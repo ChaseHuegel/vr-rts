@@ -8,6 +8,7 @@ public class PalmMenu : MonoBehaviour
     // public Hand leftHand;
     // public Hand rightHand;
 
+
     Hand menuHand;
     Hand selectionHand;
 
