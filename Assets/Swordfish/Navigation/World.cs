@@ -41,7 +41,7 @@ public class World : Singleton<World>
         Gizmos.DrawLine( new Vector3(gridSize, 0, gridSize), new Vector3(gridSize, 0, 0) );
         Gizmos.DrawLine( new Vector3(gridSize, 0, 0), new Vector3(0, 0, 0) );
 
-        //  Grid
+        // Grid
         // for (int x = 0; x < gridSize + 1; x++)
         // {
         //     //  Draw columns
