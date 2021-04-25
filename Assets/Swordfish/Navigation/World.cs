@@ -11,15 +11,35 @@ public class World : Singleton<World>
     [SerializeField] protected float gridUnit = 1;
 
     private Grid grid;
+    public static Grid Grid { get { return Instance.grid; } }
 
-    public static Vector3 GetTransformOffset() { return new Vector3(-0.5f, 0f, -0.5f); }
+    //  Grid info
+    public static float GetUnit() { return Instance.gridUnit; }
+    public static float GetScale() { return 1f/Instance.gridUnit; }
+    public static Vector3 GetGridOffset() { return new Vector3((GetSize() - 0.5f) * -0.5f, 0f, (GetSize() - 0.5f) * -0.5f); }
 
-    public static Grid GetGrid() { return Instance.grid; }
-    public static int GetGridSize() { return Instance.gridSize; }
-    public static float GetGridUnit() { return Instance.gridUnit; }
+    //  World info
+    public static float GetSize() { return Instance.gridSize * Instance.gridUnit; }
+    public static Vector3 GetOrigin() { return Instance.transform.position; }
 
     //  Shorthand access to grid
-    public static Cell at(int x, int y) { return Instance.grid.at(x, y); }
+    public static Cell at(int x, int y) { return Grid.at(x, y); }
+
+    //  Convert from grid units to transform units
+    public static Vector3 ToTransformSpace(Vector3 pos)
+    {
+        Vector3 result = (pos + GetOrigin()) * GetUnit() + GetGridOffset();
+        result.y = pos.y;
+        return result;
+    }
+
+    //  Convert from transform units to grid units
+    public static Vector3 ToWorldSpace(Vector3 pos)
+    {
+        Vector3 result = ((pos + World.GetOrigin()) + (Vector3.one * World.GetSize()/2)) / World.GetUnit();
+        result.y = pos.y;
+        return result;
+    }
 
     private void Start()
     {
@@ -31,28 +51,36 @@ public class World : Singleton<World>
     {
         if (Application.isEditor != true) return;
 
-        Gizmos.matrix = Matrix4x4.TRS(GetTransformOffset(), Quaternion.identity, transform.lossyScale);
-
+        //  Center at 0,0 on the grid
+        Gizmos.matrix = Matrix4x4.TRS(ToTransformSpace(Vector3.zero), Quaternion.identity, Vector3.one);
         Gizmos.color = Color.yellow;
 
         //  Bounds
-        Gizmos.DrawLine( new Vector3(0, 0, 0), new Vector3(0, 0, gridSize) );
-        Gizmos.DrawLine( new Vector3(0, 0, gridSize), new Vector3(gridSize, 0, gridSize));
-        Gizmos.DrawLine( new Vector3(gridSize, 0, gridSize), new Vector3(gridSize, 0, 0) );
-        Gizmos.DrawLine( new Vector3(gridSize, 0, 0), new Vector3(0, 0, 0) );
+        Gizmos.DrawLine( new Vector3(0, 0, 0), new Vector3(0, 0, GetSize()) );
+        Gizmos.DrawLine( new Vector3(0, 0, GetSize()), new Vector3(GetSize(), 0, GetSize()));
+        Gizmos.DrawLine( new Vector3(GetSize(), 0, GetSize()), new Vector3(GetSize(), 0, 0) );
+        Gizmos.DrawLine( new Vector3(GetSize(), 0, 0), new Vector3(0, 0, 0) );
 
-        // Grid
-        // for (int x = 0; x < gridSize + 1; x++)
-        // {
-        //     //  Draw columns
-        //     Gizmos.DrawLine( new Vector3(x * gridUnit, 0, 0), new Vector3(x * gridUnit, 0, gridSize * gridUnit) );
+        //  Center on the world origin
+        Gizmos.matrix = Matrix4x4.TRS(GetOrigin(), Quaternion.identity, Vector3.one);
 
-        //     for (int z = 0; z < gridSize + 1; z++)
-        //     {
-        //         //  Draw rows
-        //         Gizmos.DrawLine( new Vector3(0, 0, z * gridUnit), new Vector3(gridSize * gridUnit, 0, z * gridUnit) );
-        //     }
-        // }
+        //  Grid
+        for (int x = 0; x < gridSize; x++)
+        {
+            for (int y = 0; y < gridSize; y++)
+            {
+                //  Create a checkered pattern
+                bool upper = (x % 2 == 0 && y % 2 != 0);
+                bool lower = (x % 2 != 0 && y % 2 == 0);
+                Gizmos.color = (upper || lower) ? Color.gray : Color.black;
+
+                if (grid != null && !at(x, y).passable)
+                {
+                    Gizmos.color = Color.yellow;
+                    Gizmos.DrawCube( ToTransformSpace(new Vector3(x, 0f, y)), new Vector3(GetUnit(), 0f, GetUnit()));
+                }
+            }
+        }
     }
 }
 

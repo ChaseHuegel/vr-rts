@@ -7,6 +7,19 @@ public class TestActor : Actor
 {
     public void Update()
     {
+        // if (Input.GetKeyDown(KeyCode.Space))
+        // {
+        //     ToggleFreeze();
+        // }
+
+        // if (Input.GetMouseButtonDown(0))
+        // {
+        //     Vector3 target = Camera.main.ScreenToWorldPoint( new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0) );
+
+        //     target = World.ToWorldSpace(target);
+
+        //     Goto( (int)target.x, (int)target.z );
+        // }
     }
 
     public override void Tick()

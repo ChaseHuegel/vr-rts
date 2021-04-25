@@ -5,124 +5,46 @@ using UnityEngine;
 namespace Swordfish.Navigation
 {
 
-public class Actor : MonoBehaviour
+public class Actor : Body
 {
-    public byte tickRate = 5;
-    public byte tickTimer = 0;
-
-    public float movementInterpolation = 1f;
-
-    public Coord2D gridPosition = new Coord2D(0, 0);
+    [SerializeField] protected float movementInterpolation = 1f;
 
     public List<Cell> currentPath = null;
-    public byte failedPathAttempts = 0;
+    private byte pathWaitTries = 0;
+    private byte pathRepathTries = 0;
 
-    private Vector3 interpolateMoveTo;
+    private byte tickTimer = 0;
+    private bool frozen = false;
 
-#region monobehavior
+    public bool HasValidPath() { return (currentPath != null && currentPath.Count > 0); }
 
-    private void Start()
+    public void Freeze() { frozen = true; }
+    public void Unfreeze() { frozen = false; UpdatePosition(); }
+    public void ToggleFreeze()
     {
-        //  Snap to the grid with rounding
-        //  Round instead of truncate the initial position (i.e. obstacles which don't align with the grid)
-        //  Rounding is more accurate but has more overhead than truncating
-        //  Do NOT round unless necessary! Movement is bound to the grid, accuracy not an issue
-        HardSnapToGrid();
-
-        UpdateCell();   //  Tell the actor's cell that it's occupied
-
-        Initialize();
+        if (frozen = !frozen == false) UpdatePosition();
     }
-
-    //  Perform ticks at a regular interval. FixedUpdate is called 60x/s
-    public void FixedUpdate()
-    {
-        tickTimer++;
-
-        if (tickTimer >= tickRate)
-        {
-            tickTimer = 0;
-            Tick();
-
-            //  If we have a valid path, move along it
-            //  TODO: interpolate for smooth movement
-            if (HasValidPath())
-            {
-                //  Attempt to move to the next point
-                if (SetPosition( currentPath[0].x, currentPath[0].y ))
-                {
-                    currentPath.RemoveAt(0);
-                    failedPathAttempts = 0;
-                }
-                //  Unable to reach the next point, re-route if we've failed a # of tries
-                else
-                {
-                    failedPathAttempts++;
-
-                    if (failedPathAttempts > Constants.PATHFINDING_MAX_ATTEMPTS)
-                    {
-                        currentPath = null;
-                        failedPathAttempts = 0;
-                    }
-                }
-
-                //  Don't hang onto an empty path. Save a little memory
-                if (currentPath != null && currentPath.Count == 0)
-                    currentPath = null;
-            }
-        }
-
-        if (HasValidPath())
-        {
-            //  Interpolate movement
-            transform.position = Vector3.Lerp(transform.position, new Vector3(currentPath[0].x, transform.position.y, currentPath[0].y), Time.fixedDeltaTime * movementInterpolation);
-            // transform.position = Vector3.Lerp(transform.position, interpolateMoveTo, Time.fixedDeltaTime * movementInterpolation);
-        }
-    }
-
-    //  Debug drawing
-    public void OnDrawGizmosSelected()
-    {
-        if (Application.isEditor != true) return;
-
-        if (currentPath != null)
-        {
-            foreach (Cell cell in currentPath)
-            {
-                Gizmos.color = Color.cyan;
-                Gizmos.DrawSphere(new Vector3(cell.x, 0, cell.y), 0.25f);
-            }
-        }
-    }
-#endregion
-
-#region mutable methods
-
-    public virtual void Initialize() {}
-    public virtual void Tick() {}
-#endregion
-
-
-#region getters setters
-
-    public bool HasValidPath()
-    {
-        return (currentPath != null && currentPath.Count > 0);
-    }
-
-    public Cell GetCellAtTransform()
-    {
-        return World.GetGrid().at((int)transform.position.x, (int)transform.position.z);
-    }
-
-    public Cell GetCellAtGrid()
-    {
-        return World.GetGrid().at(gridPosition.x, gridPosition.y);
-    }
-#endregion
 
 
 #region immutable methods
+
+    public void UpdatePosition()
+    {
+        HardSnapToGrid();
+        ResetPathing();
+    }
+
+    public void ResetAI()
+    {
+        pathWaitTries = 0;
+        pathRepathTries = 0;
+    }
+
+    public void ResetPathing()
+    {
+        currentPath = null;
+        ResetAI();
+    }
 
     //  Pathfind to a position
     public void Goto(Direction dir, int distance) { Goto(dir.toVector3() * distance); }
@@ -132,60 +54,77 @@ public class Actor : MonoBehaviour
     {
         PathManager.RequestPath(this, x, y);
     }
+#endregion
 
-    //  Move relative to current position
-    public bool Move(Direction dir) { return Move(dir.toVector3()); }
-    public bool Move(Vector2 vec) { return Move((int)vec.x, (int)vec.y); }
-    public bool Move(Vector3 vec) { return Move((int)vec.x, (int)vec.z); }
-    public bool Move(int x, int y)
+
+#region monobehavior
+
+    //  Perform ticks at a regular interval. FixedUpdate is called 60x/s
+    public void FixedUpdate()
     {
-        return SetPosition( gridPosition.x + x, gridPosition.y + y );
-    }
-
-    //  Set position snapped to the grid
-    public bool SetPosition(Vector2 p) { return SetPosition((int)p.x, (int)p.y); }
-    public bool SetPosition(Vector3 p) { return SetPosition((int)p.x, (int)p.z); }
-    public bool SetPosition(int x, int y)
-    {
-        Cell to = World.GetGrid().at(x, y);
-
-        if ( !to.occupied && to.weight == 0 )
+        tickTimer++;
+        if (tickTimer >= Constants.ACTOR_TICK_RATE)
         {
-            Cell from = GetCellAtGrid();
+            tickTimer = 0;
+            Tick();
 
-            from.occupied = false;
-            to.occupied = true;
+            //  If we have a valid path, move along it
+            if (HasValidPath() && !frozen)
+            {
+                //  Attempt to move to the next point
+                if (SetPosition( currentPath[0].x, currentPath[0].y ))
+                {
+                    currentPath.RemoveAt(0);
 
-            gridPosition.x = x;
-            gridPosition.y = y;
+                    ResetAI();
+                }
+                //  Unable to reach the next point
+                else
+                {
+                    pathWaitTries++;
 
-            return true;    //  We were able to move
+                    // Wait some time to see if path clears
+                    if (pathWaitTries > Constants.PATH_WAIT_TRIES)
+                    {
+                        //  Path isn't clearing, try repathing
+                        if (pathRepathTries < Constants.PATH_REPATH_TRIES)
+                            Goto( currentPath[currentPath.Count - 1].x + Random.Range(-1, 1), currentPath[currentPath.Count - 1].y + Random.Range(-1, 1) );
+                        //  Give up after repathing a number of times
+                        else
+                        {
+                            ResetPathing();
+                        }
+
+                        pathRepathTries++;
+                    }
+                }
+
+                //  Don't hang onto an empty path. Save a little memory
+                if (currentPath != null && currentPath.Count == 0)
+                    ResetPathing();
+            }
         }
 
-        return false;   // We were unable to move
+        //  Interpolate movement as long as we're not frozen
+        if (!frozen && transform.position.x != gridPosition.x && transform.position.z != gridPosition.y)
+        {
+            transform.position = Vector3.Lerp(transform.position, World.ToTransformSpace(new Vector3(gridPosition.x, transform.position.y, gridPosition.y)), Time.fixedDeltaTime * movementInterpolation);
+        }
     }
 
-    //  Set the current cell to be occupied
-    public void UpdateCell()
+    //  Debug drawing
+    public virtual void OnDrawGizmosSelected()
     {
-        Cell cell = World.GetGrid().at(gridPosition.x, gridPosition.y);
-        cell.occupied = true;
-    }
+        if (Application.isEditor != true) return;
 
-    //  Perform a 'soft' snap by truncating. Inaccurate but less overhead.
-    public void SnapToGrid()
-    {
-        transform.position = new Vector3( (int)transform.position.x, transform.position.y, (int)transform.position.z );
-        gridPosition.x = (int)transform.position.x;
-        gridPosition.y = (int)transform.position.z;
-    }
-
-    //  Perform a 'hard' snap by rounding. More accurate with more overhead.
-    public void HardSnapToGrid()
-    {
-        transform.position = new Vector3( Mathf.RoundToInt(transform.position.x), transform.position.y, Mathf.RoundToInt(transform.position.z) );
-        gridPosition.x = Mathf.RoundToInt(transform.position.x);
-        gridPosition.y = Mathf.RoundToInt(transform.position.z);
+        if (currentPath != null)
+        {
+            foreach (Cell cell in currentPath)
+            {
+                Gizmos.color = Color.cyan;
+                Gizmos.DrawSphere(World.ToTransformSpace(new Vector3(cell.x, 0, cell.y)), 0.25f * World.GetUnit());
+            }
+        }
     }
 #endregion
 }
