@@ -15,12 +15,16 @@ public class GripPan : MonoBehaviour
     public Valve.VR.InteractionSystem.Hand LeftHand;
     public float panRate = 3.0f;
 
-    float momentumRate = 3.0f;
+    public bool useMomentum;
+    public float momentumRate = 3.0f;
 
     bool isPanning;
+    bool isGliding;
     Vector3 panStart;
     Transform panHand;
     SteamVR_Input_Sources currentHand;
+
+    private Vector3 movementVector;
 
     // Start is called before the first frame update
     void Start()
@@ -36,21 +40,28 @@ public class GripPan : MonoBehaviour
     {
         if (isPanning)
         {
-            Vector3 dist = panStart - panHand.transform.position;
-            Vector3 newDist = dist * panRate;
+            movementVector = panStart - panHand.transform.position;
+            Vector3 newDist = movementVector * panRate;
             player.transform.position += newDist;
             panStart = panHand.transform.position;
         }
-        else if (momentumRate > 0.0f)
+        else if (isGliding)
         {
-            
+            GetComponent<Rigidbody>().velocity = movementVector/Time.deltaTime;
         }
     }
 
     public void GripOff(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
         if (isPanning && currentHand == fromSource)
-            isPanning = false;
+        {
+            isPanning = false;        
+            
+            if (useMomentum)
+            {
+                isGliding = true;
+            }
+        }    
     }
 
     public void GripOn(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)

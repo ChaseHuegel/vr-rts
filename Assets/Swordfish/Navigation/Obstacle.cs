@@ -29,10 +29,10 @@ public class Obstacle : Body
         }
     }
 
-    public void OnDestroy()
-    {
-        UnbakeFromGrid();
-    }
+    // public void OnDestroy()
+    // {
+    //     UnbakeFromGrid();
+    // }
 
     public void BakeToGrid()
     {
