@@ -9,6 +9,16 @@ public class TerrainBuilding : MonoBehaviour
     public GameObject buildingStageFinal;
     public float stage0Duration = 10.0f;
     public float stage1Duration = 10.0f;
+
+    public int maxHealth;
+
+    int currentHealth;
+    public GameObject buildingDamagedEffect;
+    public GameObject buildingHealth75PercentEffect;
+    public GameObject buildingHealth50PercentEffect;
+    public GameObject buildingHealth25PercentEffect;
+
+    public GameObject buildingDestroyedEffect;
     private float timeElapsed;
     private bool TimerStarted;   
     private float stage1EndTime;
