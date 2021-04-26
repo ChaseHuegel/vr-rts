@@ -71,6 +71,8 @@ public class Actor : Body
             //  If we have a valid path, move along it
             if (HasValidPath() && !frozen)
             {
+                LookAt(currentPath[0].x, currentPath[0].y );
+                
                 //  Attempt to move to the next point
                 if (SetPosition( currentPath[0].x, currentPath[0].y ))
                 {
@@ -130,6 +132,20 @@ public class Actor : Body
             }
         }
     }
+
+    void LookAt(float x, float y) 
+    {
+        Vector3 temp = World.ToTransformSpace(new Vector3(x, 0, y));
+
+        Debug.Log(temp.x + " Y " + temp.z);
+
+        float damping = 1.0f;
+        var lookPos = temp - transform.position;
+        lookPos.y = 0;
+        var rotation = Quaternion.LookRotation(lookPos);
+        transform.rotation = rotation;// Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * damping);
+    }
+
 #endregion
 }
 
