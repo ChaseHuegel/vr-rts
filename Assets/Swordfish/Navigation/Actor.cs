@@ -137,8 +137,6 @@ public class Actor : Body
     {
         Vector3 temp = World.ToTransformSpace(new Vector3(x, 0, y));
 
-        Debug.Log(temp.x + " Y " + temp.z);
-
         float damping = 1.0f;
         var lookPos = temp - transform.position;
         lookPos.y = 0;

@@ -14,6 +14,9 @@ public class GripPan : MonoBehaviour
     public Valve.VR.InteractionSystem.Hand RightHand;
     public Valve.VR.InteractionSystem.Hand LeftHand;
     public float panRate = 3.0f;
+
+    float momentumRate = 3.0f;
+
     bool isPanning;
     Vector3 panStart;
     Transform panHand;
@@ -37,6 +40,10 @@ public class GripPan : MonoBehaviour
             Vector3 newDist = dist * panRate;
             player.transform.position += newDist;
             panStart = panHand.transform.position;
+        }
+        else if (momentumRate > 0.0f)
+        {
+            
         }
     }
 
