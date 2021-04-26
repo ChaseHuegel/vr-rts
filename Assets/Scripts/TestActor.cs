@@ -27,7 +27,7 @@ public class TestActor : Actor
         //  Choose a random path if we don't have one
         if (HasValidPath() == false)
         {
-            Goto( Random.Range(0, World.GetGridSize()), Random.Range(0, World.GetGridSize()) );
+            Goto( Random.Range(0, World.Grid.GetSize()), Random.Range(0, World.Grid.GetSize()) );
         }
     }
 }
