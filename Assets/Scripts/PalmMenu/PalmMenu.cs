@@ -16,7 +16,7 @@ public class PalmMenu : MonoBehaviour
     void Start()
     {
         menuHand = Player.instance.leftHand;
-        selectionHand = Player.instance.rightHand;
+        selectionHand = Player.instance.rightHand;                
     }
 
     // Update is called once per frame
@@ -24,10 +24,37 @@ public class PalmMenu : MonoBehaviour
     {
         
     }
+    
+    public void Toggle()
+    {
+        if (menuHand == null)
+            menuHand = Player.instance.leftHand;
+        if (selectionHand == null)
+            selectionHand = Player.instance.rightHand;
+
+        if (gameObject.activeSelf == true)
+        {
+            gameObject.SetActive(false);  
+            menuHand.useHoverSphere = true;
+            menuHand.useFingerJointHover = true;
+            //selectionHand.useHoverSphere = true;                      
+        }    
+        else
+        {   
+            menuHand = Player.instance.leftHand;
+            menuHand.useHoverSphere = false;
+            menuHand.useFingerJointHover = false;
+            //selectionHand.useHoverSphere = false;
+            gameObject.SetActive(true);          
+        }
+    }
 
     public void Spawn(GameObject objectToSpawn)
     {
-        GameObject go = Instantiate(objectToSpawn) as GameObject;
-        selectionHand.AttachObject(go, GrabTypes.Scripted);
+        //GameObject go = Instantiate(objectToSpawn) as GameObject;
+        
+        //selectionHand.AttachObject(go, GrabTypes.Scripted);
+
+        //go.gameObject.transform.position = new Vector3();
     }
 }

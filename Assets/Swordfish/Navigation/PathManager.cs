@@ -65,7 +65,7 @@ public class PathManager : Singleton<PathManager>
         currentRequest.actor.currentPath = Path.Find( currentRequest.actor.GetCellAtGrid(), World.at(currentRequest.target.x, currentRequest.target.y) );
 
         timer.Stop();
-        UnityEngine.Debug.Log( string.Format("pathfind took {0}ms", timer.ElapsedMilliseconds) );
+        //UnityEngine.Debug.Log( string.Format("pathfind took {0}ms", timer.ElapsedMilliseconds) );
 
 
     }

@@ -13,6 +13,8 @@ public class PlayerManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Player.instance.rightHand.GetComponent<HandPhysics>().enabled = false;
+        Player.instance.leftHand.GetComponent<HandPhysics>().enabled = false;
         if (palmMenu == null)
         {
             palmMenu = Player.instance.GetComponent<PalmMenu>();
@@ -32,10 +34,6 @@ public class PlayerManager : MonoBehaviour
 
     public void TogglePalmMenu(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
-        bool palmMenuIsaActive = palmMenu.gameObject.activeSelf;
-        if (palmMenuIsaActive)
-            palmMenu.gameObject.SetActive(false);
-        else
-            palmMenu.gameObject.SetActive(true);
+        palmMenu.Toggle();        
     }
 }
