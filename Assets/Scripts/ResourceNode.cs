@@ -12,12 +12,12 @@ public class ResourceNode : MonoBehaviour
     public bool destroyWhenResourceDepleted;
 
     public List<GameObject> PrefabVariations;
-    int currentResourceAmount = 5000;
+    public float currentResourceAmount;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        currentResourceAmount = maxResourceAmount;
     }
 
     // Update is called once per frame
@@ -26,20 +26,20 @@ public class ResourceNode : MonoBehaviour
 
     }
 
-    public void decreaseCurrentResourceAmount(int amountToRemove)
+    public void decreaseCurrentResourceAmount(float amountToRemove)
     {
         currentResourceAmount -= amountToRemove;
-        Debug.Log("Removed " + currentResourceAmount + " from " + resourceName + currentResourceAmount + " / " + maxResourceAmount);
+        //Debug.Log("Removed " + amountToRemove + " " + resourceName + " " + currentResourceAmount + " / " + maxResourceAmount);
 
         if (currentResourceAmount <= 0)
         {
-            Debug.Log("Resource " + resourceName + " depleted");
+            //Debug.Log("Resource " + resourceName + " depleted");
 
             if (destroyWhenResourceDepleted)
             {
                 GetComponent<Obstacle>().UnbakeFromGrid();
                 Destroy(this.gameObject);
-                Debug.Log("Resource " + resourceName + " object destroy.");
+                //Debug.Log("Resource " + resourceName + " object destroyed.");
             }
         }
     }
