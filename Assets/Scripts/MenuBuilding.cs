@@ -64,33 +64,17 @@ public class MenuBuilding : MonoBehaviour
         Ray ray = new Ray(contact.point - (-contact.normal * backTrackLength), -contact.normal);
         Vector3 groundPosition = contact.point;
         groundPosition.y = 0;    
-        GameObject spawned = GameObject.Instantiate(spawnBuildingOnCollision);                
-        spawned.transform.position = groundPosition;
-        spawned.transform.rotation = spawnBuildingOnCollision.transform.rotation;
+
+        // TODO: There are still cases where buildings can spawn on top of each other
+        if (collision.transform.name == "Floor")
+        {
+            GameObject spawned = GameObject.Instantiate(spawnBuildingOnCollision);                
+            spawned.transform.position = groundPosition;
+            spawned.transform.rotation = spawnBuildingOnCollision.transform.rotation;
+        }
+
         Debug.DrawRay(ray.origin, ray.direction, Color.cyan, 5, true);
         
         Destroy(this.gameObject);
-
-        // if (collision.collider == targetCollider)
-        // {
-        //     ContactPoint contact = collision.contacts[0];
-        //     RaycastHit hit;
-
-        //     float backTrackLength = 1f;
-        //     Ray ray = new Ray(contact.point - (-contact.normal * backTrackLength), -contact.normal);
-        //     if (collision.collider.Raycast(ray, out hit, 2))
-        //     {            
-        //         Vector3 groundPosition = contact.point;
-        //         groundPosition.y = 0;    
-        //         GameObject spawned = GameObject.Instantiate(spawnBuildingOnCollision);                
-        //         spawned.transform.position = groundPosition;
-        //         spawned.transform.rotation = spawnBuildingOnCollision.transform.rotation;
-        //     }
-
-        //     Debug.DrawRay(ray.origin, ray.direction, Color.cyan, 5, true);
-
-        //     if (destroyOnTargetCollision)
-        //          Destroy(this.gameObject);
-        // }
     }
 }

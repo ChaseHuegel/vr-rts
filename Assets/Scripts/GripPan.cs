@@ -13,18 +13,29 @@ public class GripPan : MonoBehaviour
     public GameObject player;
     public Valve.VR.InteractionSystem.Hand RightHand;
     public Valve.VR.InteractionSystem.Hand LeftHand;
-    public float panRate = 3.0f;
 
-    public bool useMomentum;
-    public float momentumRate = 3.0f;
+    public float floorHeight = 0f;
+
+    public float panMovementRate = 3.0f;
+    public bool useMomentum = true;
+    public float momentumStrength = 1.0f;
+    public float momentumDrag = 5.0f;
 
     bool isPanning;
     bool isGliding;
-    Vector3 panStart;
+    Vector3 panStartPosition;
     Transform panHand;
     SteamVR_Input_Sources currentHand;
 
     private Vector3 movementVector;
+    private Vector3 glidingVector;
+    private float glideTimePassed;
+    private Vector3 grabPosition;
+    private Vector3 grabOffPosition;
+    float magnitude;
+    Vector3 velocity;
+    float grabTime;
+
 
     // Start is called before the first frame update
     void Start()
@@ -40,28 +51,43 @@ public class GripPan : MonoBehaviour
     {
         if (isPanning)
         {
-            movementVector = panStart - panHand.transform.position;
-            Vector3 newDist = movementVector * panRate;
-            player.transform.position += newDist;
-            panStart = panHand.transform.position;
+            movementVector = panStartPosition - panHand.transform.position;
+            Vector3 adjustedMovementVector = movementVector * panMovementRate;
+            player.transform.position += adjustedMovementVector;
+            panStartPosition = panHand.position;
+            glideTimePassed += Time.deltaTime;
         }
         else if (isGliding)
         {
-            GetComponent<Rigidbody>().velocity = movementVector/Time.deltaTime;
+            magnitude -= momentumDrag * Time.deltaTime;
+            if (magnitude < 0) magnitude = 0;
+
+            player.transform.position += glidingVector * magnitude * Time.deltaTime;
         }
+
+        //  Don't let player go below the 'floor'
+        if (player.transform.position.y < floorHeight)
+            player.transform.position = new Vector3(player.transform.position.x, floorHeight, player.transform.position.z);
     }
 
     public void GripOff(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
         if (isPanning && currentHand == fromSource)
         {
-            isPanning = false;        
-            
+            isPanning = false;
+
+            grabOffPosition = panHand.position;
+
             if (useMomentum)
             {
                 isGliding = true;
+
+                glidingVector = grabOffPosition - grabPosition;
+                magnitude = (glidingVector.magnitude / glideTimePassed) * momentumStrength;
+                glidingVector.Normalize();
             }
-        }    
+        }
+
     }
 
     public void GripOn(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
@@ -69,39 +95,40 @@ public class GripPan : MonoBehaviour
         if (fromSource == SteamVR_Input_Sources.RightHand)
         {
             if (RightHand.hoveringInteractable == null)
-            {    
-                panHand = RightHand.transform; 
-                panStart = panHand.transform.position; 
+            {
+                panHand = RightHand.transform;
+                panStartPosition = panHand.transform.position;
                 isPanning = true;
-                currentHand = fromSource; 
+                currentHand = fromSource;
             }
         }
         else if (fromSource == SteamVR_Input_Sources.LeftHand)
         {
             if (LeftHand.hoveringInteractable == null)
-            {    
+            {
                 panHand = LeftHand.transform;
-                panStart = panHand.transform.position; 
+                panStartPosition = panHand.transform.position;
                 isPanning = true;
-                currentHand = fromSource; 
+                currentHand = fromSource;
             }
-        }        
-             
+        }
+        isGliding = false;
 
-                             
+        grabPosition = panHand.position;
+        glideTimePassed = 0.0f;
     }
 }
 
 //         if (RightHand.hoveringInteractable == null && LeftHand.hoveringInteractable == null)
 //         {
 //             if (fromSource == SteamVR_Input_Sources.RightHand)
-//                 panHand = RightHand.transform; 
+//                 panHand = RightHand.transform;
 //             else if (fromSource == SteamVR_Input_Sources.LeftHand)
 //                 panHand = LeftHand.transform;
 
-//             panStart = panHand.transform.position; 
+//             panStart = panHand.transform.position;
 //             isPanning = true;
 
 //             if (fromSource != currentHand)
 //                 currentHand = fromSource;
-//         }      
+//         }

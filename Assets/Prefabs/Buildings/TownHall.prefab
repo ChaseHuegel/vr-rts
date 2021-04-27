@@ -64,7 +64,7 @@ MonoBehaviour:
   bakeOnStart: 0
   rebake: 0
   dimensions: {x: 1, y: 1}
-  offset: {x: 0, y: 0}
+  transformOrigin: {x: 0, y: 0}
 --- !u!114 &6749152223849434000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -82,6 +82,12 @@ MonoBehaviour:
   buildingStageFinal: {fileID: 3284518357400287364}
   stage0Duration: 3
   stage1Duration: 3
+  maxHealth: 0
+  buildingDamagedEffect: {fileID: 0}
+  buildingHealth75PercentEffect: {fileID: 0}
+  buildingHealth50PercentEffect: {fileID: 0}
+  buildingHealth25PercentEffect: {fileID: 0}
+  buildingDestroyedEffect: {fileID: 0}
 --- !u!1001 &2723764393020680091
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -164,7 +170,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: c5f43a47e4b64c14da6e0081f639fdd3, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: c5f43a47e4b64c14da6e0081f639fdd3, type: 3}
       propertyPath: m_RootOrder
