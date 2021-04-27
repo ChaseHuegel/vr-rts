@@ -86,13 +86,6 @@ public class Body : MonoBehaviour
         gridPosition.y = y;
     }
 
-    //  Set the current cell to be occupied
-    public void UpdateCell()
-    {
-        Cell cell = World.Grid.at(gridPosition.x, gridPosition.y);
-        cell.occupied = true;
-    }
-
     //  Perform a 'soft' snap by truncating. Inaccurate but less overhead.
     public void SnapToGrid()
     {
@@ -101,8 +94,6 @@ public class Body : MonoBehaviour
         gridPosition.y = (int)pos.z;
 
         UpdateTransform();
-
-        UpdateCell();
     }
 
     //  Perform a 'hard' snap by rounding. More accurate with more overhead.
@@ -114,8 +105,6 @@ public class Body : MonoBehaviour
         gridPosition.y = Mathf.RoundToInt(pos.z);
 
         UpdateTransform();
-
-        UpdateCell();
     }
 
     //  Force the transform to match the grid position

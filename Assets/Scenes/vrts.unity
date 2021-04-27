@@ -449,6 +449,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df03bfb25b43d3047970231943a0c7b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gridPosition:
+    x: 0
+    y: 0
   bakeOnStart: 1
   rebake: 0
   dimensions: {x: 11, y: 11}
@@ -2585,6 +2588,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df03bfb25b43d3047970231943a0c7b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gridPosition:
+    x: 0
+    y: 0
   bakeOnStart: 1
   rebake: 0
   dimensions: {x: 9, y: 9}
@@ -5005,6 +5011,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df03bfb25b43d3047970231943a0c7b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gridPosition:
+    x: 0
+    y: 0
   bakeOnStart: 1
   rebake: 0
   dimensions: {x: 10, y: 10}
@@ -6378,6 +6387,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df03bfb25b43d3047970231943a0c7b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gridPosition:
+    x: 0
+    y: 0
   bakeOnStart: 1
   rebake: 0
   dimensions: {x: 1, y: 1}
@@ -6495,6 +6507,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df03bfb25b43d3047970231943a0c7b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gridPosition:
+    x: 0
+    y: 0
   bakeOnStart: 1
   rebake: 0
   dimensions: {x: 1, y: 1}
@@ -6529,6 +6544,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df03bfb25b43d3047970231943a0c7b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gridPosition:
+    x: 0
+    y: 0
   bakeOnStart: 1
   rebake: 0
   dimensions: {x: 1, y: 1}
@@ -6716,6 +6734,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df03bfb25b43d3047970231943a0c7b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gridPosition:
+    x: 0
+    y: 0
   bakeOnStart: 1
   rebake: 0
   dimensions: {x: 11, y: 11}
@@ -20209,7 +20230,7 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 540403057}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1613924795
+--- !u!114 &1613924793
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -20218,10 +20239,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 1613924792}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cb2ca70ab7fa8b54183db47ec44e1d46, type: 3}
+  m_Script: {fileID: 11500000, guid: bc46828e8b3e0b74abc70b8a29118970, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementInterpolation: 2
+  gridPosition:
+    x: 0
+    y: 0
+  movementInterpolation: 5
+  cellSearchDistance: 20
+  targetNode: {fileID: 0}
 --- !u!1001 &1617913711
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21181,6 +21207,7 @@ GameObject:
   - component: {fileID: 1685026605}
   - component: {fileID: 1685026604}
   - component: {fileID: 1685026603}
+  - component: {fileID: 1685026606}
   m_Layer: 0
   m_Name: _World
   m_TagString: Untagged
@@ -21228,6 +21255,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1685026606
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1685026602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d94e385bea0e4b841936d0d18d145e33, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  treesFromChildrenTarget: {fileID: 760236207}
+  trees: []
 --- !u!1001 &1691583101
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -22316,10 +22357,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 1764044087}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cb2ca70ab7fa8b54183db47ec44e1d46, type: 3}
+  m_Script: {fileID: 11500000, guid: bc46828e8b3e0b74abc70b8a29118970, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementInterpolation: 2
+  gridPosition:
+    x: 0
+    y: 0
+  movementInterpolation: 5
+  cellSearchDistance: 20
+  targetNode: {fileID: 0}
 --- !u!1001 &1766474134
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -22835,6 +22881,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df03bfb25b43d3047970231943a0c7b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gridPosition:
+    x: 0
+    y: 0
   bakeOnStart: 1
   rebake: 0
   dimensions: {x: 12, y: 12}
@@ -22932,6 +22981,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df03bfb25b43d3047970231943a0c7b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gridPosition:
+    x: 0
+    y: 0
   bakeOnStart: 1
   rebake: 0
   dimensions: {x: 11, y: 12}
@@ -24474,7 +24526,10 @@ MonoBehaviour:
   player: {fileID: 1983244380}
   RightHand: {fileID: 972327923}
   LeftHand: {fileID: 1732920418}
+  floorHeight: -1
   panRate: 5
+  useMomentum: 1
+  momentumDrag: 6
 --- !u!1001 &1987740893
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -24504,7 +24559,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 408984, guid: 53eb1e18130e9be4387a785b482187e1, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 12.885284
+      value: 13.678
       objectReference: {fileID: 0}
     - target: {fileID: 408984, guid: 53eb1e18130e9be4387a785b482187e1, type: 3}
       propertyPath: m_LocalPosition.y
@@ -24563,10 +24618,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 1987740894}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cb2ca70ab7fa8b54183db47ec44e1d46, type: 3}
+  m_Script: {fileID: 11500000, guid: bc46828e8b3e0b74abc70b8a29118970, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementInterpolation: 2
+  gridPosition:
+    x: 0
+    y: 0
+  movementInterpolation: 5
+  cellSearchDistance: 20
+  targetNode: {fileID: 0}
 --- !u!4 &1990987541 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6245847907370464301, guid: 98885f5b4fafa1c4d9c5fb6ecd229b0b,
@@ -25730,6 +25790,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df03bfb25b43d3047970231943a0c7b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gridPosition:
+    x: 0
+    y: 0
   bakeOnStart: 1
   rebake: 0
   dimensions: {x: 9, y: 9}
@@ -25906,10 +25969,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 2113393401}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cb2ca70ab7fa8b54183db47ec44e1d46, type: 3}
+  m_Script: {fileID: 11500000, guid: bc46828e8b3e0b74abc70b8a29118970, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementInterpolation: 2
+  gridPosition:
+    x: 0
+    y: 0
+  movementInterpolation: 5
+  cellSearchDistance: 20
+  targetNode: {fileID: 0}
 --- !u!1001 &2114540951
 PrefabInstance:
   m_ObjectHideFlags: 0

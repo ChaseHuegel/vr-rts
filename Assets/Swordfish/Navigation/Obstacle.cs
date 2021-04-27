@@ -23,15 +23,9 @@ public class Obstacle : Body
     {
         if (rebake)
         {
-            UnbakeFromGrid();
             BakeToGrid();
             rebake = false;
         }
-    }
-
-    public void OnDestroy()
-    {
-        UnbakeFromGrid();
     }
 
     public void BakeToGrid()
@@ -66,6 +60,7 @@ public class Obstacle : Body
                 cell = World.at( (int)pos.x + x, (int)pos.z + y );
 
                 cell.passable = true;
+                cell.occupied = false;
             }
         }
     }
