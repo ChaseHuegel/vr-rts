@@ -18,6 +18,7 @@ public class MenuBuilding : MonoBehaviour
 
     public void DetachedFromHand()
     {
+        Debug.Log("detaching");
         // Use gravity, kinematics off, etc..        
         gameObject.GetComponent<Rigidbody>().isKinematic = false;
         gameObject.GetComponent<Rigidbody>().useGravity = true; 
