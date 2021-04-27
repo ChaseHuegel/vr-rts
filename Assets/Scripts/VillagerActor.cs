@@ -13,13 +13,90 @@ public class VillagerActor : Actor
     public int carryingCapacity = 100;
     public float gatheringCapacityPerSecond = 10;
     public int currentCargo;
-
     public VillagerActorState currentState = VillagerActorState.Idle;
 
     // Store previous state so villager can go back to work after attaching/fleeing
     private VillagerActorState previouState;
 
-    public enum VillagerActorState { Idle, Gathering, Transporting, Fleeing, Repairing, Attacking, Roaming };
+    public enum VillagerActorState { Idle, Gathering, Transporting, Building, Repairing, Roaming };
+    public enum ResourceGatheringType { None, Grain, Wood, Ore, Gold };
+    bool isHeld;
+
+    public GameObject cargoGrainDisplayObject;
+    public GameObject cargoWoodDisplayObject;
+    public GameObject cargoOreDisplayObject;
+    public GameObject cargoGoldDisplayObject;
+    public GameObject handGrainDisplayObject;    
+    public GameObject handWoodDisplayObject;    
+    public GameObject handOreDisplayObject;    
+    public GameObject handGoldDisplayObject;
+    GameObject currentCargoDisplayObject;
+    GameObject currentHandDisplayObject;
+
+    public ResourceGatheringType currentGatheringResourceType;
+    ResourceGatheringType lastGatheringResoureType;
+
+    public void Update()
+    {
+        if (lastGatheringResoureType == currentGatheringResourceType)
+            return;
+
+        if (currentHandDisplayObject)
+            currentHandDisplayObject.SetActive(false);
+        
+        lastGatheringResoureType = currentGatheringResourceType;
+
+        switch (currentGatheringResourceType)
+        {
+            case ResourceGatheringType.Grain:
+            {                    
+                handGrainDisplayObject.SetActive(true);
+                currentHandDisplayObject = handGrainDisplayObject;
+                break;
+            }
+
+            case ResourceGatheringType.Wood:
+            {
+                handWoodDisplayObject.SetActive(true);
+                currentHandDisplayObject = handWoodDisplayObject;
+                break;
+            }
+
+            case ResourceGatheringType.Ore:
+            {
+                handOreDisplayObject.SetActive(true);
+                currentHandDisplayObject = handOreDisplayObject;
+                break;
+            }
+
+            case ResourceGatheringType.Gold:
+            {
+                handGoldDisplayObject.SetActive(true);
+                currentHandDisplayObject = handGoldDisplayObject;
+                break;
+            }
+        }
+    }
+    public void OnPickUp()
+    {
+        isHeld = true;
+        this.enabled = false;
+        ResetPathing();
+        ResetAI();
+    }
+
+    public void OnDetachFromHand()
+    {
+        isHeld = false;  
+        ResetPathing();
+        ResetAI();
+        //this.enabled = false;      
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        this.enabled = true;
+    }
 
     public bool HasValidGatheringTarget()
     {
@@ -33,12 +110,15 @@ public class VillagerActor : Actor
     
     public override void Tick()
     {
+        if (isHeld)
+            return;
+        
         switch (currentState)
         {
             case VillagerActorState.Idle:
             {
                 // Play idle animation
-                GetComponent<Animator>().Play("Idle");
+                GetComponentInChildren<Animator>().Play("Idle");
                 break;
             }
             
@@ -51,7 +131,7 @@ public class VillagerActor : Actor
                     //  Reached our target
                     if (Util.DistanceUnsquared(gridPosition, body.gridPosition) <= 1.5f)
                     {               
-                        GetComponent<Animator>().Play("Attack", -1, 0f); 
+                        GetComponentInChildren<Animator>().Play("Attack", -1, 0f); 
                                                         
                         if (currentCargo < carryingCapacity) 
                         {
@@ -64,6 +144,7 @@ public class VillagerActor : Actor
                         {
                             currentCargo = carryingCapacity;
                             currentState = VillagerActorState.Transporting;
+                            DisplayCargo(true);                            
                             Debug.Log(gameObject.name + " is done gathering and is now transporting " + currentCargo + " wood.");
                         }
                         Debug.DrawRay(targetNode.transform.position, Vector3.up, Color.red, 0.5f);
@@ -72,7 +153,7 @@ public class VillagerActor : Actor
                     {
                         //  Pathfind to the target
                         Goto(body.gridPosition.x + Random.Range(-1, 1), body.gridPosition.y + Random.Range(-1, 1));
-                        GetComponent<Animator>().Play("Walk");
+                        GetComponentInChildren<Animator>().Play("Walk");
                     }
                 }
                 else
@@ -83,7 +164,7 @@ public class VillagerActor : Actor
                     if ( !HasValidGatheringTarget() )
                     {
                         currentState = VillagerActorState.Roaming;         
-                        GetComponent<Animator>().Play("Walk");
+                        GetComponentInChildren<Animator>().Play("Walk");
                         Debug.Log(gameObject.name + " couldn't find wood, going to roam around now.");               
                     }    
                 }
@@ -102,6 +183,7 @@ public class VillagerActor : Actor
                         Debug.Log("Dropped off " + currentCargo + " wood.");
                         Valve.VR.InteractionSystem.Player.instance.GetComponent<PlayerManager>().AddWoodToResources(currentCargo);
                         currentCargo = 0;
+                        DisplayCargo(false);
                         currentState = VillagerActorState.Gathering;
                         Debug.DrawRay(targetNode.transform.position, Vector3.up, Color.red, 0.5f);
                     }
@@ -109,7 +191,7 @@ public class VillagerActor : Actor
                     {
                         //  Pathfind to the target
                         Goto(body.gridPosition.x + Random.Range(-1, 1), body.gridPosition.y + Random.Range(-1, 1));
-                        GetComponent<Animator>().Play("Walk");
+                        GetComponentInChildren<Animator>().Play("Walk");
                     }
                 }
                 else
@@ -137,50 +219,44 @@ public class VillagerActor : Actor
             default:
                 break;
         }
-
-        //  If we aren't pathfinding...
-        // if ( !HasValidPath() )
-        // {
-            //  Pathfind to our target if we have one and havent reached it
-            // if ( HasValidTarget())
-            // {
-            //     Body body = targetNode.GetComponent<Body>();
-
-            //     if (Util.DistanceUnsquared(gridPosition, body.gridPosition) <= 1.5f)
-            //     {
-            //         //  Reached our target
-            //         if (currentCargo < carryingCapacity)
-            //         {
-            //             targetNode.decreaseCurrentResourceAmount(gatheringCapacityPerSecond / Time.deltaTime);
-            //         }
-            //         else
-            //         {
-            //             currentCargo = carryingCapacity;
-
-            //         }
-
-            //         Debug.DrawRay(targetNode.transform.position, Vector3.up, Color.red, 0.5f);
-            //     }
-            //     else
-            //     {
-            //         //  Pathfind to the target
-            //         Goto(body.gridPosition.x + Random.Range(-1, 1), body.gridPosition.y + Random.Range(-1, 1));
-            //     }
-            // }
-            // else
-            // {
-            //     FindResource();
-
-            //     //  If we can't find a resource, wander around
-            //     if ( !HasValidTarget() )
-            //         Goto(
-            //             Random.Range(gridPosition.x - 4, gridPosition.x + 4),
-            //             Random.Range(gridPosition.x - 4, gridPosition.x + 4)
-            //             );
-            // }
-        //}
     }
     
+    private void DisplayCargo(bool visible)
+    {
+        if (currentCargoDisplayObject)
+            currentCargoDisplayObject.SetActive(false);
+
+        switch (currentGatheringResourceType)
+        {
+            case ResourceGatheringType.Grain:
+            {    
+                cargoGrainDisplayObject.SetActive(visible);
+                currentCargoDisplayObject = cargoGrainDisplayObject;
+                break;
+            }
+
+            case ResourceGatheringType.Wood:
+            {
+                cargoWoodDisplayObject.SetActive(visible);
+                currentCargoDisplayObject = cargoWoodDisplayObject;
+                break;
+            }
+
+            case ResourceGatheringType.Ore:
+            {
+                cargoOreDisplayObject.SetActive(visible);
+                currentCargoDisplayObject = cargoOreDisplayObject;
+                break;
+            }
+
+            case ResourceGatheringType.Gold:
+            {
+                cargoGoldDisplayObject.SetActive(visible);
+                currentCargoDisplayObject = cargoGoldDisplayObject;
+                break;
+            }
+        }
+    }
 
     private void FindBuilding(List<TerrainBuilding> blacklist = null)
     {

@@ -40,6 +40,11 @@ public class GripPan : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if (!player)
+        {
+            player = this.gameObject;
+        }
+
         GripOnOff.AddOnStateDownListener(GripOn, handRight);
         GripOnOff.AddOnStateUpListener(GripOff, handRight);
         GripOnOff.AddOnStateDownListener(GripOn, handLeft);

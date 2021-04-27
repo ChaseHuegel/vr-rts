@@ -84,6 +84,13 @@ public class Actor : Body
             {
                 LookAt(currentPath[0].x, currentPath[0].y );
 
+                // Need to be watching the actors position in world space and update it's
+                // grid position when it reaches a grid boundary so we can control the
+                // movement speed of the actor properly.
+                // Right now, you can turn the interpolation really low and the actor will
+                // reach it's destination and start gathering in grid space while still
+                // several grid spaces away from the target node in world space.
+                
                 //  Attempt to move to the next point
                 if (SetPosition( currentPath[0].x, currentPath[0].y ))
                 {
