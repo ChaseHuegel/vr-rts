@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Swordfish;
 using Swordfish.Navigation;
+using Valve.VR;
 
 public class VillagerActor : Actor
 {
@@ -29,7 +30,7 @@ public class VillagerActor : Actor
     {
         return (targetBuilding != null);
     }
-
+    
     public override void Tick()
     {
         switch (currentState)
@@ -37,6 +38,7 @@ public class VillagerActor : Actor
             case VillagerActorState.Idle:
             {
                 // Play idle animation
+                GetComponent<Animator>().Play("Idle");
                 break;
             }
             
@@ -45,10 +47,12 @@ public class VillagerActor : Actor
                 if ( HasValidGatheringTarget())
                 {
                     Body body = targetNode.GetComponent<Body>();
-
+                    
+                    //  Reached our target
                     if (Util.DistanceUnsquared(gridPosition, body.gridPosition) <= 1.5f)
-                    {
-                        //  Reached our target
+                    {               
+                        GetComponent<Animator>().Play("Attack", -1, 0f); 
+                                                        
                         if (currentCargo < carryingCapacity) 
                         {
                             int amountToRemove = (int)(gatheringCapacityPerSecond / (60 / Constants.ACTOR_TICK_RATE));
@@ -68,6 +72,7 @@ public class VillagerActor : Actor
                     {
                         //  Pathfind to the target
                         Goto(body.gridPosition.x + Random.Range(-1, 1), body.gridPosition.y + Random.Range(-1, 1));
+                        GetComponent<Animator>().Play("Walk");
                     }
                 }
                 else
@@ -78,6 +83,7 @@ public class VillagerActor : Actor
                     if ( !HasValidGatheringTarget() )
                     {
                         currentState = VillagerActorState.Roaming;         
+                        GetComponent<Animator>().Play("Walk");
                         Debug.Log(gameObject.name + " couldn't find wood, going to roam around now.");               
                     }    
                 }
@@ -94,6 +100,7 @@ public class VillagerActor : Actor
                     {
                         //  Reached our target                        
                         Debug.Log("Dropped off " + currentCargo + " wood.");
+                        Valve.VR.InteractionSystem.Player.instance.GetComponent<PlayerManager>().AddWoodToResources(currentCargo);
                         currentCargo = 0;
                         currentState = VillagerActorState.Gathering;
                         Debug.DrawRay(targetNode.transform.position, Vector3.up, Color.red, 0.5f);
@@ -102,6 +109,7 @@ public class VillagerActor : Actor
                     {
                         //  Pathfind to the target
                         Goto(body.gridPosition.x + Random.Range(-1, 1), body.gridPosition.y + Random.Range(-1, 1));
+                        GetComponent<Animator>().Play("Walk");
                     }
                 }
                 else
@@ -172,6 +180,7 @@ public class VillagerActor : Actor
             // }
         //}
     }
+    
 
     private void FindBuilding(List<TerrainBuilding> blacklist = null)
     {

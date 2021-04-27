@@ -7,6 +7,11 @@ using Valve.VR.InteractionSystem;
 public class PlayerManager : MonoBehaviour
 {
     public PalmMenu palmMenu;
+
+    public WristDisplay WristDisplay;
+
+    int woodCollected;
+
     private TeleportArc teleportArc;
 
     public SteamVR_Action_Boolean palmMenuOnOff;
@@ -39,5 +44,11 @@ public class PlayerManager : MonoBehaviour
     public void TogglePalmMenu(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
         palmMenu.Toggle();        
+    }
+
+    public void AddWoodToResources(int amount)
+    {
+        woodCollected += amount;
+        WristDisplay.SetWoodText(woodCollected.ToString());
     }
 }

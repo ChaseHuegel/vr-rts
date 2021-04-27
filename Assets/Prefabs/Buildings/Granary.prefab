@@ -47,7 +47,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 11, y: 11, z: 4.8569922}
+  m_Size: {x: 5.6, y: 5.6, z: 4.8569922}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &1021321901423112567
 MonoBehaviour:
@@ -61,10 +61,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df03bfb25b43d3047970231943a0c7b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gridPosition:
+    x: 0
+    y: 0
   bakeOnStart: 0
   rebake: 0
   dimensions: {x: 1, y: 1}
-  offset: {x: 0, y: 0}
+  transformOrigin: {x: 0, y: 0}
 --- !u!114 &6808646793922926954
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -82,6 +85,12 @@ MonoBehaviour:
   buildingStageFinal: {fileID: 7498368359219376081}
   stage0Duration: 3
   stage1Duration: 3
+  maxHealth: 0
+  buildingDamagedEffect: {fileID: 0}
+  buildingHealth75PercentEffect: {fileID: 0}
+  buildingHealth50PercentEffect: {fileID: 0}
+  buildingHealth25PercentEffect: {fileID: 0}
+  buildingDestroyedEffect: {fileID: 0}
 --- !u!1001 &1320994316150500138
 PrefabInstance:
   m_ObjectHideFlags: 0
