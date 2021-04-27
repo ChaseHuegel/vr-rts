@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Swordfish.Navigation;
 
 public class ResourceNode : MonoBehaviour
 {
     public string resourceName = "Resource";
 
-    public int maxResourceAmount = 5000;    
+    public int maxResourceAmount = 5000;
 
     public bool destroyWhenResourceDepleted;
 
@@ -16,16 +17,16 @@ public class ResourceNode : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
-    void decreaseCurrentResourceAmount(int amountToRemove)
+    public void decreaseCurrentResourceAmount(int amountToRemove)
     {
         currentResourceAmount -= amountToRemove;
         Debug.Log("Removed " + currentResourceAmount + " from " + resourceName + currentResourceAmount + " / " + maxResourceAmount);
@@ -36,7 +37,8 @@ public class ResourceNode : MonoBehaviour
 
             if (destroyWhenResourceDepleted)
             {
-                Destroy(this);
+                GetComponent<Obstacle>().UnbakeFromGrid();
+                Destroy(this.gameObject);
                 Debug.Log("Resource " + resourceName + " object destroy.");
             }
         }
