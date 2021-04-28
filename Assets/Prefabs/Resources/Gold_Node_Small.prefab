@@ -50,10 +50,6 @@ MonoBehaviour:
   resourceName: Gold
   maxResourceAmount: 1000
   destroyWhenResourceDepleted: 1
-  prefabVariations:
-  - {fileID: 7468881304053019306}
-  - {fileID: 1753285320554048559}
-  - {fileID: 2294288426991035946}
 --- !u!114 &4543408999672634872
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -71,8 +67,8 @@ MonoBehaviour:
     y: 0
   bakeOnStart: 1
   rebake: 0
-  dimensions: {x: 1, y: 1}
-  transformOrigin: {x: 0, y: 0}
+  dimensions: {x: 2, y: 2}
+  transformOrigin: {x: -0.125, y: -0.125}
 --- !u!1001 &222842744850090672
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -197,12 +193,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7b70cc63a1e85a54baecc77d7e643ed1, type: 3}
---- !u!1 &1753285320554048559 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1964512810022463135, guid: 7b70cc63a1e85a54baecc77d7e643ed1,
-    type: 3}
-  m_PrefabInstance: {fileID: 222842744850090672}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5071179243305326860 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5005681634886570940, guid: 7b70cc63a1e85a54baecc77d7e643ed1,
@@ -333,12 +323,6 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: b142df6d7e265bd4ea8f912f57053403, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 90b8c5a4056c7814f91b27e1bea80c33, type: 3}
---- !u!1 &2294288426991035946 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3613718223623019555, guid: 90b8c5a4056c7814f91b27e1bea80c33,
-    type: 3}
-  m_PrefabInstance: {fileID: 3310271864247482889}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4747473753789469449 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7787313648030738688, guid: 90b8c5a4056c7814f91b27e1bea80c33,
@@ -414,12 +398,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5ccb96400feadf74fbe439e341c069b2, type: 3}
---- !u!1 &7468881304053019306 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3429597340349181409, guid: 5ccb96400feadf74fbe439e341c069b2,
-    type: 3}
-  m_PrefabInstance: {fileID: 5205786671169265483}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1518776537554136394 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6714141725660377601, guid: 5ccb96400feadf74fbe439e341c069b2,

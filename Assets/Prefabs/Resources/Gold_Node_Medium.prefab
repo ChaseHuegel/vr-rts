@@ -50,10 +50,6 @@ MonoBehaviour:
   resourceName: Gold
   maxResourceAmount: 2500
   destroyWhenResourceDepleted: 1
-  prefabVariations:
-  - {fileID: 6304909807048972786}
-  - {fileID: 8525268311894756292}
-  - {fileID: 1144657019929688435}
 --- !u!114 &3987189314186285125
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -71,8 +67,8 @@ MonoBehaviour:
     y: 0
   bakeOnStart: 1
   rebake: 0
-  dimensions: {x: 1, y: 1}
-  transformOrigin: {x: 0, y: 0}
+  dimensions: {x: 2, y: 2}
+  transformOrigin: {x: -0.125, y: -0.125}
 --- !u!1001 &2311326803354752499
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -142,12 +138,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 04a83b657860a874aa2e6b26f8080853, type: 3}
---- !u!1 &6304909807048972786 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8605518433616612353, guid: 04a83b657860a874aa2e6b26f8080853,
-    type: 3}
-  m_PrefabInstance: {fileID: 2311326803354752499}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &669649870818929873 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2979246023005763874, guid: 04a83b657860a874aa2e6b26f8080853,
@@ -228,12 +218,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 611d2b40547f2dc44900d6ce805b6842, type: 3}
---- !u!1 &1144657019929688435 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4404484165395545519, guid: 611d2b40547f2dc44900d6ce805b6842,
-    type: 3}
-  m_PrefabInstance: {fileID: 3674229749593081052}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5896964998870813776 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7145882276024305804, guid: 611d2b40547f2dc44900d6ce805b6842,
@@ -314,12 +298,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 616d0285c64b8544a961d49ad4f03e46, type: 3}
---- !u!1 &8525268311894756292 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5190043011281554752, guid: 616d0285c64b8544a961d49ad4f03e46,
-    type: 3}
-  m_PrefabInstance: {fileID: 4488235887407007364}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2917012382719557351 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1599382101237708899, guid: 616d0285c64b8544a961d49ad4f03e46,
