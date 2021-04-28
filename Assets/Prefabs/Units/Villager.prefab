@@ -17508,6 +17508,7 @@ GameObject:
   - component: {fileID: 5240977597520700744}
   - component: {fileID: 1098559784769540740}
   - component: {fileID: 70645328441259782}
+  - component: {fileID: -6606716014632887433}
   m_Layer: 9
   m_Name: Villager
   m_TagString: Untagged
@@ -17788,7 +17789,118 @@ MonoBehaviour:
   handWoodDisplayObject: {fileID: 1069823527080595998}
   handOreDisplayObject: {fileID: 1069823527080554358}
   handGoldDisplayObject: {fileID: 1069823527080554358}
+  onPickUpSoundList:
+  - {fileID: 8300000, guid: 77eed934f8a69eb41b328a4c3e0090b0, type: 3}
+  - {fileID: 8300000, guid: c1d7f3f58fafcac4fb793927a1aa2e88, type: 3}
+  - {fileID: 8300000, guid: ef85bf22745f24b4b967d56db93711f9, type: 3}
+  - {fileID: 8300000, guid: f006a90d8354dd546b4460c41b641186, type: 3}
+  - {fileID: 8300000, guid: e57bdc5a493772748a5a7402199bd3a6, type: 3}
+  - {fileID: 8300000, guid: 99431e1367f84e54f9fba8525c401115, type: 3}
+  - {fileID: 8300000, guid: 1b027c20a11eb41469231f000a26c7d3, type: 3}
+  - {fileID: 8300000, guid: 3d8befcc80d4d674ba6d65989c64012e, type: 3}
+  - {fileID: 8300000, guid: 78ca85b589f7d6e4c8234cb9b41e0137, type: 3}
+  - {fileID: 8300000, guid: fe22e717c7ad57e419d82cd06baaf8d2, type: 3}
+  - {fileID: 8300000, guid: 11bf668e81609a14a919c0625b9be221, type: 3}
+  - {fileID: 8300000, guid: cdcfd4bbae902fc43abed7047a236348, type: 3}
   currentGatheringResourceType: 2
+  playAudio: 1
+--- !u!82 &-6606716014632887433
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1069823527325677058}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 243366450046692526, guid: ec12f7772c03e4c4c9e4c2f1643595ad,
+    type: 2}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 0.5
+  MaxDistance: 7
+  Pan2D: 0
+  rolloffMode: 1
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &1436935316071542656
 GameObject:
   m_ObjectHideFlags: 0

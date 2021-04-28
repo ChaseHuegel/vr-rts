@@ -33,8 +33,12 @@ public class VillagerActor : Actor
     GameObject currentCargoDisplayObject;
     GameObject currentHandDisplayObject;
 
+    public AudioClip[] onPickUpSoundList;
+
     public ResourceGatheringType currentGatheringResourceType;
     ResourceGatheringType lastGatheringResoureType;
+
+    public bool playAudio;
 
     public void Update()
     {
@@ -80,10 +84,37 @@ public class VillagerActor : Actor
     public void OnPickUp()
     {
         isHeld = true;
-        Freeze();
-        this.enabled = false;
+        if (playAudio)
+            PlaySound();
+        Freeze();        
+        this.enabled = false;        
         ResetPathing();
     }
+
+    void PlaySound()
+    {    
+        AudioSource audio = gameObject.GetComponent<AudioSource>();
+        audio.clip = onPickUpSoundList[Random.Range(0, onPickUpSoundList.Length)];
+        audio.Play();
+        //AudioSource.PlayClipAtPoint();
+    }
+
+    // public AudioClip[] otherClip; //make an arrayed variable (so you can attach more than one sound)
+ 
+    // // Play random sound from variable
+    // void PlaySound()
+    // {
+    //             //Assign random sound from variable
+    //             audio.clip = otherClip[Random.Range(0,otherClip.length)];
+ 
+    //     audio.Play();
+ 
+    //     // Wait for the audio to have finished
+    //     yield WaitForSeconds (audio.clip.length);
+ 
+    //     //Now you should re-loop this function Like
+    //             PlaySound();
+    // }
 
     public void OnDetachFromHand()
     {
@@ -96,6 +127,8 @@ public class VillagerActor : Actor
     {        
         this.enabled = true;
         Unfreeze();
+        AudioSource audio = gameObject.GetComponent<AudioSource>();
+        //audio.Stop();
     }
 
     public bool HasValidGatheringTarget()
@@ -189,7 +222,8 @@ public class VillagerActor : Actor
                         currentCargo = 0;
                         DisplayCargo(false);
                         currentState = VillagerActorState.Gathering;
-                        Debug.DrawRay(targetNode.transform.position, Vector3.up, Color.red, 0.5f);
+                        if (targetNode != null)
+                            Debug.DrawRay(targetNode.transform.position, Vector3.up, Color.red, 0.5f);
                     }
                     else
                     {

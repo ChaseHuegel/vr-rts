@@ -10,7 +10,6 @@ public class ResourceManager : Singleton<ResourceManager>
     public GameObject goldFromChildrenTarget;
     public GameObject grainFromChildrenTarget;
     public GameObject lumberMillsFromChildrenTarget;
-
     public GameObject townHallsFromChildrenTarget;
     public GameObject granariesFromChildrenTarget;
     
