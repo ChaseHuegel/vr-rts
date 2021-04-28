@@ -42,23 +42,27 @@ public class Body : MonoBehaviour
 #region immutable methods
 
     //  Move relative to current position
-    public bool Move(Direction dir) { return Move(dir.toVector3()); }
-    public bool Move(Vector2 vec) { return Move((int)vec.x, (int)vec.y); }
-    public bool Move(Vector3 vec) { return Move((int)vec.x, (int)vec.z); }
-    public bool Move(int x, int y)
+    public bool Move(Direction dir, bool ignoreOccupied = false) { return Move(dir.toVector3(), ignoreOccupied); }
+    public bool Move(Vector2 vec, bool ignoreOccupied = false) { return Move((int)vec.x, (int)vec.y, ignoreOccupied); }
+    public bool Move(Vector3 vec, bool ignoreOccupied = false) { return Move((int)vec.x, (int)vec.z, ignoreOccupied); }
+    public bool Move(int x, int y, bool ignoreOccupied = false)
     {
         return SetPosition( gridPosition.x + x, gridPosition.y + y );
     }
 
     //  Set position snapped to the grid
-    public bool SetPosition(Vector2 p) { return SetPosition((int)p.x, (int)p.y); }
-    public bool SetPosition(Vector3 p) { return SetPosition((int)p.x, (int)p.z); }
-    public bool SetPosition(int x, int y)
+    public bool SetPosition(Vector2 p, bool ignoreOccupied = false) { return SetPosition((int)p.x, (int)p.y, ignoreOccupied); }
+    public bool SetPosition(Vector3 p, bool ignoreOccupied = false) { return SetPosition((int)p.x, (int)p.z, ignoreOccupied); }
+    public bool SetPosition(int x, int y, bool ignoreOccupied = false)
     {
         Cell to = World.at(x, y);
 
-        if ( !to.occupied && to.passable)
+        //  Only move if cell passable, and not occupied (if we arent ignoring occupied cells)
+        if (to.passable)
         {
+            if (to.occupied && !ignoreOccupied)
+                return false;
+
             Cell from = GetCellAtGrid();
 
             from.occupied = false;
@@ -84,6 +88,14 @@ public class Body : MonoBehaviour
 
         gridPosition.x = x;
         gridPosition.y = y;
+    }
+
+    //  Remove this body from the grid
+    public void RemoveFromGrid()
+    {
+        Cell cell = World.at(gridPosition);
+        cell.occupied = false;
+        cell.passable = true;
     }
 
     //  Perform a 'soft' snap by truncating. Inaccurate but less overhead.

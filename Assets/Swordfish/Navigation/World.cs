@@ -24,6 +24,7 @@ public class World : Singleton<World>
     public static Vector3 GetOrigin() { return Instance.transform.position; }
 
     //  Shorthand access to grid
+    public static Cell at(Coord2D coord) { return Grid.at(coord.x, coord.y); }
     public static Cell at(int x, int y) { return Grid.at(x, y); }
 
     //  Convert from grid units to transform units
@@ -82,9 +83,12 @@ public class World : Singleton<World>
                 bool lower = (x % 2 != 0 && y % 2 == 0);
                 Gizmos.color = (upper || lower) ? Color.gray : Color.black;
 
-                if (grid != null && !at(x, y).passable)
+                if (grid != null)
                 {
-                    Gizmos.color = Color.yellow;
+                    if (!at(x, y).passable)
+                        Gizmos.color = Color.yellow;
+                    else if (!at(x, y).occupied)
+                        Gizmos.color = Color.blue;
                 }
 
                 Gizmos.color *= new Color(1f, 1f, 1f, 0.15f);

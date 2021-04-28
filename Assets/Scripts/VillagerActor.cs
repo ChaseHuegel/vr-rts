@@ -26,9 +26,9 @@ public class VillagerActor : Actor
     public GameObject cargoWoodDisplayObject;
     public GameObject cargoOreDisplayObject;
     public GameObject cargoGoldDisplayObject;
-    public GameObject handGrainDisplayObject;    
-    public GameObject handWoodDisplayObject;    
-    public GameObject handOreDisplayObject;    
+    public GameObject handGrainDisplayObject;
+    public GameObject handWoodDisplayObject;
+    public GameObject handOreDisplayObject;
     public GameObject handGoldDisplayObject;
     GameObject currentCargoDisplayObject;
     GameObject currentHandDisplayObject;
@@ -43,13 +43,13 @@ public class VillagerActor : Actor
 
         if (currentHandDisplayObject)
             currentHandDisplayObject.SetActive(false);
-        
+
         lastGatheringResoureType = currentGatheringResourceType;
 
         switch (currentGatheringResourceType)
         {
             case ResourceGatheringType.Grain:
-            {                    
+            {
                 handGrainDisplayObject.SetActive(true);
                 currentHandDisplayObject = handGrainDisplayObject;
                 break;
@@ -82,12 +82,14 @@ public class VillagerActor : Actor
         isHeld = true;
         Freeze();
         this.enabled = false;
+        ResetPathing();
     }
 
     public void OnDetachFromHand()
     {
-        isHeld = false;  
-        //this.enabled = false;      
+        isHeld = false;
+        ResetPathing();
+        //this.enabled = false;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -105,12 +107,12 @@ public class VillagerActor : Actor
     {
         return (targetBuilding != null);
     }
-    
+
     public override void Tick()
     {
         if (isHeld)
             return;
-        
+
         switch (currentState)
         {
             case VillagerActorState.Idle:
@@ -119,24 +121,26 @@ public class VillagerActor : Actor
                 GetComponentInChildren<Animator>().Play("Idle");
                 break;
             }
-            
+
             case VillagerActorState.Gathering:
             {
+                if (HasValidPath()) break;
+
                 if ( HasValidGatheringTarget())
                 {
                     Body body = targetNode.GetComponent<Body>();
-                    
+
                     //  Reached our target
                     if (Util.DistanceUnsquared(gridPosition, body.gridPosition) <= 1.5f)
-                    {               
-                        GetComponentInChildren<Animator>().Play("Attack", -1, 0f); 
-                                                        
-                        if (currentCargo < carryingCapacity) 
+                    {
+                        GetComponentInChildren<Animator>().Play("Attack", -1, 0f);
+
+                        if (currentCargo < carryingCapacity)
                         {
                             int amountToRemove = (int)(gatheringCapacityPerSecond / (60 / Constants.ACTOR_TICK_RATE));
                             amountToRemove = Mathf.Clamp( carryingCapacity - currentCargo, 0, amountToRemove );
                             currentCargo += amountToRemove;
-                            targetNode.decreaseCurrentResourceAmount(amountToRemove);                            
+                            targetNode.decreaseCurrentResourceAmount(amountToRemove);
                         }
                         else
                         {
@@ -161,7 +165,7 @@ public class VillagerActor : Actor
                     //  If we can't find a resource, wander around
                     if ( !HasValidGatheringTarget() )
                     {
-                        currentState = VillagerActorState.Roaming;         
+                        currentState = VillagerActorState.Roaming;
                         GetComponentInChildren<Animator>().Play("Walk");
                         Debug.Log(gameObject.name + " couldn't find " + currentGatheringResourceType + ", going to roam around now.");               
                     }    
@@ -171,6 +175,8 @@ public class VillagerActor : Actor
 
             case VillagerActorState.Transporting:
             {
+                if (HasValidPath()) break;
+
                 if ( HasValidTransportTarget())
                 {
                     Body body = targetBuilding.GetComponent<Body>();
@@ -208,7 +214,9 @@ public class VillagerActor : Actor
 
             case VillagerActorState.Roaming:
             {
-                Goto(Random.Range(gridPosition.x - 4, gridPosition.x + 4), 
+                if (HasValidPath()) break;
+
+                Goto(Random.Range(gridPosition.x - 4, gridPosition.x + 4),
                     Random.Range(gridPosition.x - 4, gridPosition.x + 4));
 
                 break;
@@ -218,7 +226,7 @@ public class VillagerActor : Actor
                 break;
         }
     }
-    
+
     private void DisplayCargo(bool visible)
     {
         if (currentCargoDisplayObject)
@@ -227,7 +235,7 @@ public class VillagerActor : Actor
         switch (currentGatheringResourceType)
         {
             case ResourceGatheringType.Grain:
-            {    
+            {
                 cargoGrainDisplayObject.SetActive(visible);
                 currentCargoDisplayObject = cargoGrainDisplayObject;
                 break;
