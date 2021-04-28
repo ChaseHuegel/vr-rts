@@ -8774,16 +8774,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1129064322339030951, guid: 9b01cde0f07486643a93faa1b4864738,
         type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.089999996
-      objectReference: {fileID: 0}
-    - target: {fileID: 1129064322339030951, guid: 9b01cde0f07486643a93faa1b4864738,
-        type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0.089999996
-      objectReference: {fileID: 0}
-    - target: {fileID: 1129064322339030951, guid: 9b01cde0f07486643a93faa1b4864738,
-        type: 3}
       propertyPath: m_LocalPosition.x
       value: -23.90555
       objectReference: {fileID: 0}
@@ -8832,11 +8822,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 9114873673496324627, guid: 9b01cde0f07486643a93faa1b4864738,
+    - target: {fileID: 6749152223849434000, guid: 9b01cde0f07486643a93faa1b4864738,
         type: 3}
-      propertyPath: bakeOnStart
-      value: 1
-      objectReference: {fileID: 0}
+      propertyPath: playerManager
+      value: 
+      objectReference: {fileID: 1983244381}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9b01cde0f07486643a93faa1b4864738, type: 3}
 --- !u!4 &587066385 stripped
@@ -9737,6 +9727,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6749152223849434000, guid: 9b01cde0f07486643a93faa1b4864738,
+        type: 3}
+      propertyPath: playerManager
+      value: 
+      objectReference: {fileID: 1983244381}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9b01cde0f07486643a93faa1b4864738, type: 3}
 --- !u!1001 &661964650
@@ -19281,16 +19276,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1129064322339030951, guid: 9b01cde0f07486643a93faa1b4864738,
         type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.089999996
-      objectReference: {fileID: 0}
-    - target: {fileID: 1129064322339030951, guid: 9b01cde0f07486643a93faa1b4864738,
-        type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0.089999996
-      objectReference: {fileID: 0}
-    - target: {fileID: 1129064322339030951, guid: 9b01cde0f07486643a93faa1b4864738,
-        type: 3}
       propertyPath: m_LocalPosition.x
       value: -25.866083
       objectReference: {fileID: 0}
@@ -19339,11 +19324,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 9114873673496324627, guid: 9b01cde0f07486643a93faa1b4864738,
+    - target: {fileID: 6749152223849434000, guid: 9b01cde0f07486643a93faa1b4864738,
         type: 3}
-      propertyPath: bakeOnStart
-      value: 1
-      objectReference: {fileID: 0}
+      propertyPath: playerManager
+      value: 
+      objectReference: {fileID: 1983244381}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9b01cde0f07486643a93faa1b4864738, type: 3}
 --- !u!4 &1255749509 stripped
@@ -25905,17 +25890,17 @@ PrefabInstance:
     - target: {fileID: 6245847907370464301, guid: 98885f5b4fafa1c4d9c5fb6ecd229b0b,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.8814802
+      value: 1.1314802
       objectReference: {fileID: 0}
     - target: {fileID: 6245847907370464301, guid: 98885f5b4fafa1c4d9c5fb6ecd229b0b,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.63819766
+      value: -0.638
       objectReference: {fileID: 0}
     - target: {fileID: 6245847907370464301, guid: 98885f5b4fafa1c4d9c5fb6ecd229b0b,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -11.869776
+      value: -11.942
       objectReference: {fileID: 0}
     - target: {fileID: 6245847907370464301, guid: 98885f5b4fafa1c4d9c5fb6ecd229b0b,
         type: 3}
@@ -27635,6 +27620,8 @@ MonoBehaviour:
   palmMenuOnOff:
     actionPath: /actions/default/in/PalmMenu
     needsReinit: 0
+  villagerPrefab: {fileID: 1069823527325677058, guid: 2e26cba339b071948830d584eca2edda,
+    type: 3}
 --- !u!114 &1983244382
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29055,16 +29042,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1129064322339030951, guid: 9b01cde0f07486643a93faa1b4864738,
         type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.089999996
-      objectReference: {fileID: 0}
-    - target: {fileID: 1129064322339030951, guid: 9b01cde0f07486643a93faa1b4864738,
-        type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0.089999996
-      objectReference: {fileID: 0}
-    - target: {fileID: 1129064322339030951, guid: 9b01cde0f07486643a93faa1b4864738,
-        type: 3}
       propertyPath: m_LocalPosition.x
       value: -7.865083
       objectReference: {fileID: 0}
@@ -29113,11 +29090,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 9114873673496324627, guid: 9b01cde0f07486643a93faa1b4864738,
+    - target: {fileID: 6749152223849434000, guid: 9b01cde0f07486643a93faa1b4864738,
         type: 3}
-      propertyPath: bakeOnStart
-      value: 1
-      objectReference: {fileID: 0}
+      propertyPath: playerManager
+      value: 
+      objectReference: {fileID: 1983244381}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9b01cde0f07486643a93faa1b4864738, type: 3}
 --- !u!4 &2123990934 stripped

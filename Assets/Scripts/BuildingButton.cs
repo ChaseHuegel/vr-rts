@@ -7,11 +7,9 @@ public class BuildingButton : MonoBehaviour
 {
     public HoverButton hoverButton;
 
-    public GameObject prefab;
-
     TerrainBuilding parentBuilding;
 
-    RTSUnitType unitTypeToQueue;
+    public RTSUnitType unitTypeToQueue;
 
     private void Start()
     {

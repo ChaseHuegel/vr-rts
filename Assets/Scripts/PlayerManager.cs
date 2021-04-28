@@ -16,6 +16,10 @@ public class PlayerManager : MonoBehaviour
 
     public SteamVR_Action_Boolean palmMenuOnOff;
 
+    List<RTSUnitTypeData> rtsUnitDataList = new List<RTSUnitTypeData>();
+    
+    public GameObject villagerPrefab;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -33,12 +37,24 @@ public class PlayerManager : MonoBehaviour
         palmMenuOnOff.AddOnStateUpListener(TogglePalmMenu, SteamVR_Input_Sources.LeftHand);
 
         teleportArc.Show();
+
+        rtsUnitDataList = new List<RTSUnitTypeData>();
+
+        RTSUnitTypeData villagerData = new RTSUnitTypeData(RTSUnitType.Villager, 3.0f, villagerPrefab);
+
+        rtsUnitDataList.Add(villagerData);
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    public RTSUnitTypeData FindUnitData(RTSUnitType type)
+    {
+        RTSUnitTypeData ret = rtsUnitDataList.Find(x => x.unitType == type );
+        return ret;
     }
 
     public void TogglePalmMenu(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
