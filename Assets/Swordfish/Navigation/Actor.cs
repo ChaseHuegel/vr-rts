@@ -18,7 +18,7 @@ public class Actor : Body
 
     public bool HasValidPath() { return (currentPath != null && currentPath.Count > 0); }
 
-    public void Freeze() { frozen = true; }
+    public void Freeze() { frozen = true; RemoveFromGrid(); }
     public void Unfreeze() { frozen = false; UpdatePosition(); }
     public void ToggleFreeze()
     {
@@ -34,7 +34,7 @@ public class Actor : Body
         ResetPathing();
     }
 
-    public void ResetAI()
+    public void ResetPathingBrain()
     {
         pathWaitTries = 0;
         pathRepathTries = 0;
@@ -43,7 +43,7 @@ public class Actor : Body
     public void ResetPathing()
     {
         currentPath = null;
-        ResetAI();
+        ResetPathingBrain();
     }
 
     //  Pathfind to a position
@@ -90,13 +90,16 @@ public class Actor : Body
                 // Right now, you can turn the interpolation really low and the actor will
                 // reach it's destination and start gathering in grid space while still
                 // several grid spaces away from the target node in world space.
-                
+
+                //  We can pass thru actors if the path ahead is clear
+                bool canPassThruActors = currentPath.Count > 2 ? !World.at(currentPath[1].x, currentPath[1].y).IsBlocked() : false;
+
                 //  Attempt to move to the next point
-                if (SetPosition( currentPath[0].x, currentPath[0].y ))
+                if (SetPosition( currentPath[0].x, currentPath[0].y, canPassThruActors ))
                 {
                     currentPath.RemoveAt(0);
 
-                    ResetAI();
+                    ResetPathingBrain();
                 }
                 //  Unable to reach the next point
                 else

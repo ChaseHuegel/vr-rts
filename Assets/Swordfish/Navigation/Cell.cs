@@ -38,6 +38,11 @@ public class Cell : IHeapItem<Cell>
         return -compare;
     }
 
+    public bool IsBlocked()
+    {
+        return (occupied || !passable);
+    }
+
     public Coord2D GetCoord()
     {
         return new Coord2D(x, y);
