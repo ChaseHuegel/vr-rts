@@ -47,8 +47,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 5.6, y: 5.6, z: 4.3621407}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 6.100453, y: 6.350706, z: 4.1348104}
+  m_Center: {x: 0.08340941, y: -0.041714974, z: 2.1218479}
 --- !u!114 &910369991214926928
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -80,17 +80,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe9688ff2b232c447b5987fc6a92de7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PlayerColor: 0
   buildingStage0: {fileID: 4261954071007285202}
   buildingStage1: {fileID: 6928727478804071249}
   buildingStageFinal: {fileID: 5500085563426119892}
   stage0Duration: 3
   stage1Duration: 3
-  maxHealth: 0
+  maxHealth: 500
+  maxUnitQueueSize: 5
   buildingDamagedEffect: {fileID: 0}
   buildingHealth75PercentEffect: {fileID: 0}
   buildingHealth50PercentEffect: {fileID: 0}
   buildingHealth25PercentEffect: {fileID: 0}
   buildingDestroyedEffect: {fileID: 0}
+  unitSpawnPoint: {fileID: 0}
+  unitRallyWaypoint: {fileID: 0}
+  unitRallyWaypointRadius: 0
+  allowedUnitCreationList: 
+  playerManager: {fileID: 0}
 --- !u!1001 &4261954071007250802
 PrefabInstance:
   m_ObjectHideFlags: 0

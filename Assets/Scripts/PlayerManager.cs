@@ -11,6 +11,8 @@ public class PlayerManager : MonoBehaviour
     public WristDisplay WristDisplay;
 
     int woodCollected;
+    int goldCollected;
+    int grainCollected;
 
     private TeleportArc teleportArc;
 
@@ -62,9 +64,40 @@ public class PlayerManager : MonoBehaviour
         palmMenu.Toggle();        
     }
 
+    public void AddResourceToStockpile(ResourceGatheringType type, int amount)
+    {
+        switch (type)
+        {
+            case ResourceGatheringType.Wood:
+                AddWoodToResources(amount);
+                break;
+
+            case ResourceGatheringType.Grain:
+                AddGrainToResources(amount);
+                break;
+
+            case ResourceGatheringType.Gold:
+                AddGoldToResources(amount);
+                break;
+
+            default:
+                break;
+        }
+    }
+
     public void AddWoodToResources(int amount)
     {
         woodCollected += amount;
         WristDisplay.SetWoodText(woodCollected.ToString());
+    }
+    public void AddGrainToResources(int amount)
+    {
+        grainCollected += amount;
+        WristDisplay.SetGrainText(grainCollected.ToString());
+    }
+    public void AddGoldToResources(int amount)
+    {
+        goldCollected += amount;
+        WristDisplay.SetGoldText(goldCollected.ToString());
     }
 }

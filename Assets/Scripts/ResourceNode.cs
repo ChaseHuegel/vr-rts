@@ -11,7 +11,6 @@ public class ResourceNode : MonoBehaviour
 
     public bool destroyWhenResourceDepleted;
 
-    public List<GameObject> prefabVariations;
     float currentResourceAmount;
 
     // Start is called before the first frame update

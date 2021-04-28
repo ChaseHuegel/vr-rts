@@ -425,7 +425,7 @@ Transform:
   m_GameObject: {fileID: 1129064322338806663}
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 3.1439228, y: 0.8720664, z: 32.272068}
-  m_LocalScale: {x: 0.09, y: 0.089999996, z: 0.089999996}
+  m_LocalScale: {x: 0.09, y: 0.08999999, z: 0.08999999}
   m_Children:
   - {fileID: 3284518357399790756}
   - {fileID: 9099679966836143721}
@@ -447,8 +447,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 5.6, y: 5.6, z: 8.693968}
-  m_Center: {x: 0.018764535, y: -3.4409033e-14, z: 4.3531027}
+  m_Size: {x: 6.3981557, y: 6.2118945, z: 8.693968}
+  m_Center: {x: -0.19407669, y: -0.013331574, z: 4.3531027}
 --- !u!114 &9114873673496324627
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -486,7 +486,7 @@ MonoBehaviour:
   buildingStageFinal: {fileID: 3284518357400287364}
   stage0Duration: 3
   stage1Duration: 3
-  maxHealth: 100
+  maxHealth: 500
   maxUnitQueueSize: 5
   buildingDamagedEffect: {fileID: 0}
   buildingHealth75PercentEffect: {fileID: 0}
@@ -625,6 +625,11 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 7e90f10e44a186a49a00679d068515ed, type: 2}
+    - target: {fileID: 4848693147342387597, guid: 88075a54c7fb1484ba25db394b612917,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.69559425
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 88075a54c7fb1484ba25db394b612917, type: 3}
 --- !u!4 &4000012820191168 stripped

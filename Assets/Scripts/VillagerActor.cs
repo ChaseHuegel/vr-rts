@@ -5,6 +5,9 @@ using Swordfish;
 using Swordfish.Navigation;
 using Valve.VR;
 
+public enum VillagerActorState { Idle, Gathering, Transporting, Building, Repairing, Roaming };
+public enum ResourceGatheringType { None, Grain, Wood, Ore, Gold };
+
 public class VillagerActor : Actor
 {
     [SerializeField] protected int cellSearchDistance = 20;
@@ -16,10 +19,7 @@ public class VillagerActor : Actor
     public VillagerActorState currentState = VillagerActorState.Idle;
 
     // Store previous state so villager can go back to work after attaching/fleeing
-    private VillagerActorState previouState;
-
-    public enum VillagerActorState { Idle, Gathering, Transporting, Building, Repairing, Roaming };
-    public enum ResourceGatheringType { None, Grain, Wood, Ore, Gold };
+    private VillagerActorState previouState;    
     bool isHeld;
 
     public GameObject cargoGrainDisplayObject;
@@ -185,7 +185,7 @@ public class VillagerActor : Actor
                     {
                         //  Reached our target                        
                         // Debug.Log("Dropped off " + currentCargo + " " + currentGatheringResourceType + ".");
-                        Valve.VR.InteractionSystem.Player.instance.GetComponent<PlayerManager>().AddWoodToResources(currentCargo);
+                        Valve.VR.InteractionSystem.Player.instance.GetComponent<PlayerManager>().AddResourceToStockpile(currentGatheringResourceType, currentCargo);
                         currentCargo = 0;
                         DisplayCargo(false);
                         currentState = VillagerActorState.Gathering;
