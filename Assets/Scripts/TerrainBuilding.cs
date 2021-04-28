@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum RTSUnitType { Villager, Swordsman };
+
 public class TerrainBuilding : MonoBehaviour
 {
     public GameObject buildingStage0;
@@ -23,7 +25,24 @@ public class TerrainBuilding : MonoBehaviour
     private bool TimerStarted;   
     private float stage1EndTime;
 
+    public RTSUnitType unitTypeToSpawn = RTSUnitType.Villager;
+    public GameObject unitSpawnPoint;
+    GameObject currentPrefabUnitToSpawn;
+    
     public float TimeElapsed { get { return timeElapsed; } }
+
+    public GameObject villagerPrefab;
+
+    // TODO: Add ability for other objects to subscribe to events on
+    // buildings for informational displays.
+    public void QueueUnit(RTSUnitType unitTypeToQueue)
+    {
+        // Set current unit type to spawn
+        currentPrefabUnitToSpawn = villagerPrefab;
+
+        // No Queue built yet, just spawn the current unit.
+        SpawnUnit();
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -68,4 +87,43 @@ public class TerrainBuilding : MonoBehaviour
             }
         }
     }
+
+    
+    private void SpawnUnit()
+    {            
+        GameObject unit = GameObject.Instantiate<GameObject>(currentPrefabUnitToSpawn);
+        unit.transform.position = unitSpawnPoint.transform.position;        
+    }
+
+    // private IEnumerator SpawnUnit()
+    // {            
+    //     GameObject planting = GameObject.Instantiate<GameObject>(currentPrefabUnitToSpawn);
+    //     planting.transform.position = this.transform.position;
+    //     planting.transform.rotation = Quaternion.Euler(0, Random.value * 360f, 0);
+
+    //     planting.GetComponentInChildren<MeshRenderer>().material.SetColor("_TintColor", Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f));
+
+    //     Rigidbody rigidbody = planting.GetComponent<Rigidbody>();
+    //     if (rigidbody != null)
+    //         rigidbody.isKinematic = true;
+
+
+    //     Vector3 initialScale = Vector3.one * 0.01f;
+    //     Vector3 targetScale = Vector3.one * (1 + (Random.value * 0.25f));
+
+    //     float startTime = Time.time;
+    //     float overTime = 0.5f;
+    //     float endTime = startTime + overTime;
+
+    //     while (Time.time < endTime)
+    //     {
+    //         planting.transform.localScale = Vector3.Slerp(initialScale, targetScale, (Time.time - startTime) / overTime);
+    //         yield return null;
+    //     }
+
+
+    //     if (rigidbody != null)
+    //         rigidbody.isKinematic = false;
+    // }
+
 }
