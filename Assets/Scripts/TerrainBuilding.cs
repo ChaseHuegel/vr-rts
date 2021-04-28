@@ -5,6 +5,9 @@ using Valve.VR.InteractionSystem;
 
 public class TerrainBuilding : MonoBehaviour
 {
+    [Header( "Multiplayer")]
+    public int PlayerColor = 0;
+
     [Header( "Construction Stages" )]
     public GameObject buildingStage0;
     public GameObject buildingStage1;
@@ -24,10 +27,14 @@ public class TerrainBuilding : MonoBehaviour
     public GameObject buildingHealth50PercentEffect;
     public GameObject buildingHealth25PercentEffect;
     public GameObject buildingDestroyedEffect;
-
+    
     [Header( "Unit Stuff" )]
     public GameObject unitSpawnPoint;
-    public GameObject unitRallyWaypoint;        
+    public GameObject unitRallyWaypoint; 
+
+    // Meant to be used so units pick a random spot within the radius to 
+    // go to so they don't fight over a single point.       
+    public float unitRallyWaypointRadius;
     public List<RTSUnitType> allowedUnitCreationList;
     
     public PlayerManager playerManager;
@@ -65,7 +72,7 @@ public class TerrainBuilding : MonoBehaviour
 
     // Start is called before the first frame update
     void Start()
-    {
+    {        
         playerManager = Player.instance.GetComponent<PlayerManager>();
         currentHealth = maxHealth;
         unitSpawnQueue.Capacity = maxUnitQueueSize;

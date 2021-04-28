@@ -79,7 +79,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: I Am A Menu
+  m_Text: All Your Base Are Belong To Us
 --- !u!114 &80567698
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -480,6 +480,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe9688ff2b232c447b5987fc6a92de7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PlayerColor: 0
   buildingStage0: {fileID: 2723764393020711227}
   buildingStage1: {fileID: 9099679966836435529}
   buildingStageFinal: {fileID: 3284518357400287364}
@@ -494,6 +495,7 @@ MonoBehaviour:
   buildingDestroyedEffect: {fileID: 0}
   unitSpawnPoint: {fileID: 679956169}
   unitRallyWaypoint: {fileID: 7371219673673626341}
+  unitRallyWaypointRadius: 0
   allowedUnitCreationList: 00000000
   playerManager: {fileID: 0}
 --- !u!1 &2991398575645089970
