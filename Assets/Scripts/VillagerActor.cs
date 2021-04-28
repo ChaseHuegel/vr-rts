@@ -147,7 +147,7 @@ public class VillagerActor : Actor
                             currentCargo = carryingCapacity;
                             currentState = VillagerActorState.Transporting;
                             DisplayCargo(true);                            
-                            Debug.Log(gameObject.name + " is done gathering and is now transporting " + currentCargo + " " + currentGatheringResourceType + ".");
+                            // Debug.Log(gameObject.name + " is done gathering and is now transporting " + currentCargo + " " + currentGatheringResourceType + ".");
                         }
                         Debug.DrawRay(targetNode.transform.position, Vector3.up, Color.red, 0.5f);
                     }
@@ -167,7 +167,7 @@ public class VillagerActor : Actor
                     {
                         currentState = VillagerActorState.Roaming;
                         GetComponentInChildren<Animator>().Play("Walk");
-                        Debug.Log(gameObject.name + " couldn't find " + currentGatheringResourceType + ", going to roam around now.");               
+                        // Debug.Log(gameObject.name + " couldn't find " + currentGatheringResourceType + ", going to roam around now.");               
                     }    
                 }
                 break;
@@ -184,7 +184,7 @@ public class VillagerActor : Actor
                     if (Util.DistanceUnsquared(gridPosition, body.gridPosition) <= 1.5f)
                     {
                         //  Reached our target                        
-                        Debug.Log("Dropped off " + currentCargo + " " + currentGatheringResourceType + ".");
+                        // Debug.Log("Dropped off " + currentCargo + " " + currentGatheringResourceType + ".");
                         Valve.VR.InteractionSystem.Player.instance.GetComponent<PlayerManager>().AddWoodToResources(currentCargo);
                         currentCargo = 0;
                         DisplayCargo(false);
@@ -206,7 +206,7 @@ public class VillagerActor : Actor
                     if ( !HasValidTransportTarget() )
                     {
                         currentState = VillagerActorState.Roaming;                        
-                        Debug.Log(gameObject.name + " couldn't find a building to drop off my cargo, going to roam around now.");
+                        // Debug.Log(gameObject.name + " couldn't find a building to drop off my cargo, going to roam around now.");
                     }
                 }
                 break;
@@ -275,6 +275,38 @@ public class VillagerActor : Actor
             case ResourceGatheringType.Gold:
                 FindTownHalls(blacklist);
                 break;
+
+            case ResourceGatheringType.Grain:
+                FindGranaries(blacklist);
+                break;
+
+        }
+    }
+
+    private void FindGranaries(List<TerrainBuilding> blacklist = null)
+    {
+        TerrainBuilding nearestBuilding = null;
+
+        //  Find the nearest townhall within range
+        int shortestDistance = cellSearchDistance * cellSearchDistance; //  Square the distance
+        foreach (TerrainBuilding granary in ResourceManager.GetGranaries())
+        {
+            if (granary == null) continue;   //  TODO trim null values from resource manager
+            if (blacklist != null && blacklist.Contains(granary)) continue;
+
+            Body body = granary.GetComponent<Body>();
+            int distance = (int)Util.DistanceUnsquared(gridPosition, body.gridPosition);
+
+            if (distance <= shortestDistance)
+            {
+                shortestDistance = distance;
+                nearestBuilding = granary;
+            }
+        }
+
+        if (nearestBuilding != null)
+        {
+            targetBuilding = nearestBuilding;
         }
     }
 
@@ -346,6 +378,37 @@ public class VillagerActor : Actor
                 FindGold(blacklist);
                 break;
 
+            case ResourceGatheringType.Grain:
+                FindGrain(blacklist);
+                break;
+
+        }
+    }
+
+    private void FindGrain(List<ResourceNode> blacklist = null)
+    {
+        ResourceNode nearestNode = null;
+
+        //  Find the nearest tree within range
+        int shortestDistance = cellSearchDistance * cellSearchDistance; //  Square the distance
+        foreach (ResourceNode grain in ResourceManager.GetGrain())
+        {
+            if (grain == null) continue;   //  TODO trim null values from resource manager
+            if (blacklist != null && blacklist.Contains(grain)) continue;
+
+            Body body = grain.GetComponent<Body>();
+            int distance = (int)Util.DistanceUnsquared(gridPosition, body.gridPosition);
+
+            if (distance <= shortestDistance)
+            {
+                shortestDistance = distance;
+                nearestNode = grain;
+            }
+        }
+
+        if (nearestNode != null)
+        {
+            targetNode = nearestNode;
         }
     }
 

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: -6293708739223406101}
   - component: {fileID: 1792975782769633862}
   - component: {fileID: 6451706933942204417}
+  - component: {fileID: 744812072195582190}
   m_Layer: 0
   m_Name: Farm
   m_TagString: Untagged
@@ -67,17 +68,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe9688ff2b232c447b5987fc6a92de7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PlayerColor: 0
   buildingStage0: {fileID: 6469210233134069085}
   buildingStage1: {fileID: 6091863267799677659}
   buildingStageFinal: {fileID: 8987644490303141695}
   stage0Duration: 3
   stage1Duration: 3
   maxHealth: 0
+  maxUnitQueueSize: 5
   buildingDamagedEffect: {fileID: 0}
   buildingHealth75PercentEffect: {fileID: 0}
   buildingHealth50PercentEffect: {fileID: 0}
   buildingHealth25PercentEffect: {fileID: 0}
   buildingDestroyedEffect: {fileID: 0}
+  unitSpawnPoint: {fileID: 0}
+  unitRallyWaypoint: {fileID: 0}
+  unitRallyWaypointRadius: 0
+  allowedUnitCreationList: 
+  playerManager: {fileID: 0}
 --- !u!65 &6451706933942204417
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -91,6 +99,22 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 5.6, y: 5.6, z: 3.116359}
   m_Center: {x: -0.025361113, y: 0.048159227, z: 1.5570672}
+--- !u!114 &744812072195582190
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 899507145775679583}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73818678be48477418bdf0c87156e9c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  resourceName: Grain
+  maxResourceAmount: 2500
+  destroyWhenResourceDepleted: 1
+  prefabVariations: []
 --- !u!1001 &6091863267799645307
 PrefabInstance:
   m_ObjectHideFlags: 0
