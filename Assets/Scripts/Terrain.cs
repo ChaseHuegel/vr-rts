@@ -12,7 +12,6 @@ public class Terrain : MonoBehaviour
 {
     public bool readyForRelight = false;
 
-    public int TileResolution = 16;
     public int Resolution = 512;
 
     public float Scale = 1.0f;
@@ -114,19 +113,19 @@ public class Terrain : MonoBehaviour
         List<Vector3> vertices = new List<Vector3>();
 		List<int> triangles = new List<int>();
 		List<Vector3> normals = new List<Vector3>();
-		List<Vector2> uvs = new List<Vector2>();
+		List<Vector3> uvs = new List<Vector3>();
 		List<Vector2> uvs2 = new List<Vector2>();
 		List<Color> colors = new List<Color>();
 
         System.Random random = new System.Random();
 
         float y1, y2, y3, y4 = 0;
-        for (int x = -halfRes; x < halfRes; x++)
+        for (int x = 0; x < Resolution; x++)
         {
-            for (int z = -halfRes; z < halfRes; z++)
+            for (int z = 0; z < Resolution; z++)
             {
-                int arrayX = x + halfRes;
-                int arrayY = z + halfRes;
+                int arrayX = x;
+                int arrayY = z;
 
                 int vertexPixel1 = toIndex(arrayX, arrayY + 1);
                 int vertexPixel2 = toIndex(arrayX + 1, arrayY + 1);
@@ -142,10 +141,10 @@ public class Terrain : MonoBehaviour
                 y4 = SampleHeight(scaleX, scaleZ);
 
                 vertexIndex = vertices.Count;
-                vertices.Add( new Vector3(x * Scale, y1, (z + 1) * Scale) );
-                vertices.Add( new Vector3((x + 1) * Scale, y2, (z + 1) * Scale) );
-                vertices.Add( new Vector3((x + 1) * Scale, y3, z * Scale) );
-                vertices.Add( new Vector3(x * Scale, y4, z * Scale) );
+                vertices.Add( new Vector3(x * Scale, y1, (z + 1) * Scale) - (Vector3.one * halfRes * Scale) );
+                vertices.Add( new Vector3((x + 1) * Scale, y2, (z + 1) * Scale) - (Vector3.one * halfRes * Scale) );
+                vertices.Add( new Vector3((x + 1) * Scale, y3, z * Scale) - (Vector3.one * halfRes * Scale) );
+                vertices.Add( new Vector3(x * Scale, y4, z * Scale) - (Vector3.one * halfRes * Scale) );
 
                 //  Triangle 1
                 triangles.Add(vertexIndex);
@@ -183,7 +182,6 @@ public class Terrain : MonoBehaviour
 
                 float occlusion = (steepness + shading) / 2;
 
-
                 if (y1 - heightAverage > 0.95f ||
                     y2 - heightAverage > 0.95f ||
                     y3 - heightAverage > 0.95f ||
@@ -213,15 +211,15 @@ public class Terrain : MonoBehaviour
                     Color.Lerp(minShade, maxShade, steepness) * Color.Lerp(minShade, baseShade, shading)
                     );
 
-                uvs.Add( new Vector2(0, 1) );
-                uvs.Add( new Vector2(1, 1) );
-                uvs.Add( new Vector2(1, 0) );
-                uvs.Add( new Vector2(0, 0) );
+                uvs.Add( new Vector3(0, 1, tileTexIndex) );
+                uvs.Add( new Vector3(1, 1, tileTexIndex) );
+                uvs.Add( new Vector3(1, 0, tileTexIndex) );
+                uvs.Add( new Vector3(0, 0, tileTexIndex) );
 
-                uvs2.Add( new Vector2(tileTexIndex, 0) );
-                uvs2.Add( new Vector2(tileTexIndex, 0) );
-                uvs2.Add( new Vector2(tileTexIndex, 0) );
-                uvs2.Add( new Vector2(tileTexIndex, 0) );
+                // uvs2.Add( new Vector2(tileTexIndex, 0) );
+                // uvs2.Add( new Vector2(tileTexIndex, 0) );
+                // uvs2.Add( new Vector2(tileTexIndex, 0) );
+                // uvs2.Add( new Vector2(tileTexIndex, 0) );
 
                 // if (populate)
                 // {
@@ -235,8 +233,8 @@ public class Terrain : MonoBehaviour
         mesh.vertices = vertices.ToArray();
         mesh.triangles = triangles.ToArray();
         mesh.normals = normals.ToArray();
-        mesh.uv = uvs.ToArray();
-        mesh.uv2 = uvs2.ToArray();
+        mesh.SetUVs(0, uvs.ToArray());
+        // mesh.uv2 = uvs2.ToArray();
         mesh.colors = colors.ToArray();
         // mesh.RecalculateNormals();
 

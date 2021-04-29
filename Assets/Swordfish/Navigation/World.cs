@@ -7,6 +7,7 @@ namespace Swordfish.Navigation
 
 public class World : Singleton<World>
 {
+    public bool showGizmos = true;
     public bool showDebugGrid = true;
 
     [SerializeField] protected int gridSize = 10;
@@ -34,6 +35,8 @@ public class World : Singleton<World>
     public static Cell at(int x, int y) { return Grid.at(x, y); }
 
     //  Convert from grid units to transform units
+    public static Vector3 ToTransformSpace(int x, int y, int z) { return ToTransformSpace(new Vector3(x, y, z)); }
+    public static Vector3 ToTransformSpace(int x, int y) { return ToTransformSpace(new Vector3(x, 0, y)); }
     public static Vector3 ToTransformSpace(Coord2D coord) { return ToTransformSpace(new Vector3(coord.x, 0, coord.y)); }
     public static Vector3 ToTransformSpace(Vector3 pos)
     {
@@ -65,7 +68,7 @@ public class World : Singleton<World>
     //  Debug draw the grid
     private void OnDrawGizmos()
     {
-        if (Application.isEditor != true) return;
+        if (Application.isEditor != true || !showGizmos) return;
 
         //  Center at 0,0 on the grid
         Gizmos.matrix = Matrix4x4.TRS(GetCenteredPosition(), Quaternion.identity, Vector3.one);

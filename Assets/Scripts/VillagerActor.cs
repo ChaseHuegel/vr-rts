@@ -92,7 +92,7 @@ public class VillagerActor : Actor
     void PlaySound()
     {
         AudioSource audio = gameObject.GetComponent<AudioSource>();
-        audio.clip = GameMaster.GetAudio("UnitPickup").GetClip();
+        audio.clip = GameMaster.GetAudio("unitPickup").GetClip();
         audio.Play();
     }
 
