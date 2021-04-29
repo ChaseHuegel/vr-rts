@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Swordfish;
 
-[CreateAssetMenu(fileName = "New Database", menuName = "Swordfish/Database/Audio")]
+namespace Swordfish.Audio
+{
+
+[CreateAssetMenu(fileName = "New Audio Database", menuName = "Swordfish/Audio/Database")]
 public class AudioDatabase : ScriptableObject
 {
     [SerializeField] private List<SoundElement> database = new List<SoundElement>();
@@ -20,4 +22,6 @@ public class AudioDatabase : ScriptableObject
 
         return new SoundElement();
     }
+}
+
 }
