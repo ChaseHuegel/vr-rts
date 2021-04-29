@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Valve.VR;
 using Valve.VR.InteractionSystem;
+using UnityEngine.UI;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -20,14 +21,24 @@ public class PlayerManager : MonoBehaviour
 
     List<RTSUnitTypeData> rtsUnitDataList = new List<RTSUnitTypeData>();
     
-    public GameObject villagerPrefab;
-    
+    public GameObject builderPrefab;
+    public GameObject minerPrefab;
+    public GameObject farmerPrefab;
+    public GameObject lumberjackPrefab;
+    public Sprite builderWorldButtonImage;
+    public Sprite minerWorldButtonImage;
+    public Sprite farmerWorldButtonImage;
+    public Sprite lumberjackWorldButtonImage;
+
     // Start is called before the first frame update
     void Start()
     {
         teleportArc = this.GetComponent<TeleportArc>();
-        Player.instance.rightHand.GetComponent<HandPhysics>().enabled = false;
-        Player.instance.leftHand.GetComponent<HandPhysics>().enabled = false;
+
+        // Move this to a function on the player?
+        // Player.instance.rightHand.GetComponent<HandPhysics>().enabled = false;
+        // Player.instance.leftHand.GetComponent<HandPhysics>().enabled = false;
+        
         if (palmMenu == null)
         {
             palmMenu = Player.instance.GetComponent<PalmMenu>();
@@ -42,9 +53,15 @@ public class PlayerManager : MonoBehaviour
 
         rtsUnitDataList = new List<RTSUnitTypeData>();
 
-        RTSUnitTypeData villagerData = new RTSUnitTypeData(RTSUnitType.Villager, 3.0f, villagerPrefab);
-
-        rtsUnitDataList.Add(villagerData);
+        RTSUnitTypeData builderData = new RTSUnitTypeData(RTSUnitType.Builder, 5.0f, builderPrefab, builderWorldButtonImage);
+        RTSUnitTypeData farmerData = new RTSUnitTypeData(RTSUnitType.Farmer, 5.0f, farmerPrefab, farmerWorldButtonImage);
+        RTSUnitTypeData lumberjackData = new RTSUnitTypeData(RTSUnitType.Lumberjack, 5.0f, lumberjackPrefab, lumberjackWorldButtonImage);
+        RTSUnitTypeData minerData = new RTSUnitTypeData(RTSUnitType.Miner, 5.0f, minerPrefab, minerWorldButtonImage);
+        
+        rtsUnitDataList.Add(builderData);
+        rtsUnitDataList.Add(farmerData);
+        rtsUnitDataList.Add(lumberjackData);
+        rtsUnitDataList.Add(minerData);
     }
 
     // Update is called once per frame
