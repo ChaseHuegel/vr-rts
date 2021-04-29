@@ -7,12 +7,14 @@ using System;
 
 namespace Valve.VR.InteractionSystem.Sample
 {
+    
     public class ButtonEffect : MonoBehaviour
     {
         public void OnButtonDown(Hand fromHand)
         {
             ColorSelf(Color.cyan);
-            fromHand.TriggerHapticPulse(1000);
+            if (fromHand.HasSkeleton())
+                fromHand.TriggerHapticPulse(1000);            
         }
 
         public void OnButtonUp(Hand fromHand)

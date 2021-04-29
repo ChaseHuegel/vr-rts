@@ -17,7 +17,7 @@ public class TerrainBuilding : MonoBehaviour
 
     [Header( "Building Stats" )]
     public int maxHealth = 100;
-    public int maxUnitQueueSize = 5;
+    public int maxUnitQueueSize = 10;
 
     int currentHealth;
 
@@ -43,7 +43,15 @@ public class TerrainBuilding : MonoBehaviour
     private bool constructionCompleted = false;   
     private float buildingContructionTimeTotal;
     
-    private List<RTSUnitTypeData> unitSpawnQueue = new List<RTSUnitTypeData>();
+    private Queue<RTSUnitTypeData> unitSpawnQueue = new Queue<RTSUnitTypeData>();
+
+    public UnityEngine.UI.Text queueStatusText;
+
+    public UnityEngine.UI.Image progressImage;
+
+    public UnityEngine.UI.Image[] QueueImageObjects;
+    
+    //public Sprite emptyQueueSlotImage;
 
     GameObject currentPrefabUnitToSpawn;    
     public float GetTimeElapsed { get { return timeElapsed; } }
@@ -58,7 +66,7 @@ public class TerrainBuilding : MonoBehaviour
         {
             if (unitSpawnQueue.Count < maxUnitQueueSize)
             {    
-                unitSpawnQueue.Add(playerManager.FindUnitData(unitTypeToQueue));
+                unitSpawnQueue.Enqueue(playerManager.FindUnitData(unitTypeToQueue));
                 Debug.Log("Queued " + unitTypeToQueue.ToString() + " (" + unitSpawnQueue.Count + ")");
             }
         }
@@ -67,7 +75,7 @@ public class TerrainBuilding : MonoBehaviour
         //currentPrefabUnitToSpawn = villagerPrefab;
 
         // No Queue built yet, just spawn the current unit.
-        SpawnUnit();
+        //SpawnUnit();
     }
 
     // Start is called before the first frame update
@@ -75,7 +83,6 @@ public class TerrainBuilding : MonoBehaviour
     {        
         playerManager = Player.instance.GetComponent<PlayerManager>();
         currentHealth = maxHealth;
-        unitSpawnQueue.Capacity = maxUnitQueueSize;
         buildingContructionTimeTotal = stage0Duration + stage1Duration;
     }
 
@@ -101,8 +108,31 @@ public class TerrainBuilding : MonoBehaviour
             if (unitSpawnQueue.Count > 0)
             {
                 timeElapsed += Time.deltaTime;
-                if (timeElapsed >= unitSpawnQueue[0].queueTime)
+                float progress = (timeElapsed / unitSpawnQueue.Peek().queueTime) * 100;
+                progress = UnityEngine.Mathf.Round(progress);
+                queueStatusText.text = unitSpawnQueue.Count.ToString();// progress.ToString() + "%";
+                progressImage.fillAmount = progress / 100;
+
+                if (timeElapsed >= unitSpawnQueue.Peek().queueTime)
+                {
                     SpawnUnit();
+                    timeElapsed = 0.0f;
+                    unitSpawnQueue.Dequeue();
+                    Debug.Log("Removed unit from queue " + unitSpawnQueue.Count + " left in queue.");
+                    progressImage.fillAmount = 0; 
+                }
+
+                foreach(UnityEngine.UI.Image image in QueueImageObjects)
+                {
+                    image.overrideSprite = null;// emptyQueueSlotImage;
+                }
+
+                int i = 0;
+                foreach (RTSUnitTypeData unitData in unitSpawnQueue)
+                {
+                    QueueImageObjects[i].overrideSprite = unitData.worldButtonImage;
+                    i++;
+                }
             }
         }
         else
@@ -114,7 +144,7 @@ public class TerrainBuilding : MonoBehaviour
                 buildingStage1.SetActive(false);
                 buildingStageFinal.SetActive(true);
                 constructionCompleted = true;      
-                timeElapsed = 0.0f;            
+                timeElapsed = 0.0f;                           
             }
             else if (timeElapsed >= stage0Duration)
             {
@@ -125,12 +155,27 @@ public class TerrainBuilding : MonoBehaviour
         }
     }
 
+    public void RemoveLastUnitFromQueue()
+    {
+        if (unitSpawnQueue.Count > 0)
+        {
+            unitSpawnQueue.Dequeue();
+            Debug.Log("Removed unit from queue " + unitSpawnQueue.Count + " left in queue.");
+        }
+    }
     
     private void SpawnUnit()
-    {                
-        GameObject unit = GameObject.Instantiate<GameObject>(unitSpawnQueue[0].prefab);
-        unit.transform.position = unitSpawnPoint.transform.position;        
-        unitSpawnQueue.RemoveAt(0);
+    {   
+        GameObject prefabToSpawn = unitSpawnQueue.Peek().prefab;
+
+        if (prefabToSpawn)
+        {
+            GameObject unit = GameObject.Instantiate<GameObject>(unitSpawnQueue.Peek().prefab);
+            unit.transform.position = unitSpawnPoint.transform.position;
+            Debug.Log("Spawned " + unit.name + ".");
+        }      
+        else
+            Debug.Log ("Spawn unit failed. Missing prefabToSpawn");
     }
 
     
