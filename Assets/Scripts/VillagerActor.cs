@@ -19,7 +19,7 @@ public class VillagerActor : Actor
     public VillagerActorState currentState = VillagerActorState.Idle;
 
     // Store previous state so villager can go back to work after attaching/fleeing
-    private VillagerActorState previouState;    
+    private VillagerActorState previouState;
     bool isHeld;
 
     public GameObject cargoGrainDisplayObject;
@@ -32,8 +32,6 @@ public class VillagerActor : Actor
     public GameObject handGoldDisplayObject;
     GameObject currentCargoDisplayObject;
     GameObject currentHandDisplayObject;
-
-    public AudioClip[] onPickUpSoundList;
 
     public ResourceGatheringType currentGatheringResourceType;
     ResourceGatheringType lastGatheringResoureType;
@@ -86,32 +84,31 @@ public class VillagerActor : Actor
         isHeld = true;
         if (playAudio)
             PlaySound();
-        Freeze();        
-        this.enabled = false;        
+        Freeze();
+        this.enabled = false;
         ResetPathing();
     }
 
     void PlaySound()
-    {    
+    {
         AudioSource audio = gameObject.GetComponent<AudioSource>();
-        audio.clip = onPickUpSoundList[Random.Range(0, onPickUpSoundList.Length)];
+        audio.clip = GameMaster.GetAudio("UnitPickup").GetClip();
         audio.Play();
-        //AudioSource.PlayClipAtPoint();
     }
 
     // public AudioClip[] otherClip; //make an arrayed variable (so you can attach more than one sound)
- 
+
     // // Play random sound from variable
     // void PlaySound()
     // {
     //             //Assign random sound from variable
     //             audio.clip = otherClip[Random.Range(0,otherClip.length)];
- 
+
     //     audio.Play();
- 
+
     //     // Wait for the audio to have finished
     //     yield WaitForSeconds (audio.clip.length);
- 
+
     //     //Now you should re-loop this function Like
     //             PlaySound();
     // }
@@ -120,11 +117,13 @@ public class VillagerActor : Actor
     {
         isHeld = false;
         ResetPathing();
+        AudioSource audio = gameObject.GetComponent<AudioSource>();
+        audio.Stop();
         //this.enabled = false;
     }
 
     private void OnCollisionEnter(Collision collision)
-    {        
+    {
         this.enabled = true;
         Unfreeze();
         AudioSource audio = gameObject.GetComponent<AudioSource>();
@@ -157,8 +156,6 @@ public class VillagerActor : Actor
 
             case VillagerActorState.Gathering:
             {
-                if (HasValidPath()) break;
-
                 if ( HasValidGatheringTarget())
                 {
                     Body body = targetNode.GetComponent<Body>();
@@ -179,7 +176,7 @@ public class VillagerActor : Actor
                         {
                             currentCargo = carryingCapacity;
                             currentState = VillagerActorState.Transporting;
-                            DisplayCargo(true);                            
+                            DisplayCargo(true);
                             // Debug.Log(gameObject.name + " is done gathering and is now transporting " + currentCargo + " " + currentGatheringResourceType + ".");
                         }
                         Debug.DrawRay(targetNode.transform.position, Vector3.up, Color.red, 0.5f);
@@ -200,23 +197,21 @@ public class VillagerActor : Actor
                     {
                         currentState = VillagerActorState.Roaming;
                         GetComponentInChildren<Animator>().Play("Walk");
-                        // Debug.Log(gameObject.name + " couldn't find " + currentGatheringResourceType + ", going to roam around now.");               
-                    }    
+                        // Debug.Log(gameObject.name + " couldn't find " + currentGatheringResourceType + ", going to roam around now.");
+                    }
                 }
                 break;
             }
 
             case VillagerActorState.Transporting:
             {
-                if (HasValidPath()) break;
-
                 if ( HasValidTransportTarget())
                 {
                     Body body = targetBuilding.GetComponent<Body>();
 
                     if (Util.DistanceUnsquared(gridPosition, body.gridPosition) <= 1.5f)
                     {
-                        //  Reached our target                        
+                        //  Reached our target
                         // Debug.Log("Dropped off " + currentCargo + " " + currentGatheringResourceType + ".");
                         Valve.VR.InteractionSystem.Player.instance.GetComponent<PlayerManager>().AddResourceToStockpile(currentGatheringResourceType, currentCargo);
                         currentCargo = 0;
@@ -239,7 +234,7 @@ public class VillagerActor : Actor
                     //  If we can't find a building, wander around
                     if ( !HasValidTransportTarget() )
                     {
-                        currentState = VillagerActorState.Roaming;                        
+                        currentState = VillagerActorState.Roaming;
                         // Debug.Log(gameObject.name + " couldn't find a building to drop off my cargo, going to roam around now.");
                     }
                 }
@@ -248,8 +243,6 @@ public class VillagerActor : Actor
 
             case VillagerActorState.Roaming:
             {
-                if (HasValidPath()) break;
-
                 Goto(Random.Range(gridPosition.x - 4, gridPosition.x + 4),
                     Random.Range(gridPosition.x - 4, gridPosition.x + 4));
 
@@ -399,15 +392,15 @@ public class VillagerActor : Actor
     }
 
     private void FindResource(List<ResourceNode> blacklist = null)
-    {        
-        
+    {
+
 
         switch (currentGatheringResourceType)
         {
             case ResourceGatheringType.Wood:
-                FindWood(blacklist);                
+                FindWood(blacklist);
                 break;
-            
+
             case ResourceGatheringType.Gold:
                 FindGold(blacklist);
                 break;

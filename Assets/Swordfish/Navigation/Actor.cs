@@ -52,6 +52,14 @@ public class Actor : Body
     public void Goto(Vector3 vec, bool ignoreActors = true) { Goto((int)vec.x, (int)vec.z, ignoreActors); }
     public void Goto(int x, int y, bool ignoreActors = true)
     {
+        if (!HasValidPath()) PathManager.RequestPath(this, x, y, ignoreActors);
+    }
+
+    public void GotoForced(Direction dir, int distance, bool ignoreActors = true) { Goto(dir.toVector3() * distance, ignoreActors); }
+    public void GotoForced(Vector2 vec, bool ignoreActors = true) { Goto((int)vec.x, (int)vec.y, ignoreActors); }
+    public void GotoForced(Vector3 vec, bool ignoreActors = true) { Goto((int)vec.x, (int)vec.z, ignoreActors); }
+    public void GotoForced(int x, int y, bool ignoreActors = true)
+    {
         PathManager.RequestPath(this, x, y, ignoreActors);
     }
 
@@ -111,7 +119,7 @@ public class Actor : Body
                     {
                         //  Path isn't clearing, try repathing
                         if (pathRepathTries < Constants.PATH_REPATH_TRIES)
-                            Goto(
+                            GotoForced(
                                 currentPath[currentPath.Count - 1].x + Random.Range(-1, 1),
                                 currentPath[currentPath.Count - 1].y + Random.Range(-1, 1),
                                 false    //  false, dont ignore actors. Stuck and may need to path around them

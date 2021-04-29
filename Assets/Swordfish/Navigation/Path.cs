@@ -39,12 +39,12 @@ public class Path
             testedList.Add(current);    //  Move current cell to the tested list
 
             //  We've reached the end point
-            if (current == end)
+            if (current == end || openList.IsFull() || testedList.IsFull())
             {
                 List<Cell> path = new List<Cell>();
 
                 //  Trace a path back to the start and reverse it
-                Cell tracingCell = end;
+                Cell tracingCell = current;
                 while (tracingCell != start)
                 {
                     path.Add(tracingCell);
