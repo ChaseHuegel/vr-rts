@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6007586901534665008}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: UnitSpawnPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: 1942781468817715530}
   - component: {fileID: 8104914418468807534}
   - component: {fileID: 8621433241102897680}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Keep
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -96,10 +96,10 @@ MonoBehaviour:
   gridPosition:
     x: 0
     y: 0
+  boundingDimensions: {x: 2, y: 2}
+  boundingOrigin: {x: -0.125, y: -0.125}
   bakeOnStart: 1
   rebake: 0
-  dimensions: {x: 2, y: 2}
-  transformOrigin: {x: -0.125, y: -0.125}
 --- !u!114 &8621433241102897680
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -139,7 +139,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 744677254693606039}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: UnitRallyWaypoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -170,6 +170,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 70a74a7e3a8172e4d9fc5cd02c4800ba, type: 3}
       propertyPath: m_Name
       value: Keep_1
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 70a74a7e3a8172e4d9fc5cd02c4800ba, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 70a74a7e3a8172e4d9fc5cd02c4800ba, type: 3}
       propertyPath: m_IsActive
@@ -245,6 +249,10 @@ PrefabInstance:
       value: Keep
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 003306f67c7bed24b8be307fb52fb0ab, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 003306f67c7bed24b8be307fb52fb0ab, type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
@@ -316,6 +324,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 9f1a76b274a57c841b1aa03e7c5e5200, type: 3}
       propertyPath: m_Name
       value: Keep_0
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 9f1a76b274a57c841b1aa03e7c5e5200, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 9f1a76b274a57c841b1aa03e7c5e5200, type: 3}
       propertyPath: m_RootOrder

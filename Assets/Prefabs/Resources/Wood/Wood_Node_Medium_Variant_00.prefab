@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2966476158122163740}
   - component: {fileID: 5871603658111709000}
   - component: {fileID: 1056458220666404208}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Wood_Node_Medium_Variant_00
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -65,9 +65,9 @@ MonoBehaviour:
   gridPosition:
     x: 0
     y: 0
+  boundingDimensions: {x: 1, y: 1}
   bakeOnStart: 1
   rebake: 0
-  dimensions: {x: 1, y: 1}
   transformOrigin: {x: 0, y: 0}
 --- !u!136 &1056458220666404208
 CapsuleCollider:
@@ -94,6 +94,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: tree_pine_00 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8243015420921488169, guid: b3f671ff8e27aaa40ba31acf343ef5ba,
+        type: 3}
+      propertyPath: m_Layer
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 8245761171291332027, guid: b3f671ff8e27aaa40ba31acf343ef5ba,
         type: 3}
@@ -184,6 +189,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: tree_pine_00
+      objectReference: {fileID: 0}
+    - target: {fileID: 8243015420921488169, guid: b3f671ff8e27aaa40ba31acf343ef5ba,
+        type: 3}
+      propertyPath: m_Layer
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 8245761171291332027, guid: b3f671ff8e27aaa40ba31acf343ef5ba,
         type: 3}

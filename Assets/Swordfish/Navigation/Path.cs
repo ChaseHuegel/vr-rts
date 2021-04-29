@@ -60,15 +60,18 @@ public class Path
             //  Not there yet! Go through all neighbors of the current cell..
             foreach(Cell neighbor in current.neighbors())
             {
-                //  Ignore this neighbor if its solid or it has already been tested
-                if (!neighbor.passable || testedList.Contains(neighbor))
-                    continue;
+                if (neighbor != end)
+                {
+                    //  Ignore this neighbor if its solid or it has already been tested
+                    if (!neighbor.passable || testedList.Contains(neighbor))
+                        continue;
 
-                //  Are we pathing around actors? If so, ignore occupied neighbors
-                //  By default we ignore actors, otherwise we would get a slower
-                //  route just because a narrow path is blocked by another actor that may be moving
-                if (!ignoreActors && neighbor.occupied)
-                    continue;
+                    //  Are we pathing around actors? If so, ignore occupied neighbors
+                    //  By default we ignore actors, otherwise we would get a slower
+                    //  route just because a narrow path is blocked by another actor that may be moving
+                    if (!ignoreActors && neighbor.occupied)
+                        continue;
+                }
 
                 bool neighborInOpenList = openList.Contains(neighbor);
 

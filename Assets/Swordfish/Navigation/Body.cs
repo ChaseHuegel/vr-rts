@@ -8,6 +8,8 @@ namespace Swordfish.Navigation
 public class Body : MonoBehaviour
 {
     public Coord2D gridPosition = new Coord2D(0, 0);
+    public Vector2 boundingDimensions = Vector2.one;
+    public Vector2 boundingOrigin = Vector2.zero;
 
     public virtual void Initialize() {}
     public virtual void Tick() {}
@@ -23,6 +25,26 @@ public class Body : MonoBehaviour
         Initialize();
     }
 
+    public virtual void OnDrawGizmos()
+    {
+        if (Application.isEditor != true || Application.isPlaying) return;
+
+        Vector3 pos = transform.position;
+        pos.x += boundingOrigin.x;
+        pos.z += boundingOrigin.y;
+
+        Vector3 worldPos = World.ToWorldSpace(pos);
+        Vector3 gridPoint = World.ToTransformSpace( worldPos);
+
+        Gizmos.matrix = Matrix4x4.TRS(gridPoint - World.GetUnitOffset(), Quaternion.identity, Vector3.one * GetBoundsVolume());
+        Gizmos.color = Color.cyan;
+
+        Gizmos.DrawLine( new Vector3(0, 0, 0), new Vector3(0, 0, World.GetUnit()) );
+        Gizmos.DrawLine( new Vector3(0, 0, World.GetUnit()), new Vector3(World.GetUnit(), 0,World.GetUnit()));
+        Gizmos.DrawLine( new Vector3(World.GetUnit(), 0, World.GetUnit()), new Vector3(World.GetUnit(), 0, 0) );
+        Gizmos.DrawLine( new Vector3(World.GetUnit(), 0, 0), new Vector3(0, 0, 0) );
+    }
+
 
 #region getters setters
 
@@ -35,6 +57,21 @@ public class Body : MonoBehaviour
     public Cell GetCellAtGrid()
     {
         return World.Grid.at(gridPosition.x, gridPosition.y);
+    }
+
+
+    //  Used in transform space
+    public float GetBoundsVolumeSqr() { return GetBoundsVolume() * GetBoundsVolume(); }
+    public float GetBoundsVolume()
+    {
+        return (boundingDimensions.x + boundingDimensions.y) * 0.5f + World.GetUnit();
+    }
+
+    //  Used in world space
+    public float GetCellVolumeSqr() { return GetCellVolume() * GetCellVolume(); }
+    public float GetCellVolume()
+    {
+        return (boundingDimensions.x + boundingDimensions.y) * 0.75f;
     }
 #endregion
 

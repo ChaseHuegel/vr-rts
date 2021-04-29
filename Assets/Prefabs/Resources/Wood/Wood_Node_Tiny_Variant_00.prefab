@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8947400695965821339}
   - component: {fileID: 9025738673981971103}
   - component: {fileID: 4429459736856525535}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Wood_Node_Tiny_Variant_00
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -78,9 +78,9 @@ MonoBehaviour:
   gridPosition:
     x: 0
     y: 0
+  boundingDimensions: {x: 1, y: 1}
   bakeOnStart: 1
   rebake: 0
-  dimensions: {x: 1, y: 1}
   transformOrigin: {x: 0, y: 0}
 --- !u!1001 &9062653132985078406
 PrefabInstance:
@@ -93,6 +93,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: tree_pine_00
+      objectReference: {fileID: 0}
+    - target: {fileID: 8243015420921488169, guid: b3f671ff8e27aaa40ba31acf343ef5ba,
+        type: 3}
+      propertyPath: m_Layer
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 8245761171291332027, guid: b3f671ff8e27aaa40ba31acf343ef5ba,
         type: 3}

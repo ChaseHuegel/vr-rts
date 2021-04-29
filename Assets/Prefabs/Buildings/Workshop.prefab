@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2630092738252272715}
   - component: {fileID: 3751680065508727009}
   - component: {fileID: 7431120126052149129}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Workshop
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -66,10 +66,10 @@ MonoBehaviour:
   gridPosition:
     x: 0
     y: 0
+  boundingDimensions: {x: 2, y: 2}
+  boundingOrigin: {x: -0.125, y: -0.125}
   bakeOnStart: 1
   rebake: 0
-  dimensions: {x: 2, y: 2}
-  transformOrigin: {x: -0.125, y: -0.125}
 --- !u!114 &7431120126052149129
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -109,7 +109,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3147916540261467754}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: UnitRallyWaypoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -139,7 +139,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3147916540595743665}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: UnitSpawnPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -170,6 +170,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 5573396f6b8833f4dbd78bbb53d56df5, type: 3}
       propertyPath: m_Name
       value: Workshop
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 5573396f6b8833f4dbd78bbb53d56df5, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 5573396f6b8833f4dbd78bbb53d56df5, type: 3}
       propertyPath: m_IsActive
@@ -257,6 +261,10 @@ PrefabInstance:
       value: Workshop_1
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: de6238c57a8f0ac478c92903b1b153cc, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: de6238c57a8f0ac478c92903b1b153cc, type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
@@ -328,6 +336,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 4f825c353b2346344a464e665e8a8f59, type: 3}
       propertyPath: m_Name
       value: Workshop_0
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 4f825c353b2346344a464e665e8a8f59, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 4f825c353b2346344a464e665e8a8f59, type: 3}
       propertyPath: m_RootOrder

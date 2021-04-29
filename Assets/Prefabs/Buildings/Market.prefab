@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4468552156609978690}
   - component: {fileID: 6716401633730726450}
   - component: {fileID: 8426115943958040868}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Market
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -66,10 +66,10 @@ MonoBehaviour:
   gridPosition:
     x: 0
     y: 0
+  boundingDimensions: {x: 2, y: 2}
+  boundingOrigin: {x: -0.125, y: -0.125}
   bakeOnStart: 1
   rebake: 0
-  dimensions: {x: 2, y: 2}
-  transformOrigin: {x: -0.125, y: -0.125}
 --- !u!114 &8426115943958040868
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -109,7 +109,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8231847355065589849}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: UnitSpawnPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -139,7 +139,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7459059606152391984}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: UnitRallyWaypoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -170,6 +170,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: e80371d003bd70d439af07f3facb22ea, type: 3}
       propertyPath: m_Name
       value: Market
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: e80371d003bd70d439af07f3facb22ea, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: e80371d003bd70d439af07f3facb22ea, type: 3}
       propertyPath: m_IsActive
@@ -245,6 +249,10 @@ PrefabInstance:
       value: Market_1
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: ecd750c81ddec2c48abc6d35830d1422, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: ecd750c81ddec2c48abc6d35830d1422, type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
@@ -316,6 +324,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 36773d88f5d34834587aff054644b010, type: 3}
       propertyPath: m_Name
       value: Market_0
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 36773d88f5d34834587aff054644b010, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 36773d88f5d34834587aff054644b010, type: 3}
       propertyPath: m_RootOrder

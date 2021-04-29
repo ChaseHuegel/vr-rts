@@ -9,8 +9,6 @@ public class Obstacle : Body
 {
     public bool bakeOnStart = true;
     public bool rebake = false;
-    public Vector2 dimensions;
-    public Vector2 transformOrigin;
 
     public override void Initialize()
     {
@@ -32,9 +30,9 @@ public class Obstacle : Body
     {
         //  Block all cells within bounds
         Cell cell;
-        for (int x = -(int)(dimensions.x/2); x < dimensions.x/2; x++)
+        for (int x = -(int)(boundingDimensions.x/2); x < boundingDimensions.x/2; x++)
         {
-            for (int y = -(int)(dimensions.y/2); y < dimensions.y/2; y++)
+            for (int y = -(int)(boundingDimensions.y/2); y < boundingDimensions.y/2; y++)
             {
                 Vector3 pos = World.ToWorldSpace(transform.position);
 
@@ -44,16 +42,16 @@ public class Obstacle : Body
             }
         }
 
-        transform.position += new Vector3(transformOrigin.x, 0f, transformOrigin.y);
+        transform.position += new Vector3(boundingOrigin.x, 0f, boundingOrigin.y);
     }
 
     public void UnbakeFromGrid()
     {
         //  Unblock all cells within bounds
         Cell cell;
-        for (int x = -(int)(dimensions.x/2); x < dimensions.x/2; x++)
+        for (int x = -(int)(boundingDimensions.x/2); x < boundingDimensions.x/2; x++)
         {
-            for (int y = -(int)(dimensions.y/2); y < dimensions.y/2; y++)
+            for (int y = -(int)(boundingDimensions.y/2); y < boundingDimensions.y/2; y++)
             {
                 Vector3 pos = World.ToWorldSpace(transform.position);
 
@@ -65,8 +63,10 @@ public class Obstacle : Body
         }
     }
 
-    public void OnDrawGizmos()
+    public override void OnDrawGizmos()
     {
+        base.OnDrawGizmos();
+
         if (Application.isEditor != true || Application.isPlaying) return;
 
         Vector3 worldPos = World.ToWorldSpace(transform.position);
@@ -74,15 +74,15 @@ public class Obstacle : Body
         Vector3 gridPoint = World.ToTransformSpace( worldPos);
         Gizmos.matrix = Matrix4x4.TRS(gridPoint, Quaternion.identity, Vector3.one);
         Gizmos.color = Color.blue;
-        Gizmos.DrawLine(new Vector3(transformOrigin.x, 0f, transformOrigin.y), new Vector3(transformOrigin.x, World.GetUnit()*1.5f, transformOrigin.y));
+        Gizmos.DrawLine(new Vector3(boundingOrigin.x, 0f, boundingOrigin.y), new Vector3(boundingOrigin.x, World.GetUnit()*1.5f, boundingOrigin.y));
 
         Coord2D gridPos = new Coord2D(0, 0);
         gridPos.x = Mathf.FloorToInt( worldPos.x );
         gridPos.y = Mathf.FloorToInt( worldPos.z );
 
-        for (int x = -(int)(dimensions.x/2); x < dimensions.x/2; x++)
+        for (int x = -(int)(boundingDimensions.x/2); x < boundingDimensions.x/2; x++)
         {
-            for (int y = -(int)(dimensions.y/2); y < dimensions.y/2; y++)
+            for (int y = -(int)(boundingDimensions.y/2); y < boundingDimensions.y/2; y++)
             {
                 gridPoint = World.ToTransformSpace(new Vector3(
                     gridPos.x + x,

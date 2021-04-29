@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8193485075300465437}
   - component: {fileID: 7051028493964679095}
   - component: {fileID: 3668824323759270111}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Stables
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -66,10 +66,10 @@ MonoBehaviour:
   gridPosition:
     x: 0
     y: 0
+  boundingDimensions: {x: 2, y: 2}
+  boundingOrigin: {x: -0.125, y: -0.125}
   bakeOnStart: 1
   rebake: 0
-  dimensions: {x: 2, y: 2}
-  transformOrigin: {x: -0.125, y: -0.125}
 --- !u!114 &3668824323759270111
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -109,7 +109,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9107766363147658471}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: UnitSpawnPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -139,7 +139,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9107766364826716476}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: UnitRallyWaypoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -170,6 +170,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: c8f46a36db3ed5d4ba1ec3877467e8ca, type: 3}
       propertyPath: m_Name
       value: Stables_0
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: c8f46a36db3ed5d4ba1ec3877467e8ca, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: c8f46a36db3ed5d4ba1ec3877467e8ca, type: 3}
       propertyPath: m_RootOrder
@@ -239,6 +243,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: cca1c5a0500e0194cbfcc9780cb0f8d5, type: 3}
       propertyPath: m_Name
       value: Stables_1
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: cca1c5a0500e0194cbfcc9780cb0f8d5, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: cca1c5a0500e0194cbfcc9780cb0f8d5, type: 3}
       propertyPath: m_IsActive
@@ -312,6 +320,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 0c6eb60ad59a81145839dbc6dedcbc3f, type: 3}
       propertyPath: m_Name
       value: Stables
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 0c6eb60ad59a81145839dbc6dedcbc3f, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 0c6eb60ad59a81145839dbc6dedcbc3f, type: 3}
       propertyPath: m_IsActive

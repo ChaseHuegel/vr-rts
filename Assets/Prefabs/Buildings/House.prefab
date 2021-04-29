@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5276706465699879340}
   - component: {fileID: 7152178549369273602}
   - component: {fileID: -2718789996109689435}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: House
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -52,10 +52,10 @@ MonoBehaviour:
   gridPosition:
     x: 0
     y: 0
+  boundingDimensions: {x: 2, y: 2}
+  boundingOrigin: {x: -0.125, y: -0.125}
   bakeOnStart: 1
   rebake: 0
-  dimensions: {x: 2, y: 2}
-  transformOrigin: {x: -0.125, y: -0.125}
 --- !u!114 &5276706465699879340
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -163,6 +163,10 @@ PrefabInstance:
       value: House_0
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: c4bb27f050a2ef4439fb736e16b2bded, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: c4bb27f050a2ef4439fb736e16b2bded, type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
@@ -236,6 +240,10 @@ PrefabInstance:
       value: House
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 05035b78d90b21f43854dfe010ccd289, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 05035b78d90b21f43854dfe010ccd289, type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
@@ -307,6 +315,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: b1ff534b3931e674e8e475faa59eb659, type: 3}
       propertyPath: m_Name
       value: House_1
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: b1ff534b3931e674e8e475faa59eb659, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: b1ff534b3931e674e8e475faa59eb659, type: 3}
       propertyPath: m_IsActive

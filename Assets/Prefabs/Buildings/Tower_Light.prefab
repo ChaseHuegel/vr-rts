@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2627572614425185739}
   - component: {fileID: 3753839428809269601}
   - component: {fileID: 7433279506835561993}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower_Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -66,10 +66,10 @@ MonoBehaviour:
   gridPosition:
     x: 0
     y: 0
+  boundingDimensions: {x: 2, y: 2}
+  boundingOrigin: {x: -0.125, y: -0.125}
   bakeOnStart: 1
   rebake: 0
-  dimensions: {x: 2, y: 2}
-  transformOrigin: {x: -0.125, y: -0.125}
 --- !u!114 &7433279506835561993
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -109,7 +109,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3145572321148501994}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: UnitRallyWaypoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -139,7 +139,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3145572321885868593}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: UnitSpawnPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -170,6 +170,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 5921e45280d702e44ad0fb582ac16d26, type: 3}
       propertyPath: m_Name
       value: Tower_A
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 5921e45280d702e44ad0fb582ac16d26, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 5921e45280d702e44ad0fb582ac16d26, type: 3}
       propertyPath: m_IsActive
@@ -256,6 +260,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tower_A_0
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: ce8b6056e281f7c40b4f6f25ef610477, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: ce8b6056e281f7c40b4f6f25ef610477, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -324,6 +332,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 240875b6dee8d804883a4a485f4ed145, type: 3}
       propertyPath: m_Name
       value: Tower_A_1
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 240875b6dee8d804883a4a485f4ed145, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 240875b6dee8d804883a4a485f4ed145, type: 3}
       propertyPath: m_IsActive

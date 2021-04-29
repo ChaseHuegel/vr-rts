@@ -34,6 +34,7 @@ public class World : Singleton<World>
     public static Cell at(int x, int y) { return Grid.at(x, y); }
 
     //  Convert from grid units to transform units
+    public static Vector3 ToTransformSpace(Coord2D coord) { return ToTransformSpace(new Vector3(coord.x, 0, coord.y)); }
     public static Vector3 ToTransformSpace(Vector3 pos)
     {
         Vector3 result = (pos + GetOrigin()) * GetUnit() + GetGridOffset() + GetUnitOffset();

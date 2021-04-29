@@ -10,8 +10,19 @@ public class Cell : IHeapItem<Cell>
     public Grid grid = null;
     public int x, y;
     public byte weight = 0;
-    public bool occupied = false;
     public bool passable = true;
+
+    private int occupiedCount = 0;
+    public bool occupied
+    {
+        get { return occupiedCount > 0; }
+        set {
+            if (value == true)
+                occupiedCount++;
+            else
+                occupiedCount--;
+        }
+    }
 
     //  Pathfinding info
     //  TODO: try to pull this out of the cell class

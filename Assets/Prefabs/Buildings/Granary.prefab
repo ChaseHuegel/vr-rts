@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4114195085777081166}
   - component: {fileID: 1021321901423112567}
   - component: {fileID: 6808646793922926954}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Granary
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -64,10 +64,10 @@ MonoBehaviour:
   gridPosition:
     x: 0
     y: 0
+  boundingDimensions: {x: 2, y: 2}
+  boundingOrigin: {x: -0.125, y: -0.125}
   bakeOnStart: 1
   rebake: 0
-  dimensions: {x: 2, y: 2}
-  transformOrigin: {x: -0.125, y: -0.125}
 --- !u!114 &6808646793922926954
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -108,6 +108,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 25ef05172876b8742b290e10ba4393cf, type: 3}
       propertyPath: m_Name
       value: Granary_1
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 25ef05172876b8742b290e10ba4393cf, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 25ef05172876b8742b290e10ba4393cf, type: 3}
       propertyPath: m_IsActive
@@ -182,6 +186,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Granary_0
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: b18013bceef29894d95932ffbdf069c0, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: b18013bceef29894d95932ffbdf069c0, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -250,6 +258,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: aec20226064bbcc4d850e8da90e49a4b, type: 3}
       propertyPath: m_Name
       value: Granary
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: aec20226064bbcc4d850e8da90e49a4b, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: aec20226064bbcc4d850e8da90e49a4b, type: 3}
       propertyPath: m_IsActive

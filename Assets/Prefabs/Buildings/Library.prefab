@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2978058604722818708}
   - component: {fileID: -5228332635521230738}
   - component: {fileID: 274094332085062762}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Library
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -64,10 +64,10 @@ MonoBehaviour:
   gridPosition:
     x: 0
     y: 0
+  boundingDimensions: {x: 2, y: 2}
+  boundingOrigin: {x: -0.125, y: -0.125}
   bakeOnStart: 1
   rebake: 0
-  dimensions: {x: 2, y: 2}
-  transformOrigin: {x: -0.125, y: -0.125}
 --- !u!114 &274094332085062762
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -108,6 +108,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 2969cfa0fe7f35d4c94a50c9fb1d9f8c, type: 3}
       propertyPath: m_Name
       value: Library_1
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 2969cfa0fe7f35d4c94a50c9fb1d9f8c, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 2969cfa0fe7f35d4c94a50c9fb1d9f8c, type: 3}
       propertyPath: m_IsActive
@@ -183,6 +187,10 @@ PrefabInstance:
       value: Library
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: a219455911288e84da9a9c5f55fd95c6, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: a219455911288e84da9a9c5f55fd95c6, type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
@@ -254,6 +262,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 3fae66635eefa35409bdeb9bcad140ff, type: 3}
       propertyPath: m_Name
       value: Library_0
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 3fae66635eefa35409bdeb9bcad140ff, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 3fae66635eefa35409bdeb9bcad140ff, type: 3}
       propertyPath: m_IsActive

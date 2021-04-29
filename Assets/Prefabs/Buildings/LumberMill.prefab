@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5514326502535893717}
   - component: {fileID: -816816719307291597}
   - component: {fileID: 6101814930517581062}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: LumberMill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -64,10 +64,10 @@ MonoBehaviour:
   gridPosition:
     x: 0
     y: 0
+  boundingDimensions: {x: 2, y: 2}
+  boundingOrigin: {x: -0.125, y: -0.125}
   bakeOnStart: 1
   rebake: 0
-  dimensions: {x: 2, y: 2}
-  transformOrigin: {x: -0.125, y: -0.125}
 --- !u!114 &6101814930517581062
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -108,6 +108,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: c650d1b47e984954fa4415d5b8fba967, type: 3}
       propertyPath: m_Name
       value: LumberMill_1
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: c650d1b47e984954fa4415d5b8fba967, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: c650d1b47e984954fa4415d5b8fba967, type: 3}
       propertyPath: m_IsActive
@@ -183,6 +187,10 @@ PrefabInstance:
       value: LumberMill
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 06905b5e993435c4e9526f63c49622e3, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 06905b5e993435c4e9526f63c49622e3, type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
@@ -254,6 +262,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 68dc2d4464799a947be0ba3c5b424331, type: 3}
       propertyPath: m_Name
       value: LumberMill_0
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 68dc2d4464799a947be0ba3c5b424331, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 68dc2d4464799a947be0ba3c5b424331, type: 3}
       propertyPath: m_RootOrder

@@ -160,8 +160,10 @@ public class VillagerActor : Actor
                 {
                     Body body = targetNode.GetComponent<Body>();
 
+                    Debug.DrawRay(World.ToTransformSpace(body.gridPosition), Vector3.up, Color.red, 0.5f);
+
                     //  Reached our target
-                    if (Util.DistanceUnsquared(gridPosition, body.gridPosition) <= 1.5f)
+                    if (Util.DistanceUnsquared(gridPosition, body.gridPosition) <= body.GetCellVolumeSqr())
                     {
                         GetComponentInChildren<Animator>().Play("Attack", -1, 0f);
 
@@ -179,7 +181,6 @@ public class VillagerActor : Actor
                             DisplayCargo(true);
                             // Debug.Log(gameObject.name + " is done gathering and is now transporting " + currentCargo + " " + currentGatheringResourceType + ".");
                         }
-                        Debug.DrawRay(targetNode.transform.position, Vector3.up, Color.red, 0.5f);
                     }
                     else
                     {
@@ -209,7 +210,9 @@ public class VillagerActor : Actor
                 {
                     Body body = targetBuilding.GetComponent<Body>();
 
-                    if (Util.DistanceUnsquared(gridPosition, body.gridPosition) <= 1.5f)
+                    Debug.DrawRay(World.ToTransformSpace(body.gridPosition), Vector3.up, Color.red, 0.5f);
+
+                    if (Util.DistanceUnsquared(gridPosition, body.gridPosition) <= body.GetCellVolumeSqr())
                     {
                         //  Reached our target
                         // Debug.Log("Dropped off " + currentCargo + " " + currentGatheringResourceType + ".");
@@ -217,8 +220,6 @@ public class VillagerActor : Actor
                         currentCargo = 0;
                         DisplayCargo(false);
                         currentState = VillagerActorState.Gathering;
-                        if (targetNode != null)
-                            Debug.DrawRay(targetNode.transform.position, Vector3.up, Color.red, 0.5f);
                     }
                     else
                     {
