@@ -54,8 +54,8 @@ public class VillagerActor : Actor
         {
             case ResourceGatheringType.Grain:
             {
-                handGrainDisplayObject.SetActive(true);
-                currentHandDisplayObject = handGrainDisplayObject;
+                //handGrainDisplayObject.SetActive(true);
+                currentHandDisplayObject = null;// handGrainDisplayObject;
                 break;
             }
 
