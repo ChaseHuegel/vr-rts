@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1653143408084180964}
   - component: {fileID: 400969216428414519}
   - component: {fileID: 9063403347221776227}
-  - component: {fileID: 2455242581072729435}
+  - component: {fileID: 3551840650341287066}
   m_Layer: 11
   m_Name: Wood_Node_Medium_Variant_02
   m_TagString: Untagged
@@ -70,8 +70,8 @@ MonoBehaviour:
   boundingOrigin: {x: 0, y: 0}
   bakeOnStart: 1
   rebake: 0
---- !u!136 &2455242581072729435
-CapsuleCollider:
+--- !u!65 &3551840650341287066
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -80,10 +80,9 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.2315526
-  m_Height: 0.7371694
-  m_Direction: 1
-  m_Center: {x: 0.04717493, y: 0.3650425, z: 0}
+  serializedVersion: 2
+  m_Size: {x: 0.2392788, y: 0.6639143, z: 0.424428}
+  m_Center: {x: 0.0281744, y: 0.3350795, z: 0.0060372353}
 --- !u!1001 &3953841140372554646
 PrefabInstance:
   m_ObjectHideFlags: 0
