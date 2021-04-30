@@ -167,7 +167,7 @@ public class VillagerActor : Actor
                     if (Util.DistanceUnsquared(gridPosition, body.gridPosition) <= body.GetCellVolumeSqr())
                     {
                         GetComponentInChildren<Animator>().Play("Attack", -1, 0f);
-
+                        LookAt(body.gridPosition.x, body.gridPosition.y);
                         if (currentCargo < carryingCapacity)
                         {
                             int amountToRemove = (int)(gatheringCapacityPerSecond / (60 / Constants.ACTOR_TICK_RATE));
@@ -253,6 +253,40 @@ public class VillagerActor : Actor
 
             default:
                 break;
+        }
+    }
+
+    public void SetUnitType(RTSUnitType type)
+    {
+        switch ( type )
+        {
+            case RTSUnitType.Builder:
+                {
+                    currentState = VillagerActorState.Building;
+                    currentGatheringResourceType = ResourceGatheringType.None;
+                    break;
+                }
+
+            case RTSUnitType.Farmer:
+                {
+                    currentState = VillagerActorState.Gathering;
+                    currentGatheringResourceType = ResourceGatheringType.Grain;
+                    break;
+                }
+
+            case RTSUnitType.Lumberjack:
+            {
+                currentState = VillagerActorState.Gathering;
+                currentGatheringResourceType = ResourceGatheringType.Wood;
+                break;
+            }
+
+            case RTSUnitType.Miner:
+            {
+                currentState = VillagerActorState.Gathering;
+                currentGatheringResourceType = ResourceGatheringType.Gold;
+                break;
+            }
         }
     }
 
