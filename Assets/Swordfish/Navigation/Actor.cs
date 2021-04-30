@@ -7,15 +7,16 @@ namespace Swordfish.Navigation
 
 public class Actor : Body
 {
-    [SerializeField] protected float movementInterpolation = 1f;
+    public float movementSpeed = 1f;
+    private float movementInterpolation;
 
     public List<Cell> currentPath = null;
     private byte pathWaitTries = 0;
     private byte pathRepathTries = 0;
+    private bool frozen = false;
 
     private byte pathTimer = 0;
     private byte tickTimer = 0;
-    private bool frozen = false;
 
     public bool HasValidPath() { return (currentPath != null && currentPath.Count > 0); }
 
@@ -24,6 +25,13 @@ public class Actor : Body
     public void ToggleFreeze()
     {
         if (frozen = !frozen == false) UpdatePosition();
+    }
+
+    public override void Initialize()
+    {
+        base.Initialize();
+
+        movementInterpolation = 1f - (Constants.ACTOR_PATH_RATE / 60f);
     }
 
 
@@ -90,68 +98,88 @@ public class Actor : Body
             Tick();
         }
 
-        pathTimer++;
-        if (pathTimer >= Constants.ACTOR_PATH_RATE)
+        //  Don't pathfind while frozen
+        if (frozen) return;
+
+        Vector3 gridTransformPos = World.ToTransformSpace(gridPosition.x, transform.position.y, gridPosition.y);
+        bool reachedTarget = true;
+
+        //  Interpolate movement
+        if (transform.position != gridTransformPos)
         {
-            pathTimer = 0;
+            transform.position = Vector3.MoveTowards
+            (
+                transform.position,
+                gridTransformPos,
+                Time.fixedDeltaTime * movementInterpolation * movementSpeed
+            );
 
-            //  If we have a valid path, move along it
-            if (HasValidPath() && !frozen)
-            {
-                LookAt(currentPath[0].x, currentPath[0].y );
-
-                // Need to be watching the actors position in world space and update it's
-                // grid position when it reaches a grid boundary so we can control the
-                // movement speed of the actor properly.
-                // Right now, you can turn the interpolation really low and the actor will
-                // reach it's destination and start gathering in grid space while still
-                // several grid spaces away from the target node in world space.
-
-                //  We can pass thru actors if the path ahead is clear
-                bool canPassThruActors = currentPath.Count > 2 ? !World.at(currentPath[1].x, currentPath[1].y).IsBlocked() : false;
-
-                //  Attempt to move to the next point
-                if (SetPosition( currentPath[0].x, currentPath[0].y, canPassThruActors ))
-                {
-                    currentPath.RemoveAt(0);
-
-                    ResetPathingBrain();
-                }
-                //  Unable to reach the next point
-                else
-                {
-                    pathWaitTries++;
-
-                    // Wait some time to see if path clears
-                    if (pathWaitTries > Constants.PATH_WAIT_TRIES)
-                    {
-                        //  Path isn't clearing, try repathing
-                        if (pathRepathTries < Constants.PATH_REPATH_TRIES)
-                            GotoForced(
-                                currentPath[currentPath.Count - 1].x + Random.Range(-1, 1),
-                                currentPath[currentPath.Count - 1].y + Random.Range(-1, 1),
-                                false    //  false, dont ignore actors. Stuck and may need to path around them
-                                );
-                        //  Give up after repathing a number of times
-                        else
-                        {
-                            ResetPathing();
-                        }
-
-                        pathRepathTries++;
-                    }
-                }
-
-                //  Don't hang onto an empty path. Save a little memory
-                if (currentPath != null && currentPath.Count == 0)
-                    ResetPathing();
-            }
+            if (World.ToWorldCoord(transform.position) != gridPosition)
+                reachedTarget = false;
         }
 
-        //  Interpolate movement as long as we're not frozen
-        if (!frozen && transform.position.x != gridPosition.x && transform.position.z != gridPosition.y)
+        pathTimer++;
+        if (pathTimer >= Constants.ACTOR_PATH_RATE)
+            pathTimer = 0;  //  Path tick
+
+        //  If we have a valid path, move along it
+        if (HasValidPath())
         {
-            transform.position = Vector3.Lerp(transform.position, World.ToTransformSpace(new Vector3(gridPosition.x, transform.position.y, gridPosition.y)), Time.fixedDeltaTime * movementInterpolation);
+            // Need to be watching the actors position in world space and update it's
+            // grid position when it reaches a grid boundary so we can control the
+            // movement speed of the actor properly.
+            // Right now, you can turn the interpolation really low and the actor will
+            // reach it's destination and start gathering in grid space while still
+            // several grid spaces away from the target node in world space.
+
+            //  We can pass thru actors if the path ahead is clear
+            bool canPassThruActors = currentPath.Count > 2 ? !World.at(currentPath[1].x, currentPath[1].y).IsBlocked() : false;
+
+            //  Attempt to move to the next point
+            if ( CanSetPosition(currentPath[0].x, currentPath[0].y, canPassThruActors) )
+            {
+                //  If the path is clear, reset pathing logic
+                ResetPathingBrain();
+
+                //  Only move if we finished interpolating
+                if (reachedTarget)
+                {
+                    //  Look in the direction we're going
+                    LookAt(currentPath[0].x, currentPath[0].y);
+                    SetPositionUnsafe(currentPath[0].x, currentPath[0].y);
+                    currentPath.RemoveAt(0);
+                }
+            }
+            //  Unable to reach the next point, handle pathing logic on tick
+            else if (pathTimer == 0)
+            {
+                // Wait some time to see if path clears
+                if (pathWaitTries > Constants.PATH_WAIT_TRIES)
+                {
+                    //  Path hasn't cleared, try repathing
+                    if (pathRepathTries < Constants.PATH_REPATH_TRIES)
+                    {
+                        GotoForced(
+                            currentPath[currentPath.Count - 1].x + Random.Range(-1, 1),
+                            currentPath[currentPath.Count - 1].y + Random.Range(-1, 1),
+                            false    //  false, dont ignore actors. Stuck and may need to path around them
+                            );
+                    }
+                    //  Unable to repath, resort to giving up
+                    else
+                    {
+                        ResetPathing();
+                    }
+
+                    pathRepathTries++;
+                }
+
+                pathWaitTries++;
+            }
+
+            //  Don't hang onto an empty path. Save a little memory
+            if (currentPath != null && currentPath.Count == 0)
+                ResetPathing();
         }
     }
 
