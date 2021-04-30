@@ -27,22 +27,23 @@ public class TerrainBuilding : MonoBehaviour
     public GameObject buildingHealth50PercentEffect;
     public GameObject buildingHealth25PercentEffect;
     public GameObject buildingDestroyedEffect;
-    
-    [Header( "Unit Stuff" )]
-    public GameObject unitSpawnPoint;
-    public GameObject unitRallyWaypoint; 
 
-    // Meant to be used so units pick a random spot within the radius to 
-    // go to so they don't fight over a single point.       
+    [Header( "Unit Stuff" )]
+    public ResourceGatheringType dropoffType = ResourceGatheringType.None;
+    public GameObject unitSpawnPoint;
+    public GameObject unitRallyWaypoint;
+
+    // Meant to be used so units pick a random spot within the radius to
+    // go to so they don't fight over a single point.
     public float unitRallyWaypointRadius;
     public List<RTSUnitType> allowedUnitCreationList;
-    
+
     public PlayerManager playerManager;
 
     private float timeElapsed = 0.0f;
-    private bool constructionCompleted = false;   
+    private bool constructionCompleted = false;
     private float buildingContructionTimeTotal;
-    
+
     private Queue<RTSUnitTypeData> unitSpawnQueue = new Queue<RTSUnitTypeData>();
 
     public UnityEngine.UI.Text queueStatusText;
@@ -50,12 +51,12 @@ public class TerrainBuilding : MonoBehaviour
     public UnityEngine.UI.Image progressImage;
 
     public UnityEngine.UI.Image[] QueueImageObjects;
-    
+
     //public Sprite emptyQueueSlotImage;
 
-    GameObject currentPrefabUnitToSpawn;    
+    GameObject currentPrefabUnitToSpawn;
     public float GetTimeElapsed { get { return timeElapsed; } }
-    
+
     // TODO: Add ability for other objects to subscribe to events on
     // buildings for informational displays.
     public void QueueUnit(RTSUnitType unitTypeToQueue)
@@ -65,7 +66,7 @@ public class TerrainBuilding : MonoBehaviour
         if (constructionCompleted && currentHealth >= maxHealth)
         {
             if (unitSpawnQueue.Count < maxUnitQueueSize)
-            {    
+            {
                 unitSpawnQueue.Enqueue(playerManager.FindUnitData(unitTypeToQueue));
                 Debug.Log("Queued " + unitTypeToQueue.ToString() + " (" + unitSpawnQueue.Count + ")");
             }
@@ -80,10 +81,29 @@ public class TerrainBuilding : MonoBehaviour
 
     // Start is called before the first frame update
     void Start()
-    {        
+    {
         playerManager = Player.instance.GetComponent<PlayerManager>();
         currentHealth = maxHealth;
         buildingContructionTimeTotal = stage0Duration + stage1Duration;
+
+        switch (dropoffType)
+        {
+            case ResourceGatheringType.Wood:
+                ResourceManager.GetLumberMills().Add(this);
+                break;
+
+            case ResourceGatheringType.Gold:
+                ResourceManager.GetTownHalls().Add(this);
+                break;
+
+            case ResourceGatheringType.Ore:
+                ResourceManager.GetTownHalls().Add(this);
+                break;
+
+            case ResourceGatheringType.Grain:
+                ResourceManager.GetGranaries().Add(this);
+                break;
+        }
     }
 
     void OnTriggerEnter(Collider other)
@@ -119,7 +139,7 @@ public class TerrainBuilding : MonoBehaviour
                     timeElapsed = 0.0f;
                     unitSpawnQueue.Dequeue();
                     Debug.Log("Removed unit from queue " + unitSpawnQueue.Count + " left in queue.");
-                    progressImage.fillAmount = 0; 
+                    progressImage.fillAmount = 0;
                 }
 
                 foreach(UnityEngine.UI.Image image in QueueImageObjects)
@@ -138,19 +158,19 @@ public class TerrainBuilding : MonoBehaviour
         else
         {
             timeElapsed += Time.deltaTime;
-            
+
             if (timeElapsed >= buildingContructionTimeTotal)
             {
                 buildingStage1.SetActive(false);
                 buildingStageFinal.SetActive(true);
-                constructionCompleted = true;      
-                timeElapsed = 0.0f;                           
+                constructionCompleted = true;
+                timeElapsed = 0.0f;
             }
             else if (timeElapsed >= stage0Duration)
             {
-                buildingStage0.SetActive(false);  
-                buildingStage1.SetActive(true);   
-                                        
+                buildingStage0.SetActive(false);
+                buildingStage1.SetActive(true);
+
             }
         }
     }
@@ -163,9 +183,9 @@ public class TerrainBuilding : MonoBehaviour
             Debug.Log("Removed unit from queue " + unitSpawnQueue.Count + " left in queue.");
         }
     }
-    
+
     private void SpawnUnit()
-    {   
+    {
         GameObject prefabToSpawn = unitSpawnQueue.Peek().prefab;
 
         if (prefabToSpawn)
@@ -173,14 +193,14 @@ public class TerrainBuilding : MonoBehaviour
             GameObject unit = GameObject.Instantiate<GameObject>(unitSpawnQueue.Peek().prefab);
             unit.transform.position = unitSpawnPoint.transform.position;
             Debug.Log("Spawned " + unit.name + ".");
-        }      
+        }
         else
             Debug.Log ("Spawn unit failed. Missing prefabToSpawn");
     }
 
-    
+
     // private IEnumerator SpawnUnit()
-    // {            
+    // {
     //     GameObject planting = GameObject.Instantiate<GameObject>(currentPrefabUnitToSpawn);
     //     planting.transform.position = this.transform.position;
     //     planting.transform.rotation = Quaternion.Euler(0, Random.value * 360f, 0);
