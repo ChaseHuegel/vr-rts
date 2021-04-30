@@ -117,9 +117,9 @@ public class VillagerActor : Actor
     {
         isHeld = false;
         ResetPathing();
-        //AudioSource audio = gameObject.GetComponent<AudioSource>();
+        AudioSource audio = gameObject.GetComponent<AudioSource>();
         // No stopping the audio!
-        //audio.Stop();
+        audio.Stop();
         //this.enabled = false;
     }
 

@@ -13,6 +13,7 @@ public class Actor : Body
     private byte pathWaitTries = 0;
     private byte pathRepathTries = 0;
 
+    private byte pathTimer = 0;
     private byte tickTimer = 0;
     private bool frozen = false;
 
@@ -87,6 +88,12 @@ public class Actor : Body
         {
             tickTimer = 0;
             Tick();
+        }
+
+        pathTimer++;
+        if (pathTimer >= Constants.ACTOR_PATH_RATE)
+        {
+            pathTimer = 0;
 
             //  If we have a valid path, move along it
             if (HasValidPath() && !frozen)
