@@ -47,6 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73818678be48477418bdf0c87156e9c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  type: 2
   resourceName: Wood
   maxResourceAmount: 2500
   destroyWhenResourceDepleted: 1
@@ -66,9 +67,9 @@ MonoBehaviour:
     x: 0
     y: 0
   boundingDimensions: {x: 1, y: 1}
+  boundingOrigin: {x: 0, y: 0}
   bakeOnStart: 1
   rebake: 0
-  transformOrigin: {x: 0, y: 0}
 --- !u!136 &6963251281643012691
 CapsuleCollider:
   m_ObjectHideFlags: 0

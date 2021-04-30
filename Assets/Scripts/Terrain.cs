@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Swordfish.Navigation;
 
 namespace Swordfish
 {
@@ -21,11 +22,14 @@ public class Terrain : MonoBehaviour
 
     public string seed = "";
 
+    public Texture2D mask = null;
+
     private Mesh mesh = null;
     private MeshFilter meshFilter = null;
     private MeshCollider meshCollider = null;
     private float textureUnits = 0.0f;
-    private Coord2D[] tileMap = new Coord2D[0];
+    private Vector3[] tileMap = new Vector3[0];
+    private float[,] heightMap = new float[0,0];
 
     private FastNoise baseNoise;
     private FastNoise carverNoise;
@@ -71,6 +75,17 @@ public class Terrain : MonoBehaviour
         }
     }
 
+    public float GetHeightOnGrid(int x, int y)
+    {
+        int padding = (int)((Resolution - World.GetLength()) * 0.5f);
+        return heightMap[x + padding, y + padding];
+    }
+
+    public float GetHeight(int x, int y)
+    {
+        return heightMap[x, y];
+    }
+
     public float SampleHeight(float x, float y)
     {
         x *= zoom;
@@ -100,14 +115,20 @@ public class Terrain : MonoBehaviour
         meshCollider = this.GetComponent<MeshCollider>();
 
         textureUnits = 0.0625f;
-        tileMap = new Coord2D[Resolution * Resolution];
-        for (int i = 0; i < tileMap.Length; i++) { tileMap[i] = new Coord2D(0, 0); }
+        tileMap = new Vector3[Resolution * Resolution];
+        heightMap = new float[Resolution, Resolution];
+        for (int i = 0; i < tileMap.Length; i++) { tileMap[i] = new Vector3(0, 0); }
 
         int halfRes = Mathf.RoundToInt(Resolution / 2);
 
         //  Generate the base plane
         mesh = new Mesh();
         mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;    //  Allows up to 4b verts
+
+
+        Color[] maskPixels = null;
+        if (mask != null)
+            maskPixels = mask.GetPixels();
 
         int vertexIndex = 0;
         List<Vector3> vertices = new List<Vector3>();
@@ -140,11 +161,20 @@ public class Terrain : MonoBehaviour
                 y3 = SampleHeight(scaleX + 1, scaleZ);
                 y4 = SampleHeight(scaleX, scaleZ);
 
+                if (mask != null)
+                {
+                    y1 *= maskPixels[vertexPixel1].grayscale;
+                    y2 *= maskPixels[vertexPixel2].grayscale;
+                    y3 *= maskPixels[vertexPixel3].grayscale;
+                    y4 *= maskPixels[vertexPixel4].grayscale;
+                }
+
                 vertexIndex = vertices.Count;
-                vertices.Add( new Vector3(x * Scale, y1, (z + 1) * Scale) - (Vector3.one * halfRes * Scale) );
-                vertices.Add( new Vector3((x + 1) * Scale, y2, (z + 1) * Scale) - (Vector3.one * halfRes * Scale) );
-                vertices.Add( new Vector3((x + 1) * Scale, y3, z * Scale) - (Vector3.one * halfRes * Scale) );
-                vertices.Add( new Vector3(x * Scale, y4, z * Scale) - (Vector3.one * halfRes * Scale) );
+                Vector3 offset = new Vector3(1f, 0f, 1f);
+                vertices.Add( new Vector3(x * Scale, y1, (z + 1) * Scale) - (offset * halfRes * Scale) );
+                vertices.Add( new Vector3((x + 1) * Scale, y2, (z + 1) * Scale) - (offset * halfRes * Scale) );
+                vertices.Add( new Vector3((x + 1) * Scale, y3, z * Scale) - (offset * halfRes * Scale) );
+                vertices.Add( new Vector3(x * Scale, y4, z * Scale) - (offset * halfRes * Scale) );
 
                 //  Triangle 1
                 triangles.Add(vertexIndex);
@@ -198,6 +228,8 @@ public class Terrain : MonoBehaviour
                     tileTexIndex = 1;
                 }
 
+                heightMap[x, z] = heightAverage * transform.localScale.y;
+
                 colors.Add(
                     Color.Lerp(minShade, maxShade, steepness) * Color.Lerp(minShade, baseShade, shading)
                     );
@@ -215,17 +247,6 @@ public class Terrain : MonoBehaviour
                 uvs.Add( new Vector3(1, 1, tileTexIndex) );
                 uvs.Add( new Vector3(1, 0, tileTexIndex) );
                 uvs.Add( new Vector3(0, 0, tileTexIndex) );
-
-                // uvs2.Add( new Vector2(tileTexIndex, 0) );
-                // uvs2.Add( new Vector2(tileTexIndex, 0) );
-                // uvs2.Add( new Vector2(tileTexIndex, 0) );
-                // uvs2.Add( new Vector2(tileTexIndex, 0) );
-
-                // if (populate)
-                // {
-                //     if ( baseNoise.GetCubicFractal(scaleX, scaleZ + 1) > 0 && random.NextDouble() <= 0.03d ) Instantiate(treePrefab, new Vector3(x * Scale, heightAverage, z * Scale), Quaternion.Euler(0, (float)random.NextDouble() * 360, 0));
-                //     else if ( random.NextDouble() <= 0.005d ) Instantiate(rockPrefab, new Vector3(x * Scale, heightAverage, z * Scale), Quaternion.Euler(0, (float)random.NextDouble() * 360, 0));
-                // }
             }
         }
 
@@ -310,4 +331,4 @@ public class Terrain : MonoBehaviour
 
 }   //  Class
 
-}   //  Namespace
+}

@@ -35,6 +35,7 @@ public class World : Singleton<World>
     public static Cell at(int x, int y) { return Grid.at(x, y); }
 
     //  Convert from grid units to transform units
+    public static Vector3 ToTransformSpace(float x, float y, float z) { return ToTransformSpace(new Vector3(x, y, z)); }
     public static Vector3 ToTransformSpace(int x, int y, int z) { return ToTransformSpace(new Vector3(x, y, z)); }
     public static Vector3 ToTransformSpace(int x, int y) { return ToTransformSpace(new Vector3(x, 0, y)); }
     public static Vector3 ToTransformSpace(Coord2D coord) { return ToTransformSpace(new Vector3(coord.x, 0, coord.y)); }

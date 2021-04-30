@@ -249,12 +249,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   readyForRelight: 0
-  Resolution: 160
+  Resolution: 300
   Scale: 0.25
-  MaxHeight: 24
-  HeightFactor: 2.5
-  zoom: 0.2
+  MaxHeight: 80
+  HeightFactor: 1.5
+  zoom: 1
   seed: test
+  mask: {fileID: 2800000, guid: dc530a322463aa248a72edc816a71831, type: 3}
 --- !u!64 &563386967
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -344,6 +345,7 @@ GameObject:
   - component: {fileID: 1028106421}
   - component: {fileID: 1028106420}
   - component: {fileID: 1028106419}
+  - component: {fileID: 1028106423}
   m_Layer: 0
   m_Name: _Manager
   m_TagString: Untagged
@@ -408,6 +410,25 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1028106423
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1028106418}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d94e385bea0e4b841936d0d18d145e33, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  trees: []
+  gold: []
+  ore: []
+  grain: []
+  lumberMills: []
+  townHalls: []
+  granaries: []
 --- !u!1 &2001649791
 GameObject:
   m_ObjectHideFlags: 0
@@ -491,6 +512,85 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &2081804621
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1069823527325677058, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: m_Name
+      value: Villager
+      objectReference: {fileID: 0}
+    - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -3.0233946
+      objectReference: {fileID: 0}
+    - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 6.067152
+      objectReference: {fileID: 0}
+    - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9016037743184735990, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: m_IsKinematic
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9016037743184735990, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: m_CollisionDetection
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 2e26cba339b071948830d584eca2edda, type: 3}
 --- !u!1 &2095228569
 GameObject:
   m_ObjectHideFlags: 0
@@ -528,6 +628,7 @@ MonoBehaviour:
   rockAbundance: 10
   rockCoverage: -0.3
   rockDensity: 0
+  terrain: {fileID: 563386966}
 --- !u!4 &2095228571
 Transform:
   m_ObjectHideFlags: 0

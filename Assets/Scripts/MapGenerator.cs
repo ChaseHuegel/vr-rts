@@ -19,6 +19,8 @@ public class MapGenerator : MonoBehaviour
     [Range(-1f, 1f)] public float rockCoverage = 0f;
     [Range(-1f, 1f)] public float rockDensity = 0f;
 
+    public Swordfish.Terrain terrain;
+
     private FastNoise forestNoise;
     private FastNoise rockNoise;
 
@@ -56,16 +58,18 @@ public class MapGenerator : MonoBehaviour
         for (int x = 0; x < World.GetLength(); x++)
         for (int y = 0; y < World.GetLength(); y++)
         {
+            float elevation = terrain.GetHeightOnGrid(x, y);
+
             if (rockNoise.GetNoise(x * rockAbundance, y * rockAbundance) < rockCoverage && rockNoise.GetWhiteNoise(x, y) < rockDensity)
             {
-                Instantiate(GameMaster.GetNode("gold").GetVariant(), World.ToTransformSpace(x, y), Quaternion.identity, this.transform);
+                Instantiate(GameMaster.GetNode("gold").GetVariant(), World.ToTransformSpace(x, elevation, y), Quaternion.identity, this.transform);
 
                 continue;
             }
 
             if (forestNoise.GetNoise(x * forestAbundance, y * forestAbundance) < forestCoverage && forestNoise.GetWhiteNoise(x, y) < forestDensity)
             {
-                Instantiate(GameMaster.GetNode("tree").GetVariant(), World.ToTransformSpace(x, y), Quaternion.identity, this.transform);
+                Instantiate(GameMaster.GetNode("tree").GetVariant(), World.ToTransformSpace(x, elevation, y), Quaternion.identity, this.transform);
 
                 continue;
             }
