@@ -11,9 +11,9 @@ public class PlayerManager : MonoBehaviour
 
     public WristDisplay WristDisplay;
 
-    int woodCollected;
-    int goldCollected;
-    int grainCollected;
+    public int woodCollected;
+    public int goldCollected;
+    public int grainCollected;
 
     private TeleportArc teleportArc;
 
@@ -21,10 +21,7 @@ public class PlayerManager : MonoBehaviour
 
     List<RTSUnitTypeData> rtsUnitDataList = new List<RTSUnitTypeData>();
     
-    public GameObject builderPrefab;
-    public GameObject minerPrefab;
-    public GameObject farmerPrefab;
-    public GameObject lumberjackPrefab;
+    public GameObject villagerPrefab;
     public Sprite builderWorldButtonImage;
     public Sprite minerWorldButtonImage;
     public Sprite farmerWorldButtonImage;
@@ -53,10 +50,10 @@ public class PlayerManager : MonoBehaviour
 
         rtsUnitDataList = new List<RTSUnitTypeData>();
 
-        RTSUnitTypeData builderData = new RTSUnitTypeData(RTSUnitType.Builder, 5.0f, builderPrefab, builderWorldButtonImage);
-        RTSUnitTypeData farmerData = new RTSUnitTypeData(RTSUnitType.Farmer, 5.0f, farmerPrefab, farmerWorldButtonImage);
-        RTSUnitTypeData lumberjackData = new RTSUnitTypeData(RTSUnitType.Lumberjack, 5.0f, lumberjackPrefab, lumberjackWorldButtonImage);
-        RTSUnitTypeData minerData = new RTSUnitTypeData(RTSUnitType.Miner, 5.0f, minerPrefab, minerWorldButtonImage);
+        RTSUnitTypeData builderData = new RTSUnitTypeData(RTSUnitType.Builder, 5.0f, villagerPrefab, builderWorldButtonImage);
+        RTSUnitTypeData farmerData = new RTSUnitTypeData(RTSUnitType.Farmer, 5.0f, villagerPrefab, farmerWorldButtonImage);
+        RTSUnitTypeData lumberjackData = new RTSUnitTypeData(RTSUnitType.Lumberjack, 5.0f, villagerPrefab, lumberjackWorldButtonImage);
+        RTSUnitTypeData minerData = new RTSUnitTypeData(RTSUnitType.Miner, 5.0f, villagerPrefab, minerWorldButtonImage);
         
         rtsUnitDataList.Add(builderData);
         rtsUnitDataList.Add(farmerData);

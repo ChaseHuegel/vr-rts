@@ -117,6 +117,7 @@ public class VillagerActor : Actor
     {
         isHeld = false;
         ResetPathing();
+        Unfreeze();
         //AudioSource audio = gameObject.GetComponent<AudioSource>();
         // No stopping the audio!
         //audio.Stop();
@@ -167,7 +168,7 @@ public class VillagerActor : Actor
                     if (Util.DistanceUnsquared(gridPosition, body.gridPosition) <= body.GetCellVolumeSqr())
                     {
                         GetComponentInChildren<Animator>().Play("Attack", -1, 0f);
-
+                        LookAt(body.gridPosition.x, body.gridPosition.y);
                         if (currentCargo < carryingCapacity)
                         {
                             int amountToRemove = (int)(gatheringCapacityPerSecond / (60 / Constants.ACTOR_TICK_RATE));
@@ -212,7 +213,7 @@ public class VillagerActor : Actor
                     Body body = targetBuilding.GetComponent<Body>();
 
                     Debug.DrawRay(World.ToTransformSpace(body.gridPosition), Vector3.up, Color.red, 0.5f);
-
+                    
                     if (Util.DistanceUnsquared(gridPosition, body.gridPosition) <= body.GetCellVolumeSqr())
                     {
                         //  Reached our target
@@ -253,6 +254,40 @@ public class VillagerActor : Actor
 
             default:
                 break;
+        }
+    }
+
+    public void SetUnitType(RTSUnitType type)
+    {
+        switch ( type )
+        {
+            case RTSUnitType.Builder:
+                {
+                    currentState = VillagerActorState.Building;
+                    currentGatheringResourceType = ResourceGatheringType.None;
+                    break;
+                }
+
+            case RTSUnitType.Farmer:
+                {
+                    currentState = VillagerActorState.Gathering;
+                    currentGatheringResourceType = ResourceGatheringType.Grain;
+                    break;
+                }
+
+            case RTSUnitType.Lumberjack:
+            {
+                currentState = VillagerActorState.Gathering;
+                currentGatheringResourceType = ResourceGatheringType.Wood;
+                break;
+            }
+
+            case RTSUnitType.Miner:
+            {
+                currentState = VillagerActorState.Gathering;
+                currentGatheringResourceType = ResourceGatheringType.Gold;
+                break;
+            }
         }
     }
 
