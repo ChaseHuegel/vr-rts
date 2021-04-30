@@ -13,8 +13,10 @@ public class VillagerActor : Actor
     [SerializeField] protected int cellSearchDistance = 20;
     [SerializeField] protected ResourceNode targetNode;
     [SerializeField] protected TerrainBuilding targetBuilding;
+    [SerializeField] protected TerrainBuilding targetDamaged;
     public int carryingCapacity = 100;
     public float gatheringCapacityPerSecond = 10;
+    public float repairAndBuildCapacityPerSecond = 10;
     public int currentCargo;
     public VillagerActorState currentState = VillagerActorState.Idle;
 
@@ -137,6 +139,11 @@ public class VillagerActor : Actor
         //audio.Stop();
     }
 
+    public bool HasValidBuildOrRepairTarget()
+    {
+        return (targetDamaged != null);
+    }
+
     public bool HasValidGatheringTarget()
     {
         return (targetNode != null);
@@ -162,8 +169,47 @@ public class VillagerActor : Actor
             }
 
             case VillagerActorState.Building:
+            case VillagerActorState.Repairing:
             {
+                if ( HasValidBuildOrRepairTarget())
+                {
+                    Body body = targetDamaged.GetComponent<Body>();
+                    
+                    //  Reached our target
+                    if (Util.DistanceUnsquared(gridPosition, body.gridPosition) <= body.GetCellVolumeSqr())
+                    {
+                        LookAt(body.gridPosition.x, body.gridPosition.y);
 
+                        if (targetDamaged.NeedsRepair())
+                        {   
+                            GetComponentInChildren<Animator>().Play("Attack_A", -1, 0);
+                            int amountToRepair = (int)(repairAndBuildCapacityPerSecond / (60 / Constants.ACTOR_TICK_RATE));
+                            targetDamaged.RepairDamage(amountToRepair);                        
+                        }
+                        else
+                        {
+                            FindDamaged();
+                        }
+                    }
+                    else
+                    {
+                        //  Pathfind to the target
+                        Goto( body.GetNearbyCoord() );
+                        GetComponentInChildren<Animator>().Play("Walk");
+                    }
+                }
+                else
+                {
+                    FindDamaged();
+
+                    //  If we can't find a resource, wander around
+                    if ( !HasValidBuildOrRepairTarget() )
+                    {
+                        currentState = VillagerActorState.Roaming;
+                        GetComponentInChildren<Animator>().Play("Walk");
+                        // Debug.Log(gameObject.name + " couldn't find " + currentGatheringResourceType + ", going to roam around now.");
+                    }
+                }
                 break;
             }
 
@@ -250,6 +296,7 @@ public class VillagerActor : Actor
                     if ( !HasValidTransportTarget() )
                     {
                         currentState = VillagerActorState.Roaming;
+                        GetComponentInChildren<Animator>().Play("Walk");
                         // Debug.Log(gameObject.name + " couldn't find a building to drop off my cargo, going to roam around now.");
                     }
                 }
@@ -260,6 +307,7 @@ public class VillagerActor : Actor
             {
                 Goto(Random.Range(gridPosition.x - 4, gridPosition.x + 4),
                     Random.Range(gridPosition.x - 4, gridPosition.x + 4));
+                GetComponentInChildren<Animator>().Play("Walk");
 
                 break;
             }
@@ -382,6 +430,33 @@ public class VillagerActor : Actor
                 FindGranaries(blacklist);
                 break;
 
+        }
+    }
+
+    private void FindDamaged(List<TerrainBuilding> blacklist = null)
+    {
+        TerrainBuilding nearestBuilding = null;
+
+        //  Find the nearest townhall within range
+        int shortestDistance = cellSearchDistance * cellSearchDistance; //  Square the distance
+        foreach (TerrainBuilding damagedBuildings in ResourceManager.GetBuildAndRepair())
+        {
+            if (damagedBuildings == null) continue;   //  TODO trim null values from resource manager
+            if (blacklist != null && blacklist.Contains(damagedBuildings)) continue;
+
+            Body body = damagedBuildings.GetComponent<Body>();
+            int distance = (int)Util.DistanceUnsquared(gridPosition, body.gridPosition);
+
+            if (distance <= shortestDistance)
+            {
+                shortestDistance = distance;
+                nearestBuilding = damagedBuildings;
+            }
+        }
+
+        if (nearestBuilding != null)
+        {
+            targetDamaged = nearestBuilding;
         }
     }
 

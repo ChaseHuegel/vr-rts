@@ -16,10 +16,9 @@ public class TerrainBuilding : MonoBehaviour
     public float stage1Duration = 10.0f;
 
     [Header( "Building Stats" )]
-    public int maxHealth = 100;
+    public int maxHealth = 500;
     public int maxUnitQueueSize = 10;
-
-    int currentHealth;
+    public int currentHealth = 1;
 
     [Header( "Damage Effects" )]
     public GameObject buildingDamagedEffect;
@@ -42,7 +41,7 @@ public class TerrainBuilding : MonoBehaviour
 
     private float timeElapsed = 0.0f;
     private bool constructionCompleted = false;
-    private float buildingContructionTimeTotal;
+    //private float buildingContructionTimeTotal;
 
     private Queue<RTSUnitTypeData> unitSpawnQueue = new Queue<RTSUnitTypeData>();
 
@@ -50,7 +49,9 @@ public class TerrainBuilding : MonoBehaviour
 
     public UnityEngine.UI.Image progressImage;
 
-    public UnityEngine.UI.Image[] QueueImageObjects;
+    public HealthBar buildingHealthBar;
+
+    public UnityEngine.UI.Image[] QueueImageObjects;    
 
     //public Sprite emptyQueueSlotImage;
 
@@ -82,10 +83,21 @@ public class TerrainBuilding : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        playerManager = Player.instance.GetComponent<PlayerManager>();
-        currentHealth = maxHealth;
-        buildingContructionTimeTotal = stage0Duration + stage1Duration;
+        buildingHealthBar = GetComponentInChildren<HealthBar>(true);
+        if (currentHealth < maxHealth)
+            buildingHealthBar.enabled = true;
 
+        RefreshHealthBar();        
+
+        playerManager = Player.instance.GetComponent<PlayerManager>();
+        //currentHealth = maxHealth;
+        //buildingContructionTimeTotal = stage0Duration + stage1Duration;
+
+        if (currentHealth < maxHealth)
+        {
+            ResourceManager.GetBuildAndRepair().Add(this);
+        }    
+        
         switch (dropoffType)
         {
             case ResourceGatheringType.Wood:
@@ -103,7 +115,7 @@ public class TerrainBuilding : MonoBehaviour
             case ResourceGatheringType.Grain:
                 ResourceManager.GetGranaries().Add(this);
                 break;
-        }
+        }        
     }
 
     void OnTriggerEnter(Collider other)
@@ -120,9 +132,56 @@ public class TerrainBuilding : MonoBehaviour
         // }
     }
 
+    void RefreshHealthBar()
+    {
+        buildingHealthBar.SetFilledAmount((float)currentHealth / (float)maxHealth);     
+    }
+
+    public void RepairDamage(int amount)
+    {
+        currentHealth += amount;
+        RefreshHealthBar();
+
+        if (constructionCompleted) return;
+
+        if (currentHealth >= (maxHealth * 0.85f))
+        {
+            buildingStage1.SetActive(false);
+            buildingStageFinal.SetActive(true);
+            constructionCompleted = true;
+        }
+        else if (currentHealth >= (maxHealth * 0.45f))
+        {
+            buildingStage0.SetActive(false);
+            buildingStage1.SetActive(true);
+        }    
+    }
+
+    public bool NeedsRepair()
+    {
+        if (currentHealth < maxHealth)
+            return true;
+        
+        return false;
+    }
+
     // Update is called once per frame
     void Update()
-    {
+    {            
+        if (currentHealth < maxHealth)
+        {
+            //buildingHealthBar.enabled = true;
+        }
+        else
+        {
+            buildingHealthBar.enabled = false;
+            ResourceManager.GetBuildAndRepair().Remove(this);
+        }
+
+    
+        //currentHealthImage.fillAmount = (currentHealth / maxHealth);// / 100.0f;
+        
+        //healthStatusText.text = ((currentHealth/maxHealth)).ToString(); 
         if (constructionCompleted)
         {
             if (unitSpawnQueue.Count > 0)
@@ -157,21 +216,21 @@ public class TerrainBuilding : MonoBehaviour
         }
         else
         {
-            timeElapsed += Time.deltaTime;
+            // timeElapsed += Time.deltaTime;
 
-            if (timeElapsed >= buildingContructionTimeTotal)
-            {
-                buildingStage1.SetActive(false);
-                buildingStageFinal.SetActive(true);
-                constructionCompleted = true;
-                timeElapsed = 0.0f;
-            }
-            else if (timeElapsed >= stage0Duration)
-            {
-                buildingStage0.SetActive(false);
-                buildingStage1.SetActive(true);
+            // if (timeElapsed >= buildingContructionTimeTotal)
+            // {
+            //     buildingStage1.SetActive(false);
+            //     buildingStageFinal.SetActive(true);
+            //     constructionCompleted = true;
+            //     timeElapsed = 0.0f;
+            // }
+            // else if (timeElapsed >= stage0Duration)
+            // {
+            //     buildingStage0.SetActive(false);
+            //     buildingStage1.SetActive(true);
 
-            }
+            // }
         }
     }
 
