@@ -21,7 +21,7 @@ public class VillagerActor : Actor
     // Store previous state so villager can go back to work after attaching/fleeing
     private VillagerActorState previouState;
     bool isHeld;
-
+    public VillagerHoverMenu villagerHoverMenu;
     public GameObject cargoGrainDisplayObject;
     public GameObject cargoWoodDisplayObject;
     public GameObject cargoOreDisplayObject;
@@ -89,6 +89,7 @@ public class VillagerActor : Actor
         Freeze();
         this.enabled = false;
         ResetPathing();
+        villagerHoverMenu.Show();
         if (playAudio)
             PlaySound();
     }
@@ -124,6 +125,7 @@ public class VillagerActor : Actor
         AudioSource audio = gameObject.GetComponent<AudioSource>();
         // No stopping the audio!
         audio.Stop();
+        villagerHoverMenu.Hide();
         //this.enabled = false;
     }
 
