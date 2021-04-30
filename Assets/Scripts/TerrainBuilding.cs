@@ -193,41 +193,46 @@ public class TerrainBuilding : MonoBehaviour
             GameObject unit = GameObject.Instantiate<GameObject>(unitSpawnQueue.Peek().prefab);
             unit.transform.position = unitSpawnPoint.transform.position;
 
+            VillagerActor actor = unit.GetComponent<VillagerActor>();
+            actor.SetUnitType(unitSpawnQueue.Peek().unitType);
+            
             RTSUnitType uType = unitSpawnQueue.Peek().unitType;
-            switch ( uType )
-            {
-                case RTSUnitType.Builder:
-                    {
-                        VillagerActor actor = unit.GetComponent<VillagerActor>();
-                        actor.currentState = VillagerActorState.Building;
-                        actor.currentGatheringResourceType = ResourceGatheringType.None;
-                        break;
-                    }
+            
+            // switch ( uType )
+            // {
+            //     case RTSUnitType.Builder:
+            //         {
+            //             VillagerActor actor = unit.GetComponent<VillagerActor>();
+            //             actor.SetUnitType()
+            //             actor.currentState = VillagerActorState.Building;
+            //             actor.currentGatheringResourceType = ResourceGatheringType.None;
+            //             break;
+            //         }
 
-                case RTSUnitType.Farmer:
-                    {
-                        VillagerActor actor = unit.GetComponent<VillagerActor>();
-                        actor.currentState = VillagerActorState.Gathering;
-                        actor.currentGatheringResourceType = ResourceGatheringType.Grain;
-                        break;
-                    }
+            //     case RTSUnitType.Farmer:
+            //         {
+            //             VillagerActor actor = unit.GetComponent<VillagerActor>();
+            //             actor.currentState = VillagerActorState.Gathering;
+            //             actor.currentGatheringResourceType = ResourceGatheringType.Grain;
+            //             break;
+            //         }
 
-                case RTSUnitType.Lumberjack:
-                {
-                    VillagerActor actor = unit.GetComponent<VillagerActor>();
-                    actor.currentState = VillagerActorState.Gathering;
-                    actor.currentGatheringResourceType = ResourceGatheringType.Wood;
-                    break;
-                }
+            //     case RTSUnitType.Lumberjack:
+            //     {
+            //         VillagerActor actor = unit.GetComponent<VillagerActor>();
+            //         actor.currentState = VillagerActorState.Gathering;
+            //         actor.currentGatheringResourceType = ResourceGatheringType.Wood;
+            //         break;
+            //     }
 
-                case RTSUnitType.Miner:
-                {
-                    VillagerActor actor = unit.GetComponent<VillagerActor>();
-                    actor.currentState = VillagerActorState.Gathering;
-                    actor.currentGatheringResourceType = ResourceGatheringType.Gold;
-                    break;
-                }
-            }
+            //     case RTSUnitType.GoldMiner:
+            //     {
+            //         VillagerActor actor = unit.GetComponent<VillagerActor>();
+            //         actor.currentState = VillagerActorState.Gathering;
+            //         actor.currentGatheringResourceType = ResourceGatheringType.Gold;
+            //         break;
+            //     }
+            // }
 
             Debug.Log("Spawned " + unit.name + ".");
         }

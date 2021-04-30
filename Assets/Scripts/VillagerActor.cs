@@ -30,8 +30,12 @@ public class VillagerActor : Actor
     public GameObject handWoodDisplayObject;
     public GameObject handOreDisplayObject;
     public GameObject handGoldDisplayObject;
+    public GameObject handBuilderDisplayObject;
+
     GameObject currentCargoDisplayObject;
     GameObject currentHandDisplayObject;
+
+    RTSUnitType myUnitType;
 
     public ResourceGatheringType currentGatheringResourceType;
     ResourceGatheringType lastGatheringResoureType;
@@ -40,53 +44,53 @@ public class VillagerActor : Actor
 
     public void Update()
     {
-        if (lastGatheringResoureType == currentGatheringResourceType)
-            return;
+        // if (lastGatheringResoureType == currentGatheringResourceType)
+        //     return;
 
-        if (currentHandDisplayObject)
-            currentHandDisplayObject.SetActive(false);
+        // if (currentHandDisplayObject)
+        //     currentHandDisplayObject.SetActive(false);
 
-        lastGatheringResoureType = currentGatheringResourceType;
+        // lastGatheringResoureType = currentGatheringResourceType;
 
-        switch (currentGatheringResourceType)
-        {
-            case ResourceGatheringType.Grain:
-            {
-                //handGrainDisplayObject.SetActive(true);
-                currentHandDisplayObject = null;// handGrainDisplayObject;
-                break;
-            }
+        // switch (currentGatheringResourceType)
+        // {
+        //     case ResourceGatheringType.Grain:
+        //     {
+        //         //handGrainDisplayObject.SetActive(true);
+        //         currentHandDisplayObject = null;// handGrainDisplayObject;
+        //         break;
+        //     }
 
-            case ResourceGatheringType.Wood:
-            {
-                handWoodDisplayObject.SetActive(true);
-                currentHandDisplayObject = handWoodDisplayObject;
-                break;
-            }
+        //     case ResourceGatheringType.Wood:
+        //     {
+        //         handWoodDisplayObject.SetActive(true);
+        //         currentHandDisplayObject = handWoodDisplayObject;
+        //         break;
+        //     }
 
-            case ResourceGatheringType.Ore:
-            {
-                handOreDisplayObject.SetActive(true);
-                currentHandDisplayObject = handOreDisplayObject;
-                break;
-            }
+        //     case ResourceGatheringType.Ore:
+        //     {
+        //         handOreDisplayObject.SetActive(true);
+        //         currentHandDisplayObject = handOreDisplayObject;
+        //         break;
+        //     }
 
-            case ResourceGatheringType.Gold:
-            {
-                handGoldDisplayObject.SetActive(true);
-                currentHandDisplayObject = handGoldDisplayObject;
-                break;
-            }
-        }
+        //     case ResourceGatheringType.Gold:
+        //     {
+        //         handGoldDisplayObject.SetActive(true);
+        //         currentHandDisplayObject = handGoldDisplayObject;
+        //         break;
+        //     }
+        // }
     }
     public void OnPickUp()
     {
-        isHeld = true;
-        if (playAudio)
-            PlaySound();
+        isHeld = true;        
         Freeze();
         this.enabled = false;
         ResetPathing();
+        if (playAudio)
+            PlaySound();
     }
 
     void PlaySound()
@@ -155,6 +159,12 @@ public class VillagerActor : Actor
                 break;
             }
 
+            case VillagerActorState.Building:
+            {
+
+                break;
+            }
+
             case VillagerActorState.Gathering:
             {
                 if ( HasValidGatheringTarget())
@@ -166,7 +176,8 @@ public class VillagerActor : Actor
                     //  Reached our target
                     if (Util.DistanceUnsquared(gridPosition, body.gridPosition) <= body.GetCellVolumeSqr())
                     {
-                        GetComponentInChildren<Animator>().Play("Attack", -1, 0f);
+                        PlayGatheringAnimation();
+                        
                         LookAt(body.gridPosition.x, body.gridPosition.y);
                         if (currentCargo < carryingCapacity)
                         {
@@ -258,12 +269,23 @@ public class VillagerActor : Actor
 
     public void SetUnitType(RTSUnitType type)
     {
-        switch ( type )
+        if (currentHandDisplayObject)
+            currentHandDisplayObject.SetActive(false);
+
+        lastGatheringResoureType = currentGatheringResourceType;
+
+        myUnitType = type;
+        targetNode = null;
+        targetBuilding = null;
+
+        switch ( myUnitType )
         {
             case RTSUnitType.Builder:
                 {
                     currentState = VillagerActorState.Building;
                     currentGatheringResourceType = ResourceGatheringType.None;
+                    handBuilderDisplayObject.SetActive(true);
+                    currentHandDisplayObject = handBuilderDisplayObject;                    
                     break;
                 }
 
@@ -271,6 +293,8 @@ public class VillagerActor : Actor
                 {
                     currentState = VillagerActorState.Gathering;
                     currentGatheringResourceType = ResourceGatheringType.Grain;
+                    //handGrainDisplayObject.SetActive(true);
+                    currentHandDisplayObject = null;// handGrainDisplayObject;
                     break;
                 }
 
@@ -278,13 +302,26 @@ public class VillagerActor : Actor
             {
                 currentState = VillagerActorState.Gathering;
                 currentGatheringResourceType = ResourceGatheringType.Wood;
+                handWoodDisplayObject.SetActive(true);
+                currentHandDisplayObject = handWoodDisplayObject;
                 break;
             }
 
-            case RTSUnitType.Miner:
+            case RTSUnitType.GoldMiner:
             {
                 currentState = VillagerActorState.Gathering;
                 currentGatheringResourceType = ResourceGatheringType.Gold;
+                handGoldDisplayObject.SetActive(true);
+                currentHandDisplayObject = handGoldDisplayObject;
+                break;
+            }
+
+            case RTSUnitType.OreMiner:
+            {
+                currentState = VillagerActorState.Gathering;
+                currentGatheringResourceType = ResourceGatheringType.Ore;
+                handOreDisplayObject.SetActive(true);
+                currentHandDisplayObject = handOreDisplayObject;
                 break;
             }
         }
@@ -526,5 +563,38 @@ public class VillagerActor : Actor
         {
             targetNode = nearestNode;
         }
+    }
+
+    void PlayGatheringAnimation()
+    {
+        switch ( currentGatheringResourceType )
+        {
+            case ResourceGatheringType.Wood:
+            {
+                
+                GetComponentInChildren<Animator>().Play("Attack_A", -1, 0f);
+                break;
+            }
+
+            case ResourceGatheringType.Gold:
+            case ResourceGatheringType.Ore:
+            {
+                GetComponentInChildren<Animator>().Play("Attack_B", -1, 0f);
+                break;
+            }
+
+            case ResourceGatheringType.Grain:
+            {
+                int choice = Random.Range(0, 100);
+                
+                if (choice <= 50)
+                    GetComponentInChildren<Animator>().Play("Punch_A", -1, 0f);
+                else
+                    GetComponentInChildren<Animator>().Play("Punch_B", -1, 0f);
+                break;
+            }
+
+        }
+        
     }
 }

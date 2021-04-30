@@ -6,7 +6,7 @@ using Valve.VR.InteractionSystem;
 [RequireComponent( typeof( Interactable ) )]
 public class UnitCommandHoverSphere : MonoBehaviour
 {
-    private TextMesh generalText;
+    	private TextMesh generalText;
         private TextMesh hoveringText;
         private Vector3 oldPosition;
 		private Quaternion oldRotation;
@@ -17,11 +17,12 @@ public class UnitCommandHoverSphere : MonoBehaviour
 		private Hand.AttachmentFlags attachmentFlags = Hand.defaultAttachmentFlags & ( ~Hand.AttachmentFlags.SnapOnAttach ) & (~Hand.AttachmentFlags.DetachOthers) & (~Hand.AttachmentFlags.VelocityMovement);
 
         private Interactable interactable;
-
+		public VillagerHoverMenu menu;
         public RTSUnitType rtsUnitJob;
 		//-------------------------------------------------
 		void Awake()
 		{
+			//menu = gameObject.GetComponentInParent<VillagerHoverMenu>();
 			// var textMeshs = GetComponentsInChildren<TextMesh>();
             // generalText = textMeshs[0];
             // hoveringText = textMeshs[1];
@@ -33,8 +34,7 @@ public class UnitCommandHoverSphere : MonoBehaviour
 
             villagerActor = GetComponentInParent<VillagerActor>();
 
-		}
-
+		}		
 
 		//-------------------------------------------------
 		// Called when a Hand starts hovering over this object
@@ -42,6 +42,7 @@ public class UnitCommandHoverSphere : MonoBehaviour
 		private void OnHandHoverBegin( Hand hand )
 		{
 			//generalText.text = "Hovering hand: " + hand.name;
+			//menu.Show();
 		}
 
 
@@ -51,6 +52,7 @@ public class UnitCommandHoverSphere : MonoBehaviour
 		private void OnHandHoverEnd( Hand hand )
 		{
 			//generalText.text = "No Hand Hovering";
+			//menu.Hide();
 		}
 
 

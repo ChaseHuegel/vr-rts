@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public enum RTSUnitType { None, Builder, Lumberjack, Miner, Farmer, Swordsman, };
+public enum RTSUnitType { None, Builder, Lumberjack, GoldMiner, OreMiner, Farmer, Swordsman, };
 
 public struct RTSUnitTypeData
 {

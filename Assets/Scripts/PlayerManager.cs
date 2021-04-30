@@ -53,7 +53,7 @@ public class PlayerManager : MonoBehaviour
         RTSUnitTypeData builderData = new RTSUnitTypeData(RTSUnitType.Builder, 5.0f, villagerPrefab, builderWorldButtonImage);
         RTSUnitTypeData farmerData = new RTSUnitTypeData(RTSUnitType.Farmer, 5.0f, villagerPrefab, farmerWorldButtonImage);
         RTSUnitTypeData lumberjackData = new RTSUnitTypeData(RTSUnitType.Lumberjack, 5.0f, villagerPrefab, lumberjackWorldButtonImage);
-        RTSUnitTypeData minerData = new RTSUnitTypeData(RTSUnitType.Miner, 5.0f, villagerPrefab, minerWorldButtonImage);
+        RTSUnitTypeData minerData = new RTSUnitTypeData(RTSUnitType.GoldMiner, 5.0f, villagerPrefab, minerWorldButtonImage);
         
         rtsUnitDataList.Add(builderData);
         rtsUnitDataList.Add(farmerData);
