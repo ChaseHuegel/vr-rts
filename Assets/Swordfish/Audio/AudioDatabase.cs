@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,7 +15,7 @@ public class AudioDatabase : ScriptableObject
     {
         foreach (SoundElement item in database)
         {
-            if (item.name == name)
+            if (item.name.Equals(name, StringComparison.InvariantCultureIgnoreCase))
             {
                 return item;
             }

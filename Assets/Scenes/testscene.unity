@@ -365,7 +365,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65863d4773aa047438bb48d7fb25b215, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  showGizmos: 0
+  showGizmos: 1
   showDebugGrid: 0
   gridSize: 160
   gridUnit: 0.25
@@ -519,6 +519,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 70645328441259782, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: currentState
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 1069823527325677058, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
       propertyPath: m_Name

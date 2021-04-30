@@ -21,6 +21,16 @@ namespace Swordfish
 		}
 
 		//	Operators
+		public static bool operator!= (Coord2D a, Coord2D b)
+		{
+			return (a.x != b.x || a.y != b.y);
+		}
+
+		public static bool operator== (Coord2D a, Coord2D b)
+		{
+			return (a.x == b.x && a.y == b.y);
+		}
+
 		public static Coord2D operator+ (Coord2D a, Coord2D b)
 		{
 			return new Coord2D(a.x + b.x, a.y + b.y);

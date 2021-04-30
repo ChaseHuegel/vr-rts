@@ -47,6 +47,7 @@ public class World : Singleton<World>
     }
 
     //  Convert from transform units to grid units
+    public static Coord2D ToWorldCoord(Vector3 pos) { pos = ToWorldSpace(pos); return new Coord2D((int)pos.x, (int)pos.z); }
     public static Vector3 ToWorldSpace(Vector3 pos)
     {
         // Vector3 result = ((pos + World.GetOrigin()) + (Vector3.one * World.GetSize()/2)) / World.GetUnit();

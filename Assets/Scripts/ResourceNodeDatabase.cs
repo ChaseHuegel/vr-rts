@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,7 +12,7 @@ public class ResourceNodeDatabase : ScriptableObject
     {
         foreach (ResourceElement item in database)
         {
-            if (item.name == name)
+            if (item.name.Equals(name, StringComparison.InvariantCultureIgnoreCase))
             {
                 return item;
             }

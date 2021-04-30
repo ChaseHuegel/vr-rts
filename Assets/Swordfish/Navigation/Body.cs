@@ -88,6 +88,23 @@ public class Body : MonoBehaviour
     {
         return (boundingDimensions.x + boundingDimensions.y) * 0.75f;
     }
+
+    public bool CanSetPosition(Vector2 p, bool ignoreOccupied = false) { return CanSetPosition((int)p.x, (int)p.y, ignoreOccupied); }
+    public bool CanSetPosition(Vector3 p, bool ignoreOccupied = false) { return CanSetPosition((int)p.x, (int)p.z, ignoreOccupied); }
+    public bool CanSetPosition(int x, int y, bool ignoreOccupied = false)
+    {
+        Cell to = World.at(x, y);
+
+        if (to.passable)
+        {
+            if (to.occupied && !ignoreOccupied)
+                return false;
+
+            return true;
+        }
+
+        return false;
+    }
 #endregion
 
 
