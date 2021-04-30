@@ -59,6 +59,21 @@ public class Body : MonoBehaviour
         return World.Grid.at(gridPosition.x, gridPosition.y);
     }
 
+    public Coord2D GetNearbyCoord()
+    {
+        Coord2D target = new Coord2D(gridPosition.x, gridPosition.y);
+        int paddingX = (int)(boundingDimensions.x * 0.5f);
+        int paddingY = (int)(boundingDimensions.y * 0.5f);
+
+        //  Use 0 and 1 to determine negative or positive
+        int sign = (int)((Random.Range(0, 1) << 1) - 1);
+        target.x += sign * paddingX;
+
+        sign = (int)((Random.Range(0, 1) << 1) - 1);
+        target.y += sign * paddingY;
+
+        return target;
+    }
 
     //  Used in transform space
     public float GetBoundsVolumeSqr() { return GetBoundsVolume() * GetBoundsVolume(); }

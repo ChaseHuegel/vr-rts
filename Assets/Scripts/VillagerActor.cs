@@ -186,7 +186,7 @@ public class VillagerActor : Actor
                     else
                     {
                         //  Pathfind to the target
-                        Goto(body.gridPosition.x + Random.Range(-1, 1), body.gridPosition.y + Random.Range(-1, 1));
+                        Goto( body.GetNearbyCoord() );
                         GetComponentInChildren<Animator>().Play("Walk");
                     }
                 }
@@ -225,7 +225,7 @@ public class VillagerActor : Actor
                     else
                     {
                         //  Pathfind to the target
-                        Goto(body.gridPosition.x + Random.Range(-1, 1), body.gridPosition.y + Random.Range(-1, 1));
+                        Goto( body.GetNearbyCoord() );
                         GetComponentInChildren<Animator>().Play("Walk");
                     }
                 }
