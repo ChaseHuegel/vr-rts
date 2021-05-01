@@ -70,12 +70,6 @@ public class TerrainBuilding : MonoBehaviour
                 Debug.Log("Queued " + unitTypeToQueue.ToString() + " (" + unitSpawnQueue.Count + ")");
             }
         }
-
-        // Set current unit type to spawn
-        //currentPrefabUnitToSpawn = villagerPrefab;
-
-        // No Queue built yet, just spawn the current unit.
-        //SpawnUnit();
     }
 
     // Start is called before the first frame update
