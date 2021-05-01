@@ -17835,9 +17835,10 @@ GameObject:
   - component: {fileID: 2973566442904995693}
   - component: {fileID: 3165470419902578782}
   - component: {fileID: 5240977597520700744}
-  - component: {fileID: 1098559784769540740}
   - component: {fileID: 70645328441259782}
   - component: {fileID: -6606716014632887433}
+  - component: {fileID: 1098559784769540740}
+  - component: {fileID: 3014109988939847531}
   m_Layer: 9
   m_Name: Villager
   m_TagString: Untagged
@@ -18066,35 +18067,6 @@ MonoBehaviour:
   velocityAverageFrames: 5
   angularVelocityAverageFrames: 11
   estimateOnAwake: 0
---- !u!114 &1098559784769540740
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1069823527325677058}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e7418c7dd8f977d4e969202d3fa7e926, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  poseEditorExpanded: 1
-  blendEditorExpanded: 0
-  poseNames:
-  - unitPickup_01 (MAIN)
-  overridePreviewLeftHandPrefab: {fileID: 1000013348574242, guid: 638779290bce1af49b356f33dcc6fccf,
-    type: 3}
-  overridePreviewRightHandPrefab: {fileID: 1000010304998954, guid: 6def53d002137b747aec0b29551e0e25,
-    type: 3}
-  skeletonMainPose: {fileID: 11400000, guid: e89c10566133f4049b9923e9f4d6f50f, type: 2}
-  skeletonAdditionalPoses: []
-  showLeftPreview: 0
-  showRightPreview: 0
-  previewLeftInstance: {fileID: 0}
-  previewRightInstance: {fileID: 0}
-  previewPoseSelection: 0
-  blendingBehaviours: []
-  scale: 1
 --- !u!114 &70645328441259782
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18113,27 +18085,29 @@ MonoBehaviour:
   boundingDimensions: {x: 1, y: 1}
   boundingOrigin: {x: 0, y: 0}
   movementSpeed: 0.5
+  rtsUnitType: 0
+  wantedResourceType: 0
   cellSearchDistance: 20
+  previouState: 0
+  currentState: 0
   targetNode: {fileID: 0}
   targetBuilding: {fileID: 0}
   targetDamaged: {fileID: 0}
   carryingCapacity: 100
-  gatheringCapacityPerSecond: 10
-  repairAndBuildCapacityPerSecond: 10
-  currentCargo: 0
-  currentState: 0
+  gatherCapacityPerSecond: 10
+  buildAndRepairCapacityPerSecond: 10
+  animator: {fileID: 0}
+  grainCargoDisplayObject: {fileID: 668154613715088764}
+  woodCargoDisplayObject: {fileID: 2787404010531457095}
+  oreCargoDisplayObject: {fileID: 8615772494511644887}
+  goldCargoDisplayObject: {fileID: 8615772494511644887}
+  grainHandToolDisplayObject: {fileID: 1069823527080592770}
+  woodHandToolDisplayObject: {fileID: 1069823527080595998}
+  oreHandToolDisplayObject: {fileID: 1069823527080554358}
+  goldHandToolDisplayObject: {fileID: 1069823527080554358}
+  builderHandToolDisplayObject: {fileID: 1069823527080516244}
+  playRandomOnPickUpAudio: 0
   villagerHoverMenu: {fileID: 4773402040985910725}
-  cargoGrainDisplayObject: {fileID: 668154613715088764}
-  cargoWoodDisplayObject: {fileID: 2787404010531457095}
-  cargoOreDisplayObject: {fileID: 8615772494511644887}
-  cargoGoldDisplayObject: {fileID: 8615772494511644887}
-  handGrainDisplayObject: {fileID: 1069823527080516244}
-  handWoodDisplayObject: {fileID: 1069823527080595998}
-  handOreDisplayObject: {fileID: 1069823527080554358}
-  handGoldDisplayObject: {fileID: 1069823527080554358}
-  handBuilderDisplayObject: {fileID: 1069823527080516244}
-  currentGatheringResourceType: 0
-  playAudio: 1
 --- !u!82 &-6606716014632887433
 AudioSource:
   m_ObjectHideFlags: 0
@@ -18231,6 +18205,54 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1098559784769540740
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1069823527325677058}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7418c7dd8f977d4e969202d3fa7e926, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  poseEditorExpanded: 1
+  blendEditorExpanded: 0
+  poseNames:
+  - unitPickup_01 (MAIN)
+  overridePreviewLeftHandPrefab: {fileID: 1000013348574242, guid: 638779290bce1af49b356f33dcc6fccf,
+    type: 3}
+  overridePreviewRightHandPrefab: {fileID: 1000010304998954, guid: 6def53d002137b747aec0b29551e0e25,
+    type: 3}
+  skeletonMainPose: {fileID: 11400000, guid: e89c10566133f4049b9923e9f4d6f50f, type: 2}
+  skeletonAdditionalPoses: []
+  showLeftPreview: 0
+  showRightPreview: 0
+  previewLeftInstance: {fileID: 0}
+  previewRightInstance: {fileID: 0}
+  previewPoseSelection: 0
+  blendingBehaviours: []
+  scale: 1
+--- !u!95 &3014109988939847531
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1069823527325677058}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: 02ded044b8e0963439276550f50be6f9, type: 3}
+  m_Controller: {fileID: 9100000, guid: 647fd6be200056b4798c107a226580d1, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &1405613437724166983
 GameObject:
   m_ObjectHideFlags: 0

@@ -8,41 +8,66 @@ using Valve.VR;
 public enum VillagerActorState { Idle, Gathering, Transporting, Building, Repairing, Roaming };
 public enum ResourceGatheringType { None, Grain, Wood, Ore, Gold };
 
+[RequireComponent(typeof(AudioSource), typeof(Animator))]
 public class VillagerActor : Actor
 {
+    [Header ("AI")]
+    // Store previous state so villager can go back to work after attaching/fleeing
+    [SerializeField] protected RTSUnitType rtsUnitType;
+    public ResourceGatheringType wantedResourceType;
     [SerializeField] protected int cellSearchDistance = 20;
+    [SerializeField] protected VillagerActorState previouState;
+    [SerializeField] protected VillagerActorState currentState = VillagerActorState.Idle;
     [SerializeField] protected ResourceNode targetNode;
     [SerializeField] protected TerrainBuilding targetBuilding;
     [SerializeField] protected TerrainBuilding targetDamaged;
+    
+    [Header ("Stats")]
     public int carryingCapacity = 100;
-    public float gatheringCapacityPerSecond = 10;
-    public float repairAndBuildCapacityPerSecond = 10;
-    public int currentCargo;
-    public VillagerActorState currentState = VillagerActorState.Idle;
+    public float gatherCapacityPerSecond = 10;
+    public float buildAndRepairCapacityPerSecond = 10;    
+    
+    [Header("Animation")]
+    [SerializeField] protected Animator animator;
 
-    // Store previous state so villager can go back to work after attaching/fleeing
-    private VillagerActorState previouState;
+    [Header ("Visuals")]
+    public GameObject grainCargoDisplayObject;
+    public GameObject woodCargoDisplayObject;
+    public GameObject oreCargoDisplayObject;
+    public GameObject goldCargoDisplayObject;
+    public GameObject grainHandToolDisplayObject;
+    public GameObject woodHandToolDisplayObject;
+    public GameObject oreHandToolDisplayObject;
+    public GameObject goldHandToolDisplayObject;
+    public GameObject builderHandToolDisplayObject;
+
+    [Header ("Audio")]
+    public bool playRandomOnPickUpAudio;
+
+    private AudioSource audioSource;
+
     bool isHeld;
     public VillagerHoverMenu villagerHoverMenu;
-    public GameObject cargoGrainDisplayObject;
-    public GameObject cargoWoodDisplayObject;
-    public GameObject cargoOreDisplayObject;
-    public GameObject cargoGoldDisplayObject;
-    public GameObject handGrainDisplayObject;
-    public GameObject handWoodDisplayObject;
-    public GameObject handOreDisplayObject;
-    public GameObject handGoldDisplayObject;
-    public GameObject handBuilderDisplayObject;
-
     GameObject currentCargoDisplayObject;
-    GameObject currentHandDisplayObject;
+    GameObject currentHandToolDisplayObject;
+    int currentCargoTotal;
+    ResourceGatheringType lastWantedResoureType;
 
-    RTSUnitType myUnitType;
+    public override void Initialize()
+    {
+        base.Initialize();
 
-    public ResourceGatheringType currentGatheringResourceType;
-    ResourceGatheringType lastGatheringResoureType;
+        audioSource = GetComponent<AudioSource>();
+        if (!audioSource)
+            Debug.Log("No audiosource component found.");
 
-    public bool playAudio;
+        animator = GetComponent<Animator>();
+        if (!animator)
+            Debug.Log("No animator component found.");
+
+        // Initialize villager AI state, display objects, etc.
+        SetUnitType(rtsUnitType);
+    }
 
     public void Update()
     {
@@ -92,51 +117,31 @@ public class VillagerActor : Actor
         this.enabled = false;
         ResetPathing();
         villagerHoverMenu.Show();
-        if (playAudio)
-            PlaySound();
+        if (playRandomOnPickUpAudio)
+            PlayOnPickUpSound();
     }
 
-    void PlaySound()
+    void PlayOnPickUpSound()
     {
-        AudioSource audio = gameObject.GetComponent<AudioSource>();
-        audio.clip = GameMaster.GetAudio("unitPickup").GetClip();
-        audio.Play();
+        audioSource.clip = GameMaster.GetAudio("unitPickup").GetClip();
+        audioSource.Play();
     }
-
-    // public AudioClip[] otherClip; //make an arrayed variable (so you can attach more than one sound)
-
-    // // Play random sound from variable
-    // void PlaySound()
-    // {
-    //             //Assign random sound from variable
-    //             audio.clip = otherClip[Random.Range(0,otherClip.length)];
-
-    //     audio.Play();
-
-    //     // Wait for the audio to have finished
-    //     yield WaitForSeconds (audio.clip.length);
-
-    //     //Now you should re-loop this function Like
-    //             PlaySound();
-    // }
 
     public void OnDetachFromHand()
     {
         isHeld = false;
         ResetPathing();
-        AudioSource audio = gameObject.GetComponent<AudioSource>();
-        // No stopping the audio!
-        audio.Stop();
+        audioSource.Stop();
         villagerHoverMenu.Hide();
-        //this.enabled = false;
     }
 
+    // This is is used to reenable the character after they have been
+    // released from the hand AND after they have landed somewhere.
     private void OnCollisionEnter(Collision collision)
     {
         this.enabled = true;
         Unfreeze();
-        //AudioSource audio = gameObject.GetComponent<AudioSource>();
-        //audio.Stop();
+        //audioSource.Stop();
     }
 
     public bool HasValidBuildOrRepairTarget()
@@ -164,7 +169,7 @@ public class VillagerActor : Actor
             case VillagerActorState.Idle:
             {
                 // Play idle animation
-                GetComponentInChildren<Animator>().Play("Idle");
+                animator.Play("Idle");
                 break;
             }
 
@@ -182,8 +187,8 @@ public class VillagerActor : Actor
 
                         if (targetDamaged.NeedsRepair())
                         {   
-                            GetComponentInChildren<Animator>().Play("Attack_A", -1, 0);
-                            int amountToRepair = (int)(repairAndBuildCapacityPerSecond / (60 / Constants.ACTOR_TICK_RATE));
+                            animator.Play("Attack_A", -1, 0);
+                            int amountToRepair = (int)(buildAndRepairCapacityPerSecond / (60 / Constants.ACTOR_TICK_RATE));
                             targetDamaged.RepairDamage(amountToRepair);                        
                         }
                         else
@@ -195,7 +200,7 @@ public class VillagerActor : Actor
                     {
                         //  Pathfind to the target
                         Goto( body.GetNearbyCoord() );
-                        GetComponentInChildren<Animator>().Play("Walk");
+                        animator.Play("Walk");
                     }
                 }
                 else
@@ -206,7 +211,7 @@ public class VillagerActor : Actor
                     if ( !HasValidBuildOrRepairTarget() )
                     {
                         currentState = VillagerActorState.Roaming;
-                        GetComponentInChildren<Animator>().Play("Walk");
+                        animator.Play("Walk");
                         // Debug.Log(gameObject.name + " couldn't find " + currentGatheringResourceType + ", going to roam around now.");
                     }
                 }
@@ -227,16 +232,16 @@ public class VillagerActor : Actor
                         PlayGatheringAnimation();
                         
                         LookAt(body.gridPosition.x, body.gridPosition.y);
-                        if (currentCargo < carryingCapacity)
+                        if (currentCargoTotal < carryingCapacity)
                         {
-                            int amountToRemove = (int)(gatheringCapacityPerSecond / (60 / Constants.ACTOR_TICK_RATE));
-                            amountToRemove = Mathf.Clamp( carryingCapacity - currentCargo, 0, amountToRemove );
-                            currentCargo += amountToRemove;
+                            int amountToRemove = (int)(gatherCapacityPerSecond / (60 / Constants.ACTOR_TICK_RATE));
+                            amountToRemove = Mathf.Clamp( carryingCapacity - currentCargoTotal, 0, amountToRemove );
+                            currentCargoTotal += amountToRemove;
                             targetNode.decreaseCurrentResourceAmount(amountToRemove);
                         }
                         else
                         {
-                            currentCargo = carryingCapacity;
+                            currentCargoTotal = carryingCapacity;
                             currentState = VillagerActorState.Transporting;
                             DisplayCargo(true);
                             // Debug.Log(gameObject.name + " is done gathering and is now transporting " + currentCargo + " " + currentGatheringResourceType + ".");
@@ -246,7 +251,7 @@ public class VillagerActor : Actor
                     {
                         //  Pathfind to the target
                         Goto( body.GetNearbyCoord() );
-                        GetComponentInChildren<Animator>().Play("Walk");
+                        animator.Play("Walk");
                     }
                 }
                 else
@@ -257,7 +262,7 @@ public class VillagerActor : Actor
                     if ( !HasValidGatheringTarget() )
                     {
                         currentState = VillagerActorState.Roaming;
-                        GetComponentInChildren<Animator>().Play("Walk");
+                        animator.Play("Walk");
                         // Debug.Log(gameObject.name + " couldn't find " + currentGatheringResourceType + ", going to roam around now.");
                     }
                 }
@@ -276,8 +281,8 @@ public class VillagerActor : Actor
                     {
                         //  Reached our target
                         // Debug.Log("Dropped off " + currentCargo + " " + currentGatheringResourceType + ".");
-                        Valve.VR.InteractionSystem.Player.instance.GetComponent<PlayerManager>().AddResourceToStockpile(currentGatheringResourceType, currentCargo);
-                        currentCargo = 0;
+                        Valve.VR.InteractionSystem.Player.instance.GetComponent<PlayerManager>().AddResourceToStockpile(wantedResourceType, currentCargoTotal);
+                        currentCargoTotal = 0;
                         DisplayCargo(false);
                         currentState = VillagerActorState.Gathering;
                     }
@@ -285,7 +290,7 @@ public class VillagerActor : Actor
                     {
                         //  Pathfind to the target
                         Goto( body.GetNearbyCoord() );
-                        GetComponentInChildren<Animator>().Play("Walk");
+                        animator.Play("Walk");
                     }
                 }
                 else
@@ -296,7 +301,7 @@ public class VillagerActor : Actor
                     if ( !HasValidTransportTarget() )
                     {
                         currentState = VillagerActorState.Roaming;
-                        GetComponentInChildren<Animator>().Play("Walk");
+                        animator.Play("Walk");
                         // Debug.Log(gameObject.name + " couldn't find a building to drop off my cargo, going to roam around now.");
                     }
                 }
@@ -307,7 +312,7 @@ public class VillagerActor : Actor
             {
                 Goto(Random.Range(gridPosition.x - 4, gridPosition.x + 4),
                     Random.Range(gridPosition.x - 4, gridPosition.x + 4));
-                GetComponentInChildren<Animator>().Play("Walk");
+                animator.Play("Walk");
 
                 break;
             }
@@ -319,59 +324,59 @@ public class VillagerActor : Actor
 
     public void SetUnitType(RTSUnitType type)
     {
-        if (currentHandDisplayObject)
-            currentHandDisplayObject.SetActive(false);
+        if (currentHandToolDisplayObject)
+            currentHandToolDisplayObject.SetActive(false);
 
-        lastGatheringResoureType = currentGatheringResourceType;
+        lastWantedResoureType = wantedResourceType;
 
-        myUnitType = type;
+        rtsUnitType = type;
         targetNode = null;
         targetBuilding = null;
 
-        switch ( myUnitType )
+        switch ( rtsUnitType )
         {
             case RTSUnitType.Builder:
                 {
                     currentState = VillagerActorState.Building;
-                    currentGatheringResourceType = ResourceGatheringType.None;
-                    handBuilderDisplayObject.SetActive(true);
-                    currentHandDisplayObject = handBuilderDisplayObject;                    
+                    wantedResourceType = ResourceGatheringType.None;
+                    builderHandToolDisplayObject.SetActive(true);
+                    currentHandToolDisplayObject = builderHandToolDisplayObject;                    
                     break;
                 }
 
             case RTSUnitType.Farmer:
                 {
                     currentState = VillagerActorState.Gathering;
-                    currentGatheringResourceType = ResourceGatheringType.Grain;
+                    wantedResourceType = ResourceGatheringType.Grain;
                     //handGrainDisplayObject.SetActive(true);
-                    currentHandDisplayObject = null;// handGrainDisplayObject;
+                    currentHandToolDisplayObject = null;// handGrainDisplayObject;
                     break;
                 }
 
             case RTSUnitType.Lumberjack:
             {
                 currentState = VillagerActorState.Gathering;
-                currentGatheringResourceType = ResourceGatheringType.Wood;
-                handWoodDisplayObject.SetActive(true);
-                currentHandDisplayObject = handWoodDisplayObject;
+                wantedResourceType = ResourceGatheringType.Wood;
+                woodHandToolDisplayObject.SetActive(true);
+                currentHandToolDisplayObject = woodHandToolDisplayObject;
                 break;
             }
 
             case RTSUnitType.GoldMiner:
             {
                 currentState = VillagerActorState.Gathering;
-                currentGatheringResourceType = ResourceGatheringType.Gold;
-                handGoldDisplayObject.SetActive(true);
-                currentHandDisplayObject = handGoldDisplayObject;
+                wantedResourceType = ResourceGatheringType.Gold;
+                goldHandToolDisplayObject.SetActive(true);
+                currentHandToolDisplayObject = goldHandToolDisplayObject;
                 break;
             }
 
             case RTSUnitType.OreMiner:
             {
                 currentState = VillagerActorState.Gathering;
-                currentGatheringResourceType = ResourceGatheringType.Ore;
-                handOreDisplayObject.SetActive(true);
-                currentHandDisplayObject = handOreDisplayObject;
+                wantedResourceType = ResourceGatheringType.Ore;
+                oreHandToolDisplayObject.SetActive(true);
+                currentHandToolDisplayObject = oreHandToolDisplayObject;
                 break;
             }
         }
@@ -382,33 +387,33 @@ public class VillagerActor : Actor
         if (currentCargoDisplayObject)
             currentCargoDisplayObject.SetActive(false);
 
-        switch (currentGatheringResourceType)
+        switch (wantedResourceType)
         {
             case ResourceGatheringType.Grain:
             {
-                cargoGrainDisplayObject.SetActive(visible);
-                currentCargoDisplayObject = cargoGrainDisplayObject;
+                grainCargoDisplayObject.SetActive(visible);
+                currentCargoDisplayObject = grainCargoDisplayObject;
                 break;
             }
 
             case ResourceGatheringType.Wood:
             {
-                cargoWoodDisplayObject.SetActive(visible);
-                currentCargoDisplayObject = cargoWoodDisplayObject;
+                woodCargoDisplayObject.SetActive(visible);
+                currentCargoDisplayObject = woodCargoDisplayObject;
                 break;
             }
 
             case ResourceGatheringType.Ore:
             {
-                cargoOreDisplayObject.SetActive(visible);
-                currentCargoDisplayObject = cargoOreDisplayObject;
+                oreCargoDisplayObject.SetActive(visible);
+                currentCargoDisplayObject = oreCargoDisplayObject;
                 break;
             }
 
             case ResourceGatheringType.Gold:
             {
-                cargoGoldDisplayObject.SetActive(visible);
-                currentCargoDisplayObject = cargoGoldDisplayObject;
+                goldCargoDisplayObject.SetActive(visible);
+                currentCargoDisplayObject = goldCargoDisplayObject;
                 break;
             }
         }
@@ -416,7 +421,7 @@ public class VillagerActor : Actor
 
     private void FindBuilding(List<TerrainBuilding> blacklist = null)
     {
-        switch (currentGatheringResourceType)
+        switch (wantedResourceType)
         {
             case ResourceGatheringType.Wood:
                 FindLumberMills(blacklist);
@@ -545,7 +550,7 @@ public class VillagerActor : Actor
     {
 
 
-        switch (currentGatheringResourceType)
+        switch (wantedResourceType)
         {
             case ResourceGatheringType.Wood:
                 FindWood(blacklist);
@@ -644,19 +649,19 @@ public class VillagerActor : Actor
 
     void PlayGatheringAnimation()
     {
-        switch ( currentGatheringResourceType )
+        switch ( wantedResourceType )
         {
             case ResourceGatheringType.Wood:
             {
                 
-                GetComponentInChildren<Animator>().Play("Attack_A", -1, 0f);
+                animator.Play("Attack_A", -1, 0f);
                 break;
             }
 
             case ResourceGatheringType.Gold:
             case ResourceGatheringType.Ore:
             {
-                GetComponentInChildren<Animator>().Play("Attack_B", -1, 0f);
+                animator.Play("Attack_B", -1, 0f);
                 break;
             }
 
@@ -665,9 +670,9 @@ public class VillagerActor : Actor
                 int choice = Random.Range(0, 100);
                 
                 if (choice <= 50)
-                    GetComponentInChildren<Animator>().Play("Punch_A", -1, 0f);
+                    animator.Play("Punch_A", -1, 0f);
                 else
-                    GetComponentInChildren<Animator>().Play("Punch_B", -1, 0f);
+                    animator.Play("Punch_B", -1, 0f);
                 break;
             }
 

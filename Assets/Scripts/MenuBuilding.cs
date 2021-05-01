@@ -11,6 +11,7 @@ public class MenuBuilding : MonoBehaviour
     
     private PalmMenuSlot palmMenuSlot;
     private bool canReAttach;
+    private Interactable interactible;
     void Start()
     {
         palmMenuSlot = this.GetComponentInParent<PalmMenuSlot>();
@@ -18,7 +19,6 @@ public class MenuBuilding : MonoBehaviour
 
     public void DetachedFromHand()
     {
-        Debug.Log("detaching");
         // Use gravity, kinematics off, etc..        
         gameObject.GetComponent<Rigidbody>().isKinematic = false;
         gameObject.GetComponent<Rigidbody>().useGravity = true; 
@@ -41,20 +41,6 @@ public class MenuBuilding : MonoBehaviour
 
         //     palmMenuSlot.RespawnMenuSlotObject();    
         // }        
-    }
-
-    void OnTriggerEnter(Collider collision)
-    {
-        // if (collision.gameObject.name == "ButtonTrigger")
-        //     canReAttach = true;
-        
-        //Debug.Log(collision.transform.name + " Trigger");
-    }
-
-    void OnTriggerExit(Collider collision)
-    {
-        // if (collision.gameObject.name == "ButtonTrigger")
-        //     canReAttach = false;
     }
 
     private void OnCollisionEnter(Collision collision)

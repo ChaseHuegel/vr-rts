@@ -87,6 +87,7 @@ public class TerrainBuilding : MonoBehaviour
         if (currentHealth < maxHealth)
             buildingHealthBar.enabled = true;
 
+        RepairDamage(0);
         RefreshHealthBar();        
 
         playerManager = Player.instance.GetComponent<PlayerManager>();
