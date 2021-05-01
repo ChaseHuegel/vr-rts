@@ -17,6 +17,7 @@ public class PlayerManager : MonoBehaviour
 
     public int civilianPopulation;
     public int militaryPopulation;
+    public int totalPopulation;
     public int populationLimit;
 
     private TeleportArc teleportArc;
@@ -80,7 +81,7 @@ public class PlayerManager : MonoBehaviour
     {
         // Determine if the unit should be added to civilian or military population
         if (unitType == RTSUnitType.Builder || unitType == RTSUnitType.Farmer || unitType == RTSUnitType.Lumberjack ||
-            unitType == RTSUnitType.OreMiner)
+            unitType == RTSUnitType.OreMiner || unitType == RTSUnitType.GoldMiner)
         {
             civilianPopulation += 1;
             WristDisplay.SetCivilianPopulationText(civilianPopulation.ToString());
@@ -90,6 +91,9 @@ public class PlayerManager : MonoBehaviour
             militaryPopulation += 1;
             WristDisplay.SetMilitaryPopulationText(militaryPopulation.ToString());
         }
+        
+        totalPopulation += 1;
+        WristDisplay.SetTotalPopulationText(totalPopulation.ToString() + "/" + populationLimit.ToString());
     }
 
     public void RemoveFromPopulation(RTSUnitType unitType)
@@ -100,14 +104,15 @@ public class PlayerManager : MonoBehaviour
         {
             civilianPopulation -= 1;
             WristDisplay.SetCivilianPopulationText(civilianPopulation.ToString());
-            WristDisplay.SetTotalPopulationText((civilianPopulation + militaryPopulation).ToString()+ "/" + populationLimit.ToString());
         }
         else
         {
             militaryPopulation -= 1;
             WristDisplay.SetMilitaryPopulationText(militaryPopulation.ToString());            
-            WristDisplay.SetTotalPopulationText((civilianPopulation + militaryPopulation).ToString() + "/" + populationLimit.ToString());
         }
+
+        totalPopulation -= 1;
+        WristDisplay.SetTotalPopulationText(totalPopulation.ToString() + "/" + populationLimit.ToString());
     }
 
     public void IncreasePopulationLimit(int amountToIncreaseBy)

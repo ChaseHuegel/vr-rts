@@ -23,8 +23,8 @@ public class ResourceManager : Singleton<ResourceManager>
     public static List<ResourceNode> GetOre() { return Instance.ore; }
     public static List<ResourceNode> GetGrain() { return Instance.grain; }
 
-public static List<TerrainBuilding> GetBuildAndRepair() { return Instance.buildAndRepair; }
-    public static List<TerrainBuilding> GetLumberMills() { return Instance.lumberMills; }
-    public static List<TerrainBuilding> GetTownHalls() { return Instance.townHalls; }
-    public static List<TerrainBuilding> GetGranaries() {return Instance.granaries; }
+public static List<TerrainBuilding> GetBuildAndRepairObjects() { return Instance.buildAndRepair; }
+    public static List<TerrainBuilding> GetWoodDropoffObjects() { return Instance.lumberMills; }
+    public static List<TerrainBuilding> GetGoldDroppoffObjects() { return Instance.townHalls; }
+    public static List<TerrainBuilding> GetGrainDropoffObjects() {return Instance.granaries; }
 }

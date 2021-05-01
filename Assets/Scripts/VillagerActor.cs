@@ -6,7 +6,15 @@ using Swordfish.Navigation;
 using Valve.VR;
 
 public enum VillagerActorState { Idle, Gathering, Transporting, Building, Repairing, Roaming };
-public enum ResourceGatheringType { None, Grain, Wood, Ore, Gold };
+
+[System.Flags]
+public enum ResourceGatheringType { 
+    None = 0,
+    Grain = 1, 
+    Wood = 2, 
+    Ore = 4, 
+    Gold = 8,
+};
 
 [RequireComponent(typeof(AudioSource), typeof(Animator))]
 public class VillagerActor : Actor
@@ -75,47 +83,6 @@ public class VillagerActor : Actor
         playerManager.AddToPopulation(rtsUnitType);        
     }
 
-    public void Update()
-    {
-        // if (lastGatheringResoureType == currentGatheringResourceType)
-        //     return;
-
-        // if (currentHandDisplayObject)
-        //     currentHandDisplayObject.SetActive(false);
-
-        // lastGatheringResoureType = currentGatheringResourceType;
-
-        // switch (currentGatheringResourceType)
-        // {
-        //     case ResourceGatheringType.Grain:
-        //     {
-        //         //handGrainDisplayObject.SetActive(true);
-        //         currentHandDisplayObject = null;// handGrainDisplayObject;
-        //         break;
-        //     }
-
-        //     case ResourceGatheringType.Wood:
-        //     {
-        //         handWoodDisplayObject.SetActive(true);
-        //         currentHandDisplayObject = handWoodDisplayObject;
-        //         break;
-        //     }
-
-        //     case ResourceGatheringType.Ore:
-        //     {
-        //         handOreDisplayObject.SetActive(true);
-        //         currentHandDisplayObject = handOreDisplayObject;
-        //         break;
-        //     }
-
-        //     case ResourceGatheringType.Gold:
-        //     {
-        //         handGoldDisplayObject.SetActive(true);
-        //         currentHandDisplayObject = handGoldDisplayObject;
-        //         break;
-        //     }
-        // }
-    }
     public void OnPickUp()
     {
         isHeld = true;        
@@ -123,8 +90,11 @@ public class VillagerActor : Actor
         this.enabled = false;
         ResetPathing();
         villagerHoverMenu.Show();
+
         if (playRandomOnPickUpAudio)
             PlayOnPickUpSound();
+
+        animator.StopPlayback();
     }
 
     void PlayOnPickUpSound()
@@ -139,6 +109,7 @@ public class VillagerActor : Actor
         ResetPathing();
         audioSource.Stop();
         villagerHoverMenu.Hide();
+        animator.StartPlayback();
     }
 
     // This is is used to reenable the character after they have been
@@ -450,7 +421,7 @@ public class VillagerActor : Actor
 
         //  Find the nearest townhall within range
         int shortestDistance = cellSearchDistance * cellSearchDistance; //  Square the distance
-        foreach (TerrainBuilding damagedBuildings in ResourceManager.GetBuildAndRepair())
+        foreach (TerrainBuilding damagedBuildings in ResourceManager.GetBuildAndRepairObjects())
         {
             if (damagedBuildings == null) continue;   //  TODO trim null values from resource manager
             if (blacklist != null && blacklist.Contains(damagedBuildings)) continue;
@@ -477,7 +448,7 @@ public class VillagerActor : Actor
 
         //  Find the nearest townhall within range
         int shortestDistance = cellSearchDistance * cellSearchDistance; //  Square the distance
-        foreach (TerrainBuilding granary in ResourceManager.GetGranaries())
+        foreach (TerrainBuilding granary in ResourceManager.GetGrainDropoffObjects())
         {
             if (granary == null) continue;   //  TODO trim null values from resource manager
             if (blacklist != null && blacklist.Contains(granary)) continue;
@@ -504,7 +475,7 @@ public class VillagerActor : Actor
 
         //  Find the nearest townhall within range
         int shortestDistance = cellSearchDistance * cellSearchDistance; //  Square the distance
-        foreach (TerrainBuilding townhall in ResourceManager.GetTownHalls())
+        foreach (TerrainBuilding townhall in ResourceManager.GetGoldDroppoffObjects())
         {
             if (townhall == null) continue;   //  TODO trim null values from resource manager
             if (blacklist != null && blacklist.Contains(townhall)) continue;
@@ -531,7 +502,7 @@ public class VillagerActor : Actor
 
         //  Find the nearest lumbermill within range
         int shortestDistance = cellSearchDistance * cellSearchDistance; //  Square the distance
-        foreach (TerrainBuilding lumbermill in ResourceManager.GetLumberMills())
+        foreach (TerrainBuilding lumbermill in ResourceManager.GetWoodDropoffObjects())
         {
             if (lumbermill == null) continue;   //  TODO trim null values from resource manager
             if (blacklist != null && blacklist.Contains(lumbermill)) continue;

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Valve.VR.InteractionSystem;
+using UnityEditor;
 
 public class TerrainBuilding : MonoBehaviour
 {
@@ -26,7 +27,7 @@ public class TerrainBuilding : MonoBehaviour
     public GameObject buildingDestroyedEffect;
 
     [Header( "Unit Stuff" )]
-    public int populationSupported = 1;
+    public int populationSupported = 1;    
     public ResourceGatheringType dropoffType = ResourceGatheringType.None;
     public GameObject unitSpawnPoint;
     public GameObject unitRallyWaypoint;
@@ -87,27 +88,28 @@ public class TerrainBuilding : MonoBehaviour
 
         if (currentHealth < maxHealth)
         {
-            ResourceManager.GetBuildAndRepair().Add(this);
+            ResourceManager.GetBuildAndRepairObjects().Add(this);
         }    
         
-        switch (dropoffType)
+        if (dropoffType.HasFlag(ResourceGatheringType.Wood))
         {
-            case ResourceGatheringType.Wood:
-                ResourceManager.GetLumberMills().Add(this);
-                break;
+            ResourceManager.GetWoodDropoffObjects().Add(this);
+        }
 
-            case ResourceGatheringType.Gold:
-                ResourceManager.GetTownHalls().Add(this);
-                break;
+        if (dropoffType.HasFlag(ResourceGatheringType.Gold))
+        {
+            ResourceManager.GetGoldDroppoffObjects().Add(this);
+        }
 
-            case ResourceGatheringType.Ore:
-                ResourceManager.GetTownHalls().Add(this);
-                break;
+        if (dropoffType.HasFlag(ResourceGatheringType.Ore))
+        {
+            ResourceManager.GetGoldDroppoffObjects().Add(this);
+        }
 
-            case ResourceGatheringType.Grain:
-                ResourceManager.GetGranaries().Add(this);
-                break;
-        }        
+        if (dropoffType.HasFlag(ResourceGatheringType.Grain))
+        {
+            ResourceManager.GetGrainDropoffObjects().Add(this);
+        }
     }
 
     void RefreshHealthBar()
@@ -124,6 +126,7 @@ public class TerrainBuilding : MonoBehaviour
 
         if (currentHealth >= (maxHealth * 0.85f))
         {
+            buildingStage0.SetActive(false);
             buildingStage1.SetActive(false);
             buildingStageFinal.SetActive(true);
             constructionCompleted = true;
@@ -153,7 +156,7 @@ public class TerrainBuilding : MonoBehaviour
         else
         {
             buildingHealthBar.enabled = false;
-            ResourceManager.GetBuildAndRepair().Remove(this);
+            ResourceManager.GetBuildAndRepairObjects().Remove(this);
         }
 
         if (constructionCompleted)
@@ -163,16 +166,17 @@ public class TerrainBuilding : MonoBehaviour
                 timeElapsed += Time.deltaTime;
                 float progress = (timeElapsed / unitSpawnQueue.Peek().queueTime) * 100;
                 progress = UnityEngine.Mathf.Round(progress);
-                //queueStatusText.text = unitSpawnQueue.Count.ToString();// progress.ToString() + "%";
+                queueStatusText.text = unitSpawnQueue.Count.ToString();// progress.ToString() + "%";
                 progressImage.fillAmount = progress / 100;
 
                 if (timeElapsed >= unitSpawnQueue.Peek().queueTime)
                 {
                     SpawnUnit();
                     timeElapsed = 0.0f;
-                    unitSpawnQueue.Dequeue();
-                    Debug.Log("Removed unit from queue " + unitSpawnQueue.Count + " left in queue.");
+                    unitSpawnQueue.Dequeue();                    
                     progressImage.fillAmount = 0;
+
+                    //Debug.Log("Removed unit from queue " + unitSpawnQueue.Count + " left in queue.");
                 }
 
                 foreach(UnityEngine.UI.Image image in QueueImageObjects)
@@ -195,7 +199,7 @@ public class TerrainBuilding : MonoBehaviour
         if (unitSpawnQueue.Count > 0)
         {
             unitSpawnQueue.Dequeue();
-            Debug.Log("Removed unit from queue " + unitSpawnQueue.Count + " left in queue.");
+            //Debug.Log("Removed unit from queue " + unitSpawnQueue.Count + " left in queue.");
         }
     }
 
@@ -212,44 +216,8 @@ public class TerrainBuilding : MonoBehaviour
             actor.SetUnitType(unitSpawnQueue.Peek().unitType);
             
             RTSUnitType uType = unitSpawnQueue.Peek().unitType;
-            
-            // switch ( uType )
-            // {
-            //     case RTSUnitType.Builder:
-            //         {
-            //             VillagerActor actor = unit.GetComponent<VillagerActor>();
-            //             actor.SetUnitType()
-            //             actor.currentState = VillagerActorState.Building;
-            //             actor.currentGatheringResourceType = ResourceGatheringType.None;
-            //             break;
-            //         }
 
-            //     case RTSUnitType.Farmer:
-            //         {
-            //             VillagerActor actor = unit.GetComponent<VillagerActor>();
-            //             actor.currentState = VillagerActorState.Gathering;
-            //             actor.currentGatheringResourceType = ResourceGatheringType.Grain;
-            //             break;
-            //         }
-
-            //     case RTSUnitType.Lumberjack:
-            //     {
-            //         VillagerActor actor = unit.GetComponent<VillagerActor>();
-            //         actor.currentState = VillagerActorState.Gathering;
-            //         actor.currentGatheringResourceType = ResourceGatheringType.Wood;
-            //         break;
-            //     }
-
-            //     case RTSUnitType.GoldMiner:
-            //     {
-            //         VillagerActor actor = unit.GetComponent<VillagerActor>();
-            //         actor.currentState = VillagerActorState.Gathering;
-            //         actor.currentGatheringResourceType = ResourceGatheringType.Gold;
-            //         break;
-            //     }
-            // }
-
-            Debug.Log("Spawned " + unit.name + ".");
+            //Debug.Log("Spawned " + unit.name + ".");
         }
         else
             Debug.Log ("Spawn unit failed. Missing prefabToSpawn");
