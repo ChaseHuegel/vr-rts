@@ -53,6 +53,8 @@ public class VillagerActor : Actor
     int currentCargoTotal;
     ResourceGatheringType lastWantedResoureType;
 
+    protected PlayerManager playerManager;
+
     public override void Initialize()
     {
         base.Initialize();
@@ -65,8 +67,12 @@ public class VillagerActor : Actor
         if (!animator)
             Debug.Log("No animator component found.");
 
+        playerManager = Valve.VR.InteractionSystem.Player.instance.GetComponent<PlayerManager>();
+
         // Initialize villager AI state, display objects, etc.
         SetUnitType(rtsUnitType);
+
+        playerManager.AddToPopulation(rtsUnitType);        
     }
 
     public void Update()

@@ -15,6 +15,10 @@ public class PlayerManager : MonoBehaviour
     public int goldCollected;
     public int grainCollected;
 
+    public int civilianPopulation;
+    public int militaryPopulation;
+    public int populationLimit;
+
     private TeleportArc teleportArc;
 
     public SteamVR_Action_Boolean palmMenuOnOff;
@@ -50,21 +54,15 @@ public class PlayerManager : MonoBehaviour
 
         rtsUnitDataList = new List<RTSUnitTypeData>();
 
-        RTSUnitTypeData builderData = new RTSUnitTypeData(RTSUnitType.Builder, 5.0f, villagerPrefab, builderWorldButtonImage);
-        RTSUnitTypeData farmerData = new RTSUnitTypeData(RTSUnitType.Farmer, 5.0f, villagerPrefab, farmerWorldButtonImage);
-        RTSUnitTypeData lumberjackData = new RTSUnitTypeData(RTSUnitType.Lumberjack, 5.0f, villagerPrefab, lumberjackWorldButtonImage);
-        RTSUnitTypeData minerData = new RTSUnitTypeData(RTSUnitType.GoldMiner, 5.0f, villagerPrefab, minerWorldButtonImage);
+        RTSUnitTypeData builderData = new RTSUnitTypeData(RTSUnitType.Builder, 5.0f, villagerPrefab, builderWorldButtonImage, 1);
+        RTSUnitTypeData farmerData = new RTSUnitTypeData(RTSUnitType.Farmer, 5.0f, villagerPrefab, farmerWorldButtonImage, 1);
+        RTSUnitTypeData lumberjackData = new RTSUnitTypeData(RTSUnitType.Lumberjack, 5.0f, villagerPrefab, lumberjackWorldButtonImage, 1);
+        RTSUnitTypeData minerData = new RTSUnitTypeData(RTSUnitType.GoldMiner, 5.0f, villagerPrefab, minerWorldButtonImage, 1);
         
         rtsUnitDataList.Add(builderData);
         rtsUnitDataList.Add(farmerData);
         rtsUnitDataList.Add(lumberjackData);
         rtsUnitDataList.Add(minerData);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     public RTSUnitTypeData FindUnitData(RTSUnitType type)
@@ -76,6 +74,50 @@ public class PlayerManager : MonoBehaviour
     public void TogglePalmMenu(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
         palmMenu.Toggle();        
+    }
+
+    public void AddToPopulation(RTSUnitType unitType)
+    {
+        // Determine if the unit should be added to civilian or military population
+        if (unitType == RTSUnitType.Builder || unitType == RTSUnitType.Farmer || unitType == RTSUnitType.Lumberjack ||
+            unitType == RTSUnitType.OreMiner)
+        {
+            civilianPopulation += 1;
+            WristDisplay.SetCivilianPopulationText(civilianPopulation.ToString());
+        }
+        else
+        {
+            militaryPopulation += 1;
+            WristDisplay.SetMilitaryPopulationText(militaryPopulation.ToString());
+        }
+    }
+
+    public void RemoveFromPopulation(RTSUnitType unitType)
+    {
+        // Determine if the unit should be removed from civilian or military population
+        if (unitType == RTSUnitType.Builder || unitType == RTSUnitType.Farmer || unitType == RTSUnitType.Lumberjack ||
+            unitType == RTSUnitType.OreMiner)
+        {
+            civilianPopulation -= 1;
+            WristDisplay.SetCivilianPopulationText(civilianPopulation.ToString());
+            WristDisplay.SetTotalPopulationText((civilianPopulation + militaryPopulation).ToString()+ "/" + populationLimit.ToString());
+        }
+        else
+        {
+            militaryPopulation -= 1;
+            WristDisplay.SetMilitaryPopulationText(militaryPopulation.ToString());            
+            WristDisplay.SetTotalPopulationText((civilianPopulation + militaryPopulation).ToString() + "/" + populationLimit.ToString());
+        }
+    }
+
+    public void IncreasePopulationLimit(int amountToIncreaseBy)
+    {
+        populationLimit += amountToIncreaseBy;   
+    }
+
+    public void DecreasePopulationLimit(int amountDecreaseBy)
+    {
+        populationLimit -= amountDecreaseBy;
     }
 
     public void AddResourceToStockpile(ResourceGatheringType type, int amount)

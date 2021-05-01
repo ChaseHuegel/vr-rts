@@ -12,6 +12,8 @@ public class MenuBuilding : MonoBehaviour
     private PalmMenuSlot palmMenuSlot;
     private bool canReAttach;
     private Interactable interactible;
+    private bool hasBeenDetachedFromHand;
+
     void Start()
     {
         palmMenuSlot = this.GetComponentInParent<PalmMenuSlot>();
@@ -24,7 +26,7 @@ public class MenuBuilding : MonoBehaviour
         gameObject.GetComponent<Rigidbody>().useGravity = true; 
 
         palmMenuSlot.RespawnMenuSlotObject();  
-
+        hasBeenDetachedFromHand = true;
         // if (canReAttach)    
         // {
         //     gameObject.transform.parent = palmMenuSlot.transform;
@@ -45,6 +47,9 @@ public class MenuBuilding : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        if (!hasBeenDetachedFromHand)
+            return;
+
         ContactPoint contact = collision.contacts[0];
         float backTrackLength = 1f;
         Ray ray = new Ray(contact.point - (-contact.normal * backTrackLength), -contact.normal);

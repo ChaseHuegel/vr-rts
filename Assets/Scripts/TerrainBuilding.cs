@@ -12,8 +12,6 @@ public class TerrainBuilding : MonoBehaviour
     public GameObject buildingStage0;
     public GameObject buildingStage1;
     public GameObject buildingStageFinal;
-    public float stage0Duration = 10.0f;
-    public float stage1Duration = 10.0f;
 
     [Header( "Building Stats" )]
     public int maxHealth = 500;
@@ -28,6 +26,7 @@ public class TerrainBuilding : MonoBehaviour
     public GameObject buildingDestroyedEffect;
 
     [Header( "Unit Stuff" )]
+    public int populationSupported = 1;
     public ResourceGatheringType dropoffType = ResourceGatheringType.None;
     public GameObject unitSpawnPoint;
     public GameObject unitRallyWaypoint;
@@ -41,7 +40,6 @@ public class TerrainBuilding : MonoBehaviour
 
     private float timeElapsed = 0.0f;
     private bool constructionCompleted = false;
-    //private float buildingContructionTimeTotal;
 
     private Queue<RTSUnitTypeData> unitSpawnQueue = new Queue<RTSUnitTypeData>();
 
@@ -91,8 +89,7 @@ public class TerrainBuilding : MonoBehaviour
         RefreshHealthBar();        
 
         playerManager = Player.instance.GetComponent<PlayerManager>();
-        //currentHealth = maxHealth;
-        //buildingContructionTimeTotal = stage0Duration + stage1Duration;
+        playerManager.IncreasePopulationLimit(populationSupported);
 
         if (currentHealth < maxHealth)
         {
@@ -117,20 +114,6 @@ public class TerrainBuilding : MonoBehaviour
                 ResourceManager.GetGranaries().Add(this);
                 break;
         }        
-    }
-
-    void OnTriggerEnter(Collider other)
-    {
-        // TerrainBuilding tbOther = other.GetComponent<TerrainBuilding>();
-
-        // if (tbOther != null)
-        // {
-        //     Destroy(this);
-        //     // if (timeElapsed < tbOther.TimeElapsed)
-        //     // {
-        //     //     Destroy(this);
-        //     // }
-        // }
     }
 
     void RefreshHealthBar()
@@ -179,10 +162,6 @@ public class TerrainBuilding : MonoBehaviour
             ResourceManager.GetBuildAndRepair().Remove(this);
         }
 
-    
-        //currentHealthImage.fillAmount = (currentHealth / maxHealth);// / 100.0f;
-        
-        //healthStatusText.text = ((currentHealth/maxHealth)).ToString(); 
         if (constructionCompleted)
         {
             if (unitSpawnQueue.Count > 0)
@@ -190,7 +169,7 @@ public class TerrainBuilding : MonoBehaviour
                 timeElapsed += Time.deltaTime;
                 float progress = (timeElapsed / unitSpawnQueue.Peek().queueTime) * 100;
                 progress = UnityEngine.Mathf.Round(progress);
-                queueStatusText.text = unitSpawnQueue.Count.ToString();// progress.ToString() + "%";
+                //queueStatusText.text = unitSpawnQueue.Count.ToString();// progress.ToString() + "%";
                 progressImage.fillAmount = progress / 100;
 
                 if (timeElapsed >= unitSpawnQueue.Peek().queueTime)
@@ -214,25 +193,7 @@ public class TerrainBuilding : MonoBehaviour
                     i++;
                 }
             }
-        }
-        else
-        {
-            // timeElapsed += Time.deltaTime;
-
-            // if (timeElapsed >= buildingContructionTimeTotal)
-            // {
-            //     buildingStage1.SetActive(false);
-            //     buildingStageFinal.SetActive(true);
-            //     constructionCompleted = true;
-            //     timeElapsed = 0.0f;
-            // }
-            // else if (timeElapsed >= stage0Duration)
-            // {
-            //     buildingStage0.SetActive(false);
-            //     buildingStage1.SetActive(true);
-
-            // }
-        }
+        }        
     }
 
     public void RemoveLastUnitFromQueue()
