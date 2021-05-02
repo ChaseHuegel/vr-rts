@@ -113,6 +113,30 @@ namespace Valve.VR
             }
         }
         
+        public virtual SteamVR_Action_Boolean RotatePreviewClockwise
+        {
+            get
+            {
+                return SteamVR_Actions.default_RotatePreviewClockwise;
+            }
+        }
+        
+        public virtual SteamVR_Action_Boolean RotatePreviewCounterClockwise
+        {
+            get
+            {
+                return SteamVR_Actions.default_RotatePreviewCounterClockwise;
+            }
+        }
+        
+        public virtual SteamVR_Action_Boolean BuildingPlacementPointer
+        {
+            get
+            {
+                return SteamVR_Actions.default_BuildingPlacementPointer;
+            }
+        }
+        
         public virtual SteamVR_Action_Vibration Haptic
         {
             get

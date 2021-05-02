@@ -1,9 +1,4 @@
-﻿//======= Copyright (c) Valve Corporation, All rights reserved. ===============
-//
-// Purpose: Handles all the teleport logic
-//
-//=============================================================================
-
+﻿
 using UnityEngine;
 using UnityEngine.Events;
 using System.Collections;
@@ -11,9 +6,9 @@ using System.Collections;
 namespace Valve.VR.InteractionSystem
 {
 	//-------------------------------------------------------------------------
-	public class Teleport : MonoBehaviour
+	public class ObjectPlacementPointer : MonoBehaviour
     {
-        public SteamVR_Action_Boolean teleportAction = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("Teleport");
+        public SteamVR_Action_Boolean placeBuildingAction = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("BuildingPlacementPointer");
 
         public LayerMask traceLayerMask;
 		public LayerMask floorFixupTraceLayerMask;
@@ -124,14 +119,14 @@ namespace Valve.VR.InteractionSystem
 		public static SteamVR_Events.Action< TeleportMarkerBase > PlayerPreAction( UnityAction< TeleportMarkerBase > action ) { return new SteamVR_Events.Action< TeleportMarkerBase >( PlayerPre, action ); }
 
 		//-------------------------------------------------
-		private static Teleport _instance;
-		public static Teleport instance
+		private static ObjectPlacementPointer _instance;
+		public static ObjectPlacementPointer instance
 		{
 			get
 			{
 				if ( _instance == null )
 				{
-					_instance = GameObject.FindObjectOfType<Teleport>();
+					_instance = GameObject.FindObjectOfType<ObjectPlacementPointer>();
 				}
 
 				return _instance;
@@ -181,19 +176,13 @@ namespace Valve.VR.InteractionSystem
 
 			if ( player == null )
 			{
-				Debug.LogError("<b>[SteamVR Interaction]</b> Teleport: No Player instance found in map.", this);
+				Debug.LogError("<b>[SteamVR Interaction]</b> ObjectPlacementPointer: No Player instance found in map.", this);
 				Destroy( this.gameObject );
 				return;
 			}
 
-			CheckForSpawnPoint();
-
 			Invoke( "ShowTeleportHint", 5.0f );
-
-			previewObject = GameObject.Instantiate(previewObject);
-
 		}
-
 
 		//-------------------------------------------------
 		void OnEnable()
@@ -210,23 +199,6 @@ namespace Valve.VR.InteractionSystem
 			HidePointer();
 		}
 
-
-		//-------------------------------------------------
-		private void CheckForSpawnPoint()
-		{
-			foreach ( TeleportMarkerBase teleportMarker in teleportMarkers )
-			{
-				TeleportPoint teleportPoint = teleportMarker as TeleportPoint;
-				if ( teleportPoint && teleportPoint.playerSpawnPoint )
-				{
-					teleportingToMarker = teleportMarker;
-					TeleportPlayer();
-					break;
-				}
-			}
-		}
-
-
 		//-------------------------------------------------
 		public void HideTeleportPointer()
 		{
@@ -234,13 +206,6 @@ namespace Valve.VR.InteractionSystem
 			{
 				HidePointer();
 			}
-		}
-
-		public GameObject previewObject;
-
-		void ShowPreviewObject()
-		{
-			previewObject.SetActive(true);
 		}
 
 		//-------------------------------------------------
@@ -268,7 +233,7 @@ namespace Valve.VR.InteractionSystem
 				}
 			}
 
-			//If something is attached to the hand that is preventing teleport
+			//If something is attached to the hand that is preventing objectPlacement
 			if ( allowTeleportWhileAttached && !allowTeleportWhileAttached.teleportAllowed )
 			{
 				HidePointer();
@@ -349,6 +314,7 @@ namespace Valve.VR.InteractionSystem
 			{
 				hitSomething = true;
 				hitTeleportMarker = hitInfo.collider.GetComponentInParent<TeleportMarkerBase>();
+				Debug.Log(hitInfo.collider.gameObject.name);
 			}
 
 			if ( pointerAtBadAngle )
@@ -389,38 +355,6 @@ namespace Valve.VR.InteractionSystem
 
 				pointedAtTeleportMarker = hitTeleportMarker;
 				pointedAtPosition = hitInfo.point;
-
-				if ( showPlayAreaMarker )
-				{
-					//Show the play area marker if this is a teleport area
-					TeleportArea teleportArea = pointedAtTeleportMarker as TeleportArea;
-					if ( teleportArea != null && !teleportArea.locked && playAreaPreviewTransform != null )
-					{
-						Vector3 offsetToUse = playerFeetOffset;
-
-						//Adjust the actual offset to prevent the play area marker from moving too much
-						if ( !movedFeetFarEnough )
-						{
-							float distanceFromStartingOffset = Vector3.Distance( playerFeetOffset, startingFeetOffset );
-							if ( distanceFromStartingOffset < 0.1f )
-							{
-								offsetToUse = startingFeetOffset;
-							}
-							else if ( distanceFromStartingOffset < 0.4f )
-							{
-								offsetToUse = Vector3.Lerp( startingFeetOffset, playerFeetOffset, ( distanceFromStartingOffset - 0.1f ) / 0.3f );
-							}
-							else
-							{
-								movedFeetFarEnough = true;
-							}
-						}
-
-						playAreaPreviewTransform.position = pointedAtPosition + offsetToUse;
-
-						showPlayAreaPreview = true;
-					}
-				}
 
 				pointerEnd = hitInfo.point;
 			}
@@ -486,6 +420,7 @@ namespace Valve.VR.InteractionSystem
 			}
 
 			destinationReticleTransform.position = pointedAtPosition;
+			
 			invalidReticleTransform.position = pointerEnd;
 			onActivateObjectTransform.position = pointerEnd;
 			onDeactivateObjectTransform.position = pointerEnd;
@@ -495,8 +430,11 @@ namespace Valve.VR.InteractionSystem
 
 			pointerLineRenderer.SetPosition( 0, pointerStart );
 			pointerLineRenderer.SetPosition( 1, pointerEnd );
-		}
+			
+			// Added this.
+			destinationReticleTransform.gameObject.SetActive( true );
 
+		}
 
 		//-------------------------------------------------
 		void FixedUpdate()
@@ -688,8 +626,6 @@ namespace Valve.VR.InteractionSystem
 		//-------------------------------------------------
 		private void ShowPointer( Hand newPointerHand, Hand oldPointerHand )
 		{
-			//ShowPreviewObject();
-
 			if ( !visible )
 			{
 				pointedAtTeleportMarker = null;
@@ -825,6 +761,11 @@ namespace Valve.VR.InteractionSystem
 		//-------------------------------------------------
 		private void TryTeleportPlayer()
 		{
+			if ( visible)
+			{
+
+			}
+
 			if ( visible && !teleporting )
 			{
 				if ( pointedAtTeleportMarker != null && pointedAtTeleportMarker.locked == false )
@@ -850,7 +791,7 @@ namespace Valve.VR.InteractionSystem
 			if ( teleportPoint != null && teleportPoint.teleportType == TeleportPoint.TeleportPointType.SwitchToNewScene )
 			{
 				currentFadeTime *= 3.0f;
-				Teleport.ChangeScene.Send( currentFadeTime );
+				ObjectPlacementPointer.ChangeScene.Send( currentFadeTime );
 			}
 
 			SteamVR_Fade.Start( Color.clear, 0 );
@@ -869,7 +810,7 @@ namespace Valve.VR.InteractionSystem
 		{
 			teleporting = false;
 
-			Teleport.PlayerPre.Send( pointedAtTeleportMarker );
+			ObjectPlacementPointer.PlayerPre.Send( pointedAtTeleportMarker );
 
 			SteamVR_Fade.Start( Color.clear, currentFadeTime );
 
@@ -917,7 +858,7 @@ namespace Valve.VR.InteractionSystem
 				teleportingToMarker.TeleportPlayer( pointedAtPosition );
 			}
 
-			Teleport.Player.Send( pointedAtTeleportMarker );
+			ObjectPlacementPointer.Player.Send( pointedAtTeleportMarker );
 		}
 
 
@@ -974,8 +915,8 @@ namespace Valve.VR.InteractionSystem
 		{
 			if ( hintCoroutine != null )
             {
-                ControllerButtonHints.HideTextHint(player.leftHand, teleportAction);
-                ControllerButtonHints.HideTextHint(player.rightHand, teleportAction);
+                ControllerButtonHints.HideTextHint(player.leftHand, placeBuildingAction);
+                ControllerButtonHints.HideTextHint(player.rightHand, placeBuildingAction);
 
 				StopCoroutine( hintCoroutine );
 				hintCoroutine = null;
@@ -999,12 +940,12 @@ namespace Valve.VR.InteractionSystem
 				foreach ( Hand hand in player.hands )
 				{
 					bool showHint = IsEligibleForTeleport( hand );
-					bool isShowingHint = !string.IsNullOrEmpty( ControllerButtonHints.GetActiveHintText( hand, teleportAction) );
+					bool isShowingHint = !string.IsNullOrEmpty( ControllerButtonHints.GetActiveHintText( hand, placeBuildingAction) );
 					if ( showHint )
 					{
 						if ( !isShowingHint )
 						{
-							ControllerButtonHints.ShowTextHint( hand, teleportAction, "Teleport" );
+							ControllerButtonHints.ShowTextHint( hand, placeBuildingAction, "Teleport" );
 							prevBreakTime = Time.time;
 							prevHapticPulseTime = Time.time;
 						}
@@ -1019,7 +960,7 @@ namespace Valve.VR.InteractionSystem
 					}
 					else if ( !showHint && isShowingHint )
 					{
-						ControllerButtonHints.HideTextHint( hand, teleportAction);
+						ControllerButtonHints.HideTextHint( hand, placeBuildingAction);
 					}
 				}
 
@@ -1109,7 +1050,7 @@ namespace Valve.VR.InteractionSystem
 				}
 				else
                 {
-                    return teleportAction.GetStateUp(hand.handType);
+                    return placeBuildingAction.GetStateUp(hand.handType);
 
                     //return hand.controller.GetPressUp( SteamVR_Controller.ButtonMask.Touchpad );
                 }
@@ -1129,7 +1070,7 @@ namespace Valve.VR.InteractionSystem
 				}
 				else
                 {
-                    return teleportAction.GetState(hand.handType);
+                    return placeBuildingAction.GetState(hand.handType);
 				}
 			}
 
@@ -1148,7 +1089,7 @@ namespace Valve.VR.InteractionSystem
 				}
 				else
                 {
-                    return teleportAction.GetStateDown(hand.handType);
+                    return placeBuildingAction.GetStateDown(hand.handType);
 
                     //return hand.controller.GetPressDown( SteamVR_Controller.ButtonMask.Touchpad );
 				}

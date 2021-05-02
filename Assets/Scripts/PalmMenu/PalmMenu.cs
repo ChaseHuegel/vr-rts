@@ -8,7 +8,7 @@ public class PalmMenu : MonoBehaviour
     // public Hand leftHand;
     // public Hand rightHand;
 
-
+    ObjectPlacementPointer objectPlacementPointer;
     Hand menuHand;
     Hand selectionHand;
     
@@ -16,7 +16,8 @@ public class PalmMenu : MonoBehaviour
     void Start()
     {
         menuHand = Player.instance.leftHand;
-        selectionHand = Player.instance.rightHand;                
+        selectionHand = Player.instance.rightHand;      
+        objectPlacementPointer = FindObjectOfType<ObjectPlacementPointer>();          
     }
 
     // Update is called once per frame
@@ -47,14 +48,5 @@ public class PalmMenu : MonoBehaviour
             //selectionHand.useHoverSphere = false;
             gameObject.SetActive(true);          
         }
-    }
-
-    public void Spawn(GameObject objectToSpawn)
-    {
-        //GameObject go = Instantiate(objectToSpawn) as GameObject;
-        
-        //selectionHand.AttachObject(go, GrabTypes.Scripted);
-
-        //go.gameObject.transform.position = new Vector3();
     }
 }

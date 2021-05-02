@@ -23,7 +23,7 @@ public class PlayerManager : MonoBehaviour
     private TeleportArc teleportArc;
 
     public SteamVR_Action_Boolean palmMenuOnOff;
-
+    
     List<RTSUnitTypeData> rtsUnitDataList = new List<RTSUnitTypeData>();
     
     public GameObject villagerPrefab;

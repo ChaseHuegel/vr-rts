@@ -72,11 +72,11 @@ namespace Valve.VR.InteractionSystem
 
 				if ( highlight )
 				{
-					areaMesh.material = Teleport.instance.areaHighlightedMaterial;
+					//areaMesh.material = Teleport.instance.areaHighlightedMaterial;
 				}
 				else
 				{
-					areaMesh.material = Teleport.instance.areaVisibleMaterial;
+					//areaMesh.material = Teleport.instance.areaVisibleMaterial;
 				}
 			}
 		}
