@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6319131350853889515}
   - component: {fileID: 3812501444175338271}
-  - component: {fileID: 701516316411356777}
+  - component: {fileID: -8177771772452882204}
   - component: {fileID: 5912934963577245136}
   m_Layer: 11
   m_Name: Wood_Node_Large_Variant_01
@@ -52,7 +52,7 @@ MonoBehaviour:
   resourceName: Wood
   maxResourceAmount: 5000
   destroyWhenResourceDepleted: 1
---- !u!114 &701516316411356777
+--- !u!114 &-8177771772452882204
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -61,7 +61,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1706927533363365916}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df03bfb25b43d3047970231943a0c7b9, type: 3}
+  m_Script: {fileID: 11500000, guid: ab54d6d5140767340bdbc6beb759bea3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   gridPosition:
@@ -71,6 +71,7 @@ MonoBehaviour:
   boundingOrigin: {x: 0, y: 0}
   bakeOnStart: 1
   rebake: 0
+  type: 2
 --- !u!65 &5912934963577245136
 BoxCollider:
   m_ObjectHideFlags: 0

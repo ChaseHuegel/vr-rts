@@ -19,7 +19,24 @@ public class Path
             return 14*lengthX + 10*(lengthY - lengthX);
     }
 
-    public static List<Cell> Find(Cell start, Cell end, bool ignoreActors = true)
+    public static List<Cell> RetracePath(Cell tracingCell, Cell start)
+    {
+        List<Cell> path = new List<Cell>();
+
+        //  Trace a path back to the start and reverse it
+        while (tracingCell != start)
+        {
+            path.Add(tracingCell);
+            tracingCell = tracingCell.parent;
+        }
+
+        path.Reverse();
+
+        //  Return the path
+        return path;
+    }
+
+    public static List<Cell> Find(Cell start, Cell end, PathfindingGoal[] goals = null, bool ignoreActors = true)
     {
         //  TODO: waypoint system to break down long or complex treks into multiple pathfind attempts
         //  a 'waypoint' can represent the end of this path but not the actual end goal
@@ -38,29 +55,20 @@ public class Path
             current = openList.RemoveFirst();  //  Default to the first open cell
             testedList.Add(current);    //  Move current cell to the tested list
 
-            //  We've reached the end point
-            if (current == end || openList.IsFull() || testedList.IsFull())
+            //  We've reached the target or the end of a heap, path to the current cell
+            if (current == end || openList.IsFull() || testedList.IsFull() )
             {
-                List<Cell> path = new List<Cell>();
-
-                //  Trace a path back to the start and reverse it
-                Cell tracingCell = current;
-                while (tracingCell != start)
-                {
-                    path.Add(tracingCell);
-                    tracingCell = tracingCell.parent;
-                }
-
-                path.Reverse();
-
-                //  Return the path
-                return path;
+                return RetracePath(current, start);
             }
 
             //  Not there yet! Go through all neighbors of the current cell..
             foreach(Cell neighbor in current.neighbors())
             {
-                if (neighbor != end)
+                //  If we found a goal, path to it
+                // if (PathfindingGoal.IsGoal(neighbor, goals))
+                //     return RetracePath(current, start);
+
+                if (neighbor != end )
                 {
                     //  Ignore this neighbor if its solid or it has already been tested
                     if (!neighbor.passable || testedList.Contains(neighbor))

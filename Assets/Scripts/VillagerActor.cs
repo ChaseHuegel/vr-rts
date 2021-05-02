@@ -21,12 +21,12 @@ public class VillagerActor : Actor
     [SerializeField] protected ResourceNode targetNode;
     [SerializeField] protected TerrainBuilding targetBuilding;
     [SerializeField] protected TerrainBuilding targetDamaged;
-    
+
     [Header ("Stats")]
     public int carryingCapacity = 100;
     public float gatherCapacityPerSecond = 10;
-    public float buildAndRepairCapacityPerSecond = 10;    
-    
+    public float buildAndRepairCapacityPerSecond = 10;
+
     [Header("Animation")]
     [SerializeField] protected Animator animator;
 
@@ -72,7 +72,7 @@ public class VillagerActor : Actor
         // Initialize villager AI state, display objects, etc.
         SetUnitType(rtsUnitType);
 
-        playerManager.AddToPopulation(rtsUnitType);        
+        playerManager.AddToPopulation(rtsUnitType);
     }
 
     public void Update()
@@ -118,7 +118,7 @@ public class VillagerActor : Actor
     }
     public void OnPickUp()
     {
-        isHeld = true;        
+        isHeld = true;
         Freeze();
         this.enabled = false;
         ResetPathing();
@@ -185,17 +185,17 @@ public class VillagerActor : Actor
                 if ( HasValidBuildOrRepairTarget())
                 {
                     Body body = targetDamaged.GetComponent<Body>();
-                    
+
                     //  Reached our target
                     if (Util.DistanceUnsquared(gridPosition, body.gridPosition) <= body.GetCellVolumeSqr())
                     {
                         LookAt(body.gridPosition.x, body.gridPosition.y);
 
                         if (targetDamaged.NeedsRepair())
-                        {   
+                        {
                             animator.Play("Attack_A", -1, 0);
                             int amountToRepair = (int)(buildAndRepairCapacityPerSecond / (60 / Constants.ACTOR_TICK_RATE));
-                            targetDamaged.RepairDamage(amountToRepair);                        
+                            targetDamaged.RepairDamage(amountToRepair);
                         }
                         else
                         {
@@ -236,7 +236,7 @@ public class VillagerActor : Actor
                     if (Util.DistanceUnsquared(gridPosition, body.gridPosition) <= body.GetCellVolumeSqr())
                     {
                         PlayGatheringAnimation();
-                        
+
                         LookAt(body.gridPosition.x, body.gridPosition.y);
                         if (currentCargoTotal < carryingCapacity)
                         {
@@ -346,7 +346,7 @@ public class VillagerActor : Actor
                     currentState = VillagerActorState.Building;
                     wantedResourceType = ResourceGatheringType.None;
                     builderHandToolDisplayObject.SetActive(true);
-                    currentHandToolDisplayObject = builderHandToolDisplayObject;                    
+                    currentHandToolDisplayObject = builderHandToolDisplayObject;
                     break;
                 }
 
@@ -659,7 +659,7 @@ public class VillagerActor : Actor
         {
             case ResourceGatheringType.Wood:
             {
-                
+
                 animator.Play("Attack_A", -1, 0f);
                 break;
             }
@@ -674,7 +674,7 @@ public class VillagerActor : Actor
             case ResourceGatheringType.Grain:
             {
                 int choice = Random.Range(0, 100);
-                
+
                 if (choice <= 50)
                     animator.Play("Punch_A", -1, 0f);
                 else
@@ -683,6 +683,6 @@ public class VillagerActor : Actor
             }
 
         }
-        
+
     }
 }

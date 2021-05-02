@@ -334,7 +334,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7787313648030738688}
   - component: {fileID: -9582191125410412}
-  - component: {fileID: -443488839794104576}
+  - component: {fileID: -6287326408793178019}
   - component: {fileID: -4108974914810124012}
   m_Layer: 11
   m_Name: Gold_Node_Small_Variant_02
@@ -378,7 +378,7 @@ MonoBehaviour:
   resourceName: Gold
   maxResourceAmount: 1000
   destroyWhenResourceDepleted: 1
---- !u!114 &-443488839794104576
+--- !u!114 &-6287326408793178019
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -387,7 +387,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3613718223623019555}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df03bfb25b43d3047970231943a0c7b9, type: 3}
+  m_Script: {fileID: 11500000, guid: ab54d6d5140767340bdbc6beb759bea3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   gridPosition:
@@ -397,6 +397,7 @@ MonoBehaviour:
   boundingOrigin: {x: -0.125, y: -0.125}
   bakeOnStart: 1
   rebake: 0
+  type: 4
 --- !u!135 &-4108974914810124012
 SphereCollider:
   m_ObjectHideFlags: 0

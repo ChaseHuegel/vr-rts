@@ -1,18 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using Swordfish;
+using Swordfish.Navigation;
 
-public class Unit : MonoBehaviour
+public class Unit : Actor, IFactioned
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [Header("Faction")]
+    public byte factionID = 0;
+    private Faction faction;
 
-    // Update is called once per frame
-    void Update()
+    public Faction GetFaction() { return faction; }
+    public void UpdateFaction() { faction = GameMaster.Factions.Find(x => x.index == factionID); }
+
+    public override void Initialize()
     {
-        
+        base.Initialize();
+        UpdateFaction();
     }
 }
