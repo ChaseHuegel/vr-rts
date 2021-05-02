@@ -118,8 +118,6 @@ MonoBehaviour:
   buildingStage0: {fileID: 2723764393020711227}
   buildingStage1: {fileID: 9099679966836435529}
   buildingStageFinal: {fileID: 3284518357400287364}
-  stage0Duration: 3
-  stage1Duration: 3
   maxHealth: 500
   maxUnitQueueSize: 10
   currentHealth: 1
@@ -128,15 +126,16 @@ MonoBehaviour:
   buildingHealth50PercentEffect: {fileID: 0}
   buildingHealth25PercentEffect: {fileID: 0}
   buildingDestroyedEffect: {fileID: 0}
-  dropoffType: 4
+  populationSupported: 1
+  dropoffType: -1
   unitSpawnPoint: {fileID: 679956169}
   unitRallyWaypoint: {fileID: 7371219673673626341}
   unitRallyWaypointRadius: 0
   allowedUnitCreationList: 00000000
   playerManager: {fileID: 0}
-  queueStatusText: {fileID: 7081029053034404283}
-  progressImage: {fileID: 8963958098863440005}
-  buildingHealthBar: {fileID: 0}
+  queueStatusText: {fileID: 2864563768022517735}
+  progressImage: {fileID: 4358102529529716391}
+  buildingHealthBar: {fileID: 5429448858004330020}
   QueueImageObjects:
   - {fileID: 7649743887598059333}
   - {fileID: 7649743888324178767}
@@ -463,6 +462,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 6714109876060367904}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &5429448858004330020 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1617928767370082820, guid: b12682a659f5ea74f95ec202ac883979,
+    type: 3}
+  m_PrefabInstance: {fileID: 6714109876060367904}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27381cd579d45e94c8db78a0a21ff9b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &7649743888553305217
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1345,9 +1356,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &8963958098863440005 stripped
+--- !u!114 &4358102529529716391 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1607567279981241348, guid: 1a4ed3795fe2cb541ad44a5783885db9,
+  m_CorrespondingSourceObject: {fileID: 6220120485875087910, guid: 1a4ed3795fe2cb541ad44a5783885db9,
     type: 3}
   m_PrefabInstance: {fileID: 7649743888553305217}
   m_PrefabAsset: {fileID: 0}
@@ -1363,9 +1374,9 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 7649743888553305217}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &7081029053034404283 stripped
+--- !u!114 &2864563768022517735 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 607290927311584570, guid: 1a4ed3795fe2cb541ad44a5783885db9,
+  m_CorrespondingSourceObject: {fileID: 5614194438629794662, guid: 1a4ed3795fe2cb541ad44a5783885db9,
     type: 3}
   m_PrefabInstance: {fileID: 7649743888553305217}
   m_PrefabAsset: {fileID: 0}
