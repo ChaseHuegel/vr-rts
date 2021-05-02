@@ -38,32 +38,17 @@ public class Damageable : Attributable
     }
     #endregion
 
-    #region Variables
-
     [Header("Damageable")]
     [SerializeField] protected bool invulnerable = false;
     [SerializeField] protected DamageType[] weaknesses = new DamageType[0];
     [SerializeField] protected DamageType[] resistances = new DamageType[0];
     [SerializeField] protected DamageType[] immunities = new DamageType[0];
     [SerializeField] protected Vector3 center = Vector3.zero;
-    #endregion
-
-    #region Methods
 
     public virtual void Awake()
     {
         if (HasAttribute(Attributes.HEALTH) == false) AddAttribute(Attributes.HEALTH);
     }
-
-    public void OnCollisionEnter(Collision collision)
-    {
-        if (collision.relativeVelocity.magnitude > 2)
-        {
-            float damage = collision.relativeVelocity.magnitude * 3;
-            Damage( damage, collision.contacts[0].point, AttributeChangeCause.FORCED, null, DamageType.BLUDGEONING );
-        }
-    }
-    #endregion
 
     #region Functions
 

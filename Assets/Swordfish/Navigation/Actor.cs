@@ -7,8 +7,15 @@ namespace Swordfish.Navigation
 
 public class Actor : Body
 {
+    protected GoalHolder goals = new GoalHolder();
+    public virtual PathfindingGoal[] GetGoals() { return goals.entries; }
+
+    [Header("Actor")]
+    public byte goalSearchDistance = 20;
     public float movementSpeed = 1f;
+
     private float movementInterpolation;
+    private bool moving = false;
 
     public List<Cell> currentPath = null;
     private byte pathWaitTries = 0;
@@ -19,6 +26,7 @@ public class Actor : Body
     private byte tickTimer = 0;
 
     public bool HasValidPath() { return (currentPath != null && currentPath.Count > 0); }
+    public bool IsMoving() { return moving; }
 
     public void Freeze() { frozen = true; RemoveFromGrid(); }
     public void Unfreeze() { frozen = false; UpdatePosition(); }
@@ -55,14 +63,96 @@ public class Actor : Body
         ResetPathingBrain();
     }
 
-    //  Pathfind to a position
+    public Cell FindNearestGoalWithPriority()
+    {
+        Cell result = null;
+        Cell current = null;
+
+        int currentDistance = 0;
+        int nearestDistance = int.MaxValue;
+
+        foreach (PathfindingGoal goal in GetGoals())
+        {
+            for (int x = -goalSearchDistance; x < goalSearchDistance; x++)
+            for (int y = -goalSearchDistance; y < goalSearchDistance; y++)
+            {
+                current = World.at(gridPosition.x + x, gridPosition.y + y);
+                currentDistance = DistanceTo(current);
+
+                if (PathfindingGoal.TryGoal(this, current, goal) && currentDistance < nearestDistance)
+                {
+                    nearestDistance = currentDistance;
+                    result = current;
+                }
+            }
+
+            if (result != null)
+                return result;
+        }
+
+        return result;
+    }
+
+    public Cell FindNearestGoal()
+    {
+        Cell result = null;
+        Cell current = null;
+
+        int currentDistance = 0;
+        int nearestDistance = int.MaxValue;
+
+        for (int x = -goalSearchDistance; x < goalSearchDistance; x++)
+        for (int y = -goalSearchDistance; y < goalSearchDistance; y++)
+        {
+            current = World.at(gridPosition.x + x, gridPosition.y + y);
+            currentDistance = DistanceTo(current);
+
+            if (PathfindingGoal.TryGoal(this, current, GetGoals()) && currentDistance < nearestDistance)
+            {
+                nearestDistance = currentDistance;
+                result = current;
+            }
+        }
+
+        return result;
+    }
+
+    public bool GotoNearestGoalWithPriority()
+    {
+        Cell target = FindNearestGoalWithPriority();
+        if (target == null)
+            return false;
+
+        if (DistanceTo(target) <= 1)
+            PathfindingGoal.ReachIfGoal(this, target, GetGoals());
+
+        Goto(target.x, target.y);
+
+        return true;
+    }
+
+    public bool GotoNearestGoal()
+    {
+        Cell target = FindNearestGoal();
+        if (target == null)
+            return false;
+
+        if (DistanceTo(target) <= 1)
+            PathfindingGoal.ReachIfGoal(this, target, GetGoals());
+
+        Goto(target.x, target.y);
+
+        return true;
+    }
+
     public void Goto(Direction dir, int distance, bool ignoreActors = true) { Goto(dir.toVector3() * distance, ignoreActors); }
     public void Goto(Coord2D coord, bool ignoreActors = true) { Goto(coord.x, coord.y, ignoreActors); }
     public void Goto(Vector2 vec, bool ignoreActors = true) { Goto((int)vec.x, (int)vec.y, ignoreActors); }
     public void Goto(Vector3 vec, bool ignoreActors = true) { Goto((int)vec.x, (int)vec.z, ignoreActors); }
     public void Goto(int x, int y, bool ignoreActors = true)
     {
-        if (!HasValidPath()) PathManager.RequestPath(this, x, y, ignoreActors);
+        if (!HasValidPath() && DistanceTo(x, y) > 1)
+            PathManager.RequestPath(this, x, y, ignoreActors);
     }
 
     public void GotoForced(Direction dir, int distance, bool ignoreActors = true) { Goto(dir.toVector3() * distance, ignoreActors); }
@@ -70,7 +160,8 @@ public class Actor : Body
     public void GotoForced(Vector3 vec, bool ignoreActors = true) { Goto((int)vec.x, (int)vec.z, ignoreActors); }
     public void GotoForced(int x, int y, bool ignoreActors = true)
     {
-        PathManager.RequestPath(this, x, y, ignoreActors);
+        if (DistanceTo(x, y) > 1)
+            PathManager.RequestPath(this, x, y, ignoreActors);
     }
 
     public void LookAt(float x, float y)
@@ -104,9 +195,13 @@ public class Actor : Body
         Vector3 gridTransformPos = World.ToTransformSpace(gridPosition.x, transform.position.y, gridPosition.y);
         bool reachedTarget = true;
 
+        moving = false;
+
         //  Interpolate movement
         if (transform.position != gridTransformPos)
         {
+            moving = true;
+
             transform.position = Vector3.MoveTowards
             (
                 transform.position,
@@ -135,6 +230,13 @@ public class Actor : Body
             //  We can pass thru actors if the path ahead is clear
             bool canPassThruActors = currentPath.Count > 2 ? !World.at(currentPath[1].x, currentPath[1].y).IsBlocked() : false;
 
+            //  Handle reaching a goal, stop pathing if we reached a goal
+            if ( PathfindingGoal.ReachIfGoal(this, currentPath[0], GetGoals()) )
+            {
+                ResetPathing();
+                return;
+            }
+
             //  Attempt to move to the next point
             if ( CanSetPosition(currentPath[0].x, currentPath[0].y, canPassThruActors) )
             {
@@ -147,6 +249,7 @@ public class Actor : Body
                     //  Look in the direction we're going
                     LookAt(currentPath[0].x, currentPath[0].y);
                     SetPositionUnsafe(currentPath[0].x, currentPath[0].y);
+
                     currentPath.RemoveAt(0);
                 }
             }

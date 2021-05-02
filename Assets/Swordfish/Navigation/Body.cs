@@ -7,9 +7,10 @@ namespace Swordfish.Navigation
 
 public class Body : MonoBehaviour
 {
-    public Coord2D gridPosition = new Coord2D(0, 0);
+    [Header("Body")]
     public Vector2 boundingDimensions = Vector2.one;
     public Vector2 boundingOrigin = Vector2.zero;
+    public Coord2D gridPosition = new Coord2D(0, 0);
 
     public virtual void Initialize() {}
     public virtual void Tick() {}
@@ -86,7 +87,17 @@ public class Body : MonoBehaviour
     public float GetCellVolumeSqr() { return GetCellVolume() * GetCellVolume(); }
     public float GetCellVolume()
     {
-        return (boundingDimensions.x + boundingDimensions.y) * 0.75f;
+        return (boundingDimensions.x + boundingDimensions.y);
+    }
+
+    public int DistanceTo(Cell cell) { return DistanceTo(cell.x, cell.y); }
+    public int DistanceTo(Coord2D coord) { return DistanceTo(coord.x, coord.y); }
+    public int DistanceTo(int x, int y)
+    {
+        int distX = Mathf.Abs(x - gridPosition.x);
+        int distY = Mathf.Abs(y - gridPosition.y);
+
+        return distX + distY;
     }
 
     public bool CanSetPosition(Vector2 p, bool ignoreOccupied = false) { return CanSetPosition((int)p.x, (int)p.y, ignoreOccupied); }
@@ -134,8 +145,8 @@ public class Body : MonoBehaviour
 
             Cell from = GetCellAtGrid();
 
-            from.occupied = false;
-            to.occupied = true;
+            from.occupants.Remove(this);
+            to.occupants.Add(this);
 
             gridPosition.x = x;
             gridPosition.y = y;
@@ -152,8 +163,8 @@ public class Body : MonoBehaviour
         Cell to = World.at(x, y);
         Cell from = GetCellAtGrid();
 
-        from.occupied = false;
-        to.occupied = true;
+        from.occupants.Remove(this);
+        to.occupants.Add(this);
 
         gridPosition.x = x;
         gridPosition.y = y;
@@ -163,8 +174,8 @@ public class Body : MonoBehaviour
     public void RemoveFromGrid()
     {
         Cell cell = World.at(gridPosition);
-        cell.occupied = false;
         cell.passable = true;
+        cell.occupants.Remove(this);
     }
 
     //  Perform a 'soft' snap by truncating. Inaccurate but less overhead.

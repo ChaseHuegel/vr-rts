@@ -18,4 +18,12 @@ public class GameMaster : Singleton<GameMaster>
     public BuildingDatabase buildingDatabase;
     public static BuildingDatabase GetBuildingDatabase() { return Instance.buildingDatabase; }
     public static BuildingElement GetBuilding(string name) { return Instance.buildingDatabase.Get(name); }
+
+    public List<Faction> factions;
+    public static List<Faction> Factions { get { return Instance.factions;} }
+
+    public void Update()
+    {
+        Random.InitState(Time.time.GetHashCode());
+    }
 }
