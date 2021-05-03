@@ -6,16 +6,13 @@ public class HammerDestroyerOfWorlds : MonoBehaviour
 {
     public GameObject hammerAttachmentPoint;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
     public void PutAway()
     {
-        gameObject.transform.SetParent(hammerAttachmentPoint.transform);
-        gameObject.SetActive(false);
+        gameObject.transform.SetParent(hammerAttachmentPoint.transform);        
+        //gameObject.SetActive(false);
+        gameObject.GetComponent<Rigidbody>().isKinematic = true;
+        gameObject.transform.localPosition = Vector3.zero;
+        gameObject.transform.localRotation = Quaternion.identity;
     }
 
     void OnTriggerEnter(Collider other)
