@@ -47226,18 +47226,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1088476164}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1089431325 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 250473418627800766, guid: b127d49b65d6e1c4a8d5f942ac8813b0,
-    type: 3}
-  m_PrefabInstance: {fileID: 7785020839852861340}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa2bc37787a8e854994f3518757f2c57, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1089456217
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -49641,7 +49629,7 @@ MonoBehaviour:
   uiInteractAction:
     actionPath: /actions/default/in/InteractUI
     needsReinit: 0
-  useHoverSphere: 1
+  useHoverSphere: 0
   hoverSphereTransform: {fileID: 1139561835}
   hoverSphereRadius: 0.075
   hoverLayerMask:
@@ -49652,7 +49640,7 @@ MonoBehaviour:
   controllerHoverComponent: tip
   controllerHoverRadius: 0.15
   useFingerJointHover: 1
-  fingerJointHover: 8
+  fingerJointHover: 10
   fingerJointHoverRadius: 0.05
   objectAttachmentPoint: {fileID: 1139571705}
   noSteamVRFallbackCamera: {fileID: 0}
@@ -50612,7 +50600,6 @@ GameObject:
   - component: {fileID: 1128724109}
   - component: {fileID: 114000013062077391}
   - component: {fileID: 114000009461939911}
-  - component: {fileID: 1139372688}
   m_Layer: 26
   m_Name: RightHand
   m_TagString: Untagged
@@ -50620,20 +50607,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1139372688
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1139372687}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b8d4cc6cf300b3e4bb1411c4e041030c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  teleportAllowed: 1
-  overrideHoverLock: 1
 --- !u!1 &1139377165
 GameObject:
   m_ObjectHideFlags: 0
@@ -68045,18 +68018,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1512452795}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1512909911 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7204494360272283873, guid: b127d49b65d6e1c4a8d5f942ac8813b0,
-    type: 3}
-  m_PrefabInstance: {fileID: 7785020839852861340}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa2bc37787a8e854994f3518757f2c57, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1519078406
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -100055,7 +100016,7 @@ PrefabInstance:
         type: 3}
       propertyPath: onAttachedToHand.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1089431325}
+      objectReference: {fileID: 0}
     - target: {fileID: 4540855671070818154, guid: b127d49b65d6e1c4a8d5f942ac8813b0,
         type: 3}
       propertyPath: onDetachedFromHand.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
@@ -100065,7 +100026,7 @@ PrefabInstance:
         type: 3}
       propertyPath: onDetachedFromHand.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1089431325}
+      objectReference: {fileID: 0}
     - target: {fileID: 4540855671070818154, guid: b127d49b65d6e1c4a8d5f942ac8813b0,
         type: 3}
       propertyPath: onAttachedToHand.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
@@ -100120,7 +100081,7 @@ PrefabInstance:
         type: 3}
       propertyPath: onDetachedFromHand.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1512909911}
+      objectReference: {fileID: 0}
     - target: {fileID: 6883190596586375477, guid: b127d49b65d6e1c4a8d5f942ac8813b0,
         type: 3}
       propertyPath: onAttachedToHand.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
