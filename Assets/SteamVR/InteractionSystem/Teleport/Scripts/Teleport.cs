@@ -190,8 +190,6 @@ namespace Valve.VR.InteractionSystem
 
 			Invoke( "ShowTeleportHint", 5.0f );
 
-			previewObject = GameObject.Instantiate(previewObject);
-
 		}
 
 
@@ -234,13 +232,6 @@ namespace Valve.VR.InteractionSystem
 			{
 				HidePointer();
 			}
-		}
-
-		public GameObject previewObject;
-
-		void ShowPreviewObject()
-		{
-			previewObject.SetActive(true);
 		}
 
 		//-------------------------------------------------
@@ -688,7 +679,6 @@ namespace Valve.VR.InteractionSystem
 		//-------------------------------------------------
 		private void ShowPointer( Hand newPointerHand, Hand oldPointerHand )
 		{
-			//ShowPreviewObject();
 
 			if ( !visible )
 			{

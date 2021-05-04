@@ -95,13 +95,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df03bfb25b43d3047970231943a0c7b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  boundingDimensions: {x: 4, y: 4}
+  boundingOrigin: {x: -0.125, y: -0.125}
   gridPosition:
     x: 0
     y: 0
-  boundingDimensions: {x: 4, y: 4}
-  boundingOrigin: {x: -0.125, y: -0.125}
   bakeOnStart: 1
-  rebake: 0
 --- !u!114 &6749152223849434000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -126,6 +125,11 @@ MonoBehaviour:
   buildingHealth50PercentEffect: {fileID: 0}
   buildingHealth25PercentEffect: {fileID: 0}
   buildingDestroyedEffect: {fileID: 0}
+  constructionCompletedAudio: {fileID: 8300000, guid: 11bf668e81609a14a919c0625b9be221,
+    type: 3}
+  unitCreatedAudio: {fileID: 8300000, guid: ef85bf22745f24b4b967d56db93711f9, type: 3}
+  buildingDestroyedAudio: {fileID: 8300000, guid: 3ab09a3a74546f24582a546bc639048a,
+    type: 3}
   populationSupported: 3
   dropoffType: -1
   unitSpawnPoint: {fileID: 679956169}
@@ -191,6 +195,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 8bfa3476d6d02f04aac71fd7a8d1da0a, type: 3}
       propertyPath: m_Layer
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 8bfa3476d6d02f04aac71fd7a8d1da0a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 8bfa3476d6d02f04aac71fd7a8d1da0a, type: 3}
       propertyPath: m_RootOrder
@@ -267,7 +275,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: c5f43a47e4b64c14da6e0081f639fdd3, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: c5f43a47e4b64c14da6e0081f639fdd3, type: 3}
       propertyPath: m_RootOrder

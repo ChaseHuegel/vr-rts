@@ -21,7 +21,7 @@ public class AudioDatabase : ScriptableObject
             }
         }
 
-        return new SoundElement();
+        return CreateInstance<SoundElement>();
     }
 }
 

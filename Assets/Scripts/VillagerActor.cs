@@ -51,7 +51,11 @@ public class VillagerActor : Actor
 
     [Header ("Audio")]
     public bool playRandomOnPickUpAudio;
-
+    public AudioClip woodChoppingAudio;
+    public AudioClip goldMiningAudio;
+    public AudioClip oreMiningAudio;
+    public AudioClip grainGatheringAudio;
+    public AudioClip repairingAudio;    
     private AudioSource audioSource;
 
     bool isHeld;
@@ -161,9 +165,12 @@ public class VillagerActor : Actor
                     if (Util.DistanceUnsquared(gridPosition, body.gridPosition) <= body.GetCellVolumeSqr())
                     {
                         LookAt(body.gridPosition.x, body.gridPosition.y);
+                        
 
                         if (targetDamaged.NeedsRepair())
                         {
+                            audioSource.clip = repairingAudio;
+                            audioSource.Play();
                             animator.Play("Attack_A", -1, 0);
                             int amountToRepair = (int)(buildAndRepairCapacityPerSecond / (60 / Constants.ACTOR_TICK_RATE));
                             targetDamaged.RepairDamage(amountToRepair);
@@ -209,6 +216,7 @@ public class VillagerActor : Actor
                         PlayGatheringAnimation();
 
                         LookAt(body.gridPosition.x, body.gridPosition.y);
+                        
                         if (currentCargoTotal < carryingCapacity)
                         {
                             int amountToRemove = (int)(gatherCapacityPerSecond / (60 / Constants.ACTOR_TICK_RATE));
@@ -632,6 +640,7 @@ public class VillagerActor : Actor
             {
 
                 animator.Play("Attack_A", -1, 0f);
+                audioSource.clip = woodChoppingAudio;                
                 break;
             }
 
@@ -639,21 +648,24 @@ public class VillagerActor : Actor
             case ResourceGatheringType.Ore:
             {
                 animator.Play("Attack_B", -1, 0f);
+                audioSource.clip = goldMiningAudio;   
                 break;
             }
 
             case ResourceGatheringType.Grain:
             {
+                audioSource.clip = grainGatheringAudio;   
                 int choice = Random.Range(0, 100);
 
                 if (choice <= 50)
                     animator.Play("Punch_A", -1, 0f);
                 else
                     animator.Play("Punch_B", -1, 0f);
-                break;
+                break;                
             }
 
         }
 
+        audioSource.Play();
     }
 }

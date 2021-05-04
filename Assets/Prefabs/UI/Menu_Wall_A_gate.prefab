@@ -27,7 +27,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 683883869771204157}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.184, z: 0}
+  m_LocalPosition: {x: -0.181, y: -0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 683883871355939476}
@@ -124,7 +124,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 683883871355939486}
   m_LocalRotation: {x: -0.3502532, y: 0.17396863, z: -0.6862758, w: 0.6132562}
-  m_LocalPosition: {x: -10.64628, y: -0.00000011920929, z: -4.6275196}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 60, y: 60, z: 60}
   m_Children:
   - {fileID: 683883869771204158}
@@ -217,7 +217,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 961027059115258754}
         m_TargetAssemblyTypeName: UnityEngine.Renderer, UnityEngine
-        m_MethodName: set_material
+        m_MethodName: set_sharedMaterial
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 2100000, guid: bb0c02550cbc4c64ea43502a6e698cfc,
@@ -230,7 +230,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 961027059115258758}
         m_TargetAssemblyTypeName: UnityEngine.Renderer, UnityEngine
-        m_MethodName: set_material
+        m_MethodName: set_sharedMaterial
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 2100000, guid: bb0c02550cbc4c64ea43502a6e698cfc,
@@ -243,7 +243,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 961027059115258752}
         m_TargetAssemblyTypeName: UnityEngine.Renderer, UnityEngine
-        m_MethodName: set_material
+        m_MethodName: set_sharedMaterial
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 2100000, guid: bb0c02550cbc4c64ea43502a6e698cfc,
@@ -360,7 +360,8 @@ MonoBehaviour:
     type: 3}
   destroyOnTargetCollision: 0
   laser: {fileID: 4752845737145788312, guid: 1ed08dd9b28f63a4eb7b056880222e29, type: 3}
-  previewObject: {fileID: 100000, guid: 7ae56a8428b94f24b854dac395c7c925, type: 3}
+  previewObject: {fileID: 4898484864824184975, guid: ef2eb4324d91e1f4486ed0db0fe11a9e,
+    type: 3}
   previewObjectLocalScale: 0.09
   allowedLayersMask:
     serializedVersion: 2
@@ -487,8 +488,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 961027059126828674}
-  m_LocalRotation: {x: -0.00000030174849, y: 0.707107, z: 0.00000008940696, w: 0.70710665}
-  m_LocalPosition: {x: 0.0014694, y: 0.043703, z: -0.0033353}
+  m_LocalRotation: {x: -0.5, y: 0.5000002, z: 0.5000003, w: 0.49999964}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.12740026, y: 0.12740028, z: 0.12740031}
   m_Children:
   - {fileID: 961027059126985376}
@@ -497,7 +498,7 @@ Transform:
   - {fileID: 961027059126985390}
   m_Father: {fileID: 683883871355939476}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 90}
 --- !u!95 &961027059119525186
 Animator:
   serializedVersion: 3

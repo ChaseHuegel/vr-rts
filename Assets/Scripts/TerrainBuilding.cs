@@ -4,6 +4,7 @@ using UnityEngine;
 using Valve.VR.InteractionSystem;
 using UnityEditor;
 
+[RequireComponent(typeof(AudioSource))]
 public class TerrainBuilding : MonoBehaviour
 {
     [Header( "Multiplayer")]
@@ -25,6 +26,12 @@ public class TerrainBuilding : MonoBehaviour
     public GameObject buildingHealth50PercentEffect;
     public GameObject buildingHealth25PercentEffect;
     public GameObject buildingDestroyedEffect;
+
+    [Header("Audio")]
+    AudioSource audioSource;
+    public AudioClip constructionCompletedAudio;
+    public AudioClip unitCreatedAudio;   
+    public AudioClip buildingDestroyedAudio; 
 
     [Header( "Unit Stuff" )]
     public int populationSupported = 1;    
@@ -76,10 +83,17 @@ public class TerrainBuilding : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        audioSource = gameObject.GetComponent<AudioSource>();
+        constructionCompletedAudio = GameMaster.GetAudio("constructionCompleted").GetClip();       
+
         buildingHealthBar = GetComponentInChildren<HealthBar>(true);
         if (currentHealth < maxHealth)
             buildingHealthBar.enabled = true;
 
+        buildingStage0.SetActive(true);
+        buildingStage1.SetActive(false);
+        buildingStageFinal.SetActive(false);
+        
         RepairDamage(0);
         RefreshHealthBar();        
 
@@ -112,6 +126,7 @@ public class TerrainBuilding : MonoBehaviour
         }
     }
 
+    
     void RefreshHealthBar()
     {
         buildingHealthBar.SetFilledAmount((float)currentHealth / (float)maxHealth);     
@@ -124,12 +139,13 @@ public class TerrainBuilding : MonoBehaviour
 
         if (constructionCompleted) return;
 
-        if (currentHealth >= (maxHealth * 0.85f))
+        if (currentHealth >= maxHealth)
         {
             buildingStage0.SetActive(false);
             buildingStage1.SetActive(false);
             buildingStageFinal.SetActive(true);
             constructionCompleted = true;
+            audioSource.PlayOneShot(constructionCompletedAudio);
         }
         else if (currentHealth >= (maxHealth * 0.45f))
         {

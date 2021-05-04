@@ -18062,11 +18062,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc46828e8b3e0b74abc70b8a29118970, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  boundingDimensions: {x: 1, y: 1}
+  boundingOrigin: {x: 0, y: 0}
   gridPosition:
     x: 0
     y: 0
-  boundingDimensions: {x: 1, y: 1}
-  boundingOrigin: {x: 0, y: 0}
+  goalSearchDistance: 20
   movementSpeed: 0.5
   rtsUnitType: 0
   wantedResourceType: 0
@@ -18090,6 +18091,11 @@ MonoBehaviour:
   goldHandToolDisplayObject: {fileID: 1069823527080554358}
   builderHandToolDisplayObject: {fileID: 1069823527080516244}
   playRandomOnPickUpAudio: 0
+  woodChoppingAudio: {fileID: 8300000, guid: c1d7f3f58fafcac4fb793927a1aa2e88, type: 3}
+  goldMiningAudio: {fileID: 8300000, guid: a9807b9f05d1bfa45a835e3ec9ca9cbc, type: 3}
+  oreMiningAudio: {fileID: 8300000, guid: a9807b9f05d1bfa45a835e3ec9ca9cbc, type: 3}
+  grainGatheringAudio: {fileID: 8300000, guid: cdcfd4bbae902fc43abed7047a236348, type: 3}
+  repairingAudio: {fileID: 8300000, guid: 6a090be253b576b4dac41b679f12a15a, type: 3}
   villagerHoverMenu: {fileID: 4773402040985910725}
 --- !u!82 &-6606716014632887433
 AudioSource:
