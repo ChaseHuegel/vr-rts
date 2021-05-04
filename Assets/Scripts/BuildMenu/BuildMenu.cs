@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using Valve.VR.Extras;
 
 public class BuildMenu : MonoBehaviour
 {
@@ -22,5 +23,9 @@ public class BuildMenu : MonoBehaviour
         {
             tab.Generate();
         }
+    }
+
+    void Start()
+    {
     }
 }

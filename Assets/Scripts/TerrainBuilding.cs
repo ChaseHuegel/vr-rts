@@ -75,7 +75,7 @@ public class TerrainBuilding : MonoBehaviour
             if (unitSpawnQueue.Count < maxUnitQueueSize)
             {
                 unitSpawnQueue.Enqueue(playerManager.FindUnitData(unitTypeToQueue));
-                Debug.Log("Queued " + unitTypeToQueue.ToString() + " (" + unitSpawnQueue.Count + ")");
+                //Debug.Log("Queued " + unitTypeToQueue.ToString() + " (" + unitSpawnQueue.Count + ")");
             }
         }
     }
@@ -84,7 +84,7 @@ public class TerrainBuilding : MonoBehaviour
     void Start()
     {
         audioSource = gameObject.GetComponent<AudioSource>();
-        constructionCompletedAudio = GameMaster.GetAudio("constructionCompleted").GetClip();       
+        //constructionCompletedAudio = GameMaster.GetAudio("constructionCompleted").GetClip();       
 
         buildingHealthBar = GetComponentInChildren<HealthBar>(true);
         if (currentHealth < maxHealth)
