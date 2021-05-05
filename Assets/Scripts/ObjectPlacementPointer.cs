@@ -11,6 +11,8 @@ namespace Valve.VR.InteractionSystem
         public SteamVR_Action_Boolean placeBuildingAction = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("BuildingPlacementPointer");
 
         public LayerMask traceLayerMask;
+		public LayerMask allowedPlacementLayers;
+
 		public LayerMask floorFixupTraceLayerMask;
 		public float floorFixupMaximumTraceDistance = 1.0f;
 		public Material areaVisibleMaterial;
@@ -67,10 +69,11 @@ namespace Valve.VR.InteractionSystem
 		private Player player = null;
 		private TeleportArc teleportArc = null;
 
-		private bool visible = false;
+		public bool visible = false;
 
 		private TeleportMarkerBase[] teleportMarkers;
 		private TeleportMarkerBase pointedAtTeleportMarker;
+		private TerrainBuilding pointedAtTerrainBuilding;
 		private TeleportMarkerBase teleportingToMarker;
 		private Vector3 pointedAtPosition;
 		private Vector3 prevPointedAtPosition;
@@ -208,38 +211,60 @@ namespace Valve.VR.InteractionSystem
 			}
 		}
 
+
+		public bool placementStarted;
+		public Hand placementHand;
+		public bool placementEnded;
+
+		public void StartPlacement(Hand hand)
+		{
+			placementEnded = false;
+			placementStarted = true;
+			placementHand = hand;
+		}
+
+		public void StopPlacement(Hand hand)
+		{
+			placementStarted = false;	
+			placementEnded = true;
+			placementHand = hand;	
+			visible = false;	
+		}
+
 		//-------------------------------------------------
 		void Update()
 		{
 			Hand oldPointerHand = pointerHand;
 			Hand newPointerHand = null;
 
-			foreach ( Hand hand in player.hands )
-			{
+			// foreach ( Hand hand in player.hands )
+			// {
 				if ( visible )
-				{
-					if ( WasTeleportButtonReleased( hand ) )
+				{	
+					if ( placementEnded )
+					//if ( WasTeleportButtonReleased( placementHand ) )
 					{
-						if ( pointerHand == hand ) //This is the pointer hand
+						if ( pointerHand == placementHand ) //This is the pointer hand
 						{
 							TryTeleportPlayer();
 						}
 					}
 				}
 
-				if ( WasTeleportButtonPressed( hand ) )
+				if (placementStarted)
+				//if ( WasTeleportButtonPressed( placementHand ) )
 				{
-					newPointerHand = hand;
+					newPointerHand = placementHand;
 				}
-			}
+			// }
 
 			//If something is attached to the hand that is preventing objectPlacement
-			if ( allowTeleportWhileAttached && !allowTeleportWhileAttached.teleportAllowed )
-			{
-				HidePointer();
-			}
-			else
-			{
+			// if (false)// allowTeleportWhileAttached && !allowTeleportWhileAttached.teleportAllowed )
+			// {
+			// 	HidePointer();
+			// }
+			// else
+			// {
 				if ( !visible && newPointerHand != null )
 				{
 					//Begin showing the pointer
@@ -258,7 +283,7 @@ namespace Valve.VR.InteractionSystem
 						ShowPointer( newPointerHand, oldPointerHand );
 					}
 				}
-			}
+			// }
 
 			if ( visible )
 			{
@@ -269,17 +294,17 @@ namespace Valve.VR.InteractionSystem
 					UpdateTeleportColors();
 				}
 
-				if ( onActivateObjectTransform.gameObject.activeSelf && Time.time - pointerShowStartTime > activateObjectTime )
-				{
-					onActivateObjectTransform.gameObject.SetActive( false );
-				}
+				// if ( onActivateObjectTransform.gameObject.activeSelf && Time.time - pointerShowStartTime > activateObjectTime )
+				// {
+				// 	onActivateObjectTransform.gameObject.SetActive( false );
+				// }
 			}
 			else
 			{
-				if ( onDeactivateObjectTransform.gameObject.activeSelf && Time.time - pointerHideStartTime > deactivateObjectTime )
-				{
-					onDeactivateObjectTransform.gameObject.SetActive( false );
-				}
+				// if ( onDeactivateObjectTransform.gameObject.activeSelf && Time.time - pointerHideStartTime > deactivateObjectTime )
+				// {
+				// 	onDeactivateObjectTransform.gameObject.SetActive( false );
+				// }
 			}
 		}
 
@@ -291,12 +316,14 @@ namespace Valve.VR.InteractionSystem
 			Vector3 pointerEnd;
 			Vector3 pointerDir = pointerStartTransform.forward;
 			bool hitSomething = false;
-			bool showPlayAreaPreview = false;
+			bool hitPointValid = false;
+			//bool showPlayAreaPreview = false;
 			Vector3 playerFeetOffset = player.trackingOriginTransform.position - player.feetPositionGuess;
 
 			Vector3 arcVelocity = pointerDir * arcDistance;
 
 			TeleportMarkerBase hitTeleportMarker = null;
+			TerrainBuilding hitTerrainBuilding = null;
 
 			//Check pointer angle
 			float dotUp = Vector3.Dot( pointerDir, Vector3.up );
@@ -313,84 +340,85 @@ namespace Valve.VR.InteractionSystem
 			if ( teleportArc.DrawArc( out hitInfo ) )
 			{
 				hitSomething = true;
-				hitTeleportMarker = hitInfo.collider.GetComponentInParent<TeleportMarkerBase>();
-				Debug.Log(hitInfo.collider.gameObject.name);
+				//hitTeleportMarker = hitInfo.collider.GetComponentInParent<TeleportMarkerBase>();
+			
+				hitPointValid = LayerMatchTest( allowedPlacementLayers, hitInfo.collider.gameObject );
+				
+				// hitTerrainBuilding = hitInfo.collider.GetComponentInParent<TerrainBuilding>();
+				// Debug.Log(hitInfo.collider.gameObject.name);
 			}
+//-------------------------------------------/////////////////////////////////////////
+			// if ( pointerAtBadAngle )
+			// {
+			// 	hitTeleportMarker = null;
+			// }
 
-			if ( pointerAtBadAngle )
-			{
-				hitTeleportMarker = null;
-			}
+			//HighlightSelected( hitTeleportMarker );
+			//HighlightSelected( hitTerrainBuilding );
 
-			HighlightSelected( hitTeleportMarker );
-
-			if ( hitTeleportMarker != null ) //Hit a teleport marker
-			{
-				if ( hitTeleportMarker.locked )
-				{
-					teleportArc.SetColor( pointerLockedColor );
-#if (UNITY_5_4)
-					pointerLineRenderer.SetColors( pointerLockedColor, pointerLockedColor );
-#else
-					pointerLineRenderer.startColor = pointerLockedColor;
-					pointerLineRenderer.endColor = pointerLockedColor;
-#endif
-					destinationReticleTransform.gameObject.SetActive( false );
-				}
-				else
-				{
-					teleportArc.SetColor( pointerValidColor );
+			
+			// if ( hitTeleportMarker != null ) //Hit a teleport marker
+			// {
+// 				if ( hitTeleportMarker.locked )
+// 				{
+// 					teleportArc.SetColor( pointerLockedColor );
+// #if (UNITY_5_4)
+// 					pointerLineRenderer.SetColors( pointerLockedColor, pointerLockedColor );
+// #else
+// 					pointerLineRenderer.startColor = pointerLockedColor;
+// 					pointerLineRenderer.endColor = pointerLockedColor;
+// #endif
+// 					destinationReticleTransform.gameObject.SetActive( false );
+// 				}
+// 				else
+// 				{
+				
+				if (hitPointValid)
+				{	teleportArc.SetColor( pointerValidColor );
 #if (UNITY_5_4)
 					pointerLineRenderer.SetColors( pointerValidColor, pointerValidColor );
 #else
 					pointerLineRenderer.startColor = pointerValidColor;
 					pointerLineRenderer.endColor = pointerValidColor;
 #endif
-					destinationReticleTransform.gameObject.SetActive( hitTeleportMarker.showReticle );
+					destinationReticleTransform.gameObject.SetActive( true); //hitTeleportMarker.showReticle );
 				}
-
-				offsetReticleTransform.gameObject.SetActive( true );
-
-				invalidReticleTransform.gameObject.SetActive( false );
-
-				pointedAtTeleportMarker = hitTeleportMarker;
-				pointedAtPosition = hitInfo.point;
-
-				pointerEnd = hitInfo.point;
-			}
-			else //Hit neither
-			{
-				destinationReticleTransform.gameObject.SetActive( false );
-				offsetReticleTransform.gameObject.SetActive( false );
-
-				teleportArc.SetColor( pointerInvalidColor );
-#if (UNITY_5_4)
-				pointerLineRenderer.SetColors( pointerInvalidColor, pointerInvalidColor );
-#else
-				pointerLineRenderer.startColor = pointerInvalidColor;
-				pointerLineRenderer.endColor = pointerInvalidColor;
-#endif
-				invalidReticleTransform.gameObject.SetActive( !pointerAtBadAngle );
-
-				//Orient the invalid reticle to the normal of the trace hit point
-				Vector3 normalToUse = hitInfo.normal;
-				float angle = Vector3.Angle( hitInfo.normal, Vector3.up );
-				if ( angle < 15.0f )
+				else // Not valid
 				{
-					normalToUse = Vector3.up;
+					// destinationReticleTransform.gameObject.SetActive( false );
+					// offsetReticleTransform.gameObject.SetActive( false );
+					teleportArc.SetColor( pointerInvalidColor );
+#if (UNITY_5_4)
+					pointerLineRenderer.SetColors( pointerInvalidColor, pointerInvalidColor );
+#else
+					pointerLineRenderer.startColor = pointerInvalidColor;
+					pointerLineRenderer.endColor = pointerInvalidColor;
+#endif			
 				}
-				invalidReticleTargetRotation = Quaternion.FromToRotation( Vector3.up, normalToUse );
-				invalidReticleTransform.rotation = Quaternion.Slerp( invalidReticleTransform.rotation, invalidReticleTargetRotation, 0.1f );
+				pointedAtPosition = hitInfo.point;
+				pointerEnd = hitInfo.point;
 
-				//Scale the invalid reticle based on the distance from the player
-				float distanceFromPlayer = Vector3.Distance( hitInfo.point, player.hmdTransform.position );
-				float invalidReticleCurrentScale = Util.RemapNumberClamped( distanceFromPlayer, invalidReticleMinScaleDistance, invalidReticleMaxScaleDistance, invalidReticleMinScale, invalidReticleMaxScale );
-				invalidReticleScale.x = invalidReticleCurrentScale;
-				invalidReticleScale.y = invalidReticleCurrentScale;
-				invalidReticleScale.z = invalidReticleCurrentScale;
-				invalidReticleTransform.transform.localScale = invalidReticleScale;
+// 				invalidReticleTransform.gameObject.SetActive( !pointerAtBadAngle );
 
-				pointedAtTeleportMarker = null;
+// 				//Orient the invalid reticle to the normal of the trace hit point
+// 				Vector3 normalToUse = hitInfo.normal;
+// 				float angle = Vector3.Angle( hitInfo.normal, Vector3.up );
+// 				if ( angle < 15.0f )
+// 				{
+// 					normalToUse = Vector3.up;
+// 				}
+// 				invalidReticleTargetRotation = Quaternion.FromToRotation( Vector3.up, normalToUse );
+// 				invalidReticleTransform.rotation = Quaternion.Slerp( invalidReticleTransform.rotation, invalidReticleTargetRotation, 0.1f );
+
+// 				//Scale the invalid reticle based on the distance from the player
+// 				float distanceFromPlayer = Vector3.Distance( hitInfo.point, player.hmdTransform.position );
+// 				float invalidReticleCurrentScale = Util.RemapNumberClamped( distanceFromPlayer, invalidReticleMinScaleDistance, invalidReticleMaxScaleDistance, invalidReticleMinScale, invalidReticleMaxScale );
+// 				invalidReticleScale.x = invalidReticleCurrentScale;
+// 				invalidReticleScale.y = invalidReticleCurrentScale;
+// 				invalidReticleScale.z = invalidReticleCurrentScale;
+// 				invalidReticleTransform.transform.localScale = invalidReticleScale;
+
+// 				pointedAtTeleportMarker = null;
 
 				if ( hitSomething )
 				{
@@ -401,30 +429,30 @@ namespace Valve.VR.InteractionSystem
 					pointerEnd = teleportArc.GetArcPositionAtTime( teleportArc.arcDuration );
 				}
 
-				//Debug floor
-				if ( debugFloor )
-				{
-					floorDebugSphere.gameObject.SetActive( false );
-					floorDebugLine.gameObject.SetActive( false );
-				}
-			}
+// 				//Debug floor
+// 				if ( debugFloor )
+// 				{
+// 					floorDebugSphere.gameObject.SetActive( false );
+// 					floorDebugLine.gameObject.SetActive( false );
+// 				}
+// 			}
 
-			if ( playAreaPreviewTransform != null )
-			{
-				playAreaPreviewTransform.gameObject.SetActive( showPlayAreaPreview );
-			}
+			// if ( playAreaPreviewTransform != null )
+			// {
+			// 	playAreaPreviewTransform.gameObject.SetActive( showPlayAreaPreview );
+			// }
 
-			if ( !showOffsetReticle )
-			{
-				offsetReticleTransform.gameObject.SetActive( false );
-			}
+			// if ( !showOffsetReticle )
+			// {
+			// 	offsetReticleTransform.gameObject.SetActive( false );
+			// }
 
 			destinationReticleTransform.position = pointedAtPosition;
 			
-			invalidReticleTransform.position = pointerEnd;
-			onActivateObjectTransform.position = pointerEnd;
-			onDeactivateObjectTransform.position = pointerEnd;
-			offsetReticleTransform.position = pointerEnd - playerFeetOffset;
+			// invalidReticleTransform.position = pointerEnd;
+			// onActivateObjectTransform.position = pointerEnd;
+			// onDeactivateObjectTransform.position = pointerEnd;
+			// offsetReticleTransform.position = pointerEnd - playerFeetOffset;
 
 			reticleAudioSource.transform.position = pointedAtPosition;
 
@@ -434,6 +462,11 @@ namespace Valve.VR.InteractionSystem
 			// Added this.
 			destinationReticleTransform.gameObject.SetActive( true );
 
+		}
+		
+		private static bool LayerMatchTest(LayerMask layerMask, GameObject obj)
+		{
+			return ( ( 1 << obj.layer ) & layerMask ) != 0;
 		}
 
 		//-------------------------------------------------
@@ -563,6 +596,12 @@ namespace Valve.VR.InteractionSystem
 			}
 		}
 
+		public void SetDestinationReticle(GameObject go)
+		{
+			//Destroy(destinationReticleTransform.transform.GetChild(0).gameObject);
+			go.transform.parent = destinationReticleTransform.transform;
+			go.transform.localPosition = Vector3.zero;
+		}
 
 		//-------------------------------------------------
 		private void HidePointer()
@@ -661,21 +700,21 @@ namespace Valve.VR.InteractionSystem
 			}
 
 
-			if ( oldPointerHand )
-			{
-				if ( ShouldOverrideHoverLock() )
-				{
-					//Restore the original hovering interactable on the hand
-					if ( originalHoverLockState == true )
-					{
-						oldPointerHand.HoverLock( originalHoveringInteractable );
-					}
-					else
-					{
-						oldPointerHand.HoverUnlock( null );
-					}
-				}
-			}
+			// if ( oldPointerHand )
+			// {
+			// 	if ( ShouldOverrideHoverLock() )
+			// 	{
+			// 		//Restore the original hovering interactable on the hand
+			// 		if ( originalHoverLockState == true )
+			// 		{
+			// 			oldPointerHand.HoverLock( originalHoveringInteractable );
+			// 		}
+			// 		else
+			// 		{
+			// 			oldPointerHand.HoverUnlock( null );
+			// 		}
+			// 	}
+			// }
 
 			pointerHand = newPointerHand;
 
@@ -690,24 +729,24 @@ namespace Valve.VR.InteractionSystem
 
 				if ( pointerHand.currentAttachedObject != null )
 				{
-					allowTeleportWhileAttached = pointerHand.currentAttachedObject.GetComponent<AllowTeleportWhileAttachedToHand>();
+					//allowTeleportWhileAttached = pointerHand.currentAttachedObject.GetComponent<AllowTeleportWhileAttachedToHand>();
 				}
 
 				//Keep track of any existing hovering interactable on the hand
-				originalHoverLockState = pointerHand.hoverLocked;
-				originalHoveringInteractable = pointerHand.hoveringInteractable;
+				// originalHoverLockState = pointerHand.hoverLocked;
+				// originalHoveringInteractable = pointerHand.hoveringInteractable;
 
-				if ( ShouldOverrideHoverLock() )
-				{
-					pointerHand.HoverLock( null );
-				}
+				// if ( ShouldOverrideHoverLock() )
+				// {
+				// 	pointerHand.HoverLock( null );
+				// }
 
 				pointerAudioSource.transform.SetParent( pointerStartTransform );
 				pointerAudioSource.transform.localPosition = Vector3.zero;
 
 				loopingAudioSource.transform.SetParent( pointerStartTransform );
 				loopingAudioSource.transform.localPosition = Vector3.zero;
-			}
+			 }
 		}
 
 
@@ -726,10 +765,10 @@ namespace Valve.VR.InteractionSystem
 			}
 
 			//Tint color for the teleport points
-			foreach ( TeleportMarkerBase teleportMarker in teleportMarkers )
-			{
-				teleportMarker.SetAlpha( fullTintAlpha * meshAlphaPercent, meshAlphaPercent );
-			}
+			// foreach ( TeleportMarkerBase teleportMarker in teleportMarkers )
+			// {
+			// 	teleportMarker.SetAlpha( fullTintAlpha * meshAlphaPercent, meshAlphaPercent );
+			// }
 		}
 
 
@@ -861,6 +900,43 @@ namespace Valve.VR.InteractionSystem
 			ObjectPlacementPointer.Player.Send( pointedAtTeleportMarker );
 		}
 
+
+	private void HighlightSelected( TerrainBuilding hitTerrainBuilding )
+		{
+			if ( pointedAtTerrainBuilding != hitTerrainBuilding ) //Pointing at a new teleport marker
+			{
+				if ( pointedAtTerrainBuilding != null )
+				{
+					pointedAtTeleportMarker.Highlight( false );
+				}
+
+				if ( hitTerrainBuilding != null )
+				{
+					//hitTerrainBuilding.Highlight( true );
+
+					prevPointedAtPosition = pointedAtPosition;
+					//PlayPointerHaptic( !hitTerrainBuilding.locked );
+
+					PlayAudioClip( reticleAudioSource, goodHighlightSound );
+
+					loopingAudioSource.volume = loopingAudioMaxVolume;
+				}
+				else if ( pointedAtTerrainBuilding != null )
+				{
+					PlayAudioClip( reticleAudioSource, badHighlightSound );
+
+					loopingAudioSource.volume = 0.0f;
+				}
+			}
+			else if ( hitTerrainBuilding != null ) //Pointing at the same teleport marker
+			{
+				if ( Vector3.Distance( prevPointedAtPosition, pointedAtPosition ) > 1.0f )
+				{
+					prevPointedAtPosition = pointedAtPosition;
+					//PlayPointerHaptic( !hitTerrainBuilding.locked );
+				}
+			}
+		}
 
 		//-------------------------------------------------
 		private void HighlightSelected( TeleportMarkerBase hitTeleportMarker )

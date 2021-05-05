@@ -98,6 +98,18 @@
       "name": "/actions/mixedreality/in/ExternalCamera",
       "type": "pose",
       "requirement": "optional"
+    },
+    {
+      "name": "/actions/construction/in/BuildingPlacementPointer",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/construction/in/RotatePreviewClockwise",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/construction/in/RotatePreviewCounterClockwise",
+      "type": "boolean"
     }
   ],
   "action_sets": [
@@ -116,6 +128,10 @@
     {
       "name": "/actions/mixedreality",
       "usage": "single"
+    },
+    {
+      "name": "/actions/construction",
+      "usage": "leftright"
     }
   ],
   "default_bindings": [
@@ -189,7 +205,8 @@
       "/actions/default/out/Haptic": "Haptic",
       "/actions/default/in/PalmMenu": "Palm Menu",
       "/actions/default/in/RotatePreviewClockwise": "Rotate Preview Clockwise",
-      "/actions/default/in/RotatePreviewCounterClockwise": "Rotate Preview Counter Clockwise"
+      "/actions/default/in/RotatePreviewCounterClockwise": "Rotate Preview Counter Clockwise",
+      "/actions/construction/in/BuildingPlacementPointer": "Building Placement Pointer"
     }
   ]
 }

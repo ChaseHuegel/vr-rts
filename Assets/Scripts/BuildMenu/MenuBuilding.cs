@@ -23,7 +23,7 @@ public class MenuBuilding : Throwable
     private bool pinchGrip;
     public SteamVR_Action_Boolean rotatePreviewClockwise;
     public SteamVR_Action_Boolean rotatePreviewCounterClockwise;
-    public SteamVR_Action_Boolean buildingPlacementPointer;
+    //public SteamVR_Action_Boolean buildingPlacementPointer;
 
     void Start()
     {
@@ -33,10 +33,10 @@ public class MenuBuilding : Throwable
         rotatePreviewClockwise.AddOnStateDownListener(RotatePreviewClockwiseDown, SteamVR_Input_Sources.RightHand);
         rotatePreviewCounterClockwise.AddOnStateDownListener(RotatePreviewCounterClockwiseDown, SteamVR_Input_Sources.RightHand);
         
-        buildingPlacementPointer.AddOnStateDownListener(BuildingPlacementPointerDown, SteamVR_Input_Sources.RightHand);
-        buildingPlacementPointer.AddOnStateUpListener(BuildingPlacementPointerUp, SteamVR_Input_Sources.RightHand);
-        buildingPlacementPointer.AddOnStateDownListener(BuildingPlacementPointerDown, SteamVR_Input_Sources.LeftHand);
-        buildingPlacementPointer.AddOnStateUpListener(BuildingPlacementPointerUp, SteamVR_Input_Sources.LeftHand);
+        // buildingPlacementPointer.AddOnStateDownListener(BuildingPlacementPointerDown, SteamVR_Input_Sources.RightHand);
+        // buildingPlacementPointer.AddOnStateUpListener(BuildingPlacementPointerUp, SteamVR_Input_Sources.RightHand);
+        // buildingPlacementPointer.AddOnStateDownListener(BuildingPlacementPointerDown, SteamVR_Input_Sources.LeftHand);
+        // buildingPlacementPointer.AddOnStateUpListener(BuildingPlacementPointerUp, SteamVR_Input_Sources.LeftHand);
     }
 
     public void RotatePreviewCounterClockwiseDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
@@ -55,44 +55,91 @@ public class MenuBuilding : Throwable
         Debug.Log("rotated " + spawnBuildingOnCollision.gameObject.name);      
     } 
 
-    public void BuildingPlacementPointerDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
-    {
-        //ObjectPlacementPointer.instance.SetDestinationReticle(previewObject);
-        //Debug.Log("button down");
-    }
+    // public void BuildingPlacementPointerDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
+    // {
+    //     // if (interactible.isHovering)
+    //     // {
+    //         spawnBuildingOnCollision = GameObject.Instantiate(spawnBuildingOnCollision);  
+    //         spawnBuildingOnCollision.transform.localScale = new Vector3(previewObjectLocalScale, previewObjectLocalScale, previewObjectLocalScale);
+    //         spawnBuildingOnCollision.gameObject.layer = LayerMask.NameToLayer("UI");
+    //         spawnBuildingOnCollision.GetComponent<BoxCollider>().enabled = false;        
+    //         spawnBuildingOnCollision.GetComponent<TerrainBuilding>().enabled = false;
+            
+    //         // TODO: Enable for snapping while placing?
+    //         spawnBuildingOnCollision.GetComponent<Obstacle>().enabled = false;
 
-    public void BuildingPlacementPointerUp(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
-    {
+    //         ObjectPlacementPointer.instance.SetDestinationReticle(spawnBuildingOnCollision);
+    //         Debug.Log("pointer button down");
+    //     // }
+    // }
+
+    // public void BuildingPlacementPointerUp(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
+    // {
         
-    }
+    //     spawnBuildingOnCollision.transform.SetParent(null);
+    //     spawnBuildingOnCollision.GetComponent<BoxCollider>().enabled = true;
+    //     spawnBuildingOnCollision.GetComponent<Obstacle>().enabled = true;
+    //     spawnBuildingOnCollision.GetComponent<TerrainBuilding>().enabled = true;
+    //     spawnBuildingOnCollision.gameObject.layer = LayerMask.NameToLayer("Building");
+
+    //     // Use gravity, kinematics off, etc..        
+    //     gameObject.GetComponent<Rigidbody>().isKinematic = false;
+    //     gameObject.GetComponent<Rigidbody>().useGravity = true;          
+    //     gameObject.GetComponentInChildren<Collider>().isTrigger = false;
+        
+    //     buildingPlacementPointer.RemoveAllListeners(SteamVR_Input_Sources.RightHand);
+    //     rotatePreviewClockwise.RemoveAllListeners(SteamVR_Input_Sources.RightHand);
+    //     rotatePreviewCounterClockwise.RemoveAllListeners(SteamVR_Input_Sources.RightHand);
+    //     rotatePreviewCounterClockwise.RemoveAllListeners(SteamVR_Input_Sources.LeftHand);
+    //     //Destroy(base.gameObject);
+    // }
 
     protected override void HandAttachedUpdate(Hand hand)
     {
         base.HandAttachedUpdate(hand);
 
+        // Debug.DrawRay(hand.hoverSphereTransform.position, hand.hoverSphereTransform.forward, Color.red);
+        //Debug.DrawRay(hand.objectAttachmentPoint.position, hand.objectAttachmentPoint.forward, Color.blue);
+        
         if (interactable.skeletonPoser != null)
         {
             //if (hand.currentAttachedObject)
                 pinchGrip = hand.currentAttachedObjectInfo.Value.grabbedWithType == GrabTypes.Pinch;
-
+                
             if (pinchGrip)
             {
                 interactable.skeletonPoser.SetBlendingBehaviourEnabled("PinchPose", true);
 
-                if ( Physics.Raycast( transform.position, Vector3.down, out hitInfo, 100, allowedLayersMask ) )
+                // To what degree is the hand facing down?
+                Transform origin = hand.objectAttachmentPoint.transform;
+                //float facing = Vector3.Dot((Vector3.down - origin.localPosition).normalized, origin.forward);
+                
+                // Use vertical laser placement method
+                if (origin.transform.up.y > 0.7f) //facing < -0.8f)
                 {
-                    // Are we hitting something on acceptable layer?
-                    bool hitPointValid = !LayerMatchTest( disallowedLayersMask, hitInfo.collider.gameObject );
+                    if ( Physics.Raycast( transform.position, Vector3.down, out hitInfo, 100, allowedLayersMask ) )
+                    {
+                        // Are we hitting something on acceptable layer?
+                        bool hitPointValid = !LayerMatchTest( disallowedLayersMask, hitInfo.collider.gameObject );
 
-                    if (hitPointValid)
-                    {
-                        PointLaser();
+                        if (hitPointValid)
+                        {
+                            PointLaser();
+                        }
+                        else
+                        {
+                            DisplayLaserAndPreviewObject(false);
+                            
+                        }
                     }
-                    else
-                    {
-                        DisplayLaserAndPreviewObject(false);
-                        
-                    }
+                }
+                // Use arcing laser placement method
+                else
+                {
+                    ObjectPlacementPointer.instance.StartPlacement(hand);
+                    spawnBuildingOnCollision.transform.localScale = new Vector3(previewObjectLocalScale, previewObjectLocalScale, previewObjectLocalScale);
+                    spawnBuildingOnCollision.transform.position = ObjectPlacementPointer.instance.destinationReticleTransform.position;
+
                 }
             }
             else // Grab grip
@@ -171,7 +218,9 @@ public class MenuBuilding : Throwable
             spawnBuildingOnCollision.GetComponent<Obstacle>().enabled = true;
             spawnBuildingOnCollision.GetComponent<TerrainBuilding>().enabled = true;
             spawnBuildingOnCollision.gameObject.layer = LayerMask.NameToLayer("Building");
+            ObjectPlacementPointer.instance.StopPlacement(hand);
         }
+        
 
         // Use gravity, kinematics off, etc..        
         gameObject.GetComponent<Rigidbody>().isKinematic = false;
@@ -182,7 +231,7 @@ public class MenuBuilding : Throwable
 
         if (pinchGrip)
         {
-            buildingPlacementPointer.RemoveAllListeners(SteamVR_Input_Sources.RightHand);
+            // buildingPlacementPointer.RemoveAllListeners(SteamVR_Input_Sources.RightHand);
             rotatePreviewClockwise.RemoveAllListeners(SteamVR_Input_Sources.RightHand);
             rotatePreviewCounterClockwise.RemoveAllListeners(SteamVR_Input_Sources.RightHand);
             rotatePreviewCounterClockwise.RemoveAllListeners(SteamVR_Input_Sources.LeftHand);
@@ -207,7 +256,9 @@ public class MenuBuilding : Throwable
         // TODO: Enable for snapping while placing?
         spawnBuildingOnCollision.GetComponent<Obstacle>().enabled = false;
 
+        // Determine angle of hand and then decide which laser to show?
         laser = GameObject.Instantiate(laser);        
+        
     }    
 
     private void OnCollisionEnter(Collision collision)

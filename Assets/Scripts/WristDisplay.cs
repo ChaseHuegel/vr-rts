@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class WristDisplay : MonoBehaviour
 {
-    public TextMesh woodQuantityTextMesh;
-    public TextMesh grainQuantityTextMesh;
-    public TextMesh goldQuantityTextMesh;
-    public TextMesh civilianPopulationTextMesh;
-    public TextMesh militaryPopulationTextMesh;
-    public TextMesh totalPopulationTextMesh;
+    public TMPro.TextMeshPro woodQuantityTextMesh;
+    public TMPro.TextMeshPro grainQuantityTextMesh;
+    public TMPro.TextMeshPro goldQuantityTextMesh;
+    public TMPro.TextMeshPro civilianPopulationTextMesh;
+    public TMPro.TextMeshPro militaryPopulationTextMesh;
+    public TMPro.TextMeshPro totalPopulationTextMesh;
     public void SetWoodText(string text)
     {
         woodQuantityTextMesh.text = text;
