@@ -229,6 +229,7 @@ namespace Valve.VR.InteractionSystem
 			placementEnded = true;
 			placementHand = hand;				
 			visible = false;	
+			HidePointer();
 		}
 
 		//-------------------------------------------------

@@ -640,7 +640,7 @@ public class VillagerActor : Actor
             {
 
                 animator.Play("Attack_A", -1, 0f);
-                audioSource.clip = GameMaster.GetAudio("chop_wood").GetClip();;                
+                audioSource.clip = GameMaster.GetAudio("chop_wood").GetClip();                
                 break;
             }
 
@@ -648,7 +648,7 @@ public class VillagerActor : Actor
             case ResourceGatheringType.Ore:
             {
                 animator.Play("Attack_B", -1, 0f);
-                audioSource.clip = goldMiningAudio;   
+                audioSource.clip = GameMaster.GetAudio("pickaxe").GetClip();
                 break;
             }
 

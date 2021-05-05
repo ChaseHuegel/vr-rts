@@ -213,6 +213,8 @@ public class MenuBuilding : Throwable
             //     previewObject.transform.position, previewObject.transform.rotation);
             // spawned.transform.position = previewObject.transform.position;
             // spawned.transform.rotation = previewObject.transform.rotation;
+
+            // Need to check if position is valid
             spawnBuildingOnCollision.transform.SetParent(null);
             spawnBuildingOnCollision.GetComponent<BoxCollider>().enabled = true;
             spawnBuildingOnCollision.GetComponent<Obstacle>().enabled = true;
