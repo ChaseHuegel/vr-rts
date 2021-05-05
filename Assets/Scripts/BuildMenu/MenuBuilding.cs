@@ -44,7 +44,7 @@ public class MenuBuilding : Throwable
         if (interactible.attachedToHand)
             spawnBuildingOnCollision.transform.Rotate(0f, 0f, -45);
 
-        Debug.Log("rotated " + spawnBuildingOnCollision.gameObject.name);
+        //Debug.Log("rotated " + spawnBuildingOnCollision.gameObject.name);
     } 
 
     public void RotatePreviewClockwiseDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
@@ -52,7 +52,7 @@ public class MenuBuilding : Throwable
         if (interactible.attachedToHand)
             spawnBuildingOnCollision.transform.Rotate(0f, 0f, 45);      
 
-        Debug.Log("rotated " + spawnBuildingOnCollision.gameObject.name);      
+        //Debug.Log("rotated " + spawnBuildingOnCollision.gameObject.name);      
     } 
 
     // public void BuildingPlacementPointerDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
@@ -110,8 +110,13 @@ public class MenuBuilding : Throwable
             {
                 interactable.skeletonPoser.SetBlendingBehaviourEnabled("PinchPose", true);
 
+                //     Transform origin = Player.instance.leftHand.GetComponent<HandTrackingPoint>().transform;
+                //     Vector3 direction = (Player.instance.hmdTransform.position - origin.position).normalized;
+
+                //     float facing = Vector3.Dot(origin.right, direction);
+                
                 // To what degree is the hand facing down?
-                Transform origin = hand.objectAttachmentPoint.transform;
+                Transform origin = hand.GetComponent<HandTrackingPoint>().transform;
                 //float facing = Vector3.Dot((Vector3.down - origin.localPosition).normalized, origin.forward);
                 
                 // Use vertical laser placement method
@@ -209,11 +214,6 @@ public class MenuBuilding : Throwable
         
         if (pinchGrip)
         {
-            // GameObject spawned = GameObject.Instantiate(spawnBuildingOnCollision, 
-            //     previewObject.transform.position, previewObject.transform.rotation);
-            // spawned.transform.position = previewObject.transform.position;
-            // spawned.transform.rotation = previewObject.transform.rotation;
-
             // Need to check if position is valid
             spawnBuildingOnCollision.transform.SetParent(null);
             spawnBuildingOnCollision.GetComponent<BoxCollider>().enabled = true;
@@ -221,6 +221,8 @@ public class MenuBuilding : Throwable
             spawnBuildingOnCollision.GetComponent<TerrainBuilding>().enabled = true;
             spawnBuildingOnCollision.gameObject.layer = LayerMask.NameToLayer("Building");
             ObjectPlacementPointer.instance.StopPlacement(hand);
+
+
         }
         
 

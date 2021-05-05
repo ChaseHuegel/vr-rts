@@ -22,8 +22,24 @@ public class GameMaster : Singleton<GameMaster>
     public List<Faction> factions;
     public static List<Faction> Factions { get { return Instance.factions;} }
 
+    public List<RTSUnitTypeData> rtsUnitDataList = new List<RTSUnitTypeData>();
+
+    public List<RTSBuildingTypeData> rtsBuildingDataList = new List<RTSBuildingTypeData>();
+    
     public void Update()
     {
         Random.InitState(Time.time.GetHashCode());
+    }
+
+    public RTSBuildingTypeData FindBuildingData(RTSBuildingType type)
+    {
+        RTSBuildingTypeData ret = rtsBuildingDataList.Find(x => x.buildingType == type);
+        return ret;
+    }
+
+    public RTSUnitTypeData FindUnitData(RTSUnitType type)
+    {
+        RTSUnitTypeData ret = rtsUnitDataList.Find(x => x.unitType == type );
+        return ret;
     }
 }

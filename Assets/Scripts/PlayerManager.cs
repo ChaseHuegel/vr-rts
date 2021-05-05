@@ -7,40 +7,41 @@ using UnityEngine.UI;
 
 public class PlayerManager : MonoBehaviour
 {
-    public PalmMenu palmMenu;
-
-    public WristDisplay WristDisplay;
-
+    [Header("Stats/Resources")]
     public int woodCollected;
     public int goldCollected;
     public int grainCollected;
-
     public int civilianPopulation;
     public int militaryPopulation;
     public int totalPopulation;
     public int populationLimit;
 
-    private TeleportArc teleportArc;
-
+    [Header("UI")]
+    public PalmMenu palmMenu;
+    public WristDisplay WristDisplay;
     public SteamVR_Action_Boolean palmMenuOnOff;
-    
-    List<RTSUnitTypeData> rtsUnitDataList = new List<RTSUnitTypeData>();
-    
-    public GameObject villagerPrefab;
-    public Sprite builderWorldButtonImage;
-    public Sprite minerWorldButtonImage;
-    public Sprite farmerWorldButtonImage;
-    public Sprite lumberjackWorldButtonImage;
 
-    // Start is called before the first frame update
-    void Start()
+    private static PlayerManager _instance;
+    public static PlayerManager instance
     {
-        teleportArc = this.GetComponent<TeleportArc>();
+        get
+        {
+            if ( _instance == null )
+            {
+                _instance = GameObject.FindObjectOfType<PlayerManager>();
+            }
 
-        // Move this to a function on the player?
-        // Player.instance.rightHand.GetComponent<HandPhysics>().enabled = false;
-        // Player.instance.leftHand.GetComponent<HandPhysics>().enabled = false;
-        
+            return _instance;
+        }
+    }
+
+    void Awake()
+    {
+        _instance = this;
+    }
+
+    void Start()
+    {        
         if (palmMenu == null)
         {
             palmMenu = Player.instance.GetComponent<PalmMenu>();
@@ -50,27 +51,28 @@ public class PlayerManager : MonoBehaviour
         palmMenuOnOff.AddOnStateUpListener(TogglePalmMenu, SteamVR_Input_Sources.RightHand);
         palmMenuOnOff.AddOnStateDownListener(TogglePalmMenu, SteamVR_Input_Sources.LeftHand);
         palmMenuOnOff.AddOnStateUpListener(TogglePalmMenu, SteamVR_Input_Sources.LeftHand);
-
-        teleportArc.Show();
-
-        rtsUnitDataList = new List<RTSUnitTypeData>();
-
-        RTSUnitTypeData builderData = new RTSUnitTypeData(RTSUnitType.Builder, 5.0f, villagerPrefab, builderWorldButtonImage, 1);
-        RTSUnitTypeData farmerData = new RTSUnitTypeData(RTSUnitType.Farmer, 5.0f, villagerPrefab, farmerWorldButtonImage, 1);
-        RTSUnitTypeData lumberjackData = new RTSUnitTypeData(RTSUnitType.Lumberjack, 5.0f, villagerPrefab, lumberjackWorldButtonImage, 1);
-        RTSUnitTypeData minerData = new RTSUnitTypeData(RTSUnitType.GoldMiner, 5.0f, villagerPrefab, minerWorldButtonImage, 1);
-        
-        rtsUnitDataList.Add(builderData);
-        rtsUnitDataList.Add(farmerData);
-        rtsUnitDataList.Add(lumberjackData);
-        rtsUnitDataList.Add(minerData);
+       
     }
 
-    public RTSUnitTypeData FindUnitData(RTSUnitType type)
-    {
-        RTSUnitTypeData ret = rtsUnitDataList.Find(x => x.unitType == type );
-        return ret;
-    }
+    // void Update()
+    // {
+    //     Transform origin = Player.instance.leftHand.GetComponent<HandTrackingPoint>().transform;
+    //     //float facing = Vector3.Dot((Player.instance.hmdTransform.localPosition - origin.localPosition).normalized, origin.forward);
+    //     Vector3 direction = (Player.instance.hmdTransform.position - origin.position).normalized;
+
+    //     float facing = Vector3.Dot(origin.right, direction);
+
+    //     Debug.Log("facing - " + facing);
+
+    //     if (facing > 0.90f)
+    //     {
+    //         palmMenu.Show(Player.instance.leftHand.GetComponent<HandTrackingPoint>().gazeMenuAttachmentPoint);
+    //     }
+    //     else
+    //     {
+    //         palmMenu.Hide();
+    //     }
+    // }
 
     public void TogglePalmMenu(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
@@ -93,7 +95,7 @@ public class PlayerManager : MonoBehaviour
         }
         
         totalPopulation += 1;
-        WristDisplay.SetTotalPopulationText(totalPopulation.ToString() + "/" + populationLimit.ToString());
+        UpdateWristDisplayPopulationLimit();
     }
 
     public void RemoveFromPopulation(RTSUnitType unitType)
@@ -112,17 +114,24 @@ public class PlayerManager : MonoBehaviour
         }
 
         totalPopulation -= 1;
-        WristDisplay.SetTotalPopulationText(totalPopulation.ToString() + "/" + populationLimit.ToString());
+        UpdateWristDisplayPopulationLimit();
     }
 
     public void IncreasePopulationLimit(int amountToIncreaseBy)
     {
         populationLimit += amountToIncreaseBy;   
+        UpdateWristDisplayPopulationLimit();
     }
-
+    
     public void DecreasePopulationLimit(int amountDecreaseBy)
     {
         populationLimit -= amountDecreaseBy;
+        UpdateWristDisplayPopulationLimit();        
+    }
+
+    void UpdateWristDisplayPopulationLimit()
+    {
+        WristDisplay.SetTotalPopulationText(totalPopulation.ToString() + "/" + populationLimit.ToString());
     }
 
     public void AddResourceToStockpile(ResourceGatheringType type, int amount)
@@ -130,15 +139,18 @@ public class PlayerManager : MonoBehaviour
         switch (type)
         {
             case ResourceGatheringType.Wood:
-                AddWoodToResources(amount);
+                woodCollected += amount;
+                WristDisplay.SetWoodText(woodCollected.ToString());
                 break;
 
             case ResourceGatheringType.Grain:
-                AddGrainToResources(amount);
+                grainCollected += amount;
+                WristDisplay.SetGrainText(grainCollected.ToString());
                 break;
 
             case ResourceGatheringType.Gold:
-                AddGoldToResources(amount);
+                goldCollected += amount;
+                WristDisplay.SetGoldText(goldCollected.ToString());
                 break;
 
             default:
@@ -146,19 +158,43 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    public void AddWoodToResources(int amount)
-    {
-        woodCollected += amount;
-        WristDisplay.SetWoodText(woodCollected.ToString());
+    public bool CanConstructBuilding(RTSBuildingType buildingType)
+    {   
+        bool ret = true;
+        
+        RTSBuildingTypeData buildingData = GameMaster.Instance.FindBuildingData(buildingType);
+        if (goldCollected < buildingData.goldCost || woodCollected < buildingData.woodCost ||
+            grainCollected < buildingData.grainCost)
+        {
+            return false;
+        }
+
+        return ret;
     }
-    public void AddGrainToResources(int amount)
+
+    public bool CanQueueUnit(RTSUnitType unitType)
     {
-        grainCollected += amount;
-        WristDisplay.SetGrainText(grainCollected.ToString());
+        bool ret = true;
+
+        RTSUnitTypeData unitData = GameMaster.Instance.FindUnitData(unitType);
+        if (goldCollected < unitData.goldCost || woodCollected < unitData.woodCost ||
+            grainCollected < unitData.grainCost)
+        {
+            return false;
+        }
+
+        if (unitData.populationCost + totalPopulation > populationLimit)
+        {
+            return false;
+        }
+
+        return ret;        
     }
-    public void AddGoldToResources(int amount)
+
+    public void RemoveUnitQueueCostFromStockpile(RTSUnitTypeData unitType)
     {
-        goldCollected += amount;
-        WristDisplay.SetGoldText(goldCollected.ToString());
+        woodCollected -= unitType.woodCost;
+        grainCollected -= unitType.grainCost;
+        goldCollected -= unitType.goldCost;
     }
 }

@@ -20,12 +20,17 @@ public class PalmMenu : MonoBehaviour
         objectPlacementPointer = FindObjectOfType<ObjectPlacementPointer>();          
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Show(Transform parent)
     {
-        
+        gameObject.transform.SetParent(parent);
+        gameObject.SetActive(true);
     }
-    
+
+    public void Hide()
+    {
+        gameObject.SetActive(false);
+    }
+
     public void Toggle()
     {
         if (menuHand == null)

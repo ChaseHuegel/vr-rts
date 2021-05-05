@@ -21,7 +21,7 @@ public class BuildingButton : MonoBehaviour
     
     private void OnButtonDown(Hand hand)
     {
-        parentBuilding.QueueUnit(unitTypeToQueue);
+        //parentBuilding.QueueUnit(unitTypeToQueue);
 
         //StartCoroutine(DoPlant());
     }

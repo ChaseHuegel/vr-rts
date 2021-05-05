@@ -62,7 +62,7 @@ public class VillagerActor : Actor
     public VillagerHoverMenu villagerHoverMenu;
     GameObject currentCargoDisplayObject;
     GameObject currentHandToolDisplayObject;
-    int currentCargoTotal;
+    public int currentCargoTotal;
     ResourceGatheringType lastWantedResoureType;
 
     protected PlayerManager playerManager;
@@ -220,6 +220,8 @@ public class VillagerActor : Actor
                         if (currentCargoTotal < carryingCapacity)
                         {
                             int amountToRemove = (int)(gatherCapacityPerSecond / (60 / Constants.ACTOR_TICK_RATE));
+                            if (amountToRemove < 2) 
+                                amountToRemove = 2; // < 2 / (60/20) = .3333 which ends up as 0
                             amountToRemove = Mathf.Clamp( carryingCapacity - currentCargoTotal, 0, amountToRemove );
                             currentCargoTotal += amountToRemove;
                             targetNode.decreaseCurrentResourceAmount(amountToRemove);

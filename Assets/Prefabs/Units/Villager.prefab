@@ -17960,7 +17960,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffefbea063cab884ca33e5a449e5c22c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attachmentFlags: 77
+  attachmentFlags: 205
   attachmentOffset: {fileID: 0}
   catchingSpeedThreshold: -1
   releaseVelocityStyle: 1
@@ -18077,8 +18077,8 @@ MonoBehaviour:
   targetNode: {fileID: 0}
   targetBuilding: {fileID: 0}
   targetDamaged: {fileID: 0}
-  carryingCapacity: 100
-  gatherCapacityPerSecond: 10
+  carryingCapacity: 20
+  gatherCapacityPerSecond: 2
   buildAndRepairCapacityPerSecond: 10
   animator: {fileID: 0}
   grainCargoDisplayObject: {fileID: 668154613715088764}
@@ -18097,6 +18097,7 @@ MonoBehaviour:
   grainGatheringAudio: {fileID: 8300000, guid: cdcfd4bbae902fc43abed7047a236348, type: 3}
   repairingAudio: {fileID: 8300000, guid: 6a090be253b576b4dac41b679f12a15a, type: 3}
   villagerHoverMenu: {fileID: 4773402040985910725}
+  currentCargoTotal: 0
 --- !u!82 &-6606716014632887433
 AudioSource:
   m_ObjectHideFlags: 0

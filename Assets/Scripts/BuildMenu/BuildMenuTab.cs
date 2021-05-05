@@ -11,7 +11,7 @@ using UnityEditor;
     {
         DrawDefaultInspector();
 
-        if(GUILayout.Button("Generatee Menu"))
+        if(GUILayout.Button("Generate Menu"))
         {    
             ((BuildMenuTab)target).Generate();
         }
@@ -34,14 +34,16 @@ public class BuildMenuTab : MonoBehaviour
     public GameObject resourceCostPrefab;
     // Only check if you need the menu to be rebuilt because of
     // modifications.
-    public bool Rebuild = true;
-    public BuildMenuHoverButton[] Buttons;
-
+    //public BuildMenuHoverButton[] Buttons;
+    public RTSBuildingType[] Buttons;
+    
     // Start is called before the first frame update
     void Start()
     {
         if (transform.childCount <= 0)
             Generate();
+
+        
     }
 
     public void Generate()
@@ -63,7 +65,7 @@ public class BuildMenuTab : MonoBehaviour
 
         DestroyChildren();
 
-        foreach(BuildMenuHoverButton button in Buttons)
+        foreach(RTSBuildingType rtsBuildingType in Buttons)
         {           
             Vector3 position = new Vector3(x, y, 0);
 
@@ -75,16 +77,19 @@ public class BuildMenuTab : MonoBehaviour
             resourceCost.transform.localPosition = Vector3.zero;
             
             BuildMenuResouceCost cost = resourceCost.GetComponent<BuildMenuResouceCost>();
-            cost.woodText.text = button.woodCost.ToString();
-            cost.goldText.text = button.goldCost.ToString();
-            cost.grainText.text = button.grainCost.ToString();
-            cost.oreText.text = button.oreCost.ToString();
 
-            if (button.visualModel)
+            RTSBuildingTypeData typeData = GameMaster.Instance.FindBuildingData(rtsBuildingType);
+            cost.woodText.text = typeData.woodCost.ToString();
+            cost.goldText.text = typeData.goldCost.ToString();
+            cost.grainText.text = typeData.grainCost.ToString();
+            cost.oreText.text = typeData.oreCost.ToString();
+            buildMenuSlot.rtsBuildingType = typeData.buildingType;
+            
+            if (typeData.menuPrefab)
             {
-                GameObject model = Instantiate(button.visualModel, slot.transform);
+                GameObject model = Instantiate(typeData.menuPrefab, slot.transform);
                 model.transform.localPosition = Vector3.zero;
-                buildMenuSlot.menuSlotObject = button.visualModel;
+                buildMenuSlot.menuSlotObject = typeData.menuPrefab;
             }
 
             column++;

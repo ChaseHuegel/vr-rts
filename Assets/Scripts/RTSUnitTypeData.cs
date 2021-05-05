@@ -3,20 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public enum RTSUnitType { None, Builder, Lumberjack, GoldMiner, OreMiner, Farmer, 
-                        Scout, Swordsman, Paladin, Spearman, lightInfantry, wizard, 
-                        priest, highpriest, lightCavalry, mountedKinght, mountedPriest,
-                        mountedScout, mountedPaladin, mountedWizard };
-
+[System.Serializable]
 public struct RTSUnitTypeData
 {
-    public RTSUnitTypeData( RTSUnitType uType, float qTime, GameObject uPrefab, Sprite worldImage, int popCost = 1)
+    public RTSUnitTypeData( RTSUnitType uType, float qTime, GameObject uPrefab, 
+                            Sprite queueImage, int iGoldCost, int iOreCost, 
+                            int iGrainCost, int iWoodCost, int popCost = 1)
     {
         unitType = uType;
         queueTime = qTime;
         prefab = uPrefab;
-        worldButtonImage = worldImage;
+        worldButtonImage = queueImage;
         populationCost = popCost;
+        goldCost = iGoldCost;
+        oreCost = iOreCost;
+        grainCost = iGrainCost;
+        woodCost = iWoodCost;
     }
 
     public RTSUnitType unitType;
@@ -24,6 +26,10 @@ public struct RTSUnitTypeData
     public GameObject prefab;
     public Sprite worldButtonImage;
     public int populationCost;
+    public int goldCost;
+    public int oreCost;
+    public int grainCost;
+    public int woodCost;
 }
 
 
