@@ -227,7 +227,7 @@ namespace Valve.VR.InteractionSystem
 		{
 			placementStarted = false;	
 			placementEnded = true;
-			placementHand = hand;	
+			placementHand = null;	
 			visible = false;	
 		}
 
@@ -594,13 +594,6 @@ namespace Valve.VR.InteractionSystem
 
 				playAreaPreviewTransform.gameObject.SetActive( false );
 			}
-		}
-
-		public void SetDestinationReticle(GameObject go)
-		{
-			//Destroy(destinationReticleTransform.transform.GetChild(0).gameObject);
-			go.transform.parent = destinationReticleTransform.transform;
-			go.transform.localPosition = Vector3.zero;
 		}
 
 		//-------------------------------------------------
