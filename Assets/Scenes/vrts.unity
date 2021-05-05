@@ -12107,7 +12107,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 309174306}
   m_LocalRotation: {x: -0.28736815, y: -0.3922769, z: -0.65522754, w: 0.57811356}
-  m_LocalPosition: {x: 0.01060015, y: 0.069900036, z: -0.13950041}
+  m_LocalPosition: {x: 0.0105, y: 0.071, z: -0.1388}
   m_LocalScale: {x: 0.4337581, y: 0.4337582, z: 0.4337582}
   m_Children:
   - {fileID: 137259726}
@@ -44955,9 +44955,9 @@ MonoBehaviour:
   renderModels: []
   mainRenderModel: {fileID: 0}
   hoverhighlightRenderModel: {fileID: 0}
-  showDebugText: 0
-  spewDebugText: 0
-  showDebugInteractables: 0
+  showDebugText: 1
+  spewDebugText: 1
+  showDebugInteractables: 1
 --- !u!124 &1129763783
 Behaviour:
   m_ObjectHideFlags: 0
@@ -90792,6 +90792,9 @@ MonoBehaviour:
   traceLayerMask:
     serializedVersion: 2
     m_Bits: 4294967295
+  allowedPlacementLayers:
+    serializedVersion: 2
+    m_Bits: 256
   floorFixupTraceLayerMask:
     serializedVersion: 2
     m_Bits: 0
@@ -90835,6 +90838,10 @@ MonoBehaviour:
   offsetReticleTransform: {fileID: 6935284045247434876}
   floorDebugSphere: {fileID: 6935284045245647940}
   floorDebugLine: {fileID: 6935284045254850380}
+  visible: 0
+  placementStarted: 0
+  placementHand: {fileID: 0}
+  placementEnded: 0
 --- !u!1 &6935284045247738348
 GameObject:
   m_ObjectHideFlags: 0

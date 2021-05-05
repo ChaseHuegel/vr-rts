@@ -227,7 +227,7 @@ namespace Valve.VR.InteractionSystem
 		{
 			placementStarted = false;	
 			placementEnded = true;
-			placementHand = null;	
+			placementHand = hand;				
 			visible = false;	
 		}
 
@@ -272,7 +272,7 @@ namespace Valve.VR.InteractionSystem
 				}
 				else if ( visible )
 				{
-					if ( newPointerHand == null && !IsTeleportButtonDown( pointerHand ) )
+					if ( newPointerHand == null && placementEnded)// !IsTeleportButtonDown( pointerHand ) )
 					{
 						//Hide the pointer
 						HidePointer();
@@ -607,18 +607,18 @@ namespace Valve.VR.InteractionSystem
 			visible = false;
 			if ( pointerHand )
 			{
-				if ( ShouldOverrideHoverLock() )
-				{
-					//Restore the original hovering interactable on the hand
-					if ( originalHoverLockState == true )
-					{
-						pointerHand.HoverLock( originalHoveringInteractable );
-					}
-					else
-					{
-						pointerHand.HoverUnlock( null );
-					}
-				}
+				// if ( ShouldOverrideHoverLock() )
+				// {
+				// 	//Restore the original hovering interactable on the hand
+				// 	if ( originalHoverLockState == true )
+				// 	{
+				// 		pointerHand.HoverLock( originalHoveringInteractable );
+				// 	}
+				// 	else
+				// 	{
+				// 		pointerHand.HoverUnlock( null );
+				// 	}
+				// }
 
 				//Stop looping sound
 				loopingAudioSource.Stop();
@@ -628,28 +628,28 @@ namespace Valve.VR.InteractionSystem
 
 			teleportArc.Hide();
 
-			foreach ( TeleportMarkerBase teleportMarker in teleportMarkers )
-			{
-				if ( teleportMarker != null && teleportMarker.markerActive && teleportMarker.gameObject != null )
-				{
-					teleportMarker.gameObject.SetActive( false );
-				}
-			}
+			// foreach ( TeleportMarkerBase teleportMarker in teleportMarkers )
+			// {
+			// 	if ( teleportMarker != null && teleportMarker.markerActive && teleportMarker.gameObject != null )
+			// 	{
+			// 		teleportMarker.gameObject.SetActive( false );
+			// 	}
+			// }
 
-			destinationReticleTransform.gameObject.SetActive( false );
-			invalidReticleTransform.gameObject.SetActive( false );
-			offsetReticleTransform.gameObject.SetActive( false );
+			// destinationReticleTransform.gameObject.SetActive( false );
+			// invalidReticleTransform.gameObject.SetActive( false );
+			// offsetReticleTransform.gameObject.SetActive( false );
 
-			if ( playAreaPreviewTransform != null )
-			{
-				playAreaPreviewTransform.gameObject.SetActive( false );
-			}
+			// if ( playAreaPreviewTransform != null )
+			// {
+			// 	playAreaPreviewTransform.gameObject.SetActive( false );
+			// }
 
-			if ( onActivateObjectTransform.gameObject.activeSelf )
-			{
-				onActivateObjectTransform.gameObject.SetActive( false );
-			}
-			onDeactivateObjectTransform.gameObject.SetActive( true );
+			// if ( onActivateObjectTransform.gameObject.activeSelf )
+			// {
+			// 	onActivateObjectTransform.gameObject.SetActive( false );
+			// }
+			// onDeactivateObjectTransform.gameObject.SetActive( true );
 
 			pointerHand = null;
 		}
