@@ -62102,13 +62102,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1498487680}
-  m_LocalRotation: {x: -0.4194165, y: -0.00000074505795, z: -0.00000068545336, w: 0.90779394}
-  m_LocalPosition: {x: 0.0025987625, y: -0.19725102, z: 0.001563549}
+  m_LocalRotation: {x: 0.244189, y: 0.2441878, z: -0.6636059, w: 0.6636048}
+  m_LocalPosition: {x: 0.0026, y: -0.0242, z: -0.0847}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1139566929}
   m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: -49.595, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 40.404, y: 0, z: -90}
 --- !u!1001 &1498667399
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -83660,10 +83660,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a3e71b7592171349abeac5713d6d99d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  woodCollected: 0
-  goldCollected: 0
-  oreCollected: 0
-  grainCollected: 0
+  woodCollected: 100
+  goldCollected: 100
+  oreCollected: 100
+  grainCollected: 100
   civilianPopulation: 0
   militaryPopulation: 0
   totalPopulation: 0
@@ -83692,7 +83692,7 @@ MonoBehaviour:
     needsReinit: 0
   RightHand: {fileID: 1128724109}
   LeftHand: {fileID: 1128642067}
-  floorHeight: -0.5
+  floorHeight: -1
   panMovementRate: 3
   useMomentum: 1
   momentumStrength: 3

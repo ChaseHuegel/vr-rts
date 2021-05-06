@@ -110,10 +110,10 @@ public class MenuBuilding : Throwable
             {
                 interactable.skeletonPoser.SetBlendingBehaviourEnabled("PinchPose", true);
 
-                Transform origin = hand.objectAttachmentPoint.transform;
+                Transform origin = Player.instance.rightHand.GetComponent<HandTrackingPoint>().trackingPoint.transform;
                 
                 // Use vertical laser placement method
-                if ( origin.transform.up.y > 0.7f)
+                if ( origin.transform.up.y > 0.9f)
                 {
                     ObjectPlacementPointer.instance.StopPlacement(hand);
                     if ( Physics.Raycast( transform.position, Vector3.down, out hitInfo, 100, allowedLayersMask ) )

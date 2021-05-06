@@ -55,6 +55,10 @@ public class PlayerManager : MonoBehaviour
 
     void Start()
     {        
+        WristDisplay.SetWoodText(woodCollected.ToString());
+        WristDisplay.SetGrainText(grainCollected.ToString());
+        WristDisplay.SetGoldText(goldCollected.ToString());
+
         if (palmMenu == null)
         {
             palmMenu = Player.instance.GetComponent<PalmMenu>();
