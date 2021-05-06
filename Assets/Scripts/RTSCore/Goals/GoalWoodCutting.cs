@@ -5,7 +5,7 @@ public class GoalWoodCutting : PathfindingGoal
 {
     public override bool CheckGoal(Cell cell)
     {
-        Resource resource = cell.GetOccupant<Resource>();
+        Resource resource = cell?.GetOccupant<Resource>();
 
         if (resource != null && resource.type == ResourceGatheringType.Wood)
             return true;
@@ -22,9 +22,9 @@ public class GoalWoodCutting : PathfindingGoal
 
     public override void OnReachedGoal(Actor actor, Cell cell)
     {
-        Resource resource = cell.GetOccupant<Resource>();
+        Resource resource = cell?.GetOccupant<Resource>();
         Villager villager = (Villager)actor;
 
-        villager.TryGather(resource);
+        villager?.TryGather(resource);
     }
 }

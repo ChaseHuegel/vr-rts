@@ -11,6 +11,8 @@ public class Actor : Body
     public virtual PathfindingGoal[] GetGoals() { return goals.entries; }
 
     [Header("Actor")]
+    public Cell currentGoalTarget = null;
+    public PathfindingGoal currentGoal = null;
     public byte goalSearchDistance = 20;
     public float movementSpeed = 1f;
 
@@ -25,6 +27,8 @@ public class Actor : Body
     private byte pathTimer = 0;
     private byte tickTimer = 0;
 
+    public bool HasValidTarget() { return (currentGoalTarget != null); }
+    public bool HasValidGoal() { return (currentGoal != null && currentGoal.active); }
     public bool HasValidPath() { return (currentPath != null && currentPath.Count > 0); }
     public bool IsMoving() { return moving; }
 
@@ -60,10 +64,25 @@ public class Actor : Body
     public void ResetPathing()
     {
         currentPath = null;
+        currentGoal = null;
+        currentGoalTarget = null;
         ResetPathingBrain();
     }
 
-    public Cell FindNearestGoalWithPriority()
+    public void TryGoalAtHelper(int relativeX, int relativeY, PathfindingGoal goal, ref Cell current, ref Cell result, ref int currentDistance, ref int nearestDistance)
+    {
+        current = World.at(gridPosition.x + relativeX, gridPosition.y + relativeY);
+        currentDistance = DistanceTo(current);
+
+        if (PathfindingGoal.TryGoal(this, current, goal) && currentDistance < nearestDistance)
+        {
+            nearestDistance = currentDistance;
+            result = current;
+        }
+    }
+
+    public Cell FindNearestGoalWithPriority() { return FindNearestGoal(true); }
+    public Cell FindNearestGoal(bool usePriority = false)
     {
         Cell result = null;
         Cell current = null;
@@ -73,76 +92,66 @@ public class Actor : Body
 
         foreach (PathfindingGoal goal in GetGoals())
         {
-            for (int x = -goalSearchDistance; x < goalSearchDistance; x++)
-            for (int y = -goalSearchDistance; y < goalSearchDistance; y++)
-            {
-                current = World.at(gridPosition.x + x, gridPosition.y + y);
-                currentDistance = DistanceTo(current);
+            currentGoal = goal;
 
-                if (PathfindingGoal.TryGoal(this, current, goal) && currentDistance < nearestDistance)
+            //  TODO: There is a cleaner way to do this
+
+            //  Radiate out layer by layer around the actor without searching previous layers
+            for (int radius = 1; radius < goalSearchDistance; radius++)
+            {
+                //  Search the top/bottom rows
+                for (int x = -radius; x < radius; x++)
                 {
-                    nearestDistance = currentDistance;
-                    result = current;
+                    TryGoalAtHelper(x, radius, goal, ref current, ref result, ref currentDistance, ref nearestDistance);
+                    TryGoalAtHelper(x, -radius, goal, ref current, ref result, ref currentDistance, ref nearestDistance);
+
+                    //  Return the first match if goals are being tested in order of priority
+                    if (usePriority && result != null)
+                        return result;
+                }
+
+                //  Search the side columns
+                for (int y = -radius; y < radius; y++)
+                {
+                    TryGoalAtHelper(radius, y, goal, ref current, ref result, ref currentDistance, ref nearestDistance);
+                    TryGoalAtHelper(-radius, y, goal, ref current, ref result, ref currentDistance, ref nearestDistance);
+
+                    //  Return the first match if goals are being tested in order of priority
+                    if (usePriority && result != null)
+                        return result;
                 }
             }
-
-            if (result != null)
-                return result;
         }
+
+        //  No matching goal found
+        if (result == null)
+            currentGoal = null;
 
         return result;
     }
 
-    public Cell FindNearestGoal()
+    public bool GotoNearestGoalWithPriority() { return GotoNearestGoal(true); }
+    public bool GotoNearestGoal(bool usePriority = false)
     {
-        Cell result = null;
-        Cell current = null;
+        //  TODO: clean this up
 
-        int currentDistance = 0;
-        int nearestDistance = int.MaxValue;
+        if (!HasValidTarget() || !HasValidGoal())
+            currentGoalTarget = FindNearestGoal(usePriority);
 
-        for (int x = -goalSearchDistance; x < goalSearchDistance; x++)
-        for (int y = -goalSearchDistance; y < goalSearchDistance; y++)
+        //  Do we have a valid goal now?
+        if (HasValidTarget() && HasValidGoal())
         {
-            current = World.at(gridPosition.x + x, gridPosition.y + y);
-            currentDistance = DistanceTo(current);
+            //  Assume our currentGoal is a valid match since it was found successfully.
+            //  Forcibly trigger reached under that assumption
+            if (DistanceTo(currentGoalTarget) <= 1)
+                PathfindingGoal.TriggerReachedGoal(this, currentGoalTarget, currentGoal);
 
-            if (PathfindingGoal.TryGoal(this, current, GetGoals()) && currentDistance < nearestDistance)
-            {
-                nearestDistance = currentDistance;
-                result = current;
-            }
+            Goto(currentGoalTarget.x, currentGoalTarget.y);
+
+            return true;
         }
 
-        return result;
-    }
-
-    public bool GotoNearestGoalWithPriority()
-    {
-        Cell target = FindNearestGoalWithPriority();
-        if (target == null)
-            return false;
-
-        if (DistanceTo(target) <= 1)
-            PathfindingGoal.ReachIfGoal(this, target, GetGoals());
-
-        Goto(target.x, target.y);
-
-        return true;
-    }
-
-    public bool GotoNearestGoal()
-    {
-        Cell target = FindNearestGoal();
-        if (target == null)
-            return false;
-
-        if (DistanceTo(target) <= 1)
-            PathfindingGoal.ReachIfGoal(this, target, GetGoals());
-
-        Goto(target.x, target.y);
-
-        return true;
+        return false;
     }
 
     public void Goto(Direction dir, int distance, bool ignoreActors = true) { Goto(dir.toVector3() * distance, ignoreActors); }
