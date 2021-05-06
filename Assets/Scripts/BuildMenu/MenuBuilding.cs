@@ -110,18 +110,12 @@ public class MenuBuilding : Throwable
             {
                 interactable.skeletonPoser.SetBlendingBehaviourEnabled("PinchPose", true);
 
-                //     Transform origin = Player.instance.leftHand.GetComponent<HandTrackingPoint>().transform;
-                //     Vector3 direction = (Player.instance.hmdTransform.position - origin.position).normalized;
-
-                //     float facing = Vector3.Dot(origin.right, direction);
-                
-                // To what degree is the hand facing down?
-                Transform origin = hand.GetComponent<HandTrackingPoint>().transform;
-                //float facing = Vector3.Dot((Vector3.down - origin.localPosition).normalized, origin.forward);
+                Transform origin = hand.objectAttachmentPoint.transform;
                 
                 // Use vertical laser placement method
-                if (origin.transform.up.y > 0.7f) //facing < -0.8f)
+                if ( origin.transform.up.y > 0.7f)
                 {
+                    ObjectPlacementPointer.instance.StopPlacement(hand);
                     if ( Physics.Raycast( transform.position, Vector3.down, out hitInfo, 100, allowedLayersMask ) )
                     {
                         // Are we hitting something on acceptable layer?
@@ -141,6 +135,7 @@ public class MenuBuilding : Throwable
                 // Use arcing laser placement method
                 else
                 {
+                    DisplayLaserAndPreviewObject(false);
                     ObjectPlacementPointer.instance.StartPlacement(hand);
                     spawnBuildingOnCollision.transform.localScale = new Vector3(previewObjectLocalScale, previewObjectLocalScale, previewObjectLocalScale);
                     spawnBuildingOnCollision.transform.position = ObjectPlacementPointer.instance.destinationReticleTransform.position;
