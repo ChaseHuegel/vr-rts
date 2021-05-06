@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Valve.VR;
+using Valve.VR.InteractionSystem;
 
 public class GripPan : MonoBehaviour
 {
@@ -10,7 +11,6 @@ public class GripPan : MonoBehaviour
     public SteamVR_Input_Sources handRight;
     public SteamVR_Input_Sources handLeft;
     public SteamVR_Action_Boolean GripOnOff;
-    public GameObject player;
     public Valve.VR.InteractionSystem.Hand RightHand;
     public Valve.VR.InteractionSystem.Hand LeftHand;
 
@@ -36,29 +36,52 @@ public class GripPan : MonoBehaviour
     Vector3 velocity;
     float grabTime;
 
+    bool isPanEnabled;
+    bool isRightHandPanEnabled = true;
+    bool isLeftHandPanEnabled = true;
 
     // Start is called before the first frame update
     void Start()
     {
-        if (!player)
-        {
-            player = this.gameObject;
-        }
-
+        isPanEnabled = true;
+        
         GripOnOff.AddOnStateDownListener(GripOn, handRight);
         GripOnOff.AddOnStateUpListener(GripOff, handRight);
         GripOnOff.AddOnStateDownListener(GripOn, handLeft);
         GripOnOff.AddOnStateUpListener(GripOff, handLeft);
+
+    }
+
+    public void DisablePanning(Hand hand)
+    {
+        if (hand == RightHand)
+            isRightHandPanEnabled = false;
+        else
+            isLeftHandPanEnabled = false;
+        
+        // isRightHandPanEnabled = hand == RightHand;
+        // isLeftHandPanEnabled = hand == LeftHand;
+    }
+
+    public void EnablePanning(Hand hand)
+    {
+        if (hand == RightHand)
+            isRightHandPanEnabled = true;
+        else
+            isLeftHandPanEnabled = true;
+
+        // isRightHandPanEnabled = hand != RightHand;
+        // isLeftHandPanEnabled = hand != LeftHand;
     }
 
     // Update is called once per frame
     void Update()
-    {
+    {           
         if (isPanning)
         {
             movementVector = panStartPosition - panHand.transform.position;
             Vector3 adjustedMovementVector = movementVector * panMovementRate;
-            player.transform.position += adjustedMovementVector;
+            Player.instance.transform.position += adjustedMovementVector;
             panStartPosition = panHand.position;
             glideTimePassed += Time.deltaTime;
         }
@@ -67,12 +90,12 @@ public class GripPan : MonoBehaviour
             magnitude -= momentumDrag * Time.deltaTime;
             if (magnitude < 0) magnitude = 0;
 
-            player.transform.position += glidingVector * magnitude * Time.deltaTime;
+            Player.instance.transform.position += glidingVector * magnitude * Time.deltaTime;
         }
 
         //  Don't let player go below the 'floor'
-        if (player.transform.position.y < floorHeight)
-            player.transform.position = new Vector3(player.transform.position.x, floorHeight, player.transform.position.z);
+        if (Player.instance.transform.position.y < floorHeight)
+            Player.instance.transform.position = new Vector3(Player.instance.transform.position.x, floorHeight, Player.instance.transform.position.z);
     }
 
     public void GripOff(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
@@ -97,7 +120,7 @@ public class GripPan : MonoBehaviour
 
     public void GripOn(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
-        if (fromSource == SteamVR_Input_Sources.RightHand)
+        if (fromSource == SteamVR_Input_Sources.RightHand && isRightHandPanEnabled)
         {
             if (RightHand.hoveringInteractable == null)
             {
@@ -106,8 +129,11 @@ public class GripPan : MonoBehaviour
                 isPanning = true;
                 currentHand = fromSource;
             }
+            isGliding = false;
+            grabPosition = panHand.position;
+            glideTimePassed = 0.0f;
         }
-        else if (fromSource == SteamVR_Input_Sources.LeftHand)
+        else if (fromSource == SteamVR_Input_Sources.LeftHand && isLeftHandPanEnabled)
         {
             if (LeftHand.hoveringInteractable == null)
             {
@@ -116,11 +142,13 @@ public class GripPan : MonoBehaviour
                 isPanning = true;
                 currentHand = fromSource;
             }
-        }
-        isGliding = false;
 
-        grabPosition = panHand.position;
-        glideTimePassed = 0.0f;
+            isGliding = false;
+            grabPosition = panHand.position;
+            glideTimePassed = 0.0f;
+        }
+
+        
     }
 }
 

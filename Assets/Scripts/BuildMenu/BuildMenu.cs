@@ -22,7 +22,7 @@ public class BuildMenu : MonoBehaviour
             {
                 bool canBuild = PlayerManager.instance.CanConstructBuilding(slot.rtsBuildingType);                
                 slot.GetComponentInChildren<SphereCollider>().enabled = canBuild;   
-                Debug.Log("enabled");          
+                //Debug.Log("enabled");          
             }
         }
     }

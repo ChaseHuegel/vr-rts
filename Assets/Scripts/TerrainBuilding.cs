@@ -55,7 +55,8 @@ public class TerrainBuilding : MonoBehaviour
 
     public HealthBar buildingHealthBar;
 
-    public UnityEngine.UI.Image[] QueueImageObjects;    
+    public UnityEngine.UI.Image[] QueueImageObjects;   
+    public GameObject objectToToggleOnKnock; 
 
     //public Sprite emptyQueueSlotImage;
 
@@ -127,6 +128,57 @@ public class TerrainBuilding : MonoBehaviour
         }
     }
     
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.GetComponent<Hand>())
+        {
+               
+        }
+    }
+
+    protected void ToggleObjectOnKnock()
+    {
+        objectToToggleOnKnock.SetActive(!objectToToggleOnKnock.activeSelf);
+    }
+    
+    // protected float firstKnockTime;
+    // protected float secondKnockMaxDuration = 1.0f;
+    // protected bool waitingForSecondKnock;
+    private void OnHandHoverBegin()
+    {        
+        // Check if hand pose is a fist and play knock if it is.
+        audioSource.clip = GameMaster.GetAudio("knock").GetClip();
+        audioSource.Play();
+
+        ToggleObjectOnKnock();
+
+        // ---- 2 knocks is too unreliable at the moment and can deal with it later
+        // if (waitingForSecondKnock)
+        // {
+        //     // This is the 2nd knock
+        //     if (Time.fixedTime - firstKnockTime <= secondKnockMaxDuration)
+        //     {
+        //         ToggleObjectOnKnock();
+        //         waitingForSecondKnock = false;
+        //         Debug.Log("second " + (Time.fixedTime - firstKnockTime).ToString());
+        //     }
+        //     // Time windows has passed for 2nd knock
+        //     else
+        //     {
+        //         waitingForSecondKnock = false;                
+        //     }
+        // }
+        // // This is a new first knock
+        // else
+        // {
+        //     firstKnockTime = Time.fixedTime;
+        //     waitingForSecondKnock = true;
+        //     Debug.Log("first " + firstKnockTime);
+        // }
+
+        //Debug.Log("Hover Begin");
+    }
+
     void RefreshHealthBar()
     {
         buildingHealthBar.SetFilledAmount((float)currentHealth / (float)maxHealth);     
@@ -165,7 +217,7 @@ public class TerrainBuilding : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {            
+    {    
         if (currentHealth < maxHealth)
         {
             //buildingHealthBar.enabled = true;
@@ -176,39 +228,41 @@ public class TerrainBuilding : MonoBehaviour
             ResourceManager.GetBuildAndRepairObjects().Remove(this);
         }
 
-        if (constructionCompleted)
+        UpdateUnitSpawnQueue(); 
+    }
+
+    private void UpdateUnitSpawnQueue()
+    {
+        if (unitSpawnQueue.Count > 0)
         {
-            if (unitSpawnQueue.Count > 0)
+            timeElapsed += Time.deltaTime;
+            float progress = (timeElapsed / unitSpawnQueue.Peek().queueTime) * 100;
+            progress = UnityEngine.Mathf.Round(progress);
+            queueStatusText.text = unitSpawnQueue.Count.ToString();
+            progressImage.fillAmount = progress / 100;
+
+            if (timeElapsed >= unitSpawnQueue.Peek().queueTime)
             {
-                timeElapsed += Time.deltaTime;
-                float progress = (timeElapsed / unitSpawnQueue.Peek().queueTime) * 100;
-                progress = UnityEngine.Mathf.Round(progress);
-                queueStatusText.text = unitSpawnQueue.Count.ToString();// progress.ToString() + "%";
-                progressImage.fillAmount = progress / 100;
+                SpawnUnit();
+                timeElapsed = 0.0f;
+                unitSpawnQueue.Dequeue();                    
+                progressImage.fillAmount = 0;
 
-                if (timeElapsed >= unitSpawnQueue.Peek().queueTime)
-                {
-                    SpawnUnit();
-                    timeElapsed = 0.0f;
-                    unitSpawnQueue.Dequeue();                    
-                    progressImage.fillAmount = 0;
-
-                    //Debug.Log("Removed unit from queue " + unitSpawnQueue.Count + " left in queue.");
-                }
-
-                foreach(UnityEngine.UI.Image image in QueueImageObjects)
-                {
-                    image.overrideSprite = null;// emptyQueueSlotImage;
-                }
-
-                int i = 0;
-                foreach (RTSUnitTypeData unitData in unitSpawnQueue)
-                {
-                    QueueImageObjects[i].overrideSprite = unitData.worldButtonImage;
-                    i++;
-                }
+                //Debug.Log("Removed unit from queue " + unitSpawnQueue.Count + " left in queue.");
             }
-        }        
+
+            foreach(UnityEngine.UI.Image image in QueueImageObjects)
+            {
+                image.overrideSprite = null;// emptyQueueSlotImage;
+            }
+
+            int i = 0;
+            foreach (RTSUnitTypeData unitData in unitSpawnQueue)
+            {
+                QueueImageObjects[i].overrideSprite = unitData.worldButtonImage;
+                i++;
+            }
+        }
     }
 
     public void RemoveLastUnitFromQueue()

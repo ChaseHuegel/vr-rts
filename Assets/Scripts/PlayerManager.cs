@@ -10,6 +10,7 @@ public class PlayerManager : MonoBehaviour
     [Header("Stats/Resources")]
     public int woodCollected;
     public int goldCollected;
+    public int oreCollected;
     public int grainCollected;
     public int civilianPopulation;
     public int militaryPopulation;
@@ -20,7 +21,7 @@ public class PlayerManager : MonoBehaviour
     public PalmMenu palmMenu;
     public WristDisplay WristDisplay;
     public SteamVR_Action_Boolean palmMenuOnOff;
-
+    private GripPan gripPan;
     private static PlayerManager _instance;
     public static PlayerManager instance
     {
@@ -35,9 +36,21 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
+    public void DisableGripPanning(Hand hand)
+    {
+        gripPan.DisablePanning(hand);
+    }
+
+    public void EnableGripPanning(Hand hand)
+    {
+        gripPan.EnablePanning(hand);
+    }
+
     void Awake()
     {
         _instance = this;
+        if (!(gripPan = Player.instance.GetComponent<GripPan>()))
+            Debug.Log("GripPan not found.");
     }
 
     void Start()
@@ -57,7 +70,6 @@ public class PlayerManager : MonoBehaviour
     // void Update()
     // {
     //     Transform origin = Player.instance.leftHand.GetComponent<HandTrackingPoint>().transform;
-    //     //float facing = Vector3.Dot((Player.instance.hmdTransform.localPosition - origin.localPosition).normalized, origin.forward);
     //     Vector3 direction = (Player.instance.hmdTransform.position - origin.position).normalized;
 
     //     float facing = Vector3.Dot(origin.right, direction);
@@ -96,6 +108,14 @@ public class PlayerManager : MonoBehaviour
         
         totalPopulation += 1;
         UpdateWristDisplayPopulationLimit();
+    }
+
+    public void RemoveResources(int gold, int grain, int wood, int ore)
+    {
+        goldCollected -= gold;
+        grainCollected -= grain;
+        woodCollected -= wood;
+        oreCollected -= ore;
     }
 
     public void RemoveFromPopulation(RTSUnitType unitType)

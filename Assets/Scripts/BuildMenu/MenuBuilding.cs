@@ -216,6 +216,11 @@ public class MenuBuilding : Throwable
             spawnBuildingOnCollision.GetComponent<TerrainBuilding>().enabled = true;
             spawnBuildingOnCollision.gameObject.layer = LayerMask.NameToLayer("Building");
             ObjectPlacementPointer.instance.StopPlacement(hand);
+            
+            RTSBuildingTypeData buildingData = GameMaster.Instance.FindBuildingData(buildMenuSlot.rtsBuildingType);
+            
+            PlayerManager.instance.RemoveResources(buildingData.goldCost, buildingData.grainCost,
+                                               buildingData.woodCost, buildingData.oreCost);
 
 
         }
