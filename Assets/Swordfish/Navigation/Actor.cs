@@ -27,10 +27,18 @@ public class Actor : Body
     private byte pathTimer = 0;
     private byte tickTimer = 0;
 
-    public bool HasValidTarget() { return (currentGoalTarget != null); }
-    public bool HasValidGoal() { return (currentGoal != null && currentGoal.active); }
-    public bool HasValidPath() { return (currentPath != null && currentPath.Count > 0); }
     public bool IsMoving() { return moving; }
+    public bool HasValidPath() { return (currentPath != null && currentPath.Count > 0); }
+
+    public bool HasValidGoal() { return (currentGoal != null && currentGoal.active); }
+    public bool HasValidTarget()
+    {
+        if (HasValidGoal())
+            if (PathfindingGoal.CheckGoal(this, currentGoalTarget, currentGoal))
+                return true;
+
+        return false;
+    }
 
     public void Freeze() { frozen = true; RemoveFromGrid(); }
     public void Unfreeze() { frozen = false; UpdatePosition(); }
@@ -133,20 +141,13 @@ public class Actor : Body
     public bool GotoNearestGoalWithPriority() { return GotoNearestGoal(true); }
     public bool GotoNearestGoal(bool usePriority = false)
     {
-        //  TODO: clean this up
-
         if (!HasValidTarget() || !HasValidGoal())
             currentGoalTarget = FindNearestGoal(usePriority);
 
         //  Do we have a valid goal now?
         if (HasValidTarget() && HasValidGoal())
         {
-            //  Assume our currentGoal is a valid match since it was found successfully.
-            //  Forcibly trigger reached under that assumption
-            if (DistanceTo(currentGoalTarget) <= 1)
-                PathfindingGoal.TriggerReachedGoal(this, currentGoalTarget, currentGoal);
-
-            Goto(currentGoalTarget.x, currentGoalTarget.y);
+            GotoForced(currentGoalTarget.x, currentGoalTarget.y);
 
             return true;
         }
@@ -191,13 +192,25 @@ public class Actor : Body
     //  Perform ticks at a regular interval. FixedUpdate is called 60x/s
     public void FixedUpdate()
     {
+        //  Behavior ticking below
         tickTimer++;
         if (tickTimer >= Constants.ACTOR_TICK_RATE)
         {
             tickTimer = 0;
+
+            //  Handle interacting with goals
+            if (!moving && HasValidGoal() && HasValidTarget())
+            {
+                //  Assume our currentGoal is a valid match since it was found successfully.
+                //  Forcibly trigger reached under that assumption
+                if (DistanceTo(currentGoalTarget) <= 1)
+                    PathfindingGoal.TriggerReachedGoal(this, currentGoalTarget, currentGoal);
+            }
+
             Tick();
         }
 
+        //  Pathfinding and interpolation below
         //  Don't pathfind while frozen
         if (frozen) return;
 
@@ -229,18 +242,14 @@ public class Actor : Body
         //  If we have a valid path, move along it
         if (HasValidPath())
         {
-            // Need to be watching the actors position in world space and update it's
-            // grid position when it reaches a grid boundary so we can control the
-            // movement speed of the actor properly.
-            // Right now, you can turn the interpolation really low and the actor will
-            // reach it's destination and start gathering in grid space while still
-            // several grid spaces away from the target node in world space.
+            // TODO: Add 'waypoints' for longer paths too big for the heap
 
-            //  We can pass thru actors if the path ahead is clear
+            //  We can pass thru actors if the path ahead is clear and we are going beyond the next spot
             bool canPassThruActors = currentPath.Count > 2 ? !World.at(currentPath[1].x, currentPath[1].y).IsBlocked() : false;
 
-            //  Handle reaching a goal, stop pathing if we reached a goal
-            if ( PathfindingGoal.ReachIfGoal(this, currentPath[0], GetGoals()) )
+            //  NOTE possible performance hitch, possible without checking each path node?
+            //  Handle reaching current (if any) goal and stop pathing
+            if ( PathfindingGoal.TryReachGoal(this, currentPath[0], currentGoal) )
             {
                 ResetPathing();
                 return;

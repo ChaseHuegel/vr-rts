@@ -25,6 +25,6 @@ public class GoalWoodCutting : PathfindingGoal
         Resource resource = cell?.GetOccupant<Resource>();
         Villager villager = (Villager)actor;
 
-        villager?.TryGather(resource);
+        villager.TryGather(resource);
     }
 }

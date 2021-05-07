@@ -48,6 +48,17 @@ public class PathfindingGoal
         return false;
     }
 
+    public static bool TryReachGoal(Actor actor, Cell cell, PathfindingGoal goal)
+    {
+        if (goal != null && goal.active && goal.CheckGoal(cell))
+        {
+            goal.OnReachedGoal(actor, cell);
+            return true;
+        }
+
+        return false;
+    }
+
     public static bool ReachIfGoal(Actor actor, Cell cell, PathfindingGoal[] goals)
     {
         if (goals == null) return false;

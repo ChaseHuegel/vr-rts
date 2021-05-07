@@ -49,43 +49,37 @@ public class Villager : Unit
     {
         base.Tick();
 
-        if (IsMoving())
-            animator.Play("Walk");
-        else
-            animator.Play("Idle");
+        //  Woodcutting should not be active if cargo is full
+        goals.Get<GoalWoodCutting>().active = !IsCargoFull();
 
+        //  Default to roaming if we cant find a goal
         if (!GotoNearestGoalWithPriority())
-        {
-            Goto(
-                UnityEngine.Random.Range(gridPosition.x - 4, gridPosition.x + 4),
-                UnityEngine.Random.Range(gridPosition.x - 4, gridPosition.x + 4)
-                );
-
             state = UnitState.ROAMING;
-        }
 
         switch (state)
         {
+            case UnitState.ROAMING:
+                Goto(
+                    UnityEngine.Random.Range(gridPosition.x - 4, gridPosition.x + 4),
+                    UnityEngine.Random.Range(gridPosition.x - 4, gridPosition.x + 4)
+                );
+                break;
+
             case UnitState.GATHERING:
-                if (IsCargoFull())
-                {
-                    state = UnitState.ROAMING;
-                    goals.Get<GoalWoodCutting>().active = false;
-                }
+                if (IsCargoFull()) state = UnitState.TRANSPORTING;
+                if (!HasValidTarget()) state = UnitState.ROAMING;
             break;
 
             case UnitState.TRANSPORTING:
-                if (!HasCargo())
-                {
-                    state = UnitState.ROAMING;
-                    goals.Get<GoalWoodCutting>().active = true;
-                }
+                if (!HasCargo()) state = UnitState.ROAMING;
             break;
         }
     }
 
     public void TryGather(Resource resource)
     {
+        if (!resource) return;
+
         //  Convert per second to per tick and clamp to how much cargo space we have
         int amount = (int)(workRate / (60/Constants.ACTOR_TICK_RATE));
         amount = Mathf.Clamp(maxCargo - currentCargo, 0, amount);
