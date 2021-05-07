@@ -5,7 +5,8 @@ using Swordfish;
 using Swordfish.Navigation;
 using Valve.VR;
 
-public enum VillagerActorState { Idle, Gathering, Transporting, Building, Repairing, Roaming };
+public enum VillagerActorState { Idle, Lumberjacking, Farming, MiningGold, Transporting, 
+                                Building, Repairing, Attacking, Dying, MiningOre, Roaming, Gathering };
 
 [System.Flags]
 public enum ResourceGatheringType { 
@@ -24,7 +25,7 @@ public class VillagerActor : Actor
     [SerializeField] protected RTSUnitType rtsUnitType;
     public ResourceGatheringType wantedResourceType;
     [SerializeField] protected int cellSearchDistance = 20;
-    [SerializeField] protected VillagerActorState previouState;
+    [SerializeField] protected VillagerActorState previousState;
     [SerializeField] protected VillagerActorState currentState = VillagerActorState.Idle;
     [SerializeField] protected ResourceNode targetNode;
     [SerializeField] protected TerrainBuilding targetBuilding;
@@ -70,6 +71,8 @@ public class VillagerActor : Actor
     public override void Initialize()
     {
         base.Initialize();
+
+        //previouState = VillagerActorState.Idle;
 
         audioSource = GetComponent<AudioSource>();
         if (!audioSource)
@@ -123,6 +126,68 @@ public class VillagerActor : Actor
         this.enabled = true;
         Unfreeze();
         //audioSource.Stop();
+
+        ResourceNode node = collision.gameObject.GetComponent<ResourceNode>();
+        if (node)
+        {
+            switch (node.type)
+            {
+                case ResourceGatheringType.Gold:
+                {
+                    targetNode = node;
+                    currentState = VillagerActorState.MiningGold;
+                    wantedResourceType = ResourceGatheringType.Gold;
+                    ResetPathing();
+                    break;
+                }
+
+                case ResourceGatheringType.Grain:
+                {
+                    targetNode = node;
+                    currentState = VillagerActorState.Farming;
+                    wantedResourceType = ResourceGatheringType.Grain;
+                    ResetPathing();
+                    break;
+                }
+
+                case ResourceGatheringType.Wood:
+                {
+                    targetNode = node;
+                    currentState = VillagerActorState.Lumberjacking;
+                    wantedResourceType = ResourceGatheringType.Wood;
+                    ResetPathing();
+                    break;
+                }
+
+                case ResourceGatheringType.Ore:
+                {
+                    targetNode = node;
+                    currentState = VillagerActorState.MiningOre;
+                    wantedResourceType = ResourceGatheringType.Ore;
+                    ResetPathing();
+                    break;
+                }
+
+                default:
+                    break;
+            }
+            return;
+        }
+
+        TerrainBuilding building = collision.gameObject.GetComponent<TerrainBuilding>();
+        if (building)
+        {
+            if (building.NeedsRepair())
+            {
+                targetDamaged = building;
+                currentState = VillagerActorState.Building;
+                wantedResourceType = ResourceGatheringType.None;
+                ResetPathing();
+            }
+        }        
+
+        if (node) Debug.Log(node.name);
+        if (building) Debug.Log(building.name);
     }
 
     public bool HasValidBuildOrRepairTarget()
@@ -139,21 +204,68 @@ public class VillagerActor : Actor
     {
         return (targetBuilding != null);
     }
+    
+    float timeElapsed;
 
-    public override void Tick()
+    void Update()
     {
         if (isHeld)
             return;
 
+        timeElapsed += Time.deltaTime;
+                
+        animator.SetBool("IsMoving", IsMoving());
+        animator.SetInteger("VillagerActorState", (int)currentState);
+
+        // if(timeElapsed < 1.5f)
+        //     return;
+            
         switch (currentState)
         {
             case VillagerActorState.Idle:
-            {
-                // Play idle animation
-                animator.Play("Idle");
                 break;
-            }
 
+            case VillagerActorState.Building:
+            case VillagerActorState.Repairing:
+                if (!audioSource.isPlaying)
+                {
+                    audioSource.clip = repairingAudio;
+                    audioSource.Play();
+                }
+                break;
+
+            case VillagerActorState.Lumberjacking:
+                audioSource.clip = GameMaster.GetAudio("chop_wood").GetClip();
+                break;
+
+            case VillagerActorState.MiningGold:
+            case VillagerActorState.MiningOre:
+                audioSource.clip = GameMaster.GetAudio("pickaxe").GetClip();
+                break;
+
+            case VillagerActorState.Farming:
+                audioSource.clip = grainGatheringAudio;  
+                audioSource.Play();
+                break;
+            
+            case VillagerActorState.Transporting:                
+            case VillagerActorState.Roaming:
+                break;
+
+            default:
+                break;
+        }
+
+        timeElapsed = 0f;
+    }
+
+    public override void Tick()
+    {
+        if (isHeld)// || !StateChanged())
+            return;
+        
+        switch (currentState)
+        {
             case VillagerActorState.Building:
             case VillagerActorState.Repairing:
             {
@@ -166,12 +278,8 @@ public class VillagerActor : Actor
                     {
                         LookAt(body.gridPosition.x, body.gridPosition.y);
                         
-
                         if (targetDamaged.NeedsRepair())
-                        {
-                            audioSource.clip = repairingAudio;
-                            audioSource.Play();
-                            animator.Play("Attack_A", -1, 0);
+                        {                            
                             int amountToRepair = (int)(buildAndRepairCapacityPerSecond / (60 / Constants.ACTOR_TICK_RATE));
                             targetDamaged.RepairDamage(amountToRepair);
                         }
@@ -184,7 +292,7 @@ public class VillagerActor : Actor
                     {
                         //  Pathfind to the target
                         Goto( body.GetNearbyCoord() );
-                        animator.Play("Walk");
+                        //animator.Play("Walk");
                     }
                 }
                 else
@@ -195,7 +303,7 @@ public class VillagerActor : Actor
                     if ( !HasValidBuildOrRepairTarget() )
                     {
                         currentState = VillagerActorState.Roaming;
-                        animator.Play("Walk");
+                        //animator.Play("Walk");
                         // Debug.Log(gameObject.name + " couldn't find " + currentGatheringResourceType + ", going to roam around now.");
                     }
                 }
@@ -203,6 +311,10 @@ public class VillagerActor : Actor
             }
 
             case VillagerActorState.Gathering:
+            case VillagerActorState.Lumberjacking:
+            case VillagerActorState.MiningGold:
+            case VillagerActorState.MiningOre:
+            case VillagerActorState.Farming:
             {
                 if ( HasValidGatheringTarget())
                 {
@@ -212,8 +324,7 @@ public class VillagerActor : Actor
 
                     //  Reached our target
                     if (Util.DistanceUnsquared(gridPosition, body.gridPosition) <= body.GetCellVolumeSqr())
-                    {
-                        PlayGatheringAnimation();
+                    {                      
 
                         LookAt(body.gridPosition.x, body.gridPosition.y);
                         
@@ -238,7 +349,7 @@ public class VillagerActor : Actor
                     {
                         //  Pathfind to the target
                         Goto( body.GetNearbyCoord() );
-                        animator.Play("Walk");
+                        //animator.Play("Walk");
                     }
                 }
                 else
@@ -249,7 +360,7 @@ public class VillagerActor : Actor
                     if ( !HasValidGatheringTarget() )
                     {
                         currentState = VillagerActorState.Roaming;
-                        animator.Play("Walk");
+                        //animator.Play("Walk");
                         // Debug.Log(gameObject.name + " couldn't find " + currentGatheringResourceType + ", going to roam around now.");
                     }
                 }
@@ -271,13 +382,15 @@ public class VillagerActor : Actor
                         Valve.VR.InteractionSystem.Player.instance.GetComponent<PlayerManager>().AddResourceToStockpile(wantedResourceType, currentCargoTotal);
                         currentCargoTotal = 0;
                         DisplayCargo(false);
+                        
+
                         currentState = VillagerActorState.Gathering;
                     }
                     else
                     {
                         //  Pathfind to the target
                         Goto( body.GetNearbyCoord() );
-                        animator.Play("Walk");
+                        // animator.Play("Walk");
                     }
                 }
                 else
@@ -288,7 +401,7 @@ public class VillagerActor : Actor
                     if ( !HasValidTransportTarget() )
                     {
                         currentState = VillagerActorState.Roaming;
-                        animator.Play("Walk");
+                        //animator.Play("Walk");
                         // Debug.Log(gameObject.name + " couldn't find a building to drop off my cargo, going to roam around now.");
                     }
                 }
@@ -299,7 +412,7 @@ public class VillagerActor : Actor
             {
                 Goto(Random.Range(gridPosition.x - 4, gridPosition.x + 4),
                     Random.Range(gridPosition.x - 4, gridPosition.x + 4));
-                animator.Play("Walk");
+                //animator.Play("Walk");
 
                 break;
             }
@@ -307,6 +420,11 @@ public class VillagerActor : Actor
             default:
                 break;
         }
+    }
+
+    bool StateChanged()
+    {
+        return currentState != previousState;
     }
 
     public void SetUnitType(RTSUnitType type)
@@ -328,44 +446,59 @@ public class VillagerActor : Actor
                     wantedResourceType = ResourceGatheringType.None;
                     builderHandToolDisplayObject.SetActive(true);
                     currentHandToolDisplayObject = builderHandToolDisplayObject;
+                    audioSource.clip = GameMaster.GetAudio("builder").GetClip();
+                    
                     break;
                 }
 
             case RTSUnitType.Farmer:
                 {
-                    currentState = VillagerActorState.Gathering;
+                    currentState = VillagerActorState.Farming;
                     wantedResourceType = ResourceGatheringType.Grain;
                     //handGrainDisplayObject.SetActive(true);
                     currentHandToolDisplayObject = null;// handGrainDisplayObject;
+                    audioSource.clip = GameMaster.GetAudio("farmer").GetClip();
+                    
                     break;
                 }
 
             case RTSUnitType.Lumberjack:
             {
-                currentState = VillagerActorState.Gathering;
+                currentState = VillagerActorState.Lumberjacking;
                 wantedResourceType = ResourceGatheringType.Wood;
                 woodHandToolDisplayObject.SetActive(true);
                 currentHandToolDisplayObject = woodHandToolDisplayObject;
+                audioSource.clip = GameMaster.GetAudio("lumberjack").GetClip();
+                
                 break;
             }
 
             case RTSUnitType.GoldMiner:
             {
-                currentState = VillagerActorState.Gathering;
+                currentState = VillagerActorState.MiningGold;
                 wantedResourceType = ResourceGatheringType.Gold;
                 goldHandToolDisplayObject.SetActive(true);
                 currentHandToolDisplayObject = goldHandToolDisplayObject;
+                audioSource.clip = GameMaster.GetAudio("miner").GetClip();
+                
                 break;
             }
 
             case RTSUnitType.OreMiner:
             {
-                currentState = VillagerActorState.Gathering;
+                currentState = VillagerActorState.MiningOre;
                 wantedResourceType = ResourceGatheringType.Ore;
                 oreHandToolDisplayObject.SetActive(true);
                 currentHandToolDisplayObject = oreHandToolDisplayObject;
+                audioSource.clip = GameMaster.GetAudio("miner").GetClip();
+                
                 break;
             }
+        }
+
+        if (!audioSource.isPlaying)
+        {
+            audioSource.Play();
         }
     }
 
@@ -634,40 +767,4 @@ public class VillagerActor : Actor
         }
     }
 
-    void PlayGatheringAnimation()
-    {
-        switch ( wantedResourceType )
-        {
-            case ResourceGatheringType.Wood:
-            {
-
-                animator.Play("Attack_A", -1, 0f);
-                audioSource.clip = GameMaster.GetAudio("chop_wood").GetClip();                
-                break;
-            }
-
-            case ResourceGatheringType.Gold:
-            case ResourceGatheringType.Ore:
-            {
-                animator.Play("Attack_B", -1, 0f);
-                audioSource.clip = GameMaster.GetAudio("pickaxe").GetClip();
-                break;
-            }
-
-            case ResourceGatheringType.Grain:
-            {
-                audioSource.clip = grainGatheringAudio;   
-                int choice = Random.Range(0, 100);
-
-                if (choice <= 50)
-                    animator.Play("Punch_A", -1, 0f);
-                else
-                    animator.Play("Punch_B", -1, 0f);
-                break;                
-            }
-
-        }
-
-        audioSource.Play();
-    }
 }
