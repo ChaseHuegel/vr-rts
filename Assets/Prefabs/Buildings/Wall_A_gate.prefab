@@ -318,7 +318,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4840847691838123162
 Transform:
   m_ObjectHideFlags: 0
@@ -534,7 +534,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6475572782601954635
 Transform:
   m_ObjectHideFlags: 0
@@ -685,6 +685,7 @@ GameObject:
   - component: {fileID: 6697322443178933030}
   - component: {fileID: 5521124015650756492}
   - component: {fileID: 2283035067140417764}
+  - component: {fileID: 8369623698810542114}
   m_Layer: 10
   m_Name: Wall_A_gate
   m_TagString: Untagged
@@ -699,7 +700,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7832476792698142906}
-  m_LocalRotation: {x: -0.49999994, y: -0.49999994, z: -0.50000006, w: 0.5000001}
+  m_LocalRotation: {x: -0.5, y: -0.5, z: -0.5, w: 0.5}
   m_LocalPosition: {x: -12.643808, y: 0, z: -7.8172235}
   m_LocalScale: {x: 0.09, y: 0.09, z: 0.09}
   m_Children:
@@ -783,6 +784,24 @@ MonoBehaviour:
   progressImage: {fileID: 0}
   buildingHealthBar: {fileID: 8269297316427104557}
   QueueImageObjects: []
+  objectToToggleOnKnock: {fileID: 0}
+--- !u!114 &8369623698810542114
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7832476792698142906}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 847aeadd287e865488f59b558e0b9caf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  originalMaterial: {fileID: 0}
+  highlightMaterial: {fileID: 0}
+  modelMesh: {fileID: 4840847691839893114}
+  titleVisibleColor: {r: 0, g: 0, b: 0, a: 0}
+  titleHighlightedColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &8185405431068761713
 GameObject:
   m_ObjectHideFlags: 0

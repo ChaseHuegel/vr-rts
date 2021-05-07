@@ -115,7 +115,7 @@ public class MenuBuilding : Throwable
                 // Use vertical laser placement method
                 if ( origin.transform.up.y > 0.9f)
                 {
-                    ObjectPlacementPointer.instance.StopPlacement(hand);
+                    InteractionPointer.instance.StopPlacement(hand);
                     if ( Physics.Raycast( transform.position, Vector3.down, out hitInfo, 100, allowedLayersMask ) )
                     {
                         // Are we hitting something on acceptable layer?
@@ -136,9 +136,9 @@ public class MenuBuilding : Throwable
                 else
                 {
                     DisplayLaserAndPreviewObject(false);
-                    ObjectPlacementPointer.instance.StartPlacement(hand);
+                    InteractionPointer.instance.StartPlacement(hand);
                     spawnBuildingOnCollision.transform.localScale = new Vector3(previewObjectLocalScale, previewObjectLocalScale, previewObjectLocalScale);
-                    spawnBuildingOnCollision.transform.position = ObjectPlacementPointer.instance.destinationReticleTransform.position;
+                    spawnBuildingOnCollision.transform.position = InteractionPointer.instance.destinationReticleTransform.position;
 
                 }
             }
@@ -215,7 +215,7 @@ public class MenuBuilding : Throwable
             spawnBuildingOnCollision.GetComponent<Obstacle>().enabled = true;
             spawnBuildingOnCollision.GetComponent<TerrainBuilding>().enabled = true;
             spawnBuildingOnCollision.gameObject.layer = LayerMask.NameToLayer("Building");
-            ObjectPlacementPointer.instance.StopPlacement(hand);
+            InteractionPointer.instance.StopPlacement(hand);
             
             RTSBuildingTypeData buildingData = GameMaster.Instance.FindBuildingData(buildMenuSlot.rtsBuildingType);
             

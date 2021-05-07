@@ -446,7 +446,7 @@ public class VillagerActor : Actor
                     wantedResourceType = ResourceGatheringType.None;
                     builderHandToolDisplayObject.SetActive(true);
                     currentHandToolDisplayObject = builderHandToolDisplayObject;
-                    audioSource.clip = GameMaster.GetAudio("builder").GetClip();
+                    //audioSource.clip = GameMaster.GetAudio("builder").GetClip();
                     
                     break;
                 }
@@ -457,7 +457,7 @@ public class VillagerActor : Actor
                     wantedResourceType = ResourceGatheringType.Grain;
                     //handGrainDisplayObject.SetActive(true);
                     currentHandToolDisplayObject = null;// handGrainDisplayObject;
-                    audioSource.clip = GameMaster.GetAudio("farmer").GetClip();
+                   // audioSource.clip = GameMaster.GetAudio("farmer").GetClip();
                     
                     break;
                 }
@@ -468,7 +468,7 @@ public class VillagerActor : Actor
                 wantedResourceType = ResourceGatheringType.Wood;
                 woodHandToolDisplayObject.SetActive(true);
                 currentHandToolDisplayObject = woodHandToolDisplayObject;
-                audioSource.clip = GameMaster.GetAudio("lumberjack").GetClip();
+                //audioSource.clip = GameMaster.GetAudio("lumberjack").GetClip();
                 
                 break;
             }
@@ -479,7 +479,7 @@ public class VillagerActor : Actor
                 wantedResourceType = ResourceGatheringType.Gold;
                 goldHandToolDisplayObject.SetActive(true);
                 currentHandToolDisplayObject = goldHandToolDisplayObject;
-                audioSource.clip = GameMaster.GetAudio("miner").GetClip();
+                //audioSource.clip = GameMaster.GetAudio("miner").GetClip();
                 
                 break;
             }
@@ -490,16 +490,16 @@ public class VillagerActor : Actor
                 wantedResourceType = ResourceGatheringType.Stone;
                 oreHandToolDisplayObject.SetActive(true);
                 currentHandToolDisplayObject = oreHandToolDisplayObject;
-                audioSource.clip = GameMaster.GetAudio("miner").GetClip();
+                //audioSource.clip = GameMaster.GetAudio("miner").GetClip();
                 
                 break;
             }
         }
 
-        if (!audioSource.isPlaying)
-        {
-            audioSource.Play();
-        }
+        // if (!audioSource.isPlaying)
+        // {
+        //     audioSource.Play();
+        // }
     }
 
     private void DisplayCargo(bool visible)

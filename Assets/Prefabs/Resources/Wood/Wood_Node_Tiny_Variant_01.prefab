@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9201973908668890138}
+  - component: {fileID: -5838319657817282086}
   - component: {fileID: -3240084006361566618}
   - component: {fileID: -7500517833731809703}
-  - component: {fileID: 3358859299320309646}
   m_Layer: 11
   m_Name: Wood_Node_Tiny_Variant_01
   m_TagString: Untagged
@@ -34,6 +34,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &-5838319657817282086
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4589681988444887533}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.12832999
+  m_Height: 0.5042239
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.25255814, z: 0}
 --- !u!114 &-3240084006361566618
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -62,27 +76,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab54d6d5140767340bdbc6beb759bea3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  boundingDimensions: {x: 1, y: 1}
+  boundingOrigin: {x: 0, y: 0}
   gridPosition:
     x: 0
     y: 0
-  boundingDimensions: {x: 1, y: 1}
-  boundingOrigin: {x: 0, y: 0}
   bakeOnStart: 1
-  rebake: 0
   type: 2
---- !u!65 &3358859299320309646
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4589681988444887533}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.29905474, y: 0.5183637, z: 0.13883802}
-  m_Center: {x: 0, y: 0.2571897, z: 0}
+  amount: 1000
 --- !u!1001 &3170708328387834819
 PrefabInstance:
   m_ObjectHideFlags: 0

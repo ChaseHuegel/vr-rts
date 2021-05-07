@@ -233,6 +233,7 @@ public class TerrainBuilding : MonoBehaviour
             queueStatusText.text = unitSpawnQueue.Count.ToString();
             progressImage.fillAmount = progress / 100;
 
+            Debug.Log(timeElapsed.ToString() + "   " + unitSpawnQueue.Peek().queueTime.ToString());
             if (timeElapsed >= unitSpawnQueue.Peek().queueTime)
             {
                 SpawnUnit();
@@ -255,6 +256,8 @@ public class TerrainBuilding : MonoBehaviour
                 i++;
             }
         }
+        else
+            timeElapsed = 0.0f;
     }
 
     public void RemoveLastUnitFromQueue()
@@ -286,7 +289,9 @@ public class TerrainBuilding : MonoBehaviour
             Debug.Log ("Spawn unit failed. Missing prefabToSpawn");
     }
 
-
+    
+    
+    
     // private IEnumerator SpawnUnit()
     // {
     //     GameObject planting = GameObject.Instantiate<GameObject>(currentPrefabUnitToSpawn);

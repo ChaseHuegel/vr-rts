@@ -8,7 +8,7 @@ public class PalmMenu : MonoBehaviour
     // public Hand leftHand;
     // public Hand rightHand;
 
-    ObjectPlacementPointer objectPlacementPointer;
+    InteractionPointer objectPlacementPointer;
     Hand menuHand;
     Hand selectionHand;
     
@@ -17,7 +17,7 @@ public class PalmMenu : MonoBehaviour
     {
         menuHand = Player.instance.leftHand;
         selectionHand = Player.instance.rightHand;      
-        objectPlacementPointer = FindObjectOfType<ObjectPlacementPointer>();          
+        objectPlacementPointer = FindObjectOfType<InteractionPointer>();          
     }
 
     public void Show(Transform parent)

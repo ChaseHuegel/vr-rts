@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 6451706933942204417}
   - component: {fileID: 744812072195582190}
   - component: {fileID: 5225984715641916845}
+  - component: {fileID: -8402618773688929626}
   m_Layer: 10
   m_Name: Farm
   m_TagString: Untagged
@@ -97,6 +98,7 @@ MonoBehaviour:
   progressImage: {fileID: 0}
   buildingHealthBar: {fileID: 0}
   QueueImageObjects: []
+  objectToToggleOnKnock: {fileID: 0}
 --- !u!65 &6451706933942204417
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -222,6 +224,23 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &-8402618773688929626
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 899507145775679583}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 847aeadd287e865488f59b558e0b9caf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  originalMaterial: {fileID: 0}
+  highlightMaterial: {fileID: 0}
+  modelMesh: {fileID: 8987644490305071615}
+  titleVisibleColor: {r: 0, g: 0, b: 0, a: 0}
+  titleHighlightedColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1001 &6091863267799645307
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -575,6 +594,12 @@ GameObject:
 --- !u!4 &8987644490303171359 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: 520e20395d1150a4c94174228bde0499,
+    type: 3}
+  m_PrefabInstance: {fileID: 8987644490303041951}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &8987644490305071615 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 2300000, guid: 520e20395d1150a4c94174228bde0499,
     type: 3}
   m_PrefabInstance: {fileID: 8987644490303041951}
   m_PrefabAsset: {fileID: 0}

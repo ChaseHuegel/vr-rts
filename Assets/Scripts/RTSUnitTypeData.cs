@@ -19,6 +19,8 @@ public struct RTSUnitTypeData
         oreCost = iOreCost;
         grainCost = iGrainCost;
         woodCost = iWoodCost;
+
+        if (queueTime < 1.0f) queueTime = 1.0f;
     }
 
     public RTSUnitType unitType;
