@@ -29,7 +29,7 @@ public class ResourceNode : MonoBehaviour
                 ResourceManager.GetGold().Add(this);
                 break;
 
-            case ResourceGatheringType.Ore:
+            case ResourceGatheringType.Stone:
                 ResourceManager.GetOre().Add(this);
                 break;
 
@@ -66,7 +66,7 @@ public class ResourceNode : MonoBehaviour
                         ResourceManager.GetGold().Remove(this);
                         break;
 
-                    case ResourceGatheringType.Ore:
+                    case ResourceGatheringType.Stone:
                         ResourceManager.GetOre().Remove(this);
                         break;
 

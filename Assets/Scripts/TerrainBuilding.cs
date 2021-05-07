@@ -117,7 +117,7 @@ public class TerrainBuilding : MonoBehaviour
             ResourceManager.GetGoldDroppoffObjects().Add(this);
         }
 
-        if (dropoffType.HasFlag(ResourceGatheringType.Ore))
+        if (dropoffType.HasFlag(ResourceGatheringType.Stone))
         {
             ResourceManager.GetGoldDroppoffObjects().Add(this);
         }
@@ -126,15 +126,7 @@ public class TerrainBuilding : MonoBehaviour
         {
             ResourceManager.GetGrainDropoffObjects().Add(this);
         }
-    }
-    
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.GetComponent<Hand>())
-        {
-               
-        }
-    }
+    }    
 
     protected void ToggleObjectOnKnock()
     {

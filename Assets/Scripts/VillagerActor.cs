@@ -13,7 +13,7 @@ public enum ResourceGatheringType {
     None = 0,
     Grain = 1, 
     Wood = 2, 
-    Ore = 4, 
+    Stone = 4, 
     Gold = 8,
 };
 
@@ -159,11 +159,11 @@ public class VillagerActor : Actor
                     break;
                 }
 
-                case ResourceGatheringType.Ore:
+                case ResourceGatheringType.Stone:
                 {
                     targetNode = node;
                     currentState = VillagerActorState.MiningOre;
-                    wantedResourceType = ResourceGatheringType.Ore;
+                    wantedResourceType = ResourceGatheringType.Stone;
                     ResetPathing();
                     break;
                 }
@@ -487,7 +487,7 @@ public class VillagerActor : Actor
             case RTSUnitType.OreMiner:
             {
                 currentState = VillagerActorState.MiningOre;
-                wantedResourceType = ResourceGatheringType.Ore;
+                wantedResourceType = ResourceGatheringType.Stone;
                 oreHandToolDisplayObject.SetActive(true);
                 currentHandToolDisplayObject = oreHandToolDisplayObject;
                 audioSource.clip = GameMaster.GetAudio("miner").GetClip();
@@ -523,7 +523,7 @@ public class VillagerActor : Actor
                 break;
             }
 
-            case ResourceGatheringType.Ore:
+            case ResourceGatheringType.Stone:
             {
                 oreCargoDisplayObject.SetActive(visible);
                 currentCargoDisplayObject = oreCargoDisplayObject;

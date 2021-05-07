@@ -35,6 +35,12 @@ public class Villager : Unit
         //  Add goals in order of priority
         goals.Add<GoalWoodCutting>();
         goals.Add<GoalTransportWood>();
+        goals.Add<GoalGoldMining>();
+        goals.Add<GoalTransportGold>();
+        goals.Add<GoalStoneMining>();
+        goals.Add<GoalTransportStone>();
+        goals.Add<GoalFarming>();
+        goals.Add<GoalTransportGrain>();
 
         audioSource = GetComponent<AudioSource>();
         if (!audioSource)
@@ -94,7 +100,7 @@ public class Villager : Unit
         amount = resource.TryRemove(e.amount);
         currentCargo += amount;
 
-        animator.Play("Attack_A", -1, 0);
+        animator.Play("Lumberjacking", -1, 0);
     }
 
     public event EventHandler<GatherEvent> OnGatherEvent;
