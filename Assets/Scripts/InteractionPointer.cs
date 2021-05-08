@@ -72,9 +72,8 @@ public class InteractionPointer : MonoBehaviour
 	void Awake()
 	{
 		_instance = this;
-
-		pointerLineRenderer = GetComponentInChildren<LineRenderer>();
-		interactionPointerObject = pointerLineRenderer.gameObject;
+		// pointerLineRenderer = GetComponentInChildren<LineRenderer>();
+		// interactionPointerObject = pointerLineRenderer.gameObject;
 
 #if UNITY_URP
 		fullTintAlpha = 0.5f;
@@ -85,7 +84,7 @@ public class InteractionPointer : MonoBehaviour
 
 		teleportArc = GetComponent<TeleportArc>();
 		teleportArc.traceLayerMask = traceLayerMask;
-
+		
 		loopingAudioMaxVolume = loopingAudioSource.volume;
 
 		float invalidReticleStartingScale = invalidReticleTransform.localScale.x;
@@ -98,8 +97,7 @@ public class InteractionPointer : MonoBehaviour
 	void Start()
 	{
 		interactableObjects = GameObject.FindObjectsOfType<PointerInteractable>();
-
-		// HidePointer();
+		
 		player = Valve.VR.InteractionSystem.Player.instance;
 
 		ShowPointer();
@@ -148,14 +146,17 @@ public class InteractionPointer : MonoBehaviour
 		// If something is attached to the hand that is preventing objectPlacement
 		// if ( allowTeleportWhileAttached && !allowTeleportWhileAttached.teleportAllowed )
 		// {
-		// 	HidePointer();
+		 	
 		// }
 		// else
 		// {
-			ShowPointer();
+			//ShowPointer();
 		// }
 
+		//if(visible)
 			UpdatePointer();
+			
+			
 	}
 
 	//-------------------------------------------------
@@ -190,32 +191,33 @@ public class InteractionPointer : MonoBehaviour
 			hitPointValid = LayerMatchTest( allowedPlacementLayers, hitInfo.collider.gameObject );
 			hitPointerInteractable = hitInfo.collider.GetComponentInParent<PointerInteractable>();
 		}
-
-		//HighlightSelected( hitPointerInteractable );
+		
+		HighlightSelected( hitPointerInteractable );
 
 		if (hitPointValid)
 		{	
-			teleportArc.SetColor( pointerValidColor );
-#if (UNITY_5_4)
-			pointerLineRenderer.SetColors( pointerValidColor, pointerValidColor );
-#else
-			pointerLineRenderer.startColor = pointerValidColor;
-			pointerLineRenderer.endColor = pointerValidColor;
-#endif
-			destinationReticleTransform.gameObject.SetActive( true); //hitTeleportMarker.showReticle );
+// 			teleportArc.SetColor( pointerValidColor );
+// #if (UNITY_5_4)
+// 			pointerLineRenderer.SetColors( pointerValidColor, pointerValidColor );
+// #else
+// 			pointerLineRenderer.startColor = pointerValidColor;
+// 			pointerLineRenderer.endColor = pointerValidColor;
+// #endif
+			//hitTeleportMarker.showReticle );
 		}
 		else // Not valid
 		{
 			// destinationReticleTransform.gameObject.SetActive( false );
 			// offsetReticleTransform.gameObject.SetActive( false );
 			teleportArc.SetColor( pointerInvalidColor );
-#if (UNITY_5_4)
-			pointerLineRenderer.SetColors( pointerInvalidColor, pointerInvalidColor );
-#else
-			pointerLineRenderer.startColor = pointerInvalidColor;
-			pointerLineRenderer.endColor = pointerInvalidColor;
-#endif			
+// #if (UNITY_5_4)
+// 			pointerLineRenderer.SetColors( pointerInvalidColor, pointerInvalidColor );
+// #else
+// 			pointerLineRenderer.startColor = pointerInvalidColor;
+// 			pointerLineRenderer.endColor = pointerInvalidColor;
+// #endif			
 		}
+
 		pointedAtPosition = hitInfo.point;
 		pointerEnd = hitInfo.point;
 
@@ -229,20 +231,10 @@ public class InteractionPointer : MonoBehaviour
 		}
 
 		destinationReticleTransform.position = pointedAtPosition;
-		
-		// invalidReticleTransform.position = pointerEnd;
-		// onActivateObjectTransform.position = pointerEnd;
-		// onDeactivateObjectTransform.position = pointerEnd;
-		// offsetReticleTransform.position = pointerEnd - playerFeetOffset;
+		// pointerLineRenderer.SetPosition( 0, pointerStart );
+		// pointerLineRenderer.SetPosition( 1, pointerEnd );
 
-		reticleAudioSource.transform.position = pointedAtPosition;
-
-		pointerLineRenderer.SetPosition( 0, pointerStart );
-		pointerLineRenderer.SetPosition( 1, pointerEnd );
-		
-		// Added this.
 		destinationReticleTransform.gameObject.SetActive( true );
-
 	}
 	
 	private static bool LayerMatchTest(LayerMask layerMask, GameObject obj)
@@ -251,39 +243,15 @@ public class InteractionPointer : MonoBehaviour
 	}
 
 	private void HidePointer()
-	{
+	{		
 		if ( visible )
 		{
 			pointerHideStartTime = Time.time;
 		}
 
-		visible = false;
-		if ( pointerHand )
-		{
-			// if ( ShouldOverrideHoverLock() )
-			// {
-			// 	//Restore the original hovering interactable on the hand
-			// 	if ( originalHoverLockState == true )
-			// 	{
-			// 		pointerHand.HoverLock( originalHoveringInteractable );
-			// 	}
-			// 	else
-			// 	{
-			// 		pointerHand.HoverUnlock( null );
-			// 	}
-			// }
-
-			//Stop looping sound
-			loopingAudioSource.Stop();
-			PlayAudioClip( pointerAudioSource, pointerStopSound );
-		}
-		interactionPointerObject.SetActive( false );
-
+		visible = false;		
+		//interactionPointerObject.SetActive( false );
 		teleportArc.Hide();
-
-		// destinationReticleTransform.gameObject.SetActive( false );
-		// invalidReticleTransform.gameObject.SetActive( false );
-		// offsetReticleTransform.gameObject.SetActive( false );
 	}
 
 
@@ -295,9 +263,7 @@ public class InteractionPointer : MonoBehaviour
 			pointedAtPointerInteractable = null;
 			pointerShowStartTime = Time.time;
 			visible = true;
-			meshFading = true;
-
-			interactionPointerObject.SetActive( false );
+			//interactionPointerObject.SetActive( false );
 			teleportArc.Show();
 
 			foreach ( PointerInteractable interactObject in interactableObjects )
@@ -307,11 +273,6 @@ public class InteractionPointer : MonoBehaviour
 
 			startingFeetOffset = player.trackingOriginTransform.position - player.feetPositionGuess;
 			movedFeetFarEnough = false;
-
-			loopingAudioSource.clip = pointerLoopSound;
-			loopingAudioSource.loop = true;
-			loopingAudioSource.Play();
-			loopingAudioSource.volume = 0.0f;
 		}
 
 		pointerStartTransform = pointerAttachmentPoint.transform;
@@ -320,21 +281,6 @@ public class InteractionPointer : MonoBehaviour
 		{
 			//allowTeleportWhileAttached = pointerHand.currentAttachedObject.GetComponent<AllowTeleportWhileAttachedToHand>();
 		}
-
-		//Keep track of any existing hovering interactable on the hand
-		// originalHoverLockState = pointerHand.hoverLocked;
-		// originalHoveringInteractable = pointerHand.hoveringInteractable;
-
-		// if ( ShouldOverrideHoverLock() )
-		// {
-		// 	pointerHand.HoverLock( null );
-		// }
-
-		pointerAudioSource.transform.SetParent( pointerStartTransform );
-		pointerAudioSource.transform.localPosition = Vector3.zero;
-
-		loopingAudioSource.transform.SetParent( pointerStartTransform );
-		loopingAudioSource.transform.localPosition = Vector3.zero;
 	}
 
 	//-------------------------------------------------
@@ -378,15 +324,15 @@ public class InteractionPointer : MonoBehaviour
 				prevPointedAtPosition = pointedAtPosition;
 				PlayPointerHaptic( true );//!hitTerrainBuilding.locked );
 
-				PlayAudioClip( reticleAudioSource, goodHighlightSound );
+				//PlayAudioClip( reticleAudioSource, goodHighlightSound );
 
-				loopingAudioSource.volume = loopingAudioMaxVolume;
+				// loopingAudioSource.volume = loopingAudioMaxVolume;
 			}
 			else if ( pointedAtPointerInteractable != null )
 			{
-				PlayAudioClip( reticleAudioSource, badHighlightSound );
+				//PlayAudioClip( reticleAudioSource, badHighlightSound );
 
-				loopingAudioSource.volume = 0.0f;
+				// loopingAudioSource.volume = 0.0f;
 			}
 		}
 		else if ( hitPointerInteractable != null ) //Pointing at the same teleport marker

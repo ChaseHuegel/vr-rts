@@ -214,7 +214,7 @@ public class MenuBuilding : Throwable
             spawnBuildingOnCollision.GetComponent<BoxCollider>().enabled = true;
             spawnBuildingOnCollision.GetComponent<Obstacle>().enabled = true;
             spawnBuildingOnCollision.GetComponent<TerrainBuilding>().enabled = true;
-            spawnBuildingOnCollision.gameObject.layer = LayerMask.NameToLayer("Building");
+            SetLayer(spawnBuildingOnCollision, "Building");
             InteractionPointer.instance.StopPlacement(hand);
             
             RTSBuildingTypeData buildingData = GameMaster.Instance.FindBuildingData(buildMenuSlot.rtsBuildingType);
@@ -244,6 +244,15 @@ public class MenuBuilding : Throwable
         
     }
     
+    void SetLayer(GameObject go, string layer)
+    {
+        go.gameObject.layer = LayerMask.NameToLayer(layer);
+        foreach(Transform child in go.transform)
+        {
+            child.gameObject.layer = LayerMask.NameToLayer(layer);
+        }
+    }
+
     protected override void OnAttachedToHand(Hand hand)
     {   
         base.OnAttachedToHand(hand);
@@ -253,7 +262,8 @@ public class MenuBuilding : Throwable
         // TODO: this is too much instantiation, must fix at later date.
         spawnBuildingOnCollision = GameObject.Instantiate(spawnBuildingOnCollision);  
         spawnBuildingOnCollision.transform.localScale = new Vector3(previewObjectLocalScale, previewObjectLocalScale, previewObjectLocalScale);
-        spawnBuildingOnCollision.gameObject.layer = LayerMask.NameToLayer("UI");
+        //spawnBuildingOnCollision.gameObject.layer = LayerMask.NameToLayer("UI");
+        SetLayer(spawnBuildingOnCollision, "UI");
         spawnBuildingOnCollision.GetComponent<BoxCollider>().enabled = false;        
         spawnBuildingOnCollision.GetComponent<TerrainBuilding>().enabled = false;
         

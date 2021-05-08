@@ -233,7 +233,7 @@ public class TerrainBuilding : MonoBehaviour
             queueStatusText.text = unitSpawnQueue.Count.ToString();
             progressImage.fillAmount = progress / 100;
 
-            Debug.Log(timeElapsed.ToString() + "   " + unitSpawnQueue.Peek().queueTime.ToString());
+            //Debug.Log(timeElapsed.ToString() + "   " + unitSpawnQueue.Peek().queueTime.ToString());
             if (timeElapsed >= unitSpawnQueue.Peek().queueTime)
             {
                 SpawnUnit();
@@ -279,6 +279,7 @@ public class TerrainBuilding : MonoBehaviour
             unit.transform.position = unitSpawnPoint.transform.position;
 
             VillagerActor actor = unit.GetComponent<VillagerActor>();
+
             actor.SetUnitType(unitSpawnQueue.Peek().unitType);
             
             RTSUnitType uType = unitSpawnQueue.Peek().unitType;

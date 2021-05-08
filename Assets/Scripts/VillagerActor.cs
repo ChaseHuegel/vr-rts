@@ -66,28 +66,24 @@ public class VillagerActor : Actor
     public int currentCargoTotal;
     ResourceGatheringType lastWantedResoureType;
 
-    protected PlayerManager playerManager;
-
     public override void Initialize()
     {
         base.Initialize();
 
         //previouState = VillagerActorState.Idle;
+    
+        animator = GetComponent<Animator>();
+        if (!animator)
+            Debug.Log("No animator component found.");
 
         audioSource = GetComponent<AudioSource>();
         if (!audioSource)
             Debug.Log("No audiosource component found.");
 
-        animator = GetComponent<Animator>();
-        if (!animator)
-            Debug.Log("No animator component found.");
-
-        playerManager = Valve.VR.InteractionSystem.Player.instance.GetComponent<PlayerManager>();
-
         // Initialize villager AI state, display objects, etc.
         SetUnitType(rtsUnitType);
 
-        playerManager.AddToPopulation(rtsUnitType);
+        PlayerManager.instance.AddToPopulation(rtsUnitType);
     }
 
     public void OnPickUp()
@@ -185,9 +181,6 @@ public class VillagerActor : Actor
                 ResetPathing();
             }
         }        
-
-        if (node) Debug.Log(node.name);
-        if (building) Debug.Log(building.name);
     }
 
     public bool HasValidBuildOrRepairTarget()
@@ -383,7 +376,6 @@ public class VillagerActor : Actor
                         currentCargoTotal = 0;
                         DisplayCargo(false);
                         
-
                         currentState = VillagerActorState.Gathering;
                     }
                     else
@@ -438,6 +430,10 @@ public class VillagerActor : Actor
         targetNode = null;
         targetBuilding = null;
 
+        // Retarded, shouldn't be neccassary ... bit it is.
+        if (!audioSource)
+            audioSource = GetComponent<AudioSource>();
+
         switch ( rtsUnitType )
         {
             case RTSUnitType.Builder:
@@ -445,8 +441,8 @@ public class VillagerActor : Actor
                     currentState = VillagerActorState.Building;
                     wantedResourceType = ResourceGatheringType.None;
                     builderHandToolDisplayObject.SetActive(true);
-                    currentHandToolDisplayObject = builderHandToolDisplayObject;
-                    //audioSource.clip = GameMaster.GetAudio("builder").GetClip();
+                    currentHandToolDisplayObject = builderHandToolDisplayObject;                
+                    audioSource.clip = GameMaster.GetAudio("builder").GetClip();
                     
                     break;
                 }
@@ -457,7 +453,7 @@ public class VillagerActor : Actor
                     wantedResourceType = ResourceGatheringType.Grain;
                     //handGrainDisplayObject.SetActive(true);
                     currentHandToolDisplayObject = null;// handGrainDisplayObject;
-                   // audioSource.clip = GameMaster.GetAudio("farmer").GetClip();
+                    audioSource.clip = GameMaster.GetAudio("farmer").GetClip();
                     
                     break;
                 }
@@ -468,7 +464,7 @@ public class VillagerActor : Actor
                 wantedResourceType = ResourceGatheringType.Wood;
                 woodHandToolDisplayObject.SetActive(true);
                 currentHandToolDisplayObject = woodHandToolDisplayObject;
-                //audioSource.clip = GameMaster.GetAudio("lumberjack").GetClip();
+                audioSource.clip = GameMaster.GetAudio("lumberjack").GetClip();
                 
                 break;
             }
@@ -479,7 +475,7 @@ public class VillagerActor : Actor
                 wantedResourceType = ResourceGatheringType.Gold;
                 goldHandToolDisplayObject.SetActive(true);
                 currentHandToolDisplayObject = goldHandToolDisplayObject;
-                //audioSource.clip = GameMaster.GetAudio("miner").GetClip();
+                audioSource.clip = GameMaster.GetAudio("miner").GetClip();
                 
                 break;
             }
@@ -490,16 +486,16 @@ public class VillagerActor : Actor
                 wantedResourceType = ResourceGatheringType.Stone;
                 oreHandToolDisplayObject.SetActive(true);
                 currentHandToolDisplayObject = oreHandToolDisplayObject;
-                //audioSource.clip = GameMaster.GetAudio("miner").GetClip();
+                audioSource.clip = GameMaster.GetAudio("miner").GetClip();
                 
                 break;
             }
         }
 
-        // if (!audioSource.isPlaying)
-        // {
-        //     audioSource.Play();
-        // }
+        if (!audioSource.isPlaying)
+        {
+            audioSource.Play();
+        }
     }
 
     private void DisplayCargo(bool visible)
