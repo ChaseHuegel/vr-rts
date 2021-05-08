@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -204,7 +205,7 @@ public class Actor : Body
                 //  Assume our currentGoal is a valid match since it was found successfully.
                 //  Forcibly trigger reached under that assumption
                 if (DistanceTo(currentGoalTarget) <= 1)
-                    PathfindingGoal.TriggerReachedGoal(this, currentGoalTarget, currentGoal);
+                    PathfindingGoal.TriggerInteractGoal(this, currentGoalTarget, currentGoal);
             }
 
             Tick();
@@ -249,7 +250,7 @@ public class Actor : Body
 
             //  NOTE possible performance hitch, possible without checking each path node?
             //  Handle reaching current (if any) goal and stop pathing
-            if ( PathfindingGoal.TryReachGoal(this, currentPath[0], currentGoal) )
+            if ( PathfindingGoal.TryInteractGoal(this, currentPath[0], currentGoal) )
             {
                 ResetPathing();
                 return;
@@ -277,12 +278,12 @@ public class Actor : Body
                 // Wait some time to see if path clears
                 if (pathWaitTries > Constants.PATH_WAIT_TRIES)
                 {
-                    //  Path hasn't cleared, try repathing
+                    //  Path hasn't cleared, try repathing to a random point near the current path node
                     if (pathRepathTries < Constants.PATH_REPATH_TRIES)
                     {
                         GotoForced(
-                            currentPath[currentPath.Count - 1].x + Random.Range(-1, 1),
-                            currentPath[currentPath.Count - 1].y + Random.Range(-1, 1),
+                            currentPath[currentPath.Count - 1].x + UnityEngine.Random.Range(-1, 1),
+                            currentPath[currentPath.Count - 1].y + UnityEngine.Random.Range(-1, 1),
                             false    //  false, dont ignore actors. Stuck and may need to path around them
                             );
                     }

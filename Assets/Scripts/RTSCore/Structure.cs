@@ -7,7 +7,7 @@ public class Structure : Obstacle, IFactioned
     public byte factionID = 0;
     private Faction faction;
 
-    public List<ResourceGatheringType> dropoffTypes;
+    public ResourceGatheringType dropoffTypes;
 
     public Faction GetFaction() { return faction; }
     public void UpdateFaction() { faction = GameMaster.Factions.Find(x => x.index == factionID); }

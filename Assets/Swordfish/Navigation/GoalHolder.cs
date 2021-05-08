@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Swordfish.Navigation
@@ -11,9 +12,11 @@ public class GoalHolder
         get { return goals.ToArray(); }
     }
 
-    public void Add<T>() where T : PathfindingGoal
+    public T Add<T>() where T : PathfindingGoal
     {
-        goals.Add( (T)System.Activator.CreateInstance(typeof(T)) );
+        T goal = (T)System.Activator.CreateInstance(typeof(T));
+        goals.Add(goal);
+        return goal;
     }
 
     public void Remove<T>() where T : PathfindingGoal
@@ -24,6 +27,11 @@ public class GoalHolder
     public T Get<T>() where T : PathfindingGoal
     {
         return (T)goals.Find(x => x is T);
+    }
+
+    public T Get<T>(Predicate<PathfindingGoal> expression) where T : PathfindingGoal
+    {
+        return (T)goals.Find( expression );
     }
 }
 

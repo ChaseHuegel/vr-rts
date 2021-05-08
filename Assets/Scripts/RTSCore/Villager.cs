@@ -18,6 +18,7 @@ public class Villager : Unit
     public UnitState state;
 
     [Header("Villager")]
+    public ResourceGatheringType currentResource;
     public int workRate = 10;
     public int maxCargo = 100;
     public int currentCargo = 0;
@@ -32,15 +33,16 @@ public class Villager : Unit
     {
         base.Initialize();
 
+        //  Subscribe to events. They are static, make sure to unsubscribe!
+        PathfindingGoal.OnGoalFoundEvent += OnGoalFound;
+        PathfindingGoal.OnGoalInteractEvent += OnGoalInteract;
+
         //  Add goals in order of priority
-        goals.Add<GoalWoodCutting>();
-        goals.Add<GoalTransportWood>();
-        goals.Add<GoalGoldMining>();
-        goals.Add<GoalTransportGold>();
-        goals.Add<GoalStoneMining>();
-        goals.Add<GoalTransportStone>();
-        goals.Add<GoalFarming>();
-        goals.Add<GoalTransportGrain>();
+        goals.Add<GoalGatherResource>().type = ResourceGatheringType.Grain;
+        goals.Add<GoalGatherResource>().type = ResourceGatheringType.Gold;
+        goals.Add<GoalGatherResource>().type = ResourceGatheringType.Stone;
+        goals.Add<GoalGatherResource>().type = ResourceGatheringType.Wood;
+        goals.Add<GoalTransportResource>();
 
         audioSource = GetComponent<AudioSource>();
         if (!audioSource)
@@ -51,12 +53,19 @@ public class Villager : Unit
             Debug.Log("No animator component found.");
     }
 
+    public void OnDestroy()
+    {
+        //  Unsubscribe from events
+        PathfindingGoal.OnGoalFoundEvent -= OnGoalFound;
+        PathfindingGoal.OnGoalInteractEvent -= OnGoalInteract;
+    }
+
     public override void Tick()
     {
         base.Tick();
 
-        //  Woodcutting should not be active if cargo is full
-        goals.Get<GoalWoodCutting>().active = !IsCargoFull();
+        //  Transport type always matches what our current resource is
+        goals.Get<GoalTransportResource>().type = currentResource;
 
         //  Default to roaming if we cant find a goal
         if (!GotoNearestGoalWithPriority())
@@ -72,14 +81,63 @@ public class Villager : Unit
                 break;
 
             case UnitState.GATHERING:
-                if (IsCargoFull()) state = UnitState.TRANSPORTING;
-                if (!HasValidTarget()) state = UnitState.ROAMING;
+                if (IsCargoFull())  state = UnitState.TRANSPORTING;
+                else if (!HasValidTarget()) state = UnitState.ROAMING;
             break;
 
             case UnitState.TRANSPORTING:
                 if (!HasCargo()) state = UnitState.ROAMING;
             break;
         }
+    }
+
+    public static void OnGoalFound(object sender, PathfindingGoal.GoalFoundEvent e)
+    {
+        Villager villager = (Villager)e.actor;
+
+        //  Need C# 7 in Unity for switching by type!!!
+
+        if (e.goal is GoalGatherResource)
+        {
+            if (!villager.IsCargoFull())
+            {
+                villager.state = UnitState.GATHERING;
+                villager.currentResource = ((GoalGatherResource)e.goal).type;
+                return;
+            }
+        }
+
+        else if (e.goal is GoalTransportResource)
+        {
+            if (villager.HasCargo())
+            {
+                villager.state = UnitState.TRANSPORTING;
+                return;
+            }
+        }
+
+        e.Cancel();    //  default cancel the goal so that another can take priority
+    }
+
+    public static void OnGoalInteract(object sender, PathfindingGoal.GoalInteractEvent e)
+    {
+        Resource resource = e.cell.GetOccupant<Resource>();
+        Villager villager = (Villager)e.actor;
+
+        if (e.goal is GoalGatherResource)
+        {
+            villager.TryGather(resource);
+            return;
+        }
+
+        else if (e.goal is GoalTransportResource)
+        {
+            PlayerManager.instance?.AddResourceToStockpile(villager.currentResource, villager.currentCargo);
+            villager.currentCargo = 0;
+            return;
+        }
+
+        e.Cancel();    //  default cancel the interaction
     }
 
     public void TryGather(Resource resource)
@@ -92,8 +150,8 @@ public class Villager : Unit
         amount = resource.GetRemoveAmount(amount);
 
         //  Trigger a gather event
-        GatherEvent e = new GatherEvent{ target = resource, amount = amount };
-        OnGatherEvent?.Invoke(this, e);
+        GatherEvent e = new GatherEvent{ villager = this, resource = resource, amount = amount };
+        OnGatherEvent?.Invoke(null, e);
         if (e.cancel == true) { return; }   //  return if the event has been cancelled by any subscriber
 
         //  Remove from the resource and add to cargo
@@ -103,10 +161,11 @@ public class Villager : Unit
         animator.Play("Lumberjacking", -1, 0);
     }
 
-    public event EventHandler<GatherEvent> OnGatherEvent;
+    public static event EventHandler<GatherEvent> OnGatherEvent;
     public class GatherEvent : Swordfish.Event
     {
-        public Resource target;
+        public Villager villager;
+        public Resource resource;
         public int amount;
     }
 }

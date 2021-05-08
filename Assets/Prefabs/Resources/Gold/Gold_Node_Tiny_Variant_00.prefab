@@ -64,14 +64,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab54d6d5140767340bdbc6beb759bea3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  boundingDimensions: {x: 2, y: 2}
+  boundingOrigin: {x: -0.125, y: -0.125}
   gridPosition:
     x: 0
     y: 0
-  boundingDimensions: {x: 2, y: 2}
-  boundingOrigin: {x: -0.125, y: -0.125}
   bakeOnStart: 1
-  rebake: 0
-  type: 4
+  type: 8
+  amount: 1000
 --- !u!135 &-1728832828184748807
 SphereCollider:
   m_ObjectHideFlags: 0
