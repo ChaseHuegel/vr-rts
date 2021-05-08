@@ -81,15 +81,14 @@ public class InteractionPointer : MonoBehaviour
 		int tintColorID = Shader.PropertyToID("_TintColor");
 		fullTintAlpha = pointVisibleMaterial.GetColor(tintColorID).a;
 #endif
-
 		teleportArc = GetComponent<TeleportArc>();
 		teleportArc.traceLayerMask = traceLayerMask;
 		
-		loopingAudioMaxVolume = loopingAudioSource.volume;
+		// loopingAudioMaxVolume = loopingAudioSource.volume;
 
-		float invalidReticleStartingScale = invalidReticleTransform.localScale.x;
-		invalidReticleMinScale *= invalidReticleStartingScale;
-		invalidReticleMaxScale *= invalidReticleStartingScale;
+		// float invalidReticleStartingScale = invalidReticleTransform.localScale.x;
+		// invalidReticleMinScale *= invalidReticleStartingScale;
+		// invalidReticleMaxScale *= invalidReticleStartingScale;
 	}
 
 
@@ -97,10 +96,7 @@ public class InteractionPointer : MonoBehaviour
 	void Start()
 	{
 		interactableObjects = GameObject.FindObjectsOfType<PointerInteractable>();
-		
 		player = Valve.VR.InteractionSystem.Player.instance;
-
-		ShowPointer();
 
 		if ( player == null )
 		{
@@ -108,16 +104,12 @@ public class InteractionPointer : MonoBehaviour
 			Destroy( this.gameObject );
 			return;
 		}
+
+		ShowPointer();
 	}
 
 	//-------------------------------------------------
 	void OnDisable()
-	{
-		HidePointer();
-	}
-
-	//-------------------------------------------------
-	public void HideInteractionPointer()
 	{
 		HidePointer();
 	}
@@ -144,17 +136,22 @@ public class InteractionPointer : MonoBehaviour
 	void Update()
 	{
 		// If something is attached to the hand that is preventing objectPlacement
-		// if ( allowTeleportWhileAttached && !allowTeleportWhileAttached.teleportAllowed )
+		if ( allowTeleportWhileAttached && !allowTeleportWhileAttached.teleportAllowed )
+		{
+			//HidePointer();
+		}
+		
+		//UpdatePointer();
+
+		// if ( visible )
 		// {
-		 	
+			UpdatePointer();
+			
 		// }
 		// else
 		// {
-			//ShowPointer();
+		// 	ShowPointer();
 		// }
-
-		//if(visible)
-			UpdatePointer();
 			
 			
 	}
@@ -185,38 +182,17 @@ public class InteractionPointer : MonoBehaviour
 		//Trace to see if the pointer hit anything
 		RaycastHit hitInfo;
 		teleportArc.SetArcData( pointerStart, arcVelocity, true, pointerAtBadAngle );
-		if ( teleportArc.DrawArc( out hitInfo ) )
-		{
+
+		teleportArc.FindProjectileCollision( out hitInfo );
+		//if ( teleportArc.DrawArc( out hitInfo ) )
+		if ( hitInfo.collider )
+		{	
 			hitSomething = true;
 			hitPointValid = LayerMatchTest( allowedPlacementLayers, hitInfo.collider.gameObject );
 			hitPointerInteractable = hitInfo.collider.GetComponentInParent<PointerInteractable>();
 		}
 		
 		HighlightSelected( hitPointerInteractable );
-
-		if (hitPointValid)
-		{	
-// 			teleportArc.SetColor( pointerValidColor );
-// #if (UNITY_5_4)
-// 			pointerLineRenderer.SetColors( pointerValidColor, pointerValidColor );
-// #else
-// 			pointerLineRenderer.startColor = pointerValidColor;
-// 			pointerLineRenderer.endColor = pointerValidColor;
-// #endif
-			//hitTeleportMarker.showReticle );
-		}
-		else // Not valid
-		{
-			// destinationReticleTransform.gameObject.SetActive( false );
-			// offsetReticleTransform.gameObject.SetActive( false );
-			teleportArc.SetColor( pointerInvalidColor );
-// #if (UNITY_5_4)
-// 			pointerLineRenderer.SetColors( pointerInvalidColor, pointerInvalidColor );
-// #else
-// 			pointerLineRenderer.startColor = pointerInvalidColor;
-// 			pointerLineRenderer.endColor = pointerInvalidColor;
-// #endif			
-		}
 
 		pointedAtPosition = hitInfo.point;
 		pointerEnd = hitInfo.point;
@@ -231,9 +207,6 @@ public class InteractionPointer : MonoBehaviour
 		}
 
 		destinationReticleTransform.position = pointedAtPosition;
-		// pointerLineRenderer.SetPosition( 0, pointerStart );
-		// pointerLineRenderer.SetPosition( 1, pointerEnd );
-
 		destinationReticleTransform.gameObject.SetActive( true );
 	}
 	
@@ -283,6 +256,7 @@ public class InteractionPointer : MonoBehaviour
 		}
 	}
 
+		
 	//-------------------------------------------------
 	private void PlayAudioClip( AudioSource source, AudioClip clip )
 	{

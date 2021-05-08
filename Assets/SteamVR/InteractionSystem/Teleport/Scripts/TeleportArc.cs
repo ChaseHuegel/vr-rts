@@ -254,7 +254,7 @@ namespace Valve.VR.InteractionSystem
 
 
         //-------------------------------------------------
-        private float FindProjectileCollision(out RaycastHit hitInfo)
+        public float FindProjectileCollision(out RaycastHit hitInfo)
         {
             float timeStep = arcDuration / segmentCount;
             float segmentStartTime = 0.0f;
