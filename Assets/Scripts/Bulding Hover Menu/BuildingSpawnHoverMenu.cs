@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class BuildingSpawnHoverMenu : MonoBehaviour
 {
+    public TMPro.TMP_Text buildingTitleText;
+    public UnityEngine.UI.Image queueProgressImage;
+    public TMPro.TMP_Text queueProgressText;
     TerrainBuilding terrainBuilding;
-
     void Start()
     {
         terrainBuilding = GetComponentInParent<TerrainBuilding>();

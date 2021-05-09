@@ -50,13 +50,14 @@ public class TerrainBuilding : MonoBehaviour
     private bool constructionCompleted = false;
 
     private Queue<RTSUnitTypeData> unitSpawnQueue = new Queue<RTSUnitTypeData>();
-    public UnityEngine.UI.Text queueStatusText;
-    public UnityEngine.UI.Image progressImage;
+    public TMPro.TMP_Text queueProgressText;
+    public UnityEngine.UI.Image queueProgressImage;
 
     public HealthBar buildingHealthBar;
 
     public UnityEngine.UI.Image[] QueueImageObjects;   
-    public GameObject objectToToggleOnKnock; 
+
+    public BuildingSpawnHoverMenu buildingSpawnHoverMenu;
 
     //public Sprite emptyQueueSlotImage;
 
@@ -87,10 +88,13 @@ public class TerrainBuilding : MonoBehaviour
     void Start()
     {
         audioSource = gameObject.GetComponent<AudioSource>();
+        //queueProgressText = buildingSpawnHoverMenu.queueProgressText;
+        //queueProgressImage = buildingSpawnHoverMenu.queueProgressImage;
+
         //constructionCompletedAudio = GameMaster.GetAudio("constructionCompleted").GetClip();       
 
-        buildingHealthBar = GetComponentInChildren<HealthBar>(true);
-        if (currentHealth < maxHealth)
+        buildingHealthBar = GetComponentInChildren<HealthBar>( true );
+        if ( currentHealth < maxHealth )
             buildingHealthBar.enabled = true;
 
         buildingStage0.SetActive(true);
@@ -128,9 +132,9 @@ public class TerrainBuilding : MonoBehaviour
         }
     }    
 
-    protected void ToggleObjectOnKnock()
+    protected void ToggleHoverMenuOnKnock()
     {
-        objectToToggleOnKnock.SetActive(!objectToToggleOnKnock.activeSelf);
+        buildingSpawnHoverMenu.gameObject.SetActive(!buildingSpawnHoverMenu.gameObject.activeSelf);
     }
     
     // protected float firstKnockTime;
@@ -142,7 +146,7 @@ public class TerrainBuilding : MonoBehaviour
         audioSource.clip = GameMaster.GetAudio("knock").GetClip();
         audioSource.Play();
 
-        ToggleObjectOnKnock();
+        ToggleHoverMenuOnKnock();
 
         // ---- 2 knocks is too unreliable at the moment and can deal with it later
         // if (waitingForSecondKnock)
@@ -230,8 +234,8 @@ public class TerrainBuilding : MonoBehaviour
             timeElapsed += Time.deltaTime;
             float progress = (timeElapsed / unitSpawnQueue.Peek().queueTime) * 100;
             progress = UnityEngine.Mathf.Round(progress);
-            queueStatusText.text = unitSpawnQueue.Count.ToString();
-            progressImage.fillAmount = progress / 100;
+            queueProgressText.text = unitSpawnQueue.Count.ToString();
+            queueProgressImage.fillAmount = progress / 100;
 
             //Debug.Log(timeElapsed.ToString() + "   " + unitSpawnQueue.Peek().queueTime.ToString());
             if (timeElapsed >= unitSpawnQueue.Peek().queueTime)
@@ -239,7 +243,7 @@ public class TerrainBuilding : MonoBehaviour
                 SpawnUnit();
                 timeElapsed = 0.0f;
                 unitSpawnQueue.Dequeue();                    
-                progressImage.fillAmount = 0;
+                queueProgressImage.fillAmount = 0;
 
                 //Debug.Log("Removed unit from queue " + unitSpawnQueue.Count + " left in queue.");
             }

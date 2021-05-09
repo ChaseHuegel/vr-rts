@@ -205,7 +205,7 @@ public class MenuBuilding : Throwable
     {
         base.OnDetachedFromHand(hand);
 
-        buildMenuSlot.RespawnMenuSlotObject(); 
+        //buildMenuSlot.RespawnMenuSlotObject(); 
         
         if (pinchGrip)
         {
@@ -217,7 +217,7 @@ public class MenuBuilding : Throwable
             SetLayer(spawnBuildingOnCollision, "Building");
             InteractionPointer.instance.StopPlacement(hand);
             
-            RTSBuildingTypeData buildingData = GameMaster.Instance.FindBuildingData(buildMenuSlot.rtsBuildingType);
+            RTSBuildingTypeData buildingData = GameMaster.Instance.FindBuildingData(buildMenuSlot.rtsTypeData.buildingType);
             
             PlayerManager.instance.RemoveResources(buildingData.goldCost, buildingData.grainCost,
                                                buildingData.woodCost, buildingData.oreCost);

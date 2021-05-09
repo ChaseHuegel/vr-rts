@@ -7,6 +7,7 @@ using Valve.VR;
 
 public class InteractionPointer : MonoBehaviour
 {
+	
 	public SteamVR_Action_Boolean placeBuildingAction = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("BuildingPlacementPointer");
 	public GameObject pointerAttachmentPoint;
 	public LayerMask traceLayerMask;
@@ -52,7 +53,8 @@ public class InteractionPointer : MonoBehaviour
 	private AllowTeleportWhileAttachedToHand allowTeleportWhileAttached = null;
 	private Vector3 startingFeetOffset = Vector3.zero;
 	private bool movedFeetFarEnough = false;
-
+	public Hand handReticle;
+	public bool useHandAsReticle;
 	//-------------------------------------------------
 	private static InteractionPointer _instance;
 	public static InteractionPointer instance
@@ -74,6 +76,9 @@ public class InteractionPointer : MonoBehaviour
 		_instance = this;
 		// pointerLineRenderer = GetComponentInChildren<LineRenderer>();
 		// interactionPointerObject = pointerLineRenderer.gameObject;
+
+		handReticle.enabled = useHandAsReticle;
+
 
 #if UNITY_URP
 		fullTintAlpha = 0.5f;

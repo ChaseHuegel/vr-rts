@@ -25,7 +25,6 @@ namespace Valve.VR.InteractionSystem.Sample
                 Ray ray = new Ray(contact.point - (-contact.normal * backTrackLength), -contact.normal);
                 if (collision.collider.Raycast(ray, out hit, 2))
                 {
-                    
                     GameObject spawned = GameObject.Instantiate(spawnObjectOnCollision);
                     spawned.transform.position = contact.point;
                     spawned.transform.forward = ray.direction;

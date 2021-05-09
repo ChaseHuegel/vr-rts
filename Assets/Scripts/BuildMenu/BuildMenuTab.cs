@@ -29,15 +29,11 @@ public struct BuildMenuHoverButton
 }
 
 [ExecuteAlways]
+[Serializable]
 public class BuildMenuTab : MonoBehaviour
 {   
     public GameObject resourceCostPrefab;
-    // Only check if you need the menu to be rebuilt because of
-    // modifications.
-    //public BuildMenuHoverButton[] Buttons;
     public RTSBuildingType[] Buttons;
-    
-    // Start is called before the first frame update
     void Start()
     {
         if (transform.childCount <= 0)
@@ -65,13 +61,16 @@ public class BuildMenuTab : MonoBehaviour
 
         DestroyChildren();
 
-        foreach(RTSBuildingType rtsBuildingType in Buttons)
+        foreach ( RTSBuildingType rtsBuildingType in Buttons )
         {           
             Vector3 position = new Vector3(x, y, 0);
 
-            GameObject slot = Instantiate(new GameObject("slot" + i), position, Quaternion.identity, this.gameObject.transform);            
+            GameObject slot = Instantiate ( new GameObject ( "slot" + i ), position, Quaternion.identity, this.gameObject.transform );            
             slot.transform.localPosition = position;
+            slot.layer = LayerMask.NameToLayer("UI");
             BuildMenuSlot buildMenuSlot = slot.AddComponent<BuildMenuSlot>();
+            SphereCollider collider = slot.AddComponent<SphereCollider>();
+            collider.radius = 40.0f;
             
             GameObject resourceCost = Instantiate(resourceCostPrefab, Vector3.zero, Quaternion.identity, slot.transform);
             resourceCost.transform.localPosition = Vector3.zero;
@@ -83,17 +82,17 @@ public class BuildMenuTab : MonoBehaviour
             cost.goldText.text = typeData.goldCost.ToString();
             cost.grainText.text = typeData.grainCost.ToString();
             cost.oreText.text = typeData.oreCost.ToString();
-            buildMenuSlot.rtsBuildingType = typeData.buildingType;
             
-            if (typeData.menuPrefab)
+            buildMenuSlot.rtsTypeData = typeData;
+
+            if ( typeData.menuPreviewPrefab )
             {
-                GameObject model = Instantiate(typeData.menuPrefab, slot.transform);
+                GameObject model = Instantiate( typeData.menuPreviewPrefab, slot.transform );
                 model.transform.localPosition = Vector3.zero;
-                buildMenuSlot.menuSlotObject = typeData.menuPrefab;
             }
 
             column++;
-            if (column >= maxColumns)
+            if ( column >= maxColumns )
             {
                 row++;
                 column = 0;
@@ -107,19 +106,19 @@ public class BuildMenuTab : MonoBehaviour
     
     void DestroyChildren()
     {
-        GameObject[] allChildren = new GameObject[transform.childCount];
+        GameObject[] allChildren = new GameObject [ transform.childCount ] ;
 
         int i = 0;
 
-        foreach(Transform child in transform)
+        foreach ( Transform child in transform )
         {
-            allChildren[i] = child.gameObject;
+            allChildren [ i ] = child.gameObject;
             i++;
         }
 
-        foreach(GameObject child in allChildren)
+        foreach ( GameObject child in allChildren )
         {
-            DestroyImmediate(child.gameObject);
+            DestroyImmediate ( child.gameObject );
         }
     }   
 }

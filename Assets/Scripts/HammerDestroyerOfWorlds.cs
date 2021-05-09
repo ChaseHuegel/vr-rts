@@ -10,6 +10,9 @@ public class HammerDestroyerOfWorlds : MonoBehaviour
     public AudioClip unitHitAudio;
     AudioSource audioSource;
 
+    public GameObject objectDestroyedEffect;
+    public GameObject unitDestroyedEffect;
+
     void Start()
     {
         audioSource = gameObject.GetComponent<AudioSource>();
@@ -29,10 +32,15 @@ public class HammerDestroyerOfWorlds : MonoBehaviour
         if (other.gameObject.GetComponent<TerrainBuilding>())
         {
             Destroy(other.gameObject);
-            audioSource.PlayOneShot(destroyedObjectAudio);
+            GameObject spawned = GameObject.Instantiate(objectDestroyedEffect);
+            spawned.transform.position = other.transform.position;
+            AudioSource.PlayClipAtPoint( destroyedObjectAudio, other.transform.position);
+
         }
         else if (other.gameObject.GetComponent<VillagerActor>())
         {
+            GameObject spawned = GameObject.Instantiate(unitDestroyedEffect);
+            spawned.transform.position = other.transform.position;
             audioSource.PlayOneShot(unitHitAudio);
         }
     }
