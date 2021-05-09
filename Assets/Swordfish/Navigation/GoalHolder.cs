@@ -24,6 +24,11 @@ public class GoalHolder
         goals.Remove( (T)System.Activator.CreateInstance(typeof(T))  );
     }
 
+    public void RemoveAll<T>() where T : PathfindingGoal
+    {
+        goals.RemoveAll(x => x is T);
+    }
+
     public T Get<T>() where T : PathfindingGoal
     {
         return (T)goals.Find(x => x is T);
@@ -32,6 +37,16 @@ public class GoalHolder
     public T Get<T>(Predicate<PathfindingGoal> expression) where T : PathfindingGoal
     {
         return (T)goals.Find( expression );
+    }
+
+    public List<T> GetAll<T>() where T : PathfindingGoal
+    {
+        return goals.FindAll(x => x is T).ConvertAll(x => x as T);
+    }
+
+    public List<T> GetAll<T>(Predicate<PathfindingGoal> expression) where T : PathfindingGoal
+    {
+        return goals.FindAll( expression ).ConvertAll(x => x as T);
     }
 }
 

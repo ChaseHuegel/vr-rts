@@ -10,7 +10,7 @@ public class Constants
 
     public const int PATH_HEAP_SIZE = 17000;
     public const int PATH_WAIT_TRIES = 8;
-    public const int PATH_REPATH_TRIES = 2;
+    public const int PATH_REPATH_TRIES = 4;
 }
 
 }

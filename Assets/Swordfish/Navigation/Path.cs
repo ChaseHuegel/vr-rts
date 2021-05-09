@@ -64,10 +64,6 @@ public class Path
             //  Not there yet! Go through all neighbors of the current cell..
             foreach(Cell neighbor in current.neighbors())
             {
-                //  If we found a goal, path to it
-                // if (PathfindingGoal.IsGoal(neighbor, goals))
-                //     return RetracePath(current, start);
-
                 if (neighbor != end )
                 {
                     //  Ignore this neighbor if its solid or it has already been tested
@@ -83,8 +79,8 @@ public class Path
 
                 bool neighborInOpenList = openList.Contains(neighbor);
 
-                //  Move cost is the current cell's cost + the heuristic distance between the cell + neighbor
-                byte moveCost = (byte)(neighbor.weight + current.gCost + Distance(current.GetCoord(), neighbor.GetCoord()));
+                //  Move cost is the current cell's cost + the heuristic distance between the cell + weighted by # of occupants
+                byte moveCost = (byte)((neighbor.occupants.Count*8) + current.gCost + Distance(current.GetCoord(), neighbor.GetCoord()));
 
                 //  Update neighbor if its cost is lower than the move cost OR it isnt in the open list yet
                 if (moveCost < neighbor.gCost || !neighborInOpenList)
