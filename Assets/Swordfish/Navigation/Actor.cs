@@ -64,6 +64,12 @@ public class Actor : Body
         ResetPathing();
     }
 
+    public void ResetGoal()
+    {
+        currentGoal = null;
+        currentGoalTarget = null;
+    }
+
     public void ResetPathingBrain()
     {
         pathWaitTries = 0;
@@ -73,8 +79,7 @@ public class Actor : Body
     public void ResetPathing()
     {
         currentPath = null;
-        currentGoal = null;
-        currentGoalTarget = null;
+        ResetGoal();
         ResetPathingBrain();
     }
 
@@ -205,7 +210,10 @@ public class Actor : Body
                 //  Assume our currentGoal is a valid match since it was found successfully.
                 //  Forcibly trigger reached under that assumption
                 if (DistanceTo(currentGoalTarget) <= 1)
+                {
                     PathfindingGoal.TriggerInteractGoal(this, currentGoalTarget, currentGoal);
+                    ResetPathingBrain();
+                }
             }
 
             Tick();
@@ -248,14 +256,6 @@ public class Actor : Body
             //  We can pass thru actors if the path ahead is clear and we are going beyond the next spot
             bool canPassThruActors = currentPath.Count > 2 ? !World.at(currentPath[1].x, currentPath[1].y).IsBlocked() : false;
 
-            //  NOTE possible performance hitch, possible without checking each path node?
-            //  Handle reaching current (if any) goal and stop pathing
-            if ( PathfindingGoal.TryInteractGoal(this, currentPath[0], currentGoal) )
-            {
-                ResetPathing();
-                return;
-            }
-
             //  Attempt to move to the next point
             if ( CanSetPosition(currentPath[0].x, currentPath[0].y, canPassThruActors) )
             {
@@ -286,11 +286,20 @@ public class Actor : Body
                             currentPath[currentPath.Count - 1].y + UnityEngine.Random.Range(-1, 1),
                             false    //  false, dont ignore actors. Stuck and may need to path around them
                             );
+
+                        //  Trigger repath event
+                        RepathEvent e = new RepathEvent{ actor = this };
+                        OnRepathEvent?.Invoke(null, e);
+                        if (e.cancel) ResetPathingBrain();   //  Reset pathing logic if cancelled
                     }
                     //  Unable to repath, resort to giving up
                     else
                     {
                         ResetPathing();
+
+                        //  Trigger repath failed event
+                        RepathFailedEvent e = new RepathFailedEvent{ actor = this };
+                        OnRepathFailedEvent?.Invoke(null, e);
                     }
 
                     pathRepathTries++;
@@ -318,6 +327,21 @@ public class Actor : Body
                 Gizmos.DrawSphere(World.ToTransformSpace(new Vector3(cell.x, 0, cell.y)), 0.25f * World.GetUnit());
             }
         }
+    }
+#endregion
+
+#region events
+
+    public static event EventHandler<RepathEvent> OnRepathEvent;
+    public class RepathEvent : Swordfish.Event
+    {
+        public Actor actor;
+    }
+
+    public static event EventHandler<RepathFailedEvent> OnRepathFailedEvent;
+    public class RepathFailedEvent : Swordfish.Event
+    {
+        public Actor actor;
     }
 #endregion
 }

@@ -5,15 +5,15 @@ using Swordfish;
 using Swordfish.Navigation;
 using Valve.VR;
 
-public enum VillagerActorState { Idle, Lumberjacking, Farming, MiningGold, Transporting, 
+public enum VillagerActorState { Idle, Lumberjacking, Farming, MiningGold, Transporting,
                                 Building, Repairing, Attacking, Dying, MiningOre, Roaming, Gathering };
 
 [System.Flags]
-public enum ResourceGatheringType { 
+public enum ResourceGatheringType {
     None = 0,
-    Grain = 1, 
-    Wood = 2, 
-    Stone = 4, 
+    Grain = 1,
+    Wood = 2,
+    Stone = 4,
     Gold = 8,
 };
 
@@ -56,7 +56,7 @@ public class VillagerActor : Actor
     public AudioClip goldMiningAudio;
     public AudioClip oreMiningAudio;
     public AudioClip grainGatheringAudio;
-    public AudioClip repairingAudio;    
+    public AudioClip repairingAudio;
     private AudioSource audioSource;
 
     bool isHeld;
@@ -71,7 +71,7 @@ public class VillagerActor : Actor
         base.Initialize();
 
         //previouState = VillagerActorState.Idle;
-    
+
         animator = GetComponent<Animator>();
         if (!animator)
             Debug.Log("No animator component found.");
@@ -180,7 +180,7 @@ public class VillagerActor : Actor
                 wantedResourceType = ResourceGatheringType.None;
                 ResetPathing();
             }
-        }        
+        }
     }
 
     public bool HasValidBuildOrRepairTarget()
@@ -197,7 +197,7 @@ public class VillagerActor : Actor
     {
         return (targetBuilding != null);
     }
-    
+
     float timeElapsed;
 
     void Update()
@@ -206,13 +206,13 @@ public class VillagerActor : Actor
             return;
 
         timeElapsed += Time.deltaTime;
-                
+
         animator.SetBool("IsMoving", IsMoving());
         animator.SetInteger("VillagerActorState", (int)currentState);
 
         // if(timeElapsed < 1.5f)
         //     return;
-            
+
         switch (currentState)
         {
             case VillagerActorState.Idle:
@@ -237,11 +237,11 @@ public class VillagerActor : Actor
                 break;
 
             case VillagerActorState.Farming:
-                audioSource.clip = grainGatheringAudio;  
+                audioSource.clip = grainGatheringAudio;
                 audioSource.Play();
                 break;
-            
-            case VillagerActorState.Transporting:                
+
+            case VillagerActorState.Transporting:
             case VillagerActorState.Roaming:
                 break;
 
@@ -256,7 +256,7 @@ public class VillagerActor : Actor
     {
         if (isHeld)// || !StateChanged())
             return;
-        
+
         switch (currentState)
         {
             case VillagerActorState.Building:
@@ -270,9 +270,9 @@ public class VillagerActor : Actor
                     if (Util.DistanceUnsquared(gridPosition, body.gridPosition) <= body.GetCellVolumeSqr())
                     {
                         LookAt(body.gridPosition.x, body.gridPosition.y);
-                        
+
                         if (targetDamaged.NeedsRepair())
-                        {                            
+                        {
                             int amountToRepair = (int)(buildAndRepairCapacityPerSecond / (60 / Constants.ACTOR_TICK_RATE));
                             targetDamaged.RepairDamage(amountToRepair);
                         }
@@ -317,14 +317,14 @@ public class VillagerActor : Actor
 
                     //  Reached our target
                     if (Util.DistanceUnsquared(gridPosition, body.gridPosition) <= body.GetCellVolumeSqr())
-                    {                      
+                    {
 
                         LookAt(body.gridPosition.x, body.gridPosition.y);
-                        
+
                         if (currentCargoTotal < carryingCapacity)
                         {
                             int amountToRemove = (int)(gatherCapacityPerSecond / (60 / Constants.ACTOR_TICK_RATE));
-                            if (amountToRemove < 2) 
+                            if (amountToRemove < 2)
                                 amountToRemove = 2; // < 2 / (60/20) = .3333 which ends up as 0
                             amountToRemove = Mathf.Clamp( carryingCapacity - currentCargoTotal, 0, amountToRemove );
                             currentCargoTotal += amountToRemove;
@@ -375,7 +375,7 @@ public class VillagerActor : Actor
                         Valve.VR.InteractionSystem.Player.instance.GetComponent<PlayerManager>().AddResourceToStockpile(wantedResourceType, currentCargoTotal);
                         currentCargoTotal = 0;
                         DisplayCargo(false);
-                        
+
                         currentState = VillagerActorState.Gathering;
                     }
                     else
@@ -441,9 +441,9 @@ public class VillagerActor : Actor
                     currentState = VillagerActorState.Building;
                     wantedResourceType = ResourceGatheringType.None;
                     builderHandToolDisplayObject.SetActive(true);
-                    currentHandToolDisplayObject = builderHandToolDisplayObject;                
+                    currentHandToolDisplayObject = builderHandToolDisplayObject;
                     audioSource.clip = GameMaster.GetAudio("builder").GetClip();
-                    
+
                     break;
                 }
 
@@ -454,7 +454,7 @@ public class VillagerActor : Actor
                     //handGrainDisplayObject.SetActive(true);
                     currentHandToolDisplayObject = null;// handGrainDisplayObject;
                     audioSource.clip = GameMaster.GetAudio("farmer").GetClip();
-                    
+
                     break;
                 }
 
@@ -465,7 +465,7 @@ public class VillagerActor : Actor
                 woodHandToolDisplayObject.SetActive(true);
                 currentHandToolDisplayObject = woodHandToolDisplayObject;
                 audioSource.clip = GameMaster.GetAudio("lumberjack").GetClip();
-                
+
                 break;
             }
 
@@ -476,7 +476,7 @@ public class VillagerActor : Actor
                 goldHandToolDisplayObject.SetActive(true);
                 currentHandToolDisplayObject = goldHandToolDisplayObject;
                 audioSource.clip = GameMaster.GetAudio("miner").GetClip();
-                
+
                 break;
             }
 
@@ -487,7 +487,7 @@ public class VillagerActor : Actor
                 oreHandToolDisplayObject.SetActive(true);
                 currentHandToolDisplayObject = oreHandToolDisplayObject;
                 audioSource.clip = GameMaster.GetAudio("miner").GetClip();
-                
+
                 break;
             }
         }
