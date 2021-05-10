@@ -38,9 +38,9 @@ public class BuildMenu : MonoBehaviour
 
     public void GenerateTabs()
     {
-        foreach(BuildMenuTab tab in tabs)
-        {
-            tab.Generate();
-        }
+        // foreach(BuildMenuTab tab in tabs)
+        // {
+        //     tab.Generate();
+        // }
     }
 }

@@ -25,13 +25,20 @@ public class BuildMenuSlot : MonoBehaviour
     public UnityEvent dropEvent;
     private GameObject previewObject;
     public bool justPickedUpItem = false;
+    protected static Material highlightMat;
 
     void Start()
     {
+#if UNITY_URP
+        highlightMat = (Material)Resources.Load("SteamVR_HoverHighlight_URP", typeof(Material));
+#else
+        highlightMat = (Material)Resources.Load("SteamVR_HoverHighlight", typeof(Material));
+#endif
+
         CreatePreviewObject();
     }
 
-    private void CreatePreviewObject()
+    public void CreatePreviewObject()
     {
         ClearPreview();
 
@@ -58,14 +65,24 @@ public class BuildMenuSlot : MonoBehaviour
     }
 
     private void ClearPreview()
-    {
+    {        
+        GameObject[] allChildren = new GameObject [ transform.childCount ] ;
+
+        int i = 0;
+
         foreach ( Transform child in transform )
         {
-            if ( Time.time > 0 )
+            allChildren [ i ] = child.gameObject;
+            i++;
+        }
+
+        foreach ( GameObject child in allChildren )
+        {
+            if ( Time.time > 0  && !child.GetComponent<BuildMenuResouceCost>())
             {
                 GameObject.Destroy( child.gameObject );
             }
-            else
+            else if (!child.GetComponent<BuildMenuResouceCost>())
             {
                 GameObject.DestroyImmediate( child.gameObject );
             }
@@ -216,7 +233,7 @@ public class BuildMenuSlot : MonoBehaviour
        
        // hand.ForceHoverUnlock();
 
-        spawnedItem.GetComponent<ThrowableBuilding>().worldPrefabToSpawn = rtsTypeData.worldPrefab;
+        spawnedItem.GetComponent<ThrowableBuilding>().rtsBuildingTypeData = rtsTypeData;
 
         itemIsSpawned = true;
         justPickedUpItem = true;

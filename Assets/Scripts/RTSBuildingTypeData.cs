@@ -7,7 +7,7 @@ public struct RTSBuildingTypeData
 {
     public RTSBuildingType buildingType;
     public int goldCost;
-    public int oreCost;
+    public int stoneCost;
     public int grainCost;
     public int woodCost;    
     public GameObject menuPreviewPrefab;

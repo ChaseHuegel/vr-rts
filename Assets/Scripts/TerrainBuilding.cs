@@ -88,8 +88,8 @@ public class TerrainBuilding : MonoBehaviour
     void Start()
     {
         audioSource = gameObject.GetComponent<AudioSource>();
-        //queueProgressText = buildingSpawnHoverMenu.queueProgressText;
-        //queueProgressImage = buildingSpawnHoverMenu.queueProgressImage;
+        queueProgressText = buildingSpawnHoverMenu.queueProgressText;
+        queueProgressImage = buildingSpawnHoverMenu.queueProgressImage;
 
         //constructionCompletedAudio = GameMaster.GetAudio("constructionCompleted").GetClip();       
 
