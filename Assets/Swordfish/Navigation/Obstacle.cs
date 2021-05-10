@@ -54,10 +54,8 @@ public class Obstacle : Body
         }
     }
 
-    public override void OnDrawGizmos()
+    public void OnDrawGizmos()
     {
-        base.OnDrawGizmos();
-
         if (Application.isEditor != true || Application.isPlaying) return;
 
         Vector3 worldPos = World.ToWorldSpace(transform.position);

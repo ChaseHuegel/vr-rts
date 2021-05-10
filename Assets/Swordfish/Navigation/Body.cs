@@ -26,26 +26,6 @@ public class Body : MonoBehaviour
         Initialize();
     }
 
-    public virtual void OnDrawGizmos()
-    {
-        if (Application.isEditor != true || Application.isPlaying) return;
-
-        Vector3 pos = transform.position;
-        pos.x += boundingOrigin.x;
-        pos.z += boundingOrigin.y;
-
-        Vector3 worldPos = World.ToWorldSpace(pos);
-        Vector3 gridPoint = World.ToTransformSpace( worldPos);
-
-        Gizmos.matrix = Matrix4x4.TRS(gridPoint - World.GetUnitOffset(), Quaternion.identity, Vector3.one * GetBoundsVolume());
-        Gizmos.color = Color.cyan;
-
-        Gizmos.DrawLine( new Vector3(0, 0, 0), new Vector3(0, 0, World.GetUnit()) );
-        Gizmos.DrawLine( new Vector3(0, 0, World.GetUnit()), new Vector3(World.GetUnit(), 0,World.GetUnit()));
-        Gizmos.DrawLine( new Vector3(World.GetUnit(), 0, World.GetUnit()), new Vector3(World.GetUnit(), 0, 0) );
-        Gizmos.DrawLine( new Vector3(World.GetUnit(), 0, 0), new Vector3(0, 0, 0) );
-    }
-
 
 #region getters setters
 
