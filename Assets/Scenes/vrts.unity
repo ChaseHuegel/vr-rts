@@ -4299,6 +4299,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rtsTypeData:
     buildingType: 135
+    dropoffTypes: 0
     goldCost: 20
     stoneCost: 0
     grainCost: 10
@@ -4513,6 +4514,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rtsTypeData:
     buildingType: 5
+    dropoffTypes: 0
     goldCost: 20
     stoneCost: 0
     grainCost: 10
@@ -8445,6 +8447,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -162982284593069479, guid: 9b01cde0f07486643a93faa1b4864738,
+        type: 3}
+      propertyPath: rTSBuildingTypeData.buildingType
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 1129064322338806663, guid: 9b01cde0f07486643a93faa1b4864738,
         type: 3}
       propertyPath: m_Name
@@ -8458,17 +8465,17 @@ PrefabInstance:
     - target: {fileID: 1129064322339030951, guid: 9b01cde0f07486643a93faa1b4864738,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -10.883272
+      value: -10.765
       objectReference: {fileID: 0}
     - target: {fileID: 1129064322339030951, guid: 9b01cde0f07486643a93faa1b4864738,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.000197649
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 1129064322339030951, guid: 9b01cde0f07486643a93faa1b4864738,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -8.893318
+      value: -8.766
       objectReference: {fileID: 0}
     - target: {fileID: 1129064322339030951, guid: 9b01cde0f07486643a93faa1b4864738,
         type: 3}
@@ -8504,21 +8511,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3284518357399790756, guid: 9b01cde0f07486643a93faa1b4864738,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -1.2969757
-      objectReference: {fileID: 0}
-    - target: {fileID: 3284518357399790756, guid: 9b01cde0f07486643a93faa1b4864738,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 1.1853538
-      objectReference: {fileID: 0}
-    - target: {fileID: 3284518357399790756, guid: 9b01cde0f07486643a93faa1b4864738,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -0.0021959343
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9b01cde0f07486643a93faa1b4864738, type: 3}
@@ -9712,6 +9704,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rtsTypeData:
     buildingType: 60
+    dropoffTypes: 0
     goldCost: 20
     stoneCost: 0
     grainCost: 10
@@ -27307,6 +27300,85 @@ RectTransform:
   m_AnchoredPosition: {x: -4.8748646, y: -0.5001879}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1001 &596063281
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1069823527325677058, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: m_Name
+      value: Villager (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1069823527325677058, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 21
+      objectReference: {fileID: 0}
+    - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -12.958
+      objectReference: {fileID: 0}
+    - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -10.526
+      objectReference: {fileID: 0}
+    - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8052413789592210992, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: state
+      value: 4
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 2e26cba339b071948830d584eca2edda, type: 3}
 --- !u!1001 &597462177
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -29991,6 +30063,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rtsTypeData:
     buildingType: 85
+    dropoffTypes: 0
     goldCost: 20
     stoneCost: 0
     grainCost: 10
@@ -31177,6 +31250,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rtsTypeData:
     buildingType: 30
+    dropoffTypes: 0
     goldCost: 20
     stoneCost: 0
     grainCost: 10
@@ -36451,6 +36525,85 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &760899294
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1069823527325677058, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: m_Name
+      value: Villager (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1069823527325677058, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -12.334
+      objectReference: {fileID: 0}
+    - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -10.321
+      objectReference: {fileID: 0}
+    - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8052413789592210992, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: state
+      value: 4
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 2e26cba339b071948830d584eca2edda, type: 3}
 --- !u!1001 &761234984
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -37521,6 +37674,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rtsTypeData:
     buildingType: 50
+    dropoffTypes: 0
     goldCost: 20
     stoneCost: 0
     grainCost: 10
@@ -53596,6 +53750,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rtsTypeData:
     buildingType: 35
+    dropoffTypes: 0
     goldCost: 20
     stoneCost: 0
     grainCost: 10
@@ -55527,7 +55682,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1139450993}
   m_LocalRotation: {x: -0, y: -0.71257937, z: -0, w: 0.70159155}
-  m_LocalPosition: {x: -10.703, y: 0.715, z: -5.515}
+  m_LocalPosition: {x: -9.139, y: -0.224, z: -8.854}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1139575725}
@@ -71094,6 +71249,85 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1444353271}
   m_Mesh: {fileID: 8040969878338079500, guid: 9c40cd488e7d8fc419ed5b2e20b0ef6f, type: 3}
+--- !u!1001 &1445581690
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1069823527325677058, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: m_Name
+      value: Villager (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1069823527325677058, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 19
+      objectReference: {fileID: 0}
+    - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -12.867
+      objectReference: {fileID: 0}
+    - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -10.234
+      objectReference: {fileID: 0}
+    - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8052413789592210992, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: state
+      value: 4
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 2e26cba339b071948830d584eca2edda, type: 3}
 --- !u!1001 &1449797409
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -78861,6 +79095,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rtsTypeData:
     buildingType: 25
+    dropoffTypes: 0
     goldCost: 20
     stoneCost: 0
     grainCost: 10
@@ -83302,6 +83537,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rtsTypeData:
     buildingType: 65
+    dropoffTypes: 0
     goldCost: 20
     stoneCost: 0
     grainCost: 10
@@ -84217,6 +84453,7 @@ MonoBehaviour:
     woodCost: 10
   rtsBuildingDataList:
   - buildingType: 5
+    dropoffTypes: 0
     goldCost: 20
     stoneCost: 0
     grainCost: 10
@@ -84232,6 +84469,7 @@ MonoBehaviour:
     populationSupported: 0
     allowedUnitsToSpawn: 
   - buildingType: 10
+    dropoffTypes: 0
     goldCost: 20
     stoneCost: 0
     grainCost: 10
@@ -84247,6 +84485,7 @@ MonoBehaviour:
     populationSupported: 0
     allowedUnitsToSpawn: 
   - buildingType: 15
+    dropoffTypes: 0
     goldCost: 20
     stoneCost: 0
     grainCost: 10
@@ -84262,6 +84501,7 @@ MonoBehaviour:
     populationSupported: 5
     allowedUnitsToSpawn: 
   - buildingType: 20
+    dropoffTypes: 0
     goldCost: 20
     stoneCost: 0
     grainCost: 10
@@ -84277,6 +84517,7 @@ MonoBehaviour:
     populationSupported: 0
     allowedUnitsToSpawn: 
   - buildingType: 25
+    dropoffTypes: 0
     goldCost: 20
     stoneCost: 0
     grainCost: 10
@@ -84292,6 +84533,7 @@ MonoBehaviour:
     populationSupported: 0
     allowedUnitsToSpawn: 
   - buildingType: 30
+    dropoffTypes: 0
     goldCost: 20
     stoneCost: 0
     grainCost: 10
@@ -84307,6 +84549,7 @@ MonoBehaviour:
     populationSupported: 0
     allowedUnitsToSpawn: 
   - buildingType: 35
+    dropoffTypes: 0
     goldCost: 20
     stoneCost: 0
     grainCost: 10
@@ -84322,6 +84565,7 @@ MonoBehaviour:
     populationSupported: 5
     allowedUnitsToSpawn: 
   - buildingType: 40
+    dropoffTypes: 0
     goldCost: 20
     stoneCost: 0
     grainCost: 10
@@ -84337,6 +84581,7 @@ MonoBehaviour:
     populationSupported: 0
     allowedUnitsToSpawn: 
   - buildingType: 45
+    dropoffTypes: 0
     goldCost: 20
     stoneCost: 0
     grainCost: 10
@@ -84352,6 +84597,7 @@ MonoBehaviour:
     populationSupported: 0
     allowedUnitsToSpawn: 
   - buildingType: 55
+    dropoffTypes: 0
     goldCost: 20
     stoneCost: 0
     grainCost: 10
@@ -84367,6 +84613,7 @@ MonoBehaviour:
     populationSupported: 0
     allowedUnitsToSpawn: 
   - buildingType: 60
+    dropoffTypes: 0
     goldCost: 20
     stoneCost: 0
     grainCost: 10
@@ -84382,6 +84629,7 @@ MonoBehaviour:
     populationSupported: 0
     allowedUnitsToSpawn: 
   - buildingType: 65
+    dropoffTypes: 0
     goldCost: 20
     stoneCost: 0
     grainCost: 10
@@ -84397,6 +84645,7 @@ MonoBehaviour:
     populationSupported: 0
     allowedUnitsToSpawn: 
   - buildingType: 70
+    dropoffTypes: 0
     goldCost: 20
     stoneCost: 0
     grainCost: 10
@@ -84409,6 +84658,7 @@ MonoBehaviour:
     populationSupported: 0
     allowedUnitsToSpawn: 
   - buildingType: 75
+    dropoffTypes: 0
     goldCost: 20
     stoneCost: 0
     grainCost: 10
@@ -84421,6 +84671,7 @@ MonoBehaviour:
     populationSupported: 0
     allowedUnitsToSpawn: 
   - buildingType: 80
+    dropoffTypes: 0
     goldCost: 20
     stoneCost: 0
     grainCost: 10
@@ -84433,6 +84684,7 @@ MonoBehaviour:
     populationSupported: 0
     allowedUnitsToSpawn: 
   - buildingType: 85
+    dropoffTypes: 0
     goldCost: 20
     stoneCost: 0
     grainCost: 10
@@ -84448,6 +84700,7 @@ MonoBehaviour:
     populationSupported: 0
     allowedUnitsToSpawn: 
   - buildingType: 90
+    dropoffTypes: 0
     goldCost: 20
     stoneCost: 0
     grainCost: 10
@@ -84460,6 +84713,7 @@ MonoBehaviour:
     populationSupported: 0
     allowedUnitsToSpawn: 
   - buildingType: 95
+    dropoffTypes: 0
     goldCost: 20
     stoneCost: 0
     grainCost: 10
@@ -84472,6 +84726,7 @@ MonoBehaviour:
     populationSupported: 0
     allowedUnitsToSpawn: 
   - buildingType: 100
+    dropoffTypes: 0
     goldCost: 20
     stoneCost: 0
     grainCost: 10
@@ -84484,6 +84739,7 @@ MonoBehaviour:
     populationSupported: 0
     allowedUnitsToSpawn: 
   - buildingType: 105
+    dropoffTypes: 0
     goldCost: 20
     stoneCost: 0
     grainCost: 10
@@ -84496,6 +84752,7 @@ MonoBehaviour:
     populationSupported: 0
     allowedUnitsToSpawn: 
   - buildingType: 110
+    dropoffTypes: 0
     goldCost: 20
     stoneCost: 0
     grainCost: 10
@@ -84508,6 +84765,7 @@ MonoBehaviour:
     populationSupported: 0
     allowedUnitsToSpawn: 
   - buildingType: 115
+    dropoffTypes: 0
     goldCost: 20
     stoneCost: 0
     grainCost: 10
@@ -84520,6 +84778,7 @@ MonoBehaviour:
     populationSupported: 0
     allowedUnitsToSpawn: 
   - buildingType: 120
+    dropoffTypes: 0
     goldCost: 20
     stoneCost: 0
     grainCost: 10
@@ -84532,6 +84791,7 @@ MonoBehaviour:
     populationSupported: 0
     allowedUnitsToSpawn: 
   - buildingType: 125
+    dropoffTypes: 0
     goldCost: 20
     stoneCost: 0
     grainCost: 10
@@ -84544,6 +84804,7 @@ MonoBehaviour:
     populationSupported: 0
     allowedUnitsToSpawn: 
   - buildingType: 130
+    dropoffTypes: 0
     goldCost: 20
     stoneCost: 0
     grainCost: 10
@@ -84559,6 +84820,7 @@ MonoBehaviour:
     populationSupported: 0
     allowedUnitsToSpawn: 
   - buildingType: 135
+    dropoffTypes: 0
     goldCost: 20
     stoneCost: 0
     grainCost: 10
@@ -84574,6 +84836,7 @@ MonoBehaviour:
     populationSupported: 0
     allowedUnitsToSpawn: 
   - buildingType: 50
+    dropoffTypes: 0
     goldCost: 20
     stoneCost: 0
     grainCost: 10
@@ -86693,6 +86956,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rtsTypeData:
     buildingType: 45
+    dropoffTypes: 0
     goldCost: 20
     stoneCost: 0
     grainCost: 10
@@ -89471,6 +89735,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rtsTypeData:
     buildingType: 10
+    dropoffTypes: 0
     goldCost: 20
     stoneCost: 0
     grainCost: 10
@@ -102109,6 +102374,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rtsTypeData:
     buildingType: 15
+    dropoffTypes: 0
     goldCost: 20
     stoneCost: 0
     grainCost: 10

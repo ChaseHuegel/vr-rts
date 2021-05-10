@@ -230,6 +230,7 @@ GameObject:
   - component: {fileID: 352576432891692531}
   - component: {fileID: 6260394991288053503}
   - component: {fileID: 5398652802107151606}
+  - component: {fileID: 6842366032786188995}
   m_Layer: 10
   m_Name: WizardTower_World
   m_TagString: Untagged
@@ -429,6 +430,27 @@ MonoBehaviour:
   bakeOnStart: 1
   factionID: 0
   dropoffTypes: 0
+  built: 0
+--- !u!114 &6842366032786188995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9170575514898702114}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8753ff4a5012a141b16468281698adb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attributes:
+  - attribute: 0
+    value: 0
+    max: 500
+  invulnerable: 0
+  weaknesses: 
+  resistances: 
+  immunities: 
 --- !u!1001 &4058081762326561095
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -616,15 +638,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fc4ed9ef41f9dc944af60388921a8746, type: 3}
---- !u!4 &4672230311615945721 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 400000, guid: fc4ed9ef41f9dc944af60388921a8746,
-    type: 3}
-  m_PrefabInstance: {fileID: 4672230311615545721}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &4672230311615645657 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100000, guid: fc4ed9ef41f9dc944af60388921a8746,
+    type: 3}
+  m_PrefabInstance: {fileID: 4672230311615545721}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &4672230311615945721 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 400000, guid: fc4ed9ef41f9dc944af60388921a8746,
     type: 3}
   m_PrefabInstance: {fileID: 4672230311615545721}
   m_PrefabAsset: {fileID: 0}

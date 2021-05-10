@@ -170,17 +170,17 @@ public class VillagerActor : Actor
             return;
         }
 
-        TerrainBuilding building = collision.gameObject.GetComponent<TerrainBuilding>();
-        if (building)
-        {
-            if (building.NeedsRepair())
-            {
-                targetDamaged = building;
-                currentState = VillagerActorState.Building;
-                wantedResourceType = ResourceGatheringType.None;
-                ResetPathing();
-            }
-        }
+        // TerrainBuilding building = collision.gameObject.GetComponent<TerrainBuilding>();
+        // if (building)
+        // {
+        //     if (building.NeedsRepair())
+        //     {
+        //         targetDamaged = building;
+        //         currentState = VillagerActorState.Building;
+        //         wantedResourceType = ResourceGatheringType.None;
+        //         ResetPathing();
+        //     }
+        // }
     }
 
     public bool HasValidBuildOrRepairTarget()
@@ -271,15 +271,15 @@ public class VillagerActor : Actor
                     {
                         LookAt(body.gridPosition.x, body.gridPosition.y);
 
-                        if (targetDamaged.NeedsRepair())
-                        {
-                            int amountToRepair = (int)(buildAndRepairCapacityPerSecond / (60 / Constants.ACTOR_TICK_RATE));
-                            targetDamaged.RepairDamage(amountToRepair);
-                        }
-                        else
-                        {
-                            FindDamaged();
-                        }
+                        // if (targetDamaged.NeedsRepair())
+                        // {
+                        //     int amountToRepair = (int)(buildAndRepairCapacityPerSecond / (60 / Constants.ACTOR_TICK_RATE));
+                        //     targetDamaged.RepairDamage(amountToRepair);
+                        // }
+                        // else
+                        // {
+                        //     FindDamaged();
+                        // }
                     }
                     else
                     {

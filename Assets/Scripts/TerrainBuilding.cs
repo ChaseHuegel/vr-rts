@@ -3,22 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using Valve.VR.InteractionSystem;
 using UnityEditor;
+using Swordfish;
 
 [RequireComponent(typeof(AudioSource))]
 public class TerrainBuilding : MonoBehaviour
 {
-    [Header( "Multiplayer")]
-    public int PlayerColor = 0;
-
-    [Header( "Construction Stages" )]
-    public GameObject buildingStage0;
-    public GameObject buildingStage1;
-    public GameObject buildingStageFinal;
-
     [Header( "Building Stats" )]
-    public int maxHealth = 500;
     public int maxUnitQueueSize = 10;
-    public int currentHealth = 1;
 
     [Header( "Damage Effects" )]
     public GameObject buildingDamagedEffect;
@@ -34,8 +25,6 @@ public class TerrainBuilding : MonoBehaviour
     public AudioClip buildingDestroyedAudio; 
 
     [Header( "Unit Stuff" )]
-    public int populationSupported = 1;    
-    public ResourceGatheringType dropoffType = ResourceGatheringType.None;
     public GameObject unitSpawnPoint;
     public GameObject unitRallyWaypoint;
 
@@ -43,15 +32,10 @@ public class TerrainBuilding : MonoBehaviour
     // go to so they don't fight over a single point.
     public float unitRallyWaypointRadius;
     public List<RTSUnitType> allowedUnitCreationList;
-    
     private float timeElapsed = 0.0f;
-    private bool constructionCompleted = false;
-
     private Queue<RTSUnitTypeData> unitSpawnQueue = new Queue<RTSUnitTypeData>();
     public TMPro.TMP_Text queueProgressText;
     public UnityEngine.UI.Image queueProgressImage;
-
-    public HealthBar buildingHealthBar;
 
     public UnityEngine.UI.Image[] QueueImageObjects;   
 
@@ -62,9 +46,12 @@ public class TerrainBuilding : MonoBehaviour
     GameObject currentPrefabUnitToSpawn;
     public float GetTimeElapsed { get { return timeElapsed; } }
 
+    private Structure structure;
+    private Damageable damageable;
+
     public void QueueUnit(RTSUnitType unitTypeToQueue)
     { 
-        if (!constructionCompleted || currentHealth < maxHealth)
+        if (!structure.IsBuilt() || damageable.GetAttributePercent(Attributes.HEALTH) < 1.0f)
             return;
 
         if (unitSpawnQueue.Count >= maxUnitQueueSize)
@@ -79,12 +66,13 @@ public class TerrainBuilding : MonoBehaviour
         RTSUnitTypeData unitData = GameMaster.Instance.FindUnitData(unitTypeToQueue);
         PlayerManager.instance.RemoveUnitQueueCostFromStockpile(unitData);                    
         unitSpawnQueue.Enqueue(unitData);
-        //Debug.Log("Queued " + unitTypeToQueue.ToString() + " (" + unitSpawnQueue.Count + ")");
     }
 
     // Start is called before the first frame update
     void Start()
-    {
+    {   
+        damageable = gameObject.GetComponent<Damageable>();
+        structure = gameObject.GetComponent<Structure>();
         audioSource = gameObject.GetComponent<AudioSource>();
         buildingSpawnHoverMenu = gameObject.GetComponentInChildren<BuildingSpawnHoverMenu>( true );
         queueProgressText = buildingSpawnHoverMenu.queueProgressText;
@@ -92,42 +80,6 @@ public class TerrainBuilding : MonoBehaviour
         buildingSpawnHoverMenu.enabled = false;
 
         //constructionCompletedAudio = GameMaster.GetAudio("constructionCompleted").GetClip();       
-
-        buildingHealthBar = GetComponentInChildren<HealthBar>( true );
-        if ( currentHealth < maxHealth )
-            buildingHealthBar.enabled = true;
-
-        buildingStage0.SetActive(true);
-        buildingStage1.SetActive(false);
-        buildingStageFinal.SetActive(false);
-        
-        RepairDamage(0);
-        RefreshHealthBar();          
-
-        if (currentHealth < maxHealth)
-        {
-            ResourceManager.GetBuildAndRepairObjects().Add(this);
-        }    
-        
-        if (dropoffType.HasFlag(ResourceGatheringType.Wood))
-        {
-            ResourceManager.GetWoodDropoffObjects().Add(this);
-        }
-
-        if (dropoffType.HasFlag(ResourceGatheringType.Gold))
-        {
-            ResourceManager.GetGoldDroppoffObjects().Add(this);
-        }
-
-        if (dropoffType.HasFlag(ResourceGatheringType.Stone))
-        {
-            ResourceManager.GetGoldDroppoffObjects().Add(this);
-        }
-
-        if (dropoffType.HasFlag(ResourceGatheringType.Grain))
-        {
-            ResourceManager.GetGrainDropoffObjects().Add(this);
-        }
     }    
 
     protected void ToggleHoverMenuOnKnock()
@@ -173,63 +125,9 @@ public class TerrainBuilding : MonoBehaviour
         //Debug.Log("Hover Begin");
     }
 
-    void RefreshHealthBar()
-    {
-        buildingHealthBar.SetFilledAmount((float)currentHealth / (float)maxHealth);     
-    }
-
-    public void RepairDamage(int amount)
-    {
-        currentHealth += amount;
-        RefreshHealthBar();
-
-        if (constructionCompleted) return;
-
-        if (currentHealth >= maxHealth)
-        {
-            buildingStage0.SetActive(false);
-            buildingStage1.SetActive(false);
-            buildingStageFinal.SetActive(true);
-            constructionCompleted = true;
-            audioSource.PlayOneShot(constructionCompletedAudio);
-            PlayerManager.instance.IncreasePopulationLimit(populationSupported);
-        }
-        else if (currentHealth >= (maxHealth * 0.45f))
-        {
-            buildingStage0.SetActive(false);
-            buildingStage1.SetActive(true);
-        }    
-    }
-
-    public bool NeedsBuilding()
-    {
-        if ( ! constructionCompleted )
-            return true;
-        
-        return false;
-    }
-
-    public bool NeedsRepair()
-    {
-        if (currentHealth < maxHealth)
-            return true;
-        
-        return false;
-    }
-
     // Update is called once per frame
     void Update()
     {    
-        if (currentHealth < maxHealth)
-        {
-            //buildingHealthBar.enabled = true;
-        }
-        else
-        {
-            buildingHealthBar.enabled = false;
-            ResourceManager.GetBuildAndRepairObjects().Remove(this);
-        }
-
         UpdateUnitSpawnQueue(); 
     }
 
@@ -238,25 +136,29 @@ public class TerrainBuilding : MonoBehaviour
         if (unitSpawnQueue.Count > 0)
         {
             timeElapsed += Time.deltaTime;
-            float progress = (timeElapsed / unitSpawnQueue.Peek().queueTime) * 100;
-            progress = UnityEngine.Mathf.Round(progress);
-            queueProgressText.text = unitSpawnQueue.Count.ToString();
-            queueProgressImage.fillAmount = progress / 100;
+            queueProgressImage.fillAmount = (timeElapsed / unitSpawnQueue.Peek().queueTime);
+            float progressPercent = UnityEngine.Mathf.Round(queueProgressImage.fillAmount * 100);
+            queueProgressText.text = progressPercent.ToString() + "%";
 
-            //Debug.Log(timeElapsed.ToString() + "   " + unitSpawnQueue.Peek().queueTime.ToString());
             if (timeElapsed >= unitSpawnQueue.Peek().queueTime)
             {
                 SpawnUnit();
                 timeElapsed = 0.0f;
                 unitSpawnQueue.Dequeue();                    
                 queueProgressImage.fillAmount = 0;
-
-                //Debug.Log("Removed unit from queue " + unitSpawnQueue.Count + " left in queue.");
+                queueProgressImage.enabled = false;
+                queueProgressText.enabled = false;
+            }
+            else
+            {
+                queueProgressImage.enabled = true;
+                queueProgressText.enabled = true;
             }
 
             foreach(UnityEngine.UI.Image image in QueueImageObjects)
             {
-                image.overrideSprite = null;// emptyQueueSlotImage;
+                // Clearing override sprite reenables the original
+                image.overrideSprite = null;
             }
 
             int i = 0;
@@ -287,8 +189,9 @@ public class TerrainBuilding : MonoBehaviour
         {
             GameObject unit = GameObject.Instantiate<GameObject>(unitSpawnQueue.Peek().prefab);
             unit.transform.position = unitSpawnPoint.transform.position;
-
-            //Villager actor = unit.GetComponent<Villager>();
+            
+            Villager villager = unit.GetComponent<Villager>();
+            villager.Initialize();
 
             //actor.SetUnitType(unitSpawnQueue.Peek().unitType);
             

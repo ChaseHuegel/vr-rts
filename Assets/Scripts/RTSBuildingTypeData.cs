@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Swordfish.Audio;
 
 [System.Serializable]
 public struct RTSBuildingTypeData
 {
     public RTSBuildingType buildingType;
+    public ResourceGatheringType dropoffTypes;
     public int goldCost;
     public int stoneCost;
     public int grainCost;
@@ -16,5 +18,6 @@ public struct RTSBuildingTypeData
     public GameObject worldPrefab;
     public int populationSupported;
     public List<RTSUnitType> allowedUnitsToSpawn;
+    public SoundElement constructionCompletedAudio;
 
 }

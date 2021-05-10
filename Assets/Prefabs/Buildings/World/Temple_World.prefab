@@ -216,6 +216,7 @@ GameObject:
   - component: {fileID: 97252848771275188}
   - component: {fileID: 6809728518417657479}
   - component: {fileID: -4113466318399050361}
+  - component: {fileID: 5605945280560957471}
   m_Layer: 10
   m_Name: Temple_World
   m_TagString: Untagged
@@ -415,6 +416,27 @@ MonoBehaviour:
   bakeOnStart: 1
   factionID: 0
   dropoffTypes: 0
+  built: 0
+--- !u!114 &5605945280560957471
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8186733022139517711}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8753ff4a5012a141b16468281698adb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attributes:
+  - attribute: 0
+    value: 0
+    max: 500
+  invulnerable: 0
+  weaknesses: 
+  resistances: 
+  immunities: 
 --- !u!1001 &85816006621366270
 PrefabInstance:
   m_ObjectHideFlags: 0

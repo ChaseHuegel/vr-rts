@@ -84,6 +84,7 @@ GameObject:
   - component: {fileID: 6600192615302915017}
   - component: {fileID: 7582309122584721962}
   - component: {fileID: -4022471839829183491}
+  - component: {fileID: 221908359598413286}
   m_Layer: 10
   m_Name: Market_World
   m_TagString: Untagged
@@ -283,6 +284,27 @@ MonoBehaviour:
   bakeOnStart: 1
   factionID: 0
   dropoffTypes: 0
+  built: 0
+--- !u!114 &221908359598413286
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7463673549537866113}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8753ff4a5012a141b16468281698adb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attributes:
+  - attribute: 0
+    value: 0
+    max: 500
+  invulnerable: 0
+  weaknesses: 
+  resistances: 
+  immunities: 
 --- !u!1 &7492779917545014775
 GameObject:
   m_ObjectHideFlags: 0

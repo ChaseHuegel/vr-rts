@@ -75,12 +75,12 @@ public class Villager : Unit
         goals.Add<GoalGatherResource>().type = ResourceGatheringType.Stone;
         goals.Add<GoalGatherResource>().type = ResourceGatheringType.Wood;
         transportGoal = goals.Add<GoalTransportResource>();
-
-        audioSource = GetComponent<AudioSource>();
+       
+        audioSource = gameObject.GetComponent<AudioSource>();
         if (!audioSource)
             Debug.Log("No audiosource component found.");
 
-        animator = GetComponent<Animator>();
+        animator = gameObject.GetComponent<Animator>();
         if (!animator)
             Debug.Log("No animator component found.");
     }
