@@ -43,7 +43,6 @@ public class Damageable : Attributable
     [SerializeField] protected DamageType[] weaknesses = new DamageType[0];
     [SerializeField] protected DamageType[] resistances = new DamageType[0];
     [SerializeField] protected DamageType[] immunities = new DamageType[0];
-    [SerializeField] protected Vector3 center = Vector3.zero;
 
     public virtual void Awake()
     {
@@ -55,7 +54,7 @@ public class Damageable : Attributable
     public bool isDead() { return GetAttributeValue(Attributes.HEALTH) == 0; }
     public bool isAlive() { return GetAttributeValue(Attributes.HEALTH) > 0; }
 
-    public void Damage(float damage, Vector3 hitPoint, AttributeChangeCause cause = AttributeChangeCause.FORCED, Damageable attacker = null, DamageType type = DamageType.NONE)
+    public void Damage(float damage, AttributeChangeCause cause = AttributeChangeCause.FORCED, Damageable attacker = null, DamageType type = DamageType.NONE)
     {
         //  Invoke a damage event
         DamageEvent e = new DamageEvent{ cause = cause, victim = this, attacker = attacker, type = type, damage = damage };
@@ -138,15 +137,6 @@ public class Damageable : Attributable
         // UIMaster.SendFloatingIndicator(this.transform.position + this.transform.rotation * center, e.amount.ToString("#.0"), Color.green);
     }
     #endregion
-
-    public void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.blue;
-        Gizmos.DrawRay(this.transform.position + this.transform.rotation * center, this.transform.forward * 2);
-
-        Gizmos.color = Color.red;
-        Gizmos.DrawRay(this.transform.position + this.transform.rotation * center, this.transform.right * 2);
-    }
 }
 
 }

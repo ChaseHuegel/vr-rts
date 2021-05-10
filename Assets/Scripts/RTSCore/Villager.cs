@@ -14,14 +14,15 @@ public enum UnitState
     BUILDANDREPAIR,
 }
 
+[RequireComponent(typeof(Damageable))]
 public class Villager : Unit
 {
     [Header("AI")]
     public UnitState state;
 
     [Header("Villager")]
-    public List<ResourceGatheringType> resourcePriorities;
-    public ResourceGatheringType currentResource;    
+    public ResourceGatheringType currentResource;
+    public GoalTransportResource transportGoal;
 
     // Should we have different cargo capacities based on resource
     // type? We use cargo as a generic container for resources and
@@ -30,8 +31,8 @@ public class Villager : Unit
     // 1 cargo unit == 3 wood units
     // 1 cargo unit == 2 stone units
     // 1 cargo unit == 1 gold unit
-    // Could also use this system to get around the limits of our 
-    // currently used work rate, currently you can't go below a 
+    // Could also use this system to get around the limits of our
+    // currently used work rate, currently you can't go below a
     // work rate of 3 because the math puts the amount under 1 and
     // we're using INT's to store amount/capacity.
     public int maxCargo = 20;
@@ -68,17 +69,13 @@ public class Villager : Unit
         HookIntoEvents();
 
         //  Add goals in order of priority
-        goals.Add<GoalBuildRepair>();  
+        goals.Add<GoalBuildRepair>();
         goals.Add<GoalGatherResource>().type = ResourceGatheringType.Grain;
         goals.Add<GoalGatherResource>().type = ResourceGatheringType.Gold;
         goals.Add<GoalGatherResource>().type = ResourceGatheringType.Stone;
         goals.Add<GoalGatherResource>().type = ResourceGatheringType.Wood;
-        goals.Add<GoalTransportResource>();
+        transportGoal = goals.Add<GoalTransportResource>();
 
-        //  Assign priorities
-        foreach (GoalGatherResource goal in goals.GetAll<GoalGatherResource>())
-            resourcePriorities.Add(goal.type);
-        
         audioSource = GetComponent<AudioSource>();
         if (!audioSource)
             Debug.Log("No audiosource component found.");
@@ -98,15 +95,13 @@ public class Villager : Unit
         base.Tick();
 
         //  Transport type always matches what our current resource is
-        // TODO: Should move this to a function that sets the state or
-        // current resource desired to avoid calling it every frame.
-        goals.Get<GoalTransportResource>().type = currentResource;
+        transportGoal.type = currentResource;
 
         //  Default to roaming if we cant find a goal
         // TODO: Probably should default to idle for performance reasons
-        if (!GotoNearestGoalWithPriority() || !GotoNearestGoal())
+        if (!GotoNearestGoalWithPriority())
             state = UnitState.ROAMING;
-        
+
         switch (state)
         {
             case UnitState.ROAMING:
@@ -114,8 +109,7 @@ public class Villager : Unit
                     UnityEngine.Random.Range(gridPosition.x - 4, gridPosition.x + 4),
                     UnityEngine.Random.Range(gridPosition.x - 4, gridPosition.x + 4)
                 );
-                animator.SetInteger("VillagerActorState", (int)ActorAnimationState.LUMBERJACKING);
-                break;
+            break;
 
             case UnitState.GATHERING:
                 if (IsCargoFull())  state = UnitState.TRANSPORTING;
@@ -135,33 +129,22 @@ public class Villager : Unit
                 if (IsMoving())
                     animator.SetInteger("VillagerActorState", (int)ActorAnimationState.MOVING);
             break;
-            
+
             case UnitState.IDLE:
                 animator.SetInteger("VillagerActorState", (int)ActorAnimationState.IDLE);
             break;
         }
     }
 
-    public void CycleGatheringGoals()
-    {
-        //  Push the first priority to the end of the list
-        resourcePriorities.Add(resourcePriorities[0]);
-        resourcePriorities.RemoveAt(0);
-
-        //  Reassign gathering goals
-        int i = 0;
-        foreach (GoalGatherResource goal in goals.GetAll<GoalGatherResource>())
-            goal.type = resourcePriorities[i++];
-    }
-
     public void OnRepathFailed(object sender, Actor.RepathFailedEvent e)
     {
         if (e.actor != this) return;
 
-        //  If unable to find a path while gathering, reorder priorities
-        //  It is likely we can't reach our current priority
+        //  If unable to find a path, reorder priorities
+        //  It is likely we can't reach our current goal
+        //  This gives a simple decision making behavior
         if (state == UnitState.GATHERING)
-            CycleGatheringGoals();
+            goals.Cycle();
     }
 
     public void OnGoalFound(object sender, PathfindingGoal.GoalFoundEvent e)
@@ -191,6 +174,7 @@ public class Villager : Unit
         else if (e.goal is GoalBuildRepair)
         {
             villager.state = UnitState.BUILDANDREPAIR;
+            return;
         }
 
         //  default cancel the goal so that another can take priority
@@ -202,8 +186,8 @@ public class Villager : Unit
     {
         if (e.actor != this) return;
 
-        Resource resource = e.cell.GetOccupant<Resource>();
         Villager villager = (Villager)e.actor;
+        Resource resource = e.cell.GetOccupant<Resource>();
         Structure structure = e.cell.GetOccupant<Structure>();
 
         if (e.goal is GoalGatherResource && !villager.IsCargoFull())
@@ -211,14 +195,14 @@ public class Villager : Unit
             villager.TryGather(resource);
             return;
         }
-        else if (e.goal is GoalTransportResource && villager.HasCargo())
+        else if (e.goal is GoalTransportResource && villager.HasCargo() && structure.IsBuilt())
         {
             PlayerManager.instance?.AddResourceToStockpile(villager.currentResource, villager.currentCargo);
             villager.currentCargo = 0;
             return;
         }
         else if (e.goal is GoalBuildRepair)
-        {            
+        {
             villager.TryBuildRepair(structure);
             return;
         }
@@ -274,23 +258,23 @@ public class Villager : Unit
 
         // Use the repair rate unless the building hasn't been constructed.
         int rate = repairRate;
-        TerrainBuilding building = structure.GetComponent<TerrainBuilding>();
-        if (building.NeedsBuilding())
+
+        if (!structure.IsBuilt())
         {
             rate = buildRate;
-        }        
+        }
         // Repairing costs resources
         else
         {
             // TODO: Resource cost for repairing is hardcoded, should be
             // relative to building cost to build?
             PlayerManager.instance?.RemoveResources(1, 1, 1, 1);
-        }    
+        }
 
-        //  Convert per second to per tick and clamp to how much cargo space we have
+        //  Convert per second to per tick
         int amount = (int)(rate / (60/Constants.ACTOR_TICK_RATE));
-        structure.GetComponent<TerrainBuilding>().RepairDamage(amount);
-        
+        structure.TryRepair(amount, this);
+
         // Use lumberjack animation
         animator.SetInteger("VillagerActorState", (int)ActorAnimationState.LUMBERJACKING);
     }

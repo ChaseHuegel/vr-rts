@@ -12,6 +12,13 @@ public class GoalHolder
         get { return goals.ToArray(); }
     }
 
+    public void Cycle()
+    {
+        //  Push the first priority to the end of the list
+        goals.Add(goals[0]);
+        goals.RemoveAt(0);
+    }
+
     public T Add<T>() where T : PathfindingGoal
     {
         T goal = (T)System.Activator.CreateInstance(typeof(T));

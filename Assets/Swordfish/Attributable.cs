@@ -7,7 +7,6 @@ namespace Swordfish
 
 public class Attributable : MonoBehaviour
 {
-    [Header("Attributable")]
     [SerializeField] private List<Attribute> attributes = new List<Attribute>();
 
     public float GetAttributeValue(Attributes attribute)
@@ -25,6 +24,16 @@ public class Attributable : MonoBehaviour
         for (int i = 0; i < attributes.Count; i++)
         {
             if (attributes[i].GetAttribute() == attribute) return attributes[i].GetMax();
+        }
+
+        return 0.0f;
+    }
+
+    public float GetAttributePercent(Attributes attribute)
+    {
+        for (int i = 0; i < attributes.Count; i++)
+        {
+            if (attributes[i].GetAttribute() == attribute) return attributes[i].GetValue() / attributes[i].GetMax();
         }
 
         return 0.0f;

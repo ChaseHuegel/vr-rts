@@ -11,6 +11,9 @@ public class Actor : Body
     protected GoalHolder goals = new GoalHolder();
     public virtual PathfindingGoal[] GetGoals() { return goals.entries; }
 
+    private Damageable damageable;
+    public Damageable AttributeHandler { get { return damageable; } }
+
     [Header("Actor")]
     public Cell currentGoalTarget = null;
     public PathfindingGoal currentGoal = null;
@@ -85,7 +88,7 @@ public class Actor : Body
 
     public void TryGoalAtHelper(int relativeX, int relativeY, PathfindingGoal goal, ref Cell current, ref Cell result, ref int currentDistance, ref int nearestDistance)
     {
-        current = World.at(gridPosition.x + relativeX, gridPosition.y + relativeY);
+        current = World.Grid.atUnsafe(gridPosition.x + relativeX, gridPosition.y + relativeY);
         currentDistance = DistanceTo(current);
 
         if (PathfindingGoal.TryGoal(this, current, goal) && currentDistance < nearestDistance)
@@ -153,7 +156,8 @@ public class Actor : Body
         //  Do we have a valid goal now?
         if (HasValidTarget() && HasValidGoal())
         {
-            GotoForced(currentGoalTarget.x, currentGoalTarget.y);
+            Coord2D coord = currentGoalTarget.occupants[0].GetNearbyCoord();
+            GotoForced(coord.x, coord.y);
 
             return true;
         }
@@ -278,14 +282,25 @@ public class Actor : Body
                 // Wait some time to see if path clears
                 if (pathWaitTries > Constants.PATH_WAIT_TRIES)
                 {
-                    //  Path hasn't cleared, try repathing to a random point near the current path node
+                    //  Path hasn't cleared, try repathing to a point near the current node or occupant of node
                     if (pathRepathTries < Constants.PATH_REPATH_TRIES)
                     {
-                        GotoForced(
-                            currentPath[currentPath.Count - 1].x + UnityEngine.Random.Range(-1, 1),
-                            currentPath[currentPath.Count - 1].y + UnityEngine.Random.Range(-1, 1),
-                            false    //  false, dont ignore actors. Stuck and may need to path around them
-                            );
+                        int targetX, targetY;
+
+                        if (HasValidGoal() && HasValidTarget())
+                        {
+                            Coord2D coord = currentGoalTarget.occupants[0].GetNearbyCoord();
+                            targetX = coord.x;
+                            targetY = coord.y;
+                        }
+                        else
+                        {
+                            targetX = currentPath[currentPath.Count - 1].x + UnityEngine.Random.Range(-1, 1);
+                            targetY = currentPath[currentPath.Count - 1].y + UnityEngine.Random.Range(-1, 1);
+                        }
+
+                        //  false, dont ignore actors. Stuck and may need to path around them
+                        GotoForced(targetX, targetY, false);
 
                         //  Trigger repath event
                         RepathEvent e = new RepathEvent{ actor = this };

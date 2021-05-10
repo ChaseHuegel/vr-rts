@@ -7,7 +7,7 @@ public class GoalTransportResource : PathfindingGoal
 
     public override bool CheckGoal(Cell cell)
     {
-        Structure structure = cell.GetOccupant<Structure>();
+        Structure structure = cell?.GetFirstOccupant<Structure>();
 
         if (structure != null && structure.dropoffTypes.HasFlag(type))
             return true;

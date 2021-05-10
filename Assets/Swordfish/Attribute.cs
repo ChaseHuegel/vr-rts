@@ -22,7 +22,7 @@ public static class AttributesExtensions
     {
         switch (attribute)
         {
-            case Attributes.HEALTH: return new Attribute(attribute, 1, 1);
+            case Attributes.HEALTH: return new Attribute(attribute, 1, 100);
 
             default: return new Attribute(attribute, 1.0f, 0.0f);
         }

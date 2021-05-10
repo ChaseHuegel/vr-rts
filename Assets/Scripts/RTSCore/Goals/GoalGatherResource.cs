@@ -7,7 +7,7 @@ public class GoalGatherResource : PathfindingGoal
 
     public override bool CheckGoal(Cell cell)
     {
-        Resource resource = cell?.GetOccupant<Resource>();
+        Resource resource = cell?.GetFirstOccupant<Resource>();
 
         if (resource != null && resource.type.HasFlag(type))
             return true;

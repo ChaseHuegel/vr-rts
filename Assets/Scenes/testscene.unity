@@ -1649,6 +1649,7 @@ GameObject:
   - component: {fileID: 4010404002771728372}
   - component: {fileID: 5514326501203509938}
   - component: {fileID: 4010404002771823573}
+  - component: {fileID: 4010404002771823574}
   m_Layer: 10
   m_Name: LumberMill
   m_TagString: Untagged
@@ -1676,6 +1677,27 @@ MonoBehaviour:
   bakeOnStart: 1
   factionID: 0
   dropoffTypes: -1
+--- !u!114 &4010404002771823574
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4010404002771823572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8753ff4a5012a141b16468281698adb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attributes:
+  - attribute: 0
+    value: 0
+    max: 100
+  invulnerable: 0
+  weaknesses: 
+  resistances: 
+  immunities: 
+  center: {x: 0, y: 0, z: 0}
 --- !u!23 &5237849809696026803
 MeshRenderer:
   m_ObjectHideFlags: 0

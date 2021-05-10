@@ -8,6 +8,6 @@ namespace Swordfish
         FORCED,
         NATURAL,
         ATTACKED,
-        CONSUMABLE
+        HEALED
     }
 }

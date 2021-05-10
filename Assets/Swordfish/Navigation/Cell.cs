@@ -31,9 +31,18 @@ public class Cell : IHeapItem<Cell>
     //  Occupants
     public List<Body> occupants = new List<Body>();
     public bool occupied { get { return occupants.Count > 0; } }
-    public T GetOccupant<T>()
+
+    public T GetFirstOccupant<T>() where T : Body
     {
-        return (T)System.Convert.ChangeType(occupants.Find(x => x is T), typeof(T));
+        if (occupied && occupants[0] is T)
+            return (T)occupants[0];
+
+        return null;
+    }
+
+    public T GetOccupant<T>() where T : Body
+    {
+        return (T)occupants.Find(x => x is T);
     }
 
     public int CompareTo(Cell cell)

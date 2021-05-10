@@ -5,9 +5,9 @@ public class GoalBuildRepair: PathfindingGoal
 {
     public override bool CheckGoal(Cell cell)
     {
-        Structure structure = cell?.GetOccupant<Structure>();
+        Structure structure = cell?.GetFirstOccupant<Structure>();
 
-        if (structure != null && structure.GetComponent<TerrainBuilding>().NeedsRepair())
+        if (structure != null && structure.NeedsRepairs())
             return true;
 
         return false;
