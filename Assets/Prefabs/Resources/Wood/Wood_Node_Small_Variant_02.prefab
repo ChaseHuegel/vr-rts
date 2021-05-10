@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2911341787885032446}
   - component: {fileID: 5951819176672281223}
-  - component: {fileID: 3311987675593452947}
   - component: {fileID: -6608483872969990770}
   m_Layer: 11
   m_Name: Wood_Node_Small_Variant_02
@@ -48,22 +47,6 @@ CapsuleCollider:
   m_Height: 0.7382604
   m_Direction: 1
   m_Center: {x: 0, y: 0.3695764, z: 0}
---- !u!114 &3311987675593452947
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7522418863682123273}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 73818678be48477418bdf0c87156e9c4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  type: 2
-  resourceName: Wood
-  maxResourceAmount: 1000
-  destroyWhenResourceDepleted: 1
 --- !u!114 &-6608483872969990770
 MonoBehaviour:
   m_ObjectHideFlags: 0

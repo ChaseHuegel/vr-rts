@@ -130,11 +130,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 70645328441259782, guid: 2e26cba339b071948830d584eca2edda,
-        type: 3}
-      propertyPath: currentState
-      value: 5
-      objectReference: {fileID: 0}
     - target: {fileID: 1069823527325677058, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
       propertyPath: m_Name
@@ -153,7 +148,7 @@ PrefabInstance:
     - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2
+      value: 1.081
       objectReference: {fileID: 0}
     - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
@@ -195,51 +190,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 9016037743184735990, guid: 2e26cba339b071948830d584eca2edda,
-        type: 3}
-      propertyPath: m_IsKinematic
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9016037743184735990, guid: 2e26cba339b071948830d584eca2edda,
-        type: 3}
-      propertyPath: m_CollisionDetection
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 70645328441259782, guid: 2e26cba339b071948830d584eca2edda, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 2e26cba339b071948830d584eca2edda, type: 3}
---- !u!1 &57886486 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1069823527325677058, guid: 2e26cba339b071948830d584eca2edda,
-    type: 3}
-  m_PrefabInstance: {fileID: 57886485}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &57886487
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 57886486}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a4098bebca8786e40bb27495aa77b779, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  boundingDimensions: {x: 1, y: 1}
-  boundingOrigin: {x: 0, y: 0}
-  gridPosition:
-    x: 0
-    y: 0
-  goalSearchDistance: 20
-  movementSpeed: 0.5
-  factionID: 0
-  state: 0
-  resourcePriorities: 
-  currentResource: 0
-  workRate: 10
-  maxCargo: 100
-  currentCargo: 0
 --- !u!1001 &283662742
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -247,11 +200,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 70645328441259782, guid: 2e26cba339b071948830d584eca2edda,
-        type: 3}
-      propertyPath: currentState
-      value: 5
-      objectReference: {fileID: 0}
     - target: {fileID: 1069823527325677058, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
       propertyPath: m_Name
@@ -270,7 +218,7 @@ PrefabInstance:
     - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2
+      value: 1.081
       objectReference: {fileID: 0}
     - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
@@ -312,51 +260,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 9016037743184735990, guid: 2e26cba339b071948830d584eca2edda,
-        type: 3}
-      propertyPath: m_IsKinematic
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9016037743184735990, guid: 2e26cba339b071948830d584eca2edda,
-        type: 3}
-      propertyPath: m_CollisionDetection
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 70645328441259782, guid: 2e26cba339b071948830d584eca2edda, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 2e26cba339b071948830d584eca2edda, type: 3}
---- !u!1 &283662743 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1069823527325677058, guid: 2e26cba339b071948830d584eca2edda,
-    type: 3}
-  m_PrefabInstance: {fileID: 283662742}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &283662744
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 283662743}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a4098bebca8786e40bb27495aa77b779, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  boundingDimensions: {x: 1, y: 1}
-  boundingOrigin: {x: 0, y: 0}
-  gridPosition:
-    x: 0
-    y: 0
-  goalSearchDistance: 20
-  movementSpeed: 0.5
-  factionID: 0
-  state: 0
-  resourcePriorities: 
-  currentResource: 0
-  workRate: 10
-  maxCargo: 100
-  currentCargo: 0
 --- !u!1 &508883316
 GameObject:
   m_ObjectHideFlags: 0
@@ -574,11 +480,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 70645328441259782, guid: 2e26cba339b071948830d584eca2edda,
-        type: 3}
-      propertyPath: currentState
-      value: 5
-      objectReference: {fileID: 0}
     - target: {fileID: 1069823527325677058, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
       propertyPath: m_Name
@@ -597,7 +498,7 @@ PrefabInstance:
     - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2
+      value: 1.081
       objectReference: {fileID: 0}
     - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
@@ -639,51 +540,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 9016037743184735990, guid: 2e26cba339b071948830d584eca2edda,
-        type: 3}
-      propertyPath: m_IsKinematic
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9016037743184735990, guid: 2e26cba339b071948830d584eca2edda,
-        type: 3}
-      propertyPath: m_CollisionDetection
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 70645328441259782, guid: 2e26cba339b071948830d584eca2edda, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 2e26cba339b071948830d584eca2edda, type: 3}
---- !u!1 &635384236 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1069823527325677058, guid: 2e26cba339b071948830d584eca2edda,
-    type: 3}
-  m_PrefabInstance: {fileID: 635384235}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &635384237
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 635384236}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a4098bebca8786e40bb27495aa77b779, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  boundingDimensions: {x: 1, y: 1}
-  boundingOrigin: {x: 0, y: 0}
-  gridPosition:
-    x: 0
-    y: 0
-  goalSearchDistance: 20
-  movementSpeed: 0.5
-  factionID: 0
-  state: 0
-  resourcePriorities: 
-  currentResource: 0
-  workRate: 10
-  maxCargo: 100
-  currentCargo: 0
 --- !u!1001 &751489094
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -691,11 +550,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 70645328441259782, guid: 2e26cba339b071948830d584eca2edda,
-        type: 3}
-      propertyPath: currentState
-      value: 5
-      objectReference: {fileID: 0}
     - target: {fileID: 1069823527325677058, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
       propertyPath: m_Name
@@ -714,7 +568,7 @@ PrefabInstance:
     - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2
+      value: 1.081
       objectReference: {fileID: 0}
     - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
@@ -756,51 +610,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 9016037743184735990, guid: 2e26cba339b071948830d584eca2edda,
-        type: 3}
-      propertyPath: m_IsKinematic
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9016037743184735990, guid: 2e26cba339b071948830d584eca2edda,
-        type: 3}
-      propertyPath: m_CollisionDetection
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 70645328441259782, guid: 2e26cba339b071948830d584eca2edda, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 2e26cba339b071948830d584eca2edda, type: 3}
---- !u!1 &751489095 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1069823527325677058, guid: 2e26cba339b071948830d584eca2edda,
-    type: 3}
-  m_PrefabInstance: {fileID: 751489094}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &751489096
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 751489095}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a4098bebca8786e40bb27495aa77b779, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  boundingDimensions: {x: 1, y: 1}
-  boundingOrigin: {x: 0, y: 0}
-  gridPosition:
-    x: 0
-    y: 0
-  goalSearchDistance: 20
-  movementSpeed: 0.5
-  factionID: 0
-  state: 0
-  resourcePriorities: 
-  currentResource: 0
-  workRate: 10
-  maxCargo: 100
-  currentCargo: 0
 --- !u!1001 &878167940
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -808,11 +620,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 70645328441259782, guid: 2e26cba339b071948830d584eca2edda,
-        type: 3}
-      propertyPath: currentState
-      value: 5
-      objectReference: {fileID: 0}
     - target: {fileID: 1069823527325677058, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
       propertyPath: m_Name
@@ -831,7 +638,7 @@ PrefabInstance:
     - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2
+      value: 1.081
       objectReference: {fileID: 0}
     - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
@@ -873,51 +680,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 9016037743184735990, guid: 2e26cba339b071948830d584eca2edda,
-        type: 3}
-      propertyPath: m_IsKinematic
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9016037743184735990, guid: 2e26cba339b071948830d584eca2edda,
-        type: 3}
-      propertyPath: m_CollisionDetection
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 70645328441259782, guid: 2e26cba339b071948830d584eca2edda, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 2e26cba339b071948830d584eca2edda, type: 3}
---- !u!1 &878167941 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1069823527325677058, guid: 2e26cba339b071948830d584eca2edda,
-    type: 3}
-  m_PrefabInstance: {fileID: 878167940}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &878167942
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 878167941}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a4098bebca8786e40bb27495aa77b779, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  boundingDimensions: {x: 1, y: 1}
-  boundingOrigin: {x: 0, y: 0}
-  gridPosition:
-    x: 0
-    y: 0
-  goalSearchDistance: 20
-  movementSpeed: 0.5
-  factionID: 0
-  state: 0
-  resourcePriorities: 
-  currentResource: 0
-  workRate: 10
-  maxCargo: 100
-  currentCargo: 0
 --- !u!1001 &905321901
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -925,11 +690,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 70645328441259782, guid: 2e26cba339b071948830d584eca2edda,
-        type: 3}
-      propertyPath: currentState
-      value: 5
-      objectReference: {fileID: 0}
     - target: {fileID: 1069823527325677058, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
       propertyPath: m_Name
@@ -948,7 +708,7 @@ PrefabInstance:
     - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2
+      value: 1.081
       objectReference: {fileID: 0}
     - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
@@ -990,51 +750,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 9016037743184735990, guid: 2e26cba339b071948830d584eca2edda,
-        type: 3}
-      propertyPath: m_IsKinematic
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9016037743184735990, guid: 2e26cba339b071948830d584eca2edda,
-        type: 3}
-      propertyPath: m_CollisionDetection
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 70645328441259782, guid: 2e26cba339b071948830d584eca2edda, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 2e26cba339b071948830d584eca2edda, type: 3}
---- !u!1 &905321902 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1069823527325677058, guid: 2e26cba339b071948830d584eca2edda,
-    type: 3}
-  m_PrefabInstance: {fileID: 905321901}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &905321903
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 905321902}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a4098bebca8786e40bb27495aa77b779, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  boundingDimensions: {x: 1, y: 1}
-  boundingOrigin: {x: 0, y: 0}
-  gridPosition:
-    x: 0
-    y: 0
-  goalSearchDistance: 20
-  movementSpeed: 0.5
-  factionID: 0
-  state: 0
-  resourcePriorities: 
-  currentResource: 0
-  workRate: 10
-  maxCargo: 100
-  currentCargo: 0
 --- !u!1 &1028106418
 GameObject:
   m_ObjectHideFlags: 0
@@ -1142,11 +860,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 70645328441259782, guid: 2e26cba339b071948830d584eca2edda,
-        type: 3}
-      propertyPath: currentState
-      value: 5
-      objectReference: {fileID: 0}
     - target: {fileID: 1069823527325677058, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
       propertyPath: m_Name
@@ -1165,7 +878,7 @@ PrefabInstance:
     - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2
+      value: 1.081
       objectReference: {fileID: 0}
     - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
@@ -1207,51 +920,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 9016037743184735990, guid: 2e26cba339b071948830d584eca2edda,
-        type: 3}
-      propertyPath: m_IsKinematic
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9016037743184735990, guid: 2e26cba339b071948830d584eca2edda,
-        type: 3}
-      propertyPath: m_CollisionDetection
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 70645328441259782, guid: 2e26cba339b071948830d584eca2edda, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 2e26cba339b071948830d584eca2edda, type: 3}
---- !u!1 &1351560980 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1069823527325677058, guid: 2e26cba339b071948830d584eca2edda,
-    type: 3}
-  m_PrefabInstance: {fileID: 1351560979}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1351560981
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1351560980}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a4098bebca8786e40bb27495aa77b779, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  boundingDimensions: {x: 1, y: 1}
-  boundingOrigin: {x: 0, y: 0}
-  gridPosition:
-    x: 0
-    y: 0
-  goalSearchDistance: 20
-  movementSpeed: 0.5
-  factionID: 0
-  state: 0
-  resourcePriorities: 
-  currentResource: 0
-  workRate: 10
-  maxCargo: 100
-  currentCargo: 0
 --- !u!1001 &1511660174
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1259,11 +930,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 70645328441259782, guid: 2e26cba339b071948830d584eca2edda,
-        type: 3}
-      propertyPath: currentState
-      value: 5
-      objectReference: {fileID: 0}
     - target: {fileID: 1069823527325677058, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
       propertyPath: m_Name
@@ -1282,7 +948,7 @@ PrefabInstance:
     - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2
+      value: 1.081
       objectReference: {fileID: 0}
     - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
@@ -1324,51 +990,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 9016037743184735990, guid: 2e26cba339b071948830d584eca2edda,
-        type: 3}
-      propertyPath: m_IsKinematic
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9016037743184735990, guid: 2e26cba339b071948830d584eca2edda,
-        type: 3}
-      propertyPath: m_CollisionDetection
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 70645328441259782, guid: 2e26cba339b071948830d584eca2edda, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 2e26cba339b071948830d584eca2edda, type: 3}
---- !u!1 &1511660175 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1069823527325677058, guid: 2e26cba339b071948830d584eca2edda,
-    type: 3}
-  m_PrefabInstance: {fileID: 1511660174}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1511660176
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1511660175}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a4098bebca8786e40bb27495aa77b779, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  boundingDimensions: {x: 1, y: 1}
-  boundingOrigin: {x: 0, y: 0}
-  gridPosition:
-    x: 0
-    y: 0
-  goalSearchDistance: 20
-  movementSpeed: 0.5
-  factionID: 0
-  state: 0
-  resourcePriorities: 
-  currentResource: 0
-  workRate: 10
-  maxCargo: 100
-  currentCargo: 0
 --- !u!1001 &1638734319
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1376,11 +1000,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 70645328441259782, guid: 2e26cba339b071948830d584eca2edda,
-        type: 3}
-      propertyPath: currentState
-      value: 5
-      objectReference: {fileID: 0}
     - target: {fileID: 1069823527325677058, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
       propertyPath: m_Name
@@ -1399,7 +1018,7 @@ PrefabInstance:
     - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2
+      value: 1.081
       objectReference: {fileID: 0}
     - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
@@ -1441,51 +1060,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 9016037743184735990, guid: 2e26cba339b071948830d584eca2edda,
-        type: 3}
-      propertyPath: m_IsKinematic
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9016037743184735990, guid: 2e26cba339b071948830d584eca2edda,
-        type: 3}
-      propertyPath: m_CollisionDetection
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 70645328441259782, guid: 2e26cba339b071948830d584eca2edda, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 2e26cba339b071948830d584eca2edda, type: 3}
---- !u!1 &1638734320 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1069823527325677058, guid: 2e26cba339b071948830d584eca2edda,
-    type: 3}
-  m_PrefabInstance: {fileID: 1638734319}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1638734321
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1638734320}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a4098bebca8786e40bb27495aa77b779, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  boundingDimensions: {x: 1, y: 1}
-  boundingOrigin: {x: 0, y: 0}
-  gridPosition:
-    x: 0
-    y: 0
-  goalSearchDistance: 20
-  movementSpeed: 0.5
-  factionID: 0
-  state: 0
-  resourcePriorities: 
-  currentResource: 0
-  workRate: 10
-  maxCargo: 100
-  currentCargo: 0
 --- !u!1001 &1938814299
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1493,11 +1070,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 70645328441259782, guid: 2e26cba339b071948830d584eca2edda,
-        type: 3}
-      propertyPath: currentState
-      value: 5
-      objectReference: {fileID: 0}
     - target: {fileID: 1069823527325677058, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
       propertyPath: m_Name
@@ -1516,7 +1088,7 @@ PrefabInstance:
     - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2
+      value: 1.081
       objectReference: {fileID: 0}
     - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
@@ -1558,51 +1130,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 9016037743184735990, guid: 2e26cba339b071948830d584eca2edda,
+    - target: {fileID: 8052413789592210992, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
-      propertyPath: m_IsKinematic
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9016037743184735990, guid: 2e26cba339b071948830d584eca2edda,
-        type: 3}
-      propertyPath: m_CollisionDetection
-      value: 1
+      propertyPath: resourcePriorities.Array.data[0]
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 70645328441259782, guid: 2e26cba339b071948830d584eca2edda, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 2e26cba339b071948830d584eca2edda, type: 3}
---- !u!1 &1938814300 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1069823527325677058, guid: 2e26cba339b071948830d584eca2edda,
-    type: 3}
-  m_PrefabInstance: {fileID: 1938814299}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1938814301
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1938814300}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a4098bebca8786e40bb27495aa77b779, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  boundingDimensions: {x: 1, y: 1}
-  boundingOrigin: {x: 0, y: 0}
-  gridPosition:
-    x: 0
-    y: 0
-  goalSearchDistance: 20
-  movementSpeed: 0.5
-  factionID: 0
-  state: 0
-  resourcePriorities: 
-  currentResource: 0
-  workRate: 10
-  maxCargo: 100
-  currentCargo: 0
 --- !u!1001 &1960364239
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1610,11 +1145,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 70645328441259782, guid: 2e26cba339b071948830d584eca2edda,
-        type: 3}
-      propertyPath: currentState
-      value: 5
-      objectReference: {fileID: 0}
     - target: {fileID: 1069823527325677058, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
       propertyPath: m_Name
@@ -1633,7 +1163,7 @@ PrefabInstance:
     - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2
+      value: 1.081
       objectReference: {fileID: 0}
     - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
@@ -1675,51 +1205,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 9016037743184735990, guid: 2e26cba339b071948830d584eca2edda,
-        type: 3}
-      propertyPath: m_IsKinematic
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9016037743184735990, guid: 2e26cba339b071948830d584eca2edda,
-        type: 3}
-      propertyPath: m_CollisionDetection
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 70645328441259782, guid: 2e26cba339b071948830d584eca2edda, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 2e26cba339b071948830d584eca2edda, type: 3}
---- !u!1 &1960364240 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1069823527325677058, guid: 2e26cba339b071948830d584eca2edda,
-    type: 3}
-  m_PrefabInstance: {fileID: 1960364239}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1960364241
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1960364240}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a4098bebca8786e40bb27495aa77b779, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  boundingDimensions: {x: 1, y: 1}
-  boundingOrigin: {x: 0, y: 0}
-  gridPosition:
-    x: 0
-    y: 0
-  goalSearchDistance: 20
-  movementSpeed: 0.5
-  factionID: 0
-  state: 0
-  resourcePriorities: 
-  currentResource: 0
-  workRate: 10
-  maxCargo: 100
-  currentCargo: 0
 --- !u!1001 &1975807004
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1727,11 +1215,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 70645328441259782, guid: 2e26cba339b071948830d584eca2edda,
-        type: 3}
-      propertyPath: currentState
-      value: 5
-      objectReference: {fileID: 0}
     - target: {fileID: 1069823527325677058, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
       propertyPath: m_Name
@@ -1750,7 +1233,7 @@ PrefabInstance:
     - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2
+      value: 1.081
       objectReference: {fileID: 0}
     - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
@@ -1792,51 +1275,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 9016037743184735990, guid: 2e26cba339b071948830d584eca2edda,
-        type: 3}
-      propertyPath: m_IsKinematic
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9016037743184735990, guid: 2e26cba339b071948830d584eca2edda,
-        type: 3}
-      propertyPath: m_CollisionDetection
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 70645328441259782, guid: 2e26cba339b071948830d584eca2edda, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 2e26cba339b071948830d584eca2edda, type: 3}
---- !u!1 &1975807005 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1069823527325677058, guid: 2e26cba339b071948830d584eca2edda,
-    type: 3}
-  m_PrefabInstance: {fileID: 1975807004}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1975807006
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1975807005}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a4098bebca8786e40bb27495aa77b779, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  boundingDimensions: {x: 1, y: 1}
-  boundingOrigin: {x: 0, y: 0}
-  gridPosition:
-    x: 0
-    y: 0
-  goalSearchDistance: 20
-  movementSpeed: 0.5
-  factionID: 0
-  state: 0
-  resourcePriorities: 
-  currentResource: 0
-  workRate: 10
-  maxCargo: 100
-  currentCargo: 0
 --- !u!1 &2001649791
 GameObject:
   m_ObjectHideFlags: 0
@@ -1927,11 +1368,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 70645328441259782, guid: 2e26cba339b071948830d584eca2edda,
-        type: 3}
-      propertyPath: currentState
-      value: 5
-      objectReference: {fileID: 0}
     - target: {fileID: 1069823527325677058, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
       propertyPath: m_Name
@@ -1950,7 +1386,7 @@ PrefabInstance:
     - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2
+      value: 1.081
       objectReference: {fileID: 0}
     - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
@@ -1992,51 +1428,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 9016037743184735990, guid: 2e26cba339b071948830d584eca2edda,
-        type: 3}
-      propertyPath: m_IsKinematic
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9016037743184735990, guid: 2e26cba339b071948830d584eca2edda,
-        type: 3}
-      propertyPath: m_CollisionDetection
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 70645328441259782, guid: 2e26cba339b071948830d584eca2edda, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 2e26cba339b071948830d584eca2edda, type: 3}
---- !u!1 &2081804622 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1069823527325677058, guid: 2e26cba339b071948830d584eca2edda,
-    type: 3}
-  m_PrefabInstance: {fileID: 2081804621}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &2081804623
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2081804622}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a4098bebca8786e40bb27495aa77b779, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  boundingDimensions: {x: 1, y: 1}
-  boundingOrigin: {x: 0, y: 0}
-  gridPosition:
-    x: 0
-    y: 0
-  goalSearchDistance: 20
-  movementSpeed: 0.5
-  factionID: 0
-  state: 0
-  resourcePriorities: 
-  currentResource: 0
-  workRate: 10
-  maxCargo: 100
-  currentCargo: 0
 --- !u!1 &2095228569
 GameObject:
   m_ObjectHideFlags: 0
@@ -2096,11 +1490,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 70645328441259782, guid: 2e26cba339b071948830d584eca2edda,
-        type: 3}
-      propertyPath: currentState
-      value: 5
-      objectReference: {fileID: 0}
     - target: {fileID: 1069823527325677058, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
       propertyPath: m_Name
@@ -2119,7 +1508,7 @@ PrefabInstance:
     - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2
+      value: 1.081
       objectReference: {fileID: 0}
     - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
@@ -2161,51 +1550,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 9016037743184735990, guid: 2e26cba339b071948830d584eca2edda,
-        type: 3}
-      propertyPath: m_IsKinematic
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9016037743184735990, guid: 2e26cba339b071948830d584eca2edda,
-        type: 3}
-      propertyPath: m_CollisionDetection
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 70645328441259782, guid: 2e26cba339b071948830d584eca2edda, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 2e26cba339b071948830d584eca2edda, type: 3}
---- !u!1 &2135006239 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1069823527325677058, guid: 2e26cba339b071948830d584eca2edda,
-    type: 3}
-  m_PrefabInstance: {fileID: 2135006238}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &2135006240
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2135006239}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a4098bebca8786e40bb27495aa77b779, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  boundingDimensions: {x: 1, y: 1}
-  boundingOrigin: {x: 0, y: 0}
-  gridPosition:
-    x: 0
-    y: 0
-  goalSearchDistance: 20
-  movementSpeed: 0.5
-  factionID: 0
-  state: 0
-  resourcePriorities: 
-  currentResource: 0
-  workRate: 10
-  maxCargo: 100
-  currentCargo: 0
 --- !u!1001 &2139053963
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2213,11 +1560,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 70645328441259782, guid: 2e26cba339b071948830d584eca2edda,
-        type: 3}
-      propertyPath: currentState
-      value: 5
-      objectReference: {fileID: 0}
     - target: {fileID: 1069823527325677058, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
       propertyPath: m_Name
@@ -2236,7 +1578,7 @@ PrefabInstance:
     - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2
+      value: 1.081
       objectReference: {fileID: 0}
     - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
@@ -2278,51 +1620,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 9016037743184735990, guid: 2e26cba339b071948830d584eca2edda,
-        type: 3}
-      propertyPath: m_IsKinematic
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9016037743184735990, guid: 2e26cba339b071948830d584eca2edda,
-        type: 3}
-      propertyPath: m_CollisionDetection
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 70645328441259782, guid: 2e26cba339b071948830d584eca2edda, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 2e26cba339b071948830d584eca2edda, type: 3}
---- !u!1 &2139053964 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1069823527325677058, guid: 2e26cba339b071948830d584eca2edda,
-    type: 3}
-  m_PrefabInstance: {fileID: 2139053963}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &2139053965
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2139053964}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a4098bebca8786e40bb27495aa77b779, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  boundingDimensions: {x: 1, y: 1}
-  boundingOrigin: {x: 0, y: 0}
-  gridPosition:
-    x: 0
-    y: 0
-  goalSearchDistance: 20
-  movementSpeed: 0.5
-  factionID: 0
-  state: 0
-  resourcePriorities: 
-  currentResource: 0
-  workRate: 10
-  maxCargo: 100
-  currentCargo: 0
 --- !u!4 &4010404002771728372
 Transform:
   m_ObjectHideFlags: 0

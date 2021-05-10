@@ -44,8 +44,6 @@ public class TerrainBuilding : MonoBehaviour
     public float unitRallyWaypointRadius;
     public List<RTSUnitType> allowedUnitCreationList;
     
-    public PlayerManager playerManager;
-
     private float timeElapsed = 0.0f;
     private bool constructionCompleted = false;
 
@@ -88,8 +86,10 @@ public class TerrainBuilding : MonoBehaviour
     void Start()
     {
         audioSource = gameObject.GetComponent<AudioSource>();
+        buildingSpawnHoverMenu = gameObject.GetComponentInChildren<BuildingSpawnHoverMenu>( true );
         queueProgressText = buildingSpawnHoverMenu.queueProgressText;
         queueProgressImage = buildingSpawnHoverMenu.queueProgressImage;
+        buildingSpawnHoverMenu.enabled = false;
 
         //constructionCompletedAudio = GameMaster.GetAudio("constructionCompleted").GetClip();       
 
@@ -102,9 +102,7 @@ public class TerrainBuilding : MonoBehaviour
         buildingStageFinal.SetActive(false);
         
         RepairDamage(0);
-        RefreshHealthBar();        
-
-        playerManager = Player.instance.GetComponent<PlayerManager>();        
+        RefreshHealthBar();          
 
         if (currentHealth < maxHealth)
         {
@@ -201,6 +199,14 @@ public class TerrainBuilding : MonoBehaviour
             buildingStage0.SetActive(false);
             buildingStage1.SetActive(true);
         }    
+    }
+
+    public bool NeedsBuilding()
+    {
+        if ( ! constructionCompleted )
+            return true;
+        
+        return false;
     }
 
     public bool NeedsRepair()

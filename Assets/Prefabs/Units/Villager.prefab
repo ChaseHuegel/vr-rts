@@ -17834,10 +17834,10 @@ GameObject:
   - component: {fileID: 2729581958463322768}
   - component: {fileID: 2973566442904995693}
   - component: {fileID: 3165470419902578782}
-  - component: {fileID: 70645328441259782}
   - component: {fileID: -6606716014632887433}
   - component: {fileID: 1098559784769540740}
   - component: {fileID: 3014109988939847531}
+  - component: {fileID: 8052413789592210992}
   m_Layer: 9
   m_Name: Villager
   m_TagString: Untagged
@@ -18007,7 +18007,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 70645328441259782}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: VillagerActor, Assembly-CSharp
         m_MethodName: OnPickUp
         m_Mode: 1
@@ -18034,7 +18034,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 70645328441259782}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: VillagerActor, Assembly-CSharp
         m_MethodName: OnDetachFromHand
         m_Mode: 1
@@ -18050,54 +18050,6 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   interactable: {fileID: 0}
---- !u!114 &70645328441259782
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1069823527325677058}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bc46828e8b3e0b74abc70b8a29118970, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  boundingDimensions: {x: 1, y: 1}
-  boundingOrigin: {x: 0, y: 0}
-  gridPosition:
-    x: 0
-    y: 0
-  goalSearchDistance: 20
-  movementSpeed: 0.5
-  rtsUnitType: 0
-  wantedResourceType: 0
-  cellSearchDistance: 20
-  previousState: 0
-  currentState: 0
-  targetNode: {fileID: 0}
-  targetBuilding: {fileID: 0}
-  targetDamaged: {fileID: 0}
-  carryingCapacity: 20
-  gatherCapacityPerSecond: 2
-  buildAndRepairCapacityPerSecond: 10
-  animator: {fileID: 0}
-  grainCargoDisplayObject: {fileID: 668154613715088764}
-  woodCargoDisplayObject: {fileID: 2787404010531457095}
-  oreCargoDisplayObject: {fileID: 8615772494511644887}
-  goldCargoDisplayObject: {fileID: 8615772494511644887}
-  grainHandToolDisplayObject: {fileID: 1069823527080592770}
-  woodHandToolDisplayObject: {fileID: 1069823527080595998}
-  oreHandToolDisplayObject: {fileID: 1069823527080554358}
-  goldHandToolDisplayObject: {fileID: 1069823527080554358}
-  builderHandToolDisplayObject: {fileID: 1069823527080516244}
-  playRandomOnPickUpAudio: 0
-  woodChoppingAudio: {fileID: 8300000, guid: c1d7f3f58fafcac4fb793927a1aa2e88, type: 3}
-  goldMiningAudio: {fileID: 8300000, guid: a9807b9f05d1bfa45a835e3ec9ca9cbc, type: 3}
-  oreMiningAudio: {fileID: 8300000, guid: a9807b9f05d1bfa45a835e3ec9ca9cbc, type: 3}
-  grainGatheringAudio: {fileID: 8300000, guid: cdcfd4bbae902fc43abed7047a236348, type: 3}
-  repairingAudio: {fileID: 8300000, guid: 6a090be253b576b4dac41b679f12a15a, type: 3}
-  villagerHoverMenu: {fileID: 4773402040985910725}
-  currentCargoTotal: 0
 --- !u!82 &-6606716014632887433
 AudioSource:
   m_ObjectHideFlags: 0
@@ -18210,7 +18162,7 @@ MonoBehaviour:
   poseEditorExpanded: 1
   blendEditorExpanded: 0
   poseNames:
-  - unitPickup_01 (MAIN)
+  - unitPickup_pose_00 (MAIN)
   overridePreviewLeftHandPrefab: {fileID: 1000013348574242, guid: 638779290bce1af49b356f33dcc6fccf,
     type: 3}
   overridePreviewRightHandPrefab: {fileID: 1000010304998954, guid: 6def53d002137b747aec0b29551e0e25,
@@ -18243,6 +18195,34 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &8052413789592210992
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1069823527325677058}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4098bebca8786e40bb27495aa77b779, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  boundingDimensions: {x: 1, y: 1}
+  boundingOrigin: {x: 0, y: 0}
+  gridPosition:
+    x: 0
+    y: 0
+  goalSearchDistance: 20
+  movementSpeed: 1
+  factionID: 0
+  state: 0
+  resourcePriorities: 
+  currentResource: 0
+  maxCargo: 20
+  currentCargo: 0
+  workRate: 3
+  buildRate: 6
+  repairRate: 3
 --- !u!1 &1405613437724166983
 GameObject:
   m_ObjectHideFlags: 0

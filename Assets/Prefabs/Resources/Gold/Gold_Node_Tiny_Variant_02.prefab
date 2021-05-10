@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9055808516643236364}
-  - component: {fileID: 6578366135965726481}
   - component: {fileID: 4902118972136907333}
   - component: {fileID: 8733340807589499909}
   m_Layer: 11
@@ -35,22 +34,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6578366135965726481
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2564844858392026927}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 73818678be48477418bdf0c87156e9c4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  type: 4
-  resourceName: Gold
-  maxResourceAmount: 500
-  destroyWhenResourceDepleted: 1
 --- !u!114 &4902118972136907333
 MonoBehaviour:
   m_ObjectHideFlags: 0

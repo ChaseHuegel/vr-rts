@@ -172,7 +172,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8724854349296649426}
   - component: {fileID: 3005501262304796899}
-  - component: {fileID: 1895524421050528294}
   - component: {fileID: -7570714190537514692}
   m_Layer: 11
   m_Name: Wood_Node_Large_Variant_00
@@ -212,22 +211,6 @@ CapsuleCollider:
   m_Height: 0.7317836
   m_Direction: 1
   m_Center: {x: -0.00000023841858, y: 0.36598563, z: -0.0017303228}
---- !u!114 &1895524421050528294
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4113687766330663205}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 73818678be48477418bdf0c87156e9c4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  type: 2
-  resourceName: Wood
-  maxResourceAmount: 5000
-  destroyWhenResourceDepleted: 1
 --- !u!114 &-7570714190537514692
 MonoBehaviour:
   m_ObjectHideFlags: 0
