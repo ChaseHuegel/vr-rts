@@ -288,11 +288,11 @@ public class TerrainBuilding : MonoBehaviour
             GameObject unit = GameObject.Instantiate<GameObject>(unitSpawnQueue.Peek().prefab);
             unit.transform.position = unitSpawnPoint.transform.position;
 
-            VillagerActor actor = unit.GetComponent<VillagerActor>();
+            //Villager actor = unit.GetComponent<Villager>();
 
-            actor.SetUnitType(unitSpawnQueue.Peek().unitType);
+            //actor.SetUnitType(unitSpawnQueue.Peek().unitType);
             
-            RTSUnitType uType = unitSpawnQueue.Peek().unitType;
+            //RTSUnitType uType = unitSpawnQueue.Peek().unitType;
 
             //Debug.Log("Spawned " + unit.name + ".");
         }

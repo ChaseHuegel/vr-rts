@@ -8,13 +8,13 @@ public class BuildingSpawnHoverMenu : MonoBehaviour
     public UnityEngine.UI.Image queueProgressImage;
     public TMPro.TMP_Text queueProgressText;
     TerrainBuilding terrainBuilding;
-    void Start()
+    void Awake()
     {
         terrainBuilding = GetComponentInParent<TerrainBuilding>();
     }
+
     public void QueueUnit(int queueUnit)
     {
-
         RTSUnitType unitType = (RTSUnitType)queueUnit;
         terrainBuilding.QueueUnit(unitType);        
     }
