@@ -120,15 +120,20 @@ public class Villager : Unit
             case UnitState.GATHERING:
                 if (IsCargoFull())  state = UnitState.TRANSPORTING;
                 else if (!HasValidTarget()) state = UnitState.ROAMING;
+                if (IsMoving())
+                    animator.SetInteger("VillagerActorState", (int)ActorAnimationState.MOVING);
             break;
 
             case UnitState.TRANSPORTING:
                 if (!HasCargo()) state = UnitState.ROAMING;
-                animator.SetInteger("VillagerActorState", (int)ActorAnimationState.MOVING);
+                if (IsMoving())
+                    animator.SetInteger("VillagerActorState", (int)ActorAnimationState.MOVING);
             break;
 
             case UnitState.BUILDANDREPAIR:
                 if (!HasValidTarget()) state = UnitState.IDLE;
+                if (IsMoving())
+                    animator.SetInteger("VillagerActorState", (int)ActorAnimationState.MOVING);
             break;
             
             case UnitState.IDLE:
