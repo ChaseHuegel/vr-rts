@@ -18,7 +18,7 @@ public class LookAtAndReset : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
+    {   
         if (target)
         {
             Vector3 t = target.position;

@@ -87,11 +87,11 @@ public class Villager : Unit
         HookIntoEvents();
 
         //  Add goals in order of priority
-        goals.Add<GoalBuildRepair>();
-        goals.Add<GoalGatherResource>().type = ResourceGatheringType.Grain;
+        //goals.Add<GoalBuildRepair>();
+        // goals.Add<GoalGatherResource>().type = ResourceGatheringType.Grain;
         goals.Add<GoalGatherResource>().type = ResourceGatheringType.Gold;
-        goals.Add<GoalGatherResource>().type = ResourceGatheringType.Stone;
-        goals.Add<GoalGatherResource>().type = ResourceGatheringType.Wood;
+        // goals.Add<GoalGatherResource>().type = ResourceGatheringType.Stone;
+        // goals.Add<GoalGatherResource>().type = ResourceGatheringType.Wood;
         transportGoal = goals.Add<GoalTransportResource>();
        
         audioSource = gameObject.GetComponent<AudioSource>();
@@ -157,7 +157,7 @@ public class Villager : Unit
             return;
 
         base.Tick();
-
+        
         //  Transport type always matches what our current resource is
         transportGoal.type = currentResource;
 
@@ -169,10 +169,10 @@ public class Villager : Unit
         switch (state)
         {
             case UnitState.ROAMING:
-                Goto(
-                    UnityEngine.Random.Range(gridPosition.x - 4, gridPosition.x + 4),
-                    UnityEngine.Random.Range(gridPosition.x - 4, gridPosition.x + 4)
-                );
+                // Goto(
+                //     UnityEngine.Random.Range(gridPosition.x - 4, gridPosition.x + 4),
+                //     UnityEngine.Random.Range(gridPosition.x - 4, gridPosition.x + 4)
+                // );
                 if (IsMoving())
                     animator.SetInteger("VillagerActorState", (int)ActorAnimationState.MOVING);
                 ChangeTaskVisuals(); 
@@ -180,13 +180,13 @@ public class Villager : Unit
 
             case UnitState.GATHERING:
                 if (IsCargoFull())  state = UnitState.TRANSPORTING;
-                else if (!HasValidTarget()) state = UnitState.ROAMING;
+                else if (!HasValidTarget()) state = UnitState.IDLE;
                 if (IsMoving())
                     animator.SetInteger("VillagerActorState", (int)ActorAnimationState.MOVING);
             break;
 
             case UnitState.TRANSPORTING:
-                if (!HasCargo()) state = UnitState.ROAMING;
+                if (!HasCargo()) state = UnitState.IDLE;
                 if (IsMoving())
                     animator.SetInteger("VillagerActorState", (int)ActorAnimationState.MOVING);                
             break;
@@ -255,42 +255,52 @@ public class Villager : Unit
     // overridden by inheritors? Should unitType be changed to
     // unitTask or unitJob?
     public void SetRTSUnitType(RTSUnitType rtsUnitType)    
-    {
+    {        
+        goals.Clear();
+
         switch ( rtsUnitType )
         {
             case RTSUnitType.Builder:
                 state = UnitState.BUILDANDREPAIR;
                 currentResource = ResourceGatheringType.None;
+                goals.Add<GoalBuildRepair>();
                 ResetPathing();
                 break;
 
             case RTSUnitType.Farmer:
                 state = UnitState.GATHERING;
                 currentResource = ResourceGatheringType.Grain;
+                goals.Add<GoalGatherResource>().type = ResourceGatheringType.Grain;
                 ResetPathing();
                 break;
 
             case RTSUnitType.Lumberjack:
                 state = UnitState.GATHERING;
                 currentResource = ResourceGatheringType.Wood;
+                goals.Add<GoalGatherResource>().type = ResourceGatheringType.Wood;
                 ResetPathing();
                 break;
 
             case RTSUnitType.GoldMiner:
                 state = UnitState.GATHERING;
                 currentResource = ResourceGatheringType.Gold;
+                goals.Add<GoalGatherResource>().type = ResourceGatheringType.Gold;
                 ResetPathing();
                 break;
 
             case RTSUnitType.StoneMiner:
                 state = UnitState.GATHERING;
                 currentResource = ResourceGatheringType.Stone;
+                goals.entries[0] = null;
+                goals.Add<GoalGatherResource>().type = ResourceGatheringType.Stone;
                 ResetPathing();
                 break;
 
             default:
                 break;
         }
+
+        PlayChangeTaskAudio();
     }
 
     public void PlayChangeTaskAudio()

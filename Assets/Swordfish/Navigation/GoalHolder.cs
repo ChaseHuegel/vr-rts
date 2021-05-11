@@ -55,6 +55,11 @@ public class GoalHolder
     {
         return goals.FindAll( expression ).ConvertAll(x => x as T);
     }
+
+    public void Clear()
+    {
+        goals.Clear();
+    }
 }
 
 }

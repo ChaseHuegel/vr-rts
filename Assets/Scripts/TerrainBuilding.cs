@@ -193,7 +193,7 @@ public class TerrainBuilding : MonoBehaviour
             Villager villager = unit.GetComponent<Villager>();
             villager.Initialize();
 
-            //actor.SetUnitType(unitSpawnQueue.Peek().unitType);
+            villager.SetRTSUnitType(unitSpawnQueue.Peek().unitType);
             
             //RTSUnitType uType = unitSpawnQueue.Peek().unitType;
 
