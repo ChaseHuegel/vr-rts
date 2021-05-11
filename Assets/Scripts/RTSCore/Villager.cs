@@ -157,7 +157,7 @@ public class Villager : Unit
             return;
 
         base.Tick();
-        
+
         //  Transport type always matches what our current resource is
         transportGoal.type = currentResource;
 
@@ -173,34 +173,29 @@ public class Villager : Unit
                 //     UnityEngine.Random.Range(gridPosition.x - 4, gridPosition.x + 4),
                 //     UnityEngine.Random.Range(gridPosition.x - 4, gridPosition.x + 4)
                 // );
-                if (IsMoving())
-                    animator.SetInteger("VillagerActorState", (int)ActorAnimationState.MOVING);
                 ChangeTaskVisuals(); 
             break;
 
             case UnitState.GATHERING:
                 if (IsCargoFull())  state = UnitState.TRANSPORTING;
                 else if (!HasValidTarget()) state = UnitState.IDLE;
-                if (IsMoving())
-                    animator.SetInteger("VillagerActorState", (int)ActorAnimationState.MOVING);
             break;
 
             case UnitState.TRANSPORTING:
-                if (!HasCargo()) state = UnitState.IDLE;
-                if (IsMoving())
-                    animator.SetInteger("VillagerActorState", (int)ActorAnimationState.MOVING);                
+                if (!HasCargo()) state = UnitState.IDLE;              
             break;
 
             case UnitState.BUILDANDREPAIR:
-                if (!HasValidTarget()) state = UnitState.IDLE;
-                if (IsMoving())
-                    animator.SetInteger("VillagerActorState", (int)ActorAnimationState.MOVING);                
+                if (!HasValidTarget()) state = UnitState.IDLE;                                
             break;
 
             case UnitState.IDLE:
                 animator.SetInteger("VillagerActorState", (int)ActorAnimationState.IDLE);
             break;
         }
+
+        if (IsMoving())
+            animator.SetInteger("VillagerActorState", (int)ActorAnimationState.MOVING);
 
         if (TaskChanged())
         {
