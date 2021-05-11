@@ -39,7 +39,7 @@ public class Villager : Unit
     // work rate of 3 because the math puts the amount under 1 and
     // we're using INT's to store amount/capacity.
     public int maxCargo = 20;
-    public int currentCargo = 0;
+    public float currentCargo = 0;
     public int workRate = 3;
     public int buildRate = 6;
     public int repairRate = 3;
@@ -492,7 +492,7 @@ public class Villager : Unit
         if (e.cancel) return;   //  return if the event has been cancelled by any subscriber
 
         currentCargo -= e.amount;
-        PlayerManager.instance.AddResourceToStockpile(currentResource, e.amount);
+        PlayerManager.instance.AddResourceToStockpile(currentResource, (int)e.amount);
     }
 
     public void TryGather(Resource resource)
@@ -501,18 +501,18 @@ public class Villager : Unit
             return;
 
         //  Convert per second to per tick and clamp to how much cargo space we have
-        float amount = (workRate / (60/Constants.ACTOR_TICK_RATE));
+        float amount = ((float)workRate / (60/Constants.ACTOR_TICK_RATE));
         amount = Mathf.Clamp(maxCargo - currentCargo, 0, amount);
-        amount = resource.GetRemoveAmount((int)amount);
-
+        amount = resource.GetRemoveAmount(amount);
+       
         //  Trigger a gather event
-        GatherEvent e = new GatherEvent{ villager = this, resource = resource, resourceType = currentResource, amount = (int)amount };
+        GatherEvent e = new GatherEvent{ villager = this, resource = resource, resourceType = currentResource, amount = amount };
         OnGatherEvent?.Invoke(null, e);
         if (e.cancel) return;   //  return if the event has been cancelled by any subscriber
 
         //  Remove from the resource and add to cargo
         amount = resource.TryRemove(e.amount);
-        currentCargo += (int)amount;
+        currentCargo += amount;
 
         // Animation
         switch(resource.type)
@@ -560,7 +560,7 @@ public class Villager : Unit
         public Villager villager;
         public Resource resource;
         public ResourceGatheringType resourceType;
-        public int amount;
+        public float amount;
     }
 
     public static event EventHandler<DropoffEvent> OnDropoffEvent;
@@ -569,7 +569,7 @@ public class Villager : Unit
         public Villager villager;
         public Structure structure;
         public ResourceGatheringType resourceType;
-        public int amount;
+        public float amount;
     }
 
     public static event EventHandler<BuildRepairEvent> OnBuildRepairEvent;
