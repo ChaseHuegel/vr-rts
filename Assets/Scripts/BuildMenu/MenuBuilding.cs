@@ -219,7 +219,7 @@ public class MenuBuilding : Throwable
             
             RTSBuildingTypeData buildingData = GameMaster.Instance.FindBuildingData(buildMenuSlot.rtsTypeData.buildingType);
             
-            PlayerManager.instance.RemoveResources(buildingData.goldCost, buildingData.grainCost,
+            PlayerManager.instance.RemoveResourcesFromStockpile(buildingData.goldCost, buildingData.grainCost,
                                                buildingData.woodCost, buildingData.stoneCost);
 
 

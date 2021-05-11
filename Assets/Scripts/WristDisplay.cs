@@ -7,6 +7,7 @@ public class WristDisplay : MonoBehaviour
     public TMPro.TextMeshPro woodQuantityTextMesh;
     public TMPro.TextMeshPro grainQuantityTextMesh;
     public TMPro.TextMeshPro goldQuantityTextMesh;
+    public TMPro.TextMeshPro stoneQuantityTextMesh;
     public TMPro.TextMeshPro civilianPopulationTextMesh;
     public TMPro.TextMeshPro militaryPopulationTextMesh;
     public TMPro.TextMeshPro totalPopulationTextMesh;
@@ -14,6 +15,11 @@ public class WristDisplay : MonoBehaviour
     {
         woodQuantityTextMesh.text = text;
     }
+    public void SetStoneText(string text)
+    {
+        stoneQuantityTextMesh.text = text;
+    }
+
     public void SetGoldText(string text)
     {
         goldQuantityTextMesh.text = text;

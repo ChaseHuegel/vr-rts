@@ -11,7 +11,7 @@ public class Unit : Actor, IFactioned
     public Faction GetFaction() { return faction; }
     public void UpdateFaction() { faction = GameMaster.Factions.Find(x => x.index == factionID); }
 
-    public RTSUnitTypeData rTSUnitTypeData;
+    public RTSUnitTypeData rtsUnitTypeData;
     
     public override void Initialize()
     {

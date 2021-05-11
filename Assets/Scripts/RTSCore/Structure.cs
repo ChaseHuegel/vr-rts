@@ -17,14 +17,14 @@ public class Structure : Obstacle, IFactioned
     // Built signals that building construction has completed, it does
     // not signal whether a building needs repairs after having been
     // damaged.
-    public bool built = false;
+    private bool built = false;
     private Damageable damageable;
     public Damageable AttributeHandler { get { return damageable; } }
 
     [Header( "Construction Phases" )]
-    public GameObject constructionPhaseBeginPrefab;
-    public GameObject constructionPhaseMiddlePrefab;
-    public GameObject constructionPhaseEndPrefab;
+    private GameObject constructionPhaseBeginPrefab;
+    private GameObject constructionPhaseMiddlePrefab;
+    private GameObject constructionPhaseEndPrefab;
 
     public Faction GetFaction() { return faction; }
     public void UpdateFaction() { faction = GameMaster.Factions.Find(x => x.index == factionID); }

@@ -4314,6 +4314,7 @@ MonoBehaviour:
       type: 3}
     populationSupported: 0
     allowedUnitsToSpawn: 
+    constructionCompletedAudio: {fileID: 0}
   requireGrabActionToTake: 1
   requireReleaseActionToReturn: 0
   showTriggerHint: 0
@@ -4529,6 +4530,7 @@ MonoBehaviour:
       type: 3}
     populationSupported: 0
     allowedUnitsToSpawn: 
+    constructionCompletedAudio: {fileID: 0}
   requireGrabActionToTake: 1
   requireReleaseActionToReturn: 0
   showTriggerHint: 0
@@ -8447,6 +8449,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -7167361800687799736, guid: 9b01cde0f07486643a93faa1b4864738,
+        type: 3}
+      propertyPath: attributes.Array.data[0].value
+      value: 500
+      objectReference: {fileID: 0}
     - target: {fileID: -162982284593069479, guid: 9b01cde0f07486643a93faa1b4864738,
         type: 3}
       propertyPath: rTSBuildingTypeData.buildingType
@@ -8460,22 +8467,22 @@ PrefabInstance:
     - target: {fileID: 1129064322339030951, guid: 9b01cde0f07486643a93faa1b4864738,
         type: 3}
       propertyPath: m_RootOrder
-      value: 10
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 1129064322339030951, guid: 9b01cde0f07486643a93faa1b4864738,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -10.765
+      value: -13.96
       objectReference: {fileID: 0}
     - target: {fileID: 1129064322339030951, guid: 9b01cde0f07486643a93faa1b4864738,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1129064322339030951, guid: 9b01cde0f07486643a93faa1b4864738,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -8.766
+      value: -7.91
       objectReference: {fileID: 0}
     - target: {fileID: 1129064322339030951, guid: 9b01cde0f07486643a93faa1b4864738,
         type: 3}
@@ -8856,7 +8863,7 @@ Transform:
   - {fileID: 2108894939}
   - {fileID: 203703861}
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &190006812
 PrefabInstance:
@@ -9719,6 +9726,7 @@ MonoBehaviour:
       type: 3}
     populationSupported: 0
     allowedUnitsToSpawn: 
+    constructionCompletedAudio: {fileID: 0}
   requireGrabActionToTake: 1
   requireReleaseActionToReturn: 0
   showTriggerHint: 0
@@ -24520,7 +24528,7 @@ Transform:
   - {fileID: 1825294988}
   - {fileID: 628590730}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &533437574
 PrefabInstance:
@@ -27320,12 +27328,12 @@ PrefabInstance:
     - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
       propertyPath: m_RootOrder
-      value: 21
+      value: 19
       objectReference: {fileID: 0}
     - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -12.958
+      value: -15.218
       objectReference: {fileID: 0}
     - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
@@ -27335,7 +27343,7 @@ PrefabInstance:
     - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -10.526
+      value: -8.226
       objectReference: {fileID: 0}
     - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
@@ -27375,7 +27383,12 @@ PrefabInstance:
     - target: {fileID: 8052413789592210992, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
       propertyPath: state
-      value: 4
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8052413789592210992, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: currentResource
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2e26cba339b071948830d584eca2edda, type: 3}
@@ -29642,7 +29655,7 @@ Transform:
   m_Children:
   - {fileID: 6935284045247539710}
   m_Father: {fileID: 0}
-  m_RootOrder: 18
+  m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &644323300
 PrefabInstance:
@@ -30078,6 +30091,7 @@ MonoBehaviour:
       type: 3}
     populationSupported: 0
     allowedUnitsToSpawn: 
+    constructionCompletedAudio: {fileID: 0}
   requireGrabActionToTake: 1
   requireReleaseActionToReturn: 0
   showTriggerHint: 0
@@ -31265,6 +31279,7 @@ MonoBehaviour:
       type: 3}
     populationSupported: 0
     allowedUnitsToSpawn: 
+    constructionCompletedAudio: {fileID: 0}
   requireGrabActionToTake: 1
   requireReleaseActionToReturn: 0
   showTriggerHint: 0
@@ -36523,7 +36538,7 @@ Transform:
   - {fileID: 1072089706}
   - {fileID: 152940785}
   m_Father: {fileID: 0}
-  m_RootOrder: 14
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &760899294
 PrefabInstance:
@@ -36545,12 +36560,12 @@ PrefabInstance:
     - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
       propertyPath: m_RootOrder
-      value: 20
+      value: 18
       objectReference: {fileID: 0}
     - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -12.334
+      value: -15.383
       objectReference: {fileID: 0}
     - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
@@ -36560,7 +36575,7 @@ PrefabInstance:
     - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -10.321
+      value: -6.169
       objectReference: {fileID: 0}
     - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
@@ -36600,7 +36615,12 @@ PrefabInstance:
     - target: {fileID: 8052413789592210992, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
       propertyPath: state
-      value: 4
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8052413789592210992, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: currentResource
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2e26cba339b071948830d584eca2edda, type: 3}
@@ -37689,6 +37709,7 @@ MonoBehaviour:
       type: 3}
     populationSupported: 0
     allowedUnitsToSpawn: 
+    constructionCompletedAudio: {fileID: 0}
   requireGrabActionToTake: 1
   requireReleaseActionToReturn: 0
   showTriggerHint: 0
@@ -43188,7 +43209,7 @@ Transform:
   - {fileID: 1276212978}
   - {fileID: 1450194382}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &898626384
 PrefabInstance:
@@ -45475,7 +45496,7 @@ PrefabInstance:
     - target: {fileID: 338712006690949566, guid: 27cc3b43b77aafe4da537e66c4fe1efd,
         type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 338712006690949566, guid: 27cc3b43b77aafe4da537e66c4fe1efd,
         type: 3}
@@ -51243,7 +51264,7 @@ Transform:
   - {fileID: 301743704}
   - {fileID: 165764586}
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1079100075
 PrefabInstance:
@@ -52533,12 +52554,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1104496737}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &1104691411 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6245847907370464301, guid: 98885f5b4fafa1c4d9c5fb6ecd229b0b,
-    type: 3}
-  m_PrefabInstance: {fileID: 1950247778}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1106367650
 GameObject:
   m_ObjectHideFlags: 0
@@ -52632,37 +52647,6 @@ MonoBehaviour:
   goldText: {fileID: 481547101}
   grainText: {fileID: 1677817698}
   stoneText: {fileID: 964548553}
---- !u!1 &1108322813
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1108322814}
-  m_Layer: 0
-  m_Name: GrainNodes
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1108322814
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1108322813}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 12.137728, y: 0.63819766, z: 5.6906815}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1104691411}
-  m_Father: {fileID: 0}
-  m_RootOrder: 12
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1108461767
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -53765,6 +53749,7 @@ MonoBehaviour:
       type: 3}
     populationSupported: 5
     allowedUnitsToSpawn: 
+    constructionCompletedAudio: {fileID: 0}
   requireGrabActionToTake: 1
   requireReleaseActionToReturn: 0
   showTriggerHint: 0
@@ -55693,7 +55678,7 @@ Transform:
   - {fileID: 4000010887557843}
   - {fileID: 4000010722002779}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: -90.89, z: 0}
 --- !u!4 &1139664113
 Transform:
@@ -61329,7 +61314,7 @@ Transform:
   - {fileID: 2023715026}
   - {fileID: 100374671}
   m_Father: {fileID: 0}
-  m_RootOrder: 13
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1244201718
 PrefabInstance:
@@ -69891,7 +69876,7 @@ Transform:
   - {fileID: 2017988541}
   - {fileID: 609233278}
   m_Father: {fileID: 0}
-  m_RootOrder: 16
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1408794842
 PrefabInstance:
@@ -70124,75 +70109,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1412059033}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &1412759699
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 5294818226043652003, guid: 0f0f4b521d2ba1c449ead234f89aab74,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5294818226043652003, guid: 0f0f4b521d2ba1c449ead234f89aab74,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -11.75
-      objectReference: {fileID: 0}
-    - target: {fileID: 5294818226043652003, guid: 0f0f4b521d2ba1c449ead234f89aab74,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5294818226043652003, guid: 0f0f4b521d2ba1c449ead234f89aab74,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -11
-      objectReference: {fileID: 0}
-    - target: {fileID: 5294818226043652003, guid: 0f0f4b521d2ba1c449ead234f89aab74,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 5294818226043652003, guid: 0f0f4b521d2ba1c449ead234f89aab74,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 5294818226043652003, guid: 0f0f4b521d2ba1c449ead234f89aab74,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5294818226043652003, guid: 0f0f4b521d2ba1c449ead234f89aab74,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5294818226043652003, guid: 0f0f4b521d2ba1c449ead234f89aab74,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: -90
-      objectReference: {fileID: 0}
-    - target: {fileID: 5294818226043652003, guid: 0f0f4b521d2ba1c449ead234f89aab74,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5294818226043652003, guid: 0f0f4b521d2ba1c449ead234f89aab74,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5294818226044083075, guid: 0f0f4b521d2ba1c449ead234f89aab74,
-        type: 3}
-      propertyPath: m_Name
-      value: Barracks_World
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 0f0f4b521d2ba1c449ead234f89aab74, type: 3}
 --- !u!1001 &1413798583
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -71269,12 +71185,12 @@ PrefabInstance:
     - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
       propertyPath: m_RootOrder
-      value: 19
+      value: 17
       objectReference: {fileID: 0}
     - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -12.867
+      value: -15.127
       objectReference: {fileID: 0}
     - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
@@ -71284,7 +71200,7 @@ PrefabInstance:
     - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -10.234
+      value: -7.934
       objectReference: {fileID: 0}
     - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
@@ -73906,7 +73822,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 17
+  m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!1001 &1505120908
 PrefabInstance:
@@ -77649,7 +77565,7 @@ Transform:
   m_LocalScale: {x: 8, y: 3, z: 8}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1581720268
 PrefabInstance:
@@ -79110,6 +79026,7 @@ MonoBehaviour:
       type: 3}
     populationSupported: 0
     allowedUnitsToSpawn: 
+    constructionCompletedAudio: {fileID: 0}
   requireGrabActionToTake: 1
   requireReleaseActionToReturn: 0
   showTriggerHint: 0
@@ -83552,6 +83469,7 @@ MonoBehaviour:
       type: 3}
     populationSupported: 0
     allowedUnitsToSpawn: 
+    constructionCompletedAudio: {fileID: 0}
   requireGrabActionToTake: 1
   requireReleaseActionToReturn: 0
   showTriggerHint: 0
@@ -84468,6 +84386,8 @@ MonoBehaviour:
       type: 3}
     populationSupported: 0
     allowedUnitsToSpawn: 
+    constructionCompletedAudio: {fileID: 11400000, guid: c72159ec98440534abf1b3058c7edd57,
+      type: 2}
   - buildingType: 10
     dropoffTypes: 0
     goldCost: 20
@@ -84484,8 +84404,10 @@ MonoBehaviour:
       type: 3}
     populationSupported: 0
     allowedUnitsToSpawn: 
+    constructionCompletedAudio: {fileID: 11400000, guid: c72159ec98440534abf1b3058c7edd57,
+      type: 2}
   - buildingType: 15
-    dropoffTypes: 0
+    dropoffTypes: 8
     goldCost: 20
     stoneCost: 0
     grainCost: 10
@@ -84498,8 +84420,10 @@ MonoBehaviour:
       type: 3}
     worldPrefab: {fileID: 3210571205559245670, guid: f5ca26ca64a15b1428e249b9ebf62171,
       type: 3}
-    populationSupported: 5
+    populationSupported: 0
     allowedUnitsToSpawn: 
+    constructionCompletedAudio: {fileID: 11400000, guid: c72159ec98440534abf1b3058c7edd57,
+      type: 2}
   - buildingType: 20
     dropoffTypes: 0
     goldCost: 20
@@ -84516,6 +84440,8 @@ MonoBehaviour:
       type: 3}
     populationSupported: 0
     allowedUnitsToSpawn: 
+    constructionCompletedAudio: {fileID: 11400000, guid: c72159ec98440534abf1b3058c7edd57,
+      type: 2}
   - buildingType: 25
     dropoffTypes: 0
     goldCost: 20
@@ -84532,8 +84458,10 @@ MonoBehaviour:
       type: 3}
     populationSupported: 0
     allowedUnitsToSpawn: 
+    constructionCompletedAudio: {fileID: 11400000, guid: c72159ec98440534abf1b3058c7edd57,
+      type: 2}
   - buildingType: 30
-    dropoffTypes: 0
+    dropoffTypes: 1
     goldCost: 20
     stoneCost: 0
     grainCost: 10
@@ -84548,6 +84476,8 @@ MonoBehaviour:
       type: 3}
     populationSupported: 0
     allowedUnitsToSpawn: 
+    constructionCompletedAudio: {fileID: 11400000, guid: c72159ec98440534abf1b3058c7edd57,
+      type: 2}
   - buildingType: 35
     dropoffTypes: 0
     goldCost: 20
@@ -84564,6 +84494,8 @@ MonoBehaviour:
       type: 3}
     populationSupported: 5
     allowedUnitsToSpawn: 
+    constructionCompletedAudio: {fileID: 11400000, guid: c72159ec98440534abf1b3058c7edd57,
+      type: 2}
   - buildingType: 40
     dropoffTypes: 0
     goldCost: 20
@@ -84580,6 +84512,8 @@ MonoBehaviour:
       type: 3}
     populationSupported: 0
     allowedUnitsToSpawn: 
+    constructionCompletedAudio: {fileID: 11400000, guid: c72159ec98440534abf1b3058c7edd57,
+      type: 2}
   - buildingType: 45
     dropoffTypes: 0
     goldCost: 20
@@ -84596,6 +84530,8 @@ MonoBehaviour:
       type: 3}
     populationSupported: 0
     allowedUnitsToSpawn: 
+    constructionCompletedAudio: {fileID: 11400000, guid: c72159ec98440534abf1b3058c7edd57,
+      type: 2}
   - buildingType: 55
     dropoffTypes: 0
     goldCost: 20
@@ -84612,6 +84548,8 @@ MonoBehaviour:
       type: 3}
     populationSupported: 0
     allowedUnitsToSpawn: 
+    constructionCompletedAudio: {fileID: 11400000, guid: c72159ec98440534abf1b3058c7edd57,
+      type: 2}
   - buildingType: 60
     dropoffTypes: 0
     goldCost: 20
@@ -84628,6 +84566,8 @@ MonoBehaviour:
       type: 3}
     populationSupported: 0
     allowedUnitsToSpawn: 
+    constructionCompletedAudio: {fileID: 11400000, guid: c72159ec98440534abf1b3058c7edd57,
+      type: 2}
   - buildingType: 65
     dropoffTypes: 0
     goldCost: 20
@@ -84644,6 +84584,8 @@ MonoBehaviour:
       type: 3}
     populationSupported: 0
     allowedUnitsToSpawn: 
+    constructionCompletedAudio: {fileID: 11400000, guid: c72159ec98440534abf1b3058c7edd57,
+      type: 2}
   - buildingType: 70
     dropoffTypes: 0
     goldCost: 20
@@ -84657,6 +84599,8 @@ MonoBehaviour:
       type: 3}
     populationSupported: 0
     allowedUnitsToSpawn: 
+    constructionCompletedAudio: {fileID: 11400000, guid: c72159ec98440534abf1b3058c7edd57,
+      type: 2}
   - buildingType: 75
     dropoffTypes: 0
     goldCost: 20
@@ -84670,6 +84614,8 @@ MonoBehaviour:
       type: 3}
     populationSupported: 0
     allowedUnitsToSpawn: 
+    constructionCompletedAudio: {fileID: 11400000, guid: c72159ec98440534abf1b3058c7edd57,
+      type: 2}
   - buildingType: 80
     dropoffTypes: 0
     goldCost: 20
@@ -84683,6 +84629,7 @@ MonoBehaviour:
       type: 3}
     populationSupported: 0
     allowedUnitsToSpawn: 
+    constructionCompletedAudio: {fileID: 0}
   - buildingType: 85
     dropoffTypes: 0
     goldCost: 20
@@ -84697,8 +84644,10 @@ MonoBehaviour:
       type: 3}
     worldPrefab: {fileID: 1129064322338806663, guid: 9b01cde0f07486643a93faa1b4864738,
       type: 3}
-    populationSupported: 0
+    populationSupported: 5
     allowedUnitsToSpawn: 
+    constructionCompletedAudio: {fileID: 11400000, guid: c72159ec98440534abf1b3058c7edd57,
+      type: 2}
   - buildingType: 90
     dropoffTypes: 0
     goldCost: 20
@@ -84712,6 +84661,8 @@ MonoBehaviour:
       type: 3}
     populationSupported: 0
     allowedUnitsToSpawn: 
+    constructionCompletedAudio: {fileID: 11400000, guid: c72159ec98440534abf1b3058c7edd57,
+      type: 2}
   - buildingType: 95
     dropoffTypes: 0
     goldCost: 20
@@ -84725,6 +84676,8 @@ MonoBehaviour:
       type: 3}
     populationSupported: 0
     allowedUnitsToSpawn: 
+    constructionCompletedAudio: {fileID: 11400000, guid: c72159ec98440534abf1b3058c7edd57,
+      type: 2}
   - buildingType: 100
     dropoffTypes: 0
     goldCost: 20
@@ -84738,6 +84691,8 @@ MonoBehaviour:
       type: 3}
     populationSupported: 0
     allowedUnitsToSpawn: 
+    constructionCompletedAudio: {fileID: 11400000, guid: c72159ec98440534abf1b3058c7edd57,
+      type: 2}
   - buildingType: 105
     dropoffTypes: 0
     goldCost: 20
@@ -84751,6 +84706,8 @@ MonoBehaviour:
       type: 3}
     populationSupported: 0
     allowedUnitsToSpawn: 
+    constructionCompletedAudio: {fileID: 11400000, guid: c72159ec98440534abf1b3058c7edd57,
+      type: 2}
   - buildingType: 110
     dropoffTypes: 0
     goldCost: 20
@@ -84764,6 +84721,8 @@ MonoBehaviour:
       type: 3}
     populationSupported: 0
     allowedUnitsToSpawn: 
+    constructionCompletedAudio: {fileID: 11400000, guid: c72159ec98440534abf1b3058c7edd57,
+      type: 2}
   - buildingType: 115
     dropoffTypes: 0
     goldCost: 20
@@ -84777,6 +84736,8 @@ MonoBehaviour:
       type: 3}
     populationSupported: 0
     allowedUnitsToSpawn: 
+    constructionCompletedAudio: {fileID: 11400000, guid: c72159ec98440534abf1b3058c7edd57,
+      type: 2}
   - buildingType: 120
     dropoffTypes: 0
     goldCost: 20
@@ -84790,6 +84751,8 @@ MonoBehaviour:
       type: 3}
     populationSupported: 0
     allowedUnitsToSpawn: 
+    constructionCompletedAudio: {fileID: 11400000, guid: c72159ec98440534abf1b3058c7edd57,
+      type: 2}
   - buildingType: 125
     dropoffTypes: 0
     goldCost: 20
@@ -84803,6 +84766,8 @@ MonoBehaviour:
       type: 3}
     populationSupported: 0
     allowedUnitsToSpawn: 
+    constructionCompletedAudio: {fileID: 11400000, guid: c72159ec98440534abf1b3058c7edd57,
+      type: 2}
   - buildingType: 130
     dropoffTypes: 0
     goldCost: 20
@@ -84819,6 +84784,8 @@ MonoBehaviour:
       type: 3}
     populationSupported: 0
     allowedUnitsToSpawn: 
+    constructionCompletedAudio: {fileID: 11400000, guid: c72159ec98440534abf1b3058c7edd57,
+      type: 2}
   - buildingType: 135
     dropoffTypes: 0
     goldCost: 20
@@ -84835,8 +84802,10 @@ MonoBehaviour:
       type: 3}
     populationSupported: 0
     allowedUnitsToSpawn: 
+    constructionCompletedAudio: {fileID: 11400000, guid: c72159ec98440534abf1b3058c7edd57,
+      type: 2}
   - buildingType: 50
-    dropoffTypes: 0
+    dropoffTypes: 2
     goldCost: 20
     stoneCost: 0
     grainCost: 10
@@ -84851,6 +84820,8 @@ MonoBehaviour:
       type: 3}
     populationSupported: 0
     allowedUnitsToSpawn: 
+    constructionCompletedAudio: {fileID: 11400000, guid: c72159ec98440534abf1b3058c7edd57,
+      type: 2}
 --- !u!1 &1686582311
 GameObject:
   m_ObjectHideFlags: 0
@@ -86971,6 +86942,7 @@ MonoBehaviour:
       type: 3}
     populationSupported: 0
     allowedUnitsToSpawn: 
+    constructionCompletedAudio: {fileID: 0}
   requireGrabActionToTake: 1
   requireReleaseActionToReturn: 0
   showTriggerHint: 0
@@ -89305,75 +89277,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1759668831}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &1760814381
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 6467865168113617609, guid: d9203dc29d0cce64e938cdda7bc71e90,
-        type: 3}
-      propertyPath: m_Name
-      value: Archery_World
-      objectReference: {fileID: 0}
-    - target: {fileID: 6467865168114046697, guid: d9203dc29d0cce64e938cdda7bc71e90,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 6467865168114046697, guid: d9203dc29d0cce64e938cdda7bc71e90,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -13
-      objectReference: {fileID: 0}
-    - target: {fileID: 6467865168114046697, guid: d9203dc29d0cce64e938cdda7bc71e90,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6467865168114046697, guid: d9203dc29d0cce64e938cdda7bc71e90,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -7.75
-      objectReference: {fileID: 0}
-    - target: {fileID: 6467865168114046697, guid: d9203dc29d0cce64e938cdda7bc71e90,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 6467865168114046697, guid: d9203dc29d0cce64e938cdda7bc71e90,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 6467865168114046697, guid: d9203dc29d0cce64e938cdda7bc71e90,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6467865168114046697, guid: d9203dc29d0cce64e938cdda7bc71e90,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6467865168114046697, guid: d9203dc29d0cce64e938cdda7bc71e90,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: -90
-      objectReference: {fileID: 0}
-    - target: {fileID: 6467865168114046697, guid: d9203dc29d0cce64e938cdda7bc71e90,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6467865168114046697, guid: d9203dc29d0cce64e938cdda7bc71e90,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: d9203dc29d0cce64e938cdda7bc71e90, type: 3}
 --- !u!1001 &1760962483
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -89750,6 +89653,7 @@ MonoBehaviour:
       type: 3}
     populationSupported: 0
     allowedUnitsToSpawn: 
+    constructionCompletedAudio: {fileID: 0}
   requireGrabActionToTake: 1
   requireReleaseActionToReturn: 0
   showTriggerHint: 0
@@ -98535,7 +98439,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 1108322814}
+    m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 899507145775679583, guid: 98885f5b4fafa1c4d9c5fb6ecd229b0b,
         type: 3}
@@ -98545,22 +98449,32 @@ PrefabInstance:
     - target: {fileID: 6245847907370464301, guid: 98885f5b4fafa1c4d9c5fb6ecd229b0b,
         type: 3}
       propertyPath: m_RootOrder
-      value: 0
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6245847907370464301, guid: 98885f5b4fafa1c4d9c5fb6ecd229b0b,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.09
+      objectReference: {fileID: 0}
+    - target: {fileID: 6245847907370464301, guid: 98885f5b4fafa1c4d9c5fb6ecd229b0b,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.09
       objectReference: {fileID: 0}
     - target: {fileID: 6245847907370464301, guid: 98885f5b4fafa1c4d9c5fb6ecd229b0b,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -24.137728
+      value: -13.89
       objectReference: {fileID: 0}
     - target: {fileID: 6245847907370464301, guid: 98885f5b4fafa1c4d9c5fb6ecd229b0b,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.63819766
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6245847907370464301, guid: 98885f5b4fafa1c4d9c5fb6ecd229b0b,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -17.940681
+      value: -9.32
       objectReference: {fileID: 0}
     - target: {fileID: 6245847907370464301, guid: 98885f5b4fafa1c4d9c5fb6ecd229b0b,
         type: 3}
@@ -99664,7 +99578,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   woodCollected: 100
   goldCollected: 100
-  oreCollected: 100
+  stoneCollected: 0
   grainCollected: 100
   civilianPopulation: 0
   militaryPopulation: 0
@@ -102389,6 +102303,7 @@ MonoBehaviour:
       type: 3}
     populationSupported: 5
     allowedUnitsToSpawn: 
+    constructionCompletedAudio: {fileID: 0}
   requireGrabActionToTake: 1
   requireReleaseActionToReturn: 0
   showTriggerHint: 0
@@ -103491,7 +103406,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 15
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2076107088
 PrefabInstance:
@@ -109142,12 +109057,12 @@ PrefabInstance:
     - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -12.75
+      value: -15.01
       objectReference: {fileID: 0}
     - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
@@ -109157,7 +109072,7 @@ PrefabInstance:
     - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -10.75
+      value: -8.45
       objectReference: {fileID: 0}
     - target: {fileID: 1069823527325677069, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}

@@ -3060,7 +3060,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1069823527080501524}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 9000000, guid: 02ded044b8e0963439276550f50be6f9, type: 3}
   m_Controller: {fileID: 9100000, guid: 647fd6be200056b4798c107a226580d1, type: 2}
   m_CullingMode: 1
@@ -17836,8 +17836,9 @@ GameObject:
   - component: {fileID: 3165470419902578782}
   - component: {fileID: -6606716014632887433}
   - component: {fileID: 1098559784769540740}
-  - component: {fileID: 3014109988939847531}
   - component: {fileID: 8052413789592210992}
+  - component: {fileID: 7274408666555167777}
+  - component: {fileID: 3454845539566578310}
   m_Layer: 9
   m_Name: Villager
   m_TagString: Untagged
@@ -18007,18 +18008,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: VillagerActor, Assembly-CSharp
-        m_MethodName: OnPickUp
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
   onDetachFromHand:
     m_PersistentCalls:
       m_Calls:
@@ -18026,18 +18015,6 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: UnityEngine.Rigidbody, UnityEngine
         m_MethodName: set_useGravity
         m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: VillagerActor, Assembly-CSharp
-        m_MethodName: OnDetachFromHand
-        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -18176,25 +18153,6 @@ MonoBehaviour:
   previewPoseSelection: 0
   blendingBehaviours: []
   scale: 1
---- !u!95 &3014109988939847531
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1069823527325677058}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 02ded044b8e0963439276550f50be6f9, type: 3}
-  m_Controller: {fileID: 9100000, guid: 647fd6be200056b4798c107a226580d1, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!114 &8052413789592210992
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18215,14 +18173,59 @@ MonoBehaviour:
   goalSearchDistance: 20
   movementSpeed: 0.2
   factionID: 0
+  rtsUnitTypeData:
+    unitType: 0
+    queueTime: 0
+    prefab: {fileID: 0}
+    worldButtonImage: {fileID: 0}
+    populationCost: 0
+    goldCost: 0
+    oreCost: 0
+    grainCost: 0
+    woodCost: 0
   state: 0
-  resourcePriorities: 
   currentResource: 0
   maxCargo: 20
   currentCargo: 0
   workRate: 3
   buildRate: 6
   repairRate: 3
+--- !u!114 &7274408666555167777
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1069823527325677058}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8753ff4a5012a141b16468281698adb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attributes: []
+  invulnerable: 0
+  weaknesses: 
+  resistances: 
+  immunities: 
+--- !u!95 &3454845539566578310
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1069823527325677058}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: 02ded044b8e0963439276550f50be6f9, type: 3}
+  m_Controller: {fileID: 9100000, guid: 647fd6be200056b4798c107a226580d1, type: 2}
+  m_CullingMode: 1
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &1405613437724166983
 GameObject:
   m_ObjectHideFlags: 0

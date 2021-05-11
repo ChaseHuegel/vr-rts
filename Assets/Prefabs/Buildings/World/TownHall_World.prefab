@@ -159,13 +159,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe9688ff2b232c447b5987fc6a92de7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerColor: 0
-  buildingStage0: {fileID: 2723764393020711227}
-  buildingStage1: {fileID: 9099679966836435529}
-  buildingStageFinal: {fileID: 3284518357400287364}
-  maxHealth: 500
   maxUnitQueueSize: 10
-  currentHealth: 500
   buildingDamagedEffect: {fileID: 0}
   buildingHealth75PercentEffect: {fileID: 0}
   buildingHealth50PercentEffect: {fileID: 0}
@@ -176,15 +170,12 @@ MonoBehaviour:
   unitCreatedAudio: {fileID: 8300000, guid: ef85bf22745f24b4b967d56db93711f9, type: 3}
   buildingDestroyedAudio: {fileID: 8300000, guid: 3ab09a3a74546f24582a546bc639048a,
     type: 3}
-  populationSupported: 3
-  dropoffType: -1
   unitSpawnPoint: {fileID: 679956169}
   unitRallyWaypoint: {fileID: 7371219673673626341}
   unitRallyWaypointRadius: 0
   allowedUnitCreationList: 0100000002000000030000000400000005000000
   queueProgressText: {fileID: 0}
   queueProgressImage: {fileID: 0}
-  buildingHealthBar: {fileID: 0}
   QueueImageObjects:
   - {fileID: 8725226880470165287}
   - {fileID: 7037661470599435172}
@@ -377,7 +368,7 @@ MonoBehaviour:
     y: 0
   bakeOnStart: 1
   factionID: 0
-  dropoffTypes: -1
+  rtsBuildingType: 85
   built: 0
 --- !u!114 &-7167361800687799736
 MonoBehaviour:
@@ -668,12 +659,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c5f43a47e4b64c14da6e0081f639fdd3, type: 3}
---- !u!1 &3284518357400287364 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 100000, guid: c5f43a47e4b64c14da6e0081f639fdd3,
-    type: 3}
-  m_PrefabInstance: {fileID: 3284518357400190500}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &3284518357399790756 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: c5f43a47e4b64c14da6e0081f639fdd3,

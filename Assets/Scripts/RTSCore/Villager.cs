@@ -83,6 +83,8 @@ public class Villager : Unit
         animator = gameObject.GetComponent<Animator>();
         if (!animator)
             Debug.Log("No animator component found.");
+
+        PlayerManager.instance.AddToPopulation(rtsUnitTypeData.unitType);
     }
 
     public void OnDestroy()
@@ -136,6 +138,71 @@ public class Villager : Unit
         }
     }
 
+    // This is is used to reenable the character after they have been
+    // released from the hand AND after they have landed somewhere.
+    private void OnCollisionEnter(Collision collision)
+    {
+        this.enabled = true;
+        Unfreeze();
+        //audioSource.Stop();
+
+        // TODO: convert this to the new AI
+        Resource resource = collision.gameObject.GetComponent<Resource>();
+        if (resource)
+        {
+            switch (resource.type)
+            {
+                case ResourceGatheringType.Gold:
+                {
+                    state = UnitState.GATHERING;
+                    currentResource = ResourceGatheringType.Gold;
+                    ResetPathing();
+                    break;
+                }
+
+                case ResourceGatheringType.Grain:
+                {
+                    state = UnitState.GATHERING;
+                    currentResource = ResourceGatheringType.Grain;
+                    ResetPathing();
+                    break;
+                }
+
+                case ResourceGatheringType.Wood:
+                {
+                    state = UnitState.GATHERING;
+                    currentResource = ResourceGatheringType.Wood;
+                    ResetPathing();
+                    break;
+                }
+
+                case ResourceGatheringType.Stone:
+                {
+                    state = UnitState.GATHERING;
+                    currentResource = ResourceGatheringType.Stone;
+                    ResetPathing();
+                    break;
+                }
+
+                default:
+                    break;
+            }
+            return;
+        }
+
+        // TerrainBuilding building = collision.gameObject.GetComponent<TerrainBuilding>();
+        // if (building)
+        // {
+        //     if (building.NeedsRepair())
+        //     {
+        //         targetDamaged = building;
+        //         currentState = VillagerActorState.Building;
+        //         wantedResourceType = ResourceGatheringType.None;
+        //         ResetPathing();
+        //     }
+        // }
+    }
+
     public void OnRepathFailed(object sender, Actor.RepathFailedEvent e)
     {
         if (e.actor != this) return;
@@ -145,6 +212,11 @@ public class Villager : Unit
         //  This gives a simple decision making behavior
         if (state == UnitState.GATHERING)
             goals.Cycle();
+    }
+
+    public void PlaySound(string sound) 
+    {
+        AudioSource.PlayClipAtPoint(GameMaster.GetAudio(sound).GetClip(), transform.position, 0.75f);
     }
 
     public void OnGoalFound(object sender, PathfindingGoal.GoalFoundEvent e)
@@ -252,7 +324,7 @@ public class Villager : Unit
 
     public void TryBuildRepair(Structure structure)
     {
-        // These checks shouldn't be neccassary once we are past bug
+        // These checks shouldn't be necassary once we are past bug
         // squashing stages
         if (!structure) return;
 
@@ -268,7 +340,7 @@ public class Villager : Unit
         {
             // TODO: Resource cost for repairing is hardcoded, should be
             // relative to building cost to build?
-            PlayerManager.instance?.RemoveResources(1, 1, 1, 1);
+            PlayerManager.instance?.RemoveResourcesFromStockpile(1, 1, 1, 1);
         }
 
         //  Convert per second to per tick

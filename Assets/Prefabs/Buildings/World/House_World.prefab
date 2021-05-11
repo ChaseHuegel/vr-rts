@@ -55,13 +55,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe9688ff2b232c447b5987fc6a92de7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerColor: 0
-  buildingStage0: {fileID: 4217446519676726934}
-  buildingStage1: {fileID: 5563331089706735895}
-  buildingStageFinal: {fileID: 5395646467730742766}
-  maxHealth: 500
   maxUnitQueueSize: 5
-  currentHealth: 1
   buildingDamagedEffect: {fileID: 0}
   buildingHealth75PercentEffect: {fileID: 0}
   buildingHealth50PercentEffect: {fileID: 0}
@@ -72,15 +66,12 @@ MonoBehaviour:
   unitCreatedAudio: {fileID: 8300000, guid: ef85bf22745f24b4b967d56db93711f9, type: 3}
   buildingDestroyedAudio: {fileID: 8300000, guid: 3ab09a3a74546f24582a546bc639048a,
     type: 3}
-  populationSupported: 5
-  dropoffType: 0
   unitSpawnPoint: {fileID: 0}
   unitRallyWaypoint: {fileID: 0}
   unitRallyWaypointRadius: 0
   allowedUnitCreationList: 
   queueProgressText: {fileID: 0}
   queueProgressImage: {fileID: 0}
-  buildingHealthBar: {fileID: 0}
   QueueImageObjects: []
   buildingSpawnHoverMenu: {fileID: 0}
 --- !u!114 &-2718789996109689435
@@ -263,8 +254,7 @@ MonoBehaviour:
     y: 0
   bakeOnStart: 1
   factionID: 0
-  dropoffTypes: 0
-  built: 0
+  rtsBuildingType: 35
 --- !u!114 &3213080094431032773
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -465,12 +455,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c4bb27f050a2ef4439fb736e16b2bded, type: 3}
---- !u!1 &4217446519676726934 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 100000, guid: c4bb27f050a2ef4439fb736e16b2bded,
-    type: 3}
-  m_PrefabInstance: {fileID: 4217446519676626998}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4217446519677022902 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: c4bb27f050a2ef4439fb736e16b2bded,
@@ -542,12 +526,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 05035b78d90b21f43854dfe010ccd289, type: 3}
---- !u!1 &5395646467730742766 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 100000, guid: 05035b78d90b21f43854dfe010ccd289,
-    type: 3}
-  m_PrefabInstance: {fileID: 5395646467730774862}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5395646467730375118 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: 05035b78d90b21f43854dfe010ccd289,
@@ -619,12 +597,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b1ff534b3931e674e8e475faa59eb659, type: 3}
---- !u!1 &5563331089706735895 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 100000, guid: b1ff534b3931e674e8e475faa59eb659,
-    type: 3}
-  m_PrefabInstance: {fileID: 5563331089706704823}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5563331089706829111 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: b1ff534b3931e674e8e475faa59eb659,

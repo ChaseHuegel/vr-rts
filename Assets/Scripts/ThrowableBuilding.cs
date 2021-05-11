@@ -13,11 +13,10 @@ public class ThrowableBuilding : Throwable
     //public LayerMask allowedLayersMask;
     public LayerMask disallowedLayersMask;
     public RTSBuildingTypeData rtsBuildingTypeData;
+
     protected override void OnDetachedFromHand(Hand hand)
     {
         base.OnDetachedFromHand(hand);
-
-
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -50,7 +49,7 @@ public class ThrowableBuilding : Throwable
             AudioSource.PlayClipAtPoint( placementDeniedAudio.GetClip(),contact.point );            
         }
         
-        PlayerManager.instance.RemoveResources(rtsBuildingTypeData.goldCost, 
+        PlayerManager.instance.RemoveResourcesFromStockpile(rtsBuildingTypeData.goldCost, 
                                                 rtsBuildingTypeData.grainCost,
                                                 rtsBuildingTypeData.woodCost, 
                                                 rtsBuildingTypeData.stoneCost);

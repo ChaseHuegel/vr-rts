@@ -10,7 +10,7 @@ public class PlayerManager : MonoBehaviour
     [Header("Stats/Resources")]
     public int woodCollected;
     public int goldCollected;
-    public int oreCollected;
+    public int stoneCollected;
     public int grainCollected;
     public int civilianPopulation;
     public int militaryPopulation;
@@ -58,6 +58,7 @@ public class PlayerManager : MonoBehaviour
         WristDisplay.SetWoodText(woodCollected.ToString());
         WristDisplay.SetGrainText(grainCollected.ToString());
         WristDisplay.SetGoldText(goldCollected.ToString());
+        WristDisplay.SetStoneText(stoneCollected.ToString());
 
         if (palmMenu == null)
         {
@@ -114,12 +115,14 @@ public class PlayerManager : MonoBehaviour
         UpdateWristDisplayPopulationLimit();
     }
 
-    public void RemoveResources(int gold, int grain, int wood, int ore)
+    public void RemoveResourcesFromStockpile(int gold, int grain, int wood, int ore)
     {
         goldCollected -= gold;
         grainCollected -= grain;
         woodCollected -= wood;
-        oreCollected -= ore;
+        stoneCollected -= ore;
+
+        UpdateWristDisplayResourceText();
     }
 
     public void RemoveFromPopulation(RTSUnitType unitType)
@@ -158,6 +161,14 @@ public class PlayerManager : MonoBehaviour
         WristDisplay.SetTotalPopulationText(totalPopulation.ToString() + "/" + populationLimit.ToString());
     }
 
+    void UpdateWristDisplayResourceText()
+    {
+        WristDisplay.SetWoodText(woodCollected.ToString());
+        WristDisplay.SetGrainText(grainCollected.ToString());
+        WristDisplay.SetGoldText(goldCollected.ToString());
+        WristDisplay.SetStoneText(stoneCollected.ToString());
+    }
+
     public void AddResourceToStockpile(ResourceGatheringType type, int amount)
     {
         switch (type)
@@ -177,6 +188,11 @@ public class PlayerManager : MonoBehaviour
                 WristDisplay.SetGoldText(goldCollected.ToString());
                 break;
 
+            case ResourceGatheringType.Stone:
+                stoneCollected += amount;
+                WristDisplay.SetStoneText(goldCollected.ToString());
+                break;
+                
             default:
                 break;
         }
@@ -220,5 +236,7 @@ public class PlayerManager : MonoBehaviour
         woodCollected -= unitType.woodCost;
         grainCollected -= unitType.grainCost;
         goldCollected -= unitType.goldCost;
+
+        UpdateWristDisplayResourceText();
     }
 }
