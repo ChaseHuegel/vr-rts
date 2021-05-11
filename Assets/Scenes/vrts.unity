@@ -73974,6 +73974,32 @@ Transform:
   m_Father: {fileID: 1139566929}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 40.404, y: 0, z: -90}
+--- !u!1 &1498620695 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 899507145775679583, guid: 98885f5b4fafa1c4d9c5fb6ecd229b0b,
+    type: 3}
+  m_PrefabInstance: {fileID: 1950247778}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1498620696
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1498620695}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab54d6d5140767340bdbc6beb759bea3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  boundingDimensions: {x: 2, y: 2}
+  boundingOrigin: {x: 0, y: 0}
+  gridPosition:
+    x: 0
+    y: 0
+  bakeOnStart: 1
+  type: 1
+  amount: 1000
 --- !u!1001 &1498667399
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -98768,6 +98794,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Farm (20)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3987826578355607428, guid: 98885f5b4fafa1c4d9c5fb6ecd229b0b,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6245847907370464301, guid: 98885f5b4fafa1c4d9c5fb6ecd229b0b,
         type: 3}

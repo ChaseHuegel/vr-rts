@@ -88,8 +88,8 @@ public class Villager : Unit
 
         //  Add goals in order of priority
         //goals.Add<GoalBuildRepair>();
-        // goals.Add<GoalGatherResource>().type = ResourceGatheringType.Grain;
-        goals.Add<GoalGatherResource>().type = ResourceGatheringType.Gold;
+        goals.Add<GoalGatherResource>().type = ResourceGatheringType.Grain;
+        // goals.Add<GoalGatherResource>().type = ResourceGatheringType.Gold;
         // goals.Add<GoalGatherResource>().type = ResourceGatheringType.Stone;
         // goals.Add<GoalGatherResource>().type = ResourceGatheringType.Wood;
         transportGoal = goals.Add<GoalTransportResource>();
@@ -350,8 +350,8 @@ public class Villager : Unit
                     break;
 
                 case ResourceGatheringType.Grain:
-                    //handGrainDisplayObject.SetActive(true);
-                    currentHandToolDisplayObject = null;// handGrainDisplayObject;
+                    grainHandToolDisplayObject.SetActive(true);
+                    currentHandToolDisplayObject = grainHandToolDisplayObject;
                     break;
 
                 case ResourceGatheringType.Wood:
