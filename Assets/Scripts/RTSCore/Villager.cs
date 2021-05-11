@@ -87,11 +87,11 @@ public class Villager : Unit
         HookIntoEvents();
 
         //  Add goals in order of priority
-        //goals.Add<GoalBuildRepair>();
-        //goals.Add<GoalGatherResource>().type = ResourceGatheringType.Grain;
-        // goals.Add<GoalGatherResource>().type = ResourceGatheringType.Gold;
+        goals.Add<GoalBuildRepair>();
+        goals.Add<GoalGatherResource>().type = ResourceGatheringType.Grain;
+        goals.Add<GoalGatherResource>().type = ResourceGatheringType.Gold;
         goals.Add<GoalGatherResource>().type = ResourceGatheringType.Stone;
-        // goals.Add<GoalGatherResource>().type = ResourceGatheringType.Wood;
+        goals.Add<GoalGatherResource>().type = ResourceGatheringType.Wood;
         transportGoal = goals.Add<GoalTransportResource>();
        
         audioSource = gameObject.GetComponent<AudioSource>();
@@ -143,7 +143,6 @@ public class Villager : Unit
 
     public void OnDetachedFromHand(Hand hand)
     {        
-        Debug.Log("det");
         isHeld = false;
         villagerHoverMenu.Hide();
         ResetPathing();
@@ -337,6 +336,8 @@ public class Villager : Unit
             
         if (state == UnitState.GATHERING)
         {
+            transportGoal = goals.Add<GoalTransportResource>();
+
             switch (resourceType)
             {
                 case ResourceGatheringType.Gold:
@@ -421,6 +422,7 @@ public class Villager : Unit
                 villager.state = UnitState.GATHERING;
                 villager.currentResource = ((GoalGatherResource)e.goal).type;
                 DisplayCargo(false);
+                ChangeTaskVisuals();
                 return;
             }
         }
@@ -430,14 +432,16 @@ public class Villager : Unit
             {
                 villager.state = UnitState.TRANSPORTING;
                 DisplayCargo(true);
+                ChangeTaskVisuals();
                 return;
             }
         }
         else if (e.goal is GoalBuildRepair)
         {
             villager.state = UnitState.BUILDANDREPAIR;
+            ChangeTaskVisuals();
             return;
-        }
+        }        
 
         //  default cancel the goal so that another can take priority
         ResetGoal();
