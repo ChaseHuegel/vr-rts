@@ -88,9 +88,9 @@ public class Villager : Unit
 
         //  Add goals in order of priority
         //goals.Add<GoalBuildRepair>();
-        goals.Add<GoalGatherResource>().type = ResourceGatheringType.Grain;
+        //goals.Add<GoalGatherResource>().type = ResourceGatheringType.Grain;
         // goals.Add<GoalGatherResource>().type = ResourceGatheringType.Gold;
-        // goals.Add<GoalGatherResource>().type = ResourceGatheringType.Stone;
+        goals.Add<GoalGatherResource>().type = ResourceGatheringType.Stone;
         // goals.Add<GoalGatherResource>().type = ResourceGatheringType.Wood;
         transportGoal = goals.Add<GoalTransportResource>();
        
