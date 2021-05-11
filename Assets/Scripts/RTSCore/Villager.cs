@@ -137,17 +137,17 @@ public class Villager : Unit
         isHeld = true;
         villagerHoverMenu.Show();    
         Freeze();                    
-        animator.StopPlayback();
+        animator.SetInteger("VillagerActorState", 0);
         //audioSource.PlayOneShot(GameMaster.GetAudio("unitPickup").GetClip(), 0.5f);
     }
 
     public void OnDetachedFromHand(Hand hand)
     {        
+        Debug.Log("det");
         isHeld = false;
         villagerHoverMenu.Hide();
         ResetPathing();
         Unfreeze();        
-        animator.StartPlayback();
         // audioSource.Stop();
     }
 
