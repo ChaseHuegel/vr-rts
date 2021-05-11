@@ -31,7 +31,7 @@ public class Structure : Obstacle, IFactioned
 
     public bool NeedsRepairs() { return damageable.GetAttributePercent(Attributes.HEALTH) < 1f; }
     public bool IsBuilt() { return built; }
-    
+
     public override void Initialize()
     {
         base.Initialize();
@@ -56,7 +56,7 @@ public class Structure : Obstacle, IFactioned
         {
             buildingHealthBar.enabled = false;
             RefreshHealthBar();
-        }                
+        }
         else
             Debug.Log("No building health bar found.");
     }
@@ -64,12 +64,12 @@ public class Structure : Obstacle, IFactioned
     public void TryRepair(int count, Actor repairer = null)
     {
         AttributeHandler.Heal(count, AttributeChangeCause.HEALED, repairer.AttributeHandler);
-        RefreshHealthBar();        
+        RefreshHealthBar();
     }
 
     void RefreshHealthBar()
     {
-        buildingHealthBar.SetFilledAmount(damageable.GetAttributePercent(Attributes.HEALTH));  
+        buildingHealthBar.SetFilledAmount(damageable.GetAttributePercent(Attributes.HEALTH));
 
         // Only set display of building stages if construction hasn't been
         // completed yet.
@@ -80,7 +80,7 @@ public class Structure : Obstacle, IFactioned
                 constructionPhaseEndPrefab.SetActive(true);
                 constructionPhaseMiddlePrefab.SetActive(false);
                 constructionPhaseBeginPrefab.SetActive(false);
-                AudioSource.PlayClipAtPoint(rtsBuildingTypeData.constructionCompletedAudio.GetClip(), transform.position, 0.25f);
+                AudioSource.PlayClipAtPoint(rtsBuildingTypeData.constructionCompletedAudio?.GetClip(), transform.position, 0.25f);
                 built = true;
 
                 PlayerManager.instance.IncreasePopulationLimit(rtsBuildingTypeData.populationSupported);
@@ -97,7 +97,7 @@ public class Structure : Obstacle, IFactioned
                 constructionPhaseMiddlePrefab.SetActive(false);
                 constructionPhaseBeginPrefab.SetActive(true);
             }
-        }   
+        }
     }
 
     // Looks for 3 prefabs that are directly childed to the game object. The first
@@ -109,7 +109,7 @@ public class Structure : Obstacle, IFactioned
         constructionPhaseMiddlePrefab = transform.GetChild(1).gameObject;
         constructionPhaseBeginPrefab = transform.GetChild(2).gameObject;
     }
-    
+
     public bool CanDropOff(ResourceGatheringType type)
     {
         return rtsBuildingTypeData.dropoffTypes.HasFlag(type);

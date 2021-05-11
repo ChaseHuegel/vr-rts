@@ -54,22 +54,22 @@ public class PlayerManager : MonoBehaviour
     }
 
     void Start()
-    {        
-        WristDisplay.SetWoodText(woodCollected.ToString());
-        WristDisplay.SetGrainText(grainCollected.ToString());
-        WristDisplay.SetGoldText(goldCollected.ToString());
-        WristDisplay.SetStoneText(stoneCollected.ToString());
+    {
+        WristDisplay?.SetWoodText(woodCollected.ToString());
+        WristDisplay?.SetGrainText(grainCollected.ToString());
+        WristDisplay?.SetGoldText(goldCollected.ToString());
+        WristDisplay?.SetStoneText(stoneCollected.ToString());
 
         if (palmMenu == null)
         {
             palmMenu = Player.instance.GetComponent<PalmMenu>();
         }
 
-        palmMenuOnOff.AddOnStateDownListener(TogglePalmMenu, SteamVR_Input_Sources.RightHand);
-        palmMenuOnOff.AddOnStateUpListener(TogglePalmMenu, SteamVR_Input_Sources.RightHand);
-        palmMenuOnOff.AddOnStateDownListener(TogglePalmMenu, SteamVR_Input_Sources.LeftHand);
-        palmMenuOnOff.AddOnStateUpListener(TogglePalmMenu, SteamVR_Input_Sources.LeftHand);
-       
+        palmMenuOnOff?.AddOnStateDownListener(TogglePalmMenu, SteamVR_Input_Sources.RightHand);
+        palmMenuOnOff?.AddOnStateUpListener(TogglePalmMenu, SteamVR_Input_Sources.RightHand);
+        palmMenuOnOff?.AddOnStateDownListener(TogglePalmMenu, SteamVR_Input_Sources.LeftHand);
+        palmMenuOnOff?.AddOnStateUpListener(TogglePalmMenu, SteamVR_Input_Sources.LeftHand);
+
     }
 
     // void Update()
@@ -93,7 +93,7 @@ public class PlayerManager : MonoBehaviour
 
     public void TogglePalmMenu(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
-        palmMenu.Toggle();        
+        palmMenu.Toggle();
     }
 
     public void AddToPopulation(RTSUnitType unitType)
@@ -103,14 +103,14 @@ public class PlayerManager : MonoBehaviour
             unitType == RTSUnitType.StoneMiner || unitType == RTSUnitType.GoldMiner)
         {
             civilianPopulation += 1;
-            WristDisplay.SetCivilianPopulationText(civilianPopulation.ToString());
+            WristDisplay?.SetCivilianPopulationText(civilianPopulation.ToString());
         }
         else
         {
             militaryPopulation += 1;
-            WristDisplay.SetMilitaryPopulationText(militaryPopulation.ToString());
+            WristDisplay?.SetMilitaryPopulationText(militaryPopulation.ToString());
         }
-        
+
         totalPopulation += 1;
         UpdateWristDisplayPopulationLimit();
     }
@@ -137,7 +137,7 @@ public class PlayerManager : MonoBehaviour
         else
         {
             militaryPopulation -= 1;
-            WristDisplay.SetMilitaryPopulationText(militaryPopulation.ToString());            
+            WristDisplay.SetMilitaryPopulationText(militaryPopulation.ToString());
         }
 
         totalPopulation -= 1;
@@ -146,27 +146,27 @@ public class PlayerManager : MonoBehaviour
 
     public void IncreasePopulationLimit(int amountToIncreaseBy)
     {
-        populationLimit += amountToIncreaseBy;   
+        populationLimit += amountToIncreaseBy;
         UpdateWristDisplayPopulationLimit();
     }
-    
+
     public void DecreasePopulationLimit(int amountDecreaseBy)
     {
         populationLimit -= amountDecreaseBy;
-        UpdateWristDisplayPopulationLimit();        
+        UpdateWristDisplayPopulationLimit();
     }
 
     void UpdateWristDisplayPopulationLimit()
     {
-        WristDisplay.SetTotalPopulationText(totalPopulation.ToString() + "/" + populationLimit.ToString());
+        WristDisplay?.SetTotalPopulationText(totalPopulation.ToString() + "/" + populationLimit.ToString());
     }
 
     void UpdateWristDisplayResourceText()
     {
-        WristDisplay.SetWoodText(woodCollected.ToString());
-        WristDisplay.SetGrainText(grainCollected.ToString());
-        WristDisplay.SetGoldText(goldCollected.ToString());
-        WristDisplay.SetStoneText(stoneCollected.ToString());
+        WristDisplay?.SetWoodText(woodCollected.ToString());
+        WristDisplay?.SetGrainText(grainCollected.ToString());
+        WristDisplay?.SetGoldText(goldCollected.ToString());
+        WristDisplay?.SetStoneText(stoneCollected.ToString());
     }
 
     public void AddResourceToStockpile(ResourceGatheringType type, int amount)
@@ -192,16 +192,16 @@ public class PlayerManager : MonoBehaviour
                 stoneCollected += amount;
                 WristDisplay.SetStoneText(goldCollected.ToString());
                 break;
-                
+
             default:
                 break;
         }
     }
 
     public bool CanConstructBuilding(RTSBuildingType buildingType)
-    {   
+    {
         bool ret = true;
-        
+
         RTSBuildingTypeData buildingData = GameMaster.Instance.FindBuildingData(buildingType);
         if (goldCollected < buildingData.goldCost || woodCollected < buildingData.woodCost ||
             grainCollected < buildingData.grainCost)
@@ -228,7 +228,7 @@ public class PlayerManager : MonoBehaviour
             return false;
         }
 
-        return ret;        
+        return ret;
     }
 
     public void RemoveUnitQueueCostFromStockpile(RTSUnitTypeData unitType)

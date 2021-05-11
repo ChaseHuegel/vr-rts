@@ -11652,7 +11652,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65863d4773aa047438bb48d7fb25b215, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  showGizmos: 1
+  showGizmos: 0
   showDebugGrid: 0
   gridSize: 160
   gridUnit: 0.25
@@ -11683,7 +11683,9 @@ MonoBehaviour:
   audioDatabase: {fileID: 11400000, guid: bc043133584142d45bf72beb8b7f36f8, type: 2}
   nodeDatabase: {fileID: 11400000, guid: b47d761fe0f2a3c4c9f142be8272c135, type: 2}
   buildingDatabase: {fileID: 11400000, guid: 22799ff47cf2a124b82637517798a6c8, type: 2}
-  factions: []
+  factions:
+  - {fileID: 11400000, guid: effa210fcfc5796468bcaecb24cb5693, type: 2}
+  - {fileID: 11400000, guid: 8bc1d4a30d578944cb3853e5531e68e4, type: 2}
   rtsUnitDataList: []
   rtsBuildingDataList: []
 --- !u!4 &1028106422

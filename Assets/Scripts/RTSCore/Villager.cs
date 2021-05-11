@@ -93,7 +93,7 @@ public class Villager : Unit
         goals.Add<GoalGatherResource>().type = ResourceGatheringType.Stone;
         goals.Add<GoalGatherResource>().type = ResourceGatheringType.Wood;
         transportGoal = goals.Add<GoalTransportResource>();
-       
+
         audioSource = gameObject.GetComponent<AudioSource>();
         if (!audioSource)
             Debug.Log("No audiosource component found.");
@@ -135,18 +135,18 @@ public class Villager : Unit
     public void OnAttachedToHand(Hand hand)
     {
         isHeld = true;
-        villagerHoverMenu.Show();    
-        Freeze();                    
+        villagerHoverMenu.Show();
+        Freeze();
         animator.SetInteger("VillagerActorState", 0);
         //audioSource.PlayOneShot(GameMaster.GetAudio("unitPickup").GetClip(), 0.5f);
     }
 
     public void OnDetachedFromHand(Hand hand)
-    {        
+    {
         isHeld = false;
         villagerHoverMenu.Hide();
         ResetPathing();
-        Unfreeze();        
+        Unfreeze();
         // audioSource.Stop();
     }
 
@@ -172,7 +172,7 @@ public class Villager : Unit
                 //     UnityEngine.Random.Range(gridPosition.x - 4, gridPosition.x + 4),
                 //     UnityEngine.Random.Range(gridPosition.x - 4, gridPosition.x + 4)
                 // );
-                ChangeTaskVisuals(); 
+                ChangeTaskVisuals();
             break;
 
             case UnitState.GATHERING:
@@ -181,11 +181,11 @@ public class Villager : Unit
             break;
 
             case UnitState.TRANSPORTING:
-                if (!HasCargo()) state = UnitState.IDLE;              
+                if (!HasCargo()) state = UnitState.IDLE;
             break;
 
             case UnitState.BUILDANDREPAIR:
-                if (!HasValidTarget()) state = UnitState.IDLE;                                
+                if (!HasValidTarget()) state = UnitState.IDLE;
             break;
 
             case UnitState.IDLE:
@@ -220,10 +220,10 @@ public class Villager : Unit
         //     ResetPathing();
         //     currentGoalTarget = GetCellAtTransform();
         //     // currentGoal = (PathfindingGoal)Get goals.Get<GoalGatherResource>(x => ((GoalGatherResource)x).type == resource.type);
-            
+
         //     if (GotoNearestGoal()) //currentGoal != null && currentGoalTarget != null)
         //         PlayTaskChangeAudio(resource.type);
-            
+
         //     return;
         // }
     }
@@ -240,16 +240,16 @@ public class Villager : Unit
     }
 
     // Used by animator to play sound effects
-    public void AnimatorPlayAudio(string clipName) 
+    public void AnimatorPlayAudio(string clipName)
     {
         AudioSource.PlayClipAtPoint(GameMaster.GetAudio(clipName).GetClip(), transform.position, 0.75f);
     }
 
-    // TODO: Should this be part of the unit base class to be 
+    // TODO: Should this be part of the unit base class to be
     // overridden by inheritors? Should unitType be changed to
     // unitTask or unitJob?
-    public void SetRTSUnitType(RTSUnitType rtsUnitType)    
-    {        
+    public void SetRTSUnitType(RTSUnitType rtsUnitType)
+    {
         goals.Clear();
 
         switch ( rtsUnitType )
@@ -305,15 +305,18 @@ public class Villager : Unit
             {
                 case ResourceGatheringType.Gold:
                 case ResourceGatheringType.Stone:
-                    audioSource.PlayOneShot(GameMaster.GetAudio("miner").GetClip());
+                    audioSource.clip = GameMaster.GetAudio("miner").GetClip();
+                    audioSource.Play();
                     break;
 
                 case ResourceGatheringType.Grain:
-                    audioSource.PlayOneShot(GameMaster.GetAudio("farmer").GetClip());
+                    audioSource.clip = GameMaster.GetAudio("farmer").GetClip();
+                    audioSource.Play();
                     break;
 
                 case ResourceGatheringType.Wood:
-                    audioSource.PlayOneShot(GameMaster.GetAudio("lumberjack").GetClip());
+                    audioSource.clip = GameMaster.GetAudio("lumberjack").GetClip();
+                    audioSource.Play();
                     break;
 
                 default:
@@ -322,7 +325,8 @@ public class Villager : Unit
         }
         else if (state == UnitState.BUILDANDREPAIR)
         {
-            audioSource.PlayOneShot(GameMaster.GetAudio("builder").GetClip());
+            audioSource.clip = GameMaster.GetAudio("builder").GetClip();
+            audioSource.Play();
         }
     }
 
@@ -333,7 +337,7 @@ public class Villager : Unit
 
         if (resourceType == ResourceGatheringType.None)
             resourceType = currentResource;
-            
+
         if (state == UnitState.GATHERING)
         {
             transportGoal = goals.Add<GoalTransportResource>();
@@ -441,7 +445,7 @@ public class Villager : Unit
             villager.state = UnitState.BUILDANDREPAIR;
             ChangeTaskVisuals();
             return;
-        }        
+        }
 
         //  default cancel the goal so that another can take priority
         ResetGoal();
@@ -456,15 +460,14 @@ public class Villager : Unit
         Resource resource = e.cell.GetOccupant<Resource>();
         Structure structure = e.cell.GetOccupant<Structure>();
 
-        if (e.goal is GoalGatherResource && !villager.IsCargoFull())
+        if (e.goal is GoalGatherResource)
         {
             villager.TryGather(resource);
             return;
         }
-        else if (e.goal is GoalTransportResource && villager.HasCargo() && structure.IsBuilt())
+        else if (e.goal is GoalTransportResource)
         {
-            PlayerManager.instance?.AddResourceToStockpile(villager.currentResource, villager.currentCargo);
-            villager.currentCargo = 0;
+            villager.TryDropoff(structure);
             return;
         }
         else if (e.goal is GoalBuildRepair)
@@ -478,11 +481,24 @@ public class Villager : Unit
         e.Cancel();
     }
 
+    public void TryDropoff(Structure structure)
+    {
+        if (!structure || !HasCargo() || !structure.IsBuilt())
+            return;
+
+        //  Trigger a dropoff event
+        DropoffEvent e = new DropoffEvent{ villager = this, structure = structure, resourceType = currentResource, amount = currentCargo };
+        OnDropoffEvent?.Invoke(null, e);
+        if (e.cancel) return;   //  return if the event has been cancelled by any subscriber
+
+        currentCargo -= e.amount;
+        PlayerManager.instance.AddResourceToStockpile(currentResource, e.amount);
+    }
+
     public void TryGather(Resource resource)
     {
-        // These checks shouldn't be neccassary once we are past bug
-        // squashing stages
-        if (!resource) return;
+        if (!resource || IsCargoFull())
+            return;
 
         //  Convert per second to per tick and clamp to how much cargo space we have
         float amount = (workRate / (60/Constants.ACTOR_TICK_RATE));
@@ -490,9 +506,9 @@ public class Villager : Unit
         amount = resource.GetRemoveAmount((int)amount);
 
         //  Trigger a gather event
-        GatherEvent e = new GatherEvent{ villager = this, resource = resource, amount = (int)amount };
+        GatherEvent e = new GatherEvent{ villager = this, resource = resource, resourceType = currentResource, amount = (int)amount };
         OnGatherEvent?.Invoke(null, e);
-        if (e.cancel == true) { return; }   //  return if the event has been cancelled by any subscriber
+        if (e.cancel) return;   //  return if the event has been cancelled by any subscriber
 
         //  Remove from the resource and add to cargo
         amount = resource.TryRemove(e.amount);
@@ -518,28 +534,21 @@ public class Villager : Unit
 
     public void TryBuildRepair(Structure structure)
     {
-        // These checks shouldn't be necassary once we are past bug
-        // squashing stages
-        if (!structure) return;
+        if (!structure || structure.AttributeHandler.GetAttributePercent(Attributes.HEALTH) >= 1f)
+            return;
 
         // Use the repair rate unless the building hasn't been constructed.
-        int rate = repairRate;
-
-        if (!structure.IsBuilt())
-        {
-            rate = buildRate;
-        }
-        // Repairing costs resources
-        else
-        {
-            // TODO: Resource cost for repairing is hardcoded, should be
-            // relative to building cost to build?
-            PlayerManager.instance?.RemoveResourcesFromStockpile(1, 1, 1, 1);
-        }
+        int rate = structure.IsBuilt() ? buildRate : repairRate;
 
         //  Convert per second to per tick
         int amount = (int)(rate / (60/Constants.ACTOR_TICK_RATE));
-        structure.TryRepair(amount, this);
+
+        //  Trigger a build/repair event
+        BuildRepairEvent e = new BuildRepairEvent{ villager = this, structure = structure, amount = amount };
+        OnBuildRepairEvent?.Invoke(null, e);
+        if (e.cancel) return;   //  return if the event has been cancelled by any subscriber
+
+        structure.TryRepair(e.amount, this);
 
         // Use lumberjack animation
         animator.SetInteger("VillagerActorState", (int)ActorAnimationState.BUILDANDREPAIR);
@@ -550,6 +559,24 @@ public class Villager : Unit
     {
         public Villager villager;
         public Resource resource;
+        public ResourceGatheringType resourceType;
+        public int amount;
+    }
+
+    public static event EventHandler<DropoffEvent> OnDropoffEvent;
+    public class DropoffEvent : Swordfish.Event
+    {
+        public Villager villager;
+        public Structure structure;
+        public ResourceGatheringType resourceType;
+        public int amount;
+    }
+
+    public static event EventHandler<BuildRepairEvent> OnBuildRepairEvent;
+    public class BuildRepairEvent : Swordfish.Event
+    {
+        public Villager villager;
+        public Structure structure;
         public int amount;
     }
 }
