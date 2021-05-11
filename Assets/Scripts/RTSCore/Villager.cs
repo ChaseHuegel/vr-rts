@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Swordfish;
 using Swordfish.Navigation;
+using Valve.VR.InteractionSystem;
 
 public enum UnitState
 {
@@ -19,9 +20,11 @@ public class Villager : Unit
 {
     [Header("AI")]
     public UnitState state;
+    protected UnitState previousState;
 
     [Header("Villager")]
     public ResourceGatheringType currentResource;
+    protected ResourceGatheringType previousResource;
     public GoalTransportResource transportGoal;
 
     // Should we have different cargo capacities based on resource
@@ -43,8 +46,23 @@ public class Villager : Unit
     protected Animator animator;
     private AudioSource audioSource;
 
+    [Header ("Visuals")]
+    public GameObject grainCargoDisplayObject;
+    public GameObject woodCargoDisplayObject;
+    public GameObject stoneCargoDisplayObject;
+    public GameObject goldCargoDisplayObject;
+    public GameObject grainHandToolDisplayObject;
+    public GameObject woodHandToolDisplayObject;
+    public GameObject stoneHandToolDisplayObject;
+    public GameObject goldHandToolDisplayObject;
+    public GameObject builderHandToolDisplayObject;
+    GameObject currentCargoDisplayObject;
+    GameObject currentHandToolDisplayObject;
+   public VillagerHoverMenu villagerHoverMenu;
     public bool IsCargoFull() { return currentCargo >= maxCargo; }
     public bool HasCargo() { return currentCargo > 0; }
+
+    bool isHeld;
 
     public void HookIntoEvents()
     {
@@ -80,11 +98,13 @@ public class Villager : Unit
         if (!audioSource)
             Debug.Log("No audiosource component found.");
 
-        animator = gameObject.GetComponent<Animator>();
+        animator = gameObject.GetComponentInChildren<Animator>();
         if (!animator)
             Debug.Log("No animator component found.");
 
         PlayerManager.instance.AddToPopulation(rtsUnitTypeData.unitType);
+
+        //ChangeTaskVisuals();
     }
 
     public void OnDestroy()
@@ -92,8 +112,50 @@ public class Villager : Unit
         CleanupEvents();
     }
 
+    public bool TaskChanged()
+    {
+        return StateChanged() && previousResource != currentResource;
+    }
+
+    bool StateChanged()
+    {
+        return state != previousState;
+    }
+
+    public void OnHandHoverBegin(Hand hand)
+    {
+        villagerHoverMenu.Show();
+    }
+
+    public void OnHandHoverEnd(Hand hand)
+    {
+        villagerHoverMenu.Hide();
+    }
+
+    public void OnAttachedToHand(Hand hand)
+    {
+        isHeld = true;
+        villagerHoverMenu.Show();    
+        Freeze();                    
+        animator.StopPlayback();
+        //audioSource.PlayOneShot(GameMaster.GetAudio("unitPickup").GetClip(), 0.5f);
+    }
+
+    public void OnDetachedFromHand(Hand hand)
+    {        
+        isHeld = false;
+        villagerHoverMenu.Hide();
+        ResetPathing();
+        Unfreeze();        
+        animator.StartPlayback();
+        // audioSource.Stop();
+    }
+
     public override void Tick()
     {
+        if (isHeld)
+            return;
+
         base.Tick();
 
         //  Transport type always matches what our current resource is
@@ -111,6 +173,9 @@ public class Villager : Unit
                     UnityEngine.Random.Range(gridPosition.x - 4, gridPosition.x + 4),
                     UnityEngine.Random.Range(gridPosition.x - 4, gridPosition.x + 4)
                 );
+                if (IsMoving())
+                    animator.SetInteger("VillagerActorState", (int)ActorAnimationState.MOVING);
+                ChangeTaskVisuals(); 
             break;
 
             case UnitState.GATHERING:
@@ -123,83 +188,49 @@ public class Villager : Unit
             case UnitState.TRANSPORTING:
                 if (!HasCargo()) state = UnitState.ROAMING;
                 if (IsMoving())
-                    animator.SetInteger("VillagerActorState", (int)ActorAnimationState.MOVING);
+                    animator.SetInteger("VillagerActorState", (int)ActorAnimationState.MOVING);                
             break;
 
             case UnitState.BUILDANDREPAIR:
                 if (!HasValidTarget()) state = UnitState.IDLE;
                 if (IsMoving())
-                    animator.SetInteger("VillagerActorState", (int)ActorAnimationState.MOVING);
+                    animator.SetInteger("VillagerActorState", (int)ActorAnimationState.MOVING);                
             break;
 
             case UnitState.IDLE:
                 animator.SetInteger("VillagerActorState", (int)ActorAnimationState.IDLE);
             break;
         }
+
+        if (TaskChanged())
+        {
+            ChangeTaskVisuals();
+            //PlayChangeTaskAudio();
+        }
+
+        previousState = state;
+        previousResource = currentResource;
     }
 
     // This is is used to reenable the character after they have been
     // released from the hand AND after they have landed somewhere.
     private void OnCollisionEnter(Collision collision)
     {
-        this.enabled = true;
-        Unfreeze();
+        //this.enabled = true;
+        //Unfreeze();
         //audioSource.Stop();
 
-        // TODO: convert this to the new AI
-        Resource resource = collision.gameObject.GetComponent<Resource>();
-        if (resource)
-        {
-            switch (resource.type)
-            {
-                case ResourceGatheringType.Gold:
-                {
-                    state = UnitState.GATHERING;
-                    currentResource = ResourceGatheringType.Gold;
-                    ResetPathing();
-                    break;
-                }
-
-                case ResourceGatheringType.Grain:
-                {
-                    state = UnitState.GATHERING;
-                    currentResource = ResourceGatheringType.Grain;
-                    ResetPathing();
-                    break;
-                }
-
-                case ResourceGatheringType.Wood:
-                {
-                    state = UnitState.GATHERING;
-                    currentResource = ResourceGatheringType.Wood;
-                    ResetPathing();
-                    break;
-                }
-
-                case ResourceGatheringType.Stone:
-                {
-                    state = UnitState.GATHERING;
-                    currentResource = ResourceGatheringType.Stone;
-                    ResetPathing();
-                    break;
-                }
-
-                default:
-                    break;
-            }
-            return;
-        }
-
-        // TerrainBuilding building = collision.gameObject.GetComponent<TerrainBuilding>();
-        // if (building)
+        // Resource resource = collision.gameObject.GetComponent<Resource>();
+        // if (resource)
         // {
-        //     if (building.NeedsRepair())
-        //     {
-        //         targetDamaged = building;
-        //         currentState = VillagerActorState.Building;
-        //         wantedResourceType = ResourceGatheringType.None;
-        //         ResetPathing();
-        //     }
+        //     ResetPathing();
+        //     currentGoalTarget = GetCellAtTransform();
+        //     // currentGoal = (PathfindingGoal)Get goals.Get<GoalGatherResource>(x => ((GoalGatherResource)x).type == resource.type);
+            
+        //     if (GotoNearestGoal()) //currentGoal != null && currentGoalTarget != null)
+        //         PlayTaskChangeAudio(resource.type);
+            
+        //     return;
         // }
     }
 
@@ -214,9 +245,161 @@ public class Villager : Unit
             goals.Cycle();
     }
 
-    public void PlaySound(string sound) 
+    // Used by animator to play sound effects
+    public void AnimatorPlayAudio(string clipName) 
     {
-        AudioSource.PlayClipAtPoint(GameMaster.GetAudio(sound).GetClip(), transform.position, 0.75f);
+        AudioSource.PlayClipAtPoint(GameMaster.GetAudio(clipName).GetClip(), transform.position, 0.75f);
+    }
+
+    // TODO: Should this be part of the unit base class to be 
+    // overridden by inheritors? Should unitType be changed to
+    // unitTask or unitJob?
+    public void SetRTSUnitType(RTSUnitType rtsUnitType)    
+    {
+        switch ( rtsUnitType )
+        {
+            case RTSUnitType.Builder:
+                state = UnitState.BUILDANDREPAIR;
+                currentResource = ResourceGatheringType.None;
+                ResetPathing();
+                break;
+
+            case RTSUnitType.Farmer:
+                state = UnitState.GATHERING;
+                currentResource = ResourceGatheringType.Grain;
+                ResetPathing();
+                break;
+
+            case RTSUnitType.Lumberjack:
+                state = UnitState.GATHERING;
+                currentResource = ResourceGatheringType.Wood;
+                ResetPathing();
+                break;
+
+            case RTSUnitType.GoldMiner:
+                state = UnitState.GATHERING;
+                currentResource = ResourceGatheringType.Gold;
+                ResetPathing();
+                break;
+
+            case RTSUnitType.StoneMiner:
+                state = UnitState.GATHERING;
+                currentResource = ResourceGatheringType.Stone;
+                ResetPathing();
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    public void PlayChangeTaskAudio()
+    {
+        if (state == UnitState.GATHERING)
+        {
+            switch (currentResource)
+            {
+                case ResourceGatheringType.Gold:
+                case ResourceGatheringType.Stone:
+                    audioSource.PlayOneShot(GameMaster.GetAudio("miner").GetClip());
+                    break;
+
+                case ResourceGatheringType.Grain:
+                    audioSource.PlayOneShot(GameMaster.GetAudio("farmer").GetClip());
+                    break;
+
+                case ResourceGatheringType.Wood:
+                    audioSource.PlayOneShot(GameMaster.GetAudio("lumberjack").GetClip());
+                    break;
+
+                default:
+                    break;
+            }
+        }
+        else if (state == UnitState.BUILDANDREPAIR)
+        {
+            audioSource.PlayOneShot(GameMaster.GetAudio("builder").GetClip());
+        }
+    }
+
+    public void ChangeTaskVisuals(ResourceGatheringType resourceType = ResourceGatheringType.None)
+    {
+        if (currentHandToolDisplayObject)
+            currentHandToolDisplayObject.SetActive(false);
+
+        if (resourceType == ResourceGatheringType.None)
+            resourceType = currentResource;
+            
+        if (state == UnitState.GATHERING)
+        {
+            switch (resourceType)
+            {
+                case ResourceGatheringType.Gold:
+                    goldHandToolDisplayObject.SetActive(true);
+                    currentHandToolDisplayObject = goldHandToolDisplayObject;
+                    break;
+
+                case ResourceGatheringType.Stone:
+                    stoneHandToolDisplayObject.SetActive(true);
+                    currentHandToolDisplayObject = stoneHandToolDisplayObject;
+                    break;
+
+                case ResourceGatheringType.Grain:
+                    //handGrainDisplayObject.SetActive(true);
+                    currentHandToolDisplayObject = null;// handGrainDisplayObject;
+                    break;
+
+                case ResourceGatheringType.Wood:
+                    woodHandToolDisplayObject.SetActive(true);
+                    currentHandToolDisplayObject = woodHandToolDisplayObject;
+                    break;
+
+                default:
+                    break;
+            }
+        }
+        else if (state == UnitState.BUILDANDREPAIR)
+        {
+            builderHandToolDisplayObject.SetActive(true);
+            currentHandToolDisplayObject = builderHandToolDisplayObject;
+        }
+    }
+
+    private void DisplayCargo(bool visible)
+    {
+        if (currentCargoDisplayObject)
+            currentCargoDisplayObject.SetActive(false);
+
+        switch (currentResource)
+        {
+            case ResourceGatheringType.Grain:
+            {
+                grainCargoDisplayObject.SetActive(visible);
+                currentCargoDisplayObject = grainCargoDisplayObject;
+                break;
+            }
+
+            case ResourceGatheringType.Wood:
+            {
+                woodCargoDisplayObject.SetActive(visible);
+                currentCargoDisplayObject = woodCargoDisplayObject;
+                break;
+            }
+
+            case ResourceGatheringType.Stone:
+            {
+                stoneCargoDisplayObject.SetActive(visible);
+                currentCargoDisplayObject = stoneCargoDisplayObject;
+                break;
+            }
+
+            case ResourceGatheringType.Gold:
+            {
+                goldCargoDisplayObject.SetActive(visible);
+                currentCargoDisplayObject = goldCargoDisplayObject;
+                break;
+            }
+        }
     }
 
     public void OnGoalFound(object sender, PathfindingGoal.GoalFoundEvent e)
@@ -232,6 +415,7 @@ public class Villager : Unit
             {
                 villager.state = UnitState.GATHERING;
                 villager.currentResource = ((GoalGatherResource)e.goal).type;
+                DisplayCargo(false);
                 return;
             }
         }
@@ -240,6 +424,7 @@ public class Villager : Unit
             if (villager.HasCargo())
             {
                 villager.state = UnitState.TRANSPORTING;
+                DisplayCargo(true);
                 return;
             }
         }
@@ -348,7 +533,7 @@ public class Villager : Unit
         structure.TryRepair(amount, this);
 
         // Use lumberjack animation
-        animator.SetInteger("VillagerActorState", (int)ActorAnimationState.LUMBERJACKING);
+        animator.SetInteger("VillagerActorState", (int)ActorAnimationState.BUILDANDREPAIR);
     }
 
     public static event EventHandler<GatherEvent> OnGatherEvent;

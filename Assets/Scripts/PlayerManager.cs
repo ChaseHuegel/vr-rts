@@ -100,7 +100,7 @@ public class PlayerManager : MonoBehaviour
     {
         // Determine if the unit should be added to civilian or military population
         if (unitType == RTSUnitType.Builder || unitType == RTSUnitType.Farmer || unitType == RTSUnitType.Lumberjack ||
-            unitType == RTSUnitType.OreMiner || unitType == RTSUnitType.GoldMiner)
+            unitType == RTSUnitType.StoneMiner || unitType == RTSUnitType.GoldMiner)
         {
             civilianPopulation += 1;
             WristDisplay.SetCivilianPopulationText(civilianPopulation.ToString());
@@ -129,7 +129,7 @@ public class PlayerManager : MonoBehaviour
     {
         // Determine if the unit should be removed from civilian or military population
         if (unitType == RTSUnitType.Builder || unitType == RTSUnitType.Farmer || unitType == RTSUnitType.Lumberjack ||
-            unitType == RTSUnitType.OreMiner)
+            unitType == RTSUnitType.StoneMiner)
         {
             civilianPopulation -= 1;
             WristDisplay.SetCivilianPopulationText(civilianPopulation.ToString());

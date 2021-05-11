@@ -8,14 +8,7 @@ using Valve.VR;
 public enum VillagerActorState { Idle, Lumberjacking, Farming, MiningGold, Transporting,
                                 Building, Repairing, Attacking, Dying, MiningOre, Roaming, Gathering };
 
-[System.Flags]
-public enum ResourceGatheringType {
-    None = 0,
-    Grain = 1,
-    Wood = 2,
-    Stone = 4,
-    Gold = 8,
-};
+
 
 [RequireComponent(typeof(AudioSource), typeof(Animator))]
 public class VillagerActor : Actor
@@ -480,7 +473,7 @@ public class VillagerActor : Actor
                 break;
             }
 
-            case RTSUnitType.OreMiner:
+            case RTSUnitType.StoneMiner:
             {
                 currentState = VillagerActorState.MiningOre;
                 wantedResourceType = ResourceGatheringType.Stone;

@@ -5,7 +5,7 @@ using Swordfish.Audio;
 
 [System.Serializable]
 public struct RTSBuildingTypeData
-{
+{    
     public RTSBuildingType buildingType;
     public ResourceGatheringType dropoffTypes;
     public int goldCost;

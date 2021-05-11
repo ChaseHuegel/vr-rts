@@ -10,5 +10,6 @@ public enum ActorAnimationState
     FARMING = 2,
     MINING = 3,
     LUMBERJACKING = 4,
+    BUILDANDREPAIR = 5,
 
 }

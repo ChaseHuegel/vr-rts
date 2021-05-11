@@ -80,7 +80,7 @@ public class Structure : Obstacle, IFactioned
                 constructionPhaseEndPrefab.SetActive(true);
                 constructionPhaseMiddlePrefab.SetActive(false);
                 constructionPhaseBeginPrefab.SetActive(false);
-                AudioSource.PlayClipAtPoint(rtsBuildingTypeData.constructionCompletedAudio.GetClip(), transform.position);
+                AudioSource.PlayClipAtPoint(rtsBuildingTypeData.constructionCompletedAudio.GetClip(), transform.position, 0.25f);
                 built = true;
 
                 PlayerManager.instance.IncreasePopulationLimit(rtsBuildingTypeData.populationSupported);
