@@ -58,7 +58,7 @@ public class Villager : Unit
     public GameObject builderHandToolDisplayObject;
     GameObject currentCargoDisplayObject;
     GameObject currentHandToolDisplayObject;
-   public VillagerHoverMenu villagerHoverMenu;
+    public VillagerHoverMenu villagerHoverMenu;
     public bool IsCargoFull() { return currentCargo >= maxCargo; }
     public bool HasCargo() { return currentCargo > 0; }
 

@@ -63,15 +63,8 @@ public class Body : MonoBehaviour
     public Coord2D GetNearbyCoord()
     {
         Coord2D target = new Coord2D(gridPosition.x, gridPosition.y);
-        int paddingX = (int)(boundingDimensions.x * 0.5f);
-        int paddingY = (int)(boundingDimensions.y * 0.5f);
-
-        //  Use 0 and 1 to determine negative or positive
-        // int sign = (int)((Random.Range(0, 2) << 1) - 1);
-        // target.x += sign * paddingX;
-
-        // sign = (int)((Random.Range(0, 2) << 1) - 1);
-        // target.y += sign * paddingY;
+        int paddingX = Random.Range(1, (int)(boundingDimensions.x * 0.5f) + 2);
+        int paddingY = Random.Range(1, (int)(boundingDimensions.y * 0.5f) + 2);
 
         //  Use 0 and 1 to determine negative or positive
         int sign = Random.value > 0.5f ? -1 : 1;
@@ -104,7 +97,7 @@ public class Body : MonoBehaviour
         int distX = Mathf.Abs(x - gridPosition.x);
         int distY = Mathf.Abs(y - gridPosition.y);
 
-        return distX + distY;
+        return distX > distY ? distX : distY;
     }
 
     public bool CanSetPosition(Vector2 p, bool ignoreOccupied = false) { return CanSetPosition((int)p.x, (int)p.y, ignoreOccupied); }

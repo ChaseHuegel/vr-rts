@@ -55,11 +55,13 @@ public class Path
             current = openList.RemoveFirst();  //  Default to the first open cell
             testedList.Add(current);    //  Move current cell to the tested list
 
-            //  We've reached the target or the end of a heap, path to the current cell
-            if (current == end || openList.IsFull() || testedList.IsFull() )
-            {
+            //  We've reached the target, path to the current cell
+            if (current == end)
                 return RetracePath(current, start);
-            }
+
+            //  Reached end of the heap without finding a path
+            if (openList.IsFull() || testedList.IsFull())
+                return null;
 
             //  Not there yet! Go through all neighbors of the current cell..
             foreach(Cell neighbor in current.neighbors())

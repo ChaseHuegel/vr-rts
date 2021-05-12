@@ -9,7 +9,7 @@ namespace Swordfish.Navigation
 public class Actor : Body
 {
     protected GoalHolder goals = new GoalHolder();
-    public virtual PathfindingGoal[] GetGoals() { return goals.entries; }
+    public PathfindingGoal[] GetGoals() { return goals.entries; }
 
     private Damageable damageable;
     public Damageable AttributeHandler { get { return damageable; } }
@@ -84,7 +84,7 @@ public class Actor : Body
 
     public void TryGoalAtHelper(int relativeX, int relativeY, PathfindingGoal goal, ref Cell current, ref Cell result, ref int currentDistance, ref int nearestDistance)
     {
-        current = World.Grid.atUnsafe(gridPosition.x + relativeX, gridPosition.y + relativeY);
+        current = World.at(gridPosition.x + relativeX, gridPosition.y + relativeY);
         currentDistance = DistanceTo(current);
 
         if (PathfindingGoal.TryGoal(this, current, goal) && currentDistance < nearestDistance)
@@ -149,14 +149,9 @@ public class Actor : Body
         if (!HasValidTarget() || !HasValidGoal())
             currentGoalTarget = FindNearestGoal(usePriority);
 
-        //  Do we have a valid goal now?
         if (HasValidTarget() && HasValidGoal())
         {
-            Coord2D coord = currentGoalTarget.GetFirstOccupant().GetNearbyCoord();
-            GotoForced(coord.x, coord.y);
-
-            // GotoForced(currentGoalTarget.x, currentGoalTarget.y);
-
+            Goto(currentGoalTarget.x, currentGoalTarget.y);
             return true;
         }
 
@@ -209,10 +204,11 @@ public class Actor : Body
             //  Handle interacting with goals
             if (!moving && HasValidGoal() && HasValidTarget())
             {
-                //  Assume our currentGoal is a valid match since it was found successfully.
-                //  Forcibly trigger reached under that assumption
-                if (DistanceTo(currentGoalTarget) <= 1)
+                //  Check if we have reached our target, or the path ahead matches our goal
+                if (DistanceTo(currentGoalTarget) <= 1 || (HasValidPath() && PathfindingGoal.CheckGoal(this, currentPath[0], currentGoal)))
                 {
+                    //  Assume our currentGoal is a valid match since it was found successfully.
+                    //  Forcibly trigger reached under that assumption
                     PathfindingGoal.TriggerInteractGoal(this, currentGoalTarget, currentGoal);
                     ResetPathingBrain();
                 }
@@ -287,7 +283,7 @@ public class Actor : Body
 
                         if (HasValidGoal() && HasValidTarget())
                         {
-                            Coord2D coord = currentGoalTarget.occupants[0].GetNearbyCoord();
+                            Coord2D coord = currentGoalTarget.GetFirstOccupant().GetNearbyCoord();
                             targetX = coord.x;
                             targetY = coord.y;
                         }
