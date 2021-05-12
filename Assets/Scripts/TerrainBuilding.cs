@@ -11,18 +11,8 @@ public class TerrainBuilding : MonoBehaviour
     [Header( "Building Stats" )]
     public int maxUnitQueueSize = 10;
 
-    [Header( "Damage Effects" )]
-    public GameObject buildingDamagedEffect;
-    public GameObject buildingHealth75PercentEffect;
-    public GameObject buildingHealth50PercentEffect;
-    public GameObject buildingHealth25PercentEffect;
-    public GameObject buildingDestroyedEffect;
-
     [Header("Audio")]
     AudioSource audioSource;
-    public AudioClip constructionCompletedAudio;
-    public AudioClip unitCreatedAudio;   
-    public AudioClip buildingDestroyedAudio; 
 
     [Header( "Unit Stuff" )]
     public GameObject unitSpawnPoint;
@@ -40,11 +30,6 @@ public class TerrainBuilding : MonoBehaviour
     public UnityEngine.UI.Image[] QueueImageObjects;   
 
     public BuildingSpawnHoverMenu buildingSpawnHoverMenu;
-
-    //public Sprite emptyQueueSlotImage;
-
-    GameObject currentPrefabUnitToSpawn;
-    public float GetTimeElapsed { get { return timeElapsed; } }
 
     private Structure structure;
     private Damageable damageable;

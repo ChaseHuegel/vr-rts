@@ -177,15 +177,15 @@ public class Villager : Unit
 
             case UnitState.GATHERING:
                 if (IsCargoFull())  state = UnitState.TRANSPORTING;
-                else if (!HasValidTarget()) state = UnitState.IDLE;
+                else if (!HasValidTarget()) state = UnitState.ROAMING;
             break;
 
             case UnitState.TRANSPORTING:
-                if (!HasCargo()) state = UnitState.IDLE;
+                if (!HasCargo()) state = UnitState.ROAMING;
             break;
 
             case UnitState.BUILDANDREPAIR:
-                if (!HasValidTarget()) state = UnitState.IDLE;
+                if (!HasValidTarget()) state = UnitState.ROAMING;
             break;
 
             case UnitState.IDLE:
@@ -250,13 +250,15 @@ public class Villager : Unit
     // unitTask or unitJob?
     public void SetRTSUnitType(RTSUnitType rtsUnitType)
     {
+        // Turn off all goals except the transport goal.
         goals.Clear();
-
+        goals.Add<GoalTransportResource>();
+        
         switch ( rtsUnitType )
         {
             case RTSUnitType.Builder:
                 state = UnitState.BUILDANDREPAIR;
-                currentResource = ResourceGatheringType.None;
+                currentResource = ResourceGatheringType.None;                
                 goals.Add<GoalBuildRepair>();
                 ResetAI();
                 break;
@@ -277,7 +279,7 @@ public class Villager : Unit
 
             case RTSUnitType.GoldMiner:
                 state = UnitState.GATHERING;
-                currentResource = ResourceGatheringType.Gold;
+                currentResource = ResourceGatheringType.Gold;                
                 goals.Add<GoalGatherResource>().type = ResourceGatheringType.Gold;
                 ResetAI();
                 break;

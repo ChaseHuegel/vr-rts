@@ -41,9 +41,9 @@ public class GoalHolder
         return (T)goals.Find(x => x is T);
     }
 
-    public T Get<T>(Predicate<T> expression) where T : PathfindingGoal
+    public T Get<T>(Predicate<PathfindingGoal> expression) where T : PathfindingGoal
     {
-        return (T)goals.Find( (Predicate<PathfindingGoal>)expression );
+        return (T)goals.Find( expression );
     }
 
     public List<T> GetAll<T>() where T : PathfindingGoal

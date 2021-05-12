@@ -41,8 +41,7 @@ public class Structure : Obstacle, IFactioned
 
         UpdateFaction();
 
-        damageable = GetComponent<Damageable>();
-        if (!damageable)
+        if (!(damageable = GetComponent<Damageable>()))
             Debug.Log("No damageable component on structure!");
 
         // TODO: Could move this to be part of the RTSBuildingTypeData database and
