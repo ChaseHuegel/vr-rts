@@ -11,7 +11,12 @@ public class Unit : Actor, IFactioned
     public Faction GetFaction() { return faction; }
     public void UpdateFaction() { faction = GameMaster.Factions.Find(x => x.index == factionID); }
 
-    public RTSUnitTypeData rtsUnitTypeData;
+    public RTSUnitType rtsUnitType;
+
+    // Make this read only, we should only be able to change unit properties
+    // through the database.
+    public RTSUnitTypeData rtsUnitTypeData { get; }
+    protected RTSUnitTypeData m_rtsUnitTypeData;
     
     public override void Initialize()
     {
@@ -20,7 +25,7 @@ public class Unit : Actor, IFactioned
         // This could be removed at a later date and replaced with specific fetches
         // of the information needed in inheritors if we want to sacrifice memory
         // for performance
-        rtsUnitTypeData = GameMaster.Instance.FindUnitData(rtsUnitTypeData.unitType);
+        m_rtsUnitTypeData = GameMaster.Instance.FindUnitData(rtsUnitType);
 
         UpdateFaction();
     }
