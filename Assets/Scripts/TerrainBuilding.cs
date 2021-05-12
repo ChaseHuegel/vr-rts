@@ -29,10 +29,27 @@ public class TerrainBuilding : MonoBehaviour
 
     public UnityEngine.UI.Image[] QueueImageObjects;   
 
-    public BuildingSpawnHoverMenu buildingSpawnHoverMenu;
 
     private Structure structure;
     private Damageable damageable;
+
+    
+
+    // Start is called before the first frame update
+    void Start()
+    {   
+        damageable = gameObject.GetComponent<Damageable>();
+        structure = gameObject.GetComponent<Structure>();
+        audioSource = gameObject.GetComponent<AudioSource>();
+        //queueProgressText = buildingSpawnHoverMenu.queueProgressText;
+        //queueProgressImage = buildingSpawnHoverMenu.queueProgressImage; 
+    }    
+
+    // Update is called once per frame
+    void Update()
+    {    
+        UpdateUnitSpawnQueue(); 
+    }
 
     public void QueueUnit(RTSUnitType unitTypeToQueue)
     { 
@@ -51,69 +68,6 @@ public class TerrainBuilding : MonoBehaviour
         RTSUnitTypeData unitData = GameMaster.Instance.FindUnitData(unitTypeToQueue);
         PlayerManager.instance.RemoveUnitQueueCostFromStockpile(unitData);                    
         unitSpawnQueue.Enqueue(unitData);
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {   
-        damageable = gameObject.GetComponent<Damageable>();
-        structure = gameObject.GetComponent<Structure>();
-        audioSource = gameObject.GetComponent<AudioSource>();
-        buildingSpawnHoverMenu = gameObject.GetComponentInChildren<BuildingSpawnHoverMenu>( true );
-        queueProgressText = buildingSpawnHoverMenu.queueProgressText;
-        queueProgressImage = buildingSpawnHoverMenu.queueProgressImage;
-        buildingSpawnHoverMenu.enabled = false;
-
-        //constructionCompletedAudio = GameMaster.GetAudio("constructionCompleted").GetClip();       
-    }    
-
-    protected void ToggleHoverMenuOnKnock()
-    {
-        buildingSpawnHoverMenu.gameObject.SetActive(!buildingSpawnHoverMenu.gameObject.activeSelf);
-    }
-    
-    // protected float firstKnockTime;
-    // protected float secondKnockMaxDuration = 1.0f;
-    // protected bool waitingForSecondKnock;
-    private void OnHandHoverBegin()
-    {        
-        // Check if hand pose is a fist and play knock if it is.
-        audioSource.clip = GameMaster.GetAudio("knock").GetClip();
-        audioSource.Play();
-
-        ToggleHoverMenuOnKnock();
-
-        // ---- 2 knocks is too unreliable at the moment and can deal with it later
-        // if (waitingForSecondKnock)
-        // {
-        //     // This is the 2nd knock
-        //     if (Time.fixedTime - firstKnockTime <= secondKnockMaxDuration)
-        //     {
-        //         ToggleObjectOnKnock();
-        //         waitingForSecondKnock = false;
-        //         Debug.Log("second " + (Time.fixedTime - firstKnockTime).ToString());
-        //     }
-        //     // Time windows has passed for 2nd knock
-        //     else
-        //     {
-        //         waitingForSecondKnock = false;                
-        //     }
-        // }
-        // // This is a new first knock
-        // else
-        // {
-        //     firstKnockTime = Time.fixedTime;
-        //     waitingForSecondKnock = true;
-        //     Debug.Log("first " + firstKnockTime);
-        // }
-
-        //Debug.Log("Hover Begin");
-    }
-
-    // Update is called once per frame
-    void Update()
-    {    
-        UpdateUnitSpawnQueue(); 
     }
 
     private void UpdateUnitSpawnQueue()
