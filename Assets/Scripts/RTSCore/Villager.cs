@@ -100,7 +100,7 @@ public class Villager : Unit
 
         animator = gameObject.GetComponentInChildren<Animator>();
         if (!animator)
-            Debug.Log("No animator component found.");
+            Debug.Log("No animator component found.");        
 
         PlayerManager.instance.AddToPopulation(rtsUnitTypeData.unitType);
 

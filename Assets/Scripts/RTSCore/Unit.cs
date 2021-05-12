@@ -16,6 +16,12 @@ public class Unit : Actor, IFactioned
     public override void Initialize()
     {
         base.Initialize();
+        
+        // This could be removed at a later date and replaced with specific fetches
+        // of the information needed in inheritors if we want to sacrifice memory
+        // for performance
+        rtsUnitTypeData = GameMaster.Instance.FindUnitData(rtsUnitTypeData.unitType);
+
         UpdateFaction();
     }
 }
