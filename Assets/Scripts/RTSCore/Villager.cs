@@ -168,10 +168,10 @@ public class Villager : Unit
         switch (state)
         {
             case UnitState.ROAMING:
-                // Goto(
-                //     UnityEngine.Random.Range(gridPosition.x - 4, gridPosition.x + 4),
-                //     UnityEngine.Random.Range(gridPosition.x - 4, gridPosition.x + 4)
-                // );
+                Goto(
+                    UnityEngine.Random.Range(gridPosition.x - 4, gridPosition.x + 4),
+                    UnityEngine.Random.Range(gridPosition.x - 4, gridPosition.x + 4)
+                );
                 ChangeTaskVisuals();
             break;
 
@@ -419,26 +419,20 @@ public class Villager : Unit
         Villager villager = (Villager)e.actor;
 
         //  Need C# 7 in Unity for switching by type!!!
-        if (e.goal is GoalGatherResource)
+        if (e.goal is GoalGatherResource && !villager.IsCargoFull())
         {
-            if (!villager.IsCargoFull())
-            {
-                villager.state = UnitState.GATHERING;
-                villager.currentResource = ((GoalGatherResource)e.goal).type;
-                DisplayCargo(false);
-                ChangeTaskVisuals();
-                return;
-            }
+            villager.state = UnitState.GATHERING;
+            villager.currentResource = ((GoalGatherResource)e.goal).type;
+            DisplayCargo(false);
+            ChangeTaskVisuals();
+            return;
         }
-        else if (e.goal is GoalTransportResource)
+        else if (e.goal is GoalTransportResource && villager.HasCargo())
         {
-            if (villager.HasCargo())
-            {
-                villager.state = UnitState.TRANSPORTING;
-                DisplayCargo(true);
-                ChangeTaskVisuals();
-                return;
-            }
+            villager.state = UnitState.TRANSPORTING;
+            DisplayCargo(true);
+            ChangeTaskVisuals();
+            return;
         }
         else if (e.goal is GoalBuildRepair)
         {
@@ -460,55 +454,45 @@ public class Villager : Unit
         Resource resource = e.cell.GetOccupant<Resource>();
         Structure structure = e.cell.GetOccupant<Structure>();
 
-        if (e.goal is GoalGatherResource)
-        {
-            villager.TryGather(resource);
-            return;
-        }
-        else if (e.goal is GoalTransportResource)
-        {
-            villager.TryDropoff(structure);
-            return;
-        }
-        else if (e.goal is GoalBuildRepair)
-        {
-            villager.TryBuildRepair(structure);
-            return;
-        }
+        if  (e.goal is GoalGatherResource && villager.TryGather(resource)) return;
+        else if (e.goal is GoalTransportResource && villager.TryDropoff(structure)) return;
+        else if (e.goal is GoalBuildRepair && villager.TryBuildRepair(structure)) return;
 
         //  default cancel the interaction
         ResetGoal();
         e.Cancel();
     }
 
-    public void TryDropoff(Structure structure)
+    public bool TryDropoff(Structure structure)
     {
         if (!structure || !HasCargo() || !structure.IsBuilt())
-            return;
+            return false;
 
         //  Trigger a dropoff event
         DropoffEvent e = new DropoffEvent{ villager = this, structure = structure, resourceType = currentResource, amount = currentCargo };
         OnDropoffEvent?.Invoke(null, e);
-        if (e.cancel) return;   //  return if the event has been cancelled by any subscriber
+        if (e.cancel) return false;   //  return if the event has been cancelled by any subscriber
 
         currentCargo -= e.amount;
         PlayerManager.instance.AddResourceToStockpile(currentResource, (int)e.amount);
+
+        return true;
     }
 
-    public void TryGather(Resource resource)
+    public bool TryGather(Resource resource)
     {
         if (!resource || IsCargoFull())
-            return;
+            return false;
 
         //  Convert per second to per tick and clamp to how much cargo space we have
         float amount = ((float)workRate / (60/Constants.ACTOR_TICK_RATE));
         amount = Mathf.Clamp(maxCargo - currentCargo, 0, amount);
         amount = resource.GetRemoveAmount(amount);
-       
+
         //  Trigger a gather event
         GatherEvent e = new GatherEvent{ villager = this, resource = resource, resourceType = currentResource, amount = amount };
         OnGatherEvent?.Invoke(null, e);
-        if (e.cancel) return;   //  return if the event has been cancelled by any subscriber
+        if (e.cancel) return false;   //  return if the event has been cancelled by any subscriber
 
         //  Remove from the resource and add to cargo
         amount = resource.TryRemove(e.amount);
@@ -530,12 +514,14 @@ public class Villager : Unit
                 animator.SetInteger("VillagerActorState", (int)ActorAnimationState.LUMBERJACKING);
             break;
         }
+
+        return true;
     }
 
-    public void TryBuildRepair(Structure structure)
+    public bool TryBuildRepair(Structure structure)
     {
         if (!structure || structure.AttributeHandler.GetAttributePercent(Attributes.HEALTH) >= 1f)
-            return;
+            return false;
 
         // Use the repair rate unless the building hasn't been constructed.
         int rate = structure.IsBuilt() ? buildRate : repairRate;
@@ -546,12 +532,14 @@ public class Villager : Unit
         //  Trigger a build/repair event
         BuildRepairEvent e = new BuildRepairEvent{ villager = this, structure = structure, amount = amount };
         OnBuildRepairEvent?.Invoke(null, e);
-        if (e.cancel) return;   //  return if the event has been cancelled by any subscriber
+        if (e.cancel) return false;   //  return if the event has been cancelled by any subscriber
 
         structure.TryRepair(e.amount, this);
 
         // Use lumberjack animation
         animator.SetInteger("VillagerActorState", (int)ActorAnimationState.BUILDANDREPAIR);
+
+        return true;
     }
 
     public static event EventHandler<GatherEvent> OnGatherEvent;

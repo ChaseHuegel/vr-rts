@@ -104,14 +104,14 @@ public class World : Singleton<World>
 
                     if (!showDebugGrid && at(x, y).IsBlocked())
                     {
-                        Gizmos.color *= new Color(1f, 1f, 1f, 0.15f);
+                        Gizmos.color *= new Color(1f, 1f, 1f, 0.5f);
                         Gizmos.DrawCube( ToTransformSpace( new Vector3(x, 0f, y) ), new Vector3(GetUnit(), 0f, GetUnit()));
                     }
                 }
 
                 if (showDebugGrid)
                 {
-                    Gizmos.color *= new Color(1f, 1f, 1f, 0.15f);
+                    Gizmos.color *= new Color(1f, 1f, 1f, 0.5f);
                     Gizmos.DrawCube( ToTransformSpace( new Vector3(x, 0f, y) ), new Vector3(GetUnit(), 0f, GetUnit()));
                 }
             }

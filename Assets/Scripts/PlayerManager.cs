@@ -175,22 +175,22 @@ public class PlayerManager : MonoBehaviour
         {
             case ResourceGatheringType.Wood:
                 woodCollected += amount;
-                WristDisplay.SetWoodText(woodCollected.ToString());
+                WristDisplay?.SetWoodText(woodCollected.ToString());
                 break;
 
             case ResourceGatheringType.Grain:
                 grainCollected += amount;
-                WristDisplay.SetGrainText(grainCollected.ToString());
+                WristDisplay?.SetGrainText(grainCollected.ToString());
                 break;
 
             case ResourceGatheringType.Gold:
                 goldCollected += amount;
-                WristDisplay.SetGoldText(goldCollected.ToString());
+                WristDisplay?.SetGoldText(goldCollected.ToString());
                 break;
 
             case ResourceGatheringType.Stone:
                 stoneCollected += amount;
-                WristDisplay.SetStoneText(goldCollected.ToString());
+                WristDisplay?.SetStoneText(goldCollected.ToString());
                 break;
 
             default:

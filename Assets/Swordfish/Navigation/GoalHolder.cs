@@ -41,9 +41,9 @@ public class GoalHolder
         return (T)goals.Find(x => x is T);
     }
 
-    public T Get<T>(Predicate<PathfindingGoal> expression) where T : PathfindingGoal
+    public T Get<T>(Predicate<T> expression) where T : PathfindingGoal
     {
-        return (T)goals.Find( expression );
+        return (T)goals.Find( (Predicate<PathfindingGoal>)expression );
     }
 
     public List<T> GetAll<T>() where T : PathfindingGoal
@@ -51,9 +51,9 @@ public class GoalHolder
         return goals.FindAll(x => x is T).ConvertAll(x => x as T);
     }
 
-    public List<T> GetAll<T>(Predicate<PathfindingGoal> expression) where T : PathfindingGoal
+    public List<T> GetAll<T>(Predicate<T> expression) where T : PathfindingGoal
     {
-        return goals.FindAll( expression ).ConvertAll(x => x as T);
+        return goals.FindAll( (Predicate<PathfindingGoal>)expression ).ConvertAll(x => x as T);
     }
 
     public void Clear()

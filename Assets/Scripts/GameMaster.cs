@@ -25,11 +25,6 @@ public class GameMaster : Singleton<GameMaster>
     public List<RTSUnitTypeData> rtsUnitDataList = new List<RTSUnitTypeData>();
 
     public List<RTSBuildingTypeData> rtsBuildingDataList = new List<RTSBuildingTypeData>();
-    
-    public void Update()
-    {
-        Random.InitState(Time.time.GetHashCode());
-    }
 
     public RTSBuildingTypeData FindBuildingData(RTSBuildingType type)
     {

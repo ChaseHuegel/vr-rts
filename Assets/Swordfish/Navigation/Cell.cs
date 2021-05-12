@@ -32,6 +32,11 @@ public class Cell : IHeapItem<Cell>
     public List<Body> occupants = new List<Body>();
     public bool occupied { get { return occupants.Count > 0; } }
 
+    public Body GetFirstOccupant()
+    {
+        return occupants[0];
+    }
+
     public T GetFirstOccupant<T>() where T : Body
     {
         if (occupied && occupants[0] is T)

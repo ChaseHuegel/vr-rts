@@ -37,11 +37,7 @@ public class Actor : Body
     public bool HasValidGoal() { return (currentGoal != null && currentGoal.active); }
     public bool HasValidTarget()
     {
-        if (HasValidGoal())
-            if (PathfindingGoal.CheckGoal(this, currentGoalTarget, currentGoal))
-                return true;
-
-        return false;
+        return (HasValidGoal() && PathfindingGoal.CheckGoal(this, currentGoalTarget, currentGoal));
     }
 
     public void Freeze() { frozen = true; RemoveFromGrid(); }
@@ -156,8 +152,10 @@ public class Actor : Body
         //  Do we have a valid goal now?
         if (HasValidTarget() && HasValidGoal())
         {
-            Coord2D coord = currentGoalTarget.occupants[0].GetNearbyCoord();
+            Coord2D coord = currentGoalTarget.GetFirstOccupant().GetNearbyCoord();
             GotoForced(coord.x, coord.y);
+
+            // GotoForced(currentGoalTarget.x, currentGoalTarget.y);
 
             return true;
         }

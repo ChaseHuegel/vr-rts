@@ -73,6 +73,13 @@ public class Body : MonoBehaviour
         sign = (int)((Random.Range(0, 1) << 1) - 1);
         target.y += sign * paddingY;
 
+        //  Use 0 and 1 to determine negative or positive
+        // int sign = Random.value > 0.5f ? -1 : 1;
+        // target.x += sign * paddingX;
+
+        // sign = Random.value > 0.5f ? -1 : 1;
+        // target.y += sign * paddingY;
+
         return target;
     }
 
