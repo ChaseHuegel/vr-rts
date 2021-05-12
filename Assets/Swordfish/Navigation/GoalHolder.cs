@@ -9,7 +9,7 @@ public class GoalHolder
     private List<PathfindingGoal> goals = new List<PathfindingGoal>();
     public PathfindingGoal[] entries
     {
-        get { return goals.ToArray(); }
+        get { lock(goals) { return goals.ToArray(); } }
     }
 
     public void Cycle()

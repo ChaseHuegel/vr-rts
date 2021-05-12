@@ -145,7 +145,7 @@ public class Villager : Unit
     {
         isHeld = false;
         villagerHoverMenu.Hide();
-        ResetPathing();
+        ResetAI();
         Unfreeze();
         // audioSource.Stop();
     }
@@ -258,28 +258,28 @@ public class Villager : Unit
                 state = UnitState.BUILDANDREPAIR;
                 currentResource = ResourceGatheringType.None;
                 goals.Add<GoalBuildRepair>();
-                ResetPathing();
+                ResetAI();
                 break;
 
             case RTSUnitType.Farmer:
                 state = UnitState.GATHERING;
                 currentResource = ResourceGatheringType.Grain;
                 goals.Add<GoalGatherResource>().type = ResourceGatheringType.Grain;
-                ResetPathing();
+                ResetAI();
                 break;
 
             case RTSUnitType.Lumberjack:
                 state = UnitState.GATHERING;
                 currentResource = ResourceGatheringType.Wood;
                 goals.Add<GoalGatherResource>().type = ResourceGatheringType.Wood;
-                ResetPathing();
+                ResetAI();
                 break;
 
             case RTSUnitType.GoldMiner:
                 state = UnitState.GATHERING;
                 currentResource = ResourceGatheringType.Gold;
                 goals.Add<GoalGatherResource>().type = ResourceGatheringType.Gold;
-                ResetPathing();
+                ResetAI();
                 break;
 
             case RTSUnitType.StoneMiner:
@@ -287,7 +287,7 @@ public class Villager : Unit
                 currentResource = ResourceGatheringType.Stone;
                 goals.entries[0] = null;
                 goals.Add<GoalGatherResource>().type = ResourceGatheringType.Stone;
-                ResetPathing();
+                ResetAI();
                 break;
 
             default:

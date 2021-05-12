@@ -84,7 +84,7 @@ public class VillagerActor : Actor
         isHeld = true;
         Freeze();
         this.enabled = false;
-        ResetPathing();
+        ResetAI();
         villagerHoverMenu.Show();
 
         if (playRandomOnPickUpAudio)
@@ -102,7 +102,7 @@ public class VillagerActor : Actor
     public void OnDetachFromHand()
     {
         isHeld = false;
-        ResetPathing();
+        ResetAI();
         audioSource.Stop();
         villagerHoverMenu.Hide();
         animator.StartPlayback();
@@ -126,7 +126,7 @@ public class VillagerActor : Actor
                     targetNode = node;
                     currentState = VillagerActorState.MiningGold;
                     wantedResourceType = ResourceGatheringType.Gold;
-                    ResetPathing();
+                    ResetAI();
                     break;
                 }
 
@@ -135,7 +135,7 @@ public class VillagerActor : Actor
                     targetNode = node;
                     currentState = VillagerActorState.Farming;
                     wantedResourceType = ResourceGatheringType.Grain;
-                    ResetPathing();
+                    ResetAI();
                     break;
                 }
 
@@ -144,7 +144,7 @@ public class VillagerActor : Actor
                     targetNode = node;
                     currentState = VillagerActorState.Lumberjacking;
                     wantedResourceType = ResourceGatheringType.Wood;
-                    ResetPathing();
+                    ResetAI();
                     break;
                 }
 
@@ -153,7 +153,7 @@ public class VillagerActor : Actor
                     targetNode = node;
                     currentState = VillagerActorState.MiningOre;
                     wantedResourceType = ResourceGatheringType.Stone;
-                    ResetPathing();
+                    ResetAI();
                     break;
                 }
 

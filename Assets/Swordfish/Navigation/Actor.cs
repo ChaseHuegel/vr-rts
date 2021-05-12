@@ -60,7 +60,7 @@ public class Actor : Body
     public void UpdatePosition()
     {
         HardSnapToGrid();
-        ResetPathing();
+        ResetAI();
     }
 
     public void ResetGoal()
@@ -75,9 +75,14 @@ public class Actor : Body
         pathRepathTries = 0;
     }
 
-    public void ResetPathing()
+    public void ResetPath()
     {
         currentPath = null;
+    }
+
+    public void ResetAI()
+    {
+        ResetPath();
         ResetGoal();
         ResetPathingBrain();
     }
@@ -211,6 +216,7 @@ public class Actor : Body
                     //  Forcibly trigger reached under that assumption
                     PathfindingGoal.TriggerInteractGoal(this, currentGoalTarget, currentGoal);
                     ResetPathingBrain();
+                    ResetPath();
                 }
             }
 
@@ -304,7 +310,7 @@ public class Actor : Body
                     //  Unable to repath, resort to giving up
                     else
                     {
-                        ResetPathing();
+                        ResetAI();
 
                         //  Trigger repath failed event
                         RepathFailedEvent e = new RepathFailedEvent{ actor = this };
@@ -319,7 +325,7 @@ public class Actor : Body
 
             //  Don't hang onto an empty path. Save a little memory
             if (currentPath != null && currentPath.Count == 0)
-                ResetPathing();
+                ResetAI();
         }
     }
 
