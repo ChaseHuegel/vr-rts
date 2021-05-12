@@ -204,7 +204,7 @@ public class PlayerManager : MonoBehaviour
 
         RTSBuildingTypeData buildingData = GameMaster.Instance.FindBuildingData(buildingType);
         if (goldCollected < buildingData.goldCost || woodCollected < buildingData.woodCost ||
-            grainCollected < buildingData.grainCost)
+            grainCollected < buildingData.grainCost || stoneCollected < buildingData.stoneCost)
         {
             return false;
         }
@@ -218,7 +218,7 @@ public class PlayerManager : MonoBehaviour
 
         RTSUnitTypeData unitData = GameMaster.Instance.FindUnitData(unitType);
         if (goldCollected < unitData.goldCost || woodCollected < unitData.woodCost ||
-            grainCollected < unitData.grainCost)
+            grainCollected < unitData.grainCost || stoneCollected < unitData.stoneCost)
         {
             return false;
         }
@@ -236,6 +236,7 @@ public class PlayerManager : MonoBehaviour
         woodCollected -= unitType.woodCost;
         grainCollected -= unitType.grainCost;
         goldCollected -= unitType.goldCost;
+        stoneCollected -= unitType.stoneCost;
 
         UpdateWristDisplayResourceText();
     }
