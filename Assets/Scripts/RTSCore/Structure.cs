@@ -36,6 +36,11 @@ public class Structure : Obstacle, IFactioned
     {
         base.Initialize();
 
+        // Setup some defaults that tend to get switched in the editor.
+        IgnorePanning ignorePanning = GetComponentInChildren<IgnorePanning>();
+        if (ignorePanning)
+            ignorePanning.gameObject.layer = LayerMask.NameToLayer("UI");
+
         // Retrieve building data from database.
         rtsBuildingTypeData = GameMaster.Instance.FindBuildingData(rtsBuildingType);
 

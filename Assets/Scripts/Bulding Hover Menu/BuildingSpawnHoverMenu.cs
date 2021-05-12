@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class BuildingSpawnHoverMenu : MonoBehaviour
 {
+    public  bool startHidden = true;
     public TMPro.TMP_Text buildingTitleText;
     public UnityEngine.UI.Image queueProgressImage;
     public TMPro.TMP_Text queueProgressText;
@@ -11,6 +12,7 @@ public class BuildingSpawnHoverMenu : MonoBehaviour
     void Awake()
     {
         terrainBuilding = GetComponentInParent<TerrainBuilding>();
+        gameObject.SetActive(startHidden);
     }
 
     public void QueueUnit(int queueUnit)

@@ -117,6 +117,7 @@ GameObject:
   - component: {fileID: 4424245338257627667}
   - component: {fileID: -162982284593069479}
   - component: {fileID: -7167361800687799736}
+  - component: {fileID: 517748758200543824}
   m_Layer: 10
   m_Name: TownHall_World
   m_TagString: Untagged
@@ -160,16 +161,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxUnitQueueSize: 10
-  buildingDamagedEffect: {fileID: 0}
-  buildingHealth75PercentEffect: {fileID: 0}
-  buildingHealth50PercentEffect: {fileID: 0}
-  buildingHealth25PercentEffect: {fileID: 0}
-  buildingDestroyedEffect: {fileID: 0}
-  constructionCompletedAudio: {fileID: 8300000, guid: 11bf668e81609a14a919c0625b9be221,
-    type: 3}
-  unitCreatedAudio: {fileID: 8300000, guid: ef85bf22745f24b4b967d56db93711f9, type: 3}
-  buildingDestroyedAudio: {fileID: 8300000, guid: 3ab09a3a74546f24582a546bc639048a,
-    type: 3}
   unitSpawnPoint: {fileID: 679956169}
   unitRallyWaypoint: {fileID: 7371219673673626341}
   unitRallyWaypointRadius: 0
@@ -383,12 +374,64 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attributes:
   - attribute: 0
-    value: 0
+    value: 500
     max: 500
   invulnerable: 0
   weaknesses: 
   resistances: 
   immunities: 
+--- !u!114 &517748758200543824
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1129064322338806663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b93b6a877adcbf94c89a9d6e0c0e844d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  activateActionSetOnAttach:
+    actionSetPath: 
+  hideHandOnAttach: 1
+  hideSkeletonOnAttach: 0
+  hideControllerOnAttach: 0
+  handAnimationOnPickup: 0
+  setRangeOfMotionOnPickup: -1
+  useHandObjectAttachmentPoint: 1
+  attachEaseIn: 0
+  snapAttachEaseInCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  snapAttachEaseInTime: 0.15
+  snapAttachEaseInCompleted: 0
+  skeletonPoser: {fileID: 0}
+  handFollowTransform: 1
+  highlightOnHover: 1
+  hideHighlight: []
+  hoverPriority: 0
 --- !u!65 &9127067046184473412
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -429,8 +472,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7325946500314665565}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.78, y: -0.03, z: -37.62}
-  m_LocalScale: {x: 6.6149783, y: 6.6149783, z: 6.6149783}
+  m_LocalPosition: {x: 0, y: -0, z: 6.81}
+  m_LocalScale: {x: 9.47331, y: 9.47331, z: 9.47331}
   m_Children: []
   m_Father: {fileID: 1129064322339030951}
   m_RootOrder: 8
@@ -447,7 +490,7 @@ SphereCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
-  m_Center: {x: -1.38, y: 0.01, z: 6.7}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &176423153
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -804,7 +847,7 @@ PrefabInstance:
     - target: {fileID: 4696321577107034512, guid: b12682a659f5ea74f95ec202ac883979,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b12682a659f5ea74f95ec202ac883979, type: 3}
@@ -821,40 +864,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1129064322339030951}
     m_Modifications:
-    - target: {fileID: 1888785853923041234, guid: 1a4ed3795fe2cb541ad44a5783885db9,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5848405858958643796, guid: 1a4ed3795fe2cb541ad44a5783885db9,
-        type: 3}
-      propertyPath: onButtonIsPressed.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 5716366913484805698}
-    - target: {fileID: 5848405858958643796, guid: 1a4ed3795fe2cb541ad44a5783885db9,
-        type: 3}
-      propertyPath: onButtonIsPressed.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: DequeueUnit
-      objectReference: {fileID: 0}
-    - target: {fileID: 5848405858958643796, guid: 1a4ed3795fe2cb541ad44a5783885db9,
-        type: 3}
-      propertyPath: onButtonIsPressed.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: BuildingSpawnHoverMenu, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 5848405858958643796, guid: 1a4ed3795fe2cb541ad44a5783885db9,
-        type: 3}
-      propertyPath: onButtonIsPressed.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
     - target: {fileID: 7649743888859046632, guid: 1a4ed3795fe2cb541ad44a5783885db9,
         type: 3}
       propertyPath: m_Name
       value: TownHall Spawn Hover Menu
-      objectReference: {fileID: 0}
-    - target: {fileID: 7649743888859046632, guid: 1a4ed3795fe2cb541ad44a5783885db9,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7649743888859046635, guid: 1a4ed3795fe2cb541ad44a5783885db9,
         type: 3}
@@ -1019,18 +1032,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &5716366913484805698 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3909870998614436513, guid: 1a4ed3795fe2cb541ad44a5783885db9,
-    type: 3}
-  m_PrefabInstance: {fileID: 8725226881660304611}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 619bbff7fefa26d4aaceadb7e79b9500, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!4 &1386935063528447496 stripped

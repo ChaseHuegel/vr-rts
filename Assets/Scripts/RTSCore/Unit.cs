@@ -22,11 +22,16 @@ public class Unit : Actor, IFactioned
     {
         base.Initialize();
         
-        // This could be removed at a later date and replaced with specific fetches
+        // TODO: This could be removed at a later date and replaced with specific fetches
         // of the information needed in inheritors if we want to sacrifice memory
         // for performance
         m_rtsUnitTypeData = GameMaster.Instance.FindUnitData(rtsUnitType);
 
         UpdateFaction();
+    }
+
+    public bool IsCivilian()
+    {
+        return (int)rtsUnitType < (int)RTSUnitType.Scout;
     }
 }

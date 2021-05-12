@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2582580688914408458}
   - component: {fileID: 3222420655958120725}
   - component: {fileID: 7626230801999515398}
-  m_Layer: 10
+  m_Layer: 5
   m_Name: NoPan
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -27,8 +27,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3651441893614413627}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.35, y: 0, z: 0.72}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 4.18}
+  m_LocalScale: {x: 5.347764, y: 5.347764, z: 5.347764}
   m_Children: []
   m_Father: {fileID: 5294818226043652003}
   m_RootOrder: 7
@@ -44,8 +44,8 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 3.73
-  m_Center: {x: -1.38, y: 0.01, z: 2.99}
+  m_Radius: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &3222420655958120725
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -85,6 +85,7 @@ GameObject:
   - component: {fileID: 4588651157316188579}
   - component: {fileID: -5606635828607617722}
   - component: {fileID: 1850214248461142744}
+  - component: {fileID: 7276087696547761952}
   m_Layer: 10
   m_Name: Barracks_World
   m_TagString: Untagged
@@ -128,16 +129,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxUnitQueueSize: 5
-  buildingDamagedEffect: {fileID: 0}
-  buildingHealth75PercentEffect: {fileID: 0}
-  buildingHealth50PercentEffect: {fileID: 0}
-  buildingHealth25PercentEffect: {fileID: 0}
-  buildingDestroyedEffect: {fileID: 0}
-  constructionCompletedAudio: {fileID: 8300000, guid: 11bf668e81609a14a919c0625b9be221,
-    type: 3}
-  unitCreatedAudio: {fileID: 8300000, guid: ef85bf22745f24b4b967d56db93711f9, type: 3}
-  buildingDestroyedAudio: {fileID: 8300000, guid: 3ab09a3a74546f24582a546bc639048a,
-    type: 3}
   unitSpawnPoint: {fileID: 8568534242788098020}
   unitRallyWaypoint: {fileID: 8568534241111052861}
   unitRallyWaypointRadius: 0
@@ -289,12 +280,64 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attributes:
   - attribute: 0
-    value: 0
+    value: 500
     max: 500
   invulnerable: 0
   weaknesses: 
   resistances: 
   immunities: 
+--- !u!114 &7276087696547761952
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5294818226044083075}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b93b6a877adcbf94c89a9d6e0c0e844d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  activateActionSetOnAttach:
+    actionSetPath: 
+  hideHandOnAttach: 1
+  hideSkeletonOnAttach: 0
+  hideControllerOnAttach: 0
+  handAnimationOnPickup: 0
+  setRangeOfMotionOnPickup: -1
+  useHandObjectAttachmentPoint: 1
+  attachEaseIn: 0
+  snapAttachEaseInCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  snapAttachEaseInTime: 0.15
+  snapAttachEaseInCompleted: 0
+  skeletonPoser: {fileID: 0}
+  handFollowTransform: 1
+  highlightOnHover: 1
+  hideHighlight: []
+  hoverPriority: 0
 --- !u!1 &6890123303443745136
 GameObject:
   m_ObjectHideFlags: 0
@@ -304,11 +347,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2312339297404851283}
-  - component: {fileID: 6872277481887712551}
   - component: {fileID: 7023464702619518751}
-  - component: {fileID: 4793968543197041143}
-  - component: {fileID: 4319099226569474491}
-  - component: {fileID: 6778882937914671143}
   m_Layer: 10
   m_Name: Knock
   m_TagString: Untagged
@@ -324,25 +363,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6890123303443745136}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.98039985, y: 0, z: 5.5011005}
-  m_LocalScale: {x: 0.2996666, y: 0.29966664, z: 0.29966664}
+  m_LocalPosition: {x: 0, y: 0, z: 3.37}
+  m_LocalScale: {x: 6.0511565, y: 6.2634788, z: 1.8068544}
   m_Children: []
   m_Father: {fileID: 5294818226043652003}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &6872277481887712551
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6890123303443745136}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 8.498866, y: 7.0293555, z: 7.694756}
-  m_Center: {x: -2.846024, y: 6.65014, z: -6.932931}
 --- !u!65 &7023464702619518751
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -354,47 +380,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 20.238934, y: 21.11567, z: 7.5570607}
-  m_Center: {x: 3.3298912, y: -0.022206435, z: -14.50142}
---- !u!65 &4793968543197041143
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6890123303443745136}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 8.188513, y: 14.478701, z: 6.027623}
-  m_Center: {x: -2.6908205, y: -3.2389312, z: -7.766501}
---- !u!65 &4319099226569474491
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6890123303443745136}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 6.3272014, y: 6.6645846, z: 3.7159035}
-  m_Center: {x: 10.268142, y: -7.1001735, z: -8.884903}
---- !u!65 &6778882937914671143
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6890123303443745136}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 6.404798, y: 6.3541956, z: 3.7158926}
-  m_Center: {x: 10.30694, y: 7.17774, z: -8.884917}
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &8568534241111052861
 GameObject:
   m_ObjectHideFlags: 0

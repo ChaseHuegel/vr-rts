@@ -102,7 +102,7 @@ public class Villager : Unit
         if (!animator)
             Debug.Log("No animator component found.");        
 
-        PlayerManager.instance.AddToPopulation(rtsUnitTypeData.unitType);
+        PlayerManager.instance.AddToPopulation(this);
 
         //ChangeTaskVisuals();
     }

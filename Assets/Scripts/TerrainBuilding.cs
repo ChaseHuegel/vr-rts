@@ -161,8 +161,8 @@ public class TerrainBuilding : MonoBehaviour
     {
         if (unitSpawnQueue.Count > 0)
         {
-            unitSpawnQueue.Dequeue();
-            Debug.Log("Removed unit from queue " + unitSpawnQueue.Count + " left in queue.");
+            RTSUnitTypeData unitData = unitSpawnQueue.Dequeue();
+            Debug.Log("Removed " + unitData + " from queue. " + unitSpawnQueue.Count + " left in queue.");
         }
     }
 
@@ -176,50 +176,14 @@ public class TerrainBuilding : MonoBehaviour
             unit.transform.position = unitSpawnPoint.transform.position;
             
             Villager villager = unit.GetComponent<Villager>();
-            villager.Initialize();
 
             villager.SetRTSUnitType(unitSpawnQueue.Peek().unitType);
             
             //RTSUnitType uType = unitSpawnQueue.Peek().unitType;
 
-            //Debug.Log("Spawned " + unit.name + ".");
+            Debug.Log("Spawned " + villager.rtsUnitType + ".");
         }
         else
-            Debug.Log ("Spawn unit failed. Missing prefabToSpawn");
+            Debug.Log ("Spawn unit failed. Missing prefabToSpawn.");
     }
-
-    
-    
-    
-    // private IEnumerator SpawnUnit()
-    // {
-    //     GameObject planting = GameObject.Instantiate<GameObject>(currentPrefabUnitToSpawn);
-    //     planting.transform.position = this.transform.position;
-    //     planting.transform.rotation = Quaternion.Euler(0, Random.value * 360f, 0);
-
-    //     planting.GetComponentInChildren<MeshRenderer>().material.SetColor("_TintColor", Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f));
-
-    //     Rigidbody rigidbody = planting.GetComponent<Rigidbody>();
-    //     if (rigidbody != null)
-    //         rigidbody.isKinematic = true;
-
-
-    //     Vector3 initialScale = Vector3.one * 0.01f;
-    //     Vector3 targetScale = Vector3.one * (1 + (Random.value * 0.25f));
-
-    //     float startTime = Time.time;
-    //     float overTime = 0.5f;
-    //     float endTime = startTime + overTime;
-
-    //     while (Time.time < endTime)
-    //     {
-    //         planting.transform.localScale = Vector3.Slerp(initialScale, targetScale, (Time.time - startTime) / overTime);
-    //         yield return null;
-    //     }
-
-
-    //     if (rigidbody != null)
-    //         rigidbody.isKinematic = false;
-    // }
-
 }

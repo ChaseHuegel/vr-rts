@@ -3,15 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public enum RTSUnitType 
+public enum RTSUnitType
 {
-    None = 0, 
-    Builder = 1, 
-    Lumberjack = 2,
-    GoldMiner = 3,
-    StoneMiner = 4,
-    Farmer = 5,
-    Scout = 6,
-    Swordsman = 7
+    None, 
+    Drifter, // This is the default villager, they have multiple goals and wander between them.
+    Builder, 
+    Lumberjack,
+    GoldMiner,
+    StoneMiner,
+    Farmer,
+    Scout,
+    Swordsman,
     
-    };
+};
+

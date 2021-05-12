@@ -76,7 +76,7 @@ public class VillagerActor : Actor
         // Initialize villager AI state, display objects, etc.
         SetUnitType(rtsUnitType);
 
-        PlayerManager.instance.AddToPopulation(rtsUnitType);
+        //PlayerManager.instance.AddToPopulation(rtsUnitType);
     }
 
     public void OnPickUp()

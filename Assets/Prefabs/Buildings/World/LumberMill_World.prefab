@@ -58,6 +58,7 @@ GameObject:
   - component: {fileID: 4208363189184205251}
   - component: {fileID: -7331804759075624225}
   - component: {fileID: -6719215218625929819}
+  - component: {fileID: 5489870501173190152}
   m_Layer: 10
   m_Name: LumberMill_World
   m_TagString: Untagged
@@ -99,16 +100,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxUnitQueueSize: 5
-  buildingDamagedEffect: {fileID: 0}
-  buildingHealth75PercentEffect: {fileID: 0}
-  buildingHealth50PercentEffect: {fileID: 0}
-  buildingHealth25PercentEffect: {fileID: 0}
-  buildingDestroyedEffect: {fileID: 0}
-  constructionCompletedAudio: {fileID: 8300000, guid: 11bf668e81609a14a919c0625b9be221,
-    type: 3}
-  unitCreatedAudio: {fileID: 8300000, guid: ef85bf22745f24b4b967d56db93711f9, type: 3}
-  buildingDestroyedAudio: {fileID: 8300000, guid: 3ab09a3a74546f24582a546bc639048a,
-    type: 3}
   unitSpawnPoint: {fileID: 0}
   unitRallyWaypoint: {fileID: 0}
   unitRallyWaypointRadius: 0
@@ -260,12 +251,64 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attributes:
   - attribute: 0
-    value: 0
+    value: 500
     max: 500
   invulnerable: 0
   weaknesses: 
   resistances: 
   immunities: 
+--- !u!114 &5489870501173190152
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4010404002518432691}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b93b6a877adcbf94c89a9d6e0c0e844d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  activateActionSetOnAttach:
+    actionSetPath: 
+  hideHandOnAttach: 1
+  hideSkeletonOnAttach: 0
+  hideControllerOnAttach: 0
+  handAnimationOnPickup: 0
+  setRangeOfMotionOnPickup: -1
+  useHandObjectAttachmentPoint: 1
+  attachEaseIn: 0
+  snapAttachEaseInCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  snapAttachEaseInTime: 0.15
+  snapAttachEaseInCompleted: 0
+  skeletonPoser: {fileID: 0}
+  handFollowTransform: 1
+  highlightOnHover: 1
+  hideHighlight: []
+  hoverPriority: 0
 --- !u!1 &8801696703289271011
 GameObject:
   m_ObjectHideFlags: 0
@@ -278,7 +321,7 @@ GameObject:
   - component: {fileID: 1732622300542235797}
   - component: {fileID: 980305322532934632}
   - component: {fileID: 9068529942057859357}
-  m_Layer: 10
+  m_Layer: 5
   m_Name: NoPan
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -357,7 +400,7 @@ PrefabInstance:
     - target: {fileID: 7649743888859046632, guid: 1a4ed3795fe2cb541ad44a5783885db9,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7649743888859046635, guid: 1a4ed3795fe2cb541ad44a5783885db9,
         type: 3}
@@ -726,6 +769,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_PresetInfoIsWorld
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4696321577107034512, guid: b12682a659f5ea74f95ec202ac883979,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b12682a659f5ea74f95ec202ac883979, type: 3}
