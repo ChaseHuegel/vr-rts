@@ -94,6 +94,8 @@ public class Villager : Unit
         goals.Add<GoalGatherResource>().type = ResourceGatheringType.Wood;
         transportGoal = goals.Add<GoalTransportResource>();
 
+        goals.Get<GoalGatherResource>(x => x.active == true).active = false;
+
         audioSource = gameObject.GetComponent<AudioSource>();
         if (!audioSource)
             Debug.Log("No audiosource component found.");

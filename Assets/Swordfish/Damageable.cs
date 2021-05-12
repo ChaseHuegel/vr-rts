@@ -10,7 +10,7 @@ public class Damageable : Attributable
 {
     #region Events
 
-    public event EventHandler<DamageEvent> OnDamageEvent;
+    public static event EventHandler<DamageEvent> OnDamageEvent;
     public class DamageEvent : Event
     {
         public AttributeChangeCause cause;
@@ -20,7 +20,7 @@ public class Damageable : Attributable
         public float damage;
     }
 
-    public event EventHandler<HealthRegainEvent> OnHealthRegainEvent;
+    public static event EventHandler<HealthRegainEvent> OnHealthRegainEvent;
     public class HealthRegainEvent : Event
     {
         public AttributeChangeCause cause;
@@ -29,7 +29,13 @@ public class Damageable : Attributable
         public float amount;
     }
 
-    public event EventHandler<DeathEvent> OnDeathEvent;
+    public static event EventHandler<SpawnEvent> OnSpawnEvent;
+    public class SpawnEvent : Event
+    {
+        public Damageable entity;
+    }
+
+    public static event EventHandler<DeathEvent> OnDeathEvent;
     public class DeathEvent : Event
     {
         public AttributeChangeCause cause;
@@ -49,6 +55,13 @@ public class Damageable : Attributable
         if (HasAttribute(Attributes.HEALTH) == false) AddAttribute(Attributes.HEALTH);
     }
 
+    public virtual void Start()
+    {
+        SpawnEvent e = new SpawnEvent{ entity = this };
+        OnSpawnEvent?.Invoke(null, e);
+        if (e.cancel) Destroy(this.gameObject);   //  destroy this object if the event has been cancelled
+    }
+
     #region Functions
 
     public bool isDead() { return GetAttributeValue(Attributes.HEALTH) == 0; }
@@ -58,8 +71,8 @@ public class Damageable : Attributable
     {
         //  Invoke a damage event
         DamageEvent e = new DamageEvent{ cause = cause, victim = this, attacker = attacker, type = type, damage = damage };
-        OnDamageEvent?.Invoke(this, e);
-        if (e.cancel == true) { return; }   //  return if the event has been cancelled by any subscriber
+        OnDamageEvent?.Invoke(null, e);
+        if (e.cancel) return;   //  return if the event has been cancelled by any subscriber
 
         bool hadImmunity = false;
         bool hadWeakness = false;
@@ -104,8 +117,8 @@ public class Damageable : Attributable
         if (GetAttributeValue(Attributes.HEALTH) - e.damage <= 0)
         {
             DeathEvent e2 = new DeathEvent{ cause = cause, victim = this, attacker = attacker };
-            OnDeathEvent?.Invoke(this, e2);
-            if (e2.cancel == true) { return; }   //  return if the event has been cancelled by any subscriber
+            OnDeathEvent?.Invoke(null, e2);
+            if (e2.cancel) return;   //  return if the event has been cancelled by any subscriber
         }
 
         //  Update health
@@ -127,8 +140,8 @@ public class Damageable : Attributable
 
         //  Invoke a heal event
         HealthRegainEvent e = new HealthRegainEvent{ cause = cause, entity = this, healer = healer, amount = amount };
-        OnHealthRegainEvent?.Invoke(this, e);
-        if (e.cancel == true) { return; }   //  return if the event has been cancelled by any subscriber
+        OnHealthRegainEvent?.Invoke(null, e);
+        if (e.cancel) return;   //  return if the event has been cancelled by any subscriber
 
         //  Update health
         GetAttribute(Attributes.HEALTH).Modify(e.amount);
