@@ -16,8 +16,6 @@ public class HealthBar : MonoBehaviour
     public Image healthBarBackgroundImage;
     public Image healthBarForegroundImage;
     public Text healthBarStatusText;
-    
-    
 
     // Start is called before the first frame update
     void Start()
@@ -31,11 +29,15 @@ public class HealthBar : MonoBehaviour
         if (!showBarBackground)
             healthBarBackgroundImage.enabled = false;
 
-        float filledAmount = healthBarForegroundImage.fillAmount;
+        gameObject.SetActive(true);
 
-        if (filledAmount >= 1.0f && hideWhenFull)
+        if (healthBarForegroundImage.fillAmount >= 1.0f && hideWhenFull)
             gameObject.SetActive(false);
+    }
 
+    public float GetFilledAmount()
+    {
+        return healthBarBackgroundImage.fillAmount;
     }
 
     // Set fill amount, between 0 and 1
@@ -51,8 +53,6 @@ public class HealthBar : MonoBehaviour
             healthBarStatusText.text = (((int)(amount * 100)).ToString()) + "%";
 
         if (amount >= 1.0f && hideWhenFull)
-            gameObject.SetActive(false);
-        else
-            gameObject.SetActive(true);
+            gameObject.SetActive(false);            
     }
 }

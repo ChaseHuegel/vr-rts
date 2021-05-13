@@ -35,7 +35,7 @@ public class Structure : Obstacle, IFactioned
     public override void Initialize()
     {
         base.Initialize();
-
+        
         // Setup some defaults that tend to get switched in the editor.
         IgnorePanning ignorePanning = GetComponentInChildren<IgnorePanning>();
         if (ignorePanning)
@@ -63,7 +63,7 @@ public class Structure : Obstacle, IFactioned
             //buildingHealthBar.enabled = false;
         }
         else
-            Debug.Log("No building health bar found.");
+            Debug.Log("No building health bar found.");            
     }
 
     public void TryRepair(int count, Actor repairer = null)
@@ -75,6 +75,8 @@ public class Structure : Obstacle, IFactioned
     void RefreshHealthBar()
     {
         buildingHealthBar.SetFilledAmount(damageable.GetAttributePercent(Attributes.HEALTH));
+        if (damageable.GetAttributePercent(Attributes.HEALTH) < 1.0f)
+            buildingHealthBar.gameObject.SetActive(true);
 
         // Only set display of building stages if construction hasn't been
         // completed yet.

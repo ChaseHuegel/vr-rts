@@ -13,7 +13,7 @@ public class BuildingHoverDisplay : MonoBehaviour
     public bool startHidden = true;
     public GameObject titleGameObject;
     public GameObject menuGameObject;
-    public GameObject healthBarGameObject;
+    public HealthBar healthBar;
 
     protected LookAtAndReset lookAtAndReset;
     protected bool visible;
@@ -84,8 +84,8 @@ public class BuildingHoverDisplay : MonoBehaviour
 
     public void HideHealthBar() 
     { 
-        if (healthBarGameObject)
-            healthBarGameObject.SetActive(false); 
+        if (healthBar.GetFilledAmount() < 1.0f)
+            healthBar.gameObject.SetActive(false); 
         
         lookAtAndReset.enabled = false;
     }
@@ -104,8 +104,8 @@ public class BuildingHoverDisplay : MonoBehaviour
 
     public void ShowHealthBar() 
     { 
-        if (healthBarGameObject)
-            healthBarGameObject.SetActive(true); 
+        if (healthBar)
+            healthBar.gameObject.SetActive(true); 
 
         lookAtAndReset.enabled = true;
     }
