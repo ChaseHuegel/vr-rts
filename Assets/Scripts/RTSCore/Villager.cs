@@ -94,15 +94,13 @@ public class Villager : Unit
         goals.Add<GoalGatherResource>().type = ResourceGatheringType.Wood;
         transportGoal = goals.Add<GoalTransportResource>();
 
-        goals.Get<GoalGatherResource>(x => x.active == true).active = false;
-
         audioSource = gameObject.GetComponent<AudioSource>();
         if (!audioSource)
             Debug.Log("No audiosource component found.");
 
         animator = gameObject.GetComponentInChildren<Animator>();
         if (!animator)
-            Debug.Log("No animator component found.");        
+            Debug.Log("No animator component found.");
 
         PlayerManager.instance.AddToPopulation(this);
 
@@ -255,12 +253,12 @@ public class Villager : Unit
         // Turn off all goals except the transport goal.
         goals.Clear();
         goals.Add<GoalTransportResource>();
-        
+
         switch ( rtsUnitType )
         {
             case RTSUnitType.Builder:
                 state = UnitState.BUILDANDREPAIR;
-                currentResource = ResourceGatheringType.None;                
+                currentResource = ResourceGatheringType.None;
                 goals.Add<GoalBuildRepair>();
                 ResetAI();
                 break;
@@ -281,7 +279,7 @@ public class Villager : Unit
 
             case RTSUnitType.GoldMiner:
                 state = UnitState.GATHERING;
-                currentResource = ResourceGatheringType.Gold;                
+                currentResource = ResourceGatheringType.Gold;
                 goals.Add<GoalGatherResource>().type = ResourceGatheringType.Gold;
                 ResetAI();
                 break;

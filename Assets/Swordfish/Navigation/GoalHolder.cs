@@ -9,7 +9,13 @@ public class GoalHolder
     private List<PathfindingGoal> goals = new List<PathfindingGoal>();
     public PathfindingGoal[] entries
     {
-        get { lock(goals) { return goals.ToArray(); } }
+        get
+        {
+            lock (this)
+            {
+                return goals.ToArray();
+            }
+        }
     }
 
     public void Cycle()
@@ -28,7 +34,7 @@ public class GoalHolder
 
     public void Remove<T>() where T : PathfindingGoal
     {
-        goals.Remove( (T)System.Activator.CreateInstance(typeof(T))  );
+        goals.Remove( goals.Find(x => x is T) );
     }
 
     public void RemoveAll<T>() where T : PathfindingGoal
@@ -41,9 +47,13 @@ public class GoalHolder
         return (T)goals.Find(x => x is T);
     }
 
-    public T Get<T>(Predicate<PathfindingGoal> expression) where T : PathfindingGoal
+    public T Get<T>(Predicate<T> expression) where T : PathfindingGoal
     {
-        return (T)goals.Find( expression );
+        foreach (T goal in GetAll<T>())
+            if (expression(goal))
+                return goal;
+
+        return null;
     }
 
     public List<T> GetAll<T>() where T : PathfindingGoal
