@@ -29,7 +29,6 @@ public struct BuildMenuHoverButton
     public int oreCost;
 }
 
-// [ExecuteAlways]
 [Serializable]
 public class BuildMenuTab : MonoBehaviour
 {
@@ -41,6 +40,7 @@ public class BuildMenuTab : MonoBehaviour
         //     Generate();
     }
 
+    [ExecuteInEditMode]
     public void Generate()
     {
         int i = 0;

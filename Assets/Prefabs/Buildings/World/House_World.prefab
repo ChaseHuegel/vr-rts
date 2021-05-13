@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 5412639916344327254}
   - component: {fileID: 3213080094431032773}
   - component: {fileID: 3513674755632247656}
-  - component: {fileID: -546463332567890168}
+  - component: {fileID: -3847769097304552847}
   m_Layer: 10
   m_Name: House_World
   m_TagString: Untagged
@@ -64,8 +64,6 @@ MonoBehaviour:
   queueProgressText: {fileID: 0}
   queueProgressImage: {fileID: 0}
   QueueImageObjects: []
-  buildingSpawnHoverMenu: {fileID: 0}
-  buildingHoverDisplay: {fileID: 0}
 --- !u!114 &-2718789996109689435
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -261,8 +259,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attributes:
   - attribute: 0
-    value: 500
-    max: 0
+    value: 0
+    max: 500
   invulnerable: 0
   weaknesses: 
   resistances: 
@@ -319,7 +317,7 @@ MonoBehaviour:
   highlightOnHover: 1
   hideHighlight: []
   hoverPriority: 0
---- !u!114 &-546463332567890168
+--- !u!114 &-3847769097304552847
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -328,33 +326,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 3042174803139083339}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c4153b26428ccf041950b92c057812a3, type: 3}
+  m_Script: {fileID: 11500000, guid: 77fa36798b3959c44a46f72d97c3fdb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onHandHoverBegin:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1273574667708474716}
-        m_TargetAssemblyTypeName: BuildingHoverDisplay, Assembly-CSharp
-        m_MethodName: OnHandHoverBegin
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  onHandHoverEnd:
-    m_PersistentCalls:
-      m_Calls: []
-  onAttachedToHand:
-    m_PersistentCalls:
-      m_Calls: []
-  onDetachedFromHand:
-    m_PersistentCalls:
-      m_Calls: []
+  title: House
+  startHidden: 1
+  titleGameObject: {fileID: 7030996360418906938}
+  menuGameObject: {fileID: 3049472435794320750}
+  healthBarGameObject: {fileID: 6929685579023607414}
+  buildingHoverDisplayGameObject: {fileID: 1273574667708474717}
+  secondKnockMaxDuration: 0.5
 --- !u!1 &5377417405777167938
 GameObject:
   m_ObjectHideFlags: 0
@@ -544,24 +525,36 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7fb19797225db2c4488e2990249299f1, type: 3}
+--- !u!1 &1273574667708474717 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2549361127315121918, guid: 7fb19797225db2c4488e2990249299f1,
+    type: 3}
+  m_PrefabInstance: {fileID: 3660726218514072483}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1273574667708474718 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2549361127315121917, guid: 7fb19797225db2c4488e2990249299f1,
     type: 3}
   m_PrefabInstance: {fileID: 3660726218514072483}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1273574667708474716 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2549361127315121919, guid: 7fb19797225db2c4488e2990249299f1,
+--- !u!1 &7030996360418906938 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6007413679436910745, guid: 7fb19797225db2c4488e2990249299f1,
     type: 3}
   m_PrefabInstance: {fileID: 3660726218514072483}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 77fa36798b3959c44a46f72d97c3fdb1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+--- !u!1 &3049472435794320750 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1773402440631066317, guid: 7fb19797225db2c4488e2990249299f1,
+    type: 3}
+  m_PrefabInstance: {fileID: 3660726218514072483}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6929685579023607414 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5973659078053127637, guid: 7fb19797225db2c4488e2990249299f1,
+    type: 3}
+  m_PrefabInstance: {fileID: 3660726218514072483}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4217446519676626998
 PrefabInstance:
   m_ObjectHideFlags: 0

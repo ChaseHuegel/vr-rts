@@ -144,7 +144,7 @@ GameObject:
   - component: {fileID: 4130524045297879987}
   - component: {fileID: 4187674707640435269}
   - component: {fileID: 7435559696047550681}
-  - component: {fileID: 6945369367761653608}
+  - component: {fileID: -823671066366005314}
   m_Layer: 10
   m_Name: Blacksmith_World
   m_TagString: Untagged
@@ -335,8 +335,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attributes:
   - attribute: 0
-    value: 500
-    max: 0
+    value: 0
+    max: 500
   invulnerable: 0
   weaknesses: 
   resistances: 
@@ -393,7 +393,7 @@ MonoBehaviour:
   highlightOnHover: 1
   hideHighlight: []
   hoverPriority: 0
---- !u!114 &6945369367761653608
+--- !u!114 &-823671066366005314
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -402,33 +402,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 3210571205559245670}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c4153b26428ccf041950b92c057812a3, type: 3}
+  m_Script: {fileID: 11500000, guid: 77fa36798b3959c44a46f72d97c3fdb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onHandHoverBegin:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6419860754234953255}
-        m_TargetAssemblyTypeName: BuildingHoverDisplay, Assembly-CSharp
-        m_MethodName: OnHandHoverBegin
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  onHandHoverEnd:
-    m_PersistentCalls:
-      m_Calls: []
-  onAttachedToHand:
-    m_PersistentCalls:
-      m_Calls: []
-  onDetachedFromHand:
-    m_PersistentCalls:
-      m_Calls: []
+  title: Blacksmith
+  startHidden: 1
+  titleGameObject: {fileID: 2965714698206656577}
+  menuGameObject: {fileID: 7127702015518176789}
+  healthBarGameObject: {fileID: 2922968579031633165}
+  buildingHoverDisplayGameObject: {fileID: 6419860754234953254}
+  secondKnockMaxDuration: 0.5
 --- !u!1001 &4261954071007250802
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -726,27 +709,33 @@ PrefabInstance:
       objectReference: {fileID: 7127702015518176789}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7fb19797225db2c4488e2990249299f1, type: 3}
+--- !u!1 &6419860754234953254 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2549361127315121918, guid: 7fb19797225db2c4488e2990249299f1,
+    type: 3}
+  m_PrefabInstance: {fileID: 8824463891437971672}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6419860754234953253 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2549361127315121917, guid: 7fb19797225db2c4488e2990249299f1,
     type: 3}
   m_PrefabInstance: {fileID: 8824463891437971672}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &6419860754234953255 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2549361127315121919, guid: 7fb19797225db2c4488e2990249299f1,
+--- !u!1 &2965714698206656577 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6007413679436910745, guid: 7fb19797225db2c4488e2990249299f1,
     type: 3}
   m_PrefabInstance: {fileID: 8824463891437971672}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 77fa36798b3959c44a46f72d97c3fdb1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &7127702015518176789 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1773402440631066317, guid: 7fb19797225db2c4488e2990249299f1,
+    type: 3}
+  m_PrefabInstance: {fileID: 8824463891437971672}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2922968579031633165 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5973659078053127637, guid: 7fb19797225db2c4488e2990249299f1,
     type: 3}
   m_PrefabInstance: {fileID: 8824463891437971672}
   m_PrefabAsset: {fileID: 0}

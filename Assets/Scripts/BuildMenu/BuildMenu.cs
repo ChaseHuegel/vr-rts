@@ -20,6 +20,7 @@ public class BuildMenu : MonoBehaviour
         {
             foreach(BuildMenuSlot slot in tab.GetComponentsInChildren<BuildMenuSlot>())
             {
+                Debug.Log(slot.rtsTypeData);
                 bool canBuild = PlayerManager.instance.CanConstructBuilding(slot.rtsTypeData.buildingType);                
                 slot.GetComponentInChildren<SphereCollider>().enabled = canBuild;   
                 //Debug.Log("enabled");          

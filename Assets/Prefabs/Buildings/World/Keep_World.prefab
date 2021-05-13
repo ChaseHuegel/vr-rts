@@ -45,7 +45,7 @@ GameObject:
   - component: {fileID: -8879928426266428292}
   - component: {fileID: -6447204745470228519}
   - component: {fileID: 5655937067843128242}
-  - component: {fileID: -9009088454591255699}
+  - component: {fileID: 8552698601966205783}
   m_Layer: 10
   m_Name: Keep_World
   m_TagString: Untagged
@@ -95,8 +95,6 @@ MonoBehaviour:
   queueProgressText: {fileID: 0}
   queueProgressImage: {fileID: 0}
   QueueImageObjects: []
-  buildingSpawnHoverMenu: {fileID: 0}
-  buildingHoverDisplay: {fileID: 0}
 --- !u!82 &7469603410756757451
 AudioSource:
   m_ObjectHideFlags: 0
@@ -240,8 +238,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attributes:
   - attribute: 0
-    value: 500
-    max: 0
+    value: 0
+    max: 500
   invulnerable: 0
   weaknesses: 
   resistances: 
@@ -298,7 +296,7 @@ MonoBehaviour:
   highlightOnHover: 1
   hideHighlight: []
   hoverPriority: 0
---- !u!114 &-9009088454591255699
+--- !u!114 &8552698601966205783
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -307,33 +305,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 4003362987689017659}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c4153b26428ccf041950b92c057812a3, type: 3}
+  m_Script: {fileID: 11500000, guid: 77fa36798b3959c44a46f72d97c3fdb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onHandHoverBegin:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1383616861006824169}
-        m_TargetAssemblyTypeName: BuildingHoverDisplay, Assembly-CSharp
-        m_MethodName: OnHandHoverBegin
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  onHandHoverEnd:
-    m_PersistentCalls:
-      m_Calls: []
-  onAttachedToHand:
-    m_PersistentCalls:
-      m_Calls: []
-  onDetachedFromHand:
-    m_PersistentCalls:
-      m_Calls: []
+  title: Keep
+  startHidden: 1
+  titleGameObject: {fileID: 7137115440398726287}
+  menuGameObject: {fileID: 2940527694483503835}
+  healthBarGameObject: {fileID: 7112324058341425603}
+  buildingHoverDisplayGameObject: {fileID: 1383616861006824168}
+  secondKnockMaxDuration: 0.5
 --- !u!1 &5063866496943271951
 GameObject:
   m_ObjectHideFlags: 0
@@ -581,24 +562,36 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7fb19797225db2c4488e2990249299f1, type: 3}
+--- !u!1 &1383616861006824168 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2549361127315121918, guid: 7fb19797225db2c4488e2990249299f1,
+    type: 3}
+  m_PrefabInstance: {fileID: 3482054663262643222}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1383616861006824171 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2549361127315121917, guid: 7fb19797225db2c4488e2990249299f1,
     type: 3}
   m_PrefabInstance: {fileID: 3482054663262643222}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1383616861006824169 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2549361127315121919, guid: 7fb19797225db2c4488e2990249299f1,
+--- !u!1 &7137115440398726287 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6007413679436910745, guid: 7fb19797225db2c4488e2990249299f1,
     type: 3}
   m_PrefabInstance: {fileID: 3482054663262643222}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 77fa36798b3959c44a46f72d97c3fdb1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+--- !u!1 &2940527694483503835 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1773402440631066317, guid: 7fb19797225db2c4488e2990249299f1,
+    type: 3}
+  m_PrefabInstance: {fileID: 3482054663262643222}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7112324058341425603 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5973659078053127637, guid: 7fb19797225db2c4488e2990249299f1,
+    type: 3}
+  m_PrefabInstance: {fileID: 3482054663262643222}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4640778355037767359
 PrefabInstance:
   m_ObjectHideFlags: 0

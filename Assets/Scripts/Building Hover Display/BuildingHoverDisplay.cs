@@ -50,67 +50,22 @@ public class BuildingHoverDisplay : MonoBehaviour
         
     }
     
-    protected float firstKnockTime;
-    protected float secondKnockMaxDuration = 1.0f;
-    protected bool waitingForSecondKnock;
-
-    
-    private void HandHoverUpdate( Hand hand )
-    {
-        // We're making a fist
-        if (hand.IsGrabbingWithType(GrabTypes.Pinch) && hand.IsGrabbingWithType(GrabTypes.Grip))
-        {
-            
-        }    
-        //AudioSource.PlayClipAtPoint(GameMaster.GetAudio("knock").GetClip(), transform.position);
-       
-    }
-
+    protected float lastKnockTime;
+    public float secondKnockMaxDuration = 0.5f;
     public void OnHandHoverBegin(Hand hand)
     {        
+        // Make sure we are making a fist
         if (hand.IsGrabbingWithType(GrabTypes.Pinch) && hand.IsGrabbingWithType(GrabTypes.Grip))
         {
-            Debug.Log("fist");
-        }    
-        //Debug.Log("hovering");
-
-        // if (Player.instance.leftHand.hoveringInteractable == GetComponentInParent<Interactable>())
-        // {
-            // GrabTypes grabType = Player.instance.leftHand.GetGrabStarting();
-            // Debug.Log(grabType);
-        // }
-
-        // Check if hand pose is a fist and play knock if it is.
-        // GrabTypes grabType = hand.GetBestGrabbingType();
-        // Debug.Log(grabType);
-        // AudioSource.PlayClipAtPoint(GameMaster.GetAudio("knock").GetClip(), transform.position);
-        // Toggle();
-        
-        // ---- 2 knocks is too unreliable at the moment and can deal with it later
-        // if (waitingForSecondKnock)
-        // {
-        //     // This is the 2nd knock
-        //     if (Time.fixedTime - firstKnockTime <= secondKnockMaxDuration)
-        //     {
-        //         Toggle();
-        //         waitingForSecondKnock = false;
-        //         Debug.Log("second " + (Time.fixedTime - firstKnockTime).ToString());
-        //     }
-        //     // Time windows has passed for 2nd knock
-        //     else
-        //     {
-        //         waitingForSecondKnock = false;                
-        //     }
-        // }
-        // // This is a new first knock
-        // else
-        // {
-        //     firstKnockTime = Time.fixedTime;
-        //     waitingForSecondKnock = true;
-        //     Debug.Log("first " + firstKnockTime);
-        // }
-
-        //Debug.Log("Hover Begin");
+            AudioSource.PlayClipAtPoint(GameMaster.GetAudio("knock").GetClip(), transform.position);
+                        
+            if (Time.fixedTime - lastKnockTime <= secondKnockMaxDuration)
+            {
+                Toggle();
+            }
+            
+            lastKnockTime = Time.fixedTime;
+        }
     }
 
     public void Toggle()

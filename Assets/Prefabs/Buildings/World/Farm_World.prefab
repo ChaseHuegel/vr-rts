@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: -2109239944173215126}
   - component: {fileID: 1498620696}
   - component: {fileID: 6355609625548158117}
-  - component: {fileID: 7396109809317965698}
+  - component: {fileID: 6611738123303705844}
   m_Layer: 10
   m_Name: Farm_World
   m_TagString: Untagged
@@ -64,8 +64,6 @@ MonoBehaviour:
   queueProgressText: {fileID: 0}
   queueProgressImage: {fileID: 0}
   QueueImageObjects: []
-  buildingSpawnHoverMenu: {fileID: 0}
-  buildingHoverDisplay: {fileID: 0}
 --- !u!65 &6451706933942204417
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -202,8 +200,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attributes:
   - attribute: 0
-    value: 500
-    max: 0
+    value: 0
+    max: 500
   invulnerable: 0
   weaknesses: 
   resistances: 
@@ -280,7 +278,7 @@ MonoBehaviour:
   highlightOnHover: 1
   hideHighlight: []
   hoverPriority: 0
---- !u!114 &7396109809317965698
+--- !u!114 &6611738123303705844
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -289,33 +287,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 899507145775679583}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c4153b26428ccf041950b92c057812a3, type: 3}
+  m_Script: {fileID: 11500000, guid: 77fa36798b3959c44a46f72d97c3fdb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onHandHoverBegin:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1189028919910859276}
-        m_TargetAssemblyTypeName: BuildingHoverDisplay, Assembly-CSharp
-        m_MethodName: OnHandHoverBegin
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  onHandHoverEnd:
-    m_PersistentCalls:
-      m_Calls: []
-  onAttachedToHand:
-    m_PersistentCalls:
-      m_Calls: []
-  onDetachedFromHand:
-    m_PersistentCalls:
-      m_Calls: []
+  title: Farm
+  startHidden: 1
+  titleGameObject: {fileID: 6971571232081867882}
+  menuGameObject: {fileID: 3133667440422730302}
+  healthBarGameObject: {fileID: 6991788636641313062}
+  buildingHoverDisplayGameObject: {fileID: 1189028919910859277}
+  secondKnockMaxDuration: 0.5
 --- !u!1 &3163886759887789236
 GameObject:
   m_ObjectHideFlags: 0
@@ -519,24 +500,36 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7fb19797225db2c4488e2990249299f1, type: 3}
+--- !u!1 &1189028919910859277 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2549361127315121918, guid: 7fb19797225db2c4488e2990249299f1,
+    type: 3}
+  m_PrefabInstance: {fileID: 3738376851584361715}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1189028919910859278 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2549361127315121917, guid: 7fb19797225db2c4488e2990249299f1,
     type: 3}
   m_PrefabInstance: {fileID: 3738376851584361715}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1189028919910859276 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2549361127315121919, guid: 7fb19797225db2c4488e2990249299f1,
+--- !u!1 &6971571232081867882 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6007413679436910745, guid: 7fb19797225db2c4488e2990249299f1,
     type: 3}
   m_PrefabInstance: {fileID: 3738376851584361715}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 77fa36798b3959c44a46f72d97c3fdb1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+--- !u!1 &3133667440422730302 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1773402440631066317, guid: 7fb19797225db2c4488e2990249299f1,
+    type: 3}
+  m_PrefabInstance: {fileID: 3738376851584361715}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6991788636641313062 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5973659078053127637, guid: 7fb19797225db2c4488e2990249299f1,
+    type: 3}
+  m_PrefabInstance: {fileID: 3738376851584361715}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6091863267799645307
 PrefabInstance:
   m_ObjectHideFlags: 0
