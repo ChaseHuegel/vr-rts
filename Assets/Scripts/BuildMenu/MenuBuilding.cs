@@ -9,16 +9,16 @@ using Swordfish.Navigation;
 public class MenuBuilding : Throwable
 {    public GameObject spawnBuildingOnCollision;
     public bool destroyOnTargetCollision = true;
-    
+
     private BuildMenuSlot buildMenuSlot;
     private bool canReAttach;
     private Interactable interactible;
-    
+
     [Header ("Placement Preview Visuals")]
     public GameObject laser;
     public float previewObjectLocalScale = 0.09f;
     public LayerMask allowedLayersMask;
-    public LayerMask disallowedLayersMask;      
+    public LayerMask disallowedLayersMask;
     private RaycastHit hitInfo;
     private bool pinchGrip;
     public SteamVR_Action_Boolean rotatePreviewClockwise;
@@ -27,12 +27,12 @@ public class MenuBuilding : Throwable
 
     void Start()
     {
-        buildMenuSlot = gameObject.GetComponentInParent<BuildMenuSlot>();       
-        interactible = gameObject.GetComponent<Interactable>(); 
-      
+        buildMenuSlot = gameObject.GetComponentInParent<BuildMenuSlot>();
+        interactible = gameObject.GetComponent<Interactable>();
+
         rotatePreviewClockwise.AddOnStateDownListener(RotatePreviewClockwiseDown, SteamVR_Input_Sources.RightHand);
         rotatePreviewCounterClockwise.AddOnStateDownListener(RotatePreviewCounterClockwiseDown, SteamVR_Input_Sources.RightHand);
-        
+
         // buildingPlacementPointer.AddOnStateDownListener(BuildingPlacementPointerDown, SteamVR_Input_Sources.RightHand);
         // buildingPlacementPointer.AddOnStateUpListener(BuildingPlacementPointerUp, SteamVR_Input_Sources.RightHand);
         // buildingPlacementPointer.AddOnStateDownListener(BuildingPlacementPointerDown, SteamVR_Input_Sources.LeftHand);
@@ -45,26 +45,26 @@ public class MenuBuilding : Throwable
             spawnBuildingOnCollision.transform.Rotate(0f, 0f, -45);
 
         //Debug.Log("rotated " + spawnBuildingOnCollision.gameObject.name);
-    } 
+    }
 
     public void RotatePreviewClockwiseDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
         if (interactible.attachedToHand)
-            spawnBuildingOnCollision.transform.Rotate(0f, 0f, 45);      
+            spawnBuildingOnCollision.transform.Rotate(0f, 0f, 45);
 
-        //Debug.Log("rotated " + spawnBuildingOnCollision.gameObject.name);      
-    } 
+        //Debug.Log("rotated " + spawnBuildingOnCollision.gameObject.name);
+    }
 
     // public void BuildingPlacementPointerDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     // {
     //     // if (interactible.isHovering)
     //     // {
-    //         spawnBuildingOnCollision = GameObject.Instantiate(spawnBuildingOnCollision);  
+    //         spawnBuildingOnCollision = GameObject.Instantiate(spawnBuildingOnCollision);
     //         spawnBuildingOnCollision.transform.localScale = new Vector3(previewObjectLocalScale, previewObjectLocalScale, previewObjectLocalScale);
     //         spawnBuildingOnCollision.gameObject.layer = LayerMask.NameToLayer("UI");
-    //         spawnBuildingOnCollision.GetComponent<BoxCollider>().enabled = false;        
+    //         spawnBuildingOnCollision.GetComponent<BoxCollider>().enabled = false;
     //         spawnBuildingOnCollision.GetComponent<TerrainBuilding>().enabled = false;
-            
+
     //         // TODO: Enable for snapping while placing?
     //         spawnBuildingOnCollision.GetComponent<Obstacle>().enabled = false;
 
@@ -75,18 +75,18 @@ public class MenuBuilding : Throwable
 
     // public void BuildingPlacementPointerUp(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     // {
-        
+
     //     spawnBuildingOnCollision.transform.SetParent(null);
     //     spawnBuildingOnCollision.GetComponent<BoxCollider>().enabled = true;
     //     spawnBuildingOnCollision.GetComponent<Obstacle>().enabled = true;
     //     spawnBuildingOnCollision.GetComponent<TerrainBuilding>().enabled = true;
     //     spawnBuildingOnCollision.gameObject.layer = LayerMask.NameToLayer("Building");
 
-    //     // Use gravity, kinematics off, etc..        
+    //     // Use gravity, kinematics off, etc..
     //     gameObject.GetComponent<Rigidbody>().isKinematic = false;
-    //     gameObject.GetComponent<Rigidbody>().useGravity = true;          
+    //     gameObject.GetComponent<Rigidbody>().useGravity = true;
     //     gameObject.GetComponentInChildren<Collider>().isTrigger = false;
-        
+
     //     buildingPlacementPointer.RemoveAllListeners(SteamVR_Input_Sources.RightHand);
     //     rotatePreviewClockwise.RemoveAllListeners(SteamVR_Input_Sources.RightHand);
     //     rotatePreviewCounterClockwise.RemoveAllListeners(SteamVR_Input_Sources.RightHand);
@@ -100,18 +100,18 @@ public class MenuBuilding : Throwable
 
         // Debug.DrawRay(hand.hoverSphereTransform.position, hand.hoverSphereTransform.forward, Color.red);
         //Debug.DrawRay(hand.objectAttachmentPoint.position, hand.objectAttachmentPoint.forward, Color.blue);
-        
+
         if (interactable.skeletonPoser != null)
         {
             //if (hand.currentAttachedObject)
                 pinchGrip = hand.currentAttachedObjectInfo.Value.grabbedWithType == GrabTypes.Pinch;
-                
+
             if (pinchGrip)
             {
                 interactable.skeletonPoser.SetBlendingBehaviourEnabled("PinchPose", true);
 
                 Transform origin = Player.instance.rightHand.GetComponent<HandTrackingPoint>().trackingPoint.transform;
-                
+
                 // Use vertical laser placement method
                 if ( origin.transform.up.y > 0.9f)
                 {
@@ -128,7 +128,7 @@ public class MenuBuilding : Throwable
                         else
                         {
                             DisplayLaserAndPreviewObject(false);
-                            
+
                         }
                     }
                 }
@@ -179,14 +179,14 @@ public class MenuBuilding : Throwable
         DisplayLaserAndPreviewObject(true);
 
         laser.transform.position = Vector3.Lerp(transform.position, hitInfo.point, .5f);
-        
+
         // Point the laser at position where raycast hits.
         laser.transform.LookAt( hitInfo.point);
 
         // Scale the laser so it fits perfectly between the two positions
-        laser.transform.localScale = new Vector3(laser.transform.localScale.x, 
+        laser.transform.localScale = new Vector3(laser.transform.localScale.x,
             laser.transform.localScale.y, hitInfo.distance);
-        
+
         spawnBuildingOnCollision.transform.localScale = new Vector3(previewObjectLocalScale, previewObjectLocalScale, previewObjectLocalScale);
         spawnBuildingOnCollision.transform.position = hitInfo.point;
     }
@@ -205,8 +205,8 @@ public class MenuBuilding : Throwable
     {
         base.OnDetachedFromHand(hand);
 
-        //buildMenuSlot.RespawnMenuSlotObject(); 
-        
+        //buildMenuSlot.RespawnMenuSlotObject();
+
         if (pinchGrip)
         {
             // Need to check if position is valid
@@ -216,21 +216,21 @@ public class MenuBuilding : Throwable
             spawnBuildingOnCollision.GetComponent<TerrainBuilding>().enabled = true;
             SetLayer(spawnBuildingOnCollision, "Building");
             InteractionPointer.instance.StopPlacement(hand);
-            
-            RTSBuildingTypeData buildingData = GameMaster.Instance.FindBuildingData(buildMenuSlot.rtsTypeData.buildingType);
-            
+
+            BuildingData buildingData = GameMaster.GetBuilding(buildMenuSlot.rtsTypeData.buildingType);
+
             PlayerManager.instance.RemoveResourcesFromStockpile(buildingData.goldCost, buildingData.grainCost,
                                                buildingData.woodCost, buildingData.stoneCost);
 
 
         }
-        
 
-        // Use gravity, kinematics off, etc..        
+
+        // Use gravity, kinematics off, etc..
         gameObject.GetComponent<Rigidbody>().isKinematic = false;
-        gameObject.GetComponent<Rigidbody>().useGravity = true;          
+        gameObject.GetComponent<Rigidbody>().useGravity = true;
         gameObject.GetComponentInChildren<Collider>().isTrigger = false;
-        
+
         Destroy(laser.gameObject);
 
         if (pinchGrip)
@@ -241,9 +241,9 @@ public class MenuBuilding : Throwable
             rotatePreviewCounterClockwise.RemoveAllListeners(SteamVR_Input_Sources.LeftHand);
             Destroy(base.gameObject);
         }
-        
+
     }
-    
+
     void SetLayer(GameObject go, string layer)
     {
         go.gameObject.layer = LayerMask.NameToLayer(layer);
@@ -254,26 +254,26 @@ public class MenuBuilding : Throwable
     }
 
     protected override void OnAttachedToHand(Hand hand)
-    {   
+    {
         base.OnAttachedToHand(hand);
 
-        //GameObject.Instantiate(previewObject, ObjectPlacementPointer.instance.destinationReticleTransform );  
-      
+        //GameObject.Instantiate(previewObject, ObjectPlacementPointer.instance.destinationReticleTransform );
+
         // TODO: this is too much instantiation, must fix at later date.
-        spawnBuildingOnCollision = GameObject.Instantiate(spawnBuildingOnCollision);  
+        spawnBuildingOnCollision = GameObject.Instantiate(spawnBuildingOnCollision);
         spawnBuildingOnCollision.transform.localScale = new Vector3(previewObjectLocalScale, previewObjectLocalScale, previewObjectLocalScale);
         //spawnBuildingOnCollision.gameObject.layer = LayerMask.NameToLayer("UI");
         SetLayer(spawnBuildingOnCollision, "UI");
-        spawnBuildingOnCollision.GetComponent<BoxCollider>().enabled = false;        
+        spawnBuildingOnCollision.GetComponent<BoxCollider>().enabled = false;
         spawnBuildingOnCollision.GetComponent<TerrainBuilding>().enabled = false;
-        
+
         // TODO: Enable for snapping while placing?
         spawnBuildingOnCollision.GetComponent<Obstacle>().enabled = false;
 
         // Determine angle of hand and then decide which laser to show?
-        laser = GameObject.Instantiate(laser);        
-        
-    }    
+        laser = GameObject.Instantiate(laser);
+
+    }
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -284,7 +284,7 @@ public class MenuBuilding : Throwable
         float backTrackLength = 1f;
         Ray ray = new Ray(contact.point - (-contact.normal * backTrackLength), -contact.normal);
         Vector3 groundPosition = contact.point;
-        groundPosition.y = 0;    
+        groundPosition.y = 0;
 
         // TODO: There are still cases where buildings can spawn on top of each other
         if (collision.transform.name == "Floor")
@@ -296,10 +296,10 @@ public class MenuBuilding : Throwable
         }
 
         Debug.DrawRay(ray.origin, ray.direction, Color.cyan, 5, true);
-        
+
         rotatePreviewClockwise.RemoveAllListeners(SteamVR_Input_Sources.RightHand);
         rotatePreviewCounterClockwise.RemoveAllListeners(SteamVR_Input_Sources.RightHand);
-        //Destroy(previewObject.gameObject);  
+        //Destroy(previewObject.gameObject);
         Destroy(this.gameObject);
     }
 }

@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c98206bdc9ffd5547bf4552bd13d2c59, type: 3}
+  m_Name: Granary
+  m_EditorClassIdentifier: 
+  buildingType: 30
+  dropoffTypes: 1
+  goldCost: 10
+  stoneCost: 0
+  grainCost: 0
+  woodCost: 20
+  menuPreviewPrefab: {fileID: 6874825559920163717, guid: 1de3122c84e71124c976d1e0fef578ff,
+    type: 3}
+  fadedPreviewPrefab: {fileID: 5189199218548151938, guid: 77f26f7042192814b9fbd0750e81b853,
+    type: 3}
+  throwablePrefab: {fileID: 4500754704874954061, guid: 02b1e28debc26134aa487e081828986f,
+    type: 3}
+  worldPrefab: {fileID: 557160733203580378, guid: 1a0e4a32dc507d64a8068524247818ce,
+    type: 3}
+  populationSupported: 1
+  allowedUnitsToSpawn: 
+  constructionCompletedAudio: {fileID: 11400000, guid: 69c1a5a135c5aa64883815590611952c,
+    type: 2}

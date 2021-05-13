@@ -6,11 +6,16 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Building Database", menuName = "RTS/Buildings/Database")]
 public class BuildingDatabase : ScriptableObject
 {
-    [SerializeField] private List<BuildingElement> database = new List<BuildingElement>();
+    [SerializeField] private List<BuildingData> database = new List<BuildingData>();
 
-    public BuildingElement Get(string name)
+    public BuildingData Get(RTSBuildingType type)
     {
-        foreach (BuildingElement item in database)
+        return database.Find(x => x.buildingType == type);
+    }
+
+    public BuildingData Get(string name)
+    {
+        foreach (BuildingData item in database)
         {
             if (item.name.Equals(name, StringComparison.InvariantCultureIgnoreCase))
             {
@@ -18,6 +23,6 @@ public class BuildingDatabase : ScriptableObject
             }
         }
 
-        return new BuildingElement();
+        return new BuildingData();
     }
 }

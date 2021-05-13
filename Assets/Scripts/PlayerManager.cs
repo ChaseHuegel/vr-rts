@@ -200,7 +200,7 @@ public class PlayerManager : MonoBehaviour
     {
         bool ret = true;
 
-        RTSBuildingTypeData buildingData = GameMaster.Instance.FindBuildingData(buildingType);
+        BuildingData buildingData = GameMaster.GetBuilding(buildingType);
         if (goldCollected < buildingData.goldCost || woodCollected < buildingData.woodCost ||
             grainCollected < buildingData.grainCost || stoneCollected < buildingData.stoneCost)
         {

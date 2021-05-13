@@ -11,7 +11,7 @@ public class Structure : Obstacle, IFactioned
 
     // Set to grab data about this building from database.
     public RTSBuildingType rtsBuildingType;
-    protected RTSBuildingTypeData rtsBuildingTypeData;
+    protected BuildingData rtsBuildingTypeData;
     protected HealthBar buildingHealthBar;
 
     // Built signals that building construction has completed, it does
@@ -42,7 +42,7 @@ public class Structure : Obstacle, IFactioned
             ignorePanning.gameObject.layer = LayerMask.NameToLayer("UI");
 
         // Retrieve building data from database.
-        rtsBuildingTypeData = GameMaster.Instance.FindBuildingData(rtsBuildingType);
+        rtsBuildingTypeData = GameMaster.GetBuilding(rtsBuildingType);
 
         UpdateFaction();
 

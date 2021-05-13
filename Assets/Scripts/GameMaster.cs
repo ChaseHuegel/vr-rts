@@ -17,20 +17,13 @@ public class GameMaster : Singleton<GameMaster>
 
     public BuildingDatabase buildingDatabase;
     public static BuildingDatabase GetBuildingDatabase() { return Instance.buildingDatabase; }
-    public static BuildingElement GetBuilding(string name) { return Instance.buildingDatabase.Get(name); }
+    public static BuildingData GetBuilding(RTSBuildingType type) { return Instance.buildingDatabase.Get(type); }
+    public static BuildingData GetBuilding(string name) { return Instance.buildingDatabase.Get(name); }
 
     public List<Faction> factions;
     public static List<Faction> Factions { get { return Instance.factions;} }
 
     public List<RTSUnitTypeData> rtsUnitDataList = new List<RTSUnitTypeData>();
-
-    public List<RTSBuildingTypeData> rtsBuildingDataList = new List<RTSBuildingTypeData>();
-
-    public RTSBuildingTypeData FindBuildingData(RTSBuildingType type)
-    {
-        RTSBuildingTypeData ret = rtsBuildingDataList.Find(x => x.buildingType == type);
-        return ret;
-    }
 
     public RTSUnitTypeData FindUnitData(RTSUnitType type)
     {

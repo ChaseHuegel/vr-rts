@@ -10,7 +10,7 @@ using UnityEditor;
 [RequireComponent( typeof( Interactable ) )]
 public class BuildMenuSlot : MonoBehaviour
 {
-    public RTSBuildingTypeData rtsTypeData;
+    public BuildingData rtsTypeData;
     public bool requireGrabActionToTake = true;
     public bool requireReleaseActionToReturn = false;
     public bool showTriggerHint = false;
@@ -65,7 +65,7 @@ public class BuildMenuSlot : MonoBehaviour
     }
 
     private void ClearPreview()
-    {        
+    {
         GameObject[] allChildren = new GameObject [ transform.childCount ] ;
 
         int i = 0;
@@ -99,22 +99,22 @@ public class BuildMenuSlot : MonoBehaviour
             CreatePreviewObject();
         }
     }
-    
+
     private void OnHandHoverBegin( Hand hand )
     {
         ThrowableBuilding currentAttachedThrowableBuilding = GetAttachedThrowableBuilding( hand );
 
-        if ( currentAttachedThrowableBuilding ) 
+        if ( currentAttachedThrowableBuilding )
         {
             // If we want to take back the item and we aren't waiting for a trigger press
-            if ( !requireReleaseActionToReturn ) 
+            if ( !requireReleaseActionToReturn )
             {
                 TakeBackItem( hand );
             }
         }
 
         // We don't require trigger press for pickup. Spawn and attach object.
-        if (!requireGrabActionToTake) 
+        if (!requireGrabActionToTake)
         {
             SpawnAndAttachObject( hand, GrabTypes.Scripted );
         }
@@ -137,7 +137,7 @@ public class BuildMenuSlot : MonoBehaviour
                     TakeBackItem( hand );
 
                     // So that we don't pick up an throwable building the same frame that we return it
-                    return; 
+                    return;
                 }
             }
         }
@@ -145,7 +145,7 @@ public class BuildMenuSlot : MonoBehaviour
         if ( requireGrabActionToTake )
         {
             GrabTypes startingGrab = hand.GetGrabStarting();
-            
+
             if (startingGrab != GrabTypes.None)
             {
                 if (startingGrab == GrabTypes.Trigger || startingGrab == GrabTypes.Pinch)
@@ -171,15 +171,15 @@ public class BuildMenuSlot : MonoBehaviour
         GameObject currentAttachedObject = hand.currentAttachedObject;
 
         // Verify the hand is holding something
-        if ( currentAttachedObject == null ) 
+        if ( currentAttachedObject == null )
         {
             return null;
         }
 
         ThrowableBuilding throwableBuilding = hand.currentAttachedObject.GetComponent<ThrowableBuilding>();
-        
+
         // Verify the item in the hand is a throwable building
-        if ( throwableBuilding == null ) 
+        if ( throwableBuilding == null )
         {
             return null;
         }
@@ -230,7 +230,7 @@ public class BuildMenuSlot : MonoBehaviour
         spawnedItem = GameObject.Instantiate( rtsTypeData.throwablePrefab );
         spawnedItem.SetActive( true );
         hand.AttachObject( spawnedItem, grabType, attachmentFlags );
-       
+
        // hand.ForceHoverUnlock();
 
         spawnedItem.GetComponent<ThrowableBuilding>().rtsBuildingTypeData = rtsTypeData;

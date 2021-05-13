@@ -12,7 +12,7 @@ public class ThrowableBuilding : Throwable
     public SoundElement placementAllowedAudio;
     //public LayerMask allowedLayersMask;
     public LayerMask disallowedLayersMask;
-    public RTSBuildingTypeData rtsBuildingTypeData;
+    public BuildingData rtsBuildingTypeData;
 
     protected override void OnDetachedFromHand(Hand hand)
     {
@@ -29,9 +29,9 @@ public class ThrowableBuilding : Throwable
 
             float backTrackLength = 1f;
             Ray ray = new Ray(contact.point - (-contact.normal * backTrackLength), -contact.normal);
-            
+
             Vector3 groundPosition = contact.point;
-            //groundPosition.y = 0;    
+            //groundPosition.y = 0;
 
             GameObject spawned = GameObject.Instantiate(rtsBuildingTypeData.worldPrefab);
             spawned.transform.position = groundPosition;
@@ -46,12 +46,12 @@ public class ThrowableBuilding : Throwable
             ContactPoint contact = collision.contacts[0];
             GameObject spawned = GameObject.Instantiate(placementDeniedEffect);
             spawned.transform.position = contact.point;
-            AudioSource.PlayClipAtPoint( placementDeniedAudio.GetClip(),contact.point );            
+            AudioSource.PlayClipAtPoint( placementDeniedAudio.GetClip(),contact.point );
         }
-        
-        PlayerManager.instance.RemoveResourcesFromStockpile(rtsBuildingTypeData.goldCost, 
+
+        PlayerManager.instance.RemoveResourcesFromStockpile(rtsBuildingTypeData.goldCost,
                                                 rtsBuildingTypeData.grainCost,
-                                                rtsBuildingTypeData.woodCost, 
+                                                rtsBuildingTypeData.woodCost,
                                                 rtsBuildingTypeData.stoneCost);
 
         Destroy(this.gameObject);

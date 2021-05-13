@@ -7,13 +7,13 @@ using Valve.VR.InteractionSystem;
 
  [CustomEditor(typeof(BuildMenuTab))]
  public class BuildMenuTabEditor : Editor
- {    
+ {
      public override void OnInspectorGUI ()
     {
         DrawDefaultInspector();
 
         if(GUILayout.Button("Generate Menu"))
-        {    
+        {
             ((BuildMenuTab)target).Generate();
         }
     }
@@ -21,33 +21,33 @@ using Valve.VR.InteractionSystem;
 
 [Serializable]
 public struct BuildMenuHoverButton
-{    
+{
     public GameObject visualModel;
     public int grainCost;
     public int woodCost;
     public int goldCost;
-    public int oreCost;    
+    public int oreCost;
 }
 
 // [ExecuteAlways]
 [Serializable]
 public class BuildMenuTab : MonoBehaviour
-{   
+{
     public GameObject resourceCostPrefab;
     public RTSBuildingType[] Buttons;
     void Awake()
     {
         // if (transform.childCount <= 0)
-        //     Generate();        
+        //     Generate();
     }
 
     public void Generate()
-    {   
+    {
         int i = 0;
 
         int maxColumns = 3;
 
-        int xSpacing = 80;    
+        int xSpacing = 80;
         int ySpacing = 80;
 
         int originX = -80; // start
@@ -61,10 +61,10 @@ public class BuildMenuTab : MonoBehaviour
         DestroyChildren();
 
         foreach ( RTSBuildingType rtsBuildingType in Buttons )
-        {           
+        {
             // Create the button slot gameobject
-            GameObject slot = Instantiate ( new GameObject ( "slot" + i ), this.gameObject.transform );            
-            
+            GameObject slot = Instantiate ( new GameObject ( "slot" + i ), this.gameObject.transform );
+
             // Iterate through slot positions
             slot.transform.localPosition = new Vector3(x, y, 0);
 
@@ -84,15 +84,15 @@ public class BuildMenuTab : MonoBehaviour
             resourceCost.transform.localRotation = Quaternion.identity;
 
             // Fetch and set the building type data from the database
-            buildMenuSlot.rtsTypeData = GameMaster.Instance.FindBuildingData(rtsBuildingType);
-            
+            buildMenuSlot.rtsTypeData = GameMaster.GetBuilding(rtsBuildingType);
+
             // Popluate the resource cost prefab text objects
             BuildMenuResouceCost cost = resourceCost.GetComponent<BuildMenuResouceCost>();
             cost.woodText.text = buildMenuSlot.rtsTypeData.woodCost.ToString();
             cost.goldText.text = buildMenuSlot.rtsTypeData.goldCost.ToString();
             cost.grainText.text = buildMenuSlot.rtsTypeData.grainCost.ToString();
             cost.stoneText.text = buildMenuSlot.rtsTypeData.stoneCost.ToString();
-            
+
             // Create/Instatiate preview objects for slots
             buildMenuSlot.CreatePreviewObject();
 
@@ -103,14 +103,14 @@ public class BuildMenuTab : MonoBehaviour
             {
                 row++;
                 column = 0;
-            }            
-            
+            }
+
             x = column * xSpacing + originX;
-            y = -1 * row * ySpacing + originY;           
+            y = -1 * row * ySpacing + originY;
             i++;
         }
     }
-    
+
     void DestroyChildren()
     {
         GameObject[] allChildren = new GameObject [ transform.childCount ] ;
@@ -127,5 +127,5 @@ public class BuildMenuTab : MonoBehaviour
         {
             DestroyImmediate ( child.gameObject );
         }
-    }   
+    }
 }

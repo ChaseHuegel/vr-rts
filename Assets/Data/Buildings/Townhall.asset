@@ -9,8 +9,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7b4aa2ab0bc5f3848aaff932a3b09b92, type: 3}
+  m_Script: {fileID: 11500000, guid: c98206bdc9ffd5547bf4552bd13d2c59, type: 3}
   m_Name: Townhall
   m_EditorClassIdentifier: 
-  variants:
-  - {fileID: 0}
+  buildingType: 85
+  dropoffTypes: -1
+  goldCost: 20
+  stoneCost: 0
+  grainCost: 10
+  woodCost: 40
+  menuPreviewPrefab: {fileID: 3524930301159418664, guid: d69494ea3f8ed644f8dfb3599c37b0b4,
+    type: 3}
+  fadedPreviewPrefab: {fileID: 3958027217845985390, guid: 1a6f8e4828c427844bf6299d96d886e5,
+    type: 3}
+  throwablePrefab: {fileID: 7664533672966788755, guid: f1e49f8027babf347ac36bfce5960d8d,
+    type: 3}
+  worldPrefab: {fileID: 1129064322338806663, guid: 9b01cde0f07486643a93faa1b4864738,
+    type: 3}
+  populationSupported: 5
+  allowedUnitsToSpawn: 
+  constructionCompletedAudio: {fileID: 11400000, guid: c72159ec98440534abf1b3058c7edd57,
+    type: 2}
