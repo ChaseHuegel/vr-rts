@@ -17,11 +17,12 @@ public class BuildingHoverDisplay : MonoBehaviour
 
     protected LookAtAndReset lookAtAndReset;
     protected bool visible;
+    public GameObject buildingHoverDisplayGameObject;
 
     // Start is called before the first frame update
     void Start()
     {
-        lookAtAndReset = GetComponentInChildren<LookAtAndReset>();
+        lookAtAndReset = buildingHoverDisplayGameObject.GetComponentInChildren<LookAtAndReset>();
 
         if (titleGameObject)
         {
@@ -33,10 +34,10 @@ public class BuildingHoverDisplay : MonoBehaviour
             else
                 Debug.Log("Missing textmeshpro component in child objects.");
 
-            if (menuGameObject)
-                titleGameObject.transform.localPosition = new Vector3(0, 1.2f, 0);
-            else
-                titleGameObject.transform.localPosition = new Vector3(0, 0.4f, 0);
+            // if (menuGameObject)
+            //     titleGameObject.transform.localPosition = new Vector3(0, 1.2f, 0);
+            // else
+            //     titleGameObject.transform.localPosition = new Vector3(0, 0.4f, 0);
         }
         else
             Debug.Log("Missing titleGameObject.");
@@ -48,31 +49,50 @@ public class BuildingHoverDisplay : MonoBehaviour
 
         
     }
-
-    // protected void ToggleHoverMenuOnKnock()
-    // {
-    //     buildingSpawnHoverMenu.gameObject.SetActive(!buildingSpawnHoverMenu.gameObject.activeSelf);
-    //     buildingHoverDisplay.Toggle();
-    // }
     
-    // protected float firstKnockTime;
-    // protected float secondKnockMaxDuration = 1.0f;
-    // protected bool waitingForSecondKnock;
-    public void OnHandHoverBegin()
+    protected float firstKnockTime;
+    protected float secondKnockMaxDuration = 1.0f;
+    protected bool waitingForSecondKnock;
+
+    
+    private void HandHoverUpdate( Hand hand )
+    {
+        // We're making a fist
+        if (hand.IsGrabbingWithType(GrabTypes.Pinch) && hand.IsGrabbingWithType(GrabTypes.Grip))
+        {
+            
+        }    
+        //AudioSource.PlayClipAtPoint(GameMaster.GetAudio("knock").GetClip(), transform.position);
+       
+    }
+
+    public void OnHandHoverBegin(Hand hand)
     {        
+        if (hand.IsGrabbingWithType(GrabTypes.Pinch) && hand.IsGrabbingWithType(GrabTypes.Grip))
+        {
+            Debug.Log("fist");
+        }    
+        //Debug.Log("hovering");
+
+        // if (Player.instance.leftHand.hoveringInteractable == GetComponentInParent<Interactable>())
+        // {
+            // GrabTypes grabType = Player.instance.leftHand.GetGrabStarting();
+            // Debug.Log(grabType);
+        // }
+
         // Check if hand pose is a fist and play knock if it is.
-        AudioSource.PlayClipAtPoint(GameMaster.GetAudio("knock").GetClip(), transform.position);
-        Toggle();
-
-        //ToggleHoverMenuOnKnock();
-
+        // GrabTypes grabType = hand.GetBestGrabbingType();
+        // Debug.Log(grabType);
+        // AudioSource.PlayClipAtPoint(GameMaster.GetAudio("knock").GetClip(), transform.position);
+        // Toggle();
+        
         // ---- 2 knocks is too unreliable at the moment and can deal with it later
         // if (waitingForSecondKnock)
         // {
         //     // This is the 2nd knock
         //     if (Time.fixedTime - firstKnockTime <= secondKnockMaxDuration)
         //     {
-        //         ToggleObjectOnKnock();
+        //         Toggle();
         //         waitingForSecondKnock = false;
         //         Debug.Log("second " + (Time.fixedTime - firstKnockTime).ToString());
         //     }

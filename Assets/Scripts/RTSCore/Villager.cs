@@ -80,6 +80,13 @@ public class Villager : Unit
         Actor.OnRepathFailedEvent -= OnRepathFailed;
     }
 
+    public void Awake()
+    {
+        audioSource = gameObject.GetComponent<AudioSource>();
+        if (!audioSource)
+            Debug.Log("No audiosource component found.");
+    }
+
     public override void Initialize()
     {
         base.Initialize();
@@ -93,10 +100,6 @@ public class Villager : Unit
         goals.Add<GoalGatherResource>().type = ResourceGatheringType.Stone;
         goals.Add<GoalGatherResource>().type = ResourceGatheringType.Wood;
         transportGoal = goals.Add<GoalTransportResource>();
-
-        audioSource = gameObject.GetComponent<AudioSource>();
-        if (!audioSource)
-            Debug.Log("No audiosource component found.");
 
         animator = gameObject.GetComponentInChildren<Animator>();
         if (!animator)

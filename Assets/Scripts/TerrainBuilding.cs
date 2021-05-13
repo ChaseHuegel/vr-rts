@@ -46,98 +46,98 @@ public class TerrainBuilding : MonoBehaviour
     }    
 
     // Update is called once per frame
-    void Update()
-    {    
-        UpdateUnitSpawnQueue(); 
-    }
+    // void Update()
+    // {    
+    //     UpdateUnitSpawnQueue(); 
+    // }
 
-    public void QueueUnit(RTSUnitType unitTypeToQueue)
-    { 
-        if (!structure.IsBuilt() || damageable.GetAttributePercent(Attributes.HEALTH) < 1.0f)
-            return;
+    // public void QueueUnit(RTSUnitType unitTypeToQueue)
+    // { 
+    //     if (!structure.IsBuilt() || damageable.GetAttributePercent(Attributes.HEALTH) < 1.0f)
+    //         return;
 
-        if (unitSpawnQueue.Count >= maxUnitQueueSize)
-            return;
+    //     if (unitSpawnQueue.Count >= maxUnitQueueSize)
+    //         return;
 
-        if (!PlayerManager.instance.CanQueueUnit(unitTypeToQueue))
-            return;
+    //     if (!PlayerManager.instance.CanQueueUnit(unitTypeToQueue))
+    //         return;
 
-        if (!allowedUnitCreationList.Contains(unitTypeToQueue))
-            return;    
+    //     if (!allowedUnitCreationList.Contains(unitTypeToQueue))
+    //         return;    
 
-        RTSUnitTypeData unitData = GameMaster.Instance.FindUnitData(unitTypeToQueue);
-        PlayerManager.instance.RemoveUnitQueueCostFromStockpile(unitData);                    
-        unitSpawnQueue.Enqueue(unitData);
-    }
+    //     RTSUnitTypeData unitData = GameMaster.Instance.FindUnitData(unitTypeToQueue);
+    //     PlayerManager.instance.RemoveUnitQueueCostFromStockpile(unitData);                    
+    //     unitSpawnQueue.Enqueue(unitData);
+    // }
 
-    private void UpdateUnitSpawnQueue()
-    {
-        if (unitSpawnQueue.Count > 0)
-        {
-            timeElapsed += Time.deltaTime;
-            queueProgressImage.fillAmount = (timeElapsed / unitSpawnQueue.Peek().queueTime);
-            float progressPercent = UnityEngine.Mathf.Round(queueProgressImage.fillAmount * 100);
-            queueProgressText.text = progressPercent.ToString() + "%";
+    // private void UpdateUnitSpawnQueue()
+    // {
+    //     if (unitSpawnQueue.Count > 0)
+    //     {
+    //         timeElapsed += Time.deltaTime;
+    //         queueProgressImage.fillAmount = (timeElapsed / unitSpawnQueue.Peek().queueTime);
+    //         float progressPercent = UnityEngine.Mathf.Round(queueProgressImage.fillAmount * 100);
+    //         queueProgressText.text = progressPercent.ToString() + "%";
 
-            if (timeElapsed >= unitSpawnQueue.Peek().queueTime)
-            {
-                SpawnUnit();
-                timeElapsed = 0.0f;
-                unitSpawnQueue.Dequeue();                    
-                queueProgressImage.fillAmount = 0;
-                queueProgressImage.enabled = false;
-                queueProgressText.enabled = false;
-            }
-            else
-            {
-                queueProgressImage.enabled = true;
-                queueProgressText.enabled = true;
-            }
+    //         if (timeElapsed >= unitSpawnQueue.Peek().queueTime)
+    //         {
+    //             SpawnUnit();
+    //             timeElapsed = 0.0f;
+    //             unitSpawnQueue.Dequeue();                    
+    //             queueProgressImage.fillAmount = 0;
+    //             queueProgressImage.enabled = false;
+    //             queueProgressText.enabled = false;
+    //         }
+    //         else
+    //         {
+    //             queueProgressImage.enabled = true;
+    //             queueProgressText.enabled = true;
+    //         }
 
-            foreach(UnityEngine.UI.Image image in QueueImageObjects)
-            {
-                // Clearing override sprite reenables the original
-                image.overrideSprite = null;
-            }
+    //         foreach(UnityEngine.UI.Image image in QueueImageObjects)
+    //         {
+    //             // Clearing override sprite reenables the original
+    //             image.overrideSprite = null;
+    //         }
 
-            int i = 0;
-            foreach (RTSUnitTypeData unitData in unitSpawnQueue)
-            {
-                QueueImageObjects[i].overrideSprite = unitData.worldButtonImage;
-                i++;
-            }
-        }
-        else
-            timeElapsed = 0.0f;
-    }
+    //         int i = 0;
+    //         foreach (RTSUnitTypeData unitData in unitSpawnQueue)
+    //         {
+    //             QueueImageObjects[i].overrideSprite = unitData.queueImage;
+    //             i++;
+    //         }
+    //     }
+    //     else
+    //         timeElapsed = 0.0f;
+    // }
 
-    public void RemoveLastUnitFromQueue()
-    {
-        if (unitSpawnQueue.Count > 0)
-        {
-            RTSUnitTypeData unitData = unitSpawnQueue.Dequeue();
-            Debug.Log("Removed " + unitData + " from queue. " + unitSpawnQueue.Count + " left in queue.");
-        }
-    }
+    // public void RemoveLastUnitFromQueue()
+    // {
+    //     if (unitSpawnQueue.Count > 0)
+    //     {
+    //         RTSUnitTypeData unitData = unitSpawnQueue.Dequeue();
+    //         Debug.Log("Removed " + unitData + " from queue. " + unitSpawnQueue.Count + " left in queue.");
+    //     }
+    // }
 
-    private void SpawnUnit()
-    {
-        GameObject prefabToSpawn = unitSpawnQueue.Peek().prefab;
+    // private void SpawnUnit()
+    // {
+    //     GameObject prefabToSpawn = unitSpawnQueue.Peek().prefab;
 
-        if (prefabToSpawn)
-        {
-            GameObject unit = GameObject.Instantiate<GameObject>(unitSpawnQueue.Peek().prefab);
-            unit.transform.position = unitSpawnPoint.transform.position;
+    //     if (prefabToSpawn)
+    //     {
+    //         GameObject unit = GameObject.Instantiate<GameObject>(unitSpawnQueue.Peek().prefab);
+    //         unit.transform.position = unitSpawnPoint.transform.position;
             
-            Villager villager = unit.GetComponent<Villager>();
+    //         Villager villager = unit.GetComponent<Villager>();
 
-            villager.SetRTSUnitType(unitSpawnQueue.Peek().unitType);
+    //         villager.SetRTSUnitType(unitSpawnQueue.Peek().unitType);
             
-            //RTSUnitType uType = unitSpawnQueue.Peek().unitType;
+    //         //RTSUnitType uType = unitSpawnQueue.Peek().unitType;
 
-            Debug.Log("Spawned " + villager.rtsUnitType + ".");
-        }
-        else
-            Debug.Log ("Spawn unit failed. Missing prefabToSpawn.");
-    }
+    //         Debug.Log("Spawned " + villager.rtsUnitType + ".");
+    //     }
+    //     else
+    //         Debug.Log ("Spawn unit failed. Missing prefabToSpawn.");
+    // }
 }

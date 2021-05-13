@@ -7,13 +7,14 @@ using UnityEngine.UI;
 public struct RTSUnitTypeData
 {
     public RTSUnitTypeData( RTSUnitType uType, float qTime, GameObject uPrefab, 
-                            Sprite queueImage, int iGoldCost, int iStoneCost, 
+                            Sprite queueImage, Material worldButtonMat, int iGoldCost, int iStoneCost, 
                             int iGrainCost, int iWoodCost, int popCost = 1)
     {
         unitType = uType;
         queueTime = qTime;
         prefab = uPrefab;
-        worldButtonImage = queueImage;
+        this.queueImage = queueImage;
+        this.worldButtonMaterial = worldButtonMat;
         populationCost = popCost;
         goldCost = iGoldCost;
         stoneCost = iStoneCost;
@@ -26,7 +27,8 @@ public struct RTSUnitTypeData
     public RTSUnitType unitType;
     public float queueTime;
     public GameObject prefab;
-    public Sprite worldButtonImage;
+    public Sprite queueImage;
+    public Material worldButtonMaterial;
     public int populationCost;
     public int goldCost;
     public int stoneCost;

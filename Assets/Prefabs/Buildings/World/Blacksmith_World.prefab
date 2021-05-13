@@ -192,8 +192,6 @@ MonoBehaviour:
   queueProgressText: {fileID: 0}
   queueProgressImage: {fileID: 0}
   QueueImageObjects: []
-  buildingSpawnHoverMenu: {fileID: 0}
-  buildingHoverDisplay: {fileID: 0}
 --- !u!82 &8086364273588020906
 AudioSource:
   m_ObjectHideFlags: 0
@@ -651,6 +649,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3210571205559142214}
     m_Modifications:
+    - target: {fileID: 1773402440631066317, guid: 7fb19797225db2c4488e2990249299f1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2549361127315121917, guid: 7fb19797225db2c4488e2990249299f1,
         type: 3}
       propertyPath: m_RootOrder
@@ -716,6 +719,11 @@ PrefabInstance:
       propertyPath: title
       value: Blacksmith
       objectReference: {fileID: 0}
+    - target: {fileID: 2549361127315121919, guid: 7fb19797225db2c4488e2990249299f1,
+        type: 3}
+      propertyPath: menuGameObject
+      value: 
+      objectReference: {fileID: 7127702015518176789}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7fb19797225db2c4488e2990249299f1, type: 3}
 --- !u!4 &6419860754234953253 stripped
@@ -736,3 +744,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77fa36798b3959c44a46f72d97c3fdb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &7127702015518176789 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1773402440631066317, guid: 7fb19797225db2c4488e2990249299f1,
+    type: 3}
+  m_PrefabInstance: {fileID: 8824463891437971672}
+  m_PrefabAsset: {fileID: 0}

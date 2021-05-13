@@ -137,8 +137,6 @@ MonoBehaviour:
   queueProgressText: {fileID: 0}
   queueProgressImage: {fileID: 0}
   QueueImageObjects: []
-  buildingSpawnHoverMenu: {fileID: 0}
-  buildingHoverDisplay: {fileID: 0}
 --- !u!82 &6939279916203498899
 AudioSource:
   m_ObjectHideFlags: 0
@@ -721,6 +719,16 @@ PrefabInstance:
       propertyPath: title
       value: Archery Range
       objectReference: {fileID: 0}
+    - target: {fileID: 3359649421896575058, guid: 7fb19797225db2c4488e2990249299f1,
+        type: 3}
+      propertyPath: unitSpawnPoint
+      value: 
+      objectReference: {fileID: 7372687788915846830}
+    - target: {fileID: 3359649421896575058, guid: 7fb19797225db2c4488e2990249299f1,
+        type: 3}
+      propertyPath: unitRallyWaypoint
+      value: 
+      objectReference: {fileID: 7372687788311167863}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7fb19797225db2c4488e2990249299f1, type: 3}
 --- !u!4 &7589516896681575876 stripped

@@ -13,7 +13,7 @@ public class LookAtAndReset : MonoBehaviour
     {
         oldPosition = transform.position;
         oldRotation = transform.rotation;
-        target = Player.instance.hmdTransform;
+        target = Player.instance.trackingOriginTransform;
     }
 
     // Update is called once per frame

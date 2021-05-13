@@ -17,6 +17,7 @@ public class BuildingData : ScriptableObject
     public GameObject throwablePrefab;
     public GameObject worldPrefab;
     public int populationSupported;
+    public int maxUnitQueueSize;
     public List<RTSUnitType> allowedUnitsToSpawn;
     public SoundElement constructionCompletedAudio;
 }

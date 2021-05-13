@@ -11,7 +11,7 @@ public class Structure : Obstacle, IFactioned
 
     // Set to grab data about this building from database.
     public RTSBuildingType rtsBuildingType;
-    protected BuildingData rtsBuildingTypeData;
+    public BuildingData rtsBuildingTypeData { get; private set; }
     protected HealthBar buildingHealthBar;
 
     // Built signals that building construction has completed, it does
@@ -56,10 +56,11 @@ public class Structure : Obstacle, IFactioned
         if (!constructionPhaseBeginPrefab || !constructionPhaseMiddlePrefab || !constructionPhaseEndPrefab)
             Debug.Log("Missing construction stage prefab(s).");
 
-        if (buildingHealthBar = GetComponentInChildren<HealthBar>( true ))
+        buildingHealthBar = GetComponentInChildren<HealthBar>( true );
+        if (buildingHealthBar)
         {
-            buildingHealthBar.enabled = false;
             RefreshHealthBar();
+            //buildingHealthBar.enabled = false;
         }
         else
             Debug.Log("No building health bar found.");

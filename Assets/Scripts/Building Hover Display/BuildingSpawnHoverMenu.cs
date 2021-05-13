@@ -11,18 +11,18 @@ public class BuildingSpawnHoverMenu : MonoBehaviour
     TerrainBuilding terrainBuilding;
     void Awake()
     {
-        terrainBuilding = GetComponentInParent<TerrainBuilding>();
-        gameObject.SetActive(startHidden);
+        // terrainBuilding = GetComponentInParent<TerrainBuilding>();
+        // gameObject.SetActive(startHidden);
     }
 
     public void QueueUnit(int queueUnit)
     {
-        RTSUnitType unitType = (RTSUnitType)queueUnit;
-        terrainBuilding.QueueUnit(unitType);        
+        // RTSUnitType unitType = (RTSUnitType)queueUnit;
+        // terrainBuilding.QueueUnit(unitType);        
     }
 
     public void DequeueUnit()
     {
-        terrainBuilding.RemoveLastUnitFromQueue();
+        // terrainBuilding.RemoveLastUnitFromQueue();
     }
 }
