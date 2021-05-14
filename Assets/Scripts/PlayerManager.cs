@@ -21,6 +21,7 @@ public class PlayerManager : MonoBehaviour
     [Tooltip("Switch between clipboard build menu or palm build menu.")]
     public bool usePalmMenu;        
     public bool hammerOnLeft = true;
+    public bool hammerOnRight = false;
 
     public Transform rHandHammerAttachmentpoint;
     public Transform lHandHammerAttachmentPoint;
@@ -73,7 +74,7 @@ public class PlayerManager : MonoBehaviour
 
         // Initialize hammer position
         lHandHammerAttachmentPoint.gameObject.SetActive(hammerOnLeft);
-        rHandHammerAttachmentpoint.gameObject.SetActive(!hammerOnLeft);
+        rHandHammerAttachmentpoint.gameObject.SetActive(hammerOnRight);
 
         handMenuToggle?.AddOnStateDownListener(OnToggleHandMenu, SteamVR_Input_Sources.RightHand);
         handMenuToggle?.AddOnStateUpListener(OnToggleHandMenu, SteamVR_Input_Sources.RightHand);
