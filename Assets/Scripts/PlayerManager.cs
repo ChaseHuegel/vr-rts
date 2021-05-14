@@ -311,7 +311,7 @@ public class PlayerManager : MonoBehaviour
 
             case ResourceGatheringType.Stone:
                 stoneCollected += amount;
-                WristDisplay?.SetStoneText(goldCollected.ToString());
+                WristDisplay?.SetStoneText(stoneCollected.ToString());
                 break;
 
             default:
@@ -321,12 +321,12 @@ public class PlayerManager : MonoBehaviour
         buildMenu.RefreshSlots();
     }
 
-    public void RemoveResourcesFromStockpile(int gold, int grain, int wood, int ore)
+    public void RemoveResourcesFromStockpile(int gold, int grain, int wood, int stone)
     {
         goldCollected -= gold;
         grainCollected -= grain;
         woodCollected -= wood;
-        stoneCollected -= ore;
+        stoneCollected -= stone;
 
         UpdateWristDisplayResourceText();
         buildMenu.RefreshSlots();
