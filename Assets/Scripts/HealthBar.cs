@@ -30,9 +30,6 @@ public class HealthBar : MonoBehaviour
             healthBarBackgroundImage.enabled = false;
 
         gameObject.SetActive(true);
-
-        if (healthBarForegroundImage.fillAmount >= 1.0f && hideWhenFull)
-            gameObject.SetActive(false);
     }
 
     public float GetFilledAmount()

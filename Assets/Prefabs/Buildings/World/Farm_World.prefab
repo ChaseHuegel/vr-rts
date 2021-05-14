@@ -294,7 +294,7 @@ MonoBehaviour:
   startHidden: 1
   titleGameObject: {fileID: 6971571232081867882}
   menuGameObject: {fileID: 3133667440422730302}
-  healthBarGameObject: {fileID: 6991788636641313062}
+  healthBar: {fileID: 3917978342780005042}
   buildingHoverDisplayGameObject: {fileID: 1189028919910859277}
   secondKnockMaxDuration: 0.5
 --- !u!1 &3163886759887789236
@@ -524,12 +524,18 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 3738376851584361715}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &6991788636641313062 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5973659078053127637, guid: 7fb19797225db2c4488e2990249299f1,
+--- !u!114 &3917978342780005042 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 413791837215116865, guid: 7fb19797225db2c4488e2990249299f1,
     type: 3}
   m_PrefabInstance: {fileID: 3738376851584361715}
   m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27381cd579d45e94c8db78a0a21ff9b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &6091863267799645307
 PrefabInstance:
   m_ObjectHideFlags: 0

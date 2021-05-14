@@ -88,8 +88,10 @@ public class BuildingHoverDisplay : MonoBehaviour
     public void HideHealthBar() 
     { 
         if (healthBar.GetFilledAmount() < 1.0f)
-            healthBar.gameObject.SetActive(false); 
-        
+            healthBar.gameObject.SetActive(true); 
+        else
+            healthBar.gameObject.SetActive(false);
+
         lookAtAndReset.enabled = false;
     }
 
@@ -109,7 +111,7 @@ public class BuildingHoverDisplay : MonoBehaviour
     { 
         if (healthBar)
             healthBar.gameObject.SetActive(true); 
-
+        
         lookAtAndReset.enabled = true;
     }
     
