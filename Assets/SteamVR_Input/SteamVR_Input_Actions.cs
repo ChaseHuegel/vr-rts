@@ -39,7 +39,7 @@ namespace Valve.VR
         
         private static SteamVR_Action_Boolean p_default_SnapTurnRight;
         
-        private static SteamVR_Action_Boolean p_default_PalmMenu;
+        private static SteamVR_Action_Boolean p_default_ToggleHandMenu;
         
         private static SteamVR_Action_Boolean p_default_RotatePreviewClockwise;
         
@@ -157,11 +157,11 @@ namespace Valve.VR
             }
         }
         
-        public static SteamVR_Action_Boolean default_PalmMenu
+        public static SteamVR_Action_Boolean default_ToggleHandMenu
         {
             get
             {
-                return SteamVR_Actions.p_default_PalmMenu.GetCopy<SteamVR_Action_Boolean>();
+                return SteamVR_Actions.p_default_ToggleHandMenu.GetCopy<SteamVR_Action_Boolean>();
             }
         }
         
@@ -291,7 +291,7 @@ namespace Valve.VR
                     SteamVR_Actions.default_HeadsetOnHead,
                     SteamVR_Actions.default_SnapTurnLeft,
                     SteamVR_Actions.default_SnapTurnRight,
-                    SteamVR_Actions.default_PalmMenu,
+                    SteamVR_Actions.default_ToggleHandMenu,
                     SteamVR_Actions.default_RotatePreviewClockwise,
                     SteamVR_Actions.default_RotatePreviewCounterClockwise,
                     SteamVR_Actions.default_BuildingPlacementPointer,
@@ -318,7 +318,7 @@ namespace Valve.VR
                     SteamVR_Actions.default_HeadsetOnHead,
                     SteamVR_Actions.default_SnapTurnLeft,
                     SteamVR_Actions.default_SnapTurnRight,
-                    SteamVR_Actions.default_PalmMenu,
+                    SteamVR_Actions.default_ToggleHandMenu,
                     SteamVR_Actions.default_RotatePreviewClockwise,
                     SteamVR_Actions.default_RotatePreviewCounterClockwise,
                     SteamVR_Actions.default_BuildingPlacementPointer,
@@ -347,7 +347,7 @@ namespace Valve.VR
                     SteamVR_Actions.default_HeadsetOnHead,
                     SteamVR_Actions.default_SnapTurnLeft,
                     SteamVR_Actions.default_SnapTurnRight,
-                    SteamVR_Actions.default_PalmMenu,
+                    SteamVR_Actions.default_ToggleHandMenu,
                     SteamVR_Actions.default_RotatePreviewClockwise,
                     SteamVR_Actions.default_RotatePreviewCounterClockwise,
                     SteamVR_Actions.default_BuildingPlacementPointer,
@@ -376,7 +376,7 @@ namespace Valve.VR
                     SteamVR_Actions.default_HeadsetOnHead,
                     SteamVR_Actions.default_SnapTurnLeft,
                     SteamVR_Actions.default_SnapTurnRight,
-                    SteamVR_Actions.default_PalmMenu,
+                    SteamVR_Actions.default_ToggleHandMenu,
                     SteamVR_Actions.default_RotatePreviewClockwise,
                     SteamVR_Actions.default_RotatePreviewCounterClockwise,
                     SteamVR_Actions.default_BuildingPlacementPointer,
@@ -404,7 +404,7 @@ namespace Valve.VR
             SteamVR_Actions.p_default_HeadsetOnHead = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/default/in/HeadsetOnHead")));
             SteamVR_Actions.p_default_SnapTurnLeft = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/default/in/SnapTurnLeft")));
             SteamVR_Actions.p_default_SnapTurnRight = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/default/in/SnapTurnRight")));
-            SteamVR_Actions.p_default_PalmMenu = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/default/in/PalmMenu")));
+            SteamVR_Actions.p_default_ToggleHandMenu = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/default/in/ToggleHandMenu")));
             SteamVR_Actions.p_default_RotatePreviewClockwise = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/default/in/RotatePreviewClockwise")));
             SteamVR_Actions.p_default_RotatePreviewCounterClockwise = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/default/in/RotatePreviewCounterClockwise")));
             SteamVR_Actions.p_default_BuildingPlacementPointer = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/default/in/BuildingPlacementPointer")));

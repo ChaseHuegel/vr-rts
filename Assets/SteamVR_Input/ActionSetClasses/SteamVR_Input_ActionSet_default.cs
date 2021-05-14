@@ -105,11 +105,11 @@ namespace Valve.VR
             }
         }
         
-        public virtual SteamVR_Action_Boolean PalmMenu
+        public virtual SteamVR_Action_Boolean ToggleHandMenu
         {
             get
             {
-                return SteamVR_Actions.default_PalmMenu;
+                return SteamVR_Actions.default_ToggleHandMenu;
             }
         }
         

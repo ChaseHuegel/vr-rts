@@ -7,6 +7,8 @@ using UnityEngine.UI;
 
 public class PlayerManager : MonoBehaviour
 {
+    
+
     [Header("Stats/Resources")]
     public int woodCollected;
     public int goldCollected;
@@ -18,10 +20,19 @@ public class PlayerManager : MonoBehaviour
     public int populationLimit;
 
     [Header("UI")]
-    public PalmMenu palmMenu;
+    [Tooltip("Switch between clipboard build menu or palm build menu.")]
+    public bool usePalmMenu;     public PalmMenu palmMenu;
+    public Transform rHandClipboardAttachmentPoint;
+    public Transform rHandPalmUpAttachmentPoint;
+    public Transform rHandPalmUpTrackingPoint;
+    public Transform lHandClipboardAttachmentPoint;
+    public Transform lHandPalmUpAttachmentPoint;
+    public Transform lHandPalmUpTrackingPoint;
     public WristDisplay WristDisplay;
-    public SteamVR_Action_Boolean palmMenuOnOff;
+    public SteamVR_Action_Boolean handMenuToggle;
     private GripPan gripPan;
+    private Hand buildMenuHand;
+    private Hand selectionHand;
     private static PlayerManager _instance;
     public static PlayerManager instance
     {
@@ -65,35 +76,62 @@ public class PlayerManager : MonoBehaviour
             palmMenu = Player.instance.GetComponent<PalmMenu>();
         }
 
-        palmMenuOnOff?.AddOnStateDownListener(TogglePalmMenu, SteamVR_Input_Sources.RightHand);
-        palmMenuOnOff?.AddOnStateUpListener(TogglePalmMenu, SteamVR_Input_Sources.RightHand);
-        palmMenuOnOff?.AddOnStateDownListener(TogglePalmMenu, SteamVR_Input_Sources.LeftHand);
-        palmMenuOnOff?.AddOnStateUpListener(TogglePalmMenu, SteamVR_Input_Sources.LeftHand);
-
+        handMenuToggle?.AddOnStateDownListener(OnToggleHandMenu, SteamVR_Input_Sources.RightHand);
+        handMenuToggle?.AddOnStateUpListener(OnToggleHandMenu, SteamVR_Input_Sources.RightHand);
+        handMenuToggle?.AddOnStateDownListener(OnToggleHandMenu, SteamVR_Input_Sources.LeftHand);
+        handMenuToggle?.AddOnStateUpListener(OnToggleHandMenu, SteamVR_Input_Sources.LeftHand);
     }
 
-    // void Update()
-    // {
-    //     Transform origin = Player.instance.leftHand.GetComponent<HandTrackingPoint>().transform;
-    //     Vector3 direction = (Player.instance.hmdTransform.position - origin.position).normalized;
-
-    //     float facing = Vector3.Dot(origin.right, direction);
-
-    //     Debug.Log("facing - " + facing);
-
-    //     if (facing > 0.90f)
-    //     {
-    //         palmMenu.Show(Player.instance.leftHand.GetComponent<HandTrackingPoint>().gazeMenuAttachmentPoint);
-    //     }
-    //     else
-    //     {
-    //         palmMenu.Hide();
-    //     }
-    // }
-
-    public void TogglePalmMenu(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
+    void Update()
     {
-        palmMenu.Toggle();
+        //Vector3 direction = (Player.instance.hmdTransform.position - origin.position).normalized;
+        //float facing = Vector3.Dot(origin.right, direction);
+        if (usePalmMenu)
+        {
+            if (lHandPalmUpTrackingPoint.right.y > 0.30f)
+                palmMenu.Show();
+            else
+                palmMenu.Hide();
+        }
+    }
+
+    protected bool IsClipboardPalmMenuVisible;
+    public void OnToggleHandMenu(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
+    {
+        
+        // Don't use both methods to display the menu at the same time.
+        if (usePalmMenu)
+            return;
+
+        // Menu isn't visible, lets see which hand is going to display it.
+        if (!IsClipboardPalmMenuVisible)
+        {
+            if (fromSource == SteamVR_Input_Sources.RightHand)
+            {Debug.Log("right");
+                rHandClipboardAttachmentPoint.gameObject.SetActive(true);
+                buildMenuHand = Player.instance.rightHand;
+                selectionHand = Player.instance.leftHand;                
+            }
+            else if (fromSource == SteamVR_Input_Sources.LeftHand)
+            {
+                lHandClipboardAttachmentPoint.transform.gameObject.SetActive(true);
+                buildMenuHand = Player.instance.leftHand;
+                selectionHand = Player.instance.rightHand;
+            }
+
+            buildMenuHand.useHoverSphere = buildMenuHand.useFingerJointHover = false;
+            selectionHand.useHoverSphere = selectionHand.useFingerJointHover = true;
+            IsClipboardPalmMenuVisible = true;
+        }
+        else // IsClipboardPalmMenuVisible = true
+        {
+            // Deactivite both menus
+            lHandClipboardAttachmentPoint.gameObject.SetActive(false);
+            rHandClipboardAttachmentPoint.gameObject.SetActive(false);
+            buildMenuHand.useHoverSphere = buildMenuHand.useFingerJointHover = true;
+            selectionHand.useHoverSphere = selectionHand.useFingerJointHover = true;
+            IsClipboardPalmMenuVisible = false;
+        }
     }
 
     public void AddToPopulation(Unit unit)

@@ -210,20 +210,20 @@
             {
                "inputs" : {
                   "click" : {
-                     "output" : "/actions/default/in/palmmenu"
-                  }
-               },
-               "mode" : "toggle_button",
-               "path" : "/user/hand/left/input/y"
-            },
-            {
-               "inputs" : {
-                  "click" : {
                      "output" : "/actions/default/in/buildingplacementpointer"
                   }
                },
                "mode" : "button",
                "path" : "/user/hand/left/input/x"
+            },
+            {
+               "inputs" : {
+                  "click" : {
+                     "output" : "/actions/default/in/togglehandmenu"
+                  }
+               },
+               "mode" : "button",
+               "path" : "/user/hand/left/input/y"
             },
             {
                "inputs" : {
@@ -256,9 +256,6 @@
                   }
                },
                "mode" : "dpad",
-               "parameters" : {
-                  "sub_mode" : "touch"
-               },
                "path" : "/user/hand/right/input/joystick"
             },
             {
@@ -271,9 +268,6 @@
                   }
                },
                "mode" : "dpad",
-               "parameters" : {
-                  "sub_mode" : "touch"
-               },
                "path" : "/user/hand/right/input/joystick"
             },
             {
@@ -306,20 +300,11 @@
             {
                "inputs" : {
                   "click" : {
-                     "output" : "/actions/default/in/palmmenu"
-                  }
-               },
-               "mode" : "toggle_button",
-               "path" : "/user/hand/right/input/y"
-            },
-            {
-               "inputs" : {
-                  "click" : {
-                     "output" : "/actions/default/in/buildingplacementpointer"
+                     "output" : "/actions/default/in/togglehandmenu"
                   }
                },
                "mode" : "button",
-               "path" : "/user/hand/right/input/a"
+               "path" : "/user/hand/right/input/y"
             }
          ]
       },

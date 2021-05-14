@@ -14,15 +14,19 @@ public class PalmMenu : MonoBehaviour
     
     // Start is called before the first frame update
     void Start()
-    {
+    {        
         menuHand = Player.instance.leftHand;
         selectionHand = Player.instance.rightHand;      
         objectPlacementPointer = FindObjectOfType<InteractionPointer>();          
     }
 
-    public void Show(Transform parent)
+    public void SetParent(Transform parent)
     {
-        gameObject.transform.SetParent(parent);
+
+    }
+
+    public void Show()
+    {
         gameObject.SetActive(true);
     }
 
