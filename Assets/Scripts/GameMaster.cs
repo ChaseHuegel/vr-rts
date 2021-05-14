@@ -20,14 +20,11 @@ public class GameMaster : Singleton<GameMaster>
     public static BuildingData GetBuilding(RTSBuildingType type) { return Instance.buildingDatabase.Get(type); }
     public static BuildingData GetBuilding(string name) { return Instance.buildingDatabase.Get(name); }
 
+    public UnitDatabase unitDatabase;
+    public static UnitDatabase GetUnitDatabase() { return Instance.unitDatabase; }
+    public static UnitData GetUnit(RTSUnitType type) { return Instance.unitDatabase.Get(type); }
+    public static UnitData GetUnit(string name) { return Instance.unitDatabase.Get(name); }
+
     public List<Faction> factions;
     public static List<Faction> Factions { get { return Instance.factions;} }
-
-    public List<RTSUnitTypeData> rtsUnitDataList = new List<RTSUnitTypeData>();
-
-    public RTSUnitTypeData FindUnitData(RTSUnitType type)
-    {
-        RTSUnitTypeData ret = rtsUnitDataList.Find(x => x.unitType == type );
-        return ret;
-    }
 }

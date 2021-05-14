@@ -97,7 +97,7 @@ public class PlayerManager : MonoBehaviour
     protected bool IsClipboardPalmMenuVisible;
     public void OnToggleHandMenu(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
-        
+
         // Don't use both methods to display the menu at the same time.
         if (usePalmMenu)
             return;
@@ -343,7 +343,7 @@ public class PlayerManager : MonoBehaviour
     {
         bool ret = true;
 
-        RTSUnitTypeData unitData = GameMaster.Instance.FindUnitData(unitType);
+        UnitData unitData = GameMaster.GetUnit(unitType);
         if (goldCollected < unitData.goldCost || woodCollected < unitData.woodCost ||
             grainCollected < unitData.grainCost || stoneCollected < unitData.stoneCost)
         {
@@ -358,7 +358,7 @@ public class PlayerManager : MonoBehaviour
         return ret;
     }
 
-    public void RemoveUnitQueueCostFromStockpile(RTSUnitTypeData unitType)
+    public void RemoveUnitQueueCostFromStockpile(UnitData unitType)
     {
         woodCollected -= unitType.woodCost;
         grainCollected -= unitType.grainCost;
