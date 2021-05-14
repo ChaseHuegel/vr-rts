@@ -23,8 +23,10 @@ public class BuildingHoverDisplay : MonoBehaviour
     void Start()
     {
         lookAtAndReset = buildingHoverDisplayGameObject.GetComponentInChildren<LookAtAndReset>();
-        healthBar = GetComponentInChildren<HealthBar>();
         
+        // TODO: Set this reference in all buildings for performance gains.
+        healthBar = GetComponentInChildren<HealthBar>(true);
+
         if (titleGameObject)
         {
             TextMeshPro titleText = titleGameObject.GetComponentInChildren<TextMeshPro>();
