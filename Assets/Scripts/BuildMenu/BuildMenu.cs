@@ -16,10 +16,16 @@ public class BuildMenu : MonoBehaviour
 
     void OnEnable()
     {
+        RefreshSlots();
+    }
+
+    public void RefreshSlots()
+    {
         foreach(BuildMenuTab tab in tabs)
         {
             foreach(BuildMenuSlot slot in tab.GetComponentsInChildren<BuildMenuSlot>())
             {
+                // TODO: Lock icon or something like that.
                 bool canBuild = PlayerManager.instance.CanConstructBuilding(slot.rtsTypeData.buildingType);                
                 slot.GetComponentInChildren<SphereCollider>().enabled = canBuild;   
             }

@@ -39,6 +39,7 @@ public class PlayerManager : MonoBehaviour
     private Hand buildMenuHand;
     private Hand selectionHand;
     public GameObject handBuildMenu;
+    protected BuildMenu buildMenu;
 
     private static PlayerManager _instance;
     public static PlayerManager instance
@@ -75,6 +76,8 @@ public class PlayerManager : MonoBehaviour
         // Initialize hammer position
         lHandHammerAttachmentPoint.gameObject.SetActive(hammerOnLeft);
         rHandHammerAttachmentpoint.gameObject.SetActive(hammerOnRight);
+
+        buildMenu = handBuildMenu.GetComponent<BuildMenu>();
 
         handMenuToggle?.AddOnStateDownListener(OnToggleHandMenu, SteamVR_Input_Sources.RightHand);
         handMenuToggle?.AddOnStateUpListener(OnToggleHandMenu, SteamVR_Input_Sources.RightHand);
@@ -244,16 +247,6 @@ public class PlayerManager : MonoBehaviour
         UpdateWristDisplayPopulationLimit();
     }
 
-    public void RemoveResourcesFromStockpile(int gold, int grain, int wood, int ore)
-    {
-        goldCollected -= gold;
-        grainCollected -= grain;
-        woodCollected -= wood;
-        stoneCollected -= ore;
-
-        UpdateWristDisplayResourceText();
-    }
-
     public void RemoveFromPopulation(Unit unit)
     {
         // Determine if the unit should be removed from civilian or military population
@@ -324,6 +317,19 @@ public class PlayerManager : MonoBehaviour
             default:
                 break;
         }
+
+        buildMenu.RefreshSlots();
+    }
+
+    public void RemoveResourcesFromStockpile(int gold, int grain, int wood, int ore)
+    {
+        goldCollected -= gold;
+        grainCollected -= grain;
+        woodCollected -= wood;
+        stoneCollected -= ore;
+
+        UpdateWristDisplayResourceText();
+        buildMenu.RefreshSlots();
     }
 
     public bool CanConstructBuilding(RTSBuildingType buildingType)
