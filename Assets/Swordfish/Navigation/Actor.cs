@@ -241,6 +241,12 @@ public class Actor : Body
                     //  Assume our currentGoal is a valid match since it was found successfully.
                     //  Forcibly trigger reached under that assumption
                     PathfindingGoal.TriggerInteractGoal(this, currentGoalTarget, currentGoal);
+
+                    if (HasValidGoalTarget())
+                        LookAt(currentGoalTarget.x, currentGoalTarget.y);
+                    else
+                        LookAt(currentPath[0].x, currentPath[0].y);
+
                     ResetPathingBrain();
                     ResetPath();
                 }
