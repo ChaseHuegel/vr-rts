@@ -8,13 +8,13 @@ using Valve.VR.InteractionSystem;
 
  [CustomEditor(typeof(BuildingSpawnQueue))]
  public class BuildingSpawnQueueEditor : Editor
- {    
+ {
      public override void OnInspectorGUI ()
     {
         DrawDefaultInspector();
 
         if(GUILayout.Button("Generate Menu"))
-        {    
+        {
             ((BuildingSpawnQueue)target).Generate();
         }
     }
@@ -32,10 +32,10 @@ public class BuildingSpawnQueue : MonoBehaviour
     // go to so they don't fight over a single point.
     public float unitRallyWaypointRadius;
     protected float timeElapsed = 0.0f;
-    protected Queue<RTSUnitTypeData> unitSpawnQueue = new Queue<RTSUnitTypeData>();
+    protected Queue<UnitData> unitSpawnQueue = new Queue<UnitData>();
     public TMPro.TMP_Text queueProgressText;
     public UnityEngine.UI.Image queueProgressImage;
-    public UnityEngine.UI.Image[] QueueImageObjects;   
+    public UnityEngine.UI.Image[] QueueImageObjects;
 
     public List<RTSUnitType> unitQueueButtons;
     private Structure structure;
@@ -53,20 +53,20 @@ public class BuildingSpawnQueue : MonoBehaviour
             {
                 Debug.Log("UnitSpawnPoint not set, disabling queue.");
                 this.gameObject.SetActive(false);
-            }   
+            }
     }
 
     // Start is called before the first frame update
     void Start()
-    {       
+    {
         damageable = gameObject.GetComponentInParent<Damageable>();
-        structure = gameObject.GetComponentInParent<Structure>();    
-        audioSource = gameObject.GetComponent<AudioSource>(); 
+        structure = gameObject.GetComponentInParent<Structure>();
+        audioSource = gameObject.GetComponent<AudioSource>();
 
         foreach(HoverButton hButton in GetComponentsInChildren<HoverButton>())
         {
             hButton.onButtonDown.AddListener(OnButtonDown);
-            hButton.onButtonUp.AddListener(OnButtonUp);   
+            hButton.onButtonUp.AddListener(OnButtonUp);
         }
 
         queueProgressText = GetComponentInChildren<TMPro.TextMeshPro>();
@@ -75,8 +75,8 @@ public class BuildingSpawnQueue : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {    
-        UpdateUnitSpawnQueue(); 
+    {
+        UpdateUnitSpawnQueue();
     }
 
     public void OnButtonDown(Hand hand)
@@ -90,7 +90,7 @@ public class BuildingSpawnQueue : MonoBehaviour
     }
 
     public void QueueUnit(RTSUnitType unitTypeToQueue)
-    { 
+    {
         if (!structure.IsBuilt() || damageable.GetAttributePercent(Attributes.HEALTH) < 1.0f)
             return;
 
@@ -101,10 +101,10 @@ public class BuildingSpawnQueue : MonoBehaviour
             return;
 
         // if (!allowedUnitsToQueue.Contains(unitTypeToQueue))
-        //     return;    
+        //     return;
 
-        RTSUnitTypeData unitData = GameMaster.Instance.FindUnitData(unitTypeToQueue);
-        PlayerManager.instance.RemoveUnitQueueCostFromStockpile(unitData);                    
+        UnitData unitData = GameMaster.GetUnit(unitTypeToQueue);
+        PlayerManager.instance.RemoveUnitQueueCostFromStockpile(unitData);
         unitSpawnQueue.Enqueue(unitData);
 
         //Debug.Log("Queued " + unitTypeToQueue + ".");
@@ -123,7 +123,7 @@ public class BuildingSpawnQueue : MonoBehaviour
             {
                 SpawnUnit();
                 timeElapsed = 0.0f;
-                unitSpawnQueue.Dequeue();                    
+                unitSpawnQueue.Dequeue();
                 queueProgressImage.fillAmount = 0;
                 queueProgressImage.enabled = false;
                 queueProgressText.enabled = false;
@@ -141,7 +141,7 @@ public class BuildingSpawnQueue : MonoBehaviour
             }
 
             int i = 0;
-            foreach (RTSUnitTypeData unitData in unitSpawnQueue)
+            foreach (UnitData unitData in unitSpawnQueue)
             {
                 QueueImageObjects[i].overrideSprite = unitData.queueImage;
                 i++;
@@ -155,7 +155,7 @@ public class BuildingSpawnQueue : MonoBehaviour
     {
         if (unitSpawnQueue.Count > 0)
         {
-            RTSUnitTypeData unitData = unitSpawnQueue.Dequeue();
+            UnitData unitData = unitSpawnQueue.Dequeue();
             Debug.Log("Removed " + unitData + " from queue. " + unitSpawnQueue.Count + " left in queue.");
         }
     }
@@ -168,11 +168,11 @@ public class BuildingSpawnQueue : MonoBehaviour
         {
             GameObject unit = GameObject.Instantiate<GameObject>(unitSpawnQueue.Peek().prefab);
             unit.transform.position = unitSpawnPoint.transform.position;
-            
+
             Villager villager = unit.GetComponent<Villager>();
 
             villager.SetRTSUnitType(unitSpawnQueue.Peek().unitType);
-            
+
             //RTSUnitType uType = unitSpawnQueue.Peek().unitType;
 
             Debug.Log("Spawned " + villager.rtsUnitType + ".");
@@ -189,7 +189,7 @@ public class BuildingSpawnQueue : MonoBehaviour
 
         foreach(RTSUnitType unitType in unitQueueButtons)
         {
-            RTSUnitTypeData typeData = GameMaster.Instance.FindUnitData(unitType);
+            UnitData typeData = GameMaster.GetUnit(unitType);
 
             // BuildingHoverButton
             GameObject buildingHoverButton = new GameObject("BuildingHoverButton");
@@ -220,7 +220,7 @@ public class BuildingSpawnQueue : MonoBehaviour
             hoverButton.localMoveDistance = new Vector3(0, 0, -0.3f);
 
             // MovingPart (child of Face)
-            GameObject buttonMovingPart = GameObject.CreatePrimitive(PrimitiveType.Cube);   
+            GameObject buttonMovingPart = GameObject.CreatePrimitive(PrimitiveType.Cube);
             buttonMovingPart.AddComponent<UVCubeMap>();
             buttonMovingPart.name = "MovingPart";
             buttonMovingPart.transform.SetParent(face.transform);

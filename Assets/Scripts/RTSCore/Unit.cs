@@ -15,17 +15,17 @@ public class Unit : Actor, IFactioned
 
     // Make this read only, we should only be able to change unit properties
     // through the database.
-    public RTSUnitTypeData rtsUnitTypeData { get; }
-    protected RTSUnitTypeData m_rtsUnitTypeData;
-    
+    public UnitData rtsUnitTypeData { get; }
+    protected UnitData m_rtsUnitTypeData;
+
     public override void Initialize()
     {
         base.Initialize();
-        
+
         // TODO: This could be removed at a later date and replaced with specific fetches
         // of the information needed in inheritors if we want to sacrifice memory
         // for performance
-        m_rtsUnitTypeData = GameMaster.Instance.FindUnitData(rtsUnitType);
+        m_rtsUnitTypeData = GameMaster.GetUnit(rtsUnitType);
 
         UpdateFaction();
     }
