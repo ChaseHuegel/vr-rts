@@ -7,39 +7,36 @@ namespace Swordfish.Navigation
 public class GoalHolder
 {
     private List<PathfindingGoal> goals = new List<PathfindingGoal>();
-    public PathfindingGoal[] entries
-    {
-        get
-        {
-            lock (this)
-            {
-                return goals.ToArray();
-            }
-        }
-    }
+    public PathfindingGoal[] entries;
 
     public void Cycle()
     {
         //  Push the first priority to the end of the list
         goals.Add(goals[0]);
         goals.RemoveAt(0);
+
+        entries = goals.ToArray();
     }
 
     public T Add<T>() where T : PathfindingGoal
     {
         T goal = (T)System.Activator.CreateInstance(typeof(T));
         goals.Add(goal);
+
+        entries = goals.ToArray();
         return goal;
     }
 
     public void Remove<T>() where T : PathfindingGoal
     {
         goals.Remove( goals.Find(x => x is T) );
+        entries = goals.ToArray();
     }
 
     public void RemoveAll<T>() where T : PathfindingGoal
     {
         goals.RemoveAll(x => x is T);
+        entries = goals.ToArray();
     }
 
     public T Get<T>() where T : PathfindingGoal
@@ -69,6 +66,7 @@ public class GoalHolder
     public void Clear()
     {
         goals.Clear();
+        entries = goals.ToArray();
     }
 }
 

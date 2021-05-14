@@ -15,13 +15,18 @@ public class Actor : Body
     public Damageable AttributeHandler { get { return damageable; } }
 
     [Header("Actor")]
-    public Cell currentGoalTarget = null;
-    public PathfindingGoal currentGoal = null;
-    public byte goalSearchDistance = 20;
     public float movementSpeed = 1f;
+
+    [SerializeField] private byte goalSearchDistance = 20;
+    private byte goalSearchGrowth;
+    private byte currentGoalSearchDistance;
+
+    private Cell currentGoalTarget = null;
+    private PathfindingGoal currentGoal = null;
 
     private float movementInterpolation;
     private bool moving = false;
+    private bool idle = false;
 
     public List<Cell> currentPath = null;
     private byte pathWaitTries = 0;
@@ -31,13 +36,35 @@ public class Actor : Body
     private byte pathTimer = 0;
     private byte tickTimer = 0;
 
+    public override void Initialize()
+    {
+        base.Initialize();
+
+        movementInterpolation = 1f - (Constants.ACTOR_PATH_RATE / 60f);
+
+        goalSearchGrowth = (byte)(goalSearchDistance * 0.25f);
+        currentGoalSearchDistance = goalSearchGrowth;
+    }
+
+
+#region immutable methods
+
+    public bool IsIdle() { return idle; }
+    private bool UpdateIdle()
+    {
+        //  Idle if not frozen and not moving, pathing, or has a target goal
+        return ( !frozen && !(IsMoving() || HasValidPath() || HasValidTarget()) );
+    }
+
     public bool IsMoving() { return moving; }
     public bool HasValidPath() { return (currentPath != null && currentPath.Count > 0); }
 
     public bool HasValidGoal() { return (currentGoal != null && currentGoal.active); }
+    public bool HasValidGoalTarget() { return currentGoalTarget != null; }
+
     public bool HasValidTarget()
     {
-        return (HasValidGoal() && PathfindingGoal.CheckGoal(this, currentGoalTarget, currentGoal));
+        return (HasValidGoal() && HasValidGoalTarget() && PathfindingGoal.CheckGoal(this, currentGoalTarget, currentGoal));
     }
 
     public void Freeze() { frozen = true; RemoveFromGrid(); }
@@ -46,16 +73,6 @@ public class Actor : Body
     {
         if (frozen = !frozen == false) UpdatePosition();
     }
-
-    public override void Initialize()
-    {
-        base.Initialize();
-
-        movementInterpolation = 1f - (Constants.ACTOR_PATH_RATE / 60f);
-    }
-
-
-#region immutable methods
 
     public void UpdatePosition()
     {
@@ -115,7 +132,7 @@ public class Actor : Body
             //  TODO: There is a cleaner way to do this
 
             //  Radiate out layer by layer around the actor without searching previous layers
-            for (int radius = 1; radius < goalSearchDistance; radius++)
+            for (int radius = 1; radius < currentGoalSearchDistance; radius++)
             {
                 //  Search the top/bottom rows
                 for (int x = -radius; x < radius; x++)
@@ -125,7 +142,10 @@ public class Actor : Body
 
                     //  Return the first match if goals are being tested in order of priority
                     if (usePriority && result != null)
+                    {
+                        currentGoalSearchDistance = goalSearchGrowth;  //  Reset search distance
                         return result;
+                    }
                 }
 
                 //  Search the side columns
@@ -136,7 +156,10 @@ public class Actor : Body
 
                     //  Return the first match if goals are being tested in order of priority
                     if (usePriority && result != null)
+                    {
+                        currentGoalSearchDistance = goalSearchGrowth;  //  Reset search distance
                         return result;
+                    }
                 }
             }
         }
@@ -145,16 +168,19 @@ public class Actor : Body
         if (result == null)
             currentGoal = null;
 
+        //  Expand the search
+        currentGoalSearchDistance = (byte)Mathf.Clamp(currentGoalSearchDistance + goalSearchGrowth, 1, goalSearchDistance);
+
         return result;
     }
 
     public bool GotoNearestGoalWithPriority() { return GotoNearestGoal(true); }
     public bool GotoNearestGoal(bool usePriority = false)
     {
-        if (!HasValidTarget() || !HasValidGoal())
+        if (!HasValidTarget())
             currentGoalTarget = FindNearestGoal(usePriority);
 
-        if (HasValidTarget() && HasValidGoal())
+        if (HasValidTarget())
         {
             Goto(currentGoalTarget.x, currentGoalTarget.y);
             return true;
@@ -207,7 +233,7 @@ public class Actor : Body
             tickTimer = 0;
 
             //  Handle interacting with goals
-            if (!moving && HasValidGoal() && HasValidTarget())
+            if (!moving && HasValidTarget())
             {
                 //  Check if we have reached our target, or the path ahead matches our goal
                 if (DistanceTo(currentGoalTarget) <= 1 || (HasValidPath() && PathfindingGoal.CheckGoal(this, currentPath[0], currentGoal)))
@@ -219,6 +245,9 @@ public class Actor : Body
                     ResetPath();
                 }
             }
+
+            UpdateIdle();
+            if (IsIdle()) ResetAI();
 
             Tick();
         }
@@ -232,8 +261,8 @@ public class Actor : Body
 
         moving = false;
 
-        //  Interpolate movement
-        if (transform.position != gridTransformPos)
+        //  Interpolate movement if the transform hasnt reached our world space grid pos
+        if (Util.DistanceUnsquared(transform.position, gridTransformPos) > 0.001f)
         {
             moving = true;
 
@@ -250,7 +279,7 @@ public class Actor : Body
 
         pathTimer++;
         if (pathTimer >= Constants.ACTOR_PATH_RATE)
-            pathTimer = 0;  //  Path tick
+            pathTimer = 0;  //  Ticked
 
         //  If we have a valid path, move along it
         if (HasValidPath())
@@ -287,7 +316,7 @@ public class Actor : Body
                     {
                         int targetX, targetY;
 
-                        if (HasValidGoal() && HasValidTarget())
+                        if (HasValidTarget())
                         {
                             Coord2D coord = currentGoalTarget.GetFirstOccupant().GetNearbyCoord();
                             targetX = coord.x;
@@ -302,14 +331,18 @@ public class Actor : Body
                         //  false, dont ignore actors. Stuck and may need to path around them
                         GotoForced(targetX, targetY, false);
 
+                        //  Cycle goals to change priorities
+                        goals.Cycle();
+
                         //  Trigger repath event
                         RepathEvent e = new RepathEvent{ actor = this };
                         OnRepathEvent?.Invoke(null, e);
                         if (e.cancel) ResetPathingBrain();   //  Reset pathing logic if cancelled
                     }
-                    //  Unable to repath, resort to giving up
+                    //  Unable to repath
                     else
                     {
+                        //  Reset pathing
                         ResetAI();
 
                         //  Trigger repath failed event
@@ -322,10 +355,6 @@ public class Actor : Body
 
                 pathWaitTries++;
             }
-
-            //  Don't hang onto an empty path. Save a little memory
-            if (currentPath != null && currentPath.Count == 0)
-                ResetAI();
         }
     }
 

@@ -68,16 +68,12 @@ public class Villager : Unit
     {
         PathfindingGoal.OnGoalFoundEvent += OnGoalFound;
         PathfindingGoal.OnGoalInteractEvent += OnGoalInteract;
-
-        Actor.OnRepathFailedEvent += OnRepathFailed;
     }
 
     public void CleanupEvents()
     {
         PathfindingGoal.OnGoalFoundEvent -= OnGoalFound;
         PathfindingGoal.OnGoalInteractEvent -= OnGoalInteract;
-
-        Actor.OnRepathFailedEvent -= OnRepathFailed;
     }
 
     public void Awake()
@@ -163,10 +159,8 @@ public class Villager : Unit
         //  Transport type always matches what our current resource is
         transportGoal.type = currentResource;
 
-        //  Default to roaming if we cant find a goal
-        // TODO: Probably should default to idle for performance reasons
         if (!GotoNearestGoalWithPriority())
-            state = UnitState.ROAMING;
+            state = UnitState.IDLE;
 
         switch (state)
         {
@@ -179,25 +173,26 @@ public class Villager : Unit
             break;
 
             case UnitState.GATHERING:
-                if (IsCargoFull())  state = UnitState.TRANSPORTING;
-                else if (!HasValidTarget()) state = UnitState.ROAMING;
+                if (IsCargoFull()) state = UnitState.IDLE;
             break;
 
             case UnitState.TRANSPORTING:
-                if (!HasCargo()) state = UnitState.ROAMING;
+                if (!HasCargo()) state = UnitState.IDLE;
             break;
 
             case UnitState.BUILDANDREPAIR:
-                if (!HasValidTarget()) state = UnitState.ROAMING;
+                //  Do things
             break;
 
             case UnitState.IDLE:
-                animator.SetInteger("VillagerActorState", (int)ActorAnimationState.IDLE);
+                //  Do some logic to roam or something
             break;
         }
 
         if (IsMoving())
             animator.SetInteger("VillagerActorState", (int)ActorAnimationState.MOVING);
+        else if (IsIdle())
+            animator.SetInteger("VillagerActorState", (int)ActorAnimationState.IDLE);
 
         if (TaskChanged())
         {
@@ -229,17 +224,6 @@ public class Villager : Unit
 
         //     return;
         // }
-    }
-
-    public void OnRepathFailed(object sender, Actor.RepathFailedEvent e)
-    {
-        if (e.actor != this) return;
-
-        //  If unable to find a path, reorder priorities
-        //  It is likely we can't reach our current goal
-        //  This gives a simple decision making behavior
-        if (state == UnitState.GATHERING)
-            goals.Cycle();
     }
 
     // Used by animator to play sound effects

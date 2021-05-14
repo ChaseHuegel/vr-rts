@@ -20252,6 +20252,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7775255616868936735}
   - component: {fileID: 5166749451800488462}
+  - component: {fileID: 1526176130986544142}
   m_Layer: 0
   m_Name: SphereMenu
   m_TagString: Untagged
@@ -20285,12 +20286,25 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8319552250830093950}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8db83e2efefc4e74581e04fe6e8ab761, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
+--- !u!114 &1526176130986544142
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8319552250830093950}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee9994aa4d742d2448004a8a9f5bc72a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  invert: 0
 --- !u!1 &8615772494511644887
 GameObject:
   m_ObjectHideFlags: 0
