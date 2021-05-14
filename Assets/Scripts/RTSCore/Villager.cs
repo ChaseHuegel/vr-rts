@@ -137,7 +137,7 @@ public class Villager : Unit
         villagerHoverMenu.Show();
         Freeze();
         animator.SetInteger("VillagerActorState", 0);
-        //audioSource.PlayOneShot(GameMaster.GetAudio("unitPickup").GetClip(), 0.5f);
+        audioSource.PlayOneShot(GameMaster.GetAudio("unitPickup").GetClip(), 0.5f);
     }
 
     public void OnDetachedFromHand(Hand hand)
