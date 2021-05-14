@@ -38,15 +38,18 @@ public class HammerDestroyerOfWorlds : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {    
-        if (other.gameObject.GetComponent<TerrainBuilding>())
+        Structure structure = other.gameObject.GetComponentInParent<Structure>();
+        if (structure)
         {
-            Destroy(other.gameObject);
-            GameObject spawned = GameObject.Instantiate(objectDestroyedEffect);
-            spawned.transform.position = other.transform.position;
-            AudioSource.PlayClipAtPoint( destroyedObjectAudio, other.transform.position);
+            Destroy(structure.gameObject);
+
+            // TODO: Shoot a ray down to find a ground position.
+            Vector3 pos = new Vector3(structure.transform.position.x, 0, structure.transform.position.z);
+            GameObject spawned = GameObject.Instantiate(objectDestroyedEffect, pos, Quaternion.identity);
+            AudioSource.PlayClipAtPoint( destroyedObjectAudio, structure.transform.position);
 
         }
-        else if (other.gameObject.GetComponent<VillagerActor>())
+        else if (other.gameObject.GetComponent<Villager>())
         {
             GameObject spawned = GameObject.Instantiate(unitDestroyedEffect);
             spawned.transform.position = other.transform.position;

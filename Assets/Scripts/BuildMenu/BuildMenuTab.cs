@@ -62,40 +62,44 @@ public class BuildMenuTab : MonoBehaviour
 
         foreach ( RTSBuildingType rtsBuildingType in Buttons )
         {
-            // Create the button slot gameobject
-            GameObject slot = Instantiate ( new GameObject ( "slot" + i ), this.gameObject.transform );
+            if (rtsBuildingType != RTSBuildingType.None)
+            {
 
-            // Iterate through slot positions
-            slot.transform.localPosition = new Vector3(x, y, 0);
+                // Create the button slot gameobject
+                GameObject slot = Instantiate ( new GameObject ( "slot" + i ), this.gameObject.transform );
 
-            slot.transform.Rotate(0, 90, -90);
+                // Iterate through slot positions
+                slot.transform.localPosition = new Vector3(x, y, 0);
 
-            // Set layer
-            slot.layer = LayerMask.NameToLayer("UI");
+                slot.transform.Rotate(0, 90, -90);
 
-            // Add components needed
-            BuildMenuSlot buildMenuSlot = slot.AddComponent<BuildMenuSlot>();
-            SphereCollider sphereCollider = slot.AddComponent<SphereCollider>();
-            sphereCollider.radius = 40.0f;
+                // Set layer
+                slot.layer = LayerMask.NameToLayer("UI");
 
-            // Instantiate the resource cost gameobject
-            GameObject resourceCost = Instantiate(resourceCostPrefab, Vector3.zero, Quaternion.identity, slot.transform);
-            resourceCost.transform.localPosition = new Vector3(38.0f, 3.0f, 0f);
-            resourceCost.transform.localRotation = Quaternion.identity;
+                // Add components needed
+                BuildMenuSlot buildMenuSlot = slot.AddComponent<BuildMenuSlot>();
+                SphereCollider sphereCollider = slot.AddComponent<SphereCollider>();
+                sphereCollider.radius = 40.0f;
 
-            // Fetch and set the building type data from the database
-            buildMenuSlot.rtsTypeData = GameMaster.GetBuilding(rtsBuildingType);
+                // Instantiate the resource cost gameobject
+                GameObject resourceCost = Instantiate(resourceCostPrefab, Vector3.zero, Quaternion.identity, slot.transform);
+                resourceCost.transform.localPosition = new Vector3(38.0f, 3.0f, 0f);
+                resourceCost.transform.localRotation = Quaternion.identity;
 
-            // Popluate the resource cost prefab text objects
-            BuildMenuResouceCost cost = resourceCost.GetComponent<BuildMenuResouceCost>();
-            cost.woodText.text = buildMenuSlot.rtsTypeData.woodCost.ToString();
-            cost.goldText.text = buildMenuSlot.rtsTypeData.goldCost.ToString();
-            cost.grainText.text = buildMenuSlot.rtsTypeData.grainCost.ToString();
-            cost.stoneText.text = buildMenuSlot.rtsTypeData.stoneCost.ToString();
+                // Fetch and set the building type data from the database
+                buildMenuSlot.rtsTypeData = GameMaster.GetBuilding(rtsBuildingType);
 
-            // Create/Instatiate preview objects for slots
-            buildMenuSlot.CreatePreviewObject();
+                // Popluate the resource cost prefab text objects
+                BuildMenuResouceCost cost = resourceCost.GetComponent<BuildMenuResouceCost>();
+                cost.woodText.text = buildMenuSlot.rtsTypeData.woodCost.ToString();
+                cost.goldText.text = buildMenuSlot.rtsTypeData.goldCost.ToString();
+                cost.grainText.text = buildMenuSlot.rtsTypeData.grainCost.ToString();
+                cost.stoneText.text = buildMenuSlot.rtsTypeData.stoneCost.ToString();
 
+                // Create/Instatiate preview objects for slots
+                buildMenuSlot.CreatePreviewObject();
+            }
+            
             // Move to next column, or to the next row if we
             // reach max column count.
             column++;

@@ -166,7 +166,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4753052573027916961}
-  - component: {fileID: 3668824323759270111}
   - component: {fileID: 6738345143374573219}
   - component: {fileID: -4849129163342489515}
   - component: {fileID: -7959892095520365167}
@@ -202,26 +201,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
---- !u!114 &3668824323759270111
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4753052573027680385}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe9688ff2b232c447b5987fc6a92de7f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxUnitQueueSize: 5
-  unitSpawnPoint: {fileID: 9107766363147658470}
-  unitRallyWaypoint: {fileID: 9107766364826716479}
-  unitRallyWaypointRadius: 0
-  allowedUnitCreationList: 
-  queueProgressText: {fileID: 0}
-  queueProgressImage: {fileID: 0}
-  QueueImageObjects: []
 --- !u!82 &6738345143374573219
 AudioSource:
   m_ObjectHideFlags: 0
@@ -439,7 +418,7 @@ MonoBehaviour:
   startHidden: 1
   titleGameObject: {fileID: 578799160441184413}
   menuGameObject: {fileID: 4884914877147967177}
-  healthBarGameObject: {fileID: 698167226131813841}
+  healthBar: {fileID: 0}
   buildingHoverDisplayGameObject: {fileID: 8662663285717489402}
   secondKnockMaxDuration: 0.5
 --- !u!1 &9107766363147658470
@@ -597,12 +576,6 @@ GameObject:
 --- !u!1 &4884914877147967177 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1773402440631066317, guid: 7fb19797225db2c4488e2990249299f1,
-    type: 3}
-  m_PrefabInstance: {fileID: 6581676796063576068}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &698167226131813841 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5973659078053127637, guid: 7fb19797225db2c4488e2990249299f1,
     type: 3}
   m_PrefabInstance: {fileID: 6581676796063576068}
   m_PrefabAsset: {fileID: 0}

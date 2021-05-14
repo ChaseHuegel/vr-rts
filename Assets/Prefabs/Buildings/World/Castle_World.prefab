@@ -170,7 +170,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3697986734218380935}
   - component: {fileID: 221455066603446587}
-  - component: {fileID: 4633525887061439225}
   - component: {fileID: 3689557025901324715}
   - component: {fileID: -1809998736868712268}
   - component: {fileID: -6013450512040996533}
@@ -219,26 +218,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 7.9600325, y: 7.9759793, z: 10.421673}
   m_Center: {x: 0.031892125, y: -0.007972452, z: 5.1984544}
---- !u!114 &4633525887061439225
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3697986734218680999}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe9688ff2b232c447b5987fc6a92de7f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxUnitQueueSize: 5
-  unitSpawnPoint: {fileID: 919462436896947904}
-  unitRallyWaypoint: {fileID: 919462435085816601}
-  unitRallyWaypointRadius: 0
-  allowedUnitCreationList: 
-  queueProgressText: {fileID: 0}
-  queueProgressImage: {fileID: 0}
-  QueueImageObjects: []
 --- !u!82 &3689557025901324715
 AudioSource:
   m_ObjectHideFlags: 0
@@ -456,7 +435,7 @@ MonoBehaviour:
   startHidden: 1
   titleGameObject: {fileID: 2695621756054116443}
   menuGameObject: {fileID: 7974255645503477263}
-  healthBarGameObject: {fileID: 2652875358275611927}
+  healthBar: {fileID: 0}
   buildingHoverDisplayGameObject: {fileID: 6149521448459169340}
   secondKnockMaxDuration: 0.5
 --- !u!1 &4749730784114218309
@@ -850,12 +829,6 @@ GameObject:
 --- !u!1 &7974255645503477263 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1773402440631066317, guid: 7fb19797225db2c4488e2990249299f1,
-    type: 3}
-  m_PrefabInstance: {fileID: 8518096201009285314}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &2652875358275611927 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5973659078053127637, guid: 7fb19797225db2c4488e2990249299f1,
     type: 3}
   m_PrefabInstance: {fileID: 8518096201009285314}
   m_PrefabAsset: {fileID: 0}

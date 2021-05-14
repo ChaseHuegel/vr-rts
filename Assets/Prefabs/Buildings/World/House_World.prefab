@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 338712006690949566}
-  - component: {fileID: 5276706465699879340}
   - component: {fileID: -2718789996109689435}
   - component: {fileID: 7808720797177580130}
   - component: {fileID: 5266744495921080526}
@@ -44,26 +43,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
---- !u!114 &5276706465699879340
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3042174803139083339}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe9688ff2b232c447b5987fc6a92de7f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxUnitQueueSize: 5
-  unitSpawnPoint: {fileID: 0}
-  unitRallyWaypoint: {fileID: 0}
-  unitRallyWaypointRadius: 0
-  allowedUnitCreationList: 
-  queueProgressText: {fileID: 0}
-  queueProgressImage: {fileID: 0}
-  QueueImageObjects: []
 --- !u!114 &-2718789996109689435
 MonoBehaviour:
   m_ObjectHideFlags: 0

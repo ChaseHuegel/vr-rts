@@ -138,7 +138,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3210571205559142214}
-  - component: {fileID: 6886648047151706936}
   - component: {fileID: 8086364273588020906}
   - component: {fileID: 3846981145431919282}
   - component: {fileID: 4130524045297879987}
@@ -172,26 +171,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
---- !u!114 &6886648047151706936
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3210571205559245670}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe9688ff2b232c447b5987fc6a92de7f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxUnitQueueSize: 5
-  unitSpawnPoint: {fileID: 0}
-  unitRallyWaypoint: {fileID: 0}
-  unitRallyWaypointRadius: 0
-  allowedUnitCreationList: 
-  queueProgressText: {fileID: 0}
-  queueProgressImage: {fileID: 0}
-  QueueImageObjects: []
 --- !u!82 &8086364273588020906
 AudioSource:
   m_ObjectHideFlags: 0
@@ -409,7 +388,7 @@ MonoBehaviour:
   startHidden: 1
   titleGameObject: {fileID: 2965714698206656577}
   menuGameObject: {fileID: 7127702015518176789}
-  healthBarGameObject: {fileID: 2922968579031633165}
+  healthBar: {fileID: 0}
   buildingHoverDisplayGameObject: {fileID: 6419860754234953254}
   secondKnockMaxDuration: 0.5
 --- !u!1001 &4261954071007250802
@@ -730,12 +709,6 @@ GameObject:
 --- !u!1 &7127702015518176789 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1773402440631066317, guid: 7fb19797225db2c4488e2990249299f1,
-    type: 3}
-  m_PrefabInstance: {fileID: 8824463891437971672}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &2922968579031633165 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5973659078053127637, guid: 7fb19797225db2c4488e2990249299f1,
     type: 3}
   m_PrefabInstance: {fileID: 8824463891437971672}
   m_PrefabAsset: {fileID: 0}
