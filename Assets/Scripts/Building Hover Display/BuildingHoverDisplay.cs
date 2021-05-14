@@ -18,6 +18,8 @@ public class BuildingHoverDisplay : MonoBehaviour
     protected LookAtAndReset lookAtAndReset;
     protected bool visible;
     public GameObject buildingHoverDisplayGameObject;
+    protected float lastKnockTime;
+    protected float secondKnockMaxDuration = 0.5f;
 
     // Start is called before the first frame update
     void Start()
@@ -49,12 +51,8 @@ public class BuildingHoverDisplay : MonoBehaviour
             Hide();
         else
             Show();
-
-        
     }
     
-    protected float lastKnockTime;
-    public float secondKnockMaxDuration = 0.5f;
     public void OnHandHoverBegin(Hand hand)
     {        
         // Make sure we are making a fist

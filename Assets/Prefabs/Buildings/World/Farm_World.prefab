@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6245847907370464301}
-  - component: {fileID: 6451706933942204417}
   - component: {fileID: 5225984715641916845}
   - component: {fileID: -8402618773688929626}
   - component: {fileID: -2109239944173215126}
@@ -43,19 +42,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
---- !u!65 &6451706933942204417
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 899507145775679583}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 5.6, y: 5.6, z: 3.116359}
-  m_Center: {x: -0.025361113, y: 0.048159227, z: 1.5570672}
 --- !u!82 &5225984715641916845
 AudioSource:
   m_ObjectHideFlags: 0
@@ -179,7 +165,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attributes:
   - attribute: 0
-    value: 0
+    value: 500
     max: 500
   invulnerable: 0
   weaknesses: 
@@ -204,7 +190,7 @@ MonoBehaviour:
     y: 0
   bakeOnStart: 1
   type: 1
-  amount: 1000
+  amount: 200
 --- !u!114 &6355609625548158117
 MonoBehaviour:
   m_ObjectHideFlags: 0
