@@ -8199,7 +8199,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3504952778338190299
 RectTransform:
   m_ObjectHideFlags: 0
@@ -13938,6 +13938,7 @@ GameObject:
   - component: {fileID: 8894606483175583214}
   - component: {fileID: 3861378807363434143}
   - component: {fileID: 4342571925903537291}
+  - component: {fileID: 9196145191128712421}
   m_Layer: 5
   m_Name: BuildMenu00
   m_TagString: Untagged
@@ -14117,6 +14118,35 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 338.4402, y: 425.74112, z: 89.06007}
   m_Center: {x: 1.1903048, y: 1.9528469, z: 5.1415462}
+--- !u!114 &9196145191128712421
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5214017018662161812}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7418c7dd8f977d4e969202d3fa7e926, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  poseEditorExpanded: 1
+  blendEditorExpanded: 1
+  poseNames:
+  - clipboard_pose (MAIN)
+  overridePreviewLeftHandPrefab: {fileID: 1000013348574242, guid: 638779290bce1af49b356f33dcc6fccf,
+    type: 3}
+  overridePreviewRightHandPrefab: {fileID: 1000010304998954, guid: 6def53d002137b747aec0b29551e0e25,
+    type: 3}
+  skeletonMainPose: {fileID: 11400000, guid: d22106e56ca5c804bb1bea170902f131, type: 2}
+  skeletonAdditionalPoses: []
+  showLeftPreview: 0
+  showRightPreview: 0
+  previewLeftInstance: {fileID: 0}
+  previewRightInstance: {fileID: 0}
+  previewPoseSelection: 0
+  blendingBehaviours: []
+  scale: 1
 --- !u!1 &5279165821440377111
 GameObject:
   m_ObjectHideFlags: 0

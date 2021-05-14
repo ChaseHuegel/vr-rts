@@ -164,27 +164,10 @@
             {
                "inputs" : {
                   "east" : {
-                     "output" : "/actions/default/in/rotatepreviewclockwise"
+                     "output" : "/actions/default/in/snapturnright"
                   },
                   "north" : {
                      "output" : "/actions/default/in/teleport"
-                  },
-                  "west" : {
-                     "output" : "/actions/default/in/rotatepreviewcounterclockwise"
-                  }
-               },
-               "mode" : "dpad",
-               "parameters" : {
-                  "deadzone_pct" : "25",
-                  "overlap_pct" : "30",
-                  "sub_mode" : "touch"
-               },
-               "path" : "/user/hand/left/input/joystick"
-            },
-            {
-               "inputs" : {
-                  "east" : {
-                     "output" : "/actions/default/in/snapturnright"
                   },
                   "west" : {
                      "output" : "/actions/default/in/snapturnleft"
@@ -192,8 +175,8 @@
                },
                "mode" : "dpad",
                "parameters" : {
-                  "deadzone_pct" : "85",
-                  "overlap_pct" : "0",
+                  "deadzone_pct" : "25",
+                  "overlap_pct" : "30",
                   "sub_mode" : "touch"
                },
                "path" : "/user/hand/left/input/joystick"
@@ -210,7 +193,7 @@
             {
                "inputs" : {
                   "click" : {
-                     "output" : "/actions/default/in/buildingplacementpointer"
+                     "output" : "/actions/default/in/teleport"
                   }
                },
                "mode" : "button",
@@ -222,8 +205,26 @@
                      "output" : "/actions/default/in/togglehandmenu"
                   }
                },
-               "mode" : "button",
+               "mode" : "toggle_button",
                "path" : "/user/hand/left/input/y"
+            },
+            {
+               "inputs" : {
+                  "click" : {
+                     "output" : "/actions/default/in/buildingplacementpointer"
+                  }
+               },
+               "mode" : "button",
+               "path" : "/user/hand/right/input/x"
+            },
+            {
+               "inputs" : {
+                  "click" : {
+                     "output" : "/actions/default/in/togglehandmenu"
+                  }
+               },
+               "mode" : "toggle_button",
+               "path" : "/user/hand/right/input/y"
             },
             {
                "inputs" : {
@@ -256,18 +257,9 @@
                   }
                },
                "mode" : "dpad",
-               "path" : "/user/hand/right/input/joystick"
-            },
-            {
-               "inputs" : {
-                  "east" : {
-                     "output" : "/actions/default/in/snapturnright"
-                  },
-                  "west" : {
-                     "output" : "/actions/default/in/snapturnleft"
-                  }
+               "parameters" : {
+                  "sub_mode" : "touch"
                },
-               "mode" : "dpad",
                "path" : "/user/hand/right/input/joystick"
             },
             {
@@ -282,29 +274,29 @@
             {
                "inputs" : {
                   "click" : {
+                     "output" : "/actions/default/in/togglehandmenu"
+                  }
+               },
+               "mode" : "toggle_button",
+               "path" : "/user/hand/right/input/b"
+            },
+            {
+               "inputs" : {
+                  "click" : {
+                     "output" : "/actions/default/in/teleport"
+                  }
+               },
+               "mode" : "button",
+               "path" : "/user/hand/right/input/a"
+            },
+            {
+               "inputs" : {
+                  "click" : {
                      "output" : "/actions/default/in/grabpinch"
                   }
                },
                "mode" : "button",
                "path" : "/user/hand/right/input/trigger"
-            },
-            {
-               "inputs" : {
-                  "click" : {
-                     "output" : "/actions/default/in/buildingplacementpointer"
-                  }
-               },
-               "mode" : "button",
-               "path" : "/user/hand/right/input/x"
-            },
-            {
-               "inputs" : {
-                  "click" : {
-                     "output" : "/actions/default/in/togglehandmenu"
-                  }
-               },
-               "mode" : "button",
-               "path" : "/user/hand/right/input/y"
             }
          ]
       },

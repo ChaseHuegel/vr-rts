@@ -23,7 +23,8 @@ public class BuildingHoverDisplay : MonoBehaviour
     void Start()
     {
         lookAtAndReset = buildingHoverDisplayGameObject.GetComponentInChildren<LookAtAndReset>();
-
+        healthBar = GetComponentInChildren<HealthBar>();
+        
         if (titleGameObject)
         {
             TextMeshPro titleText = titleGameObject.GetComponentInChildren<TextMeshPro>();
