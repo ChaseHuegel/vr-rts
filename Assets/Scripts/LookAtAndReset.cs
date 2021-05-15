@@ -5,26 +5,22 @@ using Valve.VR.InteractionSystem;
 
 public class LookAtAndReset : MonoBehaviour
 {
-    public Transform target;
-    private Vector3 oldPosition;
-    private Quaternion oldRotation;
-    // Start is called before the first frame update
+    float rotationSpeed = 1.0f;
+    public Transform target;    
     void Start()
     {
-        oldPosition = transform.position;
-        oldRotation = transform.rotation;
-        target = Player.instance.transform;
+        if (!target) target = Player.instance.transform;
     }
-
     
     // Update is called once per frame
     void Update()
     {   
         if (target)
         {
-            Vector3 t = target.position;
-            t.y = transform.position.y;
-            transform.LookAt(t);
+            Vector3 t = target.position - transform.position;
+            t.y = 0;
+            Quaternion rot = Quaternion.LookRotation(t);
+            transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime * rotationSpeed);
         }
     }
 }
