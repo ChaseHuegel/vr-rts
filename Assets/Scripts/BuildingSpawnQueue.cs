@@ -6,20 +6,6 @@ using Swordfish.Audio;
 using UnityEditor;
 using Valve.VR.InteractionSystem;
 
- [CustomEditor(typeof(BuildingSpawnQueue))]
- public class BuildingSpawnQueueEditor : Editor
- {
-     public override void OnInspectorGUI ()
-    {
-        DrawDefaultInspector();
-
-        if(GUILayout.Button("Generate Menu"))
-        {
-            ((BuildingSpawnQueue)target).Generate();
-        }
-    }
-}
-
 public class BuildingSpawnQueue : MonoBehaviour
 {
     public RTSBuildingType buildingType;

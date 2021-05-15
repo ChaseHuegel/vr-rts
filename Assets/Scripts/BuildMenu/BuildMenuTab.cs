@@ -5,20 +5,6 @@ using System;
 using UnityEditor;
 using Valve.VR.InteractionSystem;
 
- [CustomEditor(typeof(BuildMenuTab))]
- public class BuildMenuTabEditor : Editor
- {
-     public override void OnInspectorGUI ()
-    {
-        DrawDefaultInspector();
-
-        if(GUILayout.Button("Generate Menu"))
-        {
-            ((BuildMenuTab)target).Generate();
-        }
-    }
-}
-
 [Serializable]
 public struct BuildMenuHoverButton
 {
