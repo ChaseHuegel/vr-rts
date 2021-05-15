@@ -244,7 +244,7 @@ public class Actor : Body
 
                     if (HasValidGoalTarget())
                         LookAt(currentGoalTarget.x, currentGoalTarget.y);
-                    else
+                    else if (HasValidPath())
                         LookAt(currentPath[0].x, currentPath[0].y);
 
                     ResetPathingBrain();

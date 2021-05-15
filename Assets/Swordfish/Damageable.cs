@@ -10,7 +10,7 @@ public class Damageable : Attributable
 {
     #region Events
 
-    public static event EventHandler<DamageEvent> OnDamageEvent;
+    public event EventHandler<DamageEvent> OnDamageEvent;
     public class DamageEvent : Event
     {
         public AttributeChangeCause cause;
@@ -20,7 +20,7 @@ public class Damageable : Attributable
         public float damage;
     }
 
-    public static event EventHandler<HealthRegainEvent> OnHealthRegainEvent;
+    public event EventHandler<HealthRegainEvent> OnHealthRegainEvent;
     public class HealthRegainEvent : Event
     {
         public AttributeChangeCause cause;
@@ -58,7 +58,7 @@ public class Damageable : Attributable
     public virtual void Start()
     {
         SpawnEvent e = new SpawnEvent{ entity = this };
-        OnSpawnEvent?.Invoke(null, e);
+        OnSpawnEvent?.Invoke(this, e);
         if (e.cancel) Destroy(this.gameObject);   //  destroy this object if the event has been cancelled
     }
 
@@ -71,7 +71,7 @@ public class Damageable : Attributable
     {
         //  Invoke a damage event
         DamageEvent e = new DamageEvent{ cause = cause, victim = this, attacker = attacker, type = type, damage = damage };
-        OnDamageEvent?.Invoke(null, e);
+        OnDamageEvent?.Invoke(this, e);
         if (e.cancel) return;   //  return if the event has been cancelled by any subscriber
 
         bool hadImmunity = false;
@@ -117,7 +117,7 @@ public class Damageable : Attributable
         if (GetAttributeValue(Attributes.HEALTH) - e.damage <= 0)
         {
             DeathEvent e2 = new DeathEvent{ cause = cause, victim = this, attacker = attacker };
-            OnDeathEvent?.Invoke(null, e2);
+            OnDeathEvent?.Invoke(this, e2);
             if (e2.cancel) return;   //  return if the event has been cancelled by any subscriber
         }
 
@@ -140,7 +140,7 @@ public class Damageable : Attributable
 
         //  Invoke a heal event
         HealthRegainEvent e = new HealthRegainEvent{ cause = cause, entity = this, healer = healer, amount = amount };
-        OnHealthRegainEvent?.Invoke(null, e);
+        OnHealthRegainEvent?.Invoke(this, e);
         if (e.cancel) return;   //  return if the event has been cancelled by any subscriber
 
         //  Update health

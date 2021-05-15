@@ -442,10 +442,11 @@ public class Villager : Unit
         Villager villager = (Villager)e.actor;
         Resource resource = e.cell.GetOccupant<Resource>();
         Structure structure = e.cell.GetOccupant<Structure>();
+        Constructible construction = e.cell.GetOccupant<Constructible>();
 
         if  (e.goal is GoalGatherResource && villager.TryGather(resource)) return;
         else if (e.goal is GoalTransportResource && villager.TryDropoff(structure)) return;
-        else if (e.goal is GoalBuildRepair && villager.TryBuildRepair(structure)) return;
+        else if (e.goal is GoalBuildRepair && (villager.TryRepair(structure) || villager.TryBuild(construction))) return;
 
         //  default cancel the interaction
         ResetGoal();
@@ -507,7 +508,7 @@ public class Villager : Unit
         return true;
     }
 
-    public bool TryBuildRepair(Structure structure)
+    public bool TryRepair(Structure structure)
     {
         if (!structure || structure.AttributeHandler.GetAttributePercent(Attributes.HEALTH) >= 1f)
             return false;
@@ -518,12 +519,36 @@ public class Villager : Unit
         //  Convert per second to per tick
         int amount = (int)(rate / (60/Constants.ACTOR_TICK_RATE));
 
-        //  Trigger a build/repair event
-        BuildRepairEvent e = new BuildRepairEvent{ villager = this, structure = structure, amount = amount };
-        OnBuildRepairEvent?.Invoke(null, e);
+        //  Trigger a repair event
+        RepairEvent e = new RepairEvent{ villager = this, structure = structure, amount = amount };
+        OnRepairEvent?.Invoke(null, e);
         if (e.cancel) return false;   //  return if the event has been cancelled by any subscriber
 
         structure.TryRepair(e.amount, this);
+
+        // Use lumberjack animation
+        animator.SetInteger("VillagerActorState", (int)ActorAnimationState.BUILDANDREPAIR);
+
+        return true;
+    }
+
+    public bool TryBuild(Constructible construction)
+    {
+        if (!construction || construction.AttributeHandler.GetAttributePercent(Attributes.HEALTH) >= 1f)
+            return false;
+
+        // Use the repair rate unless the building hasn't been constructed.
+        int rate = buildRate;
+
+        //  Convert per second to per tick
+        int amount = (int)(rate / (60/Constants.ACTOR_TICK_RATE));
+
+        //  Trigger a build event
+        BuildEvent e = new BuildEvent{ villager = this, constructible = construction, amount = amount };
+        OnBuildEvent?.Invoke(null, e);
+        if (e.cancel) return false;   //  return if the event has been cancelled by any subscriber
+
+        construction.TryBuild(e.amount, this);
 
         // Use lumberjack animation
         animator.SetInteger("VillagerActorState", (int)ActorAnimationState.BUILDANDREPAIR);
@@ -549,11 +574,19 @@ public class Villager : Unit
         public float amount;
     }
 
-    public static event EventHandler<BuildRepairEvent> OnBuildRepairEvent;
-    public class BuildRepairEvent : Swordfish.Event
+    public static event EventHandler<RepairEvent> OnRepairEvent;
+    public class RepairEvent : Swordfish.Event
     {
         public Villager villager;
         public Structure structure;
+        public int amount;
+    }
+
+    public static event EventHandler<BuildEvent> OnBuildEvent;
+    public class BuildEvent : Swordfish.Event
+    {
+        public Villager villager;
+        public Constructible constructible;
         public int amount;
     }
 }
