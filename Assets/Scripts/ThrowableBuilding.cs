@@ -13,12 +13,6 @@ public class ThrowableBuilding : Throwable
     //public LayerMask allowedLayersMask;
     public LayerMask disallowedLayersMask;
     public BuildingData rtsBuildingTypeData;
-
-    protected override void OnDetachedFromHand(Hand hand)
-    {
-        base.OnDetachedFromHand(hand);
-    }
-
     private void OnCollisionEnter(Collision collision)
     {
         bool hitPointValid = !LayerMatchTest( disallowedLayersMask, collision.gameObject );
@@ -39,6 +33,13 @@ public class ThrowableBuilding : Throwable
             spawned.transform.Rotate(0f, 0f, Random.Range(0, 4) * 90);
 
             AudioSource.PlayClipAtPoint( placementAllowedAudio.GetClip(), contact.point );
+
+            // Remove resources only when valid placement.
+            PlayerManager.instance.RemoveResourcesFromStockpile(rtsBuildingTypeData.goldCost,
+                                                rtsBuildingTypeData.grainCost,
+                                                rtsBuildingTypeData.woodCost,
+                                                rtsBuildingTypeData.stoneCost);
+
             Debug.DrawRay(ray.origin, ray.direction, Color.cyan, 5, true);
         }
         else
@@ -48,11 +49,6 @@ public class ThrowableBuilding : Throwable
             spawned.transform.position = contact.point;
             AudioSource.PlayClipAtPoint( placementDeniedAudio.GetClip(),contact.point );
         }
-
-        PlayerManager.instance.RemoveResourcesFromStockpile(rtsBuildingTypeData.goldCost,
-                                                rtsBuildingTypeData.grainCost,
-                                                rtsBuildingTypeData.woodCost,
-                                                rtsBuildingTypeData.stoneCost);
 
         Destroy(this.gameObject);
     }

@@ -154,13 +154,14 @@ public class BuildMenuSlot : MonoBehaviour
     private void OnHandHoverBegin( Hand hand )
     {
         ThrowableBuilding currentAttachedThrowableBuilding = GetAttachedThrowableBuilding( hand );
-
+    
         if ( currentAttachedThrowableBuilding )
         {
             // If we want to take back the item and we aren't waiting for a trigger press
-            if ( !requireReleaseActionToReturn )
+            if ( !requireReleaseActionToReturn && !justPickedUpItem)
             {
-                TakeBackItem( hand );
+                if(rtsTypeData.buildingType == currentAttachedThrowableBuilding.rtsBuildingTypeData.buildingType)
+                    TakeBackItem( hand );
             }
         }
 
@@ -178,7 +179,7 @@ public class BuildMenuSlot : MonoBehaviour
 
     private void HandHoverUpdate( Hand hand )
     {
-        if ( requireReleaseActionToReturn )
+        if ( requireReleaseActionToReturn  && !justPickedUpItem)
         {
             if (hand.isActive)
             {
@@ -239,10 +240,10 @@ public class BuildMenuSlot : MonoBehaviour
     }
 
     private void TakeBackItem( Hand hand )
-    {
+    {        
         GameObject detachedItem = hand.AttachedObjects[0].attachedObject;
         hand.DetachObject( detachedItem );
-        //Destroy(detachedItem);
+        Destroy(detachedItem);
 
         // RemoveMatchingItemsFromHandStack( itemPackage, hand );
 
@@ -282,7 +283,7 @@ public class BuildMenuSlot : MonoBehaviour
         spawnedItem.SetActive( true );
         hand.AttachObject( spawnedItem, grabType, attachmentFlags );
 
-       // hand.ForceHoverUnlock();
+        hand.ForceHoverUnlock();
 
         spawnedItem.GetComponent<ThrowableBuilding>().rtsBuildingTypeData = rtsTypeData;
 
