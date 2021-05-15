@@ -9,7 +9,6 @@ using Valve.VR.InteractionSystem;
 public class BuildingSpawnQueue : MonoBehaviour
 {
     public RTSBuildingType buildingType;
-
     [Header( "Unit Stuff" )]
     public GameObject unitSpawnPoint;
     public GameObject unitRallyWaypoint;
@@ -18,11 +17,10 @@ public class BuildingSpawnQueue : MonoBehaviour
     // go to so they don't fight over a single point.
     public float unitRallyWaypointRadius;
     protected float timeElapsed = 0.0f;
-    protected Queue<UnitData> unitSpawnQueue = new Queue<UnitData>();
+    protected LinkedList<UnitData> unitSpawnQueue = new LinkedList<UnitData>();
     public TMPro.TMP_Text queueProgressText;
     public UnityEngine.UI.Image queueProgressImage;
-    public UnityEngine.UI.Image[] QueueImageObjects;
-
+    public UnityEngine.UI.Image[] QueueSlotImage;
     public List<RTSUnitType> unitQueueButtons;
     private Structure structure;
     private Damageable damageable;
@@ -91,9 +89,8 @@ public class BuildingSpawnQueue : MonoBehaviour
 
         UnitData unitData = GameMaster.GetUnit(unitTypeToQueue);
         PlayerManager.instance.RemoveUnitQueueCostFromStockpile(unitData);
-        unitSpawnQueue.Enqueue(unitData);
 
-        //Debug.Log("Queued " + unitTypeToQueue + ".");
+        unitSpawnQueue.AddLast(unitData);
     }
 
     private void UpdateUnitSpawnQueue()
@@ -101,15 +98,15 @@ public class BuildingSpawnQueue : MonoBehaviour
         if (unitSpawnQueue.Count > 0)
         {
             timeElapsed += Time.deltaTime;
-            queueProgressImage.fillAmount = (timeElapsed / unitSpawnQueue.Peek().queueTime);
+            queueProgressImage.fillAmount = (timeElapsed / unitSpawnQueue.First.Value.queueTime);
             float progressPercent = UnityEngine.Mathf.Round(queueProgressImage.fillAmount * 100);
             queueProgressText.text = progressPercent.ToString() + "%";
 
-            if (timeElapsed >= unitSpawnQueue.Peek().queueTime)
+            if (timeElapsed >= unitSpawnQueue.First.Value.queueTime)
             {
                 SpawnUnit();
-                timeElapsed = 0.0f;
-                unitSpawnQueue.Dequeue();
+                timeElapsed = 0.0f;    
+                unitSpawnQueue.RemoveFirst();
                 queueProgressImage.fillAmount = 0;
                 queueProgressImage.enabled = false;
                 queueProgressText.enabled = false;
@@ -120,44 +117,45 @@ public class BuildingSpawnQueue : MonoBehaviour
                 queueProgressText.enabled = true;
             }
 
-            foreach(UnityEngine.UI.Image image in QueueImageObjects)
-            {
-                // Clearing override sprite reenables the original
-                image.overrideSprite = null;
-            }
-
-            int i = 0;
-            foreach (UnitData unitData in unitSpawnQueue)
-            {
-                QueueImageObjects[i].overrideSprite = unitData.queueImage;
-                i++;
-            }
+            RefreshQueueImages();
         }
         else
+        {
             timeElapsed = 0.0f;
+        }
     }
 
-    public void RemoveLastUnitFromQueue()
+    public void DequeueUnit()
     {
-        if (unitSpawnQueue.Count > 0)
+        if (unitSpawnQueue.Count <= 0)
+            return;     
+
+        else if (unitSpawnQueue.Count == 1)
+        {            
+            unitSpawnQueue.RemoveLast();
+            queueProgressImage.fillAmount = 0;
+            queueProgressImage.enabled = false;
+            queueProgressText.enabled = false;            
+            RefreshQueueImages();
+        }
+        else
         {
-            UnitData unitData = unitSpawnQueue.Dequeue();
-            Debug.Log("Removed " + unitData + " from queue. " + unitSpawnQueue.Count + " left in queue.");
+            unitSpawnQueue.RemoveLast();
         }
     }
 
     private void SpawnUnit()
     {
-        GameObject prefabToSpawn = unitSpawnQueue.Peek().prefab;
+        GameObject prefabToSpawn = unitSpawnQueue.First.Value.prefab;
 
         if (prefabToSpawn)
         {
-            GameObject unit = GameObject.Instantiate<GameObject>(unitSpawnQueue.Peek().prefab);
+            GameObject unit = GameObject.Instantiate<GameObject>(unitSpawnQueue.First.Value.prefab);
             unit.transform.position = unitSpawnPoint.transform.position;
 
             Villager villager = unit.GetComponent<Villager>();
 
-            villager.SetRTSUnitType(unitSpawnQueue.Peek().unitType);
+            villager.SetRTSUnitType(unitSpawnQueue.First.Value.unitType);
 
             //RTSUnitType uType = unitSpawnQueue.Peek().unitType;
 
@@ -165,6 +163,22 @@ public class BuildingSpawnQueue : MonoBehaviour
         }
         else
             Debug.Log ("Spawn unit failed. Missing prefabToSpawn.");
+    }
+
+    private void RefreshQueueImages()
+    {
+        foreach(UnityEngine.UI.Image image in QueueSlotImage)
+        {
+            // Clearing override sprite reenables the original
+            image.overrideSprite = null;
+        }
+
+        int i = 0;
+        foreach (UnitData unitData in unitSpawnQueue)
+        {
+            QueueSlotImage[i].overrideSprite = unitData.queueImage;
+            i++;
+        }
     }
 
     [ExecuteInEditMode]
@@ -201,10 +215,10 @@ public class BuildingSpawnQueue : MonoBehaviour
             face.transform.localPosition = Vector3.zero;
             face.transform.localScale = new Vector3(0.259453088f,0.259453088f,0.0487500019f);
             face.transform.Rotate(0, -90, 0);
-            //face.AddComponent<AudioSource>();
             HoverButton hoverButton = face.GetComponent<HoverButton>();
             hoverButton.localMoveDistance = new Vector3(0, 0, -0.3f);
-
+            face.GetComponent<Interactable>().highlightOnHover = false;
+            
             // MovingPart (child of Face)
             GameObject buttonMovingPart = GameObject.CreatePrimitive(PrimitiveType.Cube);
             buttonMovingPart.AddComponent<UVCubeMap>();

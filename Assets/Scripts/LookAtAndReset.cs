@@ -9,7 +9,7 @@ public class LookAtAndReset : MonoBehaviour
     public Transform target;    
     void Start()
     {
-        if (!target) target = Player.instance.transform;
+        if (!target) target = Player.instance.trackingOriginTransform;
     }
     
     // Update is called once per frame
