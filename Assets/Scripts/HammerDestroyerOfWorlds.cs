@@ -14,7 +14,7 @@ public class HammerDestroyerOfWorlds : MonoBehaviour
     public GameObject unitDestroyedEffect;
     private Vector3 sheathLocalScale;
     public  Vector3 wieldLocalScale;
-
+    protected bool isWielding;
     void Start()
     {
         audioSource = gameObject.GetComponent<AudioSource>();
@@ -24,6 +24,7 @@ public class HammerDestroyerOfWorlds : MonoBehaviour
     public void Wield()
     {
         gameObject.transform.localScale = wieldLocalScale;  
+        isWielding = true;
     }
 
     public void Sheath()
@@ -34,10 +35,14 @@ public class HammerDestroyerOfWorlds : MonoBehaviour
         gameObject.transform.localPosition = Vector3.zero;
         gameObject.transform.localRotation = Quaternion.identity; 
         gameObject.transform.localScale = sheathLocalScale;
+        isWielding = false;
     }
 
     void OnTriggerEnter(Collider other)
     {    
+        if (!isWielding)
+            return;
+            
         Structure structure = other.gameObject.GetComponentInParent<Structure>();
         if (structure)
         {

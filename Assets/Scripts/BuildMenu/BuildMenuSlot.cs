@@ -25,17 +25,44 @@ public class BuildMenuSlot : MonoBehaviour
     public UnityEvent dropEvent;
     private GameObject previewObject;
     public bool justPickedUpItem = false;
-    protected static Material highlightMat;
-
-    void Start()
+    public static Material disabledMat;
+    public static Material enabledMat;
+    SphereCollider grabCollider;    
+    
+    MeshRenderer[] meshRenderers;
+    SkinnedMeshRenderer[] skinnedMeshRenderers;
+    void Awake()
     {
-#if UNITY_URP
-        highlightMat = (Material)Resources.Load("SteamVR_HoverHighlight_URP", typeof(Material));
-#else
-        highlightMat = (Material)Resources.Load("SteamVR_HoverHighlight", typeof(Material));
-#endif
+        if (disabledMat == null)
+                Debug.LogError("Disabled Material is missing", this);
+        
+        if (!(grabCollider = GetComponent<SphereCollider>()))
+            Debug.Log("grabCollider missing.");    
 
-        CreatePreviewObject();
+        CreatePreviewObject();        
+    }
+
+    public void SlotEnabled(bool enabled = true)
+    {
+        if (!grabCollider)
+            grabCollider = GetComponent<SphereCollider>();
+        
+        GetMeshRenderers();
+
+        if (enabled)
+        {
+            grabCollider.enabled = true;
+
+            if (previewObject)
+                SetMaterial(enabledMat);
+        }
+        else
+        {   
+            grabCollider.enabled = false;  
+
+            if(previewObject)
+                SetMaterial(disabledMat);
+        }
     }
 
     public void CreatePreviewObject()
@@ -44,13 +71,13 @@ public class BuildMenuSlot : MonoBehaviour
 
         // Use normal preview
         if ( useFadedPreview == false )
-        {
+        {             
             if (rtsTypeData.menuPreviewPrefab != null)
             {
                 previewObject = Instantiate( rtsTypeData.menuPreviewPrefab, transform.position, Quaternion.identity ) as GameObject;
                 previewObject.transform.parent = transform;
                 previewObject.transform.localRotation = Quaternion.identity;
-            }
+            }            
         }
         // Spawned item is being held, use faded preview
         else
@@ -61,6 +88,30 @@ public class BuildMenuSlot : MonoBehaviour
                 previewObject.transform.parent = transform;
                 previewObject.transform.localRotation = Quaternion.identity;
             }
+        }
+
+        GetMeshRenderers();
+    }
+
+    private void GetMeshRenderers()
+    {
+        if (!previewObject)
+            return;
+
+        meshRenderers = previewObject.GetComponentsInChildren<MeshRenderer>();
+        skinnedMeshRenderers = previewObject.GetComponentsInChildren<SkinnedMeshRenderer>();
+    }
+
+    private void SetMaterial(Material material)
+    {
+        foreach (MeshRenderer meshRenderer in meshRenderers)
+        {
+            meshRenderer.sharedMaterial = material;
+        }
+
+        foreach (SkinnedMeshRenderer skinnedMeshRenderer in skinnedMeshRenderers)
+        {
+            skinnedMeshRenderer.sharedMaterial = material;
         }
     }
 

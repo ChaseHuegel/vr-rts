@@ -16,6 +16,7 @@ public class PlayerManager : MonoBehaviour
     public int militaryPopulation;
     public int totalPopulation;
     public int populationLimit;
+    public int queueCount;
 
     [Header("UI")]
     [Tooltip("Switch between clipboard build menu or palm build menu.")]
@@ -101,10 +102,11 @@ public class PlayerManager : MonoBehaviour
     protected bool IsClipboardPalmMenuVisible;
     public void OnToggleHandMenu(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
-
+        buildMenu.RefreshSlots();
+        
         // Don't use both methods to display the menu at the same time.
         if (usePalmMenu)
-            return;
+            return;        
 
         // Menu is visible.
         if (handBuildMenu.activeSelf)
@@ -244,6 +246,8 @@ public class PlayerManager : MonoBehaviour
         }
 
         totalPopulation += 1;
+        queueCount--;
+        if (queueCount < 0) queueCount = 0;
         UpdateWristDisplayPopulationLimit();
     }
 
@@ -345,11 +349,9 @@ public class PlayerManager : MonoBehaviour
 
         return ret;
     }
-
+    
     public bool CanQueueUnit(RTSUnitType unitType)
     {
-        bool ret = true;
-
         UnitData unitData = GameMaster.GetUnit(unitType);
         if (goldCollected < unitData.goldCost || woodCollected < unitData.woodCost ||
             grainCollected < unitData.grainCost || stoneCollected < unitData.stoneCost)
@@ -357,12 +359,13 @@ public class PlayerManager : MonoBehaviour
             return false;
         }
 
-        if (unitData.populationCost + totalPopulation > populationLimit)
+        if (unitData.populationCost + totalPopulation + queueCount > populationLimit)
         {
             return false;
         }
 
-        return ret;
+        queueCount++;
+        return true;
     }
 
     public void RemoveUnitQueueCostFromStockpile(UnitData unitType)

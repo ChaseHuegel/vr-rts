@@ -26,18 +26,22 @@ public struct BuildMenuHoverButton
     public int grainCost;
     public int woodCost;
     public int goldCost;
-    public int oreCost;
+    public int stoneCost;
 }
 
 [Serializable]
 public class BuildMenuTab : MonoBehaviour
 {
     public GameObject resourceCostPrefab;
+    public Material slotEnabledMaterial;
+    public Material slotDisabledMaterial;
     public RTSBuildingType[] Buttons;
     void Awake()
     {
         // if (transform.childCount <= 0)
         //     Generate();
+        BuildMenuSlot.disabledMat = slotDisabledMaterial;
+        BuildMenuSlot.enabledMat = slotEnabledMaterial;
     }
 
     [ExecuteInEditMode]
@@ -57,7 +61,7 @@ public class BuildMenuTab : MonoBehaviour
         int column = 0;
         int x = originX;
         int y = originY;
-
+        
         DestroyChildren();
 
         foreach ( RTSBuildingType rtsBuildingType in Buttons )
@@ -78,6 +82,8 @@ public class BuildMenuTab : MonoBehaviour
 
                 // Add components needed
                 BuildMenuSlot buildMenuSlot = slot.AddComponent<BuildMenuSlot>();
+                
+
                 SphereCollider sphereCollider = slot.AddComponent<SphereCollider>();
                 sphereCollider.radius = 40.0f;
 

@@ -20,11 +20,7 @@ public class PalmMenu : MonoBehaviour
         objectPlacementPointer = FindObjectOfType<InteractionPointer>();          
     }
 
-    public void SetParent(Transform parent)
-    {
-
-    }
-
+    
     public void Show()
     {
         gameObject.SetActive(true);

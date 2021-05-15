@@ -59,6 +59,7 @@ public class Villager : Unit
     GameObject currentCargoDisplayObject;
     GameObject currentHandToolDisplayObject;
     public VillagerHoverMenu villagerHoverMenu;
+    protected bool canRetaskOnCollision;
     public bool IsCargoFull() { return currentCargo >= maxCargo; }
     public bool HasCargo() { return currentCargo > 0; }
 
@@ -138,6 +139,7 @@ public class Villager : Unit
         Freeze();
         animator.SetInteger("VillagerActorState", 0);
         audioSource.PlayOneShot(GameMaster.GetAudio("unitPickup").GetClip(), 0.5f);
+        canRetaskOnCollision = true;
     }
 
     public void OnDetachedFromHand(Hand hand)
@@ -146,7 +148,63 @@ public class Villager : Unit
         villagerHoverMenu.Hide();
         ResetAI();
         Unfreeze();
-        // audioSource.Stop();
+        canRetaskOnCollision = false;
+        detachFromHandTime = Time.time;
+    }
+
+    float detachFromHandTime;
+
+    // This is is used to reenable the character after they have been
+    // released from the hand AND after they have landed somewhere.
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (!canRetaskOnCollision)
+            return;
+
+        // Don't wait for a collision indefinitely.
+        if (Time.time - detachFromHandTime >= 3.0f)
+        {
+            canRetaskOnCollision = false;
+            return;   
+        }
+        
+        Unfreeze();
+        
+        Resource node = collision.gameObject.GetComponent<Resource>();
+        if (node)
+        {
+            switch (node.type)
+            {
+                case ResourceGatheringType.Gold:
+                    SetRTSUnitType(RTSUnitType.GoldMiner);
+                    break;
+
+                case ResourceGatheringType.Grain:
+                    SetRTSUnitType(RTSUnitType.Farmer);
+                    break;
+
+                case ResourceGatheringType.Wood:
+                    SetRTSUnitType(RTSUnitType.Lumberjack);
+                    break;
+
+                case ResourceGatheringType.Stone:
+                    SetRTSUnitType(RTSUnitType.StoneMiner);
+                    break;
+
+                default:
+                    break;
+            }
+
+            ResetAI();
+            return;
+        }
+
+        Structure building = collision.gameObject.GetComponentInParent<Structure>();
+        if (building)
+        {
+            SetRTSUnitType(RTSUnitType.Builder);
+            ResetAI();
+        }
     }
 
     public override void Tick()
@@ -204,29 +262,7 @@ public class Villager : Unit
         previousResource = currentResource;
     }
 
-    // This is is used to reenable the character after they have been
-    // released from the hand AND after they have landed somewhere.
-    private void OnCollisionEnter(Collision collision)
-    {
-        //this.enabled = true;
-        //Unfreeze();
-        //audioSource.Stop();
-
-        // Resource resource = collision.gameObject.GetComponent<Resource>();
-        // if (resource)
-        // {
-        //     ResetPathing();
-        //     currentGoalTarget = GetCellAtTransform();
-        //     // currentGoal = (PathfindingGoal)Get goals.Get<GoalGatherResource>(x => ((GoalGatherResource)x).type == resource.type);
-
-        //     if (GotoNearestGoal()) //currentGoal != null && currentGoalTarget != null)
-        //         PlayTaskChangeAudio(resource.type);
-
-        //     return;
-        // }
-    }
-
-    // Used by animator to play sound effects
+     // Used by animator to play sound effects
     public void AnimatorPlayAudio(string clipName)
     {
         AudioSource.PlayClipAtPoint(GameMaster.GetAudio(clipName).GetClip(), transform.position, 0.75f);
@@ -274,7 +310,6 @@ public class Villager : Unit
             case RTSUnitType.StoneMiner:
                 state = UnitState.GATHERING;
                 currentResource = ResourceGatheringType.Stone;
-                goals.entries[0] = null;
                 goals.Add<GoalGatherResource>().type = ResourceGatheringType.Stone;
                 ResetAI();
                 break;

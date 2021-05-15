@@ -13,9 +13,10 @@ public class LookAtAndReset : MonoBehaviour
     {
         oldPosition = transform.position;
         oldRotation = transform.rotation;
-        target = Player.instance.trackingOriginTransform;
+        target = Player.instance.transform;
     }
 
+    
     // Update is called once per frame
     void Update()
     {   
@@ -26,7 +27,4 @@ public class LookAtAndReset : MonoBehaviour
             transform.LookAt(t);
         }
     }
-
-    // transform.position = oldPosition;
-    // transform.rotation = oldRotation;
 }
