@@ -14,10 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buildingType: 65
   dropoffTypes: 8
-  goldCost: 20
-  stoneCost: 40
-  grainCost: 10
-  woodCost: 0
+  goldCost: 0
+  stoneCost: 0
+  grainCost: 0
+  woodCost: 175
+  populationSupported: 0
+  maxUnitQueueSize: 12
+  hitPoints: 2100
+  garrisonCapacity: 10
+  armor: 3
   menuPreviewPrefab: {fileID: 7228949492008360357, guid: 928a06802f70e2d47b2bde3d08872968,
     type: 3}
   fadedPreviewPrefab: {fileID: 5598441377920673726, guid: 734731538a2877a4eb2d1cbf085fd0fe,
@@ -26,7 +31,6 @@ MonoBehaviour:
     type: 3}
   worldPrefab: {fileID: 8186733022139517711, guid: 12bc7d8ebf7063a4bbcbb2fdb712925f,
     type: 3}
-  populationSupported: 1
   allowedUnitsToSpawn: 
   constructionCompletedAudio: {fileID: 11400000, guid: 69c1a5a135c5aa64883815590611952c,
     type: 2}

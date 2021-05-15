@@ -11,13 +11,16 @@ public class BuildingData : ScriptableObject
     public int goldCost;
     public int stoneCost;
     public int grainCost;
-    public int woodCost;
+    public int woodCost;    
+    public int populationSupported;
+    public int maxUnitQueueSize;
+    public int hitPoints;
+    public int garrisonCapacity;
+    public int armor;
     public GameObject menuPreviewPrefab;
     public GameObject fadedPreviewPrefab;
     public GameObject throwablePrefab;
     public GameObject worldPrefab;
-    public int populationSupported;
-    public int maxUnitQueueSize;
     public List<RTSUnitType> allowedUnitsToSpawn;
     public SoundElement constructionCompletedAudio;
 }
