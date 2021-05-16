@@ -11,6 +11,9 @@ public class BuildingHoverDisplay : MonoBehaviour
 
     [Header("Options")]
     public bool startHidden = true;
+    public bool autohide = true;
+    public float autohideDelay = 10.0f;
+    public float autohideRadius = 1.5f;
     public GameObject titleGameObject;
     public GameObject menuGameObject;
     public HealthBar healthBar;
@@ -24,8 +27,11 @@ public class BuildingHoverDisplay : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        lookAtAndReset = buildingHoverDisplayGameObject.GetComponentInChildren<LookAtAndReset>();
-        
+        if (!(lookAtAndReset = buildingHoverDisplayGameObject.GetComponentInChildren<LookAtAndReset>()))
+            Debug.Log("LookAtAndReset component not found.", this);
+
+        lookAtAndReset.SetAutohideParameters(autohide, autohideDelay, autohideRadius);
+
         // TODO: Set this reference in all buildings for performance gains.
         healthBar = GetComponentInChildren<HealthBar>(true);
 
@@ -100,33 +106,6 @@ public class BuildingHoverDisplay : MonoBehaviour
 
         
     }
-
-    public void HideTitle() 
-    { 
-        if (titleGameObject)
-            titleGameObject.SetActive(false); 
-    }
-
-    public void ShowMenu() 
-    { 
-        if (menuGameObject)
-            menuGameObject.SetActive(true); 
-    }
-
-    public void ShowHealthBar() 
-    { 
-        if (healthBar)
-        {
-            healthBar.gameObject.SetActive(true); 
-            lookAtAndReset.enabled = true;
-        }
-    }
-    
-    public void ShowTitle() 
-    { 
-        if (titleGameObject)
-            titleGameObject.SetActive(true); 
-    }
     
     public void Hide() 
     {     
@@ -144,8 +123,34 @@ public class BuildingHoverDisplay : MonoBehaviour
         ShowMenu(); 
         ShowTitle(); 
         ShowHealthBar();
-        visible = true;
-        
+        visible = true;        
     }
     
+    
+    private void HideTitle() 
+    { 
+        if (titleGameObject)
+            titleGameObject.SetActive(false); 
+    }
+
+    private void ShowMenu() 
+    { 
+        if (menuGameObject)
+            menuGameObject.SetActive(true); 
+    }
+
+    private void ShowHealthBar() 
+    { 
+        if (healthBar)
+        {
+            healthBar.gameObject.SetActive(true); 
+            lookAtAndReset.enabled = true;
+        }
+    }
+    
+    private void ShowTitle() 
+    { 
+        if (titleGameObject)
+            titleGameObject.SetActive(true); 
+    }
 }
