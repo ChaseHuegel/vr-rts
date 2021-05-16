@@ -63,7 +63,7 @@ public class Constructible : Obstacle, IFactioned
         }
     }
 
-    public void TryBuild(int count, Actor builder = null)
+    public void TryBuild(float count, Actor builder = null)
     {
         AttributeHandler.Heal(count, AttributeChangeCause.HEALED, builder.AttributeHandler);
     }

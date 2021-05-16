@@ -69,7 +69,7 @@ public class Structure : Obstacle, IFactioned
             Debug.Log("No building health bar found.", this);
     }
 
-    public void TryRepair(int count, Actor repairer = null)
+    public void TryRepair(float count, Actor repairer = null)
     {
         AttributeHandler.Heal(count, AttributeChangeCause.HEALED, repairer.AttributeHandler);
         RefreshHealthBar();

@@ -40,9 +40,9 @@ public class Villager : Unit
     // we're using INT's to store amount/capacity.
     public int maxCargo = 20;
     public float currentCargo = 0;
-    public int workRate = 3;
-    public int buildRate = 6;
-    public int repairRate = 3;
+    public float workRate = 3;
+    public float buildRate = 6;
+    public float repairRate = 3;
     protected Animator animator;
     private AudioSource audioSource;
 
@@ -91,11 +91,11 @@ public class Villager : Unit
         HookIntoEvents();        
 
         //  Add goals in order of priority
-        goals.Add<GoalBuildRepair>();
-        goals.Add<GoalGatherResource>().type = ResourceGatheringType.Grain;
-        goals.Add<GoalGatherResource>().type = ResourceGatheringType.Gold;
-        goals.Add<GoalGatherResource>().type = ResourceGatheringType.Stone;
-        goals.Add<GoalGatherResource>().type = ResourceGatheringType.Wood;
+        // goals.Add<GoalBuildRepair>();
+        // goals.Add<GoalGatherResource>().type = ResourceGatheringType.Grain;
+        // goals.Add<GoalGatherResource>().type = ResourceGatheringType.Gold;
+        // goals.Add<GoalGatherResource>().type = ResourceGatheringType.Stone;
+        // goals.Add<GoalGatherResource>().type = ResourceGatheringType.Wood;
         transportGoal = goals.Add<GoalTransportResource>();
 
         animator = gameObject.GetComponentInChildren<Animator>();
@@ -494,6 +494,9 @@ public class Villager : Unit
         if (!structure || !HasCargo() || !structure.IsBuilt())
             return false;
 
+        if (!structure.CanDropOff(currentResource))
+            return false;
+            
         //  Trigger a dropoff event
         DropoffEvent e = new DropoffEvent{ villager = this, structure = structure, resourceType = currentResource, amount = currentCargo };
         OnDropoffEvent?.Invoke(null, e);
@@ -550,10 +553,10 @@ public class Villager : Unit
             return false;
 
         // Use the repair rate unless the building hasn't been constructed.
-        int rate = structure.IsBuilt() ? buildRate : repairRate;
+        float rate = structure.IsBuilt() ? buildRate : repairRate;
 
         //  Convert per second to per tick
-        int amount = (int)(rate / (60/Constants.ACTOR_TICK_RATE));
+        float amount = (rate / (60/Constants.ACTOR_TICK_RATE));
 
         //  Trigger a repair event
         RepairEvent e = new RepairEvent{ villager = this, structure = structure, amount = amount };
@@ -574,10 +577,10 @@ public class Villager : Unit
             return false;
 
         // Use the repair rate unless the building hasn't been constructed.
-        int rate = buildRate;
+        float rate = buildRate;
 
         //  Convert per second to per tick
-        int amount = (int)(rate / (60/Constants.ACTOR_TICK_RATE));
+        float amount = (rate / (60/Constants.ACTOR_TICK_RATE));
 
         //  Trigger a build event
         BuildEvent e = new BuildEvent{ villager = this, constructible = construction, amount = amount };
@@ -615,7 +618,7 @@ public class Villager : Unit
     {
         public Villager villager;
         public Structure structure;
-        public int amount;
+        public float amount;
     }
 
     public static event EventHandler<BuildEvent> OnBuildEvent;
@@ -623,6 +626,6 @@ public class Villager : Unit
     {
         public Villager villager;
         public Constructible constructible;
-        public int amount;
+        public float amount;
     }
 }

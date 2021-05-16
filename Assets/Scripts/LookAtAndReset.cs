@@ -16,7 +16,7 @@ public class LookAtAndReset : MonoBehaviour
 
     void Awake()
     {
-        if (!target) target = Player.instance.trackingOriginTransform;
+        if (!target) target = Player.instance.hmdTransform;
         buildingHoverDisplay = GetComponentInParent<BuildingHoverDisplay>();
     }
 
