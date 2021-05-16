@@ -242,7 +242,7 @@ public class PlayerManager : MonoBehaviour
             militaryPopulation += 1;
             WristDisplay?.SetMilitaryPopulationText(militaryPopulation.ToString());
         }
-
+        
         totalPopulation += unit.rtsUnitTypeData.populationCost;
         queueCount -= unit.rtsUnitTypeData.populationCost;
         if (queueCount < 0) queueCount = 0;

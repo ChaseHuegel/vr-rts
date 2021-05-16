@@ -88,7 +88,7 @@ public class Villager : Unit
     {
         base.Initialize();
 
-        HookIntoEvents();
+        HookIntoEvents();        
 
         //  Add goals in order of priority
         goals.Add<GoalBuildRepair>();
@@ -102,7 +102,7 @@ public class Villager : Unit
         if (!animator)
             Debug.Log("No animator component found.");
 
-        PlayerManager.instance.AddToPopulation(this);
+        PlayerManager.instance.AddToPopulation((Unit)this);
 
         //ChangeTaskVisuals();
     }
