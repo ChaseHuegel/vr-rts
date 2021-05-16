@@ -63,7 +63,7 @@ public class Damageable : Attributable
     }
 
     #region Functions
-
+    
     public bool isDead() { return GetAttributeValue(Attributes.HEALTH) == 0; }
     public bool isAlive() { return GetAttributeValue(Attributes.HEALTH) > 0; }
 

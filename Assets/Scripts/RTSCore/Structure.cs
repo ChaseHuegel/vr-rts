@@ -49,6 +49,9 @@ public class Structure : Obstacle, IFactioned
         if (!(damageable = GetComponent<Damageable>()))
             Debug.Log("No damageable component on structure!");
 
+        // Set health based on building database hit point value.
+        damageable.GetAttribute(Attributes.HEALTH).SetMax(rtsBuildingTypeData.hitPoints);
+
         // TODO: Could move this to be part of the RTSBuildingTypeData database and
         // pull the prefabs directly from their. Would simplify creation/addition of
         // new building types.
