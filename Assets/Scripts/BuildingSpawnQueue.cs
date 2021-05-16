@@ -34,10 +34,10 @@ public class BuildingSpawnQueue : MonoBehaviour
     void Awake()
     {
         if (!unitSpawnPoint)
-            {
-                Debug.Log("UnitSpawnPoint not set, disabling queue.");
-                this.gameObject.SetActive(false);
-            }
+        {
+            Debug.Log("UnitSpawnPoint not set, disabling queue.");
+            //this.gameObject.SetActive(false);
+        }
     }
 
     // Start is called before the first frame update
@@ -53,8 +53,8 @@ public class BuildingSpawnQueue : MonoBehaviour
             hButton.onButtonUp.AddListener(OnButtonUp);
         }
 
-        queueProgressText = GetComponentInChildren<TMPro.TextMeshPro>();
-        queueProgressImage = GetComponentInChildren<UnityEngine.UI.Image>();
+        queueProgressText = GetComponentInChildren<TMPro.TextMeshPro>(true);
+        queueProgressImage = GetComponentInChildren<UnityEngine.UI.Image>(true);
     }
 
     // Update is called once per frame
@@ -132,6 +132,7 @@ public class BuildingSpawnQueue : MonoBehaviour
 
         else if (unitSpawnQueue.Count == 1)
         {            
+            PlayerManager.instance.RemoveFromQueueCount(unitSpawnQueue.Last.Value.populationCost);
             unitSpawnQueue.RemoveLast();
             queueProgressImage.fillAmount = 0;
             queueProgressImage.enabled = false;
@@ -140,6 +141,7 @@ public class BuildingSpawnQueue : MonoBehaviour
         }
         else
         {
+            PlayerManager.instance.RemoveFromQueueCount(unitSpawnQueue.Last.Value.populationCost);
             unitSpawnQueue.RemoveLast();
         }
     }

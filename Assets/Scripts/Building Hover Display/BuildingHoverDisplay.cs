@@ -46,6 +46,8 @@ public class BuildingHoverDisplay : MonoBehaviour
         }
         else
             Debug.Log("Missing titleGameObject.");
+        
+        healthBar.enabled = true;
 
         if (startHidden)
             Hide();
@@ -86,11 +88,17 @@ public class BuildingHoverDisplay : MonoBehaviour
     public void HideHealthBar() 
     { 
         if (healthBar.GetFilledAmount() < 1.0f)
+        {
             healthBar.gameObject.SetActive(true); 
+            lookAtAndReset.enabled = true;
+        }
         else
+        {
             healthBar.gameObject.SetActive(false);
+            lookAtAndReset.enabled = false;
+        }
 
-        lookAtAndReset.enabled = false;
+        
     }
 
     public void HideTitle() 
@@ -108,9 +116,10 @@ public class BuildingHoverDisplay : MonoBehaviour
     public void ShowHealthBar() 
     { 
         if (healthBar)
+        {
             healthBar.gameObject.SetActive(true); 
-        
-        lookAtAndReset.enabled = true;
+            lookAtAndReset.enabled = true;
+        }
     }
     
     public void ShowTitle() 
@@ -120,21 +129,23 @@ public class BuildingHoverDisplay : MonoBehaviour
     }
     
     public void Hide() 
-    { 
+    {     
+        lookAtAndReset.enabled = false;
         HideMenu();
         HideTitle();
         HideHealthBar();
         visible = false;
-        lookAtAndReset.enabled = false;
+        
     }
     
     public void Show() 
     {
+        lookAtAndReset.enabled = true;
         ShowMenu(); 
         ShowTitle(); 
         ShowHealthBar();
         visible = true;
-        lookAtAndReset.enabled = true;
+        
     }
     
 }

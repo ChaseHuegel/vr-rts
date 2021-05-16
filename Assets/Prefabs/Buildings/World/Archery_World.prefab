@@ -332,10 +332,9 @@ MonoBehaviour:
   title: Archery
   startHidden: 1
   titleGameObject: {fileID: 1832078780024337312}
-  menuGameObject: {fileID: 5957737872376823284}
-  healthBar: {fileID: 0}
+  menuGameObject: {fileID: 5959909024254018618}
+  healthBar: {fileID: 5732047014957460856}
   buildingHoverDisplayGameObject: {fileID: 7589516896681575879}
-  secondKnockMaxDuration: 0.5
 --- !u!1 &6774225452457186318
 GameObject:
   m_ObjectHideFlags: 0
@@ -711,12 +710,24 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 5346413877091984185}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &5957737872376823284 stripped
+--- !u!1 &5959909024254018618 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 1773402440631066317, guid: 7fb19797225db2c4488e2990249299f1,
+  m_CorrespondingSourceObject: {fileID: 1767555883321468675, guid: 7fb19797225db2c4488e2990249299f1,
     type: 3}
   m_PrefabInstance: {fileID: 5346413877091984185}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &5732047014957460856 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 413791837215116865, guid: 7fb19797225db2c4488e2990249299f1,
+    type: 3}
+  m_PrefabInstance: {fileID: 5346413877091984185}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27381cd579d45e94c8db78a0a21ff9b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &7372687789394832580
 PrefabInstance:
   m_ObjectHideFlags: 0

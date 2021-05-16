@@ -27,10 +27,8 @@ public class PlayerManager : MonoBehaviour
     public Transform rHandHammerAttachmentpoint;
     public Transform lHandHammerAttachmentPoint;
      public PalmMenu palmMenu;
-    public Transform rHandClipboardAttachmentPoint;
     public Transform rHandPalmUpAttachmentPoint;
     public Transform rHandPalmUpTrackingPoint;
-    public Transform lHandClipboardAttachmentPoint;
     public Transform lHandPalmUpAttachmentPoint;
     public Transform lHandPalmUpTrackingPoint;
 
@@ -245,8 +243,8 @@ public class PlayerManager : MonoBehaviour
             WristDisplay?.SetMilitaryPopulationText(militaryPopulation.ToString());
         }
 
-        totalPopulation += 1;
-        queueCount--;
+        totalPopulation += unit.rtsUnitTypeData.populationCost;
+        queueCount -= unit.rtsUnitTypeData.populationCost;
         if (queueCount < 0) queueCount = 0;
         UpdateWristDisplayPopulationLimit();
     }
@@ -265,7 +263,7 @@ public class PlayerManager : MonoBehaviour
             WristDisplay.SetMilitaryPopulationText(militaryPopulation.ToString());
         }
 
-        totalPopulation -= 1;
+        totalPopulation -= unit.rtsUnitTypeData.populationCost;
         UpdateWristDisplayPopulationLimit();
     }
 
@@ -273,6 +271,11 @@ public class PlayerManager : MonoBehaviour
     {
         populationLimit += amountToIncreaseBy;
         UpdateWristDisplayPopulationLimit();
+    }
+
+    public void RemoveFromQueueCount(int amount = 1)
+    {
+        queueCount -= amount;
     }
 
     public void DecreasePopulationLimit(int amountDecreaseBy)
@@ -364,7 +367,7 @@ public class PlayerManager : MonoBehaviour
             return false;
         }
 
-        queueCount++;
+        queueCount += unitData.populationCost;
         return true;
     }
 
