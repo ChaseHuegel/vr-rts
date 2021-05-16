@@ -271,13 +271,13 @@ public class Villager : Unit
     // TODO: Should this be part of the unit base class to be
     // overridden by inheritors? Should unitType be changed to
     // unitTask or unitJob?
-    public void SetRTSUnitType(RTSUnitType rtsUnitType)
+    public void SetRTSUnitType(RTSUnitType unitType)
     {
         // Turn off all goals except the transport goal.
         goals.Clear();
         goals.Add<GoalTransportResource>();
 
-        switch ( rtsUnitType )
+        switch ( unitType )
         {
             case RTSUnitType.Builder:
                 state = UnitState.BUILDANDREPAIR;
@@ -364,6 +364,7 @@ public class Villager : Unit
 
         if (state == UnitState.GATHERING)
         {
+            // TODO: Why is this here?
             transportGoal = goals.Add<GoalTransportResource>();
 
             switch (resourceType)

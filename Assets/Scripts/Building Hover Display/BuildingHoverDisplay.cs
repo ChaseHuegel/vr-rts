@@ -12,8 +12,8 @@ public class BuildingHoverDisplay : MonoBehaviour
     [Header("Options")]
     public bool startHidden = true;
     public bool autohide = true;
-    public float autohideDelay = 10.0f;
-    public float autohideRadius = 1.5f;
+    public float autohideDelay = 15.0f;
+    public float autohideRadius = 2.0f;
     public GameObject titleGameObject;
     public GameObject menuGameObject;
     public HealthBar healthBar;

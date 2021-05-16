@@ -54,7 +54,7 @@ public class LookAtAndReset : MonoBehaviour
             }
         
 
-        Debug.Log("distance: " + distance + "Time: " + (Time.time - radiusExitTime).ToString());
+        //Debug.Log("distance: " + distance + "Time: " + (Time.time - radiusExitTime).ToString());
     }
 
     public void SetAutohideParameters(bool autohide, float delay, float radius)

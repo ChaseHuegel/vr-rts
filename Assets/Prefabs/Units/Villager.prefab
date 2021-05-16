@@ -18081,9 +18081,10 @@ MonoBehaviour:
     x: 0
     y: 0
   movementSpeed: 0.2
-  goalSearchDistance: 20
+  goalSearchDistance: 30
   factionID: 0
   rtsUnitType: 1
+  m_rtsUnitTypeData: {fileID: 0}
   state: 0
   currentResource: 0
   maxCargo: 10
@@ -20291,6 +20292,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8db83e2efefc4e74581e04fe6e8ab761, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rotationSpeed: 1
   target: {fileID: 0}
 --- !u!114 &1526176130986544142
 MonoBehaviour:

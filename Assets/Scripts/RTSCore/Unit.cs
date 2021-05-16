@@ -16,7 +16,7 @@ public class Unit : Actor, IFactioned
     // Make this read only, we should only be able to change unit properties
     // through the database.
     public UnitData rtsUnitTypeData { get { return m_rtsUnitTypeData; } }
-    protected UnitData m_rtsUnitTypeData;
+    public UnitData m_rtsUnitTypeData;
 
     public override void Initialize()
     {
@@ -30,8 +30,15 @@ public class Unit : Actor, IFactioned
         UpdateFaction();
     }
 
+    // TODO: Not fond of this setup but it works and I don't want to dig into
+    // this mess right now.
+    public void SetUnitData(UnitData unitData)
+    {
+        m_rtsUnitTypeData = unitData;
+    }
+
     public bool IsCivilian()
     {
-        return (int)rtsUnitType < (int)RTSUnitType.Scout;
+        return (int)rtsUnitTypeData.unitType < (int)RTSUnitType.Scout;
     }
 }

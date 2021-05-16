@@ -53,11 +53,15 @@ public class BuildingSpawnQueue : MonoBehaviour
         if (!(audioSource = gameObject.GetComponentInParent<AudioSource>()))
             Debug.Log("Missing audiosource component in parent.", this);
 
-        foreach(HoverButton hButton in GetComponentsInChildren<HoverButton>())
-        {
-            hButton.onButtonDown.AddListener(OnButtonDown);
-            hButton.onButtonUp.AddListener(OnButtonUp);
-        }
+        HoverButton[] hoverButtons = GetComponentsInChildren<HoverButton>(true);
+        if (hoverButtons.Length <= 0)
+            Debug.Log("No HoverButton components found in children.");
+        else
+            foreach(HoverButton hButton in hoverButtons)
+            {
+                hButton.onButtonDown.AddListener(OnButtonDown);
+                hButton.onButtonUp.AddListener(OnButtonUp);
+            }
 
         if (!(queueProgressText = GetComponentInChildren<TMPro.TextMeshPro>(true)))
             Debug.Log("queueProgressText object not found.", this);
@@ -99,6 +103,8 @@ public class BuildingSpawnQueue : MonoBehaviour
         PlayerManager.instance.RemoveUnitQueueCostFromStockpile(unitData);
 
         unitSpawnQueue.AddLast(unitData);
+
+        Debug.Log("Queued " + unitData.unitType);
     }
 
     private void UpdateUnitSpawnQueue()
@@ -162,14 +168,19 @@ public class BuildingSpawnQueue : MonoBehaviour
         {
             GameObject unit = GameObject.Instantiate<GameObject>(unitSpawnQueue.First.Value.prefab);
             unit.transform.position = unitSpawnPoint.transform.position;
-
+            
             Villager villager = unit.GetComponent<Villager>();
 
-            villager.SetRTSUnitType(unitSpawnQueue.First.Value.unitType);
+            // TODO: Not fond of this setup but it works and I don't want to dig into
+            // this mess right now.
+            villager.rtsUnitType = unitSpawnQueue.First.Value.unitType;
+            villager.SetUnitData(unitSpawnQueue.First.Value);
+            villager.SetRTSUnitType(villager.rtsUnitTypeData.unitType);
+            
 
             //RTSUnitType uType = unitSpawnQueue.Peek().unitType;
 
-            Debug.Log("Spawned " + villager.rtsUnitType + ".");
+            Debug.Log("Spawned " + villager.rtsUnitTypeData.unitType + ".");
         }
         else
             Debug.Log ("Spawn unit failed. Missing prefabToSpawn.");
