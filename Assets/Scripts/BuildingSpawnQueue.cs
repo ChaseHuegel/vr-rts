@@ -6,7 +6,6 @@ using Swordfish.Audio;
 using UnityEditor;
 using Valve.VR.InteractionSystem;
 
-[RequireComponent(typeof(Structure), typeof(Damageable), typeof(AudioSource))]
 public class BuildingSpawnQueue : MonoBehaviour
 {
     public RTSBuildingType buildingType;
@@ -46,13 +45,13 @@ public class BuildingSpawnQueue : MonoBehaviour
     void Start()
     {
         if (!(damageable = gameObject.GetComponentInParent<Damageable>()))
-            Debug.Log("Missing damageable component.", this);
+            Debug.Log("Missing damageable component in parent.", this);
 
         if (!(structure = gameObject.GetComponentInParent<Structure>()))
-            Debug.Log("Missing structure component.", this);
+            Debug.Log("Missing structure component in parent.", this);
 
-        if (!(audioSource = gameObject.GetComponent<AudioSource>()))
-            Debug.Log("Missing audiosource component.", this);
+        if (!(audioSource = gameObject.GetComponentInParent<AudioSource>()))
+            Debug.Log("Missing audiosource component in parent.", this);
 
         foreach(HoverButton hButton in GetComponentsInChildren<HoverButton>())
         {
