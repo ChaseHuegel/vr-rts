@@ -31,7 +31,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 7463673549537504673}
-  m_RootOrder: 6
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!135 &5331130124107164914
 SphereCollider:
@@ -107,8 +107,6 @@ Transform:
   - {fileID: 1190172525370163163}
   - {fileID: 6820017798905788740}
   - {fileID: 7842425539229277461}
-  - {fileID: 8231847355065589849}
-  - {fileID: 7459059606152391984}
   - {fileID: 336908430978766307}
   - {fileID: 6524810842588898781}
   - {fileID: 8286917267787247977}
@@ -236,8 +234,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6494f394dde4732498f2aecf5968b6e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boundingDimensions: {x: 2, y: 2}
-  boundingOrigin: {x: -0.125, y: -0.125}
+  boundingDimensions: {x: 5, y: 5}
+  boundingOrigin: {x: 0, y: 0}
   gridPosition:
     x: 0
     y: 0
@@ -363,7 +361,7 @@ Transform:
   m_LocalScale: {x: 0.2996666, y: 0.29966664, z: 0.29966664}
   m_Children: []
   m_Father: {fileID: 7463673549537504673}
-  m_RootOrder: 5
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &4218153703823054125
 BoxCollider:
@@ -378,66 +376,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 19.7391, y: 19.901281, z: 8.782958}
   m_Center: {x: 3.1824303, y: -0.048402537, z: -13.888426}
---- !u!1 &7495116034274365382
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8231847355065589849}
-  m_Layer: 10
-  m_Name: UnitSpawnPoint
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &8231847355065589849
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7495116034274365382}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.81, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 7463673549537504673}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &7756028582204013675
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7459059606152391984}
-  m_Layer: 10
-  m_Name: UnitRallyWaypoint
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &7459059606152391984
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7756028582204013675}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.81, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 7463673549537504673}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1190172525369763163
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -519,7 +457,7 @@ PrefabInstance:
     - target: {fileID: 2549361127315121917, guid: 7fb19797225db2c4488e2990249299f1,
         type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 2549361127315121917, guid: 7fb19797225db2c4488e2990249299f1,
         type: 3}

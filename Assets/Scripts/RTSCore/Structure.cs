@@ -63,7 +63,7 @@ public class Structure : Obstacle, IFactioned
             //buildingHealthBar.enabled = false;
         }
         else
-            Debug.Log("No building health bar found.");
+            Debug.Log("No building health bar found.", this);
     }
 
     public void TryRepair(int count, Actor repairer = null)

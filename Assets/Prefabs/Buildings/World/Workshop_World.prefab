@@ -36,8 +36,6 @@ Transform:
   - {fileID: 3147916539269304593}
   - {fileID: 3147916539592520393}
   - {fileID: 3147916540458554680}
-  - {fileID: 3147916540595743665}
-  - {fileID: 3147916540261467754}
   - {fileID: 6360747315438548667}
   - {fileID: 5988430286517167441}
   - {fileID: 6117109232689456831}
@@ -165,8 +163,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6494f394dde4732498f2aecf5968b6e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boundingDimensions: {x: 2, y: 1}
-  boundingOrigin: {x: -0.125, y: -0.125}
+  boundingDimensions: {x: 5, y: 5}
+  boundingOrigin: {x: 0, y: 0}
   gridPosition:
     x: 0
     y: 0
@@ -294,7 +292,7 @@ Transform:
   m_LocalScale: {x: 4.221771, y: 4.221771, z: 4.221771}
   m_Children: []
   m_Father: {fileID: 1458269125602579447}
-  m_RootOrder: 6
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!135 &6527972601871072898
 SphereCollider:
@@ -334,66 +332,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eddc86840f043bc4498c935173e22886, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &3147916540261467753
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3147916540261467754}
-  m_Layer: 10
-  m_Name: UnitRallyWaypoint
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &3147916540261467754
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3147916540261467753}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.81, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1458269125602579447}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &3147916540595743664
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3147916540595743665}
-  m_Layer: 10
-  m_Name: UnitSpawnPoint
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &3147916540595743665
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3147916540595743664}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.81, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1458269125602579447}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3776365353304212219
 GameObject:
   m_ObjectHideFlags: 0
@@ -423,7 +361,7 @@ Transform:
   m_LocalScale: {x: 5.8438544, y: 4.644557, z: 2.3658893}
   m_Children: []
   m_Father: {fileID: 1458269125602579447}
-  m_RootOrder: 5
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &3529567074068724081
 BoxCollider:
@@ -673,7 +611,7 @@ PrefabInstance:
     - target: {fileID: 2549361127315121917, guid: 7fb19797225db2c4488e2990249299f1,
         type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 2549361127315121917, guid: 7fb19797225db2c4488e2990249299f1,
         type: 3}

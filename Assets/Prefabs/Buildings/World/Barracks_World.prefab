@@ -31,7 +31,7 @@ Transform:
   m_LocalScale: {x: 5.347764, y: 5.347764, z: 5.347764}
   m_Children: []
   m_Father: {fileID: 5294818226043652003}
-  m_RootOrder: 6
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!135 &2582580688914408458
 SphereCollider:
@@ -107,8 +107,6 @@ Transform:
   - {fileID: 8568534243048474911}
   - {fileID: 8568534241609708638}
   - {fileID: 8568534242093876052}
-  - {fileID: 8568534242788098021}
-  - {fileID: 8568534241111052862}
   - {fileID: 2312339297404851283}
   - {fileID: 2658211119655900719}
   - {fileID: 1484492571045934776}
@@ -236,8 +234,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6494f394dde4732498f2aecf5968b6e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boundingDimensions: {x: 2, y: 2}
-  boundingOrigin: {x: -0.125, y: -0.125}
+  boundingDimensions: {x: 5, y: 5}
+  boundingOrigin: {x: 0, y: 0}
   gridPosition:
     x: 0
     y: 0
@@ -363,7 +361,7 @@ Transform:
   m_LocalScale: {x: 6.0511565, y: 6.2634788, z: 1.8068544}
   m_Children: []
   m_Father: {fileID: 5294818226043652003}
-  m_RootOrder: 5
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &7023464702619518751
 BoxCollider:
@@ -378,66 +376,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!1 &8568534241111052861
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8568534241111052862}
-  m_Layer: 10
-  m_Name: UnitRallyWaypoint
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &8568534241111052862
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8568534241111052861}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.81, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 5294818226043652003}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &8568534242788098020
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8568534242788098021}
-  m_Layer: 10
-  m_Name: UnitSpawnPoint
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &8568534242788098021
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8568534242788098020}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.81, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 5294818226043652003}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &4033215706713067589
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -448,7 +386,7 @@ PrefabInstance:
     - target: {fileID: 2549361127315121917, guid: 7fb19797225db2c4488e2990249299f1,
         type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 2549361127315121917, guid: 7fb19797225db2c4488e2990249299f1,
         type: 3}
@@ -514,12 +452,12 @@ PrefabInstance:
         type: 3}
       propertyPath: unitSpawnPoint
       value: 
-      objectReference: {fileID: 8568534242788098020}
+      objectReference: {fileID: 0}
     - target: {fileID: 3359649421896575058, guid: 7fb19797225db2c4488e2990249299f1,
         type: 3}
       propertyPath: unitRallyWaypoint
       value: 
-      objectReference: {fileID: 8568534241111052861}
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7fb19797225db2c4488e2990249299f1, type: 3}
 --- !u!1 &1484492571045934779 stripped

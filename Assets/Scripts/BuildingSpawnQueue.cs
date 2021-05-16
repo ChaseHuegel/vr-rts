@@ -6,12 +6,13 @@ using Swordfish.Audio;
 using UnityEditor;
 using Valve.VR.InteractionSystem;
 
+[RequireComponent(typeof(Structure), typeof(Damageable), typeof(AudioSource))]
 public class BuildingSpawnQueue : MonoBehaviour
 {
     public RTSBuildingType buildingType;
     [Header( "Unit Stuff" )]
-    public GameObject unitSpawnPoint;
-    public GameObject unitRallyWaypoint;
+    public Transform unitSpawnPoint;
+    public Transform unitRallyWaypoint;
 
     // Meant to be used so units pick a random spot within the radius to
     // go to so they don't fight over a single point.
@@ -33,19 +34,25 @@ public class BuildingSpawnQueue : MonoBehaviour
 
     void Awake()
     {
-        if (!unitSpawnPoint)
+        // TODO: Pick a spot around the building and set it as the spawn point
+        // when no spawn point is found. Using transform center currently.
+        if (!unitSpawnPoint) 
         {
-            Debug.Log("UnitSpawnPoint not set, disabling queue.");
-            //this.gameObject.SetActive(false);
+            unitSpawnPoint = transform;
+            Debug.Log("UnitSpawnPoint not set.", this);
         }
     }
 
-    // Start is called before the first frame update
     void Start()
     {
-        damageable = gameObject.GetComponentInParent<Damageable>();
-        structure = gameObject.GetComponentInParent<Structure>();
-        audioSource = gameObject.GetComponent<AudioSource>();
+        if (!(damageable = gameObject.GetComponentInParent<Damageable>()))
+            Debug.Log("Missing damageable component.", this);
+
+        if (!(structure = gameObject.GetComponentInParent<Structure>()))
+            Debug.Log("Missing structure component.", this);
+
+        if (!(audioSource = gameObject.GetComponent<AudioSource>()))
+            Debug.Log("Missing audiosource component.", this);
 
         foreach(HoverButton hButton in GetComponentsInChildren<HoverButton>())
         {
@@ -53,11 +60,13 @@ public class BuildingSpawnQueue : MonoBehaviour
             hButton.onButtonUp.AddListener(OnButtonUp);
         }
 
-        queueProgressText = GetComponentInChildren<TMPro.TextMeshPro>(true);
-        queueProgressImage = GetComponentInChildren<UnityEngine.UI.Image>(true);
+        if (!(queueProgressText = GetComponentInChildren<TMPro.TextMeshPro>(true)))
+            Debug.Log("queueProgressText object not found.", this);
+
+        if (!(queueProgressImage = GetComponentInChildren<UnityEngine.UI.Image>(true)))
+            Debug.Log("queueProgressImage not found.", this);
     }
 
-    // Update is called once per frame
     void Update()
     {
         UpdateUnitSpawnQueue();
