@@ -23,7 +23,6 @@ public class Villager : Unit
     protected UnitState previousState;   
 
     [Header("Villager")]
-    public bool startWithDefaultAI;
     public ResourceGatheringType currentResource;
     protected ResourceGatheringType previousResource;
     public GoalTransportResource transportGoal;
@@ -214,44 +213,47 @@ public class Villager : Unit
         //  Transport type always matches what our current resource is
         transportGoal.type = currentResource;
 
-        if (!GotoNearestGoalWithPriority())
-            state = UnitState.IDLE;
+        GotoNearestGoalWithPriority();
 
+        // if (!GotoNearestGoalWithPriority())
+        //     state = UnitState.IDLE;
+        
         switch (state)
         {
             case UnitState.ROAMING:
-                Goto(
-                    UnityEngine.Random.Range(gridPosition.x - 4, gridPosition.x + 4),
-                    UnityEngine.Random.Range(gridPosition.x - 4, gridPosition.x + 4)
-                );
-                ChangeTaskVisuals();
+                // Goto(
+                //     UnityEngine.Random.Range(gridPosition.x - 4, gridPosition.x + 4),
+                //     UnityEngine.Random.Range(gridPosition.x - 4, gridPosition.x + 4)
+                // );
+                // ChangeTaskVisuals();
             break;
 
             case UnitState.GATHERING:
-                if (IsCargoFull()) state = UnitState.IDLE;
+                //if (IsCargoFull()) state = UnitState.IDLE;
             break;
 
             case UnitState.TRANSPORTING:
-                if (!HasCargo()) state = UnitState.IDLE;
+                //if (!HasCargo()) state = UnitState.IDLE;
             break;
 
             case UnitState.BUILDANDREPAIR:
-                //  Do things
             break;
 
             case UnitState.IDLE:
-                //  Do some logic to roam or something
+                //animator.SetInteger("VillagerActorState", (int)ActorAnimationState.IDLE);
             break;
         }
 
-        if (IsMoving())
-            animator.SetInteger("VillagerActorState", (int)ActorAnimationState.MOVING);
-        else if (IsIdle())
-            animator.SetInteger("VillagerActorState", (int)ActorAnimationState.IDLE);
+        //Debug.Log("State: " + state.ToString() + " PreviousState: " + previousState.ToString());
 
+        if (IsMoving() )
+        {
+            animator.SetInteger("VillagerActorState", (int)ActorAnimationState.MOVING);
+        }
+        
         if (TaskChanged())
         {
-            ChangeTaskVisuals();
+            ChangeEquippedItems();
             //PlayChangeTaskAudio();
         }
 
@@ -362,7 +364,7 @@ public class Villager : Unit
         }
     }
 
-    public void ChangeTaskVisuals(ResourceGatheringType resourceType = ResourceGatheringType.None)
+    public void ChangeEquippedItems(ResourceGatheringType resourceType = ResourceGatheringType.None)
     {
         if (currentHandToolDisplayObject)
             currentHandToolDisplayObject.SetActive(false);
@@ -451,26 +453,30 @@ public class Villager : Unit
 
         Villager villager = (Villager)e.actor;
 
+        // TODO: ChangeEquippedItems should only be called when they change jobs.
         //  Need C# 7 in Unity for switching by type!!!
         if (e.goal is GoalGatherResource && !villager.IsCargoFull())
         {
             villager.state = UnitState.GATHERING;
             villager.currentResource = ((GoalGatherResource)e.goal).type;
             DisplayCargo(false);
-            ChangeTaskVisuals();
+            // TODO: ChangeEquippedItems should only be called when they change jobs.
+            ChangeEquippedItems();
             return;
         }
         else if (e.goal is GoalTransportResource && villager.HasCargo())
         {
             villager.state = UnitState.TRANSPORTING;
             DisplayCargo(true);
-            ChangeTaskVisuals();
+            // TODO: ChangeEquippedItems should only be called when they change jobs.            
+            ChangeEquippedItems();
             return;
         }
         else if (e.goal is GoalBuildRepair)
         {
             villager.state = UnitState.BUILDANDREPAIR;
-            ChangeTaskVisuals();
+            // TODO: ChangeEquippedItems should only be called when they change jobs.
+            ChangeEquippedItems();
             return;
         }
 
@@ -487,11 +493,14 @@ public class Villager : Unit
         Resource resource = e.cell.GetOccupant<Resource>();
         Structure structure = e.cell.GetOccupant<Structure>();
         Constructible construction = e.cell.GetOccupant<Constructible>();
-
-        if  (e.goal is GoalGatherResource && villager.TryGather(resource)) return;
-        else if (e.goal is GoalTransportResource && villager.TryDropoff(structure)) return;
-        else if (e.goal is GoalBuildRepair && (villager.TryRepair(structure) || villager.TryBuild(construction))) return;
-
+        
+        if  (e.goal is GoalGatherResource && villager.TryGather(resource) ||
+            (e.goal is GoalTransportResource && villager.TryDropoff(structure) ||
+            (e.goal is GoalBuildRepair && (villager.TryRepair(structure) || villager.TryBuild(construction))))) 
+        {
+            return;
+        } 
+        
         //  default cancel the interaction
         ResetGoal();
         e.Cancel();

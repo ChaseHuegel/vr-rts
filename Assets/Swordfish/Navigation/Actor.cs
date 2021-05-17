@@ -49,6 +49,7 @@ public class Actor : Body
 
 #region immutable methods
 
+    // TODO: This is doing nothing.
     public bool IsIdle() { return idle; }
     private bool UpdateIdle()
     {
@@ -253,6 +254,7 @@ public class Actor : Body
             }
 
             UpdateIdle();
+            // TODO: IsIdle doesn't do anything because 'idle' is never used.
             if (IsIdle()) ResetAI();
 
             Tick();
