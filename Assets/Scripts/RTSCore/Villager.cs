@@ -18,11 +18,12 @@ public enum UnitState
 [RequireComponent(typeof(Damageable))]
 public class Villager : Unit
 {
-    [Header("AI")]
+    [Header("AI")]    
     public UnitState state;
-    protected UnitState previousState;
+    protected UnitState previousState;   
 
     [Header("Villager")]
+    public bool startWithDefaultAI;
     public ResourceGatheringType currentResource;
     protected ResourceGatheringType previousResource;
     public GoalTransportResource transportGoal;
@@ -82,7 +83,7 @@ public class Villager : Unit
         audioSource = gameObject.GetComponent<AudioSource>();
         if (!audioSource)
             Debug.Log("No audiosource component found.");
-    }
+    }    
 
     public override void Initialize()
     {
@@ -91,11 +92,15 @@ public class Villager : Unit
         HookIntoEvents();        
 
         // Add goals in order of priority
-        // goals.Add<GoalBuildRepair>();
-        // goals.Add<GoalGatherResource>().type = ResourceGatheringType.Grain;
-        // goals.Add<GoalGatherResource>().type = ResourceGatheringType.Gold;
-        // goals.Add<GoalGatherResource>().type = ResourceGatheringType.Stone;
-        // goals.Add<GoalGatherResource>().type = ResourceGatheringType.Wood;
+        if (startWithDefaultAI)
+        {
+            goals.Add<GoalBuildRepair>();
+            goals.Add<GoalGatherResource>().type = ResourceGatheringType.Grain;
+            goals.Add<GoalGatherResource>().type = ResourceGatheringType.Gold;
+            goals.Add<GoalGatherResource>().type = ResourceGatheringType.Stone;
+            goals.Add<GoalGatherResource>().type = ResourceGatheringType.Wood;
+        }
+
         transportGoal = goals.Add<GoalTransportResource>();
 
         animator = gameObject.GetComponentInChildren<Animator>();
@@ -283,6 +288,15 @@ public class Villager : Unit
                 state = UnitState.BUILDANDREPAIR;
                 currentResource = ResourceGatheringType.None;
                 goals.Add<GoalBuildRepair>();
+                // Add these so they do something other than wait to repair once
+                // repairs are complete.
+                goals.Add<GoalGatherResource>().type = ResourceGatheringType.Grain;
+                goals.Add<GoalBuildRepair>();
+                goals.Add<GoalGatherResource>().type = ResourceGatheringType.Gold;
+                goals.Add<GoalBuildRepair>();
+                goals.Add<GoalGatherResource>().type = ResourceGatheringType.Stone;
+                goals.Add<GoalBuildRepair>();
+                goals.Add<GoalGatherResource>().type = ResourceGatheringType.Wood;                
                 ResetAI();
                 break;
 

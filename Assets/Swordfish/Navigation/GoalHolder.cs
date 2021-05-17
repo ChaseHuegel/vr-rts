@@ -18,6 +18,12 @@ public class GoalHolder
         entries = goals.ToArray();
     }
 
+    public void Clear()
+    {
+        goals.Clear();
+        entries = goals.ToArray();
+    }
+    
     public T Add<T>() where T : PathfindingGoal
     {
         T goal = (T)System.Activator.CreateInstance(typeof(T));
@@ -61,13 +67,7 @@ public class GoalHolder
     public List<T> GetAll<T>(Predicate<T> expression) where T : PathfindingGoal
     {
         return goals.FindAll( (Predicate<PathfindingGoal>)expression ).ConvertAll(x => x as T);
-    }
-
-    public void Clear()
-    {
-        goals.Clear();
-        entries = goals.ToArray();
-    }
+    }    
 }
 
 }
