@@ -90,7 +90,7 @@ public class Villager : Unit
 
         HookIntoEvents();        
 
-        //  Add goals in order of priority
+        // Add goals in order of priority
         // goals.Add<GoalBuildRepair>();
         // goals.Add<GoalGatherResource>().type = ResourceGatheringType.Grain;
         // goals.Add<GoalGatherResource>().type = ResourceGatheringType.Gold;
@@ -553,7 +553,7 @@ public class Villager : Unit
             return false;
 
         // Use the repair rate unless the building hasn't been constructed.
-        float rate = structure.IsBuilt() ? buildRate : repairRate;
+        float rate = structure.IsBuilt() ? repairRate : buildRate;
 
         //  Convert per second to per tick
         float amount = (rate / (60/Constants.ACTOR_TICK_RATE));

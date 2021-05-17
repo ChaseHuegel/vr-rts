@@ -16,6 +16,7 @@ public enum RTSBuildingType
     Keep = 40,
     Library = 45,
     Lumbermill = 50,
+    MiningCamp = 52,
     Market = 55,
     Stables = 60,
     Temple = 65,
