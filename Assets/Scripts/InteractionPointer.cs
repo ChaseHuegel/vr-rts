@@ -394,6 +394,12 @@ public float teleportFadeTime = 0.1f;
 		}
 		
 		//HighlightSelected( hitPointerInteractable );
+		
+		if (hitPointerInteractable)
+		{
+			hitPointerInteractable.GetComponent<BuildingHoverDisplay>()?.Show();
+			//Debug.Log(hitPointerInteractable.gameObject.name);
+		}
 
 		pointedAtPosition = hitInfo.point;
 		pointerEnd = hitInfo.point;

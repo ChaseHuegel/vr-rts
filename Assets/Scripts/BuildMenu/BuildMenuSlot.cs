@@ -48,7 +48,7 @@ public class BuildMenuSlot : MonoBehaviour
             grabCollider = GetComponent<SphereCollider>();
         
         GetMeshRenderers();
-
+        
         if (enabled)
         {
             grabCollider.enabled = true;
