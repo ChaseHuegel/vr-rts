@@ -175,7 +175,7 @@ public class BuildingSpawnQueue : MonoBehaviour
             // this mess right now.
             villager.rtsUnitType = unitSpawnQueue.First.Value.unitType;
             villager.SetUnitData(unitSpawnQueue.First.Value);
-            villager.SetRTSUnitType(villager.rtsUnitTypeData.unitType);
+            villager.SetVillagerUnitType(villager.rtsUnitTypeData.unitType);
             
 
             //RTSUnitType uType = unitSpawnQueue.Peek().unitType;

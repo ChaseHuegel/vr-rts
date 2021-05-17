@@ -91,15 +91,7 @@ public class Villager : Unit
 
         HookIntoEvents();        
 
-        // Add goals in order of priority
-        if (startWithDefaultAI)
-        {
-            goals.Add<GoalBuildRepair>();
-            goals.Add<GoalGatherResource>().type = ResourceGatheringType.Grain;
-            goals.Add<GoalGatherResource>().type = ResourceGatheringType.Gold;
-            goals.Add<GoalGatherResource>().type = ResourceGatheringType.Stone;
-            goals.Add<GoalGatherResource>().type = ResourceGatheringType.Wood;
-        }
+        SetVillagerUnitType(rtsUnitType);
 
         transportGoal = goals.Add<GoalTransportResource>();
 
@@ -181,19 +173,19 @@ public class Villager : Unit
             switch (node.type)
             {
                 case ResourceGatheringType.Gold:
-                    SetRTSUnitType(RTSUnitType.GoldMiner);
+                    SetVillagerUnitType(RTSUnitType.GoldMiner);
                     break;
 
                 case ResourceGatheringType.Grain:
-                    SetRTSUnitType(RTSUnitType.Farmer);
+                    SetVillagerUnitType(RTSUnitType.Farmer);
                     break;
 
                 case ResourceGatheringType.Wood:
-                    SetRTSUnitType(RTSUnitType.Lumberjack);
+                    SetVillagerUnitType(RTSUnitType.Lumberjack);
                     break;
 
                 case ResourceGatheringType.Stone:
-                    SetRTSUnitType(RTSUnitType.StoneMiner);
+                    SetVillagerUnitType(RTSUnitType.StoneMiner);
                     break;
 
                 default:
@@ -207,7 +199,7 @@ public class Villager : Unit
         Structure building = collision.gameObject.GetComponentInParent<Structure>();
         if (building)
         {
-            SetRTSUnitType(RTSUnitType.Builder);
+            SetVillagerUnitType(RTSUnitType.Builder);
             ResetAI();
         }
     }
@@ -276,7 +268,7 @@ public class Villager : Unit
     // TODO: Should this be part of the unit base class to be
     // overridden by inheritors? Should unitType be changed to
     // unitTask or unitJob?
-    public void SetRTSUnitType(RTSUnitType unitType)
+    public void SetVillagerUnitType(RTSUnitType unitType)
     {
         // Turn off all goals except the transport goal.
         goals.Clear();
@@ -287,16 +279,7 @@ public class Villager : Unit
             case RTSUnitType.Builder:
                 state = UnitState.BUILDANDREPAIR;
                 currentResource = ResourceGatheringType.None;
-                goals.Add<GoalBuildRepair>();
-                // Add these so they do something other than wait to repair once
-                // repairs are complete.
-                goals.Add<GoalGatherResource>().type = ResourceGatheringType.Grain;
-                goals.Add<GoalBuildRepair>();
-                goals.Add<GoalGatherResource>().type = ResourceGatheringType.Gold;
-                goals.Add<GoalBuildRepair>();
-                goals.Add<GoalGatherResource>().type = ResourceGatheringType.Stone;
-                goals.Add<GoalBuildRepair>();
-                goals.Add<GoalGatherResource>().type = ResourceGatheringType.Wood;                
+                goals.Add<GoalBuildRepair>();             
                 ResetAI();
                 break;
 
@@ -325,6 +308,17 @@ public class Villager : Unit
                 state = UnitState.GATHERING;
                 currentResource = ResourceGatheringType.Stone;
                 goals.Add<GoalGatherResource>().type = ResourceGatheringType.Stone;
+                ResetAI();
+                break;
+
+            case RTSUnitType.Drifter:
+                state = UnitState.ROAMING;
+                currentResource = ResourceGatheringType.None;
+                goals.Add<GoalBuildRepair>();
+                goals.Add<GoalGatherResource>().type = ResourceGatheringType.Grain;
+                goals.Add<GoalGatherResource>().type = ResourceGatheringType.Gold;
+                goals.Add<GoalGatherResource>().type = ResourceGatheringType.Stone;
+                goals.Add<GoalGatherResource>().type = ResourceGatheringType.Wood;
                 ResetAI();
                 break;
 
