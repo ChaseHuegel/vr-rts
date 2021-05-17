@@ -393,7 +393,7 @@ public float teleportFadeTime = 0.1f;
 			hitPointerInteractable = hitInfo.collider.GetComponentInParent<PointerInteractable>();
 		}
 		
-		HighlightSelected( hitPointerInteractable );
+		//HighlightSelected( hitPointerInteractable );
 
 		pointedAtPosition = hitInfo.point;
 		pointerEnd = hitInfo.point;
