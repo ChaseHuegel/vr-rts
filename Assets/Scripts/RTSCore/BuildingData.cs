@@ -21,6 +21,8 @@ public class BuildingData : ScriptableObject
     public GameObject fadedPreviewPrefab;
     public GameObject throwablePrefab;
     public GameObject worldPrefab;
+    public int boundingDimensionX;
+    public int boundingDimensionY;
     public List<RTSUnitType> allowedUnitsToSpawn;
     public SoundElement constructionCompletedAudio;
 }
