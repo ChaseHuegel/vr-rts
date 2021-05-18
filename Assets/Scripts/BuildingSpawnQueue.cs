@@ -70,6 +70,11 @@ public class BuildingSpawnQueue : MonoBehaviour
             Debug.Log("queueProgressImage not found.", this);
     }
 
+    public void SetUnitRallyWaypoint(Vector3 position)
+    {
+        unitRallyWaypoint.transform.position = position;
+    }
+
     void Update()
     {
         UpdateUnitSpawnQueue();

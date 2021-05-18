@@ -6,54 +6,59 @@ using Valve.VR.InteractionSystem;
 using UnityEngine.Events;
 
 public class BuildingHoverDisplay : MonoBehaviour
-{
-    public string title;
-
+{        
     [Header("Options")]
+    public string title;
     public bool startHidden = true;
     public bool autohide = true;
+
+    [Tooltip("Delay to hide the menu after the target has crossed the autohideDistance threshold.")]
     public float autohideDelay = 15.0f;
-    public float autohideRadius = 2.0f;
+    
+    [Tooltip("Distance required from object to target before the autohide timer starts.")]
+    public float autohideDistance = 2.0f;
+    public AutohideBillboard autoHideBillboard;
     public GameObject titleGameObject;
     public GameObject menuGameObject;
     public HealthBar healthBar;
-
+  
+    public GameObject[] objectsToAutohide;
+    
     protected LookAtAndReset lookAtAndReset;
     protected bool visible;
-    public GameObject buildingHoverDisplayGameObject;
     protected float lastKnockTime;
     protected float secondKnockMaxDuration = 0.5f;
 
-    // Start is called before the first frame update
     void Start()
     {
-        if (!(lookAtAndReset = buildingHoverDisplayGameObject.GetComponentInChildren<LookAtAndReset>()))
-            Debug.Log("LookAtAndReset component not found.", this);
+        if (!autoHideBillboard && !(autoHideBillboard = GetComponentInChildren<AutohideBillboard>()))
+            Debug.Log("AutoHideBillboard not found.", this);
+        else if (autoHideBillboard)        
+        {
+            autoHideBillboard.SetAutohideParameters(true, false, autohideDelay, autohideDistance);
+            autoHideBillboard.onAutoHide += Hide;
+        }
 
-        lookAtAndReset.SetAutohideParameters(autohide, autohideDelay, autohideRadius);
-
-        // TODO: Set this reference in all buildings for performance gains.
-        healthBar = GetComponentInChildren<HealthBar>(true);
-
-        if (titleGameObject)
+        // Set the title of the display.
+        if (!titleGameObject)
+            Debug.Log("titleGameObject not set.", this);
+        else
         {
             TextMeshPro titleText = titleGameObject.GetComponentInChildren<TextMeshPro>();
             if (titleText)
-            {
-                titleText.text = title;
-            }
+                titleGameObject.GetComponentInChildren<TextMeshPro>().text = title;
             else
-                Debug.Log("Missing textmeshpro component in child objects.");
-
-            // if (menuGameObject)
-            //     titleGameObject.transform.localPosition = new Vector3(0, 1.2f, 0);
-            // else
-            //     titleGameObject.transform.localPosition = new Vector3(0, 0.4f, 0);
+                Debug.Log("Missing TextMeshPro component in titleGameObject children.", this);
         }
-        else
-            Debug.Log("Missing titleGameObject.");
-        
-        healthBar.enabled = true;
+
+        // TODO: Set this reference in all buildings for performance gains.
+        if (!healthBar && !(healthBar = GetComponentInChildren<HealthBar>()))
+            Debug.Log("Healthbar component not found.", this);
+        else if (healthBar)
+        {
+            healthBar = GetComponentInChildren<HealthBar>(true);        
+            healthBar.enabled = true;
+        }
 
         if (startHidden)
             Hide();
@@ -69,9 +74,7 @@ public class BuildingHoverDisplay : MonoBehaviour
             AudioSource.PlayClipAtPoint(GameMaster.GetAudio("knock").GetClip(), transform.position);
                         
             if (Time.fixedTime - lastKnockTime <= secondKnockMaxDuration)
-            {
                 Toggle();
-            }
             
             lastKnockTime = Time.fixedTime;
         }
@@ -84,73 +87,42 @@ public class BuildingHoverDisplay : MonoBehaviour
         else
             Show();
     }
-
-    public void HideMenu() 
-    { 
-        if (menuGameObject)
-            menuGameObject.SetActive(false); 
-    }
-
-    public void HideHealthBar() 
-    { 
+    
+    public void Hide() 
+    {     
+        visible = false;
+        autoHideBillboard.enabled = false;
+        titleGameObject.SetActive(false); 
+        menuGameObject.SetActive(false); 
+            
         if (healthBar.GetFilledAmount() < 1.0f)
         {
             healthBar.gameObject.SetActive(true); 
-            lookAtAndReset.enabled = true;
+            autoHideBillboard.enabled = true;
         }
         else
         {
             healthBar.gameObject.SetActive(false);
-            lookAtAndReset.enabled = false;
+            autoHideBillboard.enabled = false;
         }
 
-        
-    }
-    
-    public void Hide() 
-    {     
-        lookAtAndReset.enabled = false;
-        HideMenu();
-        HideTitle();
-        HideHealthBar();
-        visible = false;
-        
+        foreach (GameObject go in objectsToAutohide)
+        {
+            go.SetActive(false);
+        }        
     }
     
     public void Show() 
     {
-        lookAtAndReset.enabled = true;
-        ShowMenu(); 
-        ShowTitle(); 
-        ShowHealthBar();
-        visible = true;        
-    }
-    
-    
-    private void HideTitle() 
-    { 
-        if (titleGameObject)
-            titleGameObject.SetActive(false); 
-    }
+        visible = true;  
+        titleGameObject.SetActive(true); 
+        autoHideBillboard.enabled = true;
+        menuGameObject.SetActive(true); 
+        healthBar.gameObject.SetActive(true); 
 
-    private void ShowMenu() 
-    { 
-        if (menuGameObject)
-            menuGameObject.SetActive(true); 
-    }
-
-    private void ShowHealthBar() 
-    { 
-        if (healthBar)
+        foreach (GameObject go in objectsToAutohide)
         {
-            healthBar.gameObject.SetActive(true); 
-            lookAtAndReset.enabled = true;
+            go.SetActive(true);
         }
-    }
-    
-    private void ShowTitle() 
-    { 
-        if (titleGameObject)
-            titleGameObject.SetActive(true); 
     }
 }

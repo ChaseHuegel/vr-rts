@@ -4,11 +4,13 @@ using UnityEngine.Events;
 using System.Collections;
 using Valve.VR.InteractionSystem;
 using Valve.VR;
+using Swordfish.Audio;
 
 public class InteractionPointer : MonoBehaviour
 {
+	public SteamVR_Action_Boolean uiInteractAction = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("InteractUI");
 	public SteamVR_Action_Boolean teleportAction = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("Teleport");
-	public SteamVR_Action_Boolean placeBuildingAction = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("BuildingPlacementPointer");
+	//public SteamVR_Action_Boolean placeBuildingAction = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("BuildingPlacementPointer");
 	public GameObject pointerAttachmentPoint;
 	public LayerMask traceLayerMask;
 	public LayerMask allowedPlacementLayers;
@@ -27,22 +29,25 @@ public class InteractionPointer : MonoBehaviour
 	public AudioSource reticleAudioSource;
 
 	[Header( "Sounds" )]
+	public SoundElement setRallyPointSound;
 	public AudioClip teleportSound;
 	public AudioClip pointerLoopSound;
 	public AudioClip pointerStopSound;
 	public AudioClip goodHighlightSound;
 	public AudioClip badHighlightSound;
 
+
 	private LineRenderer pointerLineRenderer;
 	private GameObject interactionPointerObject;
 	private Transform pointerStartTransform;
-public float teleportFadeTime = 0.1f;
+	public float teleportFadeTime = 0.1f;
 	public Hand pointerHand = null;
 	private Player player = null;
 	private TeleportArc teleportArc = null;
 	public bool visible = false;
 	private PointerInteractable[] interactableObjects;
 	private PointerInteractable pointedAtPointerInteractable;
+	private	BuildingSpawnQueue buildingSpawnQueue;
 	private Vector3 pointedAtPosition;
 	private Vector3 prevPointedAtPosition;
 	private float pointerShowStartTime = 0.0f;
@@ -127,6 +132,8 @@ public float teleportFadeTime = 0.1f;
 	public Hand placementHand;
 	public bool placementEnded;
 
+	public GameObject wayPointReticle;
+
 	public void StartPlacement(Hand hand)
 	{
 		placementEnded = false;
@@ -179,8 +186,27 @@ public float teleportFadeTime = 0.1f;
 			{
 				newPointerHand = hand;
 			}
+
+			//hand.uiInteractAction.GetStateDown(hand.handType)
+
+			// TODO: listen for different button to cancel
+			if (uiInteractAction.GetStateUp(hand.handType) && buildingSpawnQueue != null)
+			{
+				buildingSpawnQueue.SetUnitRallyWaypoint(wayPointReticle.transform.position);
+				headAudioSource.PlayOneShot(setRallyPointSound.GetClip());
+				wayPointReticle.SetActive(false);
+				buildingSpawnQueue = null;
+			}
+
+			if (uiInteractAction.GetStateDown(hand.handType))
+			{
+				if (pointedAtPointerInteractable != null)
+				{
+					buildingSpawnQueue = pointedAtPointerInteractable.GetComponentInChildren<BuildingSpawnQueue>();
+					wayPointReticle.SetActive(true);
+				}
+			}		
 		}
-			
 	}
 
 	private bool WasTeleportButtonReleased( Hand hand )
@@ -269,6 +295,10 @@ public float teleportFadeTime = 0.1f;
 	{
 		if ( !teleporting )
 		{
+			// TODO: Change this code to use buildings as teleportmarkers and when
+			// teleporting to buildings the menu for them is possible displayed if
+			// it has a build/upgrade menu.
+
 			// if ( pointedAtTeleportMarker != null && pointedAtTeleportMarker.locked == false )
 			// {
 				//Pointing at an unlocked teleport marker
@@ -395,10 +425,17 @@ public float teleportFadeTime = 0.1f;
 		
 		//HighlightSelected( hitPointerInteractable );
 		
-		if (hitPointerInteractable)
-		{
-			hitPointerInteractable.GetComponent<BuildingHoverDisplay>()?.Show();
+		if (hitPointerInteractable != null)
+		{		
+			//hitPointerInteractable.GetComponent<BuildingHoverDisplay>()?.Show();
+			
+			pointedAtPointerInteractable = hitPointerInteractable;			
 			//Debug.Log(hitPointerInteractable.gameObject.name);
+		}
+		else
+		{
+			pointedAtPointerInteractable = null;
+			//buildingSpawnQueue = null;
 		}
 
 		pointedAtPosition = hitInfo.point;
