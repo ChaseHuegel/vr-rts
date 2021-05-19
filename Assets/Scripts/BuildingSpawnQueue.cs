@@ -36,7 +36,7 @@ public class BuildingSpawnQueue : MonoBehaviour
     {
         // TODO: Pick a spot around the building and set it as the spawn point
         // when no spawn point is found. Using transform center currently.
-        if (!unitSpawnPoint) 
+        if (!unitSpawnPoint)
         {
             unitSpawnPoint = transform;
             Debug.Log("UnitSpawnPoint not set.", this);
@@ -70,7 +70,7 @@ public class BuildingSpawnQueue : MonoBehaviour
         if (!(queueProgressImage = GetComponentInChildren<UnityEngine.UI.Image>(true)))
             Debug.Log("queueProgressImage not found.", this);
 
-            
+
 
         UnitData unitData = GameMaster.GetUnit(RTSUnitType.Lumberjack);
         PlayerManager.instance.RemoveUnitQueueCostFromStockpile(unitData);
@@ -92,7 +92,7 @@ public class BuildingSpawnQueue : MonoBehaviour
             unitSpawnQueue.AddLast(unitData);
         }
 
-        
+
     }
 
     public void SetUnitRallyWaypoint(Vector3 position)
@@ -149,7 +149,7 @@ public class BuildingSpawnQueue : MonoBehaviour
             if (timeElapsed >= unitSpawnQueue.First.Value.queueTime)
             {
                 SpawnUnit();
-                timeElapsed = 0.0f;    
+                timeElapsed = 0.0f;
                 unitSpawnQueue.RemoveFirst();
                 queueProgressImage.fillAmount = 0;
                 queueProgressImage.enabled = false;
@@ -172,15 +172,15 @@ public class BuildingSpawnQueue : MonoBehaviour
     public void DequeueUnit()
     {
         if (unitSpawnQueue.Count <= 0)
-            return;     
+            return;
 
         else if (unitSpawnQueue.Count == 1)
-        {            
+        {
             PlayerManager.instance.RemoveFromQueueCount(unitSpawnQueue.Last.Value.populationCost);
             unitSpawnQueue.RemoveLast();
             queueProgressImage.fillAmount = 0;
             queueProgressImage.enabled = false;
-            queueProgressText.enabled = false;            
+            queueProgressText.enabled = false;
             RefreshQueueImages();
         }
         else
@@ -194,21 +194,21 @@ public class BuildingSpawnQueue : MonoBehaviour
     {
         if (unitSpawnQueue.First.Value.prefab)
         {
-            GameObject unit = GameObject.Instantiate<GameObject>(unitSpawnQueue.First.Value.prefab);
-            unit.transform.position = unitSpawnPoint.transform.position;
-            
+            GameObject unit = Instantiate(unitSpawnQueue.First.Value.prefab, unitSpawnPoint.transform.position, Quaternion.identity);
+
             Villager villager = unit.GetComponent<Villager>();
+            villager.SetPositionUnsafe(World.ToWorldSpace(unitSpawnPoint.transform.position));
 
             // TODO: Not fond of this setup but it works and I don't want to dig into
             // this mess right now.
-            
+
 
             //villager.SetVillagerUnitType(villager.rtsUnitTypeData.unitType);
 
-            //villager.state = UnitState.RALLYING;
-            villager.GotoForced(World.ToWorldSpace(unitRallyWaypoint.position));
             villager.SetVillagerUnitType(unitSpawnQueue.First.Value.unitType);
-            
+            villager.GotoForced(World.ToWorldSpace(unitRallyWaypoint.position));
+            villager.state = UnitState.RALLYING;
+
             // Debug.Log("Spawned " + villager.rtsUnitTypeData.unitType + ".");
         }
         else
@@ -226,7 +226,8 @@ public class BuildingSpawnQueue : MonoBehaviour
         int i = 0;
         foreach (UnitData unitData in unitSpawnQueue)
         {
-            QueueSlotImage[i].overrideSprite = unitData.queueImage;
+            //  TODO clamping is a bandaid fix
+            QueueSlotImage[Mathf.Clamp(i, 0, QueueSlotImage.Length-1)].overrideSprite = unitData.queueImage;
             i++;
         }
     }
@@ -268,7 +269,7 @@ public class BuildingSpawnQueue : MonoBehaviour
             HoverButton hoverButton = face.GetComponent<HoverButton>();
             hoverButton.localMoveDistance = new Vector3(0, 0, -0.3f);
             face.GetComponent<Interactable>().highlightOnHover = false;
-            
+
             // MovingPart (child of Face)
             GameObject buttonMovingPart = GameObject.CreatePrimitive(PrimitiveType.Cube);
             buttonMovingPart.AddComponent<UVCubeMap>();

@@ -19,9 +19,9 @@ public enum UnitState
 [RequireComponent(typeof(Damageable))]
 public class Villager : Unit
 {
-    [Header("AI")]    
+    [Header("AI")]
     public UnitState state;
-    protected UnitState previousState;   
+    protected UnitState previousState;
 
     [Header("Villager")]
     public ResourceGatheringType currentResource;
@@ -83,13 +83,13 @@ public class Villager : Unit
         audioSource = gameObject.GetComponent<AudioSource>();
         if (!audioSource)
             Debug.Log("No audiosource component found.");
-    }    
+    }
 
     public override void Initialize()
     {
         base.Initialize();
 
-        HookIntoEvents();        
+        HookIntoEvents();
 
         SetVillagerUnitType(rtsUnitType);
 
@@ -162,11 +162,11 @@ public class Villager : Unit
         if (Time.time - detachFromHandTime >= 3.0f)
         {
             canRetaskOnCollision = false;
-            return;   
+            return;
         }
-        
+
         Unfreeze();
-        
+
         Resource node = collision.gameObject.GetComponent<Resource>();
         if (node)
         {
@@ -215,12 +215,12 @@ public class Villager : Unit
         //  Transport type always matches what our current resource is
         transportGoal.type = currentResource;
 
-        GotoNearestGoalWithPriority();
+        // GotoNearestGoalWithPriority();
         if (state != UnitState.RALLYING)
-        {
-            //GotoNearestGoalWithPriority();
-        }
-        
+            GotoNearestGoalWithPriority();
+        else
+            Debug.Log("Rallying");
+
         switch (state)
         {
             case UnitState.ROAMING:
@@ -253,7 +253,7 @@ public class Villager : Unit
         {
             animator.SetInteger("VillagerActorState", (int)ActorAnimationState.MOVING);
         }
-        
+
         if (TaskChanged())
         {
             ChangeEquippedItems();
@@ -277,7 +277,7 @@ public class Villager : Unit
     {
         rtsUnitType = unitType;
         SetUnitData(GameMaster.Instance.unitDatabase.Get(unitType));
-        
+
         // Turn off all goals except the transport goal.
         goals.Clear();
         goals.Add<GoalTransportResource>();
@@ -287,7 +287,7 @@ public class Villager : Unit
             case RTSUnitType.Builder:
                 state = UnitState.BUILDANDREPAIR;
                 currentResource = ResourceGatheringType.None;
-                goals.Add<GoalBuildRepair>();             
+                goals.Add<GoalBuildRepair>();
                 ResetAI();
                 break;
 
@@ -474,7 +474,7 @@ public class Villager : Unit
         {
             villager.state = UnitState.TRANSPORTING;
             DisplayCargo(true);
-            // TODO: ChangeEquippedItems should only be called when they change jobs.            
+            // TODO: ChangeEquippedItems should only be called when they change jobs.
             ChangeEquippedItems();
             return;
         }
@@ -499,14 +499,14 @@ public class Villager : Unit
         Resource resource = e.cell.GetOccupant<Resource>();
         Structure structure = e.cell.GetOccupant<Structure>();
         Constructible construction = e.cell.GetOccupant<Constructible>();
-        
+
         if  (e.goal is GoalGatherResource && villager.TryGather(resource) ||
             (e.goal is GoalTransportResource && villager.TryDropoff(structure) ||
-            (e.goal is GoalBuildRepair && (villager.TryRepair(structure) || villager.TryBuild(construction))))) 
+            (e.goal is GoalBuildRepair && (villager.TryRepair(structure) || villager.TryBuild(construction)))))
         {
             return;
-        } 
-        
+        }
+
         //  default cancel the interaction
         ResetGoal();
         e.Cancel();
@@ -519,7 +519,7 @@ public class Villager : Unit
 
         if (!structure.CanDropOff(currentResource))
             return false;
-            
+
         //  Trigger a dropoff event
         DropoffEvent e = new DropoffEvent{ villager = this, structure = structure, resourceType = currentResource, amount = currentCargo };
         OnDropoffEvent?.Invoke(null, e);

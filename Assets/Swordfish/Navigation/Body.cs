@@ -158,6 +158,9 @@ public class Body : MonoBehaviour
     }
 
     //  Force to a spot in the grid regardless of what else is there
+    public void SetPositionUnsafe(Coord2D coord) { SetPositionUnsafe(coord.x, coord.y); }
+    public void SetPositionUnsafe(Coord3D coord) { SetPositionUnsafe(coord.x, coord.z); }
+    public void SetPositionUnsafe(Vector3 pos) { SetPositionUnsafe((int)pos.x, (int)pos.z); }
     public void SetPositionUnsafe(int x, int y)
     {
         Cell to = World.at(x, y);
