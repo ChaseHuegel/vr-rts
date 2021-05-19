@@ -185,12 +185,13 @@ public class BuildingSpawnQueue : MonoBehaviour
     {
         if (unitSpawnQueue.First.Value.prefab)
         {
-            GameObject unitGameObject = GameObject.Instantiate<GameObject>(unitSpawnQueue.First.Value.prefab);
-            unitGameObject.transform.position = unitSpawnPoint.transform.position;
+            GameObject unitGameObject = Instantiate(unitSpawnQueue.First.Value.prefab, unitSpawnPoint.transform.position, Quaternion.identity);
 
             Unit unit = unitGameObject.GetComponent<Unit>();
             unit.rtsUnitType = unitSpawnQueue.First.Value.unitType;
+            unit.SyncPosition();
             unit.GotoForced(World.ToWorldSpace(unitRallyWaypoint.position));
+            unit.LockPath();
             unit.SetUnitType(unitSpawnQueue.First.Value.unitType);
 
             // // Spawning villager

@@ -2,6 +2,16 @@ using UnityEngine;
 using Swordfish;
 using Swordfish.Navigation;
 
+public enum UnitState
+{
+    IDLE,
+    ROAMING,
+    GATHERING,
+    TRANSPORTING,
+    BUILDANDREPAIR,
+    RALLYING,
+}
+
 public class Unit : Actor, IFactioned
 {
     [Header("Faction")]
@@ -11,7 +21,12 @@ public class Unit : Actor, IFactioned
     public Faction GetFaction() { return faction; }
     public void UpdateFaction() { faction = GameMaster.Factions.Find(x => x.index == factionID); }
 
+    [Header("Unit")]
     public RTSUnitType rtsUnitType;
+
+    [Header("AI")]
+    public UnitState state;
+    protected UnitState previousState;
 
     // Make this read only, we should only be able to change unit properties
     // through the database.
@@ -26,7 +41,7 @@ public class Unit : Actor, IFactioned
         // of the information needed in inheritors if we want to sacrifice memory
         // for performance
         m_rtsUnitTypeData = GameMaster.GetUnit(rtsUnitType);
-        
+
         UpdateFaction();
     }
 

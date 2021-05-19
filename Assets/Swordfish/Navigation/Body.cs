@@ -173,6 +173,23 @@ public class Body : MonoBehaviour
         gridPosition.y = y;
     }
 
+    //  Update grid position to match transform position
+    //  This is similar to removing from grid, moving, and snapping to grid
+    //  Use this to fix desync between the grid and transform pos
+    public void SyncPosition()
+    {
+        Coord2D worldPos = World.ToWorldCoord(transform.position);
+
+        Cell to = World.at(worldPos.x, worldPos.y);
+        Cell from = GetCellAtGrid();
+
+        from.occupants.Remove(this);
+        to.occupants.Add(this);
+
+        gridPosition.x = worldPos.x;
+        gridPosition.y = worldPos.y;
+    }
+
     //  Remove this body from the grid
     public void RemoveFromGrid()
     {

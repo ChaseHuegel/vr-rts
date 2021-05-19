@@ -95,6 +95,7 @@ public class PathfindingGoal
     }
 
     public bool active = true;
+    public bool dynamic = true;
 
     public virtual bool CheckGoal(Cell cell) { return false; }
 

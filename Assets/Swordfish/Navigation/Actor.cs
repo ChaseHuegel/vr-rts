@@ -32,6 +32,7 @@ public class Actor : Body
     private byte pathWaitTries = 0;
     private byte pathRepathTries = 0;
     private bool frozen = false;
+    private bool isPathLocked = false;
 
     private byte pathTimer = 0;
     private byte tickTimer = 0;
@@ -74,6 +75,10 @@ public class Actor : Body
     {
         if (frozen = !frozen == false) UpdatePosition();
     }
+
+    public bool IsPathLocked() { return isPathLocked; }
+    public void LockPath() { isPathLocked = true; }
+    public void UnlockPath() { isPathLocked = false; }
 
     public void UpdatePosition()
     {
@@ -178,6 +183,8 @@ public class Actor : Body
     public bool GotoNearestGoalWithPriority() { return GotoNearestGoal(true); }
     public bool GotoNearestGoal(bool usePriority = false)
     {
+        if (isPathLocked) return false;
+
         if (!HasValidTarget())
             currentGoalTarget = FindNearestGoal(usePriority);
 
@@ -196,7 +203,7 @@ public class Actor : Body
     public void Goto(Vector3 vec, bool ignoreActors = true) { Goto((int)vec.x, (int)vec.z, ignoreActors); }
     public void Goto(int x, int y, bool ignoreActors = true)
     {
-        if (!HasValidPath() && DistanceTo(x, y) > 1)
+        if (!isPathLocked && !HasValidPath() && DistanceTo(x, y) > 1)
             PathManager.RequestPath(this, x, y, ignoreActors);
     }
 
@@ -205,7 +212,7 @@ public class Actor : Body
     public void GotoForced(Vector3 vec, bool ignoreActors = true) { Goto((int)vec.x, (int)vec.z, ignoreActors); }
     public void GotoForced(int x, int y, bool ignoreActors = true)
     {
-        if (DistanceTo(x, y) > 1)
+        if (!isPathLocked && DistanceTo(x, y) > 1)
             PathManager.RequestPath(this, x, y, ignoreActors);
     }
 
@@ -288,6 +295,9 @@ public class Actor : Body
         pathTimer++;
         if (pathTimer >= Constants.ACTOR_PATH_RATE)
             pathTimer = 0;  //  Ticked
+
+        //  Make certain pathing is unlocked as soon as the path is no longer valid
+        if (!HasValidPath()) UnlockPath();
 
         //  If we have a valid path, move along it
         if (HasValidPath())

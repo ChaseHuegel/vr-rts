@@ -11,9 +11,15 @@ public class GoalHolder
 
     public void Cycle()
     {
-        //  Push the first priority to the end of the list
-        goals.Add(goals[0]);
-        goals.RemoveAt(0);
+        //  Push the first dynamic priority to the end of the list
+        for (int i = 0; i < goals.Count; i++)
+        {
+            if (goals[i].dynamic)
+            {
+                goals.Add(goals[i]);
+                goals.RemoveAt(i);
+            }
+        }
 
         entries = goals.ToArray();
     }
@@ -23,7 +29,7 @@ public class GoalHolder
         goals.Clear();
         entries = goals.ToArray();
     }
-    
+
     public T Add<T>() where T : PathfindingGoal
     {
         T goal = (T)System.Activator.CreateInstance(typeof(T));
@@ -67,7 +73,7 @@ public class GoalHolder
     public List<T> GetAll<T>(Predicate<T> expression) where T : PathfindingGoal
     {
         return goals.FindAll( (Predicate<PathfindingGoal>)expression ).ConvertAll(x => x as T);
-    }    
+    }
 }
 
 }

@@ -6,23 +6,9 @@ using Swordfish;
 using Swordfish.Navigation;
 using Valve.VR.InteractionSystem;
 
-public enum UnitState
-{
-    IDLE,
-    ROAMING,
-    GATHERING,
-    TRANSPORTING,
-    BUILDANDREPAIR,
-    RALLYING,
-}
-
 [RequireComponent(typeof(Damageable))]
 public class Villager : Unit
 {
-    [Header("AI")]
-    public UnitState state;
-    protected UnitState previousState;
-
     [Header("Villager")]
     public ResourceGatheringType currentResource;
     protected ResourceGatheringType previousResource;
@@ -215,11 +201,9 @@ public class Villager : Unit
         //  Transport type always matches what our current resource is
         transportGoal.type = currentResource;
 
-        // GotoNearestGoalWithPriority();
-        if (state != UnitState.RALLYING)
-            GotoNearestGoalWithPriority();
-        else
-            Debug.Log("Rallying");
+        GotoNearestGoalWithPriority();
+        // if (state != UnitState.RALLYING)
+        //     GotoNearestGoalWithPriority();
 
         switch (state)
         {
@@ -275,7 +259,7 @@ public class Villager : Unit
     // unitTask or unitJob?
     public override void SetUnitType(RTSUnitType unitType)
     {
-        base.SetUnitType(unitType);        
+        base.SetUnitType(unitType);
         SetUnitData(GameMaster.Instance.unitDatabase.Get(unitType));
 
         // Turn off all goals except the transport goal.
