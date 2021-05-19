@@ -72,16 +72,24 @@ public class BuildingSpawnQueue : MonoBehaviour
 
             
 
-        UnitData unitData = GameMaster.GetUnit(RTSUnitType.Farmer);
+        UnitData unitData = GameMaster.GetUnit(RTSUnitType.Lumberjack);
         PlayerManager.instance.RemoveUnitQueueCostFromStockpile(unitData);
 
         if (buildingType == RTSBuildingType.Townhall)
-        {unitSpawnQueue.AddLast(unitData);
-        unitSpawnQueue.AddLast(unitData);
-        unitSpawnQueue.AddLast(unitData);
-        unitSpawnQueue.AddLast(unitData);
-        unitSpawnQueue.AddLast(unitData);
-        unitSpawnQueue.AddLast(unitData);
+        {
+            unitSpawnQueue.AddLast(unitData);
+            unitSpawnQueue.AddLast(unitData);
+            unitSpawnQueue.AddLast(unitData);
+            unitSpawnQueue.AddLast(unitData);
+            unitSpawnQueue.AddLast(unitData);
+            unitSpawnQueue.AddLast(unitData);
+            unitSpawnQueue.AddLast(unitData);
+            unitSpawnQueue.AddLast(unitData);
+            unitSpawnQueue.AddLast(unitData);
+            unitSpawnQueue.AddLast(unitData);
+            unitSpawnQueue.AddLast(unitData);
+            unitSpawnQueue.AddLast(unitData);
+            unitSpawnQueue.AddLast(unitData);
         }
 
         
@@ -197,9 +205,9 @@ public class BuildingSpawnQueue : MonoBehaviour
 
             //villager.SetVillagerUnitType(villager.rtsUnitTypeData.unitType);
 
-            villager.state = UnitState.RALLYING;
-            villager.Goto(World.ToWorldSpace(unitRallyWaypoint.position));
-            //villager.SetVillagerUnitType(villager.rtsUnitTypeData.unitType);
+            //villager.state = UnitState.RALLYING;
+            villager.GotoForced(World.ToWorldSpace(unitRallyWaypoint.position));
+            villager.SetVillagerUnitType(unitSpawnQueue.First.Value.unitType);
             
             // Debug.Log("Spawned " + villager.rtsUnitTypeData.unitType + ".");
         }

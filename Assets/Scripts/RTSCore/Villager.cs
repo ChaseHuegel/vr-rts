@@ -215,14 +215,11 @@ public class Villager : Unit
         //  Transport type always matches what our current resource is
         transportGoal.type = currentResource;
 
+        GotoNearestGoalWithPriority();
         if (state != UnitState.RALLYING)
         {
             //GotoNearestGoalWithPriority();
         }
-        // else if (!IsMoving())
-        // {            
-        //     state = UnitState.IDLE;
-        // }
         
         switch (state)
         {
@@ -280,7 +277,7 @@ public class Villager : Unit
     {
         rtsUnitType = unitType;
         SetUnitData(GameMaster.Instance.unitDatabase.Get(unitType));
-
+        
         // Turn off all goals except the transport goal.
         goals.Clear();
         goals.Add<GoalTransportResource>();
