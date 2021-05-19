@@ -5,6 +5,7 @@ using Swordfish;
 using Swordfish.Audio;
 using UnityEditor;
 using Valve.VR.InteractionSystem;
+using Swordfish.Navigation;
 
 public class BuildingSpawnQueue : MonoBehaviour
 {
@@ -68,6 +69,22 @@ public class BuildingSpawnQueue : MonoBehaviour
 
         if (!(queueProgressImage = GetComponentInChildren<UnityEngine.UI.Image>(true)))
             Debug.Log("queueProgressImage not found.", this);
+
+            
+
+        UnitData unitData = GameMaster.GetUnit(RTSUnitType.Farmer);
+        PlayerManager.instance.RemoveUnitQueueCostFromStockpile(unitData);
+
+        if (buildingType == RTSBuildingType.Townhall)
+        {unitSpawnQueue.AddLast(unitData);
+        unitSpawnQueue.AddLast(unitData);
+        unitSpawnQueue.AddLast(unitData);
+        unitSpawnQueue.AddLast(unitData);
+        unitSpawnQueue.AddLast(unitData);
+        unitSpawnQueue.AddLast(unitData);
+        }
+
+        
     }
 
     public void SetUnitRallyWaypoint(Vector3 position)
@@ -109,7 +126,7 @@ public class BuildingSpawnQueue : MonoBehaviour
 
         unitSpawnQueue.AddLast(unitData);
 
-        Debug.Log("Queued " + unitData.unitType);
+        // Debug.Log("Queued " + unitData.unitType);
     }
 
     private void UpdateUnitSpawnQueue()
@@ -167,9 +184,7 @@ public class BuildingSpawnQueue : MonoBehaviour
 
     private void SpawnUnit()
     {
-        GameObject prefabToSpawn = unitSpawnQueue.First.Value.prefab;
-
-        if (prefabToSpawn)
+        if (unitSpawnQueue.First.Value.prefab)
         {
             GameObject unit = GameObject.Instantiate<GameObject>(unitSpawnQueue.First.Value.prefab);
             unit.transform.position = unitSpawnPoint.transform.position;
@@ -178,14 +193,15 @@ public class BuildingSpawnQueue : MonoBehaviour
 
             // TODO: Not fond of this setup but it works and I don't want to dig into
             // this mess right now.
-            villager.rtsUnitType = unitSpawnQueue.First.Value.unitType;
-            villager.SetUnitData(unitSpawnQueue.First.Value);
-            villager.SetVillagerUnitType(villager.rtsUnitTypeData.unitType);
             
 
-            //RTSUnitType uType = unitSpawnQueue.Peek().unitType;
+            //villager.SetVillagerUnitType(villager.rtsUnitTypeData.unitType);
 
-            Debug.Log("Spawned " + villager.rtsUnitTypeData.unitType + ".");
+            villager.state = UnitState.RALLYING;
+            villager.Goto(World.ToWorldSpace(unitRallyWaypoint.position));
+            //villager.SetVillagerUnitType(villager.rtsUnitTypeData.unitType);
+            
+            // Debug.Log("Spawned " + villager.rtsUnitTypeData.unitType + ".");
         }
         else
             Debug.Log ("Spawn unit failed. Missing prefabToSpawn.");

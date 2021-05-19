@@ -44,9 +44,7 @@ public class ThrowableBuilding : Throwable
             PlayerManager.instance.RemoveResourcesFromStockpile(rtsBuildingTypeData.goldCost,
                                                 rtsBuildingTypeData.grainCost,
                                                 rtsBuildingTypeData.woodCost,
-                                                rtsBuildingTypeData.stoneCost);
-
-            
+                                                rtsBuildingTypeData.stoneCost);            
         }
         else
         {
@@ -75,8 +73,8 @@ public class ThrowableBuilding : Throwable
                 Cell curCell = World.at(x, y);
                 if (curCell.occupied)
                 {
-                    Debug.Log(string.Format("x: {0} y: {1} name: {2}",
-                            curCell.x, curCell.y, curCell.occupants[0].name));
+                    // Debug.Log(string.Format("x: {0} y: {1} name: {2}",
+                    //         curCell.x, curCell.y, curCell.occupants[0].name));
                     return true;
                 }
             }

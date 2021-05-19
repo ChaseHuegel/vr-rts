@@ -190,21 +190,29 @@ public class InteractionPointer : MonoBehaviour
 			//hand.uiInteractAction.GetStateDown(hand.handType)
 
 			// TODO: listen for different button to cancel
-			if (uiInteractAction.GetStateUp(hand.handType) && buildingSpawnQueue != null)
+			if (!PlayerManager.instance.handBuildMenu.activeSelf)			
 			{
-				buildingSpawnQueue.SetUnitRallyWaypoint(wayPointReticle.transform.position);
-				headAudioSource.PlayOneShot(setRallyPointSound.GetClip());
-				wayPointReticle.SetActive(false);
-				buildingSpawnQueue = null;
-			}
-
-			if (uiInteractAction.GetStateDown(hand.handType))
-			{
-				if (pointedAtPointerInteractable != null)
+				if (uiInteractAction.GetStateUp(hand.handType) && buildingSpawnQueue != null)
 				{
-					buildingSpawnQueue = pointedAtPointerInteractable.GetComponentInChildren<BuildingSpawnQueue>();
-					wayPointReticle.SetActive(true);
+					buildingSpawnQueue.SetUnitRallyWaypoint(wayPointReticle.transform.position);
+					headAudioSource.PlayOneShot(setRallyPointSound.GetClip());
+					wayPointReticle.SetActive(false);
+					buildingSpawnQueue = null;
 				}
+
+				if (uiInteractAction.GetStateDown(hand.handType))
+				{
+					if (pointedAtPointerInteractable != null)
+					{
+						buildingSpawnQueue = pointedAtPointerInteractable.GetComponentInChildren<BuildingSpawnQueue>();
+						wayPointReticle.SetActive(true);
+					}
+				}
+			}
+			else
+			{
+				// Make sure it's off.
+				wayPointReticle.SetActive(false);
 			}		
 		}
 	}
