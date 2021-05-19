@@ -11,6 +11,7 @@ public class BuildingHoverDisplay : MonoBehaviour
     public string title;
     public bool startHidden = true;
     public bool autohide = true;
+    public bool menuEnabled = false;
 
     [Tooltip("Delay to hide the menu after the target has crossed the autohideDistance threshold.")]
     public float autohideDelay = 15.0f;
@@ -24,7 +25,6 @@ public class BuildingHoverDisplay : MonoBehaviour
   
     public GameObject[] objectsToAutohide;
     
-    protected LookAtAndReset lookAtAndReset;
     protected bool visible;
     protected float lastKnockTime;
     protected float secondKnockMaxDuration = 0.5f;
@@ -93,7 +93,7 @@ public class BuildingHoverDisplay : MonoBehaviour
         visible = false;
         autoHideBillboard.enabled = false;
         titleGameObject.SetActive(false); 
-        menuGameObject.SetActive(false); 
+        menuGameObject?.SetActive(false); 
             
         if (healthBar.GetFilledAmount() < 1.0f)
         {
@@ -117,7 +117,9 @@ public class BuildingHoverDisplay : MonoBehaviour
         visible = true;  
         titleGameObject.SetActive(true); 
         autoHideBillboard.enabled = true;
-        menuGameObject.SetActive(true); 
+
+        if (menuEnabled) menuGameObject?.SetActive(true); 
+        
         healthBar.gameObject.SetActive(true); 
 
         foreach (GameObject go in objectsToAutohide)

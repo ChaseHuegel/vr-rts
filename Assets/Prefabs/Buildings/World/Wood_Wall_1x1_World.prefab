@@ -384,15 +384,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77fa36798b3959c44a46f72d97c3fdb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  title: Stone Wall
+  title: Wood Wall
   startHidden: 1
   autohide: 1
+  menuEnabled: 0
   autohideDelay: 15
-  autohideRadius: 2
+  autohideDistance: 2
+  autoHideBillboard: {fileID: 0}
   titleGameObject: {fileID: 5225217045295518414}
   menuGameObject: {fileID: 241702790559704404}
   healthBar: {fileID: 2189656127344921622}
-  buildingHoverDisplayGameObject: {fileID: 4088155405363029161}
+  objectsToAutohide: []
 --- !u!1 &4163599710305216681
 GameObject:
   m_ObjectHideFlags: 0
@@ -679,12 +681,6 @@ PrefabInstance:
       objectReference: {fileID: 8981660122271185643}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7fb19797225db2c4488e2990249299f1, type: 3}
---- !u!1 &4088155405363029161 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2549361127315121918, guid: 7fb19797225db2c4488e2990249299f1,
-    type: 3}
-  m_PrefabInstance: {fileID: 2007811441701093975}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4088155405363029162 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2549361127315121917, guid: 7fb19797225db2c4488e2990249299f1,
