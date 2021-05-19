@@ -6,6 +6,10 @@ public class Faction : ScriptableObject
 {
     public byte index;
     public Color color = Color.blue;
+    public Material buildingMaterial;
+    public Material unitMaterial;
+
+    public GameObject bannerObject;
     private BitMask mask;
 
     public void SetAlly(Faction faction)
