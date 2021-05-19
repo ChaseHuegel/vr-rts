@@ -36,7 +36,7 @@ public class BuildingSpawnQueue : MonoBehaviour
     {
         // TODO: Pick a spot around the building and set it as the spawn point
         // when no spawn point is found. Using transform center currently.
-        if (!unitSpawnPoint) 
+        if (!unitSpawnPoint)
         {
             unitSpawnPoint = transform;
             Debug.Log("UnitSpawnPoint not set.", this);
@@ -70,7 +70,7 @@ public class BuildingSpawnQueue : MonoBehaviour
         if (!(queueProgressImage = GetComponentInChildren<UnityEngine.UI.Image>(true)))
             Debug.Log("queueProgressImage not found.", this);
 
-            
+
 
         UnitData unitData = GameMaster.GetUnit(RTSUnitType.Lumberjack);
         PlayerManager.instance.RemoveUnitQueueCostFromStockpile(unitData);
@@ -86,7 +86,7 @@ public class BuildingSpawnQueue : MonoBehaviour
             unitSpawnQueue.AddLast(unitData);
         }
 
-        
+
     }
 
     public void SetUnitRallyWaypoint(Vector3 position)
@@ -140,7 +140,7 @@ public class BuildingSpawnQueue : MonoBehaviour
             if (timeElapsed >= unitSpawnQueue.First.Value.queueTime)
             {
                 SpawnUnit();
-                timeElapsed = 0.0f;    
+                timeElapsed = 0.0f;
                 unitSpawnQueue.RemoveFirst();
                 queueProgressImage.fillAmount = 0;
                 queueProgressImage.enabled = false;
@@ -163,15 +163,15 @@ public class BuildingSpawnQueue : MonoBehaviour
     public void DequeueUnit()
     {
         if (unitSpawnQueue.Count <= 0)
-            return;     
+            return;
 
         else if (unitSpawnQueue.Count == 1)
-        {            
+        {
             PlayerManager.instance.RemoveFromQueueCount(unitSpawnQueue.Last.Value.populationCost);
             unitSpawnQueue.RemoveLast();
             queueProgressImage.fillAmount = 0;
             queueProgressImage.enabled = false;
-            queueProgressText.enabled = false;            
+            queueProgressText.enabled = false;
             RefreshQueueImages();
         }
         else
@@ -192,12 +192,12 @@ public class BuildingSpawnQueue : MonoBehaviour
             unit.rtsUnitType = unitSpawnQueue.First.Value.unitType;
             unit.GotoForced(World.ToWorldSpace(unitRallyWaypoint.position));
             unit.SetUnitType(unitSpawnQueue.First.Value.unitType);
-            
-            // // Spawning villager        
+
+            // // Spawning villager
             // if (unit.rtsUnitType <= RTSUnitType.Scout)
             // {
             //     Villager villager = unitGameObject.GetComponent<Villager>();
-            //     //villager.state = UnitState.RALLYING;                
+            //     //villager.state = UnitState.RALLYING;
             //     villager.SetVillagerUnitType(unitSpawnQueue.First.Value.unitType);
             // }
 
@@ -218,7 +218,8 @@ public class BuildingSpawnQueue : MonoBehaviour
         int i = 0;
         foreach (UnitData unitData in unitSpawnQueue)
         {
-            QueueSlotImage[i].overrideSprite = unitData.queueImage;
+            //  TODO clamping is a bandaid fix
+            QueueSlotImage[Mathf.Clamp(i, 0, QueueSlotImage.Length-1)].overrideSprite = unitData.queueImage;
             i++;
         }
     }
@@ -238,17 +239,17 @@ public class BuildingSpawnQueue : MonoBehaviour
             buildingHoverButton.transform.parent = this.transform.GetChild(0).transform;
             buildingHoverButton.transform.localPosition = startPosition;
             //buildingHoverButton.transform.Rotate(0, -90, 0);
-            buildingHoverButton.name = string.Format("Queue_{0}_Button",unitType.ToString());            
+            buildingHoverButton.name = string.Format("Queue_{0}_Button",unitType.ToString());
             buildingHoverButton.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
 
             QueueUnitButton queueUnitButton = buildingHoverButton.GetComponent<QueueUnitButton>();
             queueUnitButton.unitTypeToQueue = unitType;
             queueUnitButton.buttonLockedObject = buttonLockPrefab;
-            
+
             // Base (child of BuildingHoverButton)
             GameObject buttonBase = GameObject.CreatePrimitive(PrimitiveType.Cube);
             buttonBase.name = "Base";
-            buttonBase.transform.parent = buildingHoverButton.transform;            
+            buttonBase.transform.parent = buildingHoverButton.transform;
             buttonBase.transform.localScale = new Vector3(0.309937507f,0.312250197f,0.0399999991f);
             buttonBase.transform.localPosition = new Vector3(0.0f, 0.0f, -0.016f);
             //buttonBase.transform.Rotate(0, -90, 0);
@@ -263,7 +264,7 @@ public class BuildingSpawnQueue : MonoBehaviour
             HoverButton hoverButton = face.GetComponent<HoverButton>();
             hoverButton.localMoveDistance = new Vector3(0, 0, -0.3f);
             face.GetComponent<Interactable>().highlightOnHover = false;
-            
+
             // Lock (child of BuildingHoverButton)
             GameObject buttonLock = Instantiate<GameObject>(buttonLockPrefab);
             buttonLock.transform.parent = buildingHoverButton.transform;
