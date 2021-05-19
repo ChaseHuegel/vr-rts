@@ -9,10 +9,6 @@ using Valve.VR.InteractionSystem;
 [RequireComponent(typeof(Damageable))]
 public class Soldier : Unit
 {
-    [Header("AI")]    
-    public UnitState state;
-    protected UnitState previousState;   
-
     [Header("Soldier")]
     protected Animator animator;
     private AudioSource audioSource;
@@ -47,7 +43,7 @@ public class Soldier : Unit
 
         HookIntoEvents();        
 
-        SetUnitType(rtsUnitType);
+        //SetUnitType(rtsUnitType);
 
         animator = gameObject.GetComponentInChildren<Animator>();
         if (!animator)

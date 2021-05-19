@@ -37,22 +37,18 @@ public class Unit : Actor, IFactioned
     {
         base.Initialize();
 
-        // TODO: This could be removed at a later date and replaced with specific fetches
-        // of the information needed in inheritors if we want to sacrifice memory
-        // for performance
-        m_rtsUnitTypeData = GameMaster.GetUnit(rtsUnitType);
+        if (!m_rtsUnitTypeData)
+            m_rtsUnitTypeData = GameMaster.GetUnit(rtsUnitType);
 
         UpdateFaction();
     }
 
-    public virtual void SetUnitData(UnitData unitData)
-    {
-        m_rtsUnitTypeData = unitData;
-    }
-
+    //=========================================================================
+    // Sets the unit type and unitTypeData
     public virtual void SetUnitType(RTSUnitType unitType)
     {
         rtsUnitType = unitType;
+        m_rtsUnitTypeData = GameMaster.GetUnit(rtsUnitType);
     }
 
     public virtual bool IsCivilian()

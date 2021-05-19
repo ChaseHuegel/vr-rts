@@ -74,9 +74,8 @@ public class Villager : Unit
     public override void Initialize()
     {
         base.Initialize();
-
         HookIntoEvents();
-
+        
         SetUnitType(rtsUnitType);
 
         transportGoal = goals.Add<GoalTransportResource>();
@@ -260,7 +259,7 @@ public class Villager : Unit
     public override void SetUnitType(RTSUnitType unitType)
     {
         base.SetUnitType(unitType);
-        SetUnitData(GameMaster.Instance.unitDatabase.Get(unitType));
+        // SetUnitData(GameMaster.Instance.unitDatabase.Get(unitType));
 
         // Turn off all goals except the transport goal.
         goals.Clear();
@@ -272,35 +271,35 @@ public class Villager : Unit
                 state = UnitState.BUILDANDREPAIR;
                 currentResource = ResourceGatheringType.None;
                 goals.Add<GoalBuildRepair>();
-                ResetAI();
+                // ResetAI();
                 break;
 
             case RTSUnitType.Farmer:
                 state = UnitState.GATHERING;
                 currentResource = ResourceGatheringType.Grain;
                 goals.Add<GoalGatherResource>().type = ResourceGatheringType.Grain;
-                ResetAI();
+                //ResetAI();
                 break;
 
             case RTSUnitType.Lumberjack:
                 state = UnitState.GATHERING;
                 currentResource = ResourceGatheringType.Wood;
                 goals.Add<GoalGatherResource>().type = ResourceGatheringType.Wood;
-                ResetAI();
+                //ResetAI();
                 break;
 
             case RTSUnitType.GoldMiner:
                 state = UnitState.GATHERING;
                 currentResource = ResourceGatheringType.Gold;
                 goals.Add<GoalGatherResource>().type = ResourceGatheringType.Gold;
-                ResetAI();
+                // ResetAI();
                 break;
 
             case RTSUnitType.StoneMiner:
                 state = UnitState.GATHERING;
                 currentResource = ResourceGatheringType.Stone;
                 goals.Add<GoalGatherResource>().type = ResourceGatheringType.Stone;
-                ResetAI();
+                // ResetAI();
                 break;
 
             case RTSUnitType.Drifter:
@@ -311,7 +310,7 @@ public class Villager : Unit
                 goals.Add<GoalGatherResource>().type = ResourceGatheringType.Gold;
                 goals.Add<GoalGatherResource>().type = ResourceGatheringType.Stone;
                 goals.Add<GoalGatherResource>().type = ResourceGatheringType.Wood;
-                ResetAI();
+                // ResetAI();
                 break;
 
             default:

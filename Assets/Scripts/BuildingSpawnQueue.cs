@@ -186,21 +186,11 @@ public class BuildingSpawnQueue : MonoBehaviour
         if (unitSpawnQueue.First.Value.prefab)
         {
             GameObject unitGameObject = Instantiate(unitSpawnQueue.First.Value.prefab, unitSpawnPoint.transform.position, Quaternion.identity);
-
             Unit unit = unitGameObject.GetComponent<Unit>();
             unit.rtsUnitType = unitSpawnQueue.First.Value.unitType;
             unit.SyncPosition();
             unit.GotoForced(World.ToWorldSpace(unitRallyWaypoint.position));
             unit.LockPath();
-            unit.SetUnitType(unitSpawnQueue.First.Value.unitType);
-
-            // // Spawning villager
-            // if (unit.rtsUnitType <= RTSUnitType.Scout)
-            // {
-            //     Villager villager = unitGameObject.GetComponent<Villager>();
-            //     //villager.state = UnitState.RALLYING;
-            //     villager.SetVillagerUnitType(unitSpawnQueue.First.Value.unitType);
-            // }
 
             // Debug.Log("Spawned " + unit.rtsUnitType + ".");
         }
