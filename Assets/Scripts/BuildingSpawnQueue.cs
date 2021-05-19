@@ -29,7 +29,7 @@ public class BuildingSpawnQueue : MonoBehaviour
     public AudioClip onButtonUpAudio;
 
     public Material buttonBaseMaterial;
-    public Material buttonLockMaterial;
+    public GameObject buttonLockPrefab;
     protected AudioSource audioSource;
 
     void Awake()
@@ -84,12 +84,6 @@ public class BuildingSpawnQueue : MonoBehaviour
             unitSpawnQueue.AddLast(unitData);
             unitSpawnQueue.AddLast(unitData);
             unitSpawnQueue.AddLast(unitData);
-            unitSpawnQueue.AddLast(unitData);
-            unitSpawnQueue.AddLast(unitData);
-            unitSpawnQueue.AddLast(unitData);
-            unitSpawnQueue.AddLast(unitData);
-            unitSpawnQueue.AddLast(unitData);
-            unitSpawnQueue.AddLast(unitData);
         }
 
         
@@ -125,9 +119,6 @@ public class BuildingSpawnQueue : MonoBehaviour
 
         if (!PlayerManager.instance.CanQueueUnit(unitTypeToQueue))
             return;
-
-        // if (!allowedUnitsToQueue.Contains(unitTypeToQueue))
-        //     return;
 
         UnitData unitData = GameMaster.GetUnit(unitTypeToQueue);
         PlayerManager.instance.RemoveUnitQueueCostFromStockpile(unitData);
@@ -194,25 +185,26 @@ public class BuildingSpawnQueue : MonoBehaviour
     {
         if (unitSpawnQueue.First.Value.prefab)
         {
-            GameObject unit = GameObject.Instantiate<GameObject>(unitSpawnQueue.First.Value.prefab);
-            unit.transform.position = unitSpawnPoint.transform.position;
-            
-            Villager villager = unit.GetComponent<Villager>();
+            GameObject unitGameObject = GameObject.Instantiate<GameObject>(unitSpawnQueue.First.Value.prefab);
+            unitGameObject.transform.position = unitSpawnPoint.transform.position;
 
-            // TODO: Not fond of this setup but it works and I don't want to dig into
-            // this mess right now.
+            Unit unit = unitGameObject.GetComponent<Unit>();
+            unit.rtsUnitType = unitSpawnQueue.First.Value.unitType;
+            unit.GotoForced(World.ToWorldSpace(unitRallyWaypoint.position));
+            unit.SetUnitType(unitSpawnQueue.First.Value.unitType);
             
+            // // Spawning villager        
+            // if (unit.rtsUnitType <= RTSUnitType.Scout)
+            // {
+            //     Villager villager = unitGameObject.GetComponent<Villager>();
+            //     //villager.state = UnitState.RALLYING;                
+            //     villager.SetVillagerUnitType(unitSpawnQueue.First.Value.unitType);
+            // }
 
-            //villager.SetVillagerUnitType(villager.rtsUnitTypeData.unitType);
-
-            //villager.state = UnitState.RALLYING;
-            villager.GotoForced(World.ToWorldSpace(unitRallyWaypoint.position));
-            villager.SetVillagerUnitType(unitSpawnQueue.First.Value.unitType);
-            
-            // Debug.Log("Spawned " + villager.rtsUnitTypeData.unitType + ".");
+            // Debug.Log("Spawned " + unit.rtsUnitType + ".");
         }
         else
-            Debug.Log ("Spawn unit failed. Missing prefabToSpawn.");
+            Debug.Log (string.Format("Spawn {0} failed. Missing prefabToSpawn.", unitSpawnQueue.First.Value.unitType));
     }
 
     private void RefreshQueueImages()
@@ -242,21 +234,24 @@ public class BuildingSpawnQueue : MonoBehaviour
             UnitData typeData = GameMaster.GetUnit(unitType);
 
             // BuildingHoverButton
-            GameObject buildingHoverButton = new GameObject("BuildingHoverButton");
-            buildingHoverButton.transform.parent = this.transform;
+            GameObject buildingHoverButton = new GameObject("BuildingHoverButton", typeof(QueueUnitButton));
+            buildingHoverButton.transform.parent = this.transform.GetChild(0).transform;
             buildingHoverButton.transform.localPosition = startPosition;
-            buildingHoverButton.transform.Rotate(0, -90, 0);
-            buildingHoverButton.name = "Queue" + unitType.ToString();
-            buildingHoverButton.AddComponent<QueueUnitButton>();
-            buildingHoverButton.GetComponent<QueueUnitButton>().unitTypeToQueue = unitType;
+            //buildingHoverButton.transform.Rotate(0, -90, 0);
+            buildingHoverButton.name = string.Format("Queue_{0}_Button",unitType.ToString());            
+            buildingHoverButton.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
 
+            QueueUnitButton queueUnitButton = buildingHoverButton.GetComponent<QueueUnitButton>();
+            queueUnitButton.unitTypeToQueue = unitType;
+            queueUnitButton.buttonLockedObject = buttonLockPrefab;
+            
             // Base (child of BuildingHoverButton)
             GameObject buttonBase = GameObject.CreatePrimitive(PrimitiveType.Cube);
             buttonBase.name = "Base";
-            buttonBase.transform.parent = buildingHoverButton.transform;
-            buttonBase.transform.localPosition = new Vector3(4.45360016e-08f, 0.00300000003f, -0.0160000101f);
+            buttonBase.transform.parent = buildingHoverButton.transform;            
             buttonBase.transform.localScale = new Vector3(0.309937507f,0.312250197f,0.0399999991f);
-            buttonBase.transform.Rotate(0, -90, 0);
+            buttonBase.transform.localPosition = new Vector3(0.0f, 0.0f, -0.016f);
+            //buttonBase.transform.Rotate(0, -90, 0);
             buttonBase.transform.GetComponent<MeshRenderer>().sharedMaterial = buttonBaseMaterial;
 
             // Face (child of BuildingHoverButton)
@@ -264,11 +259,19 @@ public class BuildingSpawnQueue : MonoBehaviour
             face.transform.parent = buildingHoverButton.transform;
             face.transform.localPosition = Vector3.zero;
             face.transform.localScale = new Vector3(0.259453088f,0.259453088f,0.0487500019f);
-            face.transform.Rotate(0, -90, 0);
+            //face.transform.Rotate(0, -90, 0);
             HoverButton hoverButton = face.GetComponent<HoverButton>();
             hoverButton.localMoveDistance = new Vector3(0, 0, -0.3f);
             face.GetComponent<Interactable>().highlightOnHover = false;
             
+            // Lock (child of BuildingHoverButton)
+            GameObject buttonLock = Instantiate<GameObject>(buttonLockPrefab);
+            buttonLock.transform.parent = buildingHoverButton.transform;
+            buttonLock.transform.localPosition = new Vector3(0.0f, 0.0f, 0.0254f);
+            buttonLock.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+            buttonLock.SetActive(false);
+            //buttonLock.transform.Rotate(0, -90, 0);
+
             // MovingPart (child of Face)
             GameObject buttonMovingPart = GameObject.CreatePrimitive(PrimitiveType.Cube);
             buttonMovingPart.AddComponent<UVCubeMap>();
@@ -276,11 +279,12 @@ public class BuildingSpawnQueue : MonoBehaviour
             buttonMovingPart.transform.SetParent(face.transform);
             buttonMovingPart.transform.localScale = new Vector3(1, 1, 1);
             buttonMovingPart.transform.localPosition = Vector3.zero;
-            buttonMovingPart.transform.Rotate(0, -90, 0);
+            //buttonMovingPart.transform.Rotate(0, -90, 0);
             buttonMovingPart.transform.GetComponent<MeshRenderer>().sharedMaterial = typeData.worldButtonMaterial;
 
             hoverButton.movingPart = buttonMovingPart.transform;
-
+            //buildingHoverButton.transform.Rotate(0, 0, 0);
+            buildingHoverButton.transform.localRotation = Quaternion.identity;
             if (Time.time <= 0)
                 Destroy(buttonBase.GetComponent<BoxCollider>());
             else

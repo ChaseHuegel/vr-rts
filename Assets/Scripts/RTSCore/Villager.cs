@@ -91,7 +91,7 @@ public class Villager : Unit
 
         HookIntoEvents();        
 
-        SetVillagerUnitType(rtsUnitType);
+        SetUnitType(rtsUnitType);
 
         transportGoal = goals.Add<GoalTransportResource>();
 
@@ -173,19 +173,19 @@ public class Villager : Unit
             switch (node.type)
             {
                 case ResourceGatheringType.Gold:
-                    SetVillagerUnitType(RTSUnitType.GoldMiner);
+                    SetUnitType(RTSUnitType.GoldMiner);
                     break;
 
                 case ResourceGatheringType.Grain:
-                    SetVillagerUnitType(RTSUnitType.Farmer);
+                    SetUnitType(RTSUnitType.Farmer);
                     break;
 
                 case ResourceGatheringType.Wood:
-                    SetVillagerUnitType(RTSUnitType.Lumberjack);
+                    SetUnitType(RTSUnitType.Lumberjack);
                     break;
 
                 case ResourceGatheringType.Stone:
-                    SetVillagerUnitType(RTSUnitType.StoneMiner);
+                    SetUnitType(RTSUnitType.StoneMiner);
                     break;
 
                 default:
@@ -199,7 +199,7 @@ public class Villager : Unit
         Structure building = collision.gameObject.GetComponentInParent<Structure>();
         if (building)
         {
-            SetVillagerUnitType(RTSUnitType.Builder);
+            SetUnitType(RTSUnitType.Builder);
             ResetAI();
         }
     }
@@ -273,9 +273,9 @@ public class Villager : Unit
     // TODO: Should this be part of the unit base class to be
     // overridden by inheritors? Should unitType be changed to
     // unitTask or unitJob?
-    public void SetVillagerUnitType(RTSUnitType unitType)
+    public override void SetUnitType(RTSUnitType unitType)
     {
-        rtsUnitType = unitType;
+        base.SetUnitType(unitType);        
         SetUnitData(GameMaster.Instance.unitDatabase.Get(unitType));
         
         // Turn off all goals except the transport goal.

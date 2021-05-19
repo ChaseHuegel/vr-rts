@@ -30,14 +30,17 @@ public class Unit : Actor, IFactioned
         UpdateFaction();
     }
 
-    // TODO: Not fond of this setup but it works and I don't want to dig into
-    // this mess right now.
-    public void SetUnitData(UnitData unitData)
+    public virtual void SetUnitData(UnitData unitData)
     {
         m_rtsUnitTypeData = unitData;
     }
 
-    public bool IsCivilian()
+    public virtual void SetUnitType(RTSUnitType unitType)
+    {
+        rtsUnitType = unitType;
+    }
+
+    public virtual bool IsCivilian()
     {
         return (int)rtsUnitTypeData.unitType < (int)RTSUnitType.Scout;
     }
