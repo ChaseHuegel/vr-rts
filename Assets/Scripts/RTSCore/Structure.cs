@@ -12,7 +12,6 @@ public class Structure : Obstacle, IFactioned
     // Set to grab data about this building from database.
     public RTSBuildingType rtsBuildingType;
     public BuildingData rtsBuildingTypeData { get; private set; }
-    protected HealthBar buildingHealthBar;
 
     // Built signals that building construction has completed, it does
     // not signal whether a building needs repairs after having been
@@ -57,27 +56,30 @@ public class Structure : Obstacle, IFactioned
 
         // Set max health based on building database hit point value.
         damageable.GetAttribute(Attributes.HEALTH).SetMax(rtsBuildingTypeData.hitPoints);
-        damageable.OnDamageEvent += OnDamage;
+        damageable.OnDamageEvent += OnDamage;        
 
         // TODO: Could move this to be part of the RTSBuildingTypeData database and
         // pull the prefabs directly from their. Would simplify creation/addition of
         // new building types.
         SetConstructionPhasePrefabs();
+
         if (!constructionPhaseBeginPrefab || !constructionPhaseMiddlePrefab || !constructionPhaseEndPrefab)
             Debug.Log("Missing construction stage prefab(s).");
 
-        buildingHealthBar = GetComponentInChildren<HealthBar>( true );
-        if (buildingHealthBar)
-        {
-            RefreshHealthBar();
-            //buildingHealthBar.enabled = false;
-        }
-        else
-            Debug.Log("No building health bar found.", this);        
+        
+        RefreshConstructionVisuals();
+        
+        // buildingHealthBar = GetComponentInChildren<HealthBar>( true );
+        // if (buildingHealthBar)
+        // {
+            // RefreshConstructionVisuals();
+        // }
+        // else
+        //     Debug.Log("No building health bar found.", this);        
     }
     void OnDamage(object sender, Damageable.DamageEvent e)
     {
-        RefreshHealthBar();
+        RefreshConstructionVisuals();
         
         if (AttributeHandler.GetAttributePercent(Attributes.HEALTH) <= 0.0f)
         {
@@ -89,14 +91,18 @@ public class Structure : Obstacle, IFactioned
     public void TryRepair(float count, Actor repairer = null)
     {
         AttributeHandler.Heal(count, AttributeChangeCause.HEALED, repairer.AttributeHandler);
-        RefreshHealthBar();
+        RefreshConstructionVisuals();
     }
 
-    void RefreshHealthBar()
+    void RefreshConstructionVisuals()
     {
+        // TODO: This should be handled by the healthbar itself now through events, so remove
+        //    if no problems show up
+        /*
         buildingHealthBar.SetFilledAmount(damageable.GetAttributePercent(Attributes.HEALTH));
         if (damageable.GetAttributePercent(Attributes.HEALTH) < 1.0f)
             buildingHealthBar.gameObject.SetActive(true);
+        */
 
         // Only set display of building stages if construction hasn't been
         // completed yet.

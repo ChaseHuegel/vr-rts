@@ -35,13 +35,16 @@ public class HealthBar : MonoBehaviour
         gameObject.SetActive(true);
 
         if (!damageable)
+            damageable = GetComponentInParent<Damageable>();            
+
+        if (damageable)
         {
-            damageable = GetComponentInParent<Damageable>();
-            if (damageable)
-            {
-                damageable.OnDamageEvent += OnDamage;
-                SetFilledAmount(damageable.GetAttributePercent(Attributes.HEALTH));
-            }
+            damageable.OnDamageEvent += OnDamage;
+            SetFilledAmount(damageable.GetAttributePercent(Attributes.HEALTH));
+        }
+        else
+        {
+            Debug.Log("Damageable component not found in parent.", this);
         }
     }
 
@@ -84,6 +87,7 @@ public class HealthBar : MonoBehaviour
         if (showText)
             healthBarStatusText.gameObject.SetActive(false);
     }
+
     public void Show()
     {   
         if (showBarBackground)

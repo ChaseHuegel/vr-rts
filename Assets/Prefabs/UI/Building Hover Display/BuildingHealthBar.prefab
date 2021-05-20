@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7335933671591160007
 RectTransform:
   m_ObjectHideFlags: 0
@@ -92,7 +92,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3776859412992128699
 RectTransform:
   m_ObjectHideFlags: 0
@@ -163,7 +163,6 @@ GameObject:
   - component: {fileID: 2515380338425746119}
   - component: {fileID: 6293054210589279721}
   - component: {fileID: 1617928767370082820}
-  - component: {fileID: 8937231464112017746}
   m_Layer: 0
   m_Name: BuildingHealthBar
   m_TagString: Untagged
@@ -273,19 +272,7 @@ MonoBehaviour:
   healthBarBackgroundImage: {fileID: 7411243161522318580}
   healthBarForegroundImage: {fileID: 2762500674012305534}
   healthBarStatusText: {fileID: 4068124543681298752}
---- !u!114 &8937231464112017746
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4696321577107034512}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8db83e2efefc4e74581e04fe6e8ab761, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 0}
+  damageable: {fileID: 0}
 --- !u!1 &6398815820477387259
 GameObject:
   m_ObjectHideFlags: 0
@@ -304,7 +291,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4114516494803576173
 RectTransform:
   m_ObjectHideFlags: 0

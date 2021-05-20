@@ -54,6 +54,6 @@ public class Unit : Actor, IFactioned
 
     public virtual bool IsCivilian()
     {
-        return (int)rtsUnitTypeData.unitType < (int)RTSUnitType.Scout;
+        return (int)rtsUnitTypeData.unitType < (int)RTSUnitType.Swordsman;
     }
 }
