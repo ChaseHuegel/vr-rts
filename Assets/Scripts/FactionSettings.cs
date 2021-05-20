@@ -15,7 +15,7 @@ public class FactionSettings : MonoBehaviour
 
     void OnValidate()
     {
-        SetSkin();
+        //SetSkin();
     }
 
     private void SetSkin()

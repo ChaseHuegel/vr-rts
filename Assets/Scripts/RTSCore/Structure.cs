@@ -25,12 +25,18 @@ public class Structure : Obstacle, IFactioned
     private GameObject constructionPhaseBeginPrefab;
     private GameObject constructionPhaseMiddlePrefab;
     private GameObject constructionPhaseEndPrefab;
-
+    private AudioSource audioSource;
     public Faction GetFaction() { return faction; }
     public void UpdateFaction() { faction = GameMaster.Factions.Find(x => x.index == factionID); }
 
     public bool NeedsRepairs() { return damageable.GetAttributePercent(Attributes.HEALTH) < 1f; }
     public bool IsBuilt() { return built; }
+
+    public void Awake()
+    {
+        if (!(audioSource = GetComponent<AudioSource>()))
+            Debug.Log("Audiosource component not found.");
+    }
 
     public override void Initialize()
     {
@@ -49,8 +55,9 @@ public class Structure : Obstacle, IFactioned
         if (!(damageable = GetComponent<Damageable>()))
             Debug.Log("No damageable component on structure!");
 
-        // Set health based on building database hit point value.
+        // Set max health based on building database hit point value.
         damageable.GetAttribute(Attributes.HEALTH).SetMax(rtsBuildingTypeData.hitPoints);
+        damageable.OnDamageEvent += OnDamage;
 
         // TODO: Could move this to be part of the RTSBuildingTypeData database and
         // pull the prefabs directly from their. Would simplify creation/addition of
@@ -66,7 +73,17 @@ public class Structure : Obstacle, IFactioned
             //buildingHealthBar.enabled = false;
         }
         else
-            Debug.Log("No building health bar found.", this);
+            Debug.Log("No building health bar found.", this);        
+    }
+    void OnDamage(object sender, Damageable.DamageEvent e)
+    {
+        RefreshHealthBar();
+        
+        if (AttributeHandler.GetAttributePercent(Attributes.HEALTH) <= 0.0f)
+        {
+            audioSource.PlayOneShot(GameMaster.GetAudio("building_collapsed").GetClip());
+            Destroy(this.gameObject);
+        }
     }
 
     public void TryRepair(float count, Actor repairer = null)
@@ -90,7 +107,7 @@ public class Structure : Obstacle, IFactioned
                 constructionPhaseEndPrefab.SetActive(true);
                 constructionPhaseMiddlePrefab.SetActive(false);
                 constructionPhaseBeginPrefab.SetActive(false);
-                AudioSource.PlayClipAtPoint(rtsBuildingTypeData.constructionCompletedAudio?.GetClip(), transform.position, 0.25f);
+                audioSource.PlayOneShot(rtsBuildingTypeData.constructionCompletedAudio?.GetClip());
                 built = true;
 
                 PlayerManager.instance.IncreasePopulationLimit(rtsBuildingTypeData.populationSupported);

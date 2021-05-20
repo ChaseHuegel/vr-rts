@@ -1128,7 +1128,7 @@ MonoBehaviour:
     x: 0
     y: 0
   movementSpeed: 0.2
-  goalSearchDistance: 20
+  goalSearchDistance: 30
   factionID: 1
   rtsUnitType: 8
   state: 0
@@ -1501,6 +1501,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TimeDelayToHideMenu: 3
   objectToToggle: {fileID: 3349680017260002646}
+--- !u!114 &6486651590541324792
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8083499775152996403}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cba59d4511b9cd1418531dc6ba1ad65c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &8083499775153118671
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1587,6 +1599,12 @@ SkinnedMeshRenderer:
 --- !u!4 &8083499775153221377 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 438990, guid: bcc60fdbd3a37b44cbc0cb99db483477,
+    type: 3}
+  m_PrefabInstance: {fileID: 8083499775153118671}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &8083499775152996403 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 155132, guid: bcc60fdbd3a37b44cbc0cb99db483477,
     type: 3}
   m_PrefabInstance: {fileID: 8083499775153118671}
   m_PrefabAsset: {fileID: 0}

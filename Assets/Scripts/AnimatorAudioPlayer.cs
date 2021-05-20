@@ -3,8 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class AnimatorAudioPlayer : MonoBehaviour
-{    public void AnimatorPlayAudio(string clipName)
+{   
+    private AudioSource audioSource;
+
+    void Start()
     {
-        AudioSource.PlayClipAtPoint(GameMaster.GetAudio(clipName).GetClip(), transform.position, 0.75f);
+        if (!(audioSource = GetComponentInParent<AudioSource>()))
+        {
+            Debug.Log("No Audiosource component found in parent.", this);
+            audioSource = new AudioSource();
+        }        
+    } 
+
+    public void AnimatorPlayAudio(string clipName)
+    {
+        audioSource.PlayOneShot(GameMaster.GetAudio(clipName).GetClip());
     }
 }

@@ -142,7 +142,7 @@ public class Soldier : Unit
         {
             Unit unit = e.cell.GetFirstOccupant<Unit>();            
             Damageable damageable = unit.GetComponent<Damageable>();
-            damageable.Damage(2.0f, AttributeChangeCause.ATTACKED, null, DamageType.SLASHING);
+            damageable.Damage(rtsUnitTypeData.attackDamage, AttributeChangeCause.ATTACKED, null, DamageType.SLASHING);
             animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.ATTACKING);
             return;
         }
@@ -150,7 +150,7 @@ public class Soldier : Unit
         {
             Structure structure = e.cell.GetFirstOccupant<Structure>();           
             Damageable damageable = structure.GetComponent<Damageable>();
-            damageable.Damage(2.0f, AttributeChangeCause.ATTACKED, null, DamageType.SLASHING);
+            damageable.Damage(rtsUnitTypeData.attackDamage, AttributeChangeCause.ATTACKED, null, DamageType.SLASHING);
             animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.ATTACKING);
             return;
         }
@@ -160,7 +160,7 @@ public class Soldier : Unit
             if (unit)
             {
                 Damageable damageable = unit.GetComponent<Damageable>();
-                damageable.Damage(2.0f, AttributeChangeCause.ATTACKED, null, DamageType.SLASHING);
+                damageable.Damage(rtsUnitTypeData.attackDamage, AttributeChangeCause.ATTACKED, null, DamageType.SLASHING);
                 animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.ATTACKING);
                 return;
             }
@@ -169,7 +169,7 @@ public class Soldier : Unit
             if (structure)
             {
                 Damageable damageable = structure.GetComponent<Damageable>();
-                damageable.Damage(2.0f, AttributeChangeCause.ATTACKED, null, DamageType.SLASHING);
+                damageable.Damage(rtsUnitTypeData.attackDamage, AttributeChangeCause.ATTACKED, null, DamageType.SLASHING);
                 animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.ATTACKING);
                 return;
             }
@@ -178,7 +178,7 @@ public class Soldier : Unit
             if (construction)
             {
                 Damageable damageable = construction.GetComponent<Damageable>();
-                damageable.Damage(2.0f, AttributeChangeCause.ATTACKED, null, DamageType.SLASHING);
+                damageable.Damage(rtsUnitTypeData.attackDamage, AttributeChangeCause.ATTACKED, null, DamageType.SLASHING);
                 animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.ATTACKING);
                 return;
             }

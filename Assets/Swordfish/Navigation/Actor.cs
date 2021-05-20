@@ -41,6 +41,9 @@ public class Actor : Body
     {
         base.Initialize();
 
+        if (!(damageable = GetComponent<Damageable>()))
+            Debug.Log("Damageable component not found.");
+
         movementInterpolation = 1f - (Constants.ACTOR_PATH_RATE / 60f);
 
         goalSearchGrowth = (byte)(goalSearchDistance * 0.25f);
