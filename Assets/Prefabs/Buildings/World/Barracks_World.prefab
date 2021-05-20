@@ -449,8 +449,8 @@ GameObject:
   - component: {fileID: 4588651157316188579}
   - component: {fileID: -5606635828607617722}
   - component: {fileID: 1850214248461142744}
-  - component: {fileID: 7276087696547761952}
   - component: {fileID: 392103825219517332}
+  - component: {fileID: 7276087696547761952}
   m_Layer: 10
   m_Name: Barracks_World
   m_TagString: Untagged
@@ -608,7 +608,7 @@ MonoBehaviour:
     y: 0
   bakeOnStart: 1
   factionID: 0
-  rtsBuildingType: 10
+  buildingData: {fileID: 11400000, guid: 963461a3aaf76f0458420eb41fae093d, type: 2}
 --- !u!114 &1850214248461142744
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -629,6 +629,30 @@ MonoBehaviour:
   weaknesses: 
   resistances: 
   immunities: 
+--- !u!114 &392103825219517332
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5294818226044083075}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77fa36798b3959c44a46f72d97c3fdb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: Barracks
+  startHidden: 1
+  autohide: 1
+  menuEnabled: 1
+  autohideDelay: 15
+  autohideDistance: 2
+  autoHideBillboard: {fileID: 1318775785671252104}
+  titleGameObject: {fileID: 7252557613613727964}
+  menuGameObject: {fileID: 3422527801716094790}
+  healthBar: {fileID: 3622804137609092612}
+  objectsToAutohide:
+  - {fileID: 5447006979966127191}
 --- !u!114 &7276087696547761952
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -682,30 +706,6 @@ MonoBehaviour:
   hideHighlight:
   - {fileID: 1484492571045934779}
   hoverPriority: 0
---- !u!114 &392103825219517332
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5294818226044083075}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 77fa36798b3959c44a46f72d97c3fdb1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  title: Barracks
-  startHidden: 1
-  autohide: 1
-  menuEnabled: 1
-  autohideDelay: 15
-  autohideDistance: 2
-  autoHideBillboard: {fileID: 1318775785671252104}
-  titleGameObject: {fileID: 7252557613613727964}
-  menuGameObject: {fileID: 3422527801716094790}
-  healthBar: {fileID: 3622804137609092612}
-  objectsToAutohide:
-  - {fileID: 5447006979966127191}
 --- !u!1 &5447006979966127191
 GameObject:
   m_ObjectHideFlags: 0

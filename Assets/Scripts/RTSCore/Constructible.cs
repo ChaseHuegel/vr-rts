@@ -16,10 +16,11 @@ public class Constructible : Obstacle, IFactioned
     public void UpdateFaction() { faction = GameMaster.Factions.Find(x => x.index == factionID); }
 
     public bool DestroyOnBuilt = true;
+    public BuildingData buildingData;  
     public GameObject OnBuiltPrefab;
-
     public GameObject[] ConstructionStages;
     private int currentStage;
+    private AudioSource audioSource;
 
     public override void Initialize()
     {
@@ -31,6 +32,9 @@ public class Constructible : Obstacle, IFactioned
             Debug.Log("No damageable component on constructible!");
 
         damageable.OnHealthRegainEvent += OnBuild;
+
+        if (!(audioSource = GetComponent<AudioSource>()))
+            Debug.Log("Audiosource component missing.", this);
 
         ResetStages();
     }
@@ -51,8 +55,13 @@ public class Constructible : Obstacle, IFactioned
 
     private void UpdateStage()
     {
-        float progress = AttributeHandler.GetAttributePercent(Attributes.HEALTH);
-        int progressStage = (int)(progress / (1f / ConstructionStages.Length));
+        float progress = AttributeHandler.GetAttributePercent(Attributes.HEALTH);   
+        int progressStage = 0;// = (int)(progress / (1f / ConstructionStages.Length));
+
+        if (progress >= 0.45f)
+            progressStage = 1;
+        else if (progress >= 0.95f)
+            progressStage = 2;
 
         if (currentStage != progressStage)
         {
@@ -78,11 +87,12 @@ public class Constructible : Obstacle, IFactioned
             //  Try placing a prefab
             if (OnBuiltPrefab != null)
             {
-                Instantiate(OnBuiltPrefab, transform.position, transform.rotation);
+                GameObject obj = Instantiate(OnBuiltPrefab, transform.position, transform.rotation);                
+                audioSource.PlayOneShot(buildingData.constructionCompletedAudio?.GetClip());
             }
 
             if (DestroyOnBuilt)
-            {
+            {   
                 UnbakeFromGrid();
                 Destroy(this.gameObject);
             }

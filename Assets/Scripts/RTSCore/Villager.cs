@@ -594,7 +594,6 @@ public class Villager : Unit
         if (!construction || construction.AttributeHandler.GetAttributePercent(Attributes.HEALTH) >= 1f)
             return false;
 
-        // Use the repair rate unless the building hasn't been constructed.
         float rate = buildRate;
 
         //  Convert per second to per tick

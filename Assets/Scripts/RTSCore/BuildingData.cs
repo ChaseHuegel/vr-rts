@@ -7,6 +7,7 @@ using Swordfish.Audio;
 public class BuildingData : ScriptableObject
 {
     public RTSBuildingType buildingType;
+    public string buildingTitle;
     public ResourceGatheringType dropoffTypes;
     public int goldCost;
     public int stoneCost;
