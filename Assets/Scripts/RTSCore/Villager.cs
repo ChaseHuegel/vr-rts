@@ -47,6 +47,7 @@ public class Villager : Unit
     GameObject currentHandToolDisplayObject;
     public VillagerHoverMenu villagerHoverMenu;
     protected bool canRetaskOnCollision;
+    bool isDead;
     public bool IsCargoFull() { return currentCargo >= maxCargo; }
     public bool HasCargo() { return currentCargo > 0; }
 
@@ -84,9 +85,22 @@ public class Villager : Unit
         if (!animator)
             Debug.Log("No animator component found.");
 
-        PlayerManager.instance.AddToPopulation((Unit)this);
+        if(PlayerManager.instance.factionID == factionID)
+            PlayerManager.instance.AddToPopulation((Unit)this);
 
+        AttributeHandler.OnDamageEvent += OnDamage;
+        
         //ChangeTaskVisuals();
+    }
+
+    void OnDamage(object sender, Damageable.DamageEvent e)
+    {
+        if (AttributeHandler.GetAttributePercent(Attributes.HEALTH) <= 0.0f)
+        {
+            isDead = true;
+            animator.SetInteger("VillagerActorState", (int)ActorAnimationState.DYING);
+            Destroy(this.gameObject, 3.0f);
+        }
     }
 
     public void OnDestroy()
@@ -192,7 +206,7 @@ public class Villager : Unit
 
     public override void Tick()
     {
-        if (isHeld)
+        if (isHeld || isDead)
             return;
 
         base.Tick();
@@ -201,8 +215,6 @@ public class Villager : Unit
         transportGoal.type = currentResource;
 
         GotoNearestGoalWithPriority();
-        // if (state != UnitState.RALLYING)
-        //     GotoNearestGoalWithPriority();
 
         switch (state)
         {

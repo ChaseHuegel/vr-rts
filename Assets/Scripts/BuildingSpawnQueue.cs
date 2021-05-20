@@ -69,24 +69,6 @@ public class BuildingSpawnQueue : MonoBehaviour
 
         if (!(queueProgressImage = GetComponentInChildren<UnityEngine.UI.Image>(true)))
             Debug.Log("queueProgressImage not found.", this);
-
-
-
-        UnitData unitData = GameMaster.GetUnit(RTSUnitType.Lumberjack);
-        PlayerManager.instance.RemoveUnitQueueCostFromStockpile(unitData);
-
-        if (buildingType == RTSBuildingType.Townhall)
-        {
-            unitSpawnQueue.AddLast(unitData);
-            unitSpawnQueue.AddLast(unitData);
-            unitSpawnQueue.AddLast(unitData);
-            unitSpawnQueue.AddLast(unitData);
-            unitSpawnQueue.AddLast(unitData);
-            unitSpawnQueue.AddLast(unitData);
-            unitSpawnQueue.AddLast(unitData);
-        }
-
-
     }
 
     public void SetUnitRallyWaypoint(Vector3 position)
@@ -117,7 +99,8 @@ public class BuildingSpawnQueue : MonoBehaviour
         if (unitSpawnQueue.Count >= structure.rtsBuildingTypeData.maxUnitQueueSize)
             return;
 
-        if (!PlayerManager.instance.CanQueueUnit(unitTypeToQueue))
+        if (structure.factionID == PlayerManager.instance.factionID &&
+            !PlayerManager.instance.CanQueueUnit(unitTypeToQueue))
             return;
 
         UnitData unitData = GameMaster.GetUnit(unitTypeToQueue);
@@ -188,6 +171,7 @@ public class BuildingSpawnQueue : MonoBehaviour
             GameObject unitGameObject = Instantiate(unitSpawnQueue.First.Value.prefab, unitSpawnPoint.transform.position, Quaternion.identity);
             Unit unit = unitGameObject.GetComponent<Unit>();
             unit.rtsUnitType = unitSpawnQueue.First.Value.unitType;
+            unit.factionID = structure.factionID;
             unit.SyncPosition();
             unit.GotoForced(World.ToWorldSpace(unitRallyWaypoint.position));
             unit.LockPath();

@@ -39,6 +39,7 @@ public class PlayerManager : MonoBehaviour
     private Hand selectionHand;
     public GameObject handBuildMenu;
     protected BuildMenu buildMenu;
+    public int factionID = 0;
 
     private static PlayerManager _instance;
     public static PlayerManager instance

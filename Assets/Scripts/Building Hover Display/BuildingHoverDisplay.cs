@@ -97,12 +97,14 @@ public class BuildingHoverDisplay : MonoBehaviour
             
         if (healthBar.GetFilledAmount() < 1.0f)
         {
-            healthBar.gameObject.SetActive(true); 
+            // TODO: Redundant I think
+            healthBar.Hide();
             autoHideBillboard.enabled = true;
         }
         else
         {
-            healthBar.gameObject.SetActive(false);
+            // TODO: Redundant I think
+            healthBar.Show();
             autoHideBillboard.enabled = false;
         }
 
@@ -120,7 +122,7 @@ public class BuildingHoverDisplay : MonoBehaviour
 
         if (menuEnabled) menuGameObject?.SetActive(true); 
         
-        healthBar.gameObject.SetActive(true); 
+        healthBar.Show();
 
         foreach (GameObject go in objectsToAutohide)
         {

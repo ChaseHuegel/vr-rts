@@ -16,19 +16,8 @@ public class Soldier : Unit
     [Header ("Visuals")]
     //public VillagerHoverMenu villagerHoverMenu;
 
-    bool isHeld;
-
-    public void HookIntoEvents()
-    {
-        PathfindingGoal.OnGoalFoundEvent += OnGoalFound;
-        PathfindingGoal.OnGoalInteractEvent += OnGoalInteract;
-    }
-
-    public void CleanupEvents()
-    {
-        PathfindingGoal.OnGoalFoundEvent -= OnGoalFound;
-        PathfindingGoal.OnGoalInteractEvent -= OnGoalInteract;
-    }
+    bool isHeld;   
+    bool isDead;
 
     public void Awake()
     {
@@ -40,27 +29,30 @@ public class Soldier : Unit
     public override void Initialize()
     {
         base.Initialize();
-
         HookIntoEvents();        
 
-        //SetUnitType(rtsUnitType);
+        //goals.Add<GoalSearchAndDestroy>().myFactionID = factionID;
+        goals.Add<GoalHuntUnits>().myFactionID = factionID;
+        goals.Add<GoalHuntBuildings>().myFactionID = factionID;
 
         animator = gameObject.GetComponentInChildren<Animator>();
         if (!animator)
             Debug.Log("No animator component found.");
 
-        PlayerManager.instance.AddToPopulation((Unit)this);
+        if(PlayerManager.instance.factionID == factionID)
+            PlayerManager.instance.AddToPopulation((Unit)this);
+        
+        AttributeHandler.OnDamageEvent += OnDamage;
     }
 
-    public void OnDestroy()
+    public void HookIntoEvents()
     {
-        CleanupEvents();
+        PathfindingGoal.OnGoalFoundEvent += OnGoalFound;
+        PathfindingGoal.OnGoalInteractEvent += OnGoalInteract;
     }
 
-    bool StateChanged()
-    {
-        return state != previousState;
-    }
+  
+    bool StateChanged() { return state != previousState; }
 
     public void OnHandHoverBegin(Hand hand)
     {
@@ -77,7 +69,7 @@ public class Soldier : Unit
         isHeld = true;
         //villagerHoverMenu.Show();
         Freeze();
-        animator.SetInteger("VillagerActorState", 0);
+        animator.SetInteger("VillagerActorState", (int)ActorAnimationState.IDLE);
         audioSource.PlayOneShot(GameMaster.GetAudio("unitPickup").GetClip(), 0.5f);
     }
 
@@ -91,19 +83,15 @@ public class Soldier : Unit
 
     public override void Tick()
     {
-        if (isHeld)
+        if (isHeld || isDead)
             return;
 
         base.Tick();
 
-        //GotoNearestGoalWithPriority();
+        GotoNearestGoalWithPriority();
         
-        //Debug.Log("State: " + state.ToString() + " PreviousState: " + previousState.ToString());
-
         if (IsMoving() )
-        {
-            animator.SetInteger("VillagerActorState", (int)ActorAnimationState.MOVING);
-        }
+            animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.MOVING);
         
         // if (TaskChanged())
         // {
@@ -114,6 +102,18 @@ public class Soldier : Unit
         previousState = state;
     }
 
+    
+
+    void OnDamage(object sender, Damageable.DamageEvent e)
+    {
+        if (AttributeHandler.GetAttributePercent(Attributes.HEALTH) <= 0.0f)
+        {
+            isDead = true;
+            animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.DYING);
+            Destroy(this.gameObject, 3.0f);
+        }
+    }
+
      // Used by animator to play sound effects
     public void AnimatorPlayAudio(string clipName)
     {
@@ -122,15 +122,10 @@ public class Soldier : Unit
 
     public void OnGoalFound(object sender, PathfindingGoal.GoalFoundEvent e)
     {
-        if (e.actor != this) return;
+        if (e.actor != this) 
+            return;
 
-        // Soldier villager = (Soldier)e.actor;
-
-        // //  Need C# 7 in Unity for switching by type!!!
-        // if (e.goal is GoalGatherResource && !villager.IsCargoFull())
-        // {
-        //     return;
-        // }
+        // Debug.Log(string.Format("Found target {0}!", e.cell.GetFirstOccupant().name));
 
         //  default cancel the goal so that another can take priority
         //ResetGoal();
@@ -139,22 +134,69 @@ public class Soldier : Unit
 
     public void OnGoalInteract(object sender, PathfindingGoal.GoalInteractEvent e)
     {
-        if (e.actor != this) return;
+        if (e.actor != this) 
+            return;
 
-        // Villager villager = (Villager)e.actor;
-        // Resource resource = e.cell.GetOccupant<Resource>();
-        // Structure structure = e.cell.GetOccupant<Structure>();
-        // Constructible construction = e.cell.GetOccupant<Constructible>();
+
+        if (e.goal is GoalHuntUnits)
+        {
+            Unit unit = e.cell.GetFirstOccupant<Unit>();            
+            Damageable damageable = unit.GetComponent<Damageable>();
+            damageable.Damage(2.0f, AttributeChangeCause.ATTACKED, null, DamageType.SLASHING);
+            animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.ATTACKING);
+            return;
+        }
+        else if (e.goal is GoalHuntBuildings)
+        {
+            Structure structure = e.cell.GetFirstOccupant<Structure>();           
+            Damageable damageable = structure.GetComponent<Damageable>();
+            damageable.Damage(2.0f, AttributeChangeCause.ATTACKED, null, DamageType.SLASHING);
+            animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.ATTACKING);
+            return;
+        }
+        else if (e.goal is GoalSearchAndDestroy)
+        {
+            Unit unit = e.cell.GetFirstOccupant<Unit>();
+            if (unit)
+            {
+                Damageable damageable = unit.GetComponent<Damageable>();
+                damageable.Damage(2.0f, AttributeChangeCause.ATTACKED, null, DamageType.SLASHING);
+                animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.ATTACKING);
+                return;
+            }
+
+            Structure structure = e.cell.GetFirstOccupant<Structure>();
+            if (structure)
+            {
+                Damageable damageable = structure.GetComponent<Damageable>();
+                damageable.Damage(2.0f, AttributeChangeCause.ATTACKED, null, DamageType.SLASHING);
+                animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.ATTACKING);
+                return;
+            }
+
+            Constructible construction = e.cell.GetFirstOccupant<Constructible>();
+            if (construction)
+            {
+                Damageable damageable = construction.GetComponent<Damageable>();
+                damageable.Damage(2.0f, AttributeChangeCause.ATTACKED, null, DamageType.SLASHING);
+                animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.ATTACKING);
+                return;
+            }
+        }
         
-        // if  (e.goal is GoalGatherResource && villager.TryGather(resource) ||
-        //     (e.goal is GoalTransportResource && villager.TryDropoff(structure) ||
-        //     (e.goal is GoalBuildRepair && (villager.TryRepair(structure) || villager.TryBuild(construction))))) 
-        // {
-        //     return;
-        // } 
-        
-        // //  default cancel the interaction
-        // ResetGoal();
-        // e.Cancel();
+        //  default cancel the interaction
+        ResetGoal();
+        e.Cancel();
     }   
+
+    public void CleanupEvents()
+    {
+        PathfindingGoal.OnGoalFoundEvent -= OnGoalFound;
+        PathfindingGoal.OnGoalInteractEvent -= OnGoalInteract;
+    }
+
+    public void OnDestroy()
+    {
+        CleanupEvents();
+    }
 }

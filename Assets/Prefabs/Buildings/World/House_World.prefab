@@ -337,7 +337,7 @@ MonoBehaviour:
   attributes:
   - attribute: 0
     value: 0
-    max: 500
+    max: 550
   invulnerable: 0
   weaknesses: 
   resistances: 
@@ -357,12 +357,14 @@ MonoBehaviour:
   title: House
   startHidden: 1
   autohide: 1
+  menuEnabled: 0
   autohideDelay: 15
-  autohideRadius: 2
+  autohideDistance: 2
+  autoHideBillboard: {fileID: 0}
   titleGameObject: {fileID: 4930549063384826449}
   menuGameObject: {fileID: 1132044391496545739}
   healthBar: {fileID: 1336548388726971529}
-  buildingHoverDisplayGameObject: {fileID: 3770476775387591734}
+  objectsToAutohide: []
 --- !u!1 &5377417405777167938
 GameObject:
   m_ObjectHideFlags: 0
@@ -588,18 +590,6 @@ PrefabInstance:
       objectReference: {fileID: 154200754583432246}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7fb19797225db2c4488e2990249299f1, type: 3}
---- !u!1 &3770476775387591734 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2549361127315121918, guid: 7fb19797225db2c4488e2990249299f1,
-    type: 3}
-  m_PrefabInstance: {fileID: 1671480696085467848}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &3770476775387591733 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2549361127315121917, guid: 7fb19797225db2c4488e2990249299f1,
-    type: 3}
-  m_PrefabInstance: {fileID: 1671480696085467848}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &4930549063384826449 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6007413679436910745, guid: 7fb19797225db2c4488e2990249299f1,
@@ -624,6 +614,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27381cd579d45e94c8db78a0a21ff9b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &3770476775387591733 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2549361127315121917, guid: 7fb19797225db2c4488e2990249299f1,
+    type: 3}
+  m_PrefabInstance: {fileID: 1671480696085467848}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2588066033450655829
 PrefabInstance:
   m_ObjectHideFlags: 0
