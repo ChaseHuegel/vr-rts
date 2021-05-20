@@ -24,14 +24,15 @@ public class Unit : Actor, IFactioned
     [Header("Unit")]
     public RTSUnitType rtsUnitType;
 
-    [Header("AI")]
+    [Header("AI")]    
     public UnitState state;
+    
     protected UnitState previousState;
 
     // Make this read only, we should only be able to change unit properties
     // through the database.
     public UnitData rtsUnitTypeData { get { return m_rtsUnitTypeData; } }
-    public UnitData m_rtsUnitTypeData;
+    protected UnitData m_rtsUnitTypeData;
 
     public override void Initialize()
     {

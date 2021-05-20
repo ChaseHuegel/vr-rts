@@ -2,7 +2,7 @@ using System;
 
 namespace Swordfish.Navigation
 {
-
+[Serializable]
 public class PathfindingGoal
 {
     public static bool IsGoal(Cell cell, PathfindingGoal[] goals)

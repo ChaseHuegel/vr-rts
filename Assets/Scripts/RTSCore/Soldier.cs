@@ -9,6 +9,12 @@ using Valve.VR.InteractionSystem;
 [RequireComponent(typeof(Damageable))]
 public class Soldier : Unit
 {
+    [Header("AI")]
+
+    public bool huntVillagers = true;
+    public bool huntMilitary = true;
+    public bool huntBuildings = true;
+
     [Header("Soldier")]
     protected Animator animator;
     private AudioSource audioSource;
@@ -31,9 +37,7 @@ public class Soldier : Unit
         base.Initialize();
         HookIntoEvents();        
 
-        //goals.Add<GoalSearchAndDestroy>().myFactionID = factionID;
-        goals.Add<GoalHuntUnits>().myFactionID = factionID;
-        goals.Add<GoalHuntBuildings>().myFactionID = factionID;
+        SetAIAttackGoals(huntVillagers, huntMilitary, huntBuildings);
 
         animator = gameObject.GetComponentInChildren<Animator>();
         if (!animator)
@@ -51,7 +55,18 @@ public class Soldier : Unit
         PathfindingGoal.OnGoalInteractEvent += OnGoalInteract;
     }
 
-  
+    public void SetAIAttackGoals(bool villagers, bool military, bool buildings)
+    {
+        if (villagers)
+            goals.Add<GoalHuntVillagers>().myFactionID = factionID;
+
+        if (military)
+            goals.Add<GoalHuntMilitary>().myFactionID = factionID;        
+        
+        if (buildings)
+            goals.Add<GoalHuntBuildings>().myFactionID = factionID;
+    }
+
     bool StateChanged() { return state != previousState; }
 
     public void OnHandHoverBegin(Hand hand)
