@@ -88,7 +88,7 @@ public class Constructible : Obstacle, IFactioned
             if (OnBuiltPrefab != null)
             {
                 GameObject obj = Instantiate(OnBuiltPrefab, transform.position, transform.rotation);
-                audioSource.PlayOneShot(buildingData.constructionCompletedAudio?.GetClip());
+                AudioSource.PlayClipAtPoint(buildingData.constructionCompletedAudio?.GetClip(), transform.position);
             }
 
             if (DestroyOnBuilt)
