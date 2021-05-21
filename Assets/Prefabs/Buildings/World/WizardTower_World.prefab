@@ -456,7 +456,7 @@ MonoBehaviour:
     y: 0
   bakeOnStart: 1
   factionID: 0
-  rtsBuildingType: 130
+  buildingData: {fileID: 11400000, guid: 72a538aa312227c4eb1e2feb1e70e40e, type: 2}
 --- !u!114 &6842366032786188995
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -471,8 +471,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attributes:
   - attribute: 0
-    value: 0
-    max: 500
+    value: 2100
+    max: 2100
   invulnerable: 0
   weaknesses: 
   resistances: 
@@ -545,12 +545,14 @@ MonoBehaviour:
   title: Wizard Tower
   startHidden: 1
   autohide: 1
+  menuEnabled: 0
   autohideDelay: 15
-  autohideRadius: 2
+  autohideDistance: 2
+  autoHideBillboard: {fileID: 0}
   titleGameObject: {fileID: 2958678303233852901}
   menuGameObject: {fileID: 7121974840097452671}
   healthBar: {fileID: 9218830709520194365}
-  buildingHoverDisplayGameObject: {fileID: 6426899057281512322}
+  objectsToAutohide: []
 --- !u!1001 &93945308928203244
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -570,6 +572,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 552509685689849684, guid: d73c0ebd7248acd4daabf362cf93287b,
         type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 552509685689849684, guid: d73c0ebd7248acd4daabf362cf93287b,
+        type: 3}
       propertyPath: m_LocalRotation.x
       value: -0
       objectReference: {fileID: 0}
@@ -581,7 +588,7 @@ PrefabInstance:
     - target: {fileID: 552509685689849684, guid: d73c0ebd7248acd4daabf362cf93287b,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -1.3552527e-20
+      value: -2.710506e-20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d73c0ebd7248acd4daabf362cf93287b, type: 3}
@@ -1028,6 +1035,11 @@ PrefabInstance:
       propertyPath: unitRallyWaypoint
       value: 
       objectReference: {fileID: 8880040115627606485}
+    - target: {fileID: 5973659078053127637, guid: 7fb19797225db2c4488e2990249299f1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8082990324436219455, guid: 7fb19797225db2c4488e2990249299f1,
         type: 3}
       propertyPath: m_Materials.Array.data[0]

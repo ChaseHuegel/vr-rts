@@ -59,7 +59,7 @@ public class HealthBar : MonoBehaviour
     public void OnDamage(object sender, Damageable.DamageEvent e)
     {
         if (damageable)
-            SetFilledAmount(damageable.GetHealth() - e.damage / damageable.GetMaxHealth());
+            SetFilledAmount((damageable.GetHealth() - e.damage) / damageable.GetMaxHealth());
 
     }
 

@@ -462,6 +462,7 @@ public class Villager : Unit
         }
         else if (e.goal is GoalTransportResource && villager.HasCargo())
         {
+            //Debug.Log( ((GoalTransportResource)e.goal).type );
             villager.state = UnitState.TRANSPORTING;
             DisplayCargo(true);
             // TODO: ChangeEquippedItems should only be called when they change jobs.

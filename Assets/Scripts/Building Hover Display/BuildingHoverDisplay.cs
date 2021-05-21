@@ -8,6 +8,7 @@ using UnityEngine.Events;
 public class BuildingHoverDisplay : MonoBehaviour
 {        
     [Header("Options")]
+    // TODO: title should be pulled from database through constructable/structure buildingData
     public string title;
     public bool startHidden = true;
     public bool autohide = true;

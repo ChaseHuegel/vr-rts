@@ -423,8 +423,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attributes:
   - attribute: 0
-    value: 0
-    max: 500
+    value: 900
+    max: 900
   invulnerable: 0
   weaknesses: 
   resistances: 
@@ -448,7 +448,7 @@ MonoBehaviour:
     y: 0
   bakeOnStart: 1
   factionID: 0
-  rtsBuildingType: 75
+  buildingData: {fileID: 11400000, guid: cb48a273d55d01944a37ded59920870a, type: 2}
 --- !u!114 &7132157594760652471
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -516,12 +516,14 @@ MonoBehaviour:
   title: Stone Wall
   startHidden: 1
   autohide: 1
+  menuEnabled: 0
   autohideDelay: 15
-  autohideRadius: 2
+  autohideDistance: 2
+  autoHideBillboard: {fileID: 0}
   titleGameObject: {fileID: 2631821133919505038}
   menuGameObject: {fileID: 8025163019334761748}
   healthBar: {fileID: 8243435541134201942}
-  buildingHoverDisplayGameObject: {fileID: 6105091060118404329}
+  objectsToAutohide: []
 --- !u!1001 &356646193173367064
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -756,6 +758,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 552509685689849684, guid: d73c0ebd7248acd4daabf362cf93287b,
         type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 552509685689849684, guid: d73c0ebd7248acd4daabf362cf93287b,
+        type: 3}
       propertyPath: m_LocalRotation.x
       value: -0
       objectReference: {fileID: 0}
@@ -767,7 +774,7 @@ PrefabInstance:
     - target: {fileID: 552509685689849684, guid: d73c0ebd7248acd4daabf362cf93287b,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -1.3552527e-20
+      value: -2.710506e-20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d73c0ebd7248acd4daabf362cf93287b, type: 3}
@@ -901,14 +908,13 @@ PrefabInstance:
       propertyPath: unitRallyWaypoint
       value: 
       objectReference: {fileID: 7486277780482809923}
+    - target: {fileID: 5973659078053127637, guid: 7fb19797225db2c4488e2990249299f1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7fb19797225db2c4488e2990249299f1, type: 3}
---- !u!1 &6105091060118404329 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2549361127315121918, guid: 7fb19797225db2c4488e2990249299f1,
-    type: 3}
-  m_PrefabInstance: {fileID: 8635799109913778711}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6105091060118404330 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2549361127315121917, guid: 7fb19797225db2c4488e2990249299f1,

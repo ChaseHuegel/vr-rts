@@ -165,8 +165,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attributes:
   - attribute: 0
-    value: 500
-    max: 500
+    value: 480
+    max: 480
   invulnerable: 0
   weaknesses: 
   resistances: 
@@ -259,12 +259,14 @@ MonoBehaviour:
   title: Farm
   startHidden: 1
   autohide: 1
+  menuEnabled: 0
   autohideDelay: 15
-  autohideRadius: 2
+  autohideDistance: 2
+  autoHideBillboard: {fileID: 0}
   titleGameObject: {fileID: 3154576238173302588}
   menuGameObject: {fileID: 6926059040235247782}
   healthBar: {fileID: 9018394265720730084}
-  buildingHoverDisplayGameObject: {fileID: 6627318184042256731}
+  objectsToAutohide: []
 --- !u!1 &3163886759887789236
 GameObject:
   m_ObjectHideFlags: 0
@@ -603,14 +605,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: BuildingHoverDisplay
       objectReference: {fileID: 0}
+    - target: {fileID: 5973659078053127637, guid: 7fb19797225db2c4488e2990249299f1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7fb19797225db2c4488e2990249299f1, type: 3}
---- !u!1 &6627318184042256731 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2549361127315121918, guid: 7fb19797225db2c4488e2990249299f1,
-    type: 3}
-  m_PrefabInstance: {fileID: 8690206437443239845}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6627318184042256728 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2549361127315121917, guid: 7fb19797225db2c4488e2990249299f1,

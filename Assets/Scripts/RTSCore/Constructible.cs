@@ -31,7 +31,7 @@ public class Constructible : Obstacle, IFactioned
             Debug.Log("No damageable component on constructible!");
 
         // damageable.GetAttribute(Attributes.HEALTH).SetValue(0);
-        // damageable.GetAttribute(Attributes.HEALTH).SetMax(buildingData.hitPoints);
+        damageable.GetAttribute(Attributes.HEALTH).SetMax(buildingData.hitPoints);
         damageable.OnHealthRegainEvent += OnBuild;
 
         if (!(audioSource = GetComponent<AudioSource>()))

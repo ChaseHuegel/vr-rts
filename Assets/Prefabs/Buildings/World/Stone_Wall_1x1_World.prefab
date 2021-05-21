@@ -400,8 +400,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attributes:
   - attribute: 0
-    value: 0
-    max: 500
+    value: 900
+    max: 900
   invulnerable: 0
   weaknesses: 
   resistances: 
@@ -425,7 +425,7 @@ MonoBehaviour:
     y: 0
   bakeOnStart: 1
   factionID: 0
-  rtsBuildingType: 75
+  buildingData: {fileID: 11400000, guid: 1847bf8b7e2c0594b80f4dd83cf909f4, type: 2}
 --- !u!114 &6189036909755370357
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -493,12 +493,14 @@ MonoBehaviour:
   title: Stone Wall
   startHidden: 1
   autohide: 1
+  menuEnabled: 0
   autohideDelay: 15
-  autohideRadius: 2
+  autohideDistance: 2
+  autoHideBillboard: {fileID: 0}
   titleGameObject: {fileID: 7873312576161180297}
   menuGameObject: {fileID: 2781711974107192595}
   healthBar: {fileID: 4297326301052859473}
-  buildingHoverDisplayGameObject: {fileID: 2124600110763842798}
+  objectsToAutohide: []
 --- !u!1 &6037374126640072937
 GameObject:
   m_ObjectHideFlags: 0
@@ -967,14 +969,13 @@ PrefabInstance:
       propertyPath: unitRallyWaypoint
       value: 
       objectReference: {fileID: 8396200542945734325}
+    - target: {fileID: 5973659078053127637, guid: 7fb19797225db2c4488e2990249299f1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7fb19797225db2c4488e2990249299f1, type: 3}
---- !u!1 &2124600110763842798 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2549361127315121918, guid: 7fb19797225db2c4488e2990249299f1,
-    type: 3}
-  m_PrefabInstance: {fileID: 4475802854146914832}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2124600110763842797 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2549361127315121917, guid: 7fb19797225db2c4488e2990249299f1,
@@ -1024,6 +1025,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 552509685689849684, guid: d73c0ebd7248acd4daabf362cf93287b,
         type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 552509685689849684, guid: d73c0ebd7248acd4daabf362cf93287b,
+        type: 3}
       propertyPath: m_LocalRotation.x
       value: -0
       objectReference: {fileID: 0}
@@ -1035,7 +1041,7 @@ PrefabInstance:
     - target: {fileID: 552509685689849684, guid: d73c0ebd7248acd4daabf362cf93287b,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -1.3552527e-20
+      value: -2.710506e-20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d73c0ebd7248acd4daabf362cf93287b, type: 3}

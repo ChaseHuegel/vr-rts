@@ -21,6 +21,7 @@ public class BuildingData : ScriptableObject
     public GameObject menuPreviewPrefab;
     public GameObject fadedPreviewPrefab;
     public GameObject throwablePrefab;
+    public GameObject constructablePrefab;
     public GameObject worldPrefab;
     public int boundingDimensionX;
     public int boundingDimensionY;

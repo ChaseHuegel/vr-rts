@@ -153,7 +153,7 @@ public class Soldier : Unit
             return;
 
 
-        if (e.goal is GoalHuntUnits)
+        if (e.goal is GoalHuntUnits || e.goal is GoalHuntMilitary || e.goal is GoalHuntVillagers)
         {
             Unit unit = e.cell.GetFirstOccupant<Unit>();            
             Damageable damageable = unit.GetComponent<Damageable>();

@@ -532,7 +532,7 @@ MonoBehaviour:
     y: 0
   bakeOnStart: 1
   factionID: 0
-  buildingData: {fileID: 0}
+  buildingData: {fileID: 11400000, guid: 6d0f784ad64a1c044b8ed05d3165d46e, type: 2}
 --- !u!114 &6017734677270303756
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -547,8 +547,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attributes:
   - attribute: 0
-    value: 0
-    max: 500
+    value: 600
+    max: 600
   invulnerable: 0
   weaknesses: 
   resistances: 
@@ -876,6 +876,11 @@ PrefabInstance:
       propertyPath: unitRallyWaypoint
       value: 
       objectReference: {fileID: 7206327208635645834}
+    - target: {fileID: 5973659078053127637, guid: 7fb19797225db2c4488e2990249299f1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7fb19797225db2c4488e2990249299f1, type: 3}
 --- !u!4 &972582171789773573 stripped
