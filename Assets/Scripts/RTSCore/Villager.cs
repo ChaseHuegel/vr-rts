@@ -79,8 +79,6 @@ public class Villager : Unit
 
         SetUnitType(rtsUnitType);
 
-        transportGoal = goals.Add<GoalTransportResource>();
-
         animator = gameObject.GetComponentInChildren<Animator>();
         if (!animator)
             Debug.Log("No animator component found.");
@@ -212,7 +210,7 @@ public class Villager : Unit
         base.Tick();
 
         //  Transport type always matches what our current resource is
-        transportGoal.type = currentResource;
+        if (transportGoal != null) transportGoal.type = currentResource;
 
         GotoNearestGoalWithPriority();
 
@@ -275,7 +273,7 @@ public class Villager : Unit
 
         // Turn off all goals except the transport goal.
         goals.Clear();
-        goals.Add<GoalTransportResource>();
+        transportGoal = goals.Add<GoalTransportResource>();
 
         switch ( unitType )
         {
@@ -375,9 +373,6 @@ public class Villager : Unit
 
         if (state == UnitState.GATHERING)
         {
-            // TODO: Why is this here?
-            transportGoal = goals.Add<GoalTransportResource>();
-
             switch (resourceType)
             {
                 case ResourceGatheringType.Gold:
@@ -467,6 +462,7 @@ public class Villager : Unit
         }
         else if (e.goal is GoalTransportResource && villager.HasCargo())
         {
+            Debug.Log( ((GoalTransportResource)e.goal).type );
             villager.state = UnitState.TRANSPORTING;
             DisplayCargo(true);
             // TODO: ChangeEquippedItems should only be called when they change jobs.
@@ -509,7 +505,7 @@ public class Villager : Unit
 
     public bool TryDropoff(Structure structure)
     {
-        if (!structure || !HasCargo() || !structure.IsBuilt())
+        if (!structure || !HasCargo())
             return false;
 
         if (!structure.CanDropOff(currentResource))
@@ -570,11 +566,8 @@ public class Villager : Unit
         if (!structure || !structure.NeedsRepairs())
             return false;
 
-        // Use the repair rate unless the building hasn't been constructed.
-        float rate = structure.IsBuilt() ? repairRate : buildRate;
-
         //  Convert per second to per tick
-        float amount = (rate / (60/Constants.ACTOR_TICK_RATE));
+        float amount = (repairRate / (60/Constants.ACTOR_TICK_RATE));
 
         //  Trigger a repair event
         RepairEvent e = new RepairEvent{ villager = this, structure = structure, amount = amount };

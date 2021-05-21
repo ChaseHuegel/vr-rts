@@ -13,10 +13,6 @@ public class Structure : Obstacle, IFactioned
     //public RTSBuildingType rtsBuildingType;
     public BuildingData buildingData;
 
-    // Built signals that building construction has completed, it does
-    // not signal whether a building needs repairs after having been
-    // damaged.
-    private bool built = false;
     private Damageable damageable;
     public Damageable AttributeHandler { get { return damageable; } }
 
@@ -28,8 +24,7 @@ public class Structure : Obstacle, IFactioned
     public Faction GetFaction() { return faction; }
     public void UpdateFaction() { faction = GameMaster.Factions.Find(x => x.index == factionID); }
 
-    public bool NeedsRepairs() { return damageable.GetAttributePercent(Attributes.HEALTH) < 1f; }
-    public bool IsBuilt() { return built; }
+    public bool NeedsRepairs() { return damageable.GetHealthPercent() < 1f; }
 
     public void Awake()
     {
@@ -56,8 +51,8 @@ public class Structure : Obstacle, IFactioned
 
         // Set max health based on building database hit point value.
         damageable.GetAttribute(Attributes.HEALTH).SetMax(buildingData.hitPoints);
-        damageable.OnDamageEvent += OnDamage;        
-        
+        damageable.OnDamageEvent += OnDamage;
+
         // TODO: Could move this to be part of the RTSBuildingTypeData database and
         // pull the prefabs directly from their. Would simplify creation/addition of
         // new building types.
@@ -66,21 +61,21 @@ public class Structure : Obstacle, IFactioned
         // if (!constructionPhaseBeginPrefab || !constructionPhaseMiddlePrefab || !constructionPhaseEndPrefab)
         //     Debug.Log("Missing construction stage prefab(s).");
 
-        
+
         RefreshConstructionVisuals();
-        
+
         // buildingHealthBar = GetComponentInChildren<HealthBar>( true );
         // if (buildingHealthBar)
         // {
             // RefreshConstructionVisuals();
         // }
         // else
-        //     Debug.Log("No building health bar found.", this);        
+        //     Debug.Log("No building health bar found.", this);
     }
     void OnDamage(object sender, Damageable.DamageEvent e)
     {
         RefreshConstructionVisuals();
-        
+
         if (AttributeHandler.GetAttributePercent(Attributes.HEALTH) <= 0.0f)
         {
             audioSource.PlayOneShot(GameMaster.GetAudio("building_collapsed").GetClip());

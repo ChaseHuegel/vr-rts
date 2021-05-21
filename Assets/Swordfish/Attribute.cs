@@ -56,6 +56,7 @@ public class Attribute
     public Attribute ModifyUnsafe(float amount)     { this.value += amount; return this; }
 
     public float GetModified(float amount)           { return Mathf.Clamp(this.value + amount, 0, max); }
+    public float GetModifiedPercent(float amount)    { return (value + amount) / max; }
 
     public Attribute Max() { value = max; return this; }
     public Attribute Zero() { value = 0; return this; }
