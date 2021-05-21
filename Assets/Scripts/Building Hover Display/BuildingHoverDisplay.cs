@@ -60,6 +60,12 @@ public class BuildingHoverDisplay : MonoBehaviour
             healthBar.enabled = true;
         }
 
+        if (!menuGameObject && menuEnabled)
+        {
+            Debug.Log("menuGameObject not set.", this);
+            menuEnabled = false;
+        }
+
         if (startHidden)
             Hide();
         else

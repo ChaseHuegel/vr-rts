@@ -25,12 +25,13 @@ public class Constructible : Obstacle, IFactioned
     public override void Initialize()
     {
         base.Initialize();
-
         UpdateFaction();
 
         if (!(damageable = GetComponent<Damageable>()))
             Debug.Log("No damageable component on constructible!");
 
+        // damageable.GetAttribute(Attributes.HEALTH).SetValue(0);
+        // damageable.GetAttribute(Attributes.HEALTH).SetMax(buildingData.hitPoints);
         damageable.OnHealthRegainEvent += OnBuild;
 
         if (!(audioSource = GetComponent<AudioSource>()))
@@ -41,7 +42,7 @@ public class Constructible : Obstacle, IFactioned
 
     public bool IsBuilt()
     {
-        return AttributeHandler.GetAttributePercent(Attributes.HEALTH) >= 1f;
+        return AttributeHandler.GetAttributePercent(Attributes.HEALTH) >= 1.0f;
     }
 
     private void ResetStages()
@@ -54,10 +55,10 @@ public class Constructible : Obstacle, IFactioned
     }
 
     private void UpdateStage()
-    {
-        float progress = AttributeHandler.GetAttributePercent(Attributes.HEALTH);
+    {        
+        float progress = AttributeHandler.GetAttributePercent(Attributes.HEALTH);   
         int progressStage = 0;// = (int)(progress / (1f / ConstructionStages.Length));
-
+        
         if (progress >= 0.45f)
             progressStage = 1;
         else if (progress >= 0.95f)
@@ -87,8 +88,8 @@ public class Constructible : Obstacle, IFactioned
             //  Try placing a prefab
             if (OnBuiltPrefab != null)
             {
-                GameObject obj = Instantiate(OnBuiltPrefab, transform.position, transform.rotation);
-                audioSource.PlayOneShot(buildingData.constructionCompletedAudio?.GetClip());
+                Instantiate(OnBuiltPrefab, transform.position, transform.rotation);                
+                AudioSource.PlayClipAtPoint(buildingData.constructionCompletedAudio?.GetClip(), transform.position);
             }
 
             if (DestroyOnBuilt)

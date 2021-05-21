@@ -567,7 +567,7 @@ public class Villager : Unit
 
     public bool TryRepair(Structure structure)
     {
-        if (!structure || structure.NeedsRepairs())
+        if (!structure || !structure.NeedsRepairs())
             return false;
 
         // Use the repair rate unless the building hasn't been constructed.
@@ -594,10 +594,8 @@ public class Villager : Unit
         if (!construction || construction.IsBuilt())
             return false;
 
-        float rate = buildRate;
-
         //  Convert per second to per tick
-        float amount = (rate / (60/Constants.ACTOR_TICK_RATE));
+        float amount = (buildRate / (60/Constants.ACTOR_TICK_RATE));
 
         //  Trigger a build event
         BuildEvent e = new BuildEvent{ villager = this, constructible = construction, amount = amount };

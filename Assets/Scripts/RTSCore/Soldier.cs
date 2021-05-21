@@ -162,9 +162,14 @@ public class Soldier : Unit
             return;
         }
         else if (e.goal is GoalHuntBuildings)
-        {
-            Structure structure = e.cell.GetFirstOccupant<Structure>();           
-            Damageable damageable = structure.GetComponent<Damageable>();
+        {                     
+            Damageable damageable; 
+            Structure structure = e.cell.GetFirstOccupant<Structure>();  
+            if (structure) 
+                damageable = structure.GetComponent<Damageable>();
+            else
+                damageable = e.cell.GetFirstOccupant<Constructible>().GetComponent<Damageable>();
+            
             damageable.Damage(rtsUnitTypeData.attackDamage, AttributeChangeCause.ATTACKED, null, DamageType.SLASHING);
             animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.ATTACKING);
             return;
