@@ -93,8 +93,9 @@ public class BuildingHoverDisplay : MonoBehaviour
         visible = false;
         autoHideBillboard.enabled = false;
         titleGameObject.SetActive(false); 
-        menuGameObject?.SetActive(false); 
+        if (menuEnabled) menuGameObject?.SetActive(false); 
             
+        // TODO: Should be based on the healtbars autoshowAt/autohideAt values.
         if (healthBar.GetFilledAmount() < 1.0f)
             autoHideBillboard.enabled = true;
         else

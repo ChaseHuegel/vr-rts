@@ -7,18 +7,19 @@ using Swordfish;
 public class HealthBar : MonoBehaviour
 {
     [SerializeField]
-    bool showBarBackground = true;
-    [SerializeField]
-    bool showBarForeground = true;
-    [SerializeField]
-    bool showText = true;
-    [SerializeField]
-    bool hideWhenFull = true;
+    public bool showBarBackground = true;
+    public bool showBarForeground = true;
+    public bool showText = true;
+    
+    [Range(0, 1.0f)]
+    public float autoshowAt = 0.98f;
+
+    [Range(0, 1.0f)]
+    public float autohideAt = 1.0f;    
     public Image healthBarBackgroundImage;
     public Image healthBarForegroundImage;
     public Text healthBarStatusText;
-
-    public Damageable damageable;
+    private Damageable damageable;
 
     // Start is called before the first frame update
     void Start()
@@ -40,12 +41,19 @@ public class HealthBar : MonoBehaviour
         if (damageable)
         {
             damageable.OnDamageEvent += OnDamage;
+            damageable.OnHealthRegainEvent += OnHealthRegainEvent;
             SetFilledAmount(damageable.GetAttributePercent(Attributes.HEALTH));
         }
         else
         {
             Debug.Log("Damageable component not found in parent.", this);
         }
+    }
+
+    public void OnHealthRegainEvent(object sender, Damageable.HealthRegainEvent e)
+    {
+        if (damageable)
+            SetFilledAmount(damageable.GetAttributePercent(Attributes.HEALTH));
     }
 
     public void OnDamage(object sender, Damageable.DamageEvent e)
@@ -72,9 +80,9 @@ public class HealthBar : MonoBehaviour
         if (showText)
             healthBarStatusText.text = (((int)(amount * 100)).ToString()) + "%";
 
-        if (amount >= 1.0f && hideWhenFull)
+        if (amount >= autohideAt)
             Hide();
-        else if (amount < 1.0f)
+        else if (amount < autoshowAt)
             Show();
     }
 

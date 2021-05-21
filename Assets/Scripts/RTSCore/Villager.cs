@@ -594,7 +594,6 @@ public class Villager : Unit
         if (!construction || construction.IsBuilt())
             return false;
 
-        // Use the repair rate unless the building hasn't been constructed.
         float rate = buildRate;
 
         //  Convert per second to per tick

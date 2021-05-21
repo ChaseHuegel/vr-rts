@@ -96,7 +96,7 @@ public class BuildingSpawnQueue : MonoBehaviour
         if (!structure.IsBuilt() || damageable.GetAttributePercent(Attributes.HEALTH) < 1.0f)
             return;
 
-        if (unitSpawnQueue.Count >= structure.rtsBuildingTypeData.maxUnitQueueSize)
+        if (unitSpawnQueue.Count >= structure.buildingData.maxUnitQueueSize)
             return;
 
         if (structure.factionID == PlayerManager.instance.factionID &&
