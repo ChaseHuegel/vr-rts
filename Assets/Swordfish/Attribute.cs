@@ -55,6 +55,8 @@ public class Attribute
     public Attribute Modify(float amount)           { this.value = Mathf.Clamp(this.value + amount, 0, max); return this; }
     public Attribute ModifyUnsafe(float amount)     { this.value += amount; return this; }
 
+    public float GetModified(float amount)           { return Mathf.Clamp(this.value + amount, 0, max); }
+
     public Attribute Max() { value = max; return this; }
     public Attribute Zero() { value = 0; return this; }
 

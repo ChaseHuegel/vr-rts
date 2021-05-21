@@ -27,6 +27,7 @@ public class Damageable : Attributable
         public Damageable entity;
         public Damageable healer;
         public float amount;
+        public float health;
     }
 
     public static event EventHandler<SpawnEvent> OnSpawnEvent;
@@ -63,9 +64,13 @@ public class Damageable : Attributable
     }
 
     #region Functions
-    
+
     public bool isDead() { return GetAttributeValue(Attributes.HEALTH) == 0; }
     public bool isAlive() { return GetAttributeValue(Attributes.HEALTH) > 0; }
+
+    public float GetHealth() { return GetAttributeValue(Attributes.HEALTH); }
+    public float GetMaxHealth() { return GetAttributeMax(Attributes.HEALTH); }
+    public float GetHealthPercent() { return GetAttributePercent(Attributes.HEALTH); }
 
     public void Damage(float damage, AttributeChangeCause cause = AttributeChangeCause.FORCED, Damageable attacker = null, DamageType type = DamageType.NONE)
     {
@@ -136,10 +141,10 @@ public class Damageable : Attributable
 
     public void Heal(float amount, AttributeChangeCause cause = AttributeChangeCause.FORCED, Damageable healer = null)
     {
-        if (GetAttribute(Attributes.HEALTH).GetPercent() == 1.0f) return;
+        if (GetAttribute(Attributes.HEALTH).GetPercent() >= 1.0f) return;
 
         //  Invoke a heal event
-        HealthRegainEvent e = new HealthRegainEvent{ cause = cause, entity = this, healer = healer, amount = amount };
+        HealthRegainEvent e = new HealthRegainEvent{ cause = cause, entity = this, healer = healer, amount = amount, health = GetAttribute(Attributes.HEALTH).GetModified(amount) };
         OnHealthRegainEvent?.Invoke(this, e);
         if (e.cancel) return;   //  return if the event has been cancelled by any subscriber
 

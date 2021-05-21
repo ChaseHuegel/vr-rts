@@ -16,7 +16,7 @@ public class Constructible : Obstacle, IFactioned
     public void UpdateFaction() { faction = GameMaster.Factions.Find(x => x.index == factionID); }
 
     public bool DestroyOnBuilt = true;
-    public BuildingData buildingData;  
+    public BuildingData buildingData;
     public GameObject OnBuiltPrefab;
     public GameObject[] ConstructionStages;
     private int currentStage;
@@ -55,7 +55,7 @@ public class Constructible : Obstacle, IFactioned
 
     private void UpdateStage()
     {
-        float progress = AttributeHandler.GetAttributePercent(Attributes.HEALTH);   
+        float progress = AttributeHandler.GetAttributePercent(Attributes.HEALTH);
         int progressStage = 0;// = (int)(progress / (1f / ConstructionStages.Length));
 
         if (progress >= 0.45f)
@@ -82,17 +82,17 @@ public class Constructible : Obstacle, IFactioned
         if (e.cause != AttributeChangeCause.HEALED)
             return;
 
-        if (AttributeHandler.GetAttribute(Attributes.HEALTH).GetValue() + e.amount >= AttributeHandler.GetAttribute(Attributes.HEALTH).GetMax())
+        if (e.health >= AttributeHandler.GetMaxHealth())
         {
             //  Try placing a prefab
             if (OnBuiltPrefab != null)
             {
-                GameObject obj = Instantiate(OnBuiltPrefab, transform.position, transform.rotation);                
+                GameObject obj = Instantiate(OnBuiltPrefab, transform.position, transform.rotation);
                 audioSource.PlayOneShot(buildingData.constructionCompletedAudio?.GetClip());
             }
 
             if (DestroyOnBuilt)
-            {   
+            {
                 UnbakeFromGrid();
                 Destroy(this.gameObject);
             }
