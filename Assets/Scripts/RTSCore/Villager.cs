@@ -79,8 +79,6 @@ public class Villager : Unit
 
         SetUnitType(rtsUnitType);
 
-        transportGoal = goals.Add<GoalTransportResource>();
-
         animator = gameObject.GetComponentInChildren<Animator>();
         if (!animator)
             Debug.Log("No animator component found.");
@@ -212,7 +210,7 @@ public class Villager : Unit
         base.Tick();
 
         //  Transport type always matches what our current resource is
-        transportGoal.type = currentResource;
+        if (transportGoal != null) transportGoal.type = currentResource;
 
         GotoNearestGoalWithPriority();
 
@@ -375,9 +373,6 @@ public class Villager : Unit
 
         if (state == UnitState.GATHERING)
         {
-            // TODO: Why is this here?
-            transportGoal = goals.Add<GoalTransportResource>();
-
             switch (resourceType)
             {
                 case ResourceGatheringType.Gold:
@@ -467,6 +462,7 @@ public class Villager : Unit
         }
         else if (e.goal is GoalTransportResource && villager.HasCargo())
         {
+            Debug.Log( ((GoalTransportResource)e.goal).type );
             villager.state = UnitState.TRANSPORTING;
             DisplayCargo(true);
             // TODO: ChangeEquippedItems should only be called when they change jobs.
