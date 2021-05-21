@@ -10,12 +10,12 @@ public class HealthBar : MonoBehaviour
     public bool showBarBackground = true;
     public bool showBarForeground = true;
     public bool showText = true;
-    
+
     [Range(0, 1.0f)]
     public float autoshowAt = 0.98f;
 
     [Range(0, 1.0f)]
-    public float autohideAt = 1.0f;    
+    public float autohideAt = 1.0f;
     public Image healthBarBackgroundImage;
     public Image healthBarForegroundImage;
     public Text healthBarStatusText;
@@ -36,7 +36,7 @@ public class HealthBar : MonoBehaviour
         gameObject.SetActive(true);
 
         if (!damageable)
-            damageable = GetComponentInParent<Damageable>();            
+            damageable = GetComponentInParent<Damageable>();
 
         if (damageable)
         {
@@ -53,13 +53,13 @@ public class HealthBar : MonoBehaviour
     public void OnHealthRegainEvent(object sender, Damageable.HealthRegainEvent e)
     {
         if (damageable)
-            SetFilledAmount(damageable.GetAttributePercent(Attributes.HEALTH));
+            SetFilledAmount(e.health / damageable.GetMaxHealth());
     }
 
     public void OnDamage(object sender, Damageable.DamageEvent e)
     {
         if (damageable)
-            SetFilledAmount(damageable.GetAttributePercent(Attributes.HEALTH));
+            SetFilledAmount(damageable.GetHealth() - e.damage / damageable.GetMaxHealth());
 
     }
 
@@ -87,7 +87,7 @@ public class HealthBar : MonoBehaviour
     }
 
     public void Hide()
-    {   
+    {
         if (showBarBackground)
             healthBarBackgroundImage.gameObject.SetActive(false);
         if (showBarForeground)
@@ -97,7 +97,7 @@ public class HealthBar : MonoBehaviour
     }
 
     public void Show()
-    {   
+    {
         if (showBarBackground)
             healthBarBackgroundImage.gameObject.SetActive(true);
         if (showBarForeground)

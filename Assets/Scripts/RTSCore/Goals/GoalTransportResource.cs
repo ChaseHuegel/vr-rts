@@ -9,7 +9,7 @@ public class GoalTransportResource : PathfindingGoal
     {
         Structure structure = cell?.GetFirstOccupant<Structure>();
 
-        if (structure != null && structure.CanDropOff(type) && structure.IsBuilt())
+        if (structure != null && structure.CanDropOff(type))
             return true;
 
         return false;

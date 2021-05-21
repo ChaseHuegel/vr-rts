@@ -93,7 +93,7 @@ public class BuildingSpawnQueue : MonoBehaviour
 
     public void QueueUnit(RTSUnitType unitTypeToQueue)
     {
-        if (!structure.IsBuilt() || damageable.GetAttributePercent(Attributes.HEALTH) < 1.0f)
+        if (damageable.GetAttributePercent(Attributes.HEALTH) < 1.0f)
             return;
 
         if (unitSpawnQueue.Count >= structure.buildingData.maxUnitQueueSize)

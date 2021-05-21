@@ -275,7 +275,7 @@ public class Villager : Unit
 
         // Turn off all goals except the transport goal.
         goals.Clear();
-        goals.Add<GoalTransportResource>();
+        transportGoal = goals.Add<GoalTransportResource>();
 
         switch ( unitType )
         {
@@ -509,7 +509,7 @@ public class Villager : Unit
 
     public bool TryDropoff(Structure structure)
     {
-        if (!structure || !HasCargo() || !structure.IsBuilt())
+        if (!structure || !HasCargo())
             return false;
 
         if (!structure.CanDropOff(currentResource))
@@ -567,14 +567,11 @@ public class Villager : Unit
 
     public bool TryRepair(Structure structure)
     {
-        if (!structure || structure.NeedsRepairs())
+        if (!structure || !structure.NeedsRepairs())
             return false;
 
-        // Use the repair rate unless the building hasn't been constructed.
-        float rate = structure.IsBuilt() ? repairRate : buildRate;
-
         //  Convert per second to per tick
-        float amount = (rate / (60/Constants.ACTOR_TICK_RATE));
+        float amount = (repairRate / (60/Constants.ACTOR_TICK_RATE));
 
         //  Trigger a repair event
         RepairEvent e = new RepairEvent{ villager = this, structure = structure, amount = amount };
@@ -594,10 +591,8 @@ public class Villager : Unit
         if (!construction || construction.IsBuilt())
             return false;
 
-        float rate = buildRate;
-
         //  Convert per second to per tick
-        float amount = (rate / (60/Constants.ACTOR_TICK_RATE));
+        float amount = (buildRate / (60/Constants.ACTOR_TICK_RATE));
 
         //  Trigger a build event
         BuildEvent e = new BuildEvent{ villager = this, constructible = construction, amount = amount };
