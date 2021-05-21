@@ -8,20 +8,18 @@ public class Structure : Obstacle, IFactioned
 {
     public byte factionID = 0;
     private Faction faction;
-
-    // Set to grab data about this building from database.
-    //public RTSBuildingType rtsBuildingType;
     public BuildingData buildingData;
-
     private Damageable damageable;
     public Damageable AttributeHandler { get { return damageable; } }
-
-    [Header( "Construction Phases" )]
-    private GameObject constructionPhaseBeginPrefab;
-    private GameObject constructionPhaseMiddlePrefab;
-    private GameObject constructionPhaseEndPrefab;
     private AudioSource audioSource;
+    private GameObject buildingDamagedFX;
+    private ParticleSystem smokeParticleSystem;
+    ParticleSystem.MainModule psMain;
+    private GameObject fireGlowParticleSystem;
+    private GameObject flamesParticleSystem;
+    private GameObject sparksParticleSystem;
     public Faction GetFaction() { return faction; }
+
     public void UpdateFaction() { faction = GameMaster.Factions.Find(x => x.index == factionID); }
 
     public bool NeedsRepairs() { return damageable.GetHealthPercent() < 1f; }
@@ -53,32 +51,38 @@ public class Structure : Obstacle, IFactioned
         damageable.GetAttribute(Attributes.HEALTH).SetMax(buildingData.hitPoints);
         damageable.OnDamageEvent += OnDamage;
 
-        // TODO: Could move this to be part of the RTSBuildingTypeData database and
-        // pull the prefabs directly from their. Would simplify creation/addition of
-        // new building types.
-        // SetConstructionPhasePrefabs();
+        if (!GameMaster.Instance.buildingDamagedFX)
+            Debug.Log("buildingDamagedFX not set in GameMaster.", this);
 
-        // if (!constructionPhaseBeginPrefab || !constructionPhaseMiddlePrefab || !constructionPhaseEndPrefab)
-        //     Debug.Log("Missing construction stage prefab(s).");
+        buildingDamagedFX = Instantiate(GameMaster.Instance.buildingDamagedFX, transform.position, Quaternion.identity, transform);
+        foreach (ParticleSystem pSystem in buildingDamagedFX.transform.GetComponentsInChildren<ParticleSystem>(true))
+        {
+            if (pSystem.name == "Smoke_A")
+            {
+                smokeParticleSystem = pSystem;
+                psMain = smokeParticleSystem.main;
+            }
 
+            else if (pSystem.name == "Fire_Glow")
+                fireGlowParticleSystem = pSystem.gameObject;
 
-        RefreshConstructionVisuals();
+            else if (pSystem.name == "sparks")
+                sparksParticleSystem = pSystem.gameObject;
 
-        // buildingHealthBar = GetComponentInChildren<HealthBar>( true );
-        // if (buildingHealthBar)
-        // {
-            // RefreshConstructionVisuals();
-        // }
-        // else
-        //     Debug.Log("No building health bar found.", this);
+            else if (pSystem.name == "Flames")
+                flamesParticleSystem = pSystem.gameObject;
+        }
+
+        RefreshVisuals();
     }
+
     void OnDamage(object sender, Damageable.DamageEvent e)
     {
-        RefreshConstructionVisuals();
+        RefreshVisuals();
 
         if (AttributeHandler.GetAttributePercent(Attributes.HEALTH) <= 0.0f)
         {
-            audioSource.PlayOneShot(GameMaster.GetAudio("building_collapsed").GetClip());
+            AudioSource.PlayClipAtPoint(GameMaster.GetAudio("building_collapsed").GetClip(), transform.position, 0.5f);
             Destroy(this.gameObject);
         }
     }
@@ -86,57 +90,46 @@ public class Structure : Obstacle, IFactioned
     public void TryRepair(float count, Actor repairer = null)
     {
         AttributeHandler.Heal(count, AttributeChangeCause.HEALED, repairer.AttributeHandler);
-        RefreshConstructionVisuals();
+        RefreshVisuals();
     }
 
-    void RefreshConstructionVisuals()
-    {
-        // TODO: This should be handled by the healthbar itself now through events, so remove
-        //    if no problems show up
-        /*
-        buildingHealthBar.SetFilledAmount(damageable.GetAttributePercent(Attributes.HEALTH));
-        if (damageable.GetAttributePercent(Attributes.HEALTH) < 1.0f)
-            buildingHealthBar.gameObject.SetActive(true);
-        */
+    void RefreshVisuals()
+    {        
+        if (!buildingDamagedFX)
+            return;
 
-        // Only set display of building stages if construction hasn't been
-        // completed yet.
-        // if (!built)
-        // {
-        //     if (damageable.GetAttributePercent(Attributes.HEALTH) >= 1f)
-        //     {
-        //         constructionPhaseEndPrefab.SetActive(true);
-        //         constructionPhaseMiddlePrefab.SetActive(false);
-        //         constructionPhaseBeginPrefab.SetActive(false);
-        //         audioSource.PlayOneShot(rtsBuildingTypeData.constructionCompletedAudio?.GetClip());
-        //         built = true;
+        float healthPercent = damageable.GetAttributePercent(Attributes.HEALTH);
+        if (healthPercent >= 1.0f)
+        {
+            if (buildingDamagedFX.activeSelf) buildingDamagedFX.SetActive(false);
+            return;
+        }
 
-        //         PlayerManager.instance.IncreasePopulationLimit(rtsBuildingTypeData.populationSupported);
-        //     }
-        //     else if (damageable.GetAttributePercent(Attributes.HEALTH) >= 0.5f)
-        //     {
-        //         constructionPhaseEndPrefab.SetActive(false);
-        //         constructionPhaseMiddlePrefab.SetActive(true);
-        //         constructionPhaseBeginPrefab.SetActive(false);
-        //     }
-        //     else if (damageable.GetAttributePercent(Attributes.HEALTH) >= 0.0f)
-        //     {
-        //         constructionPhaseEndPrefab.SetActive(false);
-        //         constructionPhaseMiddlePrefab.SetActive(false);
-        //         constructionPhaseBeginPrefab.SetActive(true);
-        //     }
-        // }
+        var emission = smokeParticleSystem.emission;
+        emission.rateOverTime = (1.0f - healthPercent) * 30;
+ 
+        float modifier = 2.0f - healthPercent;  
+        psMain.startLifetime = new ParticleSystem.MinMaxCurve(2.0f + modifier, 3.0f + modifier);
+
+        modifier = (1.0f - healthPercent) * 0.75f;
+        psMain.startSize = new ParticleSystem.MinMaxCurve(0.0f + modifier, 0.5f + modifier);
+
+        if (damageable.GetAttributePercent(Attributes.HEALTH) <= 0.35f)
+        {
+            if (!fireGlowParticleSystem.activeSelf) fireGlowParticleSystem.SetActive(true);
+            if (!flamesParticleSystem.activeSelf) flamesParticleSystem.SetActive(true);            
+            if (sparksParticleSystem.activeSelf) sparksParticleSystem.SetActive(false);
+        }
+        else
+        {
+            if (fireGlowParticleSystem.activeSelf) fireGlowParticleSystem.SetActive(false);
+            if (flamesParticleSystem.activeSelf) flamesParticleSystem.SetActive(false);            
+            if (sparksParticleSystem.activeSelf) sparksParticleSystem.SetActive(false);
+        }
+
+        if (!smokeParticleSystem.gameObject.activeSelf) smokeParticleSystem.gameObject.SetActive(true);
+        if (!buildingDamagedFX.activeSelf) buildingDamagedFX.SetActive(true);
     }
-
-    // Looks for 3 prefabs that are directly childed to the game object. The first
-    // in the hierarchy is the end stage of construction, the second is the middle
-    // stage, and the third is the beginning stage.
-    // void SetConstructionPhasePrefabs()
-    // {
-    //     constructionPhaseEndPrefab = transform.GetChild(0).gameObject;
-    //     constructionPhaseMiddlePrefab = transform.GetChild(1).gameObject;
-    //     constructionPhaseBeginPrefab = transform.GetChild(2).gameObject;
-    // }
 
     public bool CanDropOff(ResourceGatheringType type)
     {

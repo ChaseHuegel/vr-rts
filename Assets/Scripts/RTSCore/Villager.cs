@@ -443,9 +443,12 @@ public class Villager : Unit
         }
     }
 
+    PathfindingGoal currentGoalFound;
+    PathfindingGoal previousGoalFound;
+
     public void OnGoalFound(object sender, PathfindingGoal.GoalFoundEvent e)
     {
-        if (e.actor != this) return;
+        if (e.actor != this) return;            
 
         Villager villager = (Villager)e.actor;
 
@@ -455,26 +458,38 @@ public class Villager : Unit
         {
             villager.state = UnitState.GATHERING;
             villager.currentResource = ((GoalGatherResource)e.goal).type;
+            currentGoalFound = e.goal;      
             DisplayCargo(false);
-            // TODO: ChangeEquippedItems should only be called when they change jobs.
-            ChangeEquippedItems();
+            
+            if (currentGoalFound != previousGoalFound)
+                ChangeEquippedItems();
+
+            previousGoalFound = currentGoalFound;
             return;
         }
         else if (e.goal is GoalTransportResource && villager.HasCargo())
         {
-            //Debug.Log( ((GoalTransportResource)e.goal).type );
             villager.state = UnitState.TRANSPORTING;
+            currentGoalFound = e.goal;            
             DisplayCargo(true);
-            // TODO: ChangeEquippedItems should only be called when they change jobs.
-            ChangeEquippedItems();
+            
+            if (currentGoalFound != previousGoalFound)
+                ChangeEquippedItems();
+
+            previousGoalFound = currentGoalFound;
             return;
         }
         else if (e.goal is GoalBuildRepair)
         {
             villager.state = UnitState.BUILDANDREPAIR;
-            // TODO: ChangeEquippedItems should only be called when they change jobs.
-            ChangeEquippedItems();
+            currentGoalFound = e.goal;
+            
+            if (currentGoalFound != previousGoalFound)
+                ChangeEquippedItems();
+
+            previousGoalFound = currentGoalFound;
             return;
+
         }
 
         //  default cancel the goal so that another can take priority

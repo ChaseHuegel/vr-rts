@@ -36,6 +36,9 @@ public class GameMaster : Singleton<GameMaster>
 
     [Header("Prefabs")]
     public GameObject floatingIndicatorPrefab;
+    public GameObject buildingDamagedFX;
+    public GameObject buildingDestroyedFX;
+    public AudioClip buildingDestroyedSound;
 
     public static void SendFloatingIndicator(Vector3 pos, string text, Color color)
     {
