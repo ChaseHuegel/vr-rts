@@ -33,7 +33,7 @@ public class Attributable : MonoBehaviour
     {
         for (int i = 0; i < attributes.Count; i++)
         {
-            if (attributes[i].GetAttribute() == attribute) return attributes[i].GetValue() / attributes[i].GetMax();
+            if (attributes[i].GetAttribute() == attribute) return attributes[i].GetPercent();
         }
 
         return 0.0f;

@@ -53,12 +53,11 @@ public class Actor : Body
 
 #region immutable methods
 
-    // TODO: This is doing nothing.
     public bool IsIdle() { return idle; }
-    private bool UpdateIdle()
+    private void UpdateIdle()
     {
         //  Idle if not frozen and not moving, pathing, or has a target goal
-        return ( !frozen && !(IsMoving() || HasValidPath() || HasValidTarget()) );
+        idle = ( !frozen && !(IsMoving() || HasValidPath() || HasValidTarget()) );
     }
 
     public bool IsMoving() { return moving; }
@@ -264,7 +263,6 @@ public class Actor : Body
             }
 
             UpdateIdle();
-            // TODO: IsIdle doesn't do anything because 'idle' is never used.
             if (IsIdle()) ResetAI();
 
             Tick();
@@ -300,7 +298,8 @@ public class Actor : Body
             pathTimer = 0;  //  Ticked
 
         //  Make certain pathing is unlocked as soon as the path is no longer valid
-        if (!HasValidPath()) UnlockPath();
+        if (IsPathLocked() && !HasValidPath())
+            UnlockPath();
 
         //  If we have a valid path, move along it
         if (HasValidPath())

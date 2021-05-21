@@ -76,7 +76,7 @@ public class Villager : Unit
     {
         base.Initialize();
         HookIntoEvents();
-        
+
         SetUnitType(rtsUnitType);
 
         transportGoal = goals.Add<GoalTransportResource>();
@@ -89,7 +89,7 @@ public class Villager : Unit
             PlayerManager.instance.AddToPopulation((Unit)this);
 
         AttributeHandler.OnDamageEvent += OnDamage;
-        
+
         //ChangeTaskVisuals();
     }
 
@@ -567,7 +567,7 @@ public class Villager : Unit
 
     public bool TryRepair(Structure structure)
     {
-        if (!structure || structure.AttributeHandler.GetAttributePercent(Attributes.HEALTH) >= 1f)
+        if (!structure || structure.NeedsRepairs())
             return false;
 
         // Use the repair rate unless the building hasn't been constructed.
@@ -591,7 +591,7 @@ public class Villager : Unit
 
     public bool TryBuild(Constructible construction)
     {
-        if (!construction || construction.AttributeHandler.GetAttributePercent(Attributes.HEALTH) >= 1f)
+        if (!construction || construction.IsBuilt())
             return false;
 
         // Use the repair rate unless the building hasn't been constructed.
