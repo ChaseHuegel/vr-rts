@@ -40,6 +40,8 @@ public class GameMaster : Singleton<GameMaster>
     public GameObject buildingDestroyedFX;
     public AudioClip buildingDestroyedSound;
 
+    public float unitCorpseDecayTime = 30.0f;
+
     public static void SendFloatingIndicator(Vector3 pos, string text, Color color)
     {
         GameObject obj = Instantiate(Instance.floatingIndicatorPrefab, pos, Quaternion.identity);

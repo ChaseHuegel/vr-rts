@@ -115,7 +115,7 @@ public class Unit : Actor, IFactioned
 
     // 90% damage from 6 second fall at the gravity acceleration
     // rate of 9.81.
-    float damageMultiplier = 6.0f;// 90.0f / (9.81f * 6.0f);
+    float damageMultiplier = 10.0f;// 90.0f / (9.81f * 6.0f);
     public virtual void OnCollisionEnter(Collision collision)
     {
         if (wasThrownOrDropped)
@@ -130,8 +130,8 @@ public class Unit : Actor, IFactioned
                 audioSource.PlayOneShot(GameMaster.GetAudio("unit_damaged").GetClip(), 0.25f);
                 wasThrownOrDropped = false;
 
-                Debug.Log(string.Format("Magnitude: {0} Damage: {1} Health: {2}", collision.relativeVelocity.magnitude,
-                            damage, AttributeHandler.GetAttributePercent(Attributes.HEALTH).ToString()));
+                // Debug.Log(string.Format("Magnitude: {0} Damage: {1} Health: {2}", collision.relativeVelocity.magnitude,
+                //             damage, AttributeHandler.GetAttributePercent(Attributes.HEALTH).ToString()));
             }
         }
     }
