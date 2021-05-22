@@ -10,7 +10,7 @@ public class GoalHuntVillagers: PathfindingGoal
     {
         Villager villager = cell?.GetFirstOccupant<Villager>();
 
-        if (villager != null && villager.factionID != myFactionID)
+        if (villager  && !villager.isDying && villager.factionID != myFactionID)
             return true;
             
         return false;

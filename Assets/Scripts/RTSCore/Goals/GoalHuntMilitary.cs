@@ -8,10 +8,10 @@ public class GoalHuntMilitary: PathfindingGoal
     public int myFactionID;
     public override bool CheckGoal(Cell cell)
     {
-        Unit unit = cell?.GetFirstOccupant<Unit>();
+        Unit unit = cell.GetFirstOccupant<Unit>();
 
-        if (unit != null && !unit.IsCivilian() && unit.factionID != myFactionID)
-            return true;
+        if (unit && !unit.IsCivilian() && !unit.isDying && unit.factionID != myFactionID)
+                return true;
             
         return false;
     }

@@ -73,13 +73,16 @@ public class Villager : Unit
         AttributeHandler.OnDamageEvent += OnDamage;
 
         //ChangeTaskVisuals();
+
     }
 
-    void OnDamage(object sender, Damageable.DamageEvent e)
+    public void OnDamage(object sender, Damageable.DamageEvent e)
     {
-        if (!isDead && AttributeHandler.GetAttributePercent(Attributes.HEALTH) <= 0.0f)
+        if (!isDying && AttributeHandler.GetAttributePercent(Attributes.HEALTH) <= 0.0f)
         {
-            isDead = true;
+            isDying = true;
+            Freeze();
+            ResetAI(); 
             animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.DYING);
             audioSource.PlayOneShot(GameMaster.GetAudio("unit_death").GetClip(), 0.5f);
             Destroy(this.gameObject, 10.0f);
@@ -186,7 +189,7 @@ public class Villager : Unit
 
     public override void Tick()
     {
-        if (isHeld || isDead)
+        if (isHeld || isDying)
             return;
 
         base.Tick();

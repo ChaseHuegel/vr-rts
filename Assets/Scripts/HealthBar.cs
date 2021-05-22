@@ -61,6 +61,9 @@ public class HealthBar : MonoBehaviour
         if (damageable)
             SetFilledAmount((damageable.GetHealth() - e.damage) / damageable.GetMaxHealth());
 
+        if (GetFilledAmount() <= 0.0f)
+            Hide();
+
     }
 
     public float GetFilledAmount()

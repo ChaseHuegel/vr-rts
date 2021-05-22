@@ -10,7 +10,7 @@ using MLAPI;
 
 public class AutoSpawner : MonoBehaviour
 {
-    [Header("Autospawn")]
+    [Header("Autospawn Settings")]
     public bool autospawn;
 
     [Min(0.0f)]

@@ -22,7 +22,7 @@ public class Soldier : Unit
     {
         base.Initialize();
         HookIntoEvents();        
-
+        
         SetAIAttackGoals(huntVillagers, huntMilitary, huntBuildings);
 
         animator = gameObject.GetComponentInChildren<Animator>();
@@ -30,11 +30,11 @@ public class Soldier : Unit
             Debug.Log("No animator component found.");
 
         if(PlayerManager.instance.factionID == factionID)
-            PlayerManager.instance.AddToPopulation((Unit)this);
-        
+            PlayerManager.instance.AddToPopulation((Unit)this);     
+
         AttributeHandler.OnDamageEvent += OnDamage;
     }
-
+    
     public void HookIntoEvents()
     {
         PathfindingGoal.OnGoalFoundEvent += OnGoalFound;
@@ -51,6 +51,8 @@ public class Soldier : Unit
         
         if (buildings)
             goals.Add<GoalHuntBuildings>().myFactionID = factionID;
+
+        ResetAI();
     }
 
     bool StateChanged() { return state != previousState; }
@@ -79,7 +81,7 @@ public class Soldier : Unit
 
     public override void Tick()
     {
-        if (isHeld || isDead)
+        if (isHeld || isDying)
             return;
 
         base.Tick();
@@ -98,11 +100,13 @@ public class Soldier : Unit
         previousState = state;
     }
 
-    void OnDamage(object sender, Damageable.DamageEvent e)
+    public void OnDamage(object sender, Damageable.DamageEvent e)
     {
-        if (!isDead && AttributeHandler.GetAttributePercent(Attributes.HEALTH) <= 0.0f)
+        if (!isDying && AttributeHandler.GetAttributePercent(Attributes.HEALTH) <= 0.0f)
         {
-            isDead = true;
+            isDying = true;
+            Freeze();
+            ResetAI();           
             animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.DYING);
             audioSource.PlayOneShot(GameMaster.GetAudio("unit_death").GetClip(), 0.5f);
             Destroy(this.gameObject, 10.0f);
@@ -120,7 +124,7 @@ public class Soldier : Unit
         if (e.actor != this) 
             return;
 
-        // Debug.Log(string.Format("Found target {0}!", e.cell.GetFirstOccupant().name));
+        //Debug.Log(string.Format("Found target {0}!", e.cell.GetFirstOccupant().name));
 
         //  default cancel the goal so that another can take priority
         //ResetGoal();
@@ -131,14 +135,20 @@ public class Soldier : Unit
     {
         if (e.actor != this) 
             return;
-
-
+        
         if (e.goal is GoalHuntUnits || e.goal is GoalHuntMilitary || e.goal is GoalHuntVillagers)
         {
-            Unit unit = e.cell.GetFirstOccupant<Unit>();            
-            Damageable damageable = unit.GetComponent<Damageable>();
+            Unit unit = e.cell.GetFirstOccupant<Unit>();
+            
+
+            Damageable damageable = unit.GetComponent<Damageable>();            
             damageable.Damage(rtsUnitTypeData.attackDamage, AttributeChangeCause.ATTACKED, null, DamageType.SLASHING);
-            animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.ATTACKING);
+            
+            if (unit.IsDead())
+                animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.IDLE);
+            else
+                animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.ATTACKING);
+
             return;
         }
         else if (e.goal is GoalHuntBuildings)
@@ -161,7 +171,12 @@ public class Soldier : Unit
             {
                 Damageable damageable = unit.GetComponent<Damageable>();
                 damageable.Damage(rtsUnitTypeData.attackDamage, AttributeChangeCause.ATTACKED, null, DamageType.SLASHING);
-                animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.ATTACKING);
+               
+                if (unit.IsDead())
+                    animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.IDLE);
+                else
+                    animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.ATTACKING);
+                    
                 return;
             }
 

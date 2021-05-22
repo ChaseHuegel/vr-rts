@@ -66,6 +66,9 @@ public class BuildingHoverDisplay : MonoBehaviour
             Debug.Log("menuGameObject not set.", this);
             menuEnabled = false;
         }
+        else if (menuGameObject && !menuEnabled)
+            menuGameObject.SetActive(false);
+            
 
         if (startHidden)
             Hide();

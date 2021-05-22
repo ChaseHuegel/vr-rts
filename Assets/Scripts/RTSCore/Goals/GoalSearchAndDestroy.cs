@@ -9,7 +9,7 @@ public class GoalSearchAndDestroy: PathfindingGoal
     public override bool CheckGoal(Cell cell)
     {
         Unit unit = cell.GetFirstOccupant<Unit>();
-        if (unit && unit.factionID != myFactionID)
+        if (unit && !unit.isDying && unit.factionID != myFactionID)
             return true;
 
         Structure structure = cell.GetFirstOccupant<Structure>();

@@ -13,6 +13,7 @@ public enum RTSUnitType
     StoneMiner,
     Farmer,
     Swordsman,
+    OrcGrunt,
     
 };
 

@@ -29,7 +29,7 @@ public class Unit : Actor, IFactioned
     public UnitState state;
     
     public bool isHeld;
-    public bool isDead;
+    public bool isDying;
     public bool wasThrownOrDropped;
     protected UnitState previousState;
 
@@ -75,6 +75,11 @@ public class Unit : Actor, IFactioned
         return (int)rtsUnitTypeData.unitType < (int)RTSUnitType.Swordsman;
     }
 
+    public bool IsDead()
+    {
+        return AttributeHandler.GetAttributePercent(Attributes.HEALTH) <= 0.0f;
+    }
+
     public virtual void OnAttachedToHand(Hand hand)
     {
         isHeld = true;
@@ -86,11 +91,10 @@ public class Unit : Actor, IFactioned
         if(factionID == PlayerManager.instance.factionID)
             audioSource.PlayOneShot(GameMaster.GetAudio("unit_pickup_friendly").GetClip(), 0.5f);  
         else
-            audioSource.PlayOneShot(GameMaster.GetAudio("unit_pickup_enemy").GetClip(), 0.5f);
-
-        
+            audioSource.PlayOneShot(GameMaster.GetAudio("unit_pickup_enemy").GetClip(), 0.5f);       
         
     }
+    
     public virtual void OnDetachedFromHand(Hand hand)
     {
         isHeld = false;

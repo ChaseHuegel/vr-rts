@@ -109,7 +109,8 @@ public class Structure : Obstacle, IFactioned
         }
 
         var emission = smokeParticleSystem.emission;
-        emission.rateOverTime = (1.0f - healthPercent) * 30;
+        // Base rate desired + percent health missing * modifier.
+        emission.rateOverTime = 4.0f + ((1.0f - healthPercent) * 30);
  
         float modifier = 2.0f - healthPercent;  
         psMain.startLifetime = new ParticleSystem.MinMaxCurve(2.0f + modifier, 3.0f + modifier);
