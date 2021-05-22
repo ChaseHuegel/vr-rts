@@ -84,7 +84,7 @@ public class Actor : Body
 
     public void UpdatePosition()
     {
-        HardSnapToGrid();
+        SyncPosition();
         ResetAI();
     }
 

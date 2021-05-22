@@ -4,7 +4,7 @@ using Swordfish;
 
 [System.Serializable]
 public class GoalHuntMilitary: PathfindingGoal
-{   
+{
     public int myFactionID;
     public override bool CheckGoal(Cell cell)
     {
@@ -12,7 +12,7 @@ public class GoalHuntMilitary: PathfindingGoal
 
         if (unit && !unit.IsCivilian() && !unit.isDying && unit.factionID != myFactionID)
                 return true;
-            
+
         return false;
     }
 }

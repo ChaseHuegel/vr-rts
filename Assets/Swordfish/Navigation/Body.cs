@@ -17,12 +17,7 @@ public class Body : MonoBehaviour
 
     private void Start()
     {
-        //  Snap to the grid with rounding
-        //  Round instead of truncate the initial position (i.e. obstacles which don't align with the grid)
-        //  Rounding is more accurate but has more overhead than truncating
-        //  Do NOT round unless necessary! Movement is bound to the grid, accuracy not an issue
-        HardSnapToGrid();
-
+        SyncPosition();
         Initialize();
     }
 
@@ -199,25 +194,26 @@ public class Body : MonoBehaviour
     }
 
     //  Perform a 'soft' snap by truncating. Inaccurate but less overhead.
-    public void SnapToGrid()
-    {
-        Vector3 pos = World.ToWorldSpace(transform.position);
-        gridPosition.x = (int)pos.x;
-        gridPosition.y = (int)pos.z;
+    // public void SnapToGrid()
+    // {
+    //     Vector3 pos = World.ToWorldSpace(transform.position);
 
-        UpdateTransform();
-    }
+    //     gridPosition.x = (int)pos.x;
+    //     gridPosition.y = (int)pos.z;
 
-    //  Perform a 'hard' snap by rounding. More accurate with more overhead.
-    public void HardSnapToGrid()
-    {
-        Vector3 pos = World.ToWorldSpace(transform.position);
+    //     UpdateTransform();
+    // }
 
-        gridPosition.x = Mathf.RoundToInt(pos.x);
-        gridPosition.y = Mathf.RoundToInt(pos.z);
+    // //  Perform a 'hard' snap by rounding. More accurate with more overhead.
+    // public void HardSnapToGrid()
+    // {
+    //     Vector3 pos = World.ToWorldSpace(transform.position);
 
-        UpdateTransform();
-    }
+    //     gridPosition.x = Mathf.RoundToInt(pos.x);
+    //     gridPosition.y = Mathf.RoundToInt(pos.z);
+
+    //     UpdateTransform();
+    // }
 
     //  Force the transform to match the grid position
     public void UpdateTransform()
