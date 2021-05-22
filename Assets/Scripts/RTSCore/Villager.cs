@@ -65,7 +65,7 @@ public class Villager : Unit
         base.Initialize();
         HookIntoEvents();
 
-        SetUnitType(rtsUnitType);        
+        SetUnitType(rtsUnitType);
 
         if(PlayerManager.instance.factionID == factionID)
             PlayerManager.instance.AddToPopulation((Unit)this);
@@ -82,7 +82,7 @@ public class Villager : Unit
         {
             isDying = true;
             Freeze();
-            ResetAI(); 
+            ResetAI();
             animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.DYING);
             audioSource.PlayOneShot(GameMaster.GetAudio("unit_death").GetClip(), 0.5f);
             Destroy(this.gameObject, GameMaster.Instance.unitCorpseDecayTime);
@@ -125,7 +125,7 @@ public class Villager : Unit
     public override void OnDetachedFromHand(Hand hand)
     {
         base.OnDetachedFromHand(hand);
-        villagerHoverMenu.Hide();        
+        villagerHoverMenu.Hide();
         detachFromHandTime = Time.time;
     }
 
@@ -433,9 +433,15 @@ public class Villager : Unit
 
     public void OnGoalFound(object sender, PathfindingGoal.GoalFoundEvent e)
     {
-        if (e.actor != this) return;            
+        if (e.actor != this) return;
 
         Villager villager = (Villager)e.actor;
+
+        if (currentGoalTarget != previousGoalTarget)
+        {
+            Resource resource = previousGoalTarget?.GetFirstOccupant<Resource>();
+            if (resource) resource.interactors--;
+        }
 
         // TODO: ChangeEquippedItems should only be called when they change jobs.
         //  Need C# 7 in Unity for switching by type!!!
@@ -443,21 +449,28 @@ public class Villager : Unit
         {
             villager.state = UnitState.GATHERING;
             villager.currentResource = ((GoalGatherResource)e.goal).type;
-            currentGoalFound = e.goal;      
+            currentGoalFound = e.goal;
             DisplayCargo(false);
-            
-            if (currentGoalFound != previousGoalFound)
-                ChangeEquippedItems();
 
-            previousGoalFound = currentGoalFound;
-            return;
+            Resource resource = e.cell?.GetFirstOccupant<Resource>();
+
+            if (!resource.IsBusy())
+            {
+                resource.interactors++;
+
+                if (currentGoalFound != previousGoalFound)
+                    ChangeEquippedItems();
+
+                previousGoalFound = currentGoalFound;
+                return;
+            }
         }
         else if (e.goal is GoalTransportResource && villager.HasCargo())
         {
             villager.state = UnitState.TRANSPORTING;
-            currentGoalFound = e.goal;            
+            currentGoalFound = e.goal;
             DisplayCargo(true);
-            
+
             if (currentGoalFound != previousGoalFound)
                 ChangeEquippedItems();
 
@@ -468,7 +481,7 @@ public class Villager : Unit
         {
             villager.state = UnitState.BUILDANDREPAIR;
             currentGoalFound = e.goal;
-            
+
             if (currentGoalFound != previousGoalFound)
                 ChangeEquippedItems();
 
