@@ -114,7 +114,7 @@ public class Soldier : Unit
                 animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.DYING2);
 
             audioSource.PlayOneShot(GameMaster.GetAudio("unit_death").GetClip(), 0.5f);
-            Destroy(this.gameObject, 10.0f);
+            Destroy(this.gameObject, GameMaster.Instance.unitCorpseDecayTime);
         }
     }
 

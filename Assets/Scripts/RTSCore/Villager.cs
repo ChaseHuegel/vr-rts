@@ -85,7 +85,7 @@ public class Villager : Unit
             ResetAI(); 
             animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.DYING);
             audioSource.PlayOneShot(GameMaster.GetAudio("unit_death").GetClip(), 0.5f);
-            Destroy(this.gameObject, 10.0f);
+            Destroy(this.gameObject, GameMaster.Instance.unitCorpseDecayTime);
         }
     }
 
