@@ -90,6 +90,7 @@ GameObject:
   - component: {fileID: 2566623956823716198}
   - component: {fileID: 5012690922499165906}
   - component: {fileID: 2683763212137216233}
+  - component: {fileID: -7623090500466327019}
   m_Layer: 10
   m_Name: House_Construction
   m_TagString: Untagged
@@ -349,6 +350,23 @@ MonoBehaviour:
   - {fileID: 3859088942351870517}
   - {fileID: 4773166446020124084}
   - {fileID: 5037401878110017869}
+--- !u!114 &-7623090500466327019
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2683763212137216232}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NetworkInstanceId: 0
+  PrefabHash: 6794554364686937333
+  PrefabHashGenerator: House_Construction
+  AlwaysReplicateAsRoot: 0
+  DontDestroyWithOwner: 0
 --- !u!1 &3859088942351870517
 GameObject:
   m_ObjectHideFlags: 0

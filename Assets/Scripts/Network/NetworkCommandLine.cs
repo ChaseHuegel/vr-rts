@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using MLAPI;
 using UnityEngine;
-
+using UnityEngine.XR;
+using UnityEngine.XR.Management; 
+using Valve.VR;
 public class NetworkCommandLine : MonoBehaviour
 {
    private NetworkManager netManager;
@@ -18,16 +20,21 @@ public class NetworkCommandLine : MonoBehaviour
        {
            switch (mlapiValue)
            {
-               case "server":
-                   netManager.StartServer();
-                   break;
-               case "host":
-                   netManager.StartHost();
-                   break;
-               case "client":
-         
-                   netManager.StartClient();
-                   break;
+                case "server":
+                    netManager.StartServer();
+                    XRGeneralSettings.Instance.Manager.DeinitializeLoader();                    
+                    //PlayerManager.instance.gameObject.transform.GetChild(0).gameObject.SetActive(false);
+                    //PlayerManager.instance.gameObject.transform.GetChild(1).gameObject.SetActive(true);
+                    break;
+
+                case "host":
+                    netManager.StartHost();
+                    break;
+
+                case "client":
+            
+                    netManager.StartClient();
+                    break;
            }
        }
    }

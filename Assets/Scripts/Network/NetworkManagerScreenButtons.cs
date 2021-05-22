@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace HelloWorld
 {   
-    public class HelloWorldManager : MonoBehaviour
+    public class NetworkManagerScreenButtons : MonoBehaviour
     {
         void OnGUI()
         {

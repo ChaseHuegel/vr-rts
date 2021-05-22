@@ -2562,7 +2562,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4603657074501875549
 Transform:
   m_ObjectHideFlags: 0
@@ -2571,7 +2571,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4603657074501634421}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.865, y: 0.809, z: -2.071}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4603657074501764709}
@@ -2900,6 +2900,7 @@ GameObject:
   - component: {fileID: 4603657074826361739}
   - component: {fileID: 4603657074501646245}
   - component: {fileID: 4603657074501646244}
+  - component: {fileID: 4603657073447195608}
   m_Layer: 0
   m_Name: VRTSPlayer
   m_TagString: Untagged
@@ -2914,7 +2915,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4603657074501646247}
-  m_LocalRotation: {x: -0, y: -0.70710707, z: -0, w: 0.70710653}
+  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: -4.336, y: 0.020999998, z: -8.607}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -3034,16 +3035,15 @@ MonoBehaviour:
   militaryPopulation: 0
   totalPopulation: 0
   populationLimit: 0
+  queueCount: 0
   usePalmMenu: 0
   hammerOnLeft: 1
   hammerOnRight: 1
   rHandHammerAttachmentpoint: {fileID: 4603657074131860891}
   lHandHammerAttachmentPoint: {fileID: 4603657074113939285}
   palmMenu: {fileID: 4965974898166583166}
-  rHandClipboardAttachmentPoint: {fileID: 0}
   rHandPalmUpAttachmentPoint: {fileID: 4603657074740535202}
   rHandPalmUpTrackingPoint: {fileID: 0}
-  lHandClipboardAttachmentPoint: {fileID: 0}
   lHandPalmUpAttachmentPoint: {fileID: 4603657075116992510}
   lHandPalmUpTrackingPoint: {fileID: 4603657073280454864}
   WristDisplay: {fileID: 8638884949150864592}
@@ -3051,6 +3051,7 @@ MonoBehaviour:
     actionPath: /actions/default/in/ToggleHandMenu
     needsReinit: 0
   handBuildMenu: {fileID: 5685968903791870704}
+  factionID: 0
 --- !u!82 &4603657074501646245
 AudioSource:
   m_ObjectHideFlags: 0
@@ -3195,6 +3196,28 @@ MonoBehaviour:
   useRandomSilence: 0
   percentToNotPlay: 0
   delayOffsetTime: 0
+--- !u!114 &4603657073447195608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4603657074501646247}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e8ba746382a328499420ecf9914b04b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  toggleKey: 96
+  openOnStart: 0
+  shakeToOpen: 1
+  shakeRequiresTouch: 0
+  shakeAcceleration: 3
+  toggleThresholdSeconds: 0.5
+  restrictLogCount: 0
+  maxLogCount: 1000
+  logFontSize: 12
+  scaleFactor: 1
 --- !u!1 &4603657074501646447
 GameObject:
   m_ObjectHideFlags: 0
@@ -3713,6 +3736,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ef8e9441eb74e98489017b5509c05fe1, type: 3}
+--- !u!4 &8638884949150864595 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5188152958490881480, guid: ef8e9441eb74e98489017b5509c05fe1,
+    type: 3}
+  m_PrefabInstance: {fileID: 4603657073583372571}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &8638884949150864592 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5188152958490881483, guid: ef8e9441eb74e98489017b5509c05fe1,
@@ -3725,12 +3754,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64f126287fd58724d8380535ccde9a11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!4 &8638884949150864595 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5188152958490881480, guid: ef8e9441eb74e98489017b5509c05fe1,
-    type: 3}
-  m_PrefabInstance: {fileID: 4603657073583372571}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4603657074726770197
 PrefabInstance:
   m_ObjectHideFlags: 0

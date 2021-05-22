@@ -35,7 +35,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 6
-    m_ConditionEvent: VillagerActorState
+    m_ConditionEvent: ActorAnimationState
     m_EventTreshold: 2
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -4275545256435295056}
@@ -138,7 +138,7 @@ AnimatorStateMachine:
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: 220, y: 110, z: 0}
   m_EntryPosition: {x: -310, y: -20, z: 0}
-  m_ExitPosition: {x: -240, y: 330, z: 0}
+  m_ExitPosition: {x: 820, y: -150, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
   m_DefaultState: {fileID: -5474408462618472580}
 --- !u!1102 &-5682329433091358202
@@ -204,7 +204,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 6
-    m_ConditionEvent: VillagerActorState
+    m_ConditionEvent: ActorAnimationState
     m_EventTreshold: 1
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -5682329433091358202}
@@ -406,7 +406,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 6
-    m_ConditionEvent: VillagerActorState
+    m_ConditionEvent: ActorAnimationState
     m_EventTreshold: 4
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -4831668101991292871}
@@ -431,7 +431,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 6
-    m_ConditionEvent: VillagerActorState
+    m_ConditionEvent: ActorAnimationState
     m_EventTreshold: 10
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -6847883475224391090}
@@ -456,7 +456,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 6
-    m_ConditionEvent: VillagerActorState
+    m_ConditionEvent: ActorAnimationState
     m_EventTreshold: 3
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -3389740939880177432}
@@ -507,7 +507,7 @@ AnimatorTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 6
-    m_ConditionEvent: VillagerActorState
+    m_ConditionEvent: ActorAnimationState
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -5474408462618472580}
@@ -666,18 +666,18 @@ AnimatorController:
   m_Name: villager
   serializedVersion: 5
   m_AnimatorParameters:
-  - m_Name: VillagerActorState
+  - m_Name: ActorAnimationState
     m_Type: 3
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
+    m_Controller: {fileID: 0}
   - m_Name: TakeDamage
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
+    m_Controller: {fileID: 0}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Base Layer
@@ -744,7 +744,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 6
-    m_ConditionEvent: VillagerActorState
+    m_ConditionEvent: ActorAnimationState
     m_EventTreshold: 1
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -5682329433091358202}
@@ -846,7 +846,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 6
-    m_ConditionEvent: VillagerActorState
+    m_ConditionEvent: ActorAnimationState
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -5474408462618472580}
@@ -897,7 +897,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 6
-    m_ConditionEvent: VillagerActorState
+    m_ConditionEvent: ActorAnimationState
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -5474408462618472580}
@@ -998,7 +998,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 6
-    m_ConditionEvent: VillagerActorState
+    m_ConditionEvent: ActorAnimationState
     m_EventTreshold: 5
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -4794070978907281927}

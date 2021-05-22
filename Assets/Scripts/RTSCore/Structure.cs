@@ -101,7 +101,7 @@ public class Structure : Obstacle, IFactioned
         float healthPercent = damageable.GetAttributePercent(Attributes.HEALTH);
         if (healthPercent >= 1.0f)
         {
-            if (buildingDamagedFX.activeSelf) buildingDamagedFX.SetActive(false);
+            if (buildingDamagedFX.activeSelf) buildingDamagedFX.SetActive(false);            
             return;
         }
 
@@ -116,16 +116,29 @@ public class Structure : Obstacle, IFactioned
 
         if (damageable.GetAttributePercent(Attributes.HEALTH) <= 0.35f)
         {
+            if (!audioSource.isPlaying)
+            {
+                audioSource.clip = GameMaster.GetAudio("crackling_fire").GetClip();
+                audioSource.volume = 0.25f;
+                audioSource.Play();
+            }
+
             if (!fireGlowParticleSystem.activeSelf) fireGlowParticleSystem.SetActive(true);
-            if (!flamesParticleSystem.activeSelf) flamesParticleSystem.SetActive(true);            
-            if (sparksParticleSystem.activeSelf) sparksParticleSystem.SetActive(false);
+            if (!flamesParticleSystem.activeSelf) flamesParticleSystem.SetActive(true);
+
+            if (sparksParticleSystem.activeSelf) sparksParticleSystem.SetActive(false);            
         }
         else
         {
+            if (audioSource.isPlaying)
+                audioSource.Stop();
+
             if (fireGlowParticleSystem.activeSelf) fireGlowParticleSystem.SetActive(false);
             if (flamesParticleSystem.activeSelf) flamesParticleSystem.SetActive(false);            
             if (sparksParticleSystem.activeSelf) sparksParticleSystem.SetActive(false);
         }
+
+        
 
         if (!smokeParticleSystem.gameObject.activeSelf) smokeParticleSystem.gameObject.SetActive(true);
         if (!buildingDamagedFX.activeSelf) buildingDamagedFX.SetActive(true);

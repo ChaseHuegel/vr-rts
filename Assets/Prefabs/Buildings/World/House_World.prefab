@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 5412639916344327254}
   - component: {fileID: 3213080094431032773}
   - component: {fileID: -3847769097304552847}
+  - component: {fileID: 762467159594771550}
   m_Layer: 10
   m_Name: House_World
   m_TagString: Untagged
@@ -267,6 +268,23 @@ MonoBehaviour:
   menuGameObject: {fileID: 1132044391496545739}
   healthBar: {fileID: 1336548388726971529}
   objectsToAutohide: []
+--- !u!114 &762467159594771550
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3042174803139083339}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NetworkInstanceId: 0
+  PrefabHash: 17352276341813831146
+  PrefabHashGenerator: House_World
+  AlwaysReplicateAsRoot: 0
+  DontDestroyWithOwner: 0
 --- !u!1 &5377417405777167938
 GameObject:
   m_ObjectHideFlags: 0

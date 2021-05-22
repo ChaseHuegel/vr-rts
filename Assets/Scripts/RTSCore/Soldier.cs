@@ -15,22 +15,8 @@ public class Soldier : Unit
     public bool huntMilitary = true;
     public bool huntBuildings = true;
 
-    [Header("Soldier")]
-    protected Animator animator;
-    private AudioSource audioSource;
 
-    [Header ("Visuals")]
     //public VillagerHoverMenu villagerHoverMenu;
-
-    bool isHeld;   
-    bool isDead;
-
-    public void Awake()
-    {
-        audioSource = gameObject.GetComponent<AudioSource>();
-        if (!audioSource)
-            Debug.Log("No audiosource component found.");
-    }    
 
     public override void Initialize()
     {
@@ -69,31 +55,26 @@ public class Soldier : Unit
 
     bool StateChanged() { return state != previousState; }
 
-    public void OnHandHoverBegin(Hand hand)
+    public override void OnHandHoverBegin(Hand hand)
     {
+        base.OnHandHoverBegin(hand);        
         // villagerHoverMenu.Show();
     }
 
-    public void OnHandHoverEnd(Hand hand)
+    public override void OnHandHoverEnd(Hand hand)
     {
+        base.OnHandHoverEnd(hand);
         // villagerHoverMenu.Hide();
     }
 
-    public void OnAttachedToHand(Hand hand)
+    public override void OnAttachedToHand(Hand hand)
     {
-        isHeld = true;
-        //villagerHoverMenu.Show();
-        Freeze();
-        animator.SetInteger("VillagerActorState", (int)ActorAnimationState.IDLE);
-        audioSource.PlayOneShot(GameMaster.GetAudio("unitPickup").GetClip(), 0.5f);
+        base.OnAttachedToHand(hand);        
     }
 
-    public void OnDetachedFromHand(Hand hand)
+    public override void OnDetachedFromHand(Hand hand)
     {
-        isHeld = false;
-        //villagerHoverMenu.Hide();
-        ResetAI();
-        Unfreeze();
+        base.OnDetachedFromHand(hand);
     }
 
     public override void Tick()
@@ -117,15 +98,14 @@ public class Soldier : Unit
         previousState = state;
     }
 
-    
-
     void OnDamage(object sender, Damageable.DamageEvent e)
     {
-        if (AttributeHandler.GetAttributePercent(Attributes.HEALTH) <= 0.0f)
+        if (!isDead && AttributeHandler.GetAttributePercent(Attributes.HEALTH) <= 0.0f)
         {
             isDead = true;
             animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.DYING);
-            Destroy(this.gameObject, 3.0f);
+            audioSource.PlayOneShot(GameMaster.GetAudio("unit_death").GetClip(), 0.5f);
+            Destroy(this.gameObject, 10.0f);
         }
     }
 

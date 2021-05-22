@@ -30,8 +30,6 @@ public class Villager : Unit
     public float workRate = 3;
     public float buildRate = 6;
     public float repairRate = 3;
-    protected Animator animator;
-    private AudioSource audioSource;
 
     [Header ("Visuals")]
     public GameObject grainCargoDisplayObject;
@@ -46,12 +44,8 @@ public class Villager : Unit
     GameObject currentCargoDisplayObject;
     GameObject currentHandToolDisplayObject;
     public VillagerHoverMenu villagerHoverMenu;
-    protected bool canRetaskOnCollision;
-    bool isDead;
     public bool IsCargoFull() { return currentCargo >= maxCargo; }
     public bool HasCargo() { return currentCargo > 0; }
-
-    bool isHeld;
 
     public void HookIntoEvents()
     {
@@ -65,23 +59,13 @@ public class Villager : Unit
         PathfindingGoal.OnGoalInteractEvent -= OnGoalInteract;
     }
 
-    public void Awake()
-    {
-        audioSource = gameObject.GetComponent<AudioSource>();
-        if (!audioSource)
-            Debug.Log("No audiosource component found.");
-    }
 
     public override void Initialize()
     {
         base.Initialize();
         HookIntoEvents();
 
-        SetUnitType(rtsUnitType);
-
-        animator = gameObject.GetComponentInChildren<Animator>();
-        if (!animator)
-            Debug.Log("No animator component found.");
+        SetUnitType(rtsUnitType);        
 
         if(PlayerManager.instance.factionID == factionID)
             PlayerManager.instance.AddToPopulation((Unit)this);
@@ -93,11 +77,12 @@ public class Villager : Unit
 
     void OnDamage(object sender, Damageable.DamageEvent e)
     {
-        if (AttributeHandler.GetAttributePercent(Attributes.HEALTH) <= 0.0f)
+        if (!isDead && AttributeHandler.GetAttributePercent(Attributes.HEALTH) <= 0.0f)
         {
             isDead = true;
-            animator.SetInteger("VillagerActorState", (int)ActorAnimationState.DYING);
-            Destroy(this.gameObject, 3.0f);
+            animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.DYING);
+            audioSource.PlayOneShot(GameMaster.GetAudio("unit_death").GetClip(), 0.5f);
+            Destroy(this.gameObject, 10.0f);
         }
     }
 
@@ -116,33 +101,28 @@ public class Villager : Unit
         return state != previousState;
     }
 
-    public void OnHandHoverBegin(Hand hand)
+    public override void OnHandHoverBegin(Hand hand)
     {
+        base.OnHandHoverBegin(hand);
         villagerHoverMenu.Show();
     }
 
-    public void OnHandHoverEnd(Hand hand)
+    public override void OnHandHoverEnd(Hand hand)
     {
+        base.OnHandHoverEnd(hand);
         villagerHoverMenu.Hide();
     }
 
-    public void OnAttachedToHand(Hand hand)
+    public override void OnAttachedToHand(Hand hand)
     {
-        isHeld = true;
+        base.OnAttachedToHand(hand);
         villagerHoverMenu.Show();
-        Freeze();
-        animator.SetInteger("VillagerActorState", 0);
-        audioSource.PlayOneShot(GameMaster.GetAudio("unitPickup").GetClip(), 0.5f);
-        canRetaskOnCollision = true;
     }
 
-    public void OnDetachedFromHand(Hand hand)
+    public override void OnDetachedFromHand(Hand hand)
     {
-        isHeld = false;
-        villagerHoverMenu.Hide();
-        ResetAI();
-        Unfreeze();
-        canRetaskOnCollision = false;
+        base.OnDetachedFromHand(hand);
+        villagerHoverMenu.Hide();        
         detachFromHandTime = Time.time;
     }
 
@@ -150,15 +130,17 @@ public class Villager : Unit
 
     // This is is used to reenable the character after they have been
     // released from the hand AND after they have landed somewhere.
-    private void OnCollisionEnter(Collision collision)
+    public override void OnCollisionEnter(Collision collision)
     {
-        if (!canRetaskOnCollision)
+        base.OnCollisionEnter(collision);
+
+        if (!wasThrownOrDropped)
             return;
 
         // Don't wait for a collision indefinitely.
         if (Time.time - detachFromHandTime >= 3.0f)
         {
-            canRetaskOnCollision = false;
+            wasThrownOrDropped = false;
             return;
         }
 
@@ -244,7 +226,7 @@ public class Villager : Unit
 
         if (IsMoving() )
         {
-            animator.SetInteger("VillagerActorState", (int)ActorAnimationState.MOVING);
+            animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.MOVING);
         }
 
         if (TaskChanged())
@@ -563,16 +545,16 @@ public class Villager : Unit
         switch(resource.type)
         {
             case ResourceGatheringType.Grain:
-                animator.SetInteger("VillagerActorState", (int)ActorAnimationState.FARMING);
+                animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.FARMING);
             break;
 
             case ResourceGatheringType.Gold:
             case ResourceGatheringType.Stone:
-                animator.SetInteger("VillagerActorState", (int)ActorAnimationState.MINING);
+                animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.MINING);
             break;
 
             case ResourceGatheringType.Wood:
-                animator.SetInteger("VillagerActorState", (int)ActorAnimationState.LUMBERJACKING);
+                animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.LUMBERJACKING);
             break;
         }
 
@@ -595,7 +577,7 @@ public class Villager : Unit
         structure.TryRepair(e.amount, this);
 
         // Use lumberjack animation
-        animator.SetInteger("VillagerActorState", (int)ActorAnimationState.BUILDANDREPAIR);
+        animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.BUILDANDREPAIR);
 
         return true;
     }
@@ -616,7 +598,7 @@ public class Villager : Unit
         construction.TryBuild(e.amount, this);
 
         // Use lumberjack animation
-        animator.SetInteger("VillagerActorState", (int)ActorAnimationState.BUILDANDREPAIR);
+        animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.BUILDANDREPAIR);
 
         return true;
     }

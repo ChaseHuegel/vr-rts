@@ -190,7 +190,7 @@ public class InteractionPointer : MonoBehaviour
 			//hand.uiInteractAction.GetStateDown(hand.handType)
 
 			// TODO: listen for different button to cancel
-			if (!PlayerManager.instance.handBuildMenu.activeSelf)			
+			if (!PlayerManager.instance.handBuildMenu.activeSelf && !hand.hoveringInteractable)			
 			{
 				if (uiInteractAction.GetStateUp(hand.handType) && buildingSpawnQueue != null)
 				{

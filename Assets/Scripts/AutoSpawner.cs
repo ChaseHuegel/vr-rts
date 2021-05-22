@@ -6,6 +6,7 @@ using Swordfish.Audio;
 using UnityEditor;
 using Valve.VR.InteractionSystem;
 using Swordfish.Navigation;
+using MLAPI;
 
 public class AutoSpawner : MonoBehaviour
 {
@@ -84,6 +85,12 @@ public class AutoSpawner : MonoBehaviour
         if (unitData.prefab)
         {
             GameObject unitGameObject = Instantiate(unitData.prefab, unitSpawnPoint.transform.position, Quaternion.identity);
+            
+            if (NetworkManager.Singleton.IsServer)
+            {
+                unitGameObject.GetComponent<NetworkObject>().Spawn();
+            }
+            
             Unit unit = unitGameObject.GetComponent<Unit>();
             unit.rtsUnitType = unitData.unitType;
             unit.factionID = factionID;
