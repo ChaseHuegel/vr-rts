@@ -106,8 +106,13 @@ public class Soldier : Unit
         {
             isDying = true;
             Freeze();
-            ResetAI();           
-            animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.DYING);
+            ResetAI();    
+
+            if (UnityEngine.Random.Range(1, 100) < 50)
+                animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.DYING);
+            else
+                animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.DYING2);
+
             audioSource.PlayOneShot(GameMaster.GetAudio("unit_death").GetClip(), 0.5f);
             Destroy(this.gameObject, 10.0f);
         }
@@ -147,7 +152,7 @@ public class Soldier : Unit
             if (unit.IsDead())
                 animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.IDLE);
             else
-                animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.ATTACKING);
+                SetAttackAnimationState();
 
             return;
         }
@@ -161,7 +166,7 @@ public class Soldier : Unit
                 damageable = e.cell.GetFirstOccupant<Constructible>().GetComponent<Damageable>();
             
             damageable.Damage(rtsUnitTypeData.attackDamage, AttributeChangeCause.ATTACKED, null, DamageType.SLASHING);
-            animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.ATTACKING);
+            SetAttackAnimationState();
             return;
         }
         else if (e.goal is GoalSearchAndDestroy)
@@ -175,7 +180,7 @@ public class Soldier : Unit
                 if (unit.IsDead())
                     animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.IDLE);
                 else
-                    animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.ATTACKING);
+                    SetAttackAnimationState();
                     
                 return;
             }
@@ -185,7 +190,7 @@ public class Soldier : Unit
             {
                 Damageable damageable = structure.GetComponent<Damageable>();
                 damageable.Damage(rtsUnitTypeData.attackDamage, AttributeChangeCause.ATTACKED, null, DamageType.SLASHING);
-                animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.ATTACKING);
+                SetAttackAnimationState();
                 return;
             }
 
@@ -194,7 +199,7 @@ public class Soldier : Unit
             {
                 Damageable damageable = construction.GetComponent<Damageable>();
                 damageable.Damage(rtsUnitTypeData.attackDamage, AttributeChangeCause.ATTACKED, null, DamageType.SLASHING);
-                animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.ATTACKING);
+                SetAttackAnimationState();
                 return;
             }
         }
@@ -204,6 +209,13 @@ public class Soldier : Unit
         e.Cancel();
     }   
 
+    private void SetAttackAnimationState()
+    {
+        if (UnityEngine.Random.Range(1, 100) < 50)
+            animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.ATTACKING);
+        else
+            animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.ATTACKING2);
+    }
     public void CleanupEvents()
     {
         PathfindingGoal.OnGoalFoundEvent -= OnGoalFound;
