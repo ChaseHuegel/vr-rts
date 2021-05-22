@@ -73,6 +73,9 @@ public class Structure : Obstacle, IFactioned
                 flamesParticleSystem = pSystem.gameObject;
         }
 
+        if (buildingData.populationSupported > 0)
+            PlayerManager.instance.IncreasePopulationLimit(buildingData.populationSupported);
+
         RefreshVisuals();
     }
 
@@ -137,8 +140,6 @@ public class Structure : Obstacle, IFactioned
             if (flamesParticleSystem.activeSelf) flamesParticleSystem.SetActive(false);            
             if (sparksParticleSystem.activeSelf) sparksParticleSystem.SetActive(false);
         }
-
-        
 
         if (!smokeParticleSystem.gameObject.activeSelf) smokeParticleSystem.gameObject.SetActive(true);
         if (!buildingDamagedFX.activeSelf) buildingDamagedFX.SetActive(true);
