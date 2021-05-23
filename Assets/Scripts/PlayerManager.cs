@@ -39,7 +39,10 @@ public class PlayerManager : MonoBehaviour
     private Hand selectionHand;
     public GameObject handBuildMenu;
     protected BuildMenu buildMenu;
-    public int factionID = 0;
+    public byte factionID = 0;
+
+    private Hand rightHand;
+    private Hand leftHand;
 
     private static PlayerManager _instance;
     public static PlayerManager instance
@@ -47,15 +50,11 @@ public class PlayerManager : MonoBehaviour
         get
         {
             if ( _instance == null )
-            {
                 _instance = GameObject.FindObjectOfType<PlayerManager>();
-            }
 
             return _instance;
         }
     }
-
-    
 
     void Awake()
     {
@@ -67,6 +66,9 @@ public class PlayerManager : MonoBehaviour
     void Start()
     {
         HookIntoEvents();
+
+        rightHand = Player.instance.rightHand;
+        leftHand = Player.instance.leftHand;
 
         WristDisplay?.SetWoodText(woodCollected.ToString());
         WristDisplay?.SetGrainText(grainCollected.ToString());
@@ -81,10 +83,8 @@ public class PlayerManager : MonoBehaviour
 
         buildMenu = handBuildMenu.GetComponent<BuildMenu>();
 
-        handMenuToggle?.AddOnStateDownListener(OnToggleHandMenu, SteamVR_Input_Sources.RightHand);
-        handMenuToggle?.AddOnStateUpListener(OnToggleHandMenu, SteamVR_Input_Sources.RightHand);
-        handMenuToggle?.AddOnStateDownListener(OnToggleHandMenu, SteamVR_Input_Sources.LeftHand);
-        handMenuToggle?.AddOnStateUpListener(OnToggleHandMenu, SteamVR_Input_Sources.LeftHand);
+        handMenuToggle?.AddOnStateDownListener(OnHandToggleMenuRightDown, SteamVR_Input_Sources.RightHand);
+        handMenuToggle?.AddOnStateDownListener(OnHandToggleMenuLeftDown, SteamVR_Input_Sources.LeftHand);
     }
 
     void Update()
@@ -103,17 +103,13 @@ public class PlayerManager : MonoBehaviour
     public void OnVillagerDropoff(object sender, Villager.DropoffEvent e)
     {
         if (e.villager.factionID == factionID)
-        {
             AddResourceToStockpile(e.resourceType, (int)e.amount);
-        }
     }
 
     public void OnVillagerRepair(object sender, Villager.RepairEvent e)
     {
         if (e.villager.factionID == factionID)
-        {
             RemoveResourcesFromStockpile(1, 1, 1, 1);
-        }
     }
 
     public void HookIntoEvents()
@@ -129,131 +125,93 @@ public class PlayerManager : MonoBehaviour
     }
 
     protected bool IsClipboardPalmMenuVisible;
-    public void OnToggleHandMenu(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
+
+    public void OnHandToggleMenuRightDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
         buildMenu.RefreshSlots();
-        
-        // Don't use both methods to display the menu at the same time.
-        if (usePalmMenu)
-            return;        
 
-        // Menu is visible.
+        // Don't use both methods to display the menu at the same time.
+        if (usePalmMenu) return;
+
+        // Menu is already visible.
         if (handBuildMenu.activeSelf)
         {
-            // Right hand pressed toggle button.
-            if (fromSource == SteamVR_Input_Sources.RightHand)
+            // Menu is attached to right hand, deactivate it, detach it, and
+            // enable interactions in right hand.
+            if (rightHand.currentAttachedObject == handBuildMenu)
             {
-                // Right hand has the menu.
-                if (Player.instance.rightHand.currentAttachedObject == handBuildMenu)
-                {
-                    DetachBuildMenuFromRightHand();
-
-                    // Hide the menu.
-                    handBuildMenu.SetActive(false);
-                }
-                // Right hand doesn't have the menu so attach it to the right hand.
-                else
-                {
-                    ToggleLeftHandInteraction(true);
-                    AttachBuildMenuToRightHand();             
-                }
+                rightHand.DetachObject(handBuildMenu);
+                handBuildMenu.SetActive(false);
+                SetRightHandInteraction(true);                
             }
-            // Left hand pressed toggle button.
-            if (fromSource == SteamVR_Input_Sources.LeftHand)
-            {   
-                // Left hand currently has the menu.
-                if (Player.instance.leftHand.currentAttachedObject == handBuildMenu)
-                {
-                    DetachBuildMenuFromLeftHand();
-
-                    // Hide the menu.
-                    handBuildMenu.SetActive(false);
-                }
-                // Left hand doesn't have the menu so attach it to the Left hand.
-                else
-                {
-                    ToggleRightHandInteraction(true);
-                    AttachBuildMenuToLeftHand();
-                }
+            // Menu must be attached to left hand, disable interaction in the right hand,
+            // attach it to the right hand, enable interacition in the left hand.
+            else
+            {
+                SetRightHandInteraction(false);
+                rightHand.AttachObject(handBuildMenu, GrabTypes.Scripted);
+                SetLeftHandInteraction(true);
             }
         }
         // Menu is not visible.
         else
         {
-            // Right hand pressed toggle button.
-            if (fromSource == SteamVR_Input_Sources.RightHand)
-            {
-                // Right hand doesn't have the menu.
-                if (Player.instance.rightHand.currentAttachedObject != handBuildMenu)
-                {
-                    // Enable interactions
-                    ToggleLeftHandInteraction(true);
-                }
-
-                // Show the menu.
-                handBuildMenu.SetActive(true);
-                AttachBuildMenuToRightHand();
-            }
-
-            // Left hand pressed toggle button.
-            if (fromSource == SteamVR_Input_Sources.LeftHand)
-            {           
-                // Left hand currently has the menu.
-                if (Player.instance.leftHand.currentAttachedObject != handBuildMenu)
-                {   
-                    // Enable interactions.
-                    ToggleRightHandInteraction(true);
-                }
-
-                // Show the menu.
-                handBuildMenu.SetActive(true);
-                AttachBuildMenuToLeftHand();
-            }            
+            // Disable interaction in right hand, activate the build menu, and 
+            // attach build menu to right hand,
+            SetRightHandInteraction(false);
+            handBuildMenu.SetActive(true);
+            rightHand.AttachObject(handBuildMenu, GrabTypes.Scripted);            
         }
+
     }
 
-    void DetachBuildMenuFromLeftHand()
+    public void OnHandToggleMenuLeftDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
-        // Detach the menu.
-        Player.instance.leftHand.DetachObject(handBuildMenu);
-
-        // Enable interactions.
-        ToggleLeftHandInteraction(true);
-    }
-
-    void DetachBuildMenuFromRightHand()
-    {
-        // Detach the menu.
-        Player.instance.rightHand.DetachObject(handBuildMenu);
+        buildMenu.RefreshSlots();
         
-        // Enable interactions.
-        ToggleRightHandInteraction(true);
+        // Don't use both methods to display the menu at the same time.
+        if (usePalmMenu) return;
+
+        // Menu is already visible.
+        if (handBuildMenu.activeSelf)
+        {
+            // Menu is attached to left hand, deactivate it, detach it, and
+            // enable interactions in left hand.
+            if (leftHand.currentAttachedObject == handBuildMenu)
+            {
+                leftHand.DetachObject(handBuildMenu);
+                handBuildMenu.SetActive(false);
+                SetLeftHandInteraction(true);                
+            }
+            // Menu must be attached to right hand, disable interaction in the left hand,
+            // attach it to the left hand, enable interacition in the right hand.
+            else
+            {
+                SetLeftHandInteraction(false);
+                leftHand.AttachObject(handBuildMenu, GrabTypes.Scripted);
+                SetRightHandInteraction(true);
+            }
+        }
+        // Menu is not visible.
+        else
+        {
+            // Disable interaction in left hand, activate the build menu, and 
+            // attach build menu to left hand,
+            SetLeftHandInteraction(false);
+            handBuildMenu.SetActive(true);
+            leftHand.AttachObject(handBuildMenu, GrabTypes.Scripted);            
+        }
+
     }
 
-    void AttachBuildMenuToLeftHand()
+    public void SetRightHandInteraction(bool canInteract)
     {
-        // Disable interactions.
-        ToggleLeftHandInteraction(false);
-        Player.instance.leftHand.AttachObject(handBuildMenu, GrabTypes.Scripted);
-
+        rightHand.useHoverSphere = rightHand.useFingerJointHover = canInteract;
     }
 
-    public void AttachBuildMenuToRightHand()
+    public void SetLeftHandInteraction(bool canInteract)
     {
-        // Disable interactions.    
-        ToggleRightHandInteraction(false); 
-        
-        Player.instance.rightHand.AttachObject(handBuildMenu, GrabTypes.Scripted);
-    }
-
-    public void ToggleRightHandInteraction(bool canInteract)
-    {
-        Player.instance.rightHand.useHoverSphere = Player.instance.rightHand.useFingerJointHover = canInteract;
-    }
-
-    public void ToggleLeftHandInteraction(bool canInteract)
-    {
-        Player.instance.leftHand.useHoverSphere = Player.instance.leftHand.useFingerJointHover = canInteract;
+        leftHand.useHoverSphere = leftHand.useFingerJointHover = canInteract;
     }
 
     public void DisableGripPanning(Hand hand) { gripPan.DisablePanning(hand); }

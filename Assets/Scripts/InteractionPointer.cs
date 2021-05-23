@@ -77,7 +77,7 @@ public class InteractionPointer : MonoBehaviour
 	bool isSettingRallyPoint;
 	
 	private int maxUnitSelectionCount;
-	private int factionID;
+	private byte factionID;
 
 	//-------------------------------------------------
 	private static InteractionPointer _instance;
@@ -218,7 +218,8 @@ public class InteractionPointer : MonoBehaviour
 					}
 
 					Unit hoveredUnit = pointedAtPointerInteractable.GetComponent<Unit>();
-					if (hoveredUnit && !isInUnitSelectiodMode)
+					if (hoveredUnit && !isInUnitSelectiodMode &&
+						factionID == hoveredUnit.factionID)
 					{
 						selectedUnits.Add(hoveredUnit);
 						isInUnitSelectiodMode = true;
