@@ -21,8 +21,9 @@ public class Actor : Body
     private byte goalSearchGrowth;
     private byte currentGoalSearchDistance;
 
-    private Cell currentGoalTarget = null;
-    private PathfindingGoal currentGoal = null;
+    protected Cell currentGoalTarget = null;
+    protected Cell previousGoalTarget = null;
+    protected PathfindingGoal currentGoal = null;
 
     private float movementInterpolation;
     private bool moving = false;
@@ -186,6 +187,8 @@ public class Actor : Body
     public bool GotoNearestGoal(bool usePriority = false)
     {
         if (isPathLocked) return false;
+
+        previousGoalTarget = currentGoalTarget;
 
         if (!HasValidTarget())
             currentGoalTarget = FindNearestGoal(usePriority);

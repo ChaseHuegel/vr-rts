@@ -7,6 +7,14 @@ public class Resource : Obstacle
     public ResourceGatheringType type = ResourceGatheringType.None;
     public float amount = 1000;
 
+    public int maxInteractors = 0;
+    public int interactors = 0;
+
+    public bool IsBusy()
+    {
+        return (maxInteractors > 0 && interactors >= maxInteractors);
+    }
+
     public float GetRemoveAmount(float count)
     {
         float value = amount - count;
@@ -19,7 +27,7 @@ public class Resource : Obstacle
     public float TryRemove(float count)
     {
         amount -= count;
- 
+
         float overflow = amount < 0 ? Mathf.Abs(amount) : 0;
 
         if (amount <= 0)
