@@ -48,6 +48,7 @@ public class InteractionPointer : MonoBehaviour
 	private PointerInteractable[] interactableObjects;
 	private PointerInteractable pointedAtPointerInteractable;
 	private	BuildingSpawnQueue buildingSpawnQueue;
+	private Unit selectedUnit;
 	private Vector3 pointedAtPosition;
 	private Vector3 prevPointedAtPosition;
 	private float pointerShowStartTime = 0.0f;
@@ -64,8 +65,17 @@ public class InteractionPointer : MonoBehaviour
 	public bool useHandAsReticle;
 	private bool teleporting = false;
 	private float currentFadeTime = 0.0f;
+	
+	public bool placementStarted;
+	public Hand placementHand;
+	public bool placementEnded;
 
-	BezierScript bezierScript;
+	public GameObject wayPointReticle;
+	private Resource pointedAtResource;
+	private Vector3 rallyWaypointArcStartPosition;
+	private LineRenderer rallyPointArcLineRenderer;
+		bool isSettingRallyPoint;
+
 	//-------------------------------------------------
 	private static InteractionPointer _instance;
 	public static InteractionPointer instance
@@ -100,7 +110,6 @@ public class InteractionPointer : MonoBehaviour
 		teleportArc = GetComponent<TeleportArc>();
 		teleportArc.traceLayerMask = traceLayerMask;
 
-		bezierScript = GetComponent<BezierScript>();
 		rallyPointArcLineRenderer = GetComponent<LineRenderer>();
 		// loopingAudioMaxVolume = loopingAudioSource.volume;
 
@@ -122,7 +131,6 @@ public class InteractionPointer : MonoBehaviour
 			Destroy( this.gameObject );
 			return;
 		}
-
 		
 		ShowPointer();
 	}
@@ -133,14 +141,6 @@ public class InteractionPointer : MonoBehaviour
 		HidePointer();
 	}
 
-	public bool placementStarted;
-	public Hand placementHand;
-	public bool placementEnded;
-
-	public GameObject wayPointReticle;
-
-	private Vector3 rallyWaypointArcStartPosition;
-	private LineRenderer rallyPointArcLineRenderer;
 	public void StartPlacement(Hand hand)
 	{
 		placementEnded = false;
@@ -155,7 +155,7 @@ public class InteractionPointer : MonoBehaviour
 		HidePointer();
 	}
 
-	bool isSettingRallyPoint;
+
 	//-------------------------------------------------
 	void Update()
 	{
@@ -183,31 +183,65 @@ public class InteractionPointer : MonoBehaviour
 		foreach ( Hand hand in player.hands )
 		{
 			if ( WasTeleportButtonReleased( hand ) )
-			{
 				if ( pointerHand == hand ) //This is the pointer hand
-				{
 					TryTeleportPlayer();
-				}
-			}
 
 			if ( WasTeleportButtonPressed( hand ) )
-			{
 				newPointerHand = hand;
-			}
 
 			//hand.uiInteractAction.GetStateDown(hand.handType)
 
 			// TODO: listen for different button to cancel
 			if (!PlayerManager.instance.handBuildMenu.activeSelf && !hand.hoveringInteractable)			
 			{
-				if (uiInteractAction.GetStateUp(hand.handType) && buildingSpawnQueue != null)
+				if (uiInteractAction.GetStateUp(hand.handType))
 				{
-					buildingSpawnQueue.SetUnitRallyWaypoint(wayPointReticle.transform.position);
-					headAudioSource.PlayOneShot(setRallyPointSound.GetClip());
-					wayPointReticle.SetActive(false);
-					buildingSpawnQueue = null;
-					isSettingRallyPoint = false;
-					rallyPointArcLineRenderer.enabled = false;
+					if (isSettingRallyPoint)
+					{
+						buildingSpawnQueue.SetUnitRallyWaypoint(wayPointReticle.transform.position);
+						headAudioSource.PlayOneShot(setRallyPointSound.GetClip());
+						wayPointReticle.SetActive(false);
+						buildingSpawnQueue = null;
+						isSettingRallyPoint = false;
+						rallyPointArcLineRenderer.enabled = false;
+					}
+					else if (selectedUnit)
+					{
+						if (selectedUnit.IsCivilian())
+						{
+							if (pointedAtResource)
+							{
+								Villager villager = selectedUnit.GetComponent<Villager>();
+								//Villager villager = (Villager)selectedUnit;
+								
+								switch (pointedAtResource.type)
+								{
+									case ResourceGatheringType.Gold:
+										villager.SetUnitType(RTSUnitType.GoldMiner);										
+										break;
+
+									case ResourceGatheringType.Grain:
+										villager.SetUnitType(RTSUnitType.Farmer);										
+										break;
+
+									case ResourceGatheringType.Stone:
+										villager.SetUnitType(RTSUnitType.StoneMiner);										
+										break;
+
+									case ResourceGatheringType.Wood:
+										villager.SetUnitType(RTSUnitType.Lumberjack);										
+										break;
+								}
+
+								villager.GotoForced(pointedAtResource.gridPosition.x, pointedAtResource.gridPosition.y);
+								villager.ResetGoal();
+							}
+
+						}
+						pointedAtResource = null;
+						selectedUnit = null;
+						rallyPointArcLineRenderer.enabled = false;
+					}
 
 				}
 
@@ -216,12 +250,18 @@ public class InteractionPointer : MonoBehaviour
 					if (pointedAtPointerInteractable != null)
 					{
 						buildingSpawnQueue = pointedAtPointerInteractable.GetComponentInChildren<BuildingSpawnQueue>();
+						selectedUnit = pointedAtPointerInteractable.GetComponent<Unit>();
 						if (buildingSpawnQueue && !isSettingRallyPoint)
 						{ 
 							rallyWaypointArcStartPosition = pointedAtPointerInteractable.transform.position;
 							isSettingRallyPoint = true;												
 						}
+						else if (selectedUnit)
+						{
+							
+						}
 
+						//Debug.Log(string.Format("Unit: {0} interactable: {1}", selectedUnit, pointedAtPointerInteractable));
 						wayPointReticle.SetActive(true);
 					}
 				}
@@ -239,15 +279,9 @@ public class InteractionPointer : MonoBehaviour
 		if ( IsEligibleForTeleport( hand ) )
 		{
 			if ( hand.noSteamVRFallbackCamera != null )
-			{
 				return Input.GetKeyUp( KeyCode.T );
-			}
 			else
-			{
 				return teleportAction.GetStateUp(hand.handType);
-
-				//return hand.controller.GetPressUp( SteamVR_Controller.ButtonMask.Touchpad );
-			}
 		}
 
 		return false;
@@ -257,26 +291,18 @@ public class InteractionPointer : MonoBehaviour
 	public bool IsEligibleForTeleport( Hand hand )
 	{
 		if ( hand == null )
-		{
 			return false;
-		}
 
 		if ( !hand.gameObject.activeInHierarchy )
-		{
 			return false;
-		}
 
 		if ( hand.hoveringInteractable != null )
-		{
 			return false;
-		}
 
 		if ( hand.noSteamVRFallbackCamera == null )
 		{
 			if ( hand.isActive == false)
-			{
 				return false;
-			}
 
 			//Something is attached to the hand
 			if ( hand.currentAttachedObject != null )
@@ -284,13 +310,9 @@ public class InteractionPointer : MonoBehaviour
 				AllowTeleportWhileAttachedToHand allowTeleportWhileAttachedToHand = hand.currentAttachedObject.GetComponent<AllowTeleportWhileAttachedToHand>();
 
 				if ( allowTeleportWhileAttachedToHand != null && allowTeleportWhileAttachedToHand.teleportAllowed == true )
-				{
 					return true;
-				}
 				else
-				{
 					return false;
-				}
 			}
 		}
 
@@ -302,15 +324,10 @@ public class InteractionPointer : MonoBehaviour
 		if ( IsEligibleForTeleport( hand ) )
 		{
 			if ( hand.noSteamVRFallbackCamera != null )
-			{
 				return Input.GetKeyDown( KeyCode.T );
-			}
 			else
-			{
 				return teleportAction.GetStateDown(hand.handType);
-
 				//return hand.controller.GetPressDown( SteamVR_Controller.ButtonMask.Touchpad );
-			}
 		}
 
 		return false;
@@ -360,39 +377,8 @@ public class InteractionPointer : MonoBehaviour
 	private void TeleportPlayer()
 		{
 			teleporting = false;
-
-			//Teleport.PlayerPre.Send( pointedAtTeleportMarker );
-
 			SteamVR_Fade.Start( Color.clear, currentFadeTime );
-
-			//TeleportPoint teleportPoint = teleportingToMarker as TeleportPoint;
 			Vector3 teleportPosition = pointedAtPosition;
-
-			// if ( teleportPoint != null )
-			// {
-			// 	teleportPosition = teleportPoint.transform.position;
-
-			// 	//Teleport to a new scene
-			// 	if ( teleportPoint.teleportType == TeleportPoint.TeleportPointType.SwitchToNewScene )
-			// 	{
-			// 		teleportPoint.TeleportToScene();
-			// 		return;
-			// 	}
-			// }
-
-			// Find the actual floor position below the navigation mesh
-			// TeleportArea teleportArea = teleportingToMarker as TeleportArea;
-			// if ( teleportArea != null )
-			// {
-			// 	if ( floorFixupMaximumTraceDistance > 0.0f )
-			// 	{
-			// 		RaycastHit raycastHit;
-			// 		if ( Physics.Raycast( teleportPosition + 0.05f * Vector3.down, Vector3.down, out raycastHit, floorFixupMaximumTraceDistance, floorFixupTraceLayerMask ) )
-			// 		{
-			// 			teleportPosition = raycastHit.point;
-			// 		}
-			// 	}
-			// }
 
 			// if ( teleportingToMarker.ShouldMovePlayer() )
 			// {
@@ -408,8 +394,6 @@ public class InteractionPointer : MonoBehaviour
 			// {
 			// 	teleportingToMarker.TeleportPlayer( pointedAtPosition );
 			// }
-
-			//Teleport.Player.Send( pointedAtTeleportMarker );
 		}
 
 	//-------------------------------------------------
@@ -445,22 +429,26 @@ public class InteractionPointer : MonoBehaviour
 		{	
 			hitSomething = true;
 			hitPointValid = LayerMatchTest( allowedPlacementLayers, hitInfo.collider.gameObject );
-			hitPointerInteractable = hitInfo.collider.GetComponentInParent<PointerInteractable>();
+			hitPointerInteractable = hitInfo.collider.GetComponent<PointerInteractable>();
+			if (!hitPointerInteractable)
+				hitPointerInteractable = hitInfo.collider.GetComponentInParent<PointerInteractable>();
+			
+			if (selectedUnit)
+			{
+				pointedAtResource = hitInfo.collider.GetComponent<Resource>();
+			}
+
 		}		
 		
 		//HighlightSelected( hitPointerInteractable );
 		
 		if (hitPointerInteractable != null)
 		{		
-			//hitPointerInteractable.GetComponent<BuildingHoverDisplay>()?.Show();
-			
 			pointedAtPointerInteractable = hitPointerInteractable;			
-			//Debug.Log(hitPointerInteractable.gameObject.name);
 		}
 		else
 		{
 			pointedAtPointerInteractable = null;
-			//buildingSpawnQueue = null;
 		}
 
 		pointedAtPosition = hitInfo.point;
@@ -480,17 +468,37 @@ public class InteractionPointer : MonoBehaviour
 
 		if (isSettingRallyPoint)
 		{			
-			float dist = Vector3.Distance(pointedAtPosition, rallyWaypointArcStartPosition) * 0.5f;
-			Vector3 dir = (pointedAtPosition - rallyWaypointArcStartPosition).normalized;
-			Vector3 mid = rallyWaypointArcStartPosition + (dir * dist);
-			mid.y += 1;
-			bezierScript.DrawQuadraticBezierCurve(rallyWaypointArcStartPosition, mid, pointedAtPosition);
+			DrawQuadraticBezierCurve(rallyWaypointArcStartPosition, pointedAtPosition);
 			if (rallyPointArcLineRenderer.enabled == false)
 				rallyPointArcLineRenderer.enabled = true;
 
 		}
+		else if (selectedUnit)
+		{
+			DrawQuadraticBezierCurve(selectedUnit.transform.position, pointedAtPosition);
+			if (rallyPointArcLineRenderer.enabled == false)
+				rallyPointArcLineRenderer.enabled = true;
+		}
 	}
-	
+
+	public void DrawQuadraticBezierCurve(Vector3 start, Vector3 end)
+    {
+		float dist = Vector3.Distance(end, start) * 0.5f;
+		Vector3 dir = (end - start).normalized;
+		Vector3 mid = start + (dir * dist);
+		mid.y += 1;
+			
+        rallyPointArcLineRenderer.positionCount = 200;
+        float t = 0f;
+        Vector3 B = new Vector3(0, 0, 0);
+        for (int i = 0; i < rallyPointArcLineRenderer.positionCount; i++)
+        {
+            B = (1 - t) * (1 - t) * start + 2 * (1 - t) * t * mid + t * t * end;
+            rallyPointArcLineRenderer.SetPosition(i, B);
+            t += (1 / (float)rallyPointArcLineRenderer.positionCount);
+        }
+    }
+
 	private static bool LayerMatchTest(LayerMask layerMask, GameObject obj)
 	{
 		return ( ( 1 << obj.layer ) & layerMask ) != 0;

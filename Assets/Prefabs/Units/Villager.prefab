@@ -17754,6 +17754,7 @@ GameObject:
   - component: {fileID: 7941443284561733052}
   - component: {fileID: -1329946777064387085}
   - component: {fileID: 5755199475747933654}
+  - component: {fileID: -2474016075810003584}
   m_Layer: 9
   m_Name: Villager
   m_TagString: Untagged
@@ -18090,6 +18091,10 @@ MonoBehaviour:
   factionID: 0
   rtsUnitType: 0
   state: 0
+  isHeld: 0
+  isDying: 0
+  wasThrownOrDropped: 0
+  audioSource: {fileID: 0}
   currentResource: 0
   maxCargo: 10
   currentCargo: 0
@@ -18206,6 +18211,19 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &-2474016075810003584
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1069823527325677058}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 847aeadd287e865488f59b558e0b9caf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  highlightMaterial: {fileID: 0}
 --- !u!1 &1405613437724166983
 GameObject:
   m_ObjectHideFlags: 0
@@ -20440,15 +20458,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 14c8966bcdb393e4eb85b5a9ddbd3551, type: 3}
---- !u!4 &326665030305288349 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4423895146491306, guid: 14c8966bcdb393e4eb85b5a9ddbd3551,
-    type: 3}
-  m_PrefabInstance: {fileID: 326295052518784311}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &325229802081752859 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1206538960988716, guid: 14c8966bcdb393e4eb85b5a9ddbd3551,
+    type: 3}
+  m_PrefabInstance: {fileID: 326295052518784311}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &326665030305288349 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4423895146491306, guid: 14c8966bcdb393e4eb85b5a9ddbd3551,
     type: 3}
   m_PrefabInstance: {fileID: 326295052518784311}
   m_PrefabAsset: {fileID: 0}
