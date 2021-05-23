@@ -64,6 +64,8 @@ public class InteractionPointer : MonoBehaviour
 	public bool useHandAsReticle;
 	private bool teleporting = false;
 	private float currentFadeTime = 0.0f;
+
+	BezierScript bezierScript;
 	//-------------------------------------------------
 	private static InteractionPointer _instance;
 	public static InteractionPointer instance
@@ -97,7 +99,9 @@ public class InteractionPointer : MonoBehaviour
 #endif
 		teleportArc = GetComponent<TeleportArc>();
 		teleportArc.traceLayerMask = traceLayerMask;
-		
+
+		bezierScript = GetComponent<BezierScript>();
+		rallyPointArcLineRenderer = GetComponent<LineRenderer>();
 		// loopingAudioMaxVolume = loopingAudioSource.volume;
 
 		// float invalidReticleStartingScale = invalidReticleTransform.localScale.x;
@@ -119,6 +123,7 @@ public class InteractionPointer : MonoBehaviour
 			return;
 		}
 
+		
 		ShowPointer();
 	}
 
@@ -134,6 +139,8 @@ public class InteractionPointer : MonoBehaviour
 
 	public GameObject wayPointReticle;
 
+	private Vector3 rallyWaypointArcStartPosition;
+	private LineRenderer rallyPointArcLineRenderer;
 	public void StartPlacement(Hand hand)
 	{
 		placementEnded = false;
@@ -148,6 +155,7 @@ public class InteractionPointer : MonoBehaviour
 		HidePointer();
 	}
 
+	bool isSettingRallyPoint;
 	//-------------------------------------------------
 	void Update()
 	{
@@ -198,6 +206,9 @@ public class InteractionPointer : MonoBehaviour
 					headAudioSource.PlayOneShot(setRallyPointSound.GetClip());
 					wayPointReticle.SetActive(false);
 					buildingSpawnQueue = null;
+					isSettingRallyPoint = false;
+					rallyPointArcLineRenderer.enabled = false;
+
 				}
 
 				if (uiInteractAction.GetStateDown(hand.handType))
@@ -205,6 +216,12 @@ public class InteractionPointer : MonoBehaviour
 					if (pointedAtPointerInteractable != null)
 					{
 						buildingSpawnQueue = pointedAtPointerInteractable.GetComponentInChildren<BuildingSpawnQueue>();
+						if (buildingSpawnQueue && !isSettingRallyPoint)
+						{ 
+							rallyWaypointArcStartPosition = pointedAtPointerInteractable.transform.position;
+							isSettingRallyPoint = true;												
+						}
+
 						wayPointReticle.SetActive(true);
 					}
 				}
@@ -420,7 +437,7 @@ public class InteractionPointer : MonoBehaviour
 
 		//Trace to see if the pointer hit anything
 		RaycastHit hitInfo;
-		teleportArc.SetArcData( pointerStart, arcVelocity, true, pointerAtBadAngle );
+		teleportArc.SetArcData( pointerStart, arcVelocity, true, pointerAtBadAngle );		
 
 		teleportArc.FindProjectileCollision( out hitInfo );
 		//if ( teleportArc.DrawArc( out hitInfo ) )
@@ -429,7 +446,7 @@ public class InteractionPointer : MonoBehaviour
 			hitSomething = true;
 			hitPointValid = LayerMatchTest( allowedPlacementLayers, hitInfo.collider.gameObject );
 			hitPointerInteractable = hitInfo.collider.GetComponentInParent<PointerInteractable>();
-		}
+		}		
 		
 		//HighlightSelected( hitPointerInteractable );
 		
@@ -460,6 +477,18 @@ public class InteractionPointer : MonoBehaviour
 
 		destinationReticleTransform.position = pointedAtPosition;
 		destinationReticleTransform.gameObject.SetActive( true );
+
+		if (isSettingRallyPoint)
+		{			
+			float dist = Vector3.Distance(pointedAtPosition, rallyWaypointArcStartPosition) * 0.5f;
+			Vector3 dir = (pointedAtPosition - rallyWaypointArcStartPosition).normalized;
+			Vector3 mid = rallyWaypointArcStartPosition + (dir * dist);
+			mid.y += 1;
+			bezierScript.DrawQuadraticBezierCurve(rallyWaypointArcStartPosition, mid, pointedAtPosition);
+			if (rallyPointArcLineRenderer.enabled == false)
+				rallyPointArcLineRenderer.enabled = true;
+
+		}
 	}
 	
 	private static bool LayerMatchTest(LayerMask layerMask, GameObject obj)
