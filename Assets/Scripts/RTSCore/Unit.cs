@@ -25,9 +25,9 @@ public class Unit : Actor, IFactioned
     [Header("Unit")]
     public RTSUnitType rtsUnitType;
 
-    [Header("AI")]    
+    [Header("AI")]
     public UnitState state;
-    
+
     public bool isHeld;
     public bool isDying;
     public bool wasThrownOrDropped;
@@ -40,7 +40,7 @@ public class Unit : Actor, IFactioned
 
     public AudioSource audioSource;
     protected Animator animator;
-    
+
     public void Awake()
     {
         audioSource = gameObject.GetComponent<AudioSource>();
@@ -68,6 +68,7 @@ public class Unit : Actor, IFactioned
     {
         rtsUnitType = unitType;
         m_rtsUnitTypeData = GameMaster.GetUnit(rtsUnitType);
+        ResetGoal();
     }
 
     public virtual bool IsCivilian()
@@ -89,12 +90,12 @@ public class Unit : Actor, IFactioned
         animator.SetInteger("AnimationActorState", (int)ActorAnimationState.IDLE);
 
         if(factionID == PlayerManager.instance.factionID)
-            audioSource.PlayOneShot(GameMaster.GetAudio("unit_pickup_friendly").GetClip(), 0.5f);  
+            audioSource.PlayOneShot(GameMaster.GetAudio("unit_pickup_friendly").GetClip(), 0.5f);
         else
-            audioSource.PlayOneShot(GameMaster.GetAudio("unit_pickup_enemy").GetClip(), 0.5f);       
-        
+            audioSource.PlayOneShot(GameMaster.GetAudio("unit_pickup_enemy").GetClip(), 0.5f);
+
     }
-    
+
     public virtual void OnDetachedFromHand(Hand hand)
     {
         isHeld = false;
@@ -125,8 +126,8 @@ public class Unit : Actor, IFactioned
             {
                 ContactPoint contact = collision.contacts[0];
                 float damage = Vector3.Dot( contact.normal, collision.relativeVelocity) * damageMultiplier;
-                AttributeHandler.Damage(damage, AttributeChangeCause.NATURAL, null, DamageType.BLUDGEONING);            
-                
+                AttributeHandler.Damage(damage, AttributeChangeCause.NATURAL, null, DamageType.BLUDGEONING);
+
                 audioSource.PlayOneShot(GameMaster.GetAudio("unit_damaged").GetClip(), 0.25f);
                 wasThrownOrDropped = false;
 
