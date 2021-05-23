@@ -5,6 +5,7 @@ using System.Collections;
 using Valve.VR.InteractionSystem;
 using Valve.VR;
 using Swordfish.Audio;
+using Swordfish.Navigation;
 
 public class InteractionPointer : MonoBehaviour
 {
@@ -232,7 +233,8 @@ public class InteractionPointer : MonoBehaviour
 										villager.SetUnitType(RTSUnitType.Lumberjack);										
 										break;
 								}
-
+								
+								PathfindingGoal.TryGoal((Actor)villager, World.at(pointedAtResource.gridPosition), villager.GetGoals());
 								villager.GotoForced(pointedAtResource.gridPosition.x, pointedAtResource.gridPosition.y);
 								villager.ResetGoal();
 							}
@@ -429,14 +431,17 @@ public class InteractionPointer : MonoBehaviour
 		{	
 			hitSomething = true;
 			hitPointValid = LayerMatchTest( allowedPlacementLayers, hitInfo.collider.gameObject );
+			
+			if (selectedUnit)
+			{
+				pointedAtResource = hitInfo.collider.GetComponentInParent<Resource>();
+			}
+			
 			hitPointerInteractable = hitInfo.collider.GetComponent<PointerInteractable>();
 			if (!hitPointerInteractable)
 				hitPointerInteractable = hitInfo.collider.GetComponentInParent<PointerInteractable>();
 			
-			if (selectedUnit)
-			{
-				pointedAtResource = hitInfo.collider.GetComponent<Resource>();
-			}
+			
 
 		}		
 		
