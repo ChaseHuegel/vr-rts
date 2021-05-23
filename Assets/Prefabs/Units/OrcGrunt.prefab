@@ -32,6 +32,7 @@ GameObject:
   - component: {fileID: 7628003446343233099}
   - component: {fileID: 465591726281918915}
   - component: {fileID: 1109623579988469932}
+  - component: {fileID: -9200534466598773922}
   m_Layer: 9
   m_Name: OrcGrunt
   m_TagString: Untagged
@@ -388,7 +389,7 @@ MonoBehaviour:
   rtsUnitType: 8
   state: 0
   isHeld: 0
-  isDead: 0
+  isDying: 0
   wasThrownOrDropped: 0
   audioSource: {fileID: 0}
   huntVillagers: 1
@@ -474,6 +475,19 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &-9200534466598773922
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2092039726793936747}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 847aeadd287e865488f59b558e0b9caf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  highlightMaterial: {fileID: 0}
 --- !u!1 &2112391497335649583
 GameObject:
   m_ObjectHideFlags: 0

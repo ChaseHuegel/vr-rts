@@ -77,6 +77,7 @@ public class InteractionPointer : MonoBehaviour
 	bool isSettingRallyPoint;
 	
 	private int maxUnitSelectionCount;
+	private int factionID;
 
 	//-------------------------------------------------
 	private static InteractionPointer _instance;
@@ -128,9 +129,10 @@ public class InteractionPointer : MonoBehaviour
 		
 		selectedUnits = new List<Unit>();
 
-		// Cache this value, going to need it a lot and don't need to keep
-		// bothering the GameMaster for it.
+		// Cache some values, going to need them a lot and don't need to keep
+		// bothering the GameMaster/PlayerManager for them.
 		maxUnitSelectionCount = GameMaster.Instance.maximumUnitSelectionCount;
+		factionID = PlayerManager.instance.factionID;
 
 		// Setup LineRenderers for unit selection
 		lineRenderers = new LineRenderer[maxUnitSelectionCount];
@@ -268,41 +270,40 @@ public class InteractionPointer : MonoBehaviour
 		{
 			foreach (Unit unit in selectedUnits)
 			{
-				if (unit.IsCivilian())
+				if (unit.IsCivilian() && pointedAtResource)
 				{
-					if (pointedAtResource)
+					Villager villager = unit.GetComponent<Villager>();
+					//Villager villager = (Villager)selectedUnit;
+
+					
+					switch (pointedAtResource.type)
 					{
-						Villager villager = unit.GetComponent<Villager>();
-						//Villager villager = (Villager)selectedUnit;
-						
-						switch (pointedAtResource.type)
-						{
-							case ResourceGatheringType.Gold:
-								villager.SetUnitType(RTSUnitType.GoldMiner);										
-								break;
+						case ResourceGatheringType.Gold:
+							villager.SetUnitType(RTSUnitType.GoldMiner);										
+							break;
 
-							case ResourceGatheringType.Grain:
-								villager.SetUnitType(RTSUnitType.Farmer);										
-								break;
+						case ResourceGatheringType.Grain:
+							villager.SetUnitType(RTSUnitType.Farmer);										
+							break;
 
-							case ResourceGatheringType.Stone:
-								villager.SetUnitType(RTSUnitType.StoneMiner);										
-								break;
+						case ResourceGatheringType.Stone:
+							villager.SetUnitType(RTSUnitType.StoneMiner);										
+							break;
 
-							case ResourceGatheringType.Wood:
-								villager.SetUnitType(RTSUnitType.Lumberjack);										
-								break;
-						}
-						
-						PathfindingGoal.TryGoal((Actor)villager, World.at(pointedAtResource.gridPosition), villager.GetGoals());
-						villager.GotoForced(pointedAtResource.gridPosition.x, pointedAtResource.gridPosition.y);
-						villager.ResetGoal();
+						case ResourceGatheringType.Wood:
+							villager.SetUnitType(RTSUnitType.Lumberjack);										
+							break;
 					}
+					
+					PathfindingGoal.TryGoal((Actor)villager, World.at(pointedAtResource.gridPosition), villager.GetGoals());
+					villager.GotoForced(pointedAtResource.gridPosition.x, pointedAtResource.gridPosition.y);
+					villager.ResetGoal();
 				}
-				// Unit.IsCivilian() = false
+				// Unit.IsCivilian() = false and/or pointedAtResource = null
 				else
 				{
-
+					unit.GotoForced(World.ToWorldSpace(pointedAtPosition));						
+					unit.ResetGoal();
 				}
 			}
 			
@@ -383,7 +384,8 @@ public class InteractionPointer : MonoBehaviour
 		else if (isInUnitSelectiodMode && pointedAtPointerInteractable != null)
 		{
 			Unit hoveredUnit = pointedAtPointerInteractable.GetComponent<Unit>();
-			if (hoveredUnit && !selectedUnits.Contains(hoveredUnit))
+			if (hoveredUnit && !selectedUnits.Contains(hoveredUnit) &&
+				factionID == hoveredUnit.factionID)
 			{
 				selectedUnits.Add(hoveredUnit);
 			}
