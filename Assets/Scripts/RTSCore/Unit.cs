@@ -76,6 +76,11 @@ public class Unit : Actor, IFactioned
         return (int)rtsUnitTypeData.unitType < (int)RTSUnitType.Swordsman;
     }
 
+    public virtual bool IsSameFaction(int factionId)
+    {
+        return this.factionID == factionId;
+    }
+
     public bool IsDead()
     {
         return AttributeHandler.GetAttributePercent(Attributes.HEALTH) <= 0.0f;

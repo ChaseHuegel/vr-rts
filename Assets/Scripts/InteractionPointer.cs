@@ -270,11 +270,13 @@ public class InteractionPointer : MonoBehaviour
 		{
 			foreach (Unit unit in selectedUnits)
 			{
-				if (unit.IsCivilian() && pointedAtResource)
+				bool civilian = unit.IsCivilian();
+
+				// Villager unit and we're targeting a resource.
+				if (civilian && pointedAtResource)
 				{
 					Villager villager = unit.GetComponent<Villager>();
 					//Villager villager = (Villager)selectedUnit;
-
 					
 					switch (pointedAtResource.type)
 					{
@@ -298,15 +300,49 @@ public class InteractionPointer : MonoBehaviour
 					PathfindingGoal.TryGoal((Actor)villager, World.at(pointedAtResource.gridPosition), villager.GetGoals());
 					villager.GotoForced(pointedAtResource.gridPosition.x, pointedAtResource.gridPosition.y);
 					villager.ResetGoal();
+					continue;
 				}
-				// Unit.IsCivilian() = false and/or pointedAtResource = null
-				else
+
+				// Villager unit and not targeting a resource.
+				if (civilian && !pointedAtResource)
 				{
+					unit.GotoForced(World.ToWorldSpace(pointedAtPosition));						
+					unit.ResetGoal();
+					continue;
+				}
+
+				// Military unit.
+				if (!civilian)
+				{	
+					if (pointedAtPointerInteractable)
+					{
+						Unit pointedAtUnit = pointedAtPointerInteractable.GetComponent<Unit>();
+
+						// Not the same faction.
+						if (pointedAtUnit && !unit.IsSameFaction(factionID))
+						{
+							// TODO: Force attack unit/set target
+							// Attack unit
+							unit.GotoForced(World.ToWorldSpace(pointedAtPosition));						
+							unit.ResetGoal();						
+							continue;
+						}
+						// Same faction, go to units position.
+						else if (pointedAtUnit)
+						{
+							unit.GotoForced(unit.gridPosition.x, unit.gridPosition.y);						
+							unit.ResetGoal();
+							continue;
+						}
+					}
+
+					// Default go to position.
 					unit.GotoForced(World.ToWorldSpace(pointedAtPosition));						
 					unit.ResetGoal();
 				}
 			}
 			
+			// Cleanup
 			isInUnitSelectiodMode = false;
 			pointedAtResource = null;
 			selectedUnits.Clear();
@@ -395,15 +431,23 @@ public class InteractionPointer : MonoBehaviour
 		{
 			int i = 0;
 			foreach (Unit unit in selectedUnits)
-			{				
+			{	
 				LineRenderer lineRenderer = lineRenderers[i];
-				DrawQuadraticBezierCurve(lineRenderer, unit.transform.position, pointedAtPosition);
-				lineRenderer.enabled = true;
+
+				if (!unit)
+				{ 
+					selectedUnits.Remove(unit);
+					if (lineRenderers[i].enabled)
+						lineRenderers[i].enabled = false;
+				}			
+				else
+				{
+					DrawQuadraticBezierCurve(lineRenderers[i], unit.transform.position, pointedAtPosition);
+					if (!lineRenderers[i].enabled)
+						lineRenderers[i].enabled = true;
+				}
 				i++;
 			}
-
-			// if (pointerLineRenderer.enabled == false)
-			// 	pointerLineRenderer.enabled = true;
 		}
 	}
 
