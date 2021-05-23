@@ -238,7 +238,6 @@ public class InteractionPointer : MonoBehaviour
 								villager.GotoForced(pointedAtResource.gridPosition.x, pointedAtResource.gridPosition.y);
 								villager.ResetGoal();
 							}
-
 						}
 						pointedAtResource = null;
 						selectedUnit = null;

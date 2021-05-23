@@ -33,6 +33,7 @@ public class Soldier : Unit
             PlayerManager.instance.AddToPopulation((Unit)this);     
 
         AttributeHandler.OnDamageEvent += OnDamage;
+        Damageable.OnDeathEvent += OnDeath;
     }
     
     public void HookIntoEvents()
@@ -102,11 +103,29 @@ public class Soldier : Unit
 
     public void OnDamage(object sender, Damageable.DamageEvent e)
     {
-        if (!isDying && AttributeHandler.GetAttributePercent(Attributes.HEALTH) <= 0.0f)
+        // if (!isDying && AttributeHandler.GetAttributePercent(Attributes.HEALTH) <= 0.0f)
+        // {
+        //     isDying = true;
+        //     Freeze();
+        //     ResetAI();    
+
+        //     if (UnityEngine.Random.Range(1, 100) < 50)
+        //         animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.DYING);
+        //     else
+        //         animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.DYING2);
+
+        //     audioSource.PlayOneShot(GameMaster.GetAudio("unit_death").GetClip(), 0.5f);
+        //     Destroy(this.gameObject, GameMaster.Instance.unitCorpseDecayTime);
+        // }
+    }
+
+    public void OnDeath(object sender, Damageable.DeathEvent e)
+    {
+        if (!isDying)
         {
             isDying = true;
             Freeze();
-            ResetAI();    
+            ResetAI(); 
 
             if (UnityEngine.Random.Range(1, 100) < 50)
                 animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.DYING);

@@ -116,7 +116,7 @@ public class Unit : Actor, IFactioned
 
     // 90% damage from 6 second fall at the gravity acceleration
     // rate of 9.81.
-    float damageMultiplier = 10.0f;// 90.0f / (9.81f * 6.0f);
+    protected float damageMultiplier = 10.0f;// 90.0f / (9.81f * 6.0f);
     public virtual void OnCollisionEnter(Collision collision)
     {
         if (wasThrownOrDropped)
