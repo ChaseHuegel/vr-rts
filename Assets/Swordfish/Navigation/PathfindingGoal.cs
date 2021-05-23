@@ -44,7 +44,7 @@ public class PathfindingGoal
             //  Trigger found event
             GoalFoundEvent e = new GoalFoundEvent{ actor = actor, goal = goal, cell = cell };
             OnGoalFoundEvent?.Invoke(null, e);
-            if (e.cancel == true) return false;   //  return if the event has been cancelled by any subscriber
+            if (e.cancel) return false;   //  return if the event has been cancelled by any subscriber
 
             return true;
         }
@@ -59,7 +59,7 @@ public class PathfindingGoal
             //  Trigger interact event
             GoalInteractEvent e = new GoalInteractEvent{ actor = actor, goal = goal, cell = cell };
             OnGoalInteractEvent?.Invoke(null, e);
-            if (e.cancel == true) return false;   //  return if the event has been cancelled by any subscriber
+            if (e.cancel) return false;   //  return if the event has been cancelled by any subscriber
 
             return true;
         }
@@ -86,12 +86,22 @@ public class PathfindingGoal
             //  Trigger interact event
             GoalInteractEvent e = new GoalInteractEvent{ actor = actor, goal = goal, cell = cell };
             OnGoalInteractEvent?.Invoke(null, e);
-            if (e.cancel == true) return false;   //  return if the event has been cancelled by any subscriber
+            if (e.cancel) return false;   //  return if the event has been cancelled by any subscriber
 
             return true;
         }
 
         return false;
+    }
+
+    public static bool TriggerGoalChanged(Actor actor, PathfindingGoal oldGoal, PathfindingGoal goal)
+    {
+        //  Trigger interact event
+        GoalChangeEvent e = new GoalChangeEvent{ actor = actor, oldGoal = oldGoal, goal = goal };
+        OnGoalChangeEvent?.Invoke(null, e);
+        if (e.cancel) return false;   //  return if the event has been cancelled by any subscriber
+
+        return true;
     }
 
     public bool active = true;
@@ -115,6 +125,14 @@ public class PathfindingGoal
         public Actor actor;
         public PathfindingGoal goal;
         public Cell cell;
+    }
+
+    public static event EventHandler<GoalChangeEvent> OnGoalChangeEvent;
+    public class GoalChangeEvent : Swordfish.Event
+    {
+        public Actor actor;
+        public PathfindingGoal oldGoal;
+        public PathfindingGoal goal;
     }
 #endregion
 }

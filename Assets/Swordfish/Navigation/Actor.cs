@@ -24,6 +24,7 @@ public class Actor : Body
     protected Cell currentGoalTarget = null;
     protected Cell previousGoalTarget = null;
     protected PathfindingGoal currentGoal = null;
+    protected PathfindingGoal previousGoal = null;
 
     private float movementInterpolation;
     private bool moving = false;
@@ -70,6 +71,11 @@ public class Actor : Body
     public bool HasValidTarget()
     {
         return (HasValidGoal() && HasValidGoalTarget() && PathfindingGoal.CheckGoal(this, currentGoalTarget, currentGoal));
+    }
+
+    public bool HasTargetChanged()
+    {
+        return currentGoalTarget != previousGoalTarget;
     }
 
     public void Freeze() { frozen = true; RemoveFromGrid(); }
@@ -188,8 +194,6 @@ public class Actor : Body
     {
         if (isPathLocked) return false;
 
-        previousGoalTarget = currentGoalTarget;
-
         if (!HasValidTarget())
             currentGoalTarget = FindNearestGoal(usePriority);
 
@@ -244,6 +248,12 @@ public class Actor : Body
         if (tickTimer >= Constants.ACTOR_TICK_RATE)
         {
             tickTimer = 0;
+
+            if (previousGoal != currentGoal)
+                PathfindingGoal.TriggerGoalChanged(this, previousGoal, currentGoal);
+
+            previousGoalTarget = currentGoalTarget;
+            previousGoal = currentGoal;
 
             //  Handle interacting with goals
             if (!moving && HasValidTarget())
