@@ -535,6 +535,9 @@ public class Villager : Unit
         if (!structure || !HasCargo())
             return false;
 
+        if (structure.factionID != factionID)
+            return false;
+
         if (!structure.CanDropOff(currentResource))
             return false;
 
@@ -544,7 +547,9 @@ public class Villager : Unit
         if (e.cancel) return false;   //  return if the event has been cancelled by any subscriber
 
         currentCargo -= e.amount;
-        PlayerManager.instance.AddResourceToStockpile(currentResource, (int)e.amount);
+
+        // Moved to static event handler OnVillagerDropoff in PlayerManager
+        //PlayerManager.instance.AddResourceToStockpile(currentResource, (int)e.amount);
 
         //  Send an indicator
         GameMaster.SendFloatingIndicator(structure.transform.position, $"+{(int)e.amount} {currentResource.ToString()}", Color.green);
@@ -596,6 +601,9 @@ public class Villager : Unit
         if (!structure || !structure.NeedsRepairs())
             return false;
 
+        if (structure.factionID != factionID)
+            return false;
+
         //  Convert per second to per tick
         float amount = (repairRate / (60/Constants.ACTOR_TICK_RATE));
 
@@ -617,6 +625,9 @@ public class Villager : Unit
         if (!construction || construction.IsBuilt())
             return false;
 
+        if (construction.factionID != factionID)
+            return false;
+            
         //  Convert per second to per tick
         float amount = (buildRate / (60/Constants.ACTOR_TICK_RATE));
 

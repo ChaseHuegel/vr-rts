@@ -391,7 +391,7 @@ MonoBehaviour:
     y: 0
   bakeOnStart: 1
   factionID: 1
-  rtsBuildingType: 10
+  buildingData: {fileID: 0}
 --- !u!114 &161417042894292969
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -424,9 +424,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 381a631b4e6c2514d9223a6b5a7d8fb3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  overrideFaction: 0
+  factionId: 0
   meshesToChange:
   - {fileID: 2508931123356532429}
   skinnedMeshesToChange: []
+  isUnit: 0
 --- !u!114 &4842783920252660064
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -445,6 +448,7 @@ MonoBehaviour:
   unitToAutospawn: 7
   factionID: 1
   unitSpawnPoint: {fileID: 3392106838259518230}
+  unitSpawnPointRadius: 0
   unitRallyWaypoint: {fileID: 4938717525532879013}
   unitRallyWaypointRadius: 0
   unit: 0
@@ -567,11 +571,11 @@ MonoBehaviour:
   showBarBackground: 1
   showBarForeground: 1
   showText: 1
-  hideWhenFull: 1
+  autoshowAt: 0.98
+  autohideAt: 1
   healthBarBackgroundImage: {fileID: 2282361205430170968}
   healthBarForegroundImage: {fileID: 6854701511966933458}
   healthBarStatusText: {fileID: 4684434899941497068}
-  damageable: {fileID: 161417042894292969}
 --- !u!1 &5193975746881954622
 GameObject:
   m_ObjectHideFlags: 0
@@ -871,7 +875,7 @@ PrefabInstance:
     - target: {fileID: 2300000, guid: e2f28d7d7478cb64597ebb9077abfe6e, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a2085ab309c94a143a706621cd42e213, type: 2}
+      objectReference: {fileID: 2100000, guid: 4a8b820c98c7b4540bab4e4f3d70d7fb, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e2f28d7d7478cb64597ebb9077abfe6e, type: 3}
 --- !u!23 &2508931123356532429 stripped

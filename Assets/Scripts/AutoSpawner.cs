@@ -23,6 +23,7 @@ public class AutoSpawner : MonoBehaviour
     public RTSUnitType unitToAutospawn;
     public byte factionID;
     public Transform unitSpawnPoint;
+    public float unitSpawnPointRadius;
     public Transform unitRallyWaypoint;
     public float unitRallyWaypointRadius;
 
@@ -39,10 +40,9 @@ public class AutoSpawner : MonoBehaviour
         // TODO: Pick a spot around the building and set it as the spawn point
         // when no spawn point is found. Using transform center currently.
         if (!unitSpawnPoint)
-        {
             unitSpawnPoint = transform;
-            Debug.Log("UnitSpawnPoint not set.", this);
-        }
+        if (!unitRallyWaypoint)
+            unitRallyWaypoint = unitSpawnPoint;
     }
 
     private void OnSpawnClicked()
@@ -84,7 +84,10 @@ public class AutoSpawner : MonoBehaviour
 
         if (unitData.prefab)
         {
-            GameObject unitGameObject = Instantiate(unitData.prefab, unitSpawnPoint.transform.position, Quaternion.identity);
+            Vector3 randomPos = (Vector3)Random.insideUnitCircle * unitSpawnPointRadius;
+            Vector3 position = unitSpawnPoint.transform.position + randomPos;
+
+            GameObject unitGameObject = Instantiate(unitData.prefab, position, Quaternion.identity);
             
             if (NetworkManager.Singleton.IsServer)
             {
@@ -95,7 +98,11 @@ public class AutoSpawner : MonoBehaviour
             unit.rtsUnitType = unitData.unitType;
             unit.factionID = factionID;
             unit.SyncPosition();
-            unit.GotoForced(World.ToWorldSpace(unitRallyWaypoint.position));
+
+            randomPos = (Vector3)Random.insideUnitCircle * unitSpawnPointRadius; 
+            position = unitRallyWaypoint.transform.position + randomPos;
+
+            unit.GotoForced(World.ToWorldSpace(position));
             unit.LockPath();
 
             // Debug.Log("Spawned " + unit.rtsUnitType + ".");

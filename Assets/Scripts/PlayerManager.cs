@@ -66,6 +66,8 @@ public class PlayerManager : MonoBehaviour
 
     void Start()
     {
+        HookIntoEvents();
+
         WristDisplay?.SetWoodText(woodCollected.ToString());
         WristDisplay?.SetGrainText(grainCollected.ToString());
         WristDisplay?.SetGoldText(goldCollected.ToString());
@@ -96,6 +98,34 @@ public class PlayerManager : MonoBehaviour
             else
                 palmMenu.Hide();
         }
+    }
+
+    public void OnVillagerDropoff(object sender, Villager.DropoffEvent e)
+    {
+        if (e.villager.factionID == factionID)
+        {
+            AddResourceToStockpile(e.resourceType, (int)e.amount);
+        }
+    }
+
+    public void OnVillagerRepair(object sender, Villager.RepairEvent e)
+    {
+        if (e.villager.factionID == factionID)
+        {
+            RemoveResourcesFromStockpile(1, 1, 1, 1);
+        }
+    }
+
+    public void HookIntoEvents()
+    {
+        Villager.OnDropoffEvent += OnVillagerDropoff;
+        Villager.OnRepairEvent += OnVillagerRepair;
+    }
+
+    public void CleanupEvents()
+    {
+        Villager.OnDropoffEvent -= OnVillagerDropoff;
+        Villager.OnRepairEvent -= OnVillagerRepair;
     }
 
     protected bool IsClipboardPalmMenuVisible;
@@ -380,5 +410,9 @@ public class PlayerManager : MonoBehaviour
         stoneCollected -= unitType.stoneCost;
 
         UpdateWristDisplayResourceText();
+    }
+    public void OnDestroy()
+    {        
+        CleanupEvents();
     }
 }

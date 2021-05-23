@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 1498620696}
   - component: {fileID: 6355609625548158117}
   - component: {fileID: 6611738123303705844}
+  - component: {fileID: 1606106129523757696}
   m_Layer: 10
   m_Name: Farm_World
   m_TagString: Untagged
@@ -269,6 +270,24 @@ MonoBehaviour:
   menuGameObject: {fileID: 6926059040235247782}
   healthBar: {fileID: 9018394265720730084}
   objectsToAutohide: []
+--- !u!114 &1606106129523757696
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 899507145775679583}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 381a631b4e6c2514d9223a6b5a7d8fb3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  overrideFaction: 0
+  factionId: 0
+  meshesToChange:
+  - {fileID: 8987644490305071615}
+  skinnedMeshesToChange: []
+  isUnit: 0
 --- !u!1 &3163886759887789236
 GameObject:
   m_ObjectHideFlags: 0
@@ -707,11 +726,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2300000, guid: 520e20395d1150a4c94174228bde0499, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 4a8b820c98c7b4540bab4e4f3d70d7fb, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 520e20395d1150a4c94174228bde0499, type: 3}
 --- !u!4 &8987644490303171359 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: 520e20395d1150a4c94174228bde0499,
+    type: 3}
+  m_PrefabInstance: {fileID: 8987644490303041951}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &8987644490305071615 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 2300000, guid: 520e20395d1150a4c94174228bde0499,
     type: 3}
   m_PrefabInstance: {fileID: 8987644490303041951}
   m_PrefabAsset: {fileID: 0}

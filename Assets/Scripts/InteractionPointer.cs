@@ -138,7 +138,7 @@ public class InteractionPointer : MonoBehaviour
 		lineRenderers = new LineRenderer[maxUnitSelectionCount];
 		for(int i = 0; i < maxUnitSelectionCount; i++)
 		{
-			lineRenderers[i] = Instantiate(pointerLineRenderer);
+			lineRenderers[i] = Instantiate(pointerLineRenderer, this.transform);
 			lineRenderers[i].enabled = false;
 		}
 
@@ -273,10 +273,11 @@ public class InteractionPointer : MonoBehaviour
 				bool civilian = unit.IsCivilian();
 
 				// Villager unit and we're targeting a resource.
-				if (civilian && pointedAtResource)
+				if (unit is Villager && pointedAtResource)
+				//if (civilian && pointedAtResource)
 				{
 					Villager villager = unit.GetComponent<Villager>();
-					//Villager villager = (Villager)selectedUnit;
+					//Villager villager = unit as Villager;
 					
 					switch (pointedAtResource.type)
 					{
@@ -304,7 +305,8 @@ public class InteractionPointer : MonoBehaviour
 				}
 
 				// Villager unit and not targeting a resource.
-				if (civilian && !pointedAtResource)
+				if (unit is Villager && !pointedAtResource)
+				// if (civilian && !pointedAtResource)
 				{
 					unit.GotoForced(World.ToWorldSpace(pointedAtPosition));						
 					unit.ResetGoal();
@@ -312,7 +314,8 @@ public class InteractionPointer : MonoBehaviour
 				}
 
 				// Military unit.
-				if (!civilian)
+				if (unit is Soldier)
+				// if (!civilian)
 				{	
 					if (pointedAtPointerInteractable)
 					{

@@ -509,9 +509,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 381a631b4e6c2514d9223a6b5a7d8fb3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  overrideFaction: 0
+  factionId: 0
   meshesToChange: []
   skinnedMeshesToChange:
   - {fileID: 3628467702706474427}
+  isUnit: 0
 --- !u!114 &782091929014317462
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1674,7 +1677,7 @@ PrefabInstance:
     - target: {fileID: 13734496, guid: bcc60fdbd3a37b44cbc0cb99db483477, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 792a4bad9e08b8e41bfbd3f0b8aac1ab, type: 2}
+      objectReference: {fileID: 2100000, guid: 4a8b820c98c7b4540bab4e4f3d70d7fb, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bcc60fdbd3a37b44cbc0cb99db483477, type: 3}
 --- !u!1 &3628467702695182887 stripped

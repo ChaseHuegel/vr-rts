@@ -407,9 +407,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 381a631b4e6c2514d9223a6b5a7d8fb3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  overrideFaction: 0
+  factionId: 0
   meshesToChange: []
   skinnedMeshesToChange:
   - {fileID: 184236362287703926}
+  isUnit: 0
 --- !u!114 &465591726281918915
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -923,6 +926,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 13700000, guid: aad05534a7ba0dd49b8c54ce188308ec, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 4a8b820c98c7b4540bab4e4f3d70d7fb, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: aad05534a7ba0dd49b8c54ce188308ec, type: 3}
 --- !u!137 &184236362287703926 stripped
