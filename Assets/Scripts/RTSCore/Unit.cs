@@ -129,6 +129,7 @@ public class Unit : Actor, IFactioned
                 AttributeHandler.Damage(damage, AttributeChangeCause.NATURAL, null, DamageType.BLUDGEONING);
 
                 audioSource.PlayOneShot(GameMaster.GetAudio("unit_damaged").GetClip(), 0.25f);
+                transform.rotation = Quaternion.identity;
                 wasThrownOrDropped = false;
 
                 // Debug.Log(string.Format("Magnitude: {0} Damage: {1} Health: {2}", collision.relativeVelocity.magnitude,

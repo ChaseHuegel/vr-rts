@@ -32,14 +32,14 @@ public class Soldier : Unit
         if(PlayerManager.instance.factionID == factionID)
             PlayerManager.instance.AddToPopulation((Unit)this);     
 
-        AttributeHandler.OnDamageEvent += OnDamage;
-        Damageable.OnDeathEvent += OnDeath;
     }
     
     public void HookIntoEvents()
     {
         PathfindingGoal.OnGoalFoundEvent += OnGoalFound;
         PathfindingGoal.OnGoalInteractEvent += OnGoalInteract;
+        AttributeHandler.OnDamageEvent += OnDamage;
+        Damageable.OnDeathEvent += OnDeath;
     }
 
     public void SetAIAttackGoals(bool villagers, bool military, bool buildings)
@@ -103,24 +103,13 @@ public class Soldier : Unit
 
     public void OnDamage(object sender, Damageable.DamageEvent e)
     {
-        // if (!isDying && AttributeHandler.GetAttributePercent(Attributes.HEALTH) <= 0.0f)
-        // {
-        //     isDying = true;
-        //     Freeze();
-        //     ResetAI();    
-
-        //     if (UnityEngine.Random.Range(1, 100) < 50)
-        //         animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.DYING);
-        //     else
-        //         animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.DYING2);
-
-        //     audioSource.PlayOneShot(GameMaster.GetAudio("unit_death").GetClip(), 0.5f);
-        //     Destroy(this.gameObject, GameMaster.Instance.unitCorpseDecayTime);
-        // }
     }
 
     public void OnDeath(object sender, Damageable.DeathEvent e)
     {
+        if (e.victim != AttributeHandler)
+            return;
+
         if (!isDying)
         {
             isDying = true;
@@ -157,7 +146,7 @@ public class Soldier : Unit
 
     public void OnGoalInteract(object sender, PathfindingGoal.GoalInteractEvent e)
     {
-        if (e.actor != this) 
+        if (e.actor != this || isHeld) 
             return;
         
         if (e.goal is GoalHuntUnits || e.goal is GoalHuntMilitary || e.goal is GoalHuntVillagers)
@@ -239,6 +228,7 @@ public class Soldier : Unit
     {
         PathfindingGoal.OnGoalFoundEvent -= OnGoalFound;
         PathfindingGoal.OnGoalInteractEvent -= OnGoalInteract;
+        Damageable.OnDeathEvent -= OnDeath;
     }
 
     public void OnDestroy()

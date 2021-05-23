@@ -24,26 +24,34 @@ public class PointerInteractable : MonoBehaviour
 
         if (highlightMaterial == null)
             Debug.LogError("<b>[SteamVR Interaction]</b> Hover Highlight Material is missing. Please create a material named 'SteamVR_HoverHighlight' and place it in a Resources folder", this);
+        
     }
 
-    protected virtual void Update()
-    {
-        UpdateHighlightRenderers();
-
-        if (highlightOn == false && highlightHolder != null)
-                Destroy(highlightHolder);
-    }
+    // protected virtual void Update()
+    // {
+    //     if (highlightOn)
+    //     { 
+    //         UpdateHighlightRenderers();
+        
+    //         if (highlightOn == false && highlightHolder != null)
+    //             Destroy(highlightHolder);
+    //     }
+    // }
 
     public void Highlight( bool highlight )
     {
-        if (highlightOn == true && wasHighlightOn == false)
-            CreateHighlightRenderers();
+        // wasHighlightOn = highlightOn;        
+        // highlightOn = highlight;  
 
-        wasHighlightOn = highlightOn;        
-        highlightOn = highlight;     
+        // // if (highlightOnHover == true && wasHovering == false)
+        // if (highlightOn == true && wasHighlightOn == false)
+        // {
+        //     CreateHighlightRenderers();
+        //     UpdateHighlightRenderers();
+        // }
 
-        if (highlightOn == false)
-            Destroy(highlightHolder);   
+        // if (highlightOn = false && highlightHolder != null)
+        //     Destroy(highlightHolder);
     }
 
     protected virtual void CreateHighlightRenderers()

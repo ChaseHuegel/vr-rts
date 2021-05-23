@@ -49,9 +49,11 @@ public class Villager : Unit
 
     public void HookIntoEvents()
     {
+        AttributeHandler.OnDamageEvent += OnDamage;
         PathfindingGoal.OnGoalFoundEvent += OnGoalFound;
         PathfindingGoal.OnGoalInteractEvent += OnGoalInteract;
         PathfindingGoal.OnGoalChangeEvent += OnGoalChange;
+        Damageable.OnDeathEvent += OnDeath;
     }
 
     public void CleanupEvents()
@@ -59,6 +61,7 @@ public class Villager : Unit
         PathfindingGoal.OnGoalFoundEvent -= OnGoalFound;
         PathfindingGoal.OnGoalInteractEvent -= OnGoalInteract;
         PathfindingGoal.OnGoalChangeEvent -= OnGoalChange;
+        Damageable.OnDeathEvent -= OnDeath;
     }
 
 
@@ -71,8 +74,7 @@ public class Villager : Unit
 
         if(PlayerManager.instance.factionID == factionID)
             PlayerManager.instance.AddToPopulation((Unit)this);
-
-        AttributeHandler.OnDamageEvent += OnDamage;
+       
 
         //ChangeTaskVisuals();
 
@@ -80,19 +82,31 @@ public class Villager : Unit
 
     public void OnDamage(object sender, Damageable.DamageEvent e)
     {
-        if (!isDying && AttributeHandler.GetAttributePercent(Attributes.HEALTH) <= 0.0f)
+    }
+
+    public void OnDeath(object sender, Damageable.DeathEvent e)
+    {
+        if (e.victim != this)
+            return;
+            
+        if (!isDying)
         {
             isDying = true;
             Freeze();
-            ResetAI();
-            animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.DYING);
+            ResetAI(); 
+
+            if (UnityEngine.Random.Range(1, 100) < 50)
+                animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.DYING);
+            else
+                animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.DYING2);
+
             audioSource.PlayOneShot(GameMaster.GetAudio("unit_death").GetClip(), 0.5f);
             Destroy(this.gameObject, GameMaster.Instance.unitCorpseDecayTime);
         }
     }
 
     public void OnDestroy()
-    {
+    {        
         CleanupEvents();
     }
 
@@ -496,7 +510,8 @@ public class Villager : Unit
 
     public void OnGoalInteract(object sender, PathfindingGoal.GoalInteractEvent e)
     {
-        if (e.actor != this) return;
+        if (e.actor != this || isHeld)
+            return;
 
         Villager villager = (Villager)e.actor;
         Resource resource = e.cell.GetOccupant<Resource>();

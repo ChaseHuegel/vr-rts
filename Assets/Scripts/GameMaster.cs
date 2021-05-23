@@ -40,6 +40,7 @@ public class GameMaster : Singleton<GameMaster>
     public GameObject buildingDestroyedFX;
     public AudioClip buildingDestroyedSound;
 
+    public int maximumUnitSelectionCount = 20;
     public float unitCorpseDecayTime = 30.0f;
 
     public static void SendFloatingIndicator(Vector3 pos, string text, Color color)

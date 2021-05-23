@@ -1,11 +1,10 @@
 ﻿
 using UnityEngine;
-using UnityEngine.Events;
-using System.Collections;
 using Valve.VR.InteractionSystem;
 using Valve.VR;
 using Swordfish.Audio;
 using Swordfish.Navigation;
+using System.Collections.Generic;
 
 public class InteractionPointer : MonoBehaviour
 {
@@ -39,7 +38,8 @@ public class InteractionPointer : MonoBehaviour
 
 
 	private LineRenderer pointerLineRenderer;
-	private GameObject interactionPointerObject;
+	private LineRenderer[] lineRenderers;
+	private GameObject pointerObject;
 	private Transform pointerStartTransform;
 	public float teleportFadeTime = 0.1f;
 	public Hand pointerHand = null;
@@ -49,7 +49,7 @@ public class InteractionPointer : MonoBehaviour
 	private PointerInteractable[] interactableObjects;
 	private PointerInteractable pointedAtPointerInteractable;
 	private	BuildingSpawnQueue buildingSpawnQueue;
-	private Unit selectedUnit;
+	private List<Unit> selectedUnits;
 	private Vector3 pointedAtPosition;
 	private Vector3 prevPointedAtPosition;
 	private float pointerShowStartTime = 0.0f;
@@ -74,8 +74,9 @@ public class InteractionPointer : MonoBehaviour
 	public GameObject wayPointReticle;
 	private Resource pointedAtResource;
 	private Vector3 rallyWaypointArcStartPosition;
-	private LineRenderer rallyPointArcLineRenderer;
-		bool isSettingRallyPoint;
+	bool isSettingRallyPoint;
+	
+	private int maxUnitSelectionCount;
 
 	//-------------------------------------------------
 	private static InteractionPointer _instance;
@@ -96,9 +97,9 @@ public class InteractionPointer : MonoBehaviour
 	void Awake()
 	{
 		_instance = this;
-		// pointerLineRenderer = GetComponentInChildren<LineRenderer>();
-		// interactionPointerObject = pointerLineRenderer.gameObject;
-
+		
+		pointerLineRenderer = GetComponentInChildren<LineRenderer>();
+		pointerObject = pointerLineRenderer.gameObject;
 		handReticle.enabled = useHandAsReticle;
 
 
@@ -111,7 +112,6 @@ public class InteractionPointer : MonoBehaviour
 		teleportArc = GetComponent<TeleportArc>();
 		teleportArc.traceLayerMask = traceLayerMask;
 
-		rallyPointArcLineRenderer = GetComponent<LineRenderer>();
 		// loopingAudioMaxVolume = loopingAudioSource.volume;
 
 		// float invalidReticleStartingScale = invalidReticleTransform.localScale.x;
@@ -123,7 +123,23 @@ public class InteractionPointer : MonoBehaviour
 	//-------------------------------------------------
 	void Start()
 	{
+		// Used to un-highlight things
 		interactableObjects = GameObject.FindObjectsOfType<PointerInteractable>();
+		
+		selectedUnits = new List<Unit>();
+
+		// Cache this value, going to need it a lot and don't need to keep
+		// bothering the GameMaster for it.
+		maxUnitSelectionCount = GameMaster.Instance.maximumUnitSelectionCount;
+
+		// Setup LineRenderers for unit selection
+		lineRenderers = new LineRenderer[maxUnitSelectionCount];
+		for(int i = 0; i < maxUnitSelectionCount; i++)
+		{
+			lineRenderers[i] = Instantiate(pointerLineRenderer);
+			lineRenderers[i].enabled = false;
+		}
+
 		player = Valve.VR.InteractionSystem.Player.instance;
 
 		if ( player == null )
@@ -134,28 +150,7 @@ public class InteractionPointer : MonoBehaviour
 		}
 		
 		ShowPointer();
-	}
-
-	//-------------------------------------------------
-	void OnDisable()
-	{
-		HidePointer();
-	}
-
-	public void StartPlacement(Hand hand)
-	{
-		placementEnded = false;
-		placementStarted = true;
-	}
-
-	public void StopPlacement(Hand hand)
-	{
-		placementStarted = false;	
-		placementEnded = true;		
-		visible = false;	
-		HidePointer();
-	}
-
+	}	
 
 	//-------------------------------------------------
 	void Update()
@@ -192,87 +187,231 @@ public class InteractionPointer : MonoBehaviour
 
 			//hand.uiInteractAction.GetStateDown(hand.handType)
 
-			// TODO: listen for different button to cancel
-			if (!PlayerManager.instance.handBuildMenu.activeSelf && !hand.hoveringInteractable)			
+			if ( WasInteractButtonReleased(hand))
+				if (pointerHand == hand)
+					TryInteract();
+
+			if ( WasInteractButtonPressed(hand))
+				newPointerHand = hand;				
+		}
+	}
+
+	private bool isInUnitSelectiodMode;
+	private bool WasInteractButtonPressed(Hand hand)
+	{
+		// TODO: listen for different button to cancel
+		if (CanInteract(hand))
+		{
+			if (uiInteractAction.GetStateDown(hand.handType))
 			{
-				if (uiInteractAction.GetStateUp(hand.handType))
+				if (pointedAtPointerInteractable != null)
 				{
-					if (isSettingRallyPoint)
-					{
-						buildingSpawnQueue.SetUnitRallyWaypoint(wayPointReticle.transform.position);
-						headAudioSource.PlayOneShot(setRallyPointSound.GetClip());
-						wayPointReticle.SetActive(false);
-						buildingSpawnQueue = null;
-						isSettingRallyPoint = false;
-						rallyPointArcLineRenderer.enabled = false;
-					}
-					else if (selectedUnit)
-					{
-						if (selectedUnit.IsCivilian())
-						{
-							if (pointedAtResource)
-							{
-								Villager villager = selectedUnit.GetComponent<Villager>();
-								//Villager villager = (Villager)selectedUnit;
-								
-								switch (pointedAtResource.type)
-								{
-									case ResourceGatheringType.Gold:
-										villager.SetUnitType(RTSUnitType.GoldMiner);										
-										break;
-
-									case ResourceGatheringType.Grain:
-										villager.SetUnitType(RTSUnitType.Farmer);										
-										break;
-
-									case ResourceGatheringType.Stone:
-										villager.SetUnitType(RTSUnitType.StoneMiner);										
-										break;
-
-									case ResourceGatheringType.Wood:
-										villager.SetUnitType(RTSUnitType.Lumberjack);										
-										break;
-								}
-								
-								PathfindingGoal.TryGoal((Actor)villager, World.at(pointedAtResource.gridPosition), villager.GetGoals());
-								villager.GotoForced(pointedAtResource.gridPosition.x, pointedAtResource.gridPosition.y);
-								villager.ResetGoal();
-							}
-						}
-						pointedAtResource = null;
-						selectedUnit = null;
-						rallyPointArcLineRenderer.enabled = false;
+					buildingSpawnQueue = pointedAtPointerInteractable.GetComponentInChildren<BuildingSpawnQueue>();
+					
+					if (buildingSpawnQueue && !isSettingRallyPoint)
+					{ 
+						rallyWaypointArcStartPosition = pointedAtPointerInteractable.transform.position;
+						isSettingRallyPoint = true;	
+						return true;											
 					}
 
+					Unit hoveredUnit = pointedAtPointerInteractable.GetComponent<Unit>();
+					if (hoveredUnit && !isInUnitSelectiodMode)
+					{
+						selectedUnits.Add(hoveredUnit);
+						isInUnitSelectiodMode = true;
+						return true;
+					}					
+
+					//Debug.Log(string.Format("Unit: {0} interactable: {1}", selectedUnit, pointedAtPointerInteractable));
+					wayPointReticle.SetActive(true);
 				}
 
-				if (uiInteractAction.GetStateDown(hand.handType))
-				{
-					if (pointedAtPointerInteractable != null)
-					{
-						buildingSpawnQueue = pointedAtPointerInteractable.GetComponentInChildren<BuildingSpawnQueue>();
-						selectedUnit = pointedAtPointerInteractable.GetComponent<Unit>();
-						if (buildingSpawnQueue && !isSettingRallyPoint)
-						{ 
-							rallyWaypointArcStartPosition = pointedAtPointerInteractable.transform.position;
-							isSettingRallyPoint = true;												
-						}
-						else if (selectedUnit)
-						{
-							
-						}
+				return true;
+			}
+		}
 
-						//Debug.Log(string.Format("Unit: {0} interactable: {1}", selectedUnit, pointedAtPointerInteractable));
-						wayPointReticle.SetActive(true);
+		// Make sure it's off.
+		wayPointReticle.SetActive(false);
+
+		return false;
+	}
+	
+	private bool WasInteractButtonReleased(Hand hand)
+	{
+		if ( CanInteract(hand))
+		{
+			if (uiInteractAction.GetStateUp(hand.handType))
+				return true;
+		}
+
+		// Make sure it's off.
+		wayPointReticle.SetActive(false);
+
+		return false;
+	}
+
+	private void TryInteract()
+	{
+		if (isSettingRallyPoint)
+		{
+			buildingSpawnQueue.SetUnitRallyWaypoint(wayPointReticle.transform.position);
+			headAudioSource.PlayOneShot(setRallyPointSound.GetClip());
+			wayPointReticle.SetActive(false);
+			buildingSpawnQueue = null;
+			isSettingRallyPoint = false;
+			pointerLineRenderer.enabled = false;
+			return;
+		}
+
+		if (selectedUnits.Count > 0)
+		{
+			foreach (Unit unit in selectedUnits)
+			{
+				if (unit.IsCivilian())
+				{
+					if (pointedAtResource)
+					{
+						Villager villager = unit.GetComponent<Villager>();
+						//Villager villager = (Villager)selectedUnit;
+						
+						switch (pointedAtResource.type)
+						{
+							case ResourceGatheringType.Gold:
+								villager.SetUnitType(RTSUnitType.GoldMiner);										
+								break;
+
+							case ResourceGatheringType.Grain:
+								villager.SetUnitType(RTSUnitType.Farmer);										
+								break;
+
+							case ResourceGatheringType.Stone:
+								villager.SetUnitType(RTSUnitType.StoneMiner);										
+								break;
+
+							case ResourceGatheringType.Wood:
+								villager.SetUnitType(RTSUnitType.Lumberjack);										
+								break;
+						}
+						
+						PathfindingGoal.TryGoal((Actor)villager, World.at(pointedAtResource.gridPosition), villager.GetGoals());
+						villager.GotoForced(pointedAtResource.gridPosition.x, pointedAtResource.gridPosition.y);
+						villager.ResetGoal();
 					}
+				}
+				// Unit.IsCivilian() = false
+				else
+				{
+
 				}
 			}
-			else
+			
+			isInUnitSelectiodMode = false;
+			pointedAtResource = null;
+			selectedUnits.Clear();
+			foreach(LineRenderer lineRenderer in lineRenderers)
 			{
-				// Make sure it's off.
-				wayPointReticle.SetActive(false);
-			}		
+				lineRenderer.enabled = false;
+			}
 		}
+	}
+
+	//-------------------------------------------------
+	private void UpdatePointer()
+	{
+		Vector3 pointerStart = pointerStartTransform.position;
+		Vector3 pointerEnd;
+		Vector3 pointerDir = pointerStartTransform.forward;
+		bool hitSomething = false;
+		bool hitPointValid = false;
+		Vector3 playerFeetOffset = player.trackingOriginTransform.position - player.feetPositionGuess;
+		Vector3 arcVelocity = pointerDir * arcDistance;
+		PointerInteractable hitPointerInteractable = null;
+
+		//Check pointer angle
+		float dotUp = Vector3.Dot( pointerDir, Vector3.up );
+		float dotForward = Vector3.Dot( pointerDir, player.hmdTransform.forward );
+		bool pointerAtBadAngle = false;
+
+		if ( ( dotForward > 0 && dotUp > 0.75f ) || ( dotForward < 0.0f && dotUp > 0.5f ) )
+			pointerAtBadAngle = true;
+
+		//Trace to see if the pointer hit anything
+		RaycastHit hitInfo;
+		teleportArc.SetArcData( pointerStart, arcVelocity, true, pointerAtBadAngle );		
+
+		teleportArc.FindProjectileCollision( out hitInfo );
+		//if ( teleportArc.DrawArc( out hitInfo ) )
+		if ( hitInfo.collider )
+		{	
+			hitSomething = true;
+			hitPointValid = LayerMatchTest( allowedPlacementLayers, hitInfo.collider.gameObject );
+			
+			if (selectedUnits.Count > 0)
+				pointedAtResource = hitInfo.collider.GetComponentInParent<Resource>();
+			
+			hitPointerInteractable = hitInfo.collider.GetComponent<PointerInteractable>();
+			if (!hitPointerInteractable)
+				hitPointerInteractable = hitInfo.collider.GetComponentInParent<PointerInteractable>();
+		}		
+		
+		HighlightSelected( hitPointerInteractable );
+		
+		if (hitPointerInteractable != null)
+			pointedAtPointerInteractable = hitPointerInteractable;			
+		else
+			pointedAtPointerInteractable = null;
+
+		pointedAtPosition = hitInfo.point;
+		pointerEnd = hitInfo.point;
+
+		if ( hitSomething )
+			pointerEnd = hitInfo.point;
+		else
+			pointerEnd = teleportArc.GetArcPositionAtTime( teleportArc.arcDuration );
+
+		destinationReticleTransform.position = pointedAtPosition;
+		destinationReticleTransform.gameObject.SetActive( true );
+
+		if (isSettingRallyPoint)
+		{			
+			DrawQuadraticBezierCurve(pointerLineRenderer, rallyWaypointArcStartPosition, pointedAtPosition);
+			if (pointerLineRenderer.enabled == false)
+				pointerLineRenderer.enabled = true;
+
+		}
+		else if (isInUnitSelectiodMode && pointedAtPointerInteractable != null)
+		{
+			Unit hoveredUnit = pointedAtPointerInteractable.GetComponent<Unit>();
+			if (hoveredUnit && !selectedUnits.Contains(hoveredUnit))
+			{
+				selectedUnits.Add(hoveredUnit);
+			}
+		}
+		
+		if (selectedUnits.Count > 0)
+		{
+			int i = 0;
+			foreach (Unit unit in selectedUnits)
+			{				
+				LineRenderer lineRenderer = lineRenderers[i];
+				DrawQuadraticBezierCurve(lineRenderer, unit.transform.position, pointedAtPosition);
+				lineRenderer.enabled = true;
+				i++;
+			}
+
+			// if (pointerLineRenderer.enabled == false)
+			// 	pointerLineRenderer.enabled = true;
+		}
+	}
+
+	private bool CanInteract( Hand hand)
+	{
+		//!PlayerManager.instance.handBuildMenu.activeSelf
+		if (!hand.currentAttachedObject && !hand.hoveringInteractable)	
+			return true;
+
+		return false;
 	}
 
 	private bool WasTeleportButtonReleased( Hand hand )
@@ -395,111 +534,23 @@ public class InteractionPointer : MonoBehaviour
 			// {
 			// 	teleportingToMarker.TeleportPlayer( pointedAtPosition );
 			// }
-		}
+		}	
 
-	//-------------------------------------------------
-	private void UpdatePointer()
-	{
-		Vector3 pointerStart = pointerStartTransform.position;
-		Vector3 pointerEnd;
-		Vector3 pointerDir = pointerStartTransform.forward;
-		bool hitSomething = false;
-		bool hitPointValid = false;
-		Vector3 playerFeetOffset = player.trackingOriginTransform.position - player.feetPositionGuess;
-
-		Vector3 arcVelocity = pointerDir * arcDistance;
-
-		PointerInteractable hitPointerInteractable = null;
-
-		//Check pointer angle
-		float dotUp = Vector3.Dot( pointerDir, Vector3.up );
-		float dotForward = Vector3.Dot( pointerDir, player.hmdTransform.forward );
-		bool pointerAtBadAngle = false;
-		if ( ( dotForward > 0 && dotUp > 0.75f ) || ( dotForward < 0.0f && dotUp > 0.5f ) )
-		{
-			pointerAtBadAngle = true;
-		}
-
-		//Trace to see if the pointer hit anything
-		RaycastHit hitInfo;
-		teleportArc.SetArcData( pointerStart, arcVelocity, true, pointerAtBadAngle );		
-
-		teleportArc.FindProjectileCollision( out hitInfo );
-		//if ( teleportArc.DrawArc( out hitInfo ) )
-		if ( hitInfo.collider )
-		{	
-			hitSomething = true;
-			hitPointValid = LayerMatchTest( allowedPlacementLayers, hitInfo.collider.gameObject );
-			
-			if (selectedUnit)
-			{
-				pointedAtResource = hitInfo.collider.GetComponentInParent<Resource>();
-			}
-			
-			hitPointerInteractable = hitInfo.collider.GetComponent<PointerInteractable>();
-			if (!hitPointerInteractable)
-				hitPointerInteractable = hitInfo.collider.GetComponentInParent<PointerInteractable>();
-			
-			
-
-		}		
-		
-		//HighlightSelected( hitPointerInteractable );
-		
-		if (hitPointerInteractable != null)
-		{		
-			pointedAtPointerInteractable = hitPointerInteractable;			
-		}
-		else
-		{
-			pointedAtPointerInteractable = null;
-		}
-
-		pointedAtPosition = hitInfo.point;
-		pointerEnd = hitInfo.point;
-
-		if ( hitSomething )
-		{
-			pointerEnd = hitInfo.point;
-		}
-		else
-		{
-			pointerEnd = teleportArc.GetArcPositionAtTime( teleportArc.arcDuration );
-		}
-
-		destinationReticleTransform.position = pointedAtPosition;
-		destinationReticleTransform.gameObject.SetActive( true );
-
-		if (isSettingRallyPoint)
-		{			
-			DrawQuadraticBezierCurve(rallyWaypointArcStartPosition, pointedAtPosition);
-			if (rallyPointArcLineRenderer.enabled == false)
-				rallyPointArcLineRenderer.enabled = true;
-
-		}
-		else if (selectedUnit)
-		{
-			DrawQuadraticBezierCurve(selectedUnit.transform.position, pointedAtPosition);
-			if (rallyPointArcLineRenderer.enabled == false)
-				rallyPointArcLineRenderer.enabled = true;
-		}
-	}
-
-	public void DrawQuadraticBezierCurve(Vector3 start, Vector3 end)
+	public void DrawQuadraticBezierCurve(LineRenderer lineRenderer, Vector3 start, Vector3 end)
     {
 		float dist = Vector3.Distance(end, start) * 0.5f;
 		Vector3 dir = (end - start).normalized;
 		Vector3 mid = start + (dir * dist);
 		mid.y += 1;
 			
-        rallyPointArcLineRenderer.positionCount = 200;
+        lineRenderer.positionCount = 200;
         float t = 0f;
         Vector3 B = new Vector3(0, 0, 0);
-        for (int i = 0; i < rallyPointArcLineRenderer.positionCount; i++)
+        for (int i = 0; i < lineRenderer.positionCount; i++)
         {
             B = (1 - t) * (1 - t) * start + 2 * (1 - t) * t * mid + t * t * end;
-            rallyPointArcLineRenderer.SetPosition(i, B);
-            t += (1 / (float)rallyPointArcLineRenderer.positionCount);
+            lineRenderer.SetPosition(i, B);
+            t += (1 / (float)lineRenderer.positionCount);
         }
     }
 
@@ -511,12 +562,10 @@ public class InteractionPointer : MonoBehaviour
 	private void HidePointer()
 	{		
 		if ( visible )
-		{
 			pointerHideStartTime = Time.time;
-		}
 
 		visible = false;		
-		//interactionPointerObject.SetActive( false );
+		//pointerObject.SetActive( false );
 		teleportArc.Hide();
 	}
 
@@ -529,13 +578,11 @@ public class InteractionPointer : MonoBehaviour
 			pointedAtPointerInteractable = null;
 			pointerShowStartTime = Time.time;
 			visible = true;
-			//interactionPointerObject.SetActive( false );
+			//pointerObject.SetActive( false );
 			teleportArc.Show();
 
 			foreach ( PointerInteractable interactObject in interactableObjects )
-			{
 				interactObject.Highlight( false );
-			}
 
 			startingFeetOffset = player.trackingOriginTransform.position - player.feetPositionGuess;
 			movedFeetFarEnough = false;
@@ -562,52 +609,42 @@ public class InteractionPointer : MonoBehaviour
 	private void PlayPointerHaptic( bool validLocation )
 	{
 		if ( pointerHand != null )
-		{
 			if ( validLocation )
-			{
 				pointerHand.TriggerHapticPulse( 800 );
-			}
 			else
-			{
 				pointerHand.TriggerHapticPulse( 100 );
-			}
-		}
 	}
 
 
 	private void HighlightSelected( PointerInteractable hitPointerInteractable )
 	{
-		if ( pointedAtPointerInteractable != hitPointerInteractable ) //Pointing at a new teleport marker
+		// Pointing at a new interactable
+		if ( pointedAtPointerInteractable != hitPointerInteractable ) 
 		{
 			if ( pointedAtPointerInteractable != null )
-			{
 				pointedAtPointerInteractable.Highlight( false );
-			}
 
 			if ( hitPointerInteractable != null )
 			{
-				hitPointerInteractable.Highlight( true );
-
+				//hitPointerInteractable.Highlight( true );
 				prevPointedAtPosition = pointedAtPosition;
-				PlayPointerHaptic( true );//!hitTerrainBuilding.locked );
-
-				//PlayAudioClip( reticleAudioSource, goodHighlightSound );
-
+				PlayPointerHaptic( true );//!hitPointerInteractable.locked );
+				// PlayAudioClip( reticleAudioSource, goodHighlightSound );
 				// loopingAudioSource.volume = loopingAudioMaxVolume;
 			}
 			else if ( pointedAtPointerInteractable != null )
 			{
-				//PlayAudioClip( reticleAudioSource, badHighlightSound );
-
+				// PlayAudioClip( reticleAudioSource, badHighlightSound );
 				// loopingAudioSource.volume = 0.0f;
 			}
 		}
-		else if ( hitPointerInteractable != null ) //Pointing at the same teleport marker
+		// Pointing at the same interactable
+		else if ( hitPointerInteractable != null ) 
 		{
 			if ( Vector3.Distance( prevPointedAtPosition, pointedAtPosition ) > 1.0f )
 			{
 				prevPointedAtPosition = pointedAtPosition;
-				PlayPointerHaptic( true ); //!hitTerrainBuilding.locked );
+				PlayPointerHaptic( true ); //!hitPointerInteractable.locked );
 			}
 		}
 	}
@@ -616,12 +653,29 @@ public class InteractionPointer : MonoBehaviour
 	private bool ShouldOverrideHoverLock()
 	{
 		if ( !allowTeleportWhileAttached || allowTeleportWhileAttached.overrideHoverLock )
-		{
 			return true;
-		}
 
 		return false;
 	}
 
+	//-------------------------------------------------
+	void OnDisable()
+	{
+		HidePointer();
+	}
+
+	public void StartPlacement(Hand hand)
+	{
+		placementEnded = false;
+		placementStarted = true;
+	}
+
+	public void StopPlacement(Hand hand)
+	{
+		placementStarted = false;	
+		placementEnded = true;		
+		visible = false;	
+		HidePointer();
+	}
 }
 
