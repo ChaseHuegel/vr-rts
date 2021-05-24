@@ -204,16 +204,16 @@ public class Body : MonoBehaviour
     //     UpdateTransform();
     // }
 
-    // //  Perform a 'hard' snap by rounding. More accurate with more overhead.
-    // public void HardSnapToGrid()
-    // {
-    //     Vector3 pos = World.ToWorldSpace(transform.position);
+    //  Perform a 'hard' snap by rounding. More accurate with more overhead.
+    public void HardSnapToGrid()
+    {
+        Vector3 pos = World.ToWorldSpace(transform.position);
 
-    //     gridPosition.x = Mathf.RoundToInt(pos.x);
-    //     gridPosition.y = Mathf.RoundToInt(pos.z);
+        gridPosition.x = Mathf.RoundToInt(pos.x);
+        gridPosition.y = Mathf.RoundToInt(pos.z);
 
-    //     UpdateTransform();
-    // }
+        UpdateTransform();
+    }
 
     //  Force the transform to match the grid position
     public void UpdateTransform()

@@ -106,46 +106,46 @@ public class MenuBuilding : Throwable
             //if (hand.currentAttachedObject)
                 pinchGrip = hand.currentAttachedObjectInfo.Value.grabbedWithType == GrabTypes.Pinch;
 
-            if (pinchGrip)
-            {
-                interactable.skeletonPoser.SetBlendingBehaviourEnabled("PinchPose", true);
+            // if (pinchGrip)
+            // {
+            //     interactable.skeletonPoser.SetBlendingBehaviourEnabled("PinchPose", true);
 
-                Transform origin = Player.instance.rightHand.GetComponent<HandTrackingPoint>().trackingPoint.transform;
+            //     Transform origin = Player.instance.rightHand.GetComponent<HandTrackingPoint>().trackingPoint.transform;
 
-                // Use vertical laser placement method
-                if ( origin.transform.up.y > 0.9f)
-                {
-                    InteractionPointer.instance.StopPlacement(hand);
-                    if ( Physics.Raycast( transform.position, Vector3.down, out hitInfo, 100, allowedLayersMask ) )
-                    {
-                        // Are we hitting something on acceptable layer?
-                        bool hitPointValid = !LayerMatchTest( disallowedLayersMask, hitInfo.collider.gameObject );
+            //     // Use vertical laser placement method
+            //     if ( origin.transform.up.y > 0.9f)
+            //     {
+            //         InteractionPointer.instance.StopPlacement(hand);
+            //         if ( Physics.Raycast( transform.position, Vector3.down, out hitInfo, 100, allowedLayersMask ) )
+            //         {
+            //             // Are we hitting something on acceptable layer?
+            //             bool hitPointValid = !LayerMatchTest( disallowedLayersMask, hitInfo.collider.gameObject );
 
-                        if (hitPointValid)
-                        {
-                            PointLaser();
-                        }
-                        else
-                        {
-                            DisplayLaserAndPreviewObject(false);
+            //             if (hitPointValid)
+            //             {
+            //                 PointLaser();
+            //             }
+            //             else
+            //             {
+            //                 DisplayLaserAndPreviewObject(false);
 
-                        }
-                    }
-                }
-                // Use arcing laser placement method
-                else
-                {
-                    DisplayLaserAndPreviewObject(false);
-                    InteractionPointer.instance.StartPlacement(hand);
-                    spawnBuildingOnCollision.transform.localScale = new Vector3(previewObjectLocalScale, previewObjectLocalScale, previewObjectLocalScale);
-                    spawnBuildingOnCollision.transform.position = InteractionPointer.instance.destinationReticleTransform.position;
+            //             }
+            //         }
+            //     }
+            //     // Use arcing laser placement method
+            //     else
+            //     {
+            //         DisplayLaserAndPreviewObject(false);
+            //         InteractionPointer.instance.StartPlacement(hand);
+            //         spawnBuildingOnCollision.transform.localScale = new Vector3(previewObjectLocalScale, previewObjectLocalScale, previewObjectLocalScale);
+            //         spawnBuildingOnCollision.transform.position = InteractionPointer.instance.destinationReticleTransform.position;
 
-                }
-            }
-            else // Grab grip
-            {
-                DisplayLaserAndPreviewObject(false);
-            }
+            //     }
+            // }
+            // else // Grab grip
+            // {
+            //     DisplayLaserAndPreviewObject(false);
+            // }
         }
     }
 

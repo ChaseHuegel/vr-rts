@@ -20,13 +20,14 @@ public class PlayerManager : MonoBehaviour
 
     [Header("UI")]
     [Tooltip("Switch between clipboard build menu or palm build menu.")]
-    public bool usePalmMenu;        
+    public bool autoHideHandMenuEnabled;      
+    public float handMenuTrackingSensitivity = 0.5f;
     public bool hammerOnLeft = true;
     public bool hammerOnRight = false;
 
     public Transform rHandHammerAttachmentpoint;
     public Transform lHandHammerAttachmentPoint;
-     public PalmMenu palmMenu;
+    public GameObject autohideHandMenuObject;    
     public Transform rHandPalmUpAttachmentPoint;
     public Transform rHandPalmUpTrackingPoint;
     public Transform lHandPalmUpAttachmentPoint;
@@ -75,7 +76,8 @@ public class PlayerManager : MonoBehaviour
         WristDisplay?.SetGoldText(goldCollected.ToString());
         WristDisplay?.SetStoneText(stoneCollected.ToString());
 
-        if (palmMenu == null) { palmMenu = Player.instance.GetComponent<PalmMenu>(); }
+        if (!autohideHandMenuObject)
+            Debug.Log("autohideHandMenuObject not set.", this);
 
         // Initialize hammer position
         lHandHammerAttachmentPoint.gameObject.SetActive(hammerOnLeft);
@@ -87,16 +89,25 @@ public class PlayerManager : MonoBehaviour
         handMenuToggle?.AddOnStateDownListener(OnHandToggleMenuLeftDown, SteamVR_Input_Sources.LeftHand);
     }
 
+    private bool isAutohideHandMenuVisible;
+
     void Update()
     {
-        //Vector3 direction = (Player.instance.hmdTransform.position - origin.position).normalized;
-        //float facing = Vector3.Dot(origin.right, direction);
-        if (usePalmMenu)
+        if (autoHideHandMenuEnabled)
         {
-            if (lHandPalmUpTrackingPoint.right.y > 0.30f)
-                palmMenu.Show();
+            if (lHandPalmUpTrackingPoint.right.y > handMenuTrackingSensitivity)
+            {
+                buildMenu.RefreshSlots();
+                SetLeftHandInteraction(false);
+                isAutohideHandMenuVisible = true;
+                autohideHandMenuObject.SetActive(true);
+            }
             else
-                palmMenu.Hide();
+            {
+                autohideHandMenuObject.SetActive(false);
+                SetLeftHandInteraction(true);
+                isAutohideHandMenuVisible = false;
+            }
         }
     }
 
@@ -130,8 +141,8 @@ public class PlayerManager : MonoBehaviour
     {
         buildMenu.RefreshSlots();
 
-        // Don't use both methods to display the menu at the same time.
-        if (usePalmMenu) return;
+        // Don't use both methods to display the menu.
+        if (autoHideHandMenuEnabled) return;
 
         // Menu is already visible.
         if (handBuildMenu.activeSelf)
@@ -170,7 +181,7 @@ public class PlayerManager : MonoBehaviour
         buildMenu.RefreshSlots();
         
         // Don't use both methods to display the menu at the same time.
-        if (usePalmMenu) return;
+        if (autoHideHandMenuEnabled) return;
 
         // Menu is already visible.
         if (handBuildMenu.activeSelf)
