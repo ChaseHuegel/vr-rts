@@ -222,17 +222,16 @@ public class BuildMenuSlot : MonoBehaviour
         {
             if (isPointerPlacementStarting)
             {
+                
                 BuildingPlacementEvent e = new BuildingPlacementEvent{ buildingData = rtsTypeData, hand = hand };
                 OnBuildingPlacementEvent?.Invoke(null, e);
-                isPointerPlacementStarting = true;
                 // itemIsSpawned = true;
                 // useFadedPreview = true;
                 // CreatePreviewObject();
-                
+
+                isPointerPlacementStarting = false;
                 if (e.cancel)
-                {
                     Debug.Log("event cancelled.");
-                }
             }
         }        
     }

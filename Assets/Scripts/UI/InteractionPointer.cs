@@ -162,6 +162,8 @@ public class InteractionPointer : MonoBehaviour
 		ShowPointer();
 	}	
 
+	
+
 	//-------------------------------------------------
 	void Update()
 	{
@@ -191,8 +193,8 @@ public class InteractionPointer : MonoBehaviour
 				newPointerHand = hand;
 
 			//hand.uiInteractAction.GetStateDown(hand.handType)
-
-			if ( WasInteractButtonReleased(hand))
+			
+			if (WasInteractButtonReleased(hand))
 				if (pointerHand == hand)
 					TryInteract();
 
@@ -202,21 +204,24 @@ public class InteractionPointer : MonoBehaviour
 			if (isInBuildingPlacementMode)
 			{
 				if (WasRotateClockwiseButtonPressed(hand))
-					buildingPlacementPreviewObject.transform.Rotate(0.0f, 0.0f, 15.0f);
+					buildingPlacementPreviewObject.transform.Rotate(0.0f, 0.0f, 45.0f);
 
 				if (WasRotateCounterclockwiseButtonPressed(hand))
-					buildingPlacementPreviewObject.transform.Rotate(0.0f, 0.0f, -15.0f);
+					buildingPlacementPreviewObject.transform.Rotate(0.0f, 0.0f, -45.0f);
 
+				HardSnapToGrid(destinationReticleTransform, placementBuildingData);
+				
 				if (WasSelectButtonPressed(hand))
 				{
 					isInBuildingPlacementMode = false;		
 					Instantiate(placementBuildingData.constructablePrefab, buildingPlacementPreviewObject.transform.position, buildingPlacementPreviewObject.transform.rotation);
+					
+					lastBuildingRotation = buildingPlacementPreviewObject.transform.localRotation.eulerAngles.y;
+
 					Destroy(buildingPlacementPreviewObject);
 					buildingPlacementPreviewObject = null;
 
-					Player.instance.GetComponentInChildren<SnapTurn>().rightHandEnabled = true;
-					Player.instance.GetComponentInChildren<SnapTurn>().leftHandEnabled = true;
-					Player.instance.GetComponentInChildren<SnapTurn>().enabled = true;
+					SetSnapTurnEnabled(true, true);
 				}
 
 				if (WasCancelButtonPressed(hand))
@@ -224,18 +229,27 @@ public class InteractionPointer : MonoBehaviour
 					isInBuildingPlacementMode = false;	
 					Destroy(buildingPlacementPreviewObject);
 					buildingPlacementPreviewObject = null;
+					
+					// TODO: Restore resources to player
 
-					Player.instance.GetComponentInChildren<SnapTurn>().rightHandEnabled = true;
-					Player.instance.GetComponentInChildren<SnapTurn>().leftHandEnabled = true;
-					Player.instance.GetComponentInChildren<SnapTurn>().enabled = true;
+					SetSnapTurnEnabled(true, true);
 				}
 			}
 		}
 	}
 
+	private void SetSnapTurnEnabled(bool right, bool left)
+	{
+		Player.instance.GetComponentInChildren<SnapTurn>().rightHandEnabled = right;
+		Player.instance.GetComponentInChildren<SnapTurn>().leftHandEnabled = left;
+		Player.instance.GetComponentInChildren<SnapTurn>().enabled = right && left;
+	}
+
 	private bool isInUnitSelectiodMode;
 	private bool isInBuildingPlacementMode;
 	private GameObject buildingPlacementPreviewObject;
+	private float lastBuildingRotation;
+
 	private bool WasRotateClockwiseButtonPressed(Hand hand)
     {
         return rotateBuildingClockwise.GetStateDown(hand.handType);
@@ -516,15 +530,14 @@ public class InteractionPointer : MonoBehaviour
 	public void OnBuildingPlacementStarted(object sender, BuildMenuSlot.BuildingPlacementEvent e)
 	{
 		//SteamVR_Actions.construction.Activate();
-		Player.instance.GetComponentInChildren<SnapTurn>().rightHandEnabled = false;
-		Player.instance.GetComponentInChildren<SnapTurn>().leftHandEnabled = false;
-		Player.instance.GetComponentInChildren<SnapTurn>().enabled = false;
+		SetSnapTurnEnabled(false, false);
 		isInBuildingPlacementMode = true;
 
 		placementBuildingData = e.buildingData;
 		
 		// Get the world prefab and instatiate it.
 		buildingPlacementPreviewObject = Instantiate(placementBuildingData.worldPreviewPrefab, destinationReticleTransform);
+		buildingPlacementPreviewObject.transform.Rotate(0, 0, lastBuildingRotation);
 		buildingPlacementPreviewObject.transform.localPosition = Vector3.zero;
 	}
 
@@ -601,6 +614,7 @@ public class InteractionPointer : MonoBehaviour
 		return false;
 	}
 	
+
 	private void TryTeleportPlayer()
 	{
 		if ( !teleporting )
@@ -733,6 +747,21 @@ public class InteractionPointer : MonoBehaviour
 		}
 	}
 
+	public void HardSnapToGrid(Transform obj, BuildingData buildingData)
+    {
+        Vector3 pos = World.ToWorldSpace(obj.position);
+
+        obj.position = World.ToTransformSpace(new Vector3(Mathf.RoundToInt(pos.x), obj.position.y, Mathf.RoundToInt(pos.z)));
+        	
+        Vector3 modPos = obj.position;
+        if (buildingData.boundingDimensionX % 2 == 0)
+            modPos.x = obj.position.x + World.GetUnit() * -0.5f;
+        
+        if (buildingData.boundingDimensionY % 2 == 0)
+            modPos.z = obj.position.z + World.GetUnit() * -0.5f;
+
+        obj.position = modPos;
+    }
 		
 	//-------------------------------------------------
 	private void PlayAudioClip( AudioSource source, AudioClip clip )
