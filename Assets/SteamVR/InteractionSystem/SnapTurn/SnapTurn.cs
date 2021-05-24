@@ -51,6 +51,8 @@ namespace Valve.VR.InteractionSystem
                 rotateRightFX.SetActive(false);
         }
 
+        public bool rightHandEnabled;
+        public bool leftHandEnabled;
 
         private void Update()
         {
@@ -74,12 +76,11 @@ namespace Valve.VR.InteractionSystem
                     && player.leftHand.currentAttachedTeleportManager != null
                     && player.leftHand.currentAttachedTeleportManager.teleportAllowed);
 
+                bool leftHandTurnLeft = snapLeftAction.GetStateDown(SteamVR_Input_Sources.LeftHand) && leftHandValid && leftHandEnabled;
+                bool rightHandTurnLeft = snapLeftAction.GetStateDown(SteamVR_Input_Sources.RightHand) && rightHandValid && rightHandEnabled;
 
-                bool leftHandTurnLeft = snapLeftAction.GetStateDown(SteamVR_Input_Sources.LeftHand) && leftHandValid;
-                bool rightHandTurnLeft = snapLeftAction.GetStateDown(SteamVR_Input_Sources.RightHand) && rightHandValid;
-
-                bool leftHandTurnRight = snapRightAction.GetStateDown(SteamVR_Input_Sources.LeftHand) && leftHandValid;
-                bool rightHandTurnRight = snapRightAction.GetStateDown(SteamVR_Input_Sources.RightHand) && rightHandValid;
+                bool leftHandTurnRight = snapRightAction.GetStateDown(SteamVR_Input_Sources.LeftHand) && leftHandValid && leftHandEnabled;
+                bool rightHandTurnRight = snapRightAction.GetStateDown(SteamVR_Input_Sources.RightHand) && rightHandValid && rightHandEnabled;
 
                 if (leftHandTurnLeft || rightHandTurnLeft)
                 {

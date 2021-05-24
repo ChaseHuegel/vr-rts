@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6316220946290710499}
-  - component: {fileID: 6316220946290710497}
   - component: {fileID: 6316220946290710498}
   - component: {fileID: 6316220946290710501}
   - component: {fileID: 6316220946290710496}
@@ -35,36 +34,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6316220946290710497
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6316220946290710500}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e4de84979188b94daf158744b691ade, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  audioDatabase: {fileID: 11400000, guid: bc043133584142d45bf72beb8b7f36f8, type: 2}
-  nodeDatabase: {fileID: 11400000, guid: b47d761fe0f2a3c4c9f142be8272c135, type: 2}
-  buildingDatabase: {fileID: 11400000, guid: 60c62c61c41403a41857c1a44a4565ad, type: 2}
-  unitDatabase: {fileID: 11400000, guid: e5258a20022e30f4f9d94dde75304afc, type: 2}
-  factions:
-  - {fileID: 11400000, guid: b4104eb9c28614645a7302829f330f61, type: 2}
-  - {fileID: 11400000, guid: 40cb0ba67a7fd094dac44936355d91ee, type: 2}
-  - {fileID: 11400000, guid: 951e72a8e5d9a2f42b7178443f97386f, type: 2}
-  - {fileID: 11400000, guid: 84f81b610f6990d408f89d1c598f2751, type: 2}
-  - {fileID: 11400000, guid: 6ef56486b991d74459d4a7298b3d1cdf, type: 2}
-  floatingIndicatorPrefab: {fileID: 9120344270828691128, guid: 03f4c6a49fa74a74bbc566db67556d7f,
-    type: 3}
-  buildingDamagedFX: {fileID: 8884242477661490918, guid: b1bc0e4d58daa084aa08fbc5b07488f9,
-    type: 3}
-  buildingDestroyedFX: {fileID: 5399314560054189854, guid: 47b5fc1c9355d1545934def8bb495922,
-    type: 3}
-  buildingDestroyedSound: {fileID: 8300000, guid: f81af9d790be4fb439b1825bcf657e76,
-    type: 3}
 --- !u!114 &6316220946290710498
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -79,7 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   showGizmos: 1
   showDebugGrid: 0
-  gridSize: 640
+  gridSize: 320
   gridUnit: 0.125
 --- !u!114 &6316220946290710501
 MonoBehaviour:
@@ -120,14 +89,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6316220946290710500}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2e8ba746382a328499420ecf9914b04b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   toggleKey: 96
   openOnStart: 0
-  shakeToOpen: 1
+  shakeToOpen: 0
   shakeRequiresTouch: 0
   shakeAcceleration: 3
   toggleThresholdSeconds: 0.5

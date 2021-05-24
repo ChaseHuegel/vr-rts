@@ -113,27 +113,51 @@ namespace Valve.VR
             }
         }
         
-        public virtual SteamVR_Action_Boolean RotatePreviewClockwise
+        public virtual SteamVR_Action_Boolean Select
         {
             get
             {
-                return SteamVR_Actions.default_RotatePreviewClockwise;
+                return SteamVR_Actions.default_Select;
             }
         }
         
-        public virtual SteamVR_Action_Boolean RotatePreviewCounterClockwise
+        public virtual SteamVR_Action_Boolean Cancel
         {
             get
             {
-                return SteamVR_Actions.default_RotatePreviewCounterClockwise;
+                return SteamVR_Actions.default_Cancel;
             }
         }
         
-        public virtual SteamVR_Action_Boolean BuildingPlacementPointer
+        public virtual SteamVR_Action_Boolean Queue
         {
             get
             {
-                return SteamVR_Actions.default_BuildingPlacementPointer;
+                return SteamVR_Actions.default_Queue;
+            }
+        }
+        
+        public virtual SteamVR_Action_Boolean Dequeue
+        {
+            get
+            {
+                return SteamVR_Actions.default_Dequeue;
+            }
+        }
+        
+        public virtual SteamVR_Action_Boolean RotateBuildingClockwise
+        {
+            get
+            {
+                return SteamVR_Actions.default_RotateBuildingClockwise;
+            }
+        }
+        
+        public virtual SteamVR_Action_Boolean RotateBuildingCounterclockwise
+        {
+            get
+            {
+                return SteamVR_Actions.default_RotateBuildingCounterclockwise;
             }
         }
         

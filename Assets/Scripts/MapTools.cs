@@ -7,10 +7,10 @@ using UnityEditor;
  [ExecuteInEditMode]
 public class MapTools : MonoBehaviour
 {
+    public bool autosnapOn;
+    
     [InspectorButton("SnapSelection")]
     public bool snapSelection;
-    
-    public bool snapOn;
 
     void SnapSelection()
     {
@@ -21,11 +21,10 @@ public class MapTools : MonoBehaviour
                 HardSnapToGrid(body);
         }
     }
-
-   
+  
     void Update()
     {
-        if (snapOn)
+        if (autosnapOn)
         {
             foreach (GameObject go in Selection.gameObjects)
             {
@@ -34,12 +33,6 @@ public class MapTools : MonoBehaviour
                     HardSnapToGrid(body);
             }
         }
-    }
-
-    public void HardSnapToGrid(GameObject go)
-    {
-        Vector3 pos = World.ToWorldSpace(go.transform.position);
-        go.transform.position = World.ToTransformSpace(new Vector3(Mathf.RoundToInt(pos.x), go.transform.position.y, Mathf.RoundToInt(pos.z)));
     }
 
     public void HardSnapToGrid(Body body)

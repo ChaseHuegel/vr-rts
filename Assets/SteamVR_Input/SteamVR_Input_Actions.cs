@@ -41,33 +41,19 @@ namespace Valve.VR
         
         private static SteamVR_Action_Boolean p_default_ToggleHandMenu;
         
-        private static SteamVR_Action_Boolean p_default_RotatePreviewClockwise;
+        private static SteamVR_Action_Boolean p_default_Select;
         
-        private static SteamVR_Action_Boolean p_default_RotatePreviewCounterClockwise;
+        private static SteamVR_Action_Boolean p_default_Cancel;
         
-        private static SteamVR_Action_Boolean p_default_BuildingPlacementPointer;
+        private static SteamVR_Action_Boolean p_default_Queue;
+        
+        private static SteamVR_Action_Boolean p_default_Dequeue;
+        
+        private static SteamVR_Action_Boolean p_default_RotateBuildingClockwise;
+        
+        private static SteamVR_Action_Boolean p_default_RotateBuildingCounterclockwise;
         
         private static SteamVR_Action_Vibration p_default_Haptic;
-        
-        private static SteamVR_Action_Vector2 p_platformer_Move;
-        
-        private static SteamVR_Action_Boolean p_platformer_Jump;
-        
-        private static SteamVR_Action_Vector2 p_buggy_Steering;
-        
-        private static SteamVR_Action_Single p_buggy_Throttle;
-        
-        private static SteamVR_Action_Boolean p_buggy_Brake;
-        
-        private static SteamVR_Action_Boolean p_buggy_Reset;
-        
-        private static SteamVR_Action_Pose p_mixedreality_ExternalCamera;
-        
-        private static SteamVR_Action_Boolean p_construction_BuildingPlacementPointer;
-        
-        private static SteamVR_Action_Boolean p_construction_RotatePreviewClockwise;
-        
-        private static SteamVR_Action_Boolean p_construction_RotatePreviewCounterClockwise;
         
         public static SteamVR_Action_Boolean default_InteractUI
         {
@@ -165,27 +151,51 @@ namespace Valve.VR
             }
         }
         
-        public static SteamVR_Action_Boolean default_RotatePreviewClockwise
+        public static SteamVR_Action_Boolean default_Select
         {
             get
             {
-                return SteamVR_Actions.p_default_RotatePreviewClockwise.GetCopy<SteamVR_Action_Boolean>();
+                return SteamVR_Actions.p_default_Select.GetCopy<SteamVR_Action_Boolean>();
             }
         }
         
-        public static SteamVR_Action_Boolean default_RotatePreviewCounterClockwise
+        public static SteamVR_Action_Boolean default_Cancel
         {
             get
             {
-                return SteamVR_Actions.p_default_RotatePreviewCounterClockwise.GetCopy<SteamVR_Action_Boolean>();
+                return SteamVR_Actions.p_default_Cancel.GetCopy<SteamVR_Action_Boolean>();
             }
         }
         
-        public static SteamVR_Action_Boolean default_BuildingPlacementPointer
+        public static SteamVR_Action_Boolean default_Queue
         {
             get
             {
-                return SteamVR_Actions.p_default_BuildingPlacementPointer.GetCopy<SteamVR_Action_Boolean>();
+                return SteamVR_Actions.p_default_Queue.GetCopy<SteamVR_Action_Boolean>();
+            }
+        }
+        
+        public static SteamVR_Action_Boolean default_Dequeue
+        {
+            get
+            {
+                return SteamVR_Actions.p_default_Dequeue.GetCopy<SteamVR_Action_Boolean>();
+            }
+        }
+        
+        public static SteamVR_Action_Boolean default_RotateBuildingClockwise
+        {
+            get
+            {
+                return SteamVR_Actions.p_default_RotateBuildingClockwise.GetCopy<SteamVR_Action_Boolean>();
+            }
+        }
+        
+        public static SteamVR_Action_Boolean default_RotateBuildingCounterclockwise
+        {
+            get
+            {
+                return SteamVR_Actions.p_default_RotateBuildingCounterclockwise.GetCopy<SteamVR_Action_Boolean>();
             }
         }
         
@@ -194,86 +204,6 @@ namespace Valve.VR
             get
             {
                 return SteamVR_Actions.p_default_Haptic.GetCopy<SteamVR_Action_Vibration>();
-            }
-        }
-        
-        public static SteamVR_Action_Vector2 platformer_Move
-        {
-            get
-            {
-                return SteamVR_Actions.p_platformer_Move.GetCopy<SteamVR_Action_Vector2>();
-            }
-        }
-        
-        public static SteamVR_Action_Boolean platformer_Jump
-        {
-            get
-            {
-                return SteamVR_Actions.p_platformer_Jump.GetCopy<SteamVR_Action_Boolean>();
-            }
-        }
-        
-        public static SteamVR_Action_Vector2 buggy_Steering
-        {
-            get
-            {
-                return SteamVR_Actions.p_buggy_Steering.GetCopy<SteamVR_Action_Vector2>();
-            }
-        }
-        
-        public static SteamVR_Action_Single buggy_Throttle
-        {
-            get
-            {
-                return SteamVR_Actions.p_buggy_Throttle.GetCopy<SteamVR_Action_Single>();
-            }
-        }
-        
-        public static SteamVR_Action_Boolean buggy_Brake
-        {
-            get
-            {
-                return SteamVR_Actions.p_buggy_Brake.GetCopy<SteamVR_Action_Boolean>();
-            }
-        }
-        
-        public static SteamVR_Action_Boolean buggy_Reset
-        {
-            get
-            {
-                return SteamVR_Actions.p_buggy_Reset.GetCopy<SteamVR_Action_Boolean>();
-            }
-        }
-        
-        public static SteamVR_Action_Pose mixedreality_ExternalCamera
-        {
-            get
-            {
-                return SteamVR_Actions.p_mixedreality_ExternalCamera.GetCopy<SteamVR_Action_Pose>();
-            }
-        }
-        
-        public static SteamVR_Action_Boolean construction_BuildingPlacementPointer
-        {
-            get
-            {
-                return SteamVR_Actions.p_construction_BuildingPlacementPointer.GetCopy<SteamVR_Action_Boolean>();
-            }
-        }
-        
-        public static SteamVR_Action_Boolean construction_RotatePreviewClockwise
-        {
-            get
-            {
-                return SteamVR_Actions.p_construction_RotatePreviewClockwise.GetCopy<SteamVR_Action_Boolean>();
-            }
-        }
-        
-        public static SteamVR_Action_Boolean construction_RotatePreviewCounterClockwise
-        {
-            get
-            {
-                return SteamVR_Actions.p_construction_RotatePreviewCounterClockwise.GetCopy<SteamVR_Action_Boolean>();
             }
         }
         
@@ -292,20 +222,13 @@ namespace Valve.VR
                     SteamVR_Actions.default_SnapTurnLeft,
                     SteamVR_Actions.default_SnapTurnRight,
                     SteamVR_Actions.default_ToggleHandMenu,
-                    SteamVR_Actions.default_RotatePreviewClockwise,
-                    SteamVR_Actions.default_RotatePreviewCounterClockwise,
-                    SteamVR_Actions.default_BuildingPlacementPointer,
-                    SteamVR_Actions.default_Haptic,
-                    SteamVR_Actions.platformer_Move,
-                    SteamVR_Actions.platformer_Jump,
-                    SteamVR_Actions.buggy_Steering,
-                    SteamVR_Actions.buggy_Throttle,
-                    SteamVR_Actions.buggy_Brake,
-                    SteamVR_Actions.buggy_Reset,
-                    SteamVR_Actions.mixedreality_ExternalCamera,
-                    SteamVR_Actions.construction_BuildingPlacementPointer,
-                    SteamVR_Actions.construction_RotatePreviewClockwise,
-                    SteamVR_Actions.construction_RotatePreviewCounterClockwise};
+                    SteamVR_Actions.default_Select,
+                    SteamVR_Actions.default_Cancel,
+                    SteamVR_Actions.default_Queue,
+                    SteamVR_Actions.default_Dequeue,
+                    SteamVR_Actions.default_RotateBuildingClockwise,
+                    SteamVR_Actions.default_RotateBuildingCounterclockwise,
+                    SteamVR_Actions.default_Haptic};
             Valve.VR.SteamVR_Input.actionsIn = new Valve.VR.ISteamVR_Action_In[] {
                     SteamVR_Actions.default_InteractUI,
                     SteamVR_Actions.default_Teleport,
@@ -319,26 +242,18 @@ namespace Valve.VR
                     SteamVR_Actions.default_SnapTurnLeft,
                     SteamVR_Actions.default_SnapTurnRight,
                     SteamVR_Actions.default_ToggleHandMenu,
-                    SteamVR_Actions.default_RotatePreviewClockwise,
-                    SteamVR_Actions.default_RotatePreviewCounterClockwise,
-                    SteamVR_Actions.default_BuildingPlacementPointer,
-                    SteamVR_Actions.platformer_Move,
-                    SteamVR_Actions.platformer_Jump,
-                    SteamVR_Actions.buggy_Steering,
-                    SteamVR_Actions.buggy_Throttle,
-                    SteamVR_Actions.buggy_Brake,
-                    SteamVR_Actions.buggy_Reset,
-                    SteamVR_Actions.mixedreality_ExternalCamera,
-                    SteamVR_Actions.construction_BuildingPlacementPointer,
-                    SteamVR_Actions.construction_RotatePreviewClockwise,
-                    SteamVR_Actions.construction_RotatePreviewCounterClockwise};
+                    SteamVR_Actions.default_Select,
+                    SteamVR_Actions.default_Cancel,
+                    SteamVR_Actions.default_Queue,
+                    SteamVR_Actions.default_Dequeue,
+                    SteamVR_Actions.default_RotateBuildingClockwise,
+                    SteamVR_Actions.default_RotateBuildingCounterclockwise};
             Valve.VR.SteamVR_Input.actionsOut = new Valve.VR.ISteamVR_Action_Out[] {
                     SteamVR_Actions.default_Haptic};
             Valve.VR.SteamVR_Input.actionsVibration = new Valve.VR.SteamVR_Action_Vibration[] {
                     SteamVR_Actions.default_Haptic};
             Valve.VR.SteamVR_Input.actionsPose = new Valve.VR.SteamVR_Action_Pose[] {
-                    SteamVR_Actions.default_Pose,
-                    SteamVR_Actions.mixedreality_ExternalCamera};
+                    SteamVR_Actions.default_Pose};
             Valve.VR.SteamVR_Input.actionsBoolean = new Valve.VR.SteamVR_Action_Boolean[] {
                     SteamVR_Actions.default_InteractUI,
                     SteamVR_Actions.default_Teleport,
@@ -348,21 +263,15 @@ namespace Valve.VR
                     SteamVR_Actions.default_SnapTurnLeft,
                     SteamVR_Actions.default_SnapTurnRight,
                     SteamVR_Actions.default_ToggleHandMenu,
-                    SteamVR_Actions.default_RotatePreviewClockwise,
-                    SteamVR_Actions.default_RotatePreviewCounterClockwise,
-                    SteamVR_Actions.default_BuildingPlacementPointer,
-                    SteamVR_Actions.platformer_Jump,
-                    SteamVR_Actions.buggy_Brake,
-                    SteamVR_Actions.buggy_Reset,
-                    SteamVR_Actions.construction_BuildingPlacementPointer,
-                    SteamVR_Actions.construction_RotatePreviewClockwise,
-                    SteamVR_Actions.construction_RotatePreviewCounterClockwise};
+                    SteamVR_Actions.default_Select,
+                    SteamVR_Actions.default_Cancel,
+                    SteamVR_Actions.default_Queue,
+                    SteamVR_Actions.default_Dequeue,
+                    SteamVR_Actions.default_RotateBuildingClockwise,
+                    SteamVR_Actions.default_RotateBuildingCounterclockwise};
             Valve.VR.SteamVR_Input.actionsSingle = new Valve.VR.SteamVR_Action_Single[] {
-                    SteamVR_Actions.default_Squeeze,
-                    SteamVR_Actions.buggy_Throttle};
-            Valve.VR.SteamVR_Input.actionsVector2 = new Valve.VR.SteamVR_Action_Vector2[] {
-                    SteamVR_Actions.platformer_Move,
-                    SteamVR_Actions.buggy_Steering};
+                    SteamVR_Actions.default_Squeeze};
+            Valve.VR.SteamVR_Input.actionsVector2 = new Valve.VR.SteamVR_Action_Vector2[0];
             Valve.VR.SteamVR_Input.actionsVector3 = new Valve.VR.SteamVR_Action_Vector3[0];
             Valve.VR.SteamVR_Input.actionsSkeleton = new Valve.VR.SteamVR_Action_Skeleton[] {
                     SteamVR_Actions.default_SkeletonLeftHand,
@@ -377,18 +286,12 @@ namespace Valve.VR
                     SteamVR_Actions.default_SnapTurnLeft,
                     SteamVR_Actions.default_SnapTurnRight,
                     SteamVR_Actions.default_ToggleHandMenu,
-                    SteamVR_Actions.default_RotatePreviewClockwise,
-                    SteamVR_Actions.default_RotatePreviewCounterClockwise,
-                    SteamVR_Actions.default_BuildingPlacementPointer,
-                    SteamVR_Actions.platformer_Move,
-                    SteamVR_Actions.platformer_Jump,
-                    SteamVR_Actions.buggy_Steering,
-                    SteamVR_Actions.buggy_Throttle,
-                    SteamVR_Actions.buggy_Brake,
-                    SteamVR_Actions.buggy_Reset,
-                    SteamVR_Actions.construction_BuildingPlacementPointer,
-                    SteamVR_Actions.construction_RotatePreviewClockwise,
-                    SteamVR_Actions.construction_RotatePreviewCounterClockwise};
+                    SteamVR_Actions.default_Select,
+                    SteamVR_Actions.default_Cancel,
+                    SteamVR_Actions.default_Queue,
+                    SteamVR_Actions.default_Dequeue,
+                    SteamVR_Actions.default_RotateBuildingClockwise,
+                    SteamVR_Actions.default_RotateBuildingCounterclockwise};
         }
         
         private static void PreInitActions()
@@ -405,20 +308,13 @@ namespace Valve.VR
             SteamVR_Actions.p_default_SnapTurnLeft = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/default/in/SnapTurnLeft")));
             SteamVR_Actions.p_default_SnapTurnRight = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/default/in/SnapTurnRight")));
             SteamVR_Actions.p_default_ToggleHandMenu = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/default/in/ToggleHandMenu")));
-            SteamVR_Actions.p_default_RotatePreviewClockwise = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/default/in/RotatePreviewClockwise")));
-            SteamVR_Actions.p_default_RotatePreviewCounterClockwise = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/default/in/RotatePreviewCounterClockwise")));
-            SteamVR_Actions.p_default_BuildingPlacementPointer = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/default/in/BuildingPlacementPointer")));
+            SteamVR_Actions.p_default_Select = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/default/in/Select")));
+            SteamVR_Actions.p_default_Cancel = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/default/in/Cancel")));
+            SteamVR_Actions.p_default_Queue = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/default/in/Queue")));
+            SteamVR_Actions.p_default_Dequeue = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/default/in/Dequeue")));
+            SteamVR_Actions.p_default_RotateBuildingClockwise = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/default/in/RotateBuildingClockwise")));
+            SteamVR_Actions.p_default_RotateBuildingCounterclockwise = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/default/in/RotateBuildingCounterclockwise")));
             SteamVR_Actions.p_default_Haptic = ((SteamVR_Action_Vibration)(SteamVR_Action.Create<SteamVR_Action_Vibration>("/actions/default/out/Haptic")));
-            SteamVR_Actions.p_platformer_Move = ((SteamVR_Action_Vector2)(SteamVR_Action.Create<SteamVR_Action_Vector2>("/actions/platformer/in/Move")));
-            SteamVR_Actions.p_platformer_Jump = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/platformer/in/Jump")));
-            SteamVR_Actions.p_buggy_Steering = ((SteamVR_Action_Vector2)(SteamVR_Action.Create<SteamVR_Action_Vector2>("/actions/buggy/in/Steering")));
-            SteamVR_Actions.p_buggy_Throttle = ((SteamVR_Action_Single)(SteamVR_Action.Create<SteamVR_Action_Single>("/actions/buggy/in/Throttle")));
-            SteamVR_Actions.p_buggy_Brake = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/buggy/in/Brake")));
-            SteamVR_Actions.p_buggy_Reset = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/buggy/in/Reset")));
-            SteamVR_Actions.p_mixedreality_ExternalCamera = ((SteamVR_Action_Pose)(SteamVR_Action.Create<SteamVR_Action_Pose>("/actions/mixedreality/in/ExternalCamera")));
-            SteamVR_Actions.p_construction_BuildingPlacementPointer = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/construction/in/BuildingPlacementPointer")));
-            SteamVR_Actions.p_construction_RotatePreviewClockwise = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/construction/in/RotatePreviewClockwise")));
-            SteamVR_Actions.p_construction_RotatePreviewCounterClockwise = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/construction/in/RotatePreviewCounterClockwise")));
         }
     }
 }

@@ -9,8 +9,15 @@ using System.Collections.Generic;
 public class InteractionPointer : MonoBehaviour
 {
 	public SteamVR_Action_Boolean uiInteractAction = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("InteractUI");
+	public SteamVR_Action_Boolean selectAction = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("Select");
+	public SteamVR_Action_Boolean cancelAction = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("Cancel");
+	public SteamVR_Action_Boolean queueAction = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("Queue");
+	public SteamVR_Action_Boolean dequeueAction = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("Dequeue");
+	public SteamVR_Action_Boolean rotateBuildingClockwise = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("RotateBuildingClockwise");
+	public SteamVR_Action_Boolean rotateBuildingCounterclockwise = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("RotateBuildingCounterclockwise");
+
 	public SteamVR_Action_Boolean teleportAction = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("Teleport");
-	//public SteamVR_Action_Boolean placeBuildingAction = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("BuildingPlacementPointer");
+
 	public GameObject pointerAttachmentPoint;
 	public LayerMask traceLayerMask;
 	public LayerMask allowedPlacementLayers;
@@ -124,6 +131,7 @@ public class InteractionPointer : MonoBehaviour
 	//-------------------------------------------------
 	void Start()
 	{
+		HookIntoEvents();
 		// Used to un-highlight things
 		interactableObjects = GameObject.FindObjectsOfType<PointerInteractable>();
 		
@@ -166,14 +174,9 @@ public class InteractionPointer : MonoBehaviour
 		//UpdatePointer();
 
 		// if ( visible )
-		// {
 			UpdatePointer();
-			
-		// }
 		// else
-		// {
 		// 	ShowPointer();
-		// }
 			
 		Hand oldPointerHand = pointerHand;
 		Hand newPointerHand = null;
@@ -194,11 +197,65 @@ public class InteractionPointer : MonoBehaviour
 					TryInteract();
 
 			if ( WasInteractButtonPressed(hand))
-				newPointerHand = hand;				
+				newPointerHand = hand;		
+
+			if (isInBuildingPlacementMode)
+			{
+				if (WasRotateClockwiseButtonPressed(hand))
+					buildingPlacementPreviewObject.transform.Rotate(0.0f, 0.0f, 15.0f);
+
+				if (WasRotateCounterclockwiseButtonPressed(hand))
+					buildingPlacementPreviewObject.transform.Rotate(0.0f, 0.0f, -15.0f);
+
+				if (WasSelectButtonPressed(hand))
+				{
+					isInBuildingPlacementMode = false;		
+					Instantiate(placementBuildingData.constructablePrefab, buildingPlacementPreviewObject.transform.position, buildingPlacementPreviewObject.transform.rotation);
+					Destroy(buildingPlacementPreviewObject);
+					buildingPlacementPreviewObject = null;
+
+					Player.instance.GetComponentInChildren<SnapTurn>().rightHandEnabled = true;
+					Player.instance.GetComponentInChildren<SnapTurn>().leftHandEnabled = true;
+					Player.instance.GetComponentInChildren<SnapTurn>().enabled = true;
+				}
+
+				if (WasCancelButtonPressed(hand))
+				{
+					isInBuildingPlacementMode = false;	
+					Destroy(buildingPlacementPreviewObject);
+					buildingPlacementPreviewObject = null;
+
+					Player.instance.GetComponentInChildren<SnapTurn>().rightHandEnabled = true;
+					Player.instance.GetComponentInChildren<SnapTurn>().leftHandEnabled = true;
+					Player.instance.GetComponentInChildren<SnapTurn>().enabled = true;
+				}
+			}
 		}
 	}
 
 	private bool isInUnitSelectiodMode;
+	private bool isInBuildingPlacementMode;
+	private GameObject buildingPlacementPreviewObject;
+	private bool WasRotateClockwiseButtonPressed(Hand hand)
+    {
+        return rotateBuildingClockwise.GetStateDown(hand.handType);
+    }
+
+	private bool WasRotateCounterclockwiseButtonPressed(Hand hand)
+    {
+        return rotateBuildingCounterclockwise.GetStateDown(hand.handType);
+    }
+
+	private bool WasSelectButtonPressed(Hand hand)
+    {
+        return selectAction.GetStateDown(hand.handType);
+    }
+
+	private bool WasCancelButtonPressed(Hand hand)
+    {
+        return cancelAction.GetStateDown(hand.handType);
+    }
+
 	private bool WasInteractButtonPressed(Hand hand)
 	{
 		// TODO: listen for different button to cancel
@@ -455,6 +512,22 @@ public class InteractionPointer : MonoBehaviour
 		}
 	}
 
+	BuildingData placementBuildingData;
+	public void OnBuildingPlacementStarted(object sender, BuildMenuSlot.BuildingPlacementEvent e)
+	{
+		//SteamVR_Actions.construction.Activate();
+		Player.instance.GetComponentInChildren<SnapTurn>().rightHandEnabled = false;
+		Player.instance.GetComponentInChildren<SnapTurn>().leftHandEnabled = false;
+		Player.instance.GetComponentInChildren<SnapTurn>().enabled = false;
+		isInBuildingPlacementMode = true;
+
+		placementBuildingData = e.buildingData;
+		
+		// Get the world prefab and instatiate it.
+		buildingPlacementPreviewObject = Instantiate(placementBuildingData.worldPreviewPrefab, destinationReticleTransform);
+		buildingPlacementPreviewObject.transform.localPosition = Vector3.zero;
+	}
+
 	private bool CanInteract( Hand hand)
 	{
 		//!PlayerManager.instance.handBuildMenu.activeSelf
@@ -480,6 +553,11 @@ public class InteractionPointer : MonoBehaviour
 	
 	public bool IsEligibleForTeleport( Hand hand )
 	{
+		// TODO: Clean this up so it works for both hands. Ideally, just have different action
+		// sets.
+		if (isInBuildingPlacementMode && hand.handType == SteamVR_Input_Sources.RightHand)
+			return false;
+
 		if ( hand == null )
 			return false;
 
@@ -609,6 +687,15 @@ public class InteractionPointer : MonoBehaviour
 		return ( ( 1 << obj.layer ) & layerMask ) != 0;
 	}
 
+	private void HookIntoEvents()
+	{
+		BuildMenuSlot.OnBuildingPlacementEvent += OnBuildingPlacementStarted;
+	}
+
+	private void CleanupEvents()
+	{
+		BuildMenuSlot.OnBuildingPlacementEvent -= OnBuildingPlacementStarted;
+	}
 	private void HidePointer()
 	{		
 		if ( visible )
@@ -712,6 +799,11 @@ public class InteractionPointer : MonoBehaviour
 	void OnDisable()
 	{
 		HidePointer();
+	}
+
+	void OnDestroy()
+	{
+		CleanupEvents();
 	}
 
 	public void StartPlacement(Hand hand)

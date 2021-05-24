@@ -54,62 +54,33 @@
       "type": "boolean"
     },
     {
-      "name": "/actions/default/in/RotatePreviewClockwise",
+      "name": "/actions/default/in/Select",
       "type": "boolean"
     },
     {
-      "name": "/actions/default/in/RotatePreviewCounterClockwise",
+      "name": "/actions/default/in/Cancel",
       "type": "boolean"
     },
     {
-      "name": "/actions/default/in/BuildingPlacementPointer",
+      "name": "/actions/default/in/Queue",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/default/in/Dequeue",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/default/in/RotateBuildingClockwise",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/default/in/RotateBuildingCounterclockwise",
       "type": "boolean"
     },
     {
       "name": "/actions/default/out/Haptic",
       "type": "vibration",
       "requirement": "suggested"
-    },
-    {
-      "name": "/actions/platformer/in/Move",
-      "type": "vector2"
-    },
-    {
-      "name": "/actions/platformer/in/Jump",
-      "type": "boolean"
-    },
-    {
-      "name": "/actions/buggy/in/Steering",
-      "type": "vector2"
-    },
-    {
-      "name": "/actions/buggy/in/Throttle",
-      "type": "vector1"
-    },
-    {
-      "name": "/actions/buggy/in/Brake",
-      "type": "boolean"
-    },
-    {
-      "name": "/actions/buggy/in/Reset",
-      "type": "boolean"
-    },
-    {
-      "name": "/actions/mixedreality/in/ExternalCamera",
-      "type": "pose",
-      "requirement": "optional"
-    },
-    {
-      "name": "/actions/construction/in/BuildingPlacementPointer",
-      "type": "boolean"
-    },
-    {
-      "name": "/actions/construction/in/RotatePreviewClockwise",
-      "type": "boolean"
-    },
-    {
-      "name": "/actions/construction/in/RotatePreviewCounterClockwise",
-      "type": "boolean"
     }
   ],
   "action_sets": [
@@ -118,20 +89,8 @@
       "usage": "single"
     },
     {
-      "name": "/actions/platformer",
-      "usage": "single"
-    },
-    {
-      "name": "/actions/buggy",
-      "usage": "single"
-    },
-    {
-      "name": "/actions/mixedreality",
-      "usage": "single"
-    },
-    {
       "name": "/actions/construction",
-      "usage": "leftright"
+      "usage": "single"
     }
   ],
   "default_bindings": [
@@ -199,14 +158,17 @@
       "/actions/default/in/SkeletonLeftHand": "Skeleton (Left)",
       "/actions/default/in/SkeletonRightHand": "Skeleton (Right)",
       "/actions/default/in/Teleport": "Teleport",
-      "/actions/platformer/in/Jump": "Jump",
       "/actions/default/in/SnapTurnLeft": "Snap Turn (Left)",
       "/actions/default/in/SnapTurnRight": "Snap Turn (Right)",
       "/actions/default/out/Haptic": "Haptic",
-      "/actions/default/in/RotatePreviewClockwise": "Rotate Preview Clockwise",
-      "/actions/default/in/RotatePreviewCounterClockwise": "Rotate Preview Counter Clockwise",
-      "/actions/construction/in/BuildingPlacementPointer": "Building Placement Pointer",
-      "/actions/default/in/ToggleHandMenu": "Toggle Hand Menu"
+      "/actions/default/in/ToggleHandMenu": "Toggle Hand Menu",
+      "/actions/default/in/Select": "Select",
+      "/actions/default/in/Cancel": "Cancel",
+      "/actions/default/in/Queue": "Queue Unit",
+      "/actions/default/in/Dequeue": "Dequeue Unit",
+      "/actions/default/in/RotateBuildingClockwise": "Rotate Building Clockwise",
+      "/actions/default/in/RotateBuildingCounterClockwise": "Rotate Building Counterclockwise",
+      "/actions/default/in/RotateBuildingCounterclockwise": "Rotate Building Counterclockwise"
     }
   ]
 }

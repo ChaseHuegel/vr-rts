@@ -16,29 +16,39 @@ public class FactionSettings : MonoBehaviour
     void Start()
     {   
         if (!overrideFaction)
-        {
+        {            
             Unit unit = GetComponent<Unit>();
             if (unit)
             {
                 isUnit = true;
                 factionId = unit.factionID;
             }
-
-            Structure structure = GetComponent<Structure>();
-            if (structure)
-                factionId = structure.factionID;       
-        }
+            else
+            {
+                Structure structure = GetComponent<Structure>();
+                if (structure)
+                    factionId = structure.factionID;  
+                else
+                {
+                    factionId = GetComponent<FactionSettings>().factionId;
+                }
+            }
+        } 
         
         SetSkin();
     }
 
     void OnValidate()
     {
-        //SetSkin();
+        // Start();
+        // SetSkin();
     }
 
     private void SetSkin()
     {
+        if (!GameMaster.Instance)
+            return;
+            
         Material mat = null;
         if (isUnit)
             mat = GameMaster.Instance.factions[factionId].unitMaterial;

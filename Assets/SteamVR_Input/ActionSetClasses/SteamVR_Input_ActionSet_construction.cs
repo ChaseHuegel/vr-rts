@@ -16,29 +16,5 @@ namespace Valve.VR
     
     public class SteamVR_Input_ActionSet_construction : Valve.VR.SteamVR_ActionSet
     {
-        
-        public virtual SteamVR_Action_Boolean BuildingPlacementPointer
-        {
-            get
-            {
-                return SteamVR_Actions.construction_BuildingPlacementPointer;
-            }
-        }
-        
-        public virtual SteamVR_Action_Boolean RotatePreviewClockwise
-        {
-            get
-            {
-                return SteamVR_Actions.construction_RotatePreviewClockwise;
-            }
-        }
-        
-        public virtual SteamVR_Action_Boolean RotatePreviewCounterClockwise
-        {
-            get
-            {
-                return SteamVR_Actions.construction_RotatePreviewCounterClockwise;
-            }
-        }
     }
 }

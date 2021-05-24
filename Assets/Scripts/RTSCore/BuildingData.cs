@@ -20,6 +20,7 @@ public class BuildingData : ScriptableObject
     public int armor;
     public GameObject menuPreviewPrefab;
     public GameObject fadedPreviewPrefab;
+    public GameObject worldPreviewPrefab;
     public GameObject throwablePrefab;
     public GameObject constructablePrefab;
     public GameObject worldPrefab;

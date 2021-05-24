@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using Valve.VR.InteractionSystem;
+using Valve.VR;
+using System;
+using Swordfish;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -10,6 +13,10 @@ using UnityEditor;
 [RequireComponent( typeof( Interactable ) )]
 public class BuildMenuSlot : MonoBehaviour
 {
+    public SteamVR_Action_Boolean selectAction = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("Select");
+	public SteamVR_Action_Boolean cancelAction = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("Cancel");
+
+
     public BuildingData rtsTypeData;
     public bool requireGrabActionToTake = true;
     public bool requireReleaseActionToReturn = false;
@@ -148,7 +155,7 @@ public class BuildMenuSlot : MonoBehaviour
             useFadedPreview = false;
             dropEvent.Invoke();
             CreatePreviewObject();
-        }
+        }                  
     }
 
     private void OnHandHoverBegin( Hand hand )
@@ -194,7 +201,7 @@ public class BuildMenuSlot : MonoBehaviour
             }
         }
 
-        if ( requireGrabActionToTake )
+        if ( requireGrabActionToTake && !isPointerPlacementStarting)
         {
             GrabTypes startingGrab = hand.GetGrabStarting();
 
@@ -204,8 +211,43 @@ public class BuildMenuSlot : MonoBehaviour
                     SpawnAndAttachObject( hand, startingGrab);// GrabTypes.Scripted);
             }
         }
+        
+        if (WasSelectButtonPressed(hand))
+        {
+            if (!isPointerPlacementStarting)
+                isPointerPlacementStarting = true;
+        }
+
+        if (WasSelectButtonReleased(hand))
+        {
+            if (isPointerPlacementStarting)
+            {
+                BuildingPlacementEvent e = new BuildingPlacementEvent{ buildingData = rtsTypeData, hand = hand };
+                OnBuildingPlacementEvent?.Invoke(null, e);
+                isPointerPlacementStarting = true;
+                // itemIsSpawned = true;
+                // useFadedPreview = true;
+                // CreatePreviewObject();
+                
+                if (e.cancel)
+                {
+                    Debug.Log("event cancelled.");
+                }
+            }
+        }        
+    }
+    
+    private bool isPointerPlacementStarting;
+
+    private bool WasSelectButtonReleased(Hand hand)
+    {
+        return selectAction.GetStateUp(hand.handType);
     }
 
+    private bool WasSelectButtonPressed(Hand hand)
+    {
+        return selectAction.GetStateDown(hand.handType);
+    }
 
     //-------------------------------------------------
     private void OnHandHoverEnd( Hand hand )
@@ -255,29 +297,10 @@ public class BuildMenuSlot : MonoBehaviour
 
     private void SpawnAndAttachObject( Hand hand, GrabTypes grabType )
     {
-        // if ( hand.otherHand != null )
-        // {
-        //     //If the other hand has this item package, take it back from the other hand
-        //     ItemPackage otherHandItemPackage = GetAttachedItemPackage( hand.otherHand );
-        //     if ( otherHandItemPackage == itemPackage )
-        //     {
-        //         TakeBackItem( hand.otherHand );
-        //     }
-        // }
-
         if ( showTriggerHint )
         {
             hand.HideGrabHint();
         }
-
-        // if ( itemPackage.otherHandItemPrefab != null )
-        // {
-        //     if ( hand.otherHand.hoverLocked )
-        //     {
-        //         Debug.Log( "<b>[SteamVR Interaction]</b> Not attaching objects because other hand is hoverlocked and we can't deliver both items." );
-        //         return;
-        //     }
-        // }
 
         spawnedItem = GameObject.Instantiate( rtsTypeData.throwablePrefab );
         spawnedItem.SetActive( true );
@@ -295,42 +318,11 @@ public class BuildMenuSlot : MonoBehaviour
         CreatePreviewObject();
     }
 
-    // private void RemoveMatchingItemsFromHandStack( ItemPackage package, Hand hand )
-    // {
-    //     if (hand == null)
-    //         return;
-
-    //     for ( int i = 0; i < hand.AttachedObjects.Count; i++ )
-    //     {
-    //         ItemPackageReference packageReference = hand.AttachedObjects[i].attachedObject.GetComponent<ItemPackageReference>();
-    //         if ( packageReference != null )
-    //         {
-    //             ItemPackage attachedObjectItemPackage = packageReference.itemPackage;
-    //             if ( ( attachedObjectItemPackage != null ) && ( attachedObjectItemPackage == package ) )
-    //             {
-    //                 GameObject detachedItem = hand.AttachedObjects[i].attachedObject;
-    //                 hand.DetachObject( detachedItem );
-    //             }
-    //         }
-    //     }
-    // }
-
-
-    //-------------------------------------------------
-    // private void RemoveMatchingItemTypesFromHand( ItemPackage.ItemPackageType packageType, Hand hand )
-    // {
-    //     for ( int i = 0; i < hand.AttachedObjects.Count; i++ )
-    //     {
-    //         ItemPackageReference packageReference = hand.AttachedObjects[i].attachedObject.GetComponent<ItemPackageReference>();
-    //         if ( packageReference != null )
-    //         {
-    //             if ( packageReference.itemPackage.packageType == packageType )
-    //             {
-    //                 GameObject detachedItem = hand.AttachedObjects[i].attachedObject;
-    //                 hand.DetachObject( detachedItem );
-    //             }
-    //         }
-    //     }
-    // }
+    public static event EventHandler<BuildingPlacementEvent> OnBuildingPlacementEvent;
+    public class BuildingPlacementEvent : Swordfish.Event
+    {
+        public BuildingData buildingData;  
+        public Hand hand;      
+    }
 }
 

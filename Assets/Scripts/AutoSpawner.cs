@@ -50,12 +50,6 @@ public class AutoSpawner : MonoBehaviour
         SpawnUnit(unit);
     }
 
-    void Start()
-    {
-        if (!(audioSource = gameObject.GetComponentInParent<AudioSource>()))
-            Debug.Log("Missing audiosource component in parent.", this);
-    }
-
     void Update()
     {
         if (!autospawn)
