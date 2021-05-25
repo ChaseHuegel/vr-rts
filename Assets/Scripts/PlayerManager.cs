@@ -307,6 +307,7 @@ public class PlayerManager : MonoBehaviour
                 break;
 
             case ResourceGatheringType.Grain:
+            case ResourceGatheringType.Berries:
                 grainCollected += amount;
                 WristDisplay?.SetGrainText(grainCollected.ToString());
                 break;
@@ -357,7 +358,7 @@ public class PlayerManager : MonoBehaviour
     {
         UnitData unitData = GameMaster.GetUnit(unitType);
         if (goldCollected < unitData.goldCost || woodCollected < unitData.woodCost ||
-            grainCollected < unitData.grainCost || stoneCollected < unitData.stoneCost)
+            grainCollected < unitData.foodCost || stoneCollected < unitData.stoneCost)
         {
             return false;
         }
@@ -374,7 +375,7 @@ public class PlayerManager : MonoBehaviour
     public void RemoveUnitQueueCostFromStockpile(UnitData unitType)
     {
         woodCollected -= unitType.woodCost;
-        grainCollected -= unitType.grainCost;
+        grainCollected -= unitType.foodCost;
         goldCollected -= unitType.goldCost;
         stoneCollected -= unitType.stoneCost;
 

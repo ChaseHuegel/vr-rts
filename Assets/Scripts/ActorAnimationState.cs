@@ -13,6 +13,7 @@ public enum ActorAnimationState
     BUILDANDREPAIR = 5,
     ATTACKING = 6,    
     ATTACKING2 = 7,
+    FORAGING = 8,
     DYING = 10,
     DYING2 = 11,
 

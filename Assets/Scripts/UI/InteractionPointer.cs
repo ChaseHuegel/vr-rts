@@ -501,7 +501,16 @@ public class InteractionPointer : MonoBehaviour
 				selectedUnits.Add(hoveredUnit);
 			}
 		}
-		
+		else if (isInBuildingPlacementMode)
+		{
+			DrawQuadraticBezierCurve(pointerLineRenderer, pointerStart, destinationReticleTransform.position);
+			if (pointerLineRenderer.enabled == false)
+				pointerLineRenderer.enabled = true;
+		}
+		else
+			if (pointerLineRenderer.enabled == true)
+				pointerLineRenderer.enabled = false;
+
 		if (selectedUnits.Count > 0)
 		{
 			int i = 0;

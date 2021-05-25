@@ -9,4 +9,5 @@ public enum ResourceGatheringType {
     Wood = 2,
     Stone = 4,
     Gold = 8,
+    Berries = 16,
 };

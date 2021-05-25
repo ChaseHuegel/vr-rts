@@ -12,6 +12,7 @@ public enum RTSUnitType
     GoldMiner,
     StoneMiner,
     Farmer,
+    Forager,
     Swordsman,
     OrcGrunt,
     

@@ -185,6 +185,10 @@ public class Villager : Unit
                 case ResourceGatheringType.Stone:
                     SetUnitType(RTSUnitType.StoneMiner);
                     break;
+                
+                case ResourceGatheringType.Berries:
+                    SetUnitType(RTSUnitType.Forager);
+                    break;
 
                 default:
                     break;
@@ -282,35 +286,36 @@ public class Villager : Unit
                 state = UnitState.BUILDANDREPAIR;
                 currentResource = ResourceGatheringType.None;
                 goals.Add<GoalBuildRepair>();
-                // ResetAI();
                 break;
 
             case RTSUnitType.Farmer:
                 state = UnitState.GATHERING;
                 currentResource = ResourceGatheringType.Grain;
                 goals.Add<GoalGatherResource>().type = ResourceGatheringType.Grain;
-                //ResetAI();
+                break;
+
+            case RTSUnitType.Forager:
+                state = UnitState.GATHERING;
+                currentResource = ResourceGatheringType.Berries;
+                goals.Add<GoalGatherResource>().type = ResourceGatheringType.Berries;
                 break;
 
             case RTSUnitType.Lumberjack:
                 state = UnitState.GATHERING;
                 currentResource = ResourceGatheringType.Wood;
                 goals.Add<GoalGatherResource>().type = ResourceGatheringType.Wood;
-                //ResetAI();
                 break;
 
             case RTSUnitType.GoldMiner:
                 state = UnitState.GATHERING;
                 currentResource = ResourceGatheringType.Gold;
                 goals.Add<GoalGatherResource>().type = ResourceGatheringType.Gold;
-                // ResetAI();
                 break;
 
             case RTSUnitType.StoneMiner:
                 state = UnitState.GATHERING;
                 currentResource = ResourceGatheringType.Stone;
                 goals.Add<GoalGatherResource>().type = ResourceGatheringType.Stone;
-                // ResetAI();
                 break;
 
             case RTSUnitType.Drifter:
@@ -318,10 +323,10 @@ public class Villager : Unit
                 currentResource = ResourceGatheringType.None;
                 goals.Add<GoalBuildRepair>();
                 goals.Add<GoalGatherResource>().type = ResourceGatheringType.Grain;
+                goals.Add<GoalGatherResource>().type = ResourceGatheringType.Berries;
                 goals.Add<GoalGatherResource>().type = ResourceGatheringType.Gold;
                 goals.Add<GoalGatherResource>().type = ResourceGatheringType.Stone;
                 goals.Add<GoalGatherResource>().type = ResourceGatheringType.Wood;
-                // ResetAI();
                 break;
 
             default:
@@ -344,6 +349,7 @@ public class Villager : Unit
                     break;
 
                 case ResourceGatheringType.Grain:
+                case ResourceGatheringType.Berries:
                     audioSource.clip = GameMaster.GetAudio("farmer").GetClip();
                     audioSource.Play();
                     break;
@@ -391,6 +397,10 @@ public class Villager : Unit
                     currentHandToolDisplayObject = grainHandToolDisplayObject;
                     break;
 
+                case ResourceGatheringType.Berries:
+                    // Equip nothing.
+                    break;
+
                 case ResourceGatheringType.Wood:
                     woodHandToolDisplayObject.SetActive(true);
                     currentHandToolDisplayObject = woodHandToolDisplayObject;
@@ -415,6 +425,7 @@ public class Villager : Unit
         switch (currentResource)
         {
             case ResourceGatheringType.Grain:
+            case ResourceGatheringType.Berries:
             {
                 grainCargoDisplayObject.SetActive(visible);
                 currentCargoDisplayObject = grainCargoDisplayObject;
@@ -581,6 +592,10 @@ public class Villager : Unit
         {
             case ResourceGatheringType.Grain:
                 animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.FARMING);
+            break;
+            
+            case ResourceGatheringType.Berries:
+                animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.FORAGING);
             break;
 
             case ResourceGatheringType.Gold:
