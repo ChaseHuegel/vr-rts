@@ -42,7 +42,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6797530162729970064}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ab54d6d5140767340bdbc6beb759bea3, type: 3}
   m_Name: 
@@ -107,8 +107,15 @@ MonoBehaviour:
   gridPosition:
     x: 0
     y: 0
-  movementSpeed: 0.3
+  movementSpeed: 0.1
   goalSearchDistance: 20
+  runSpeed: 0.3
+  actionRadius: 0.73
+  moveActionChance: 0.265
+  runActionChance: 0.418
+  eatActionChance: 0.42462313
+  lookAroundActionChance: 0.8844224
+  meatNodeToSpawnOnDeath: {fileID: 0}
 --- !u!1001 &3558281991757145375
 PrefabInstance:
   m_ObjectHideFlags: 0

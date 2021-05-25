@@ -7,91 +7,152 @@ public class Fauna : Actor
 {    
     public float runSpeed;
 
+    [Tooltip("The radius that the actor will operate in centered on their starting spawn location.")]
     [Range(0.0f, 2.0f)]
-    public float radius = 0.2f;
+    public float actionRadius = 0.5f;
+
+    [Tooltip("Chance of a move action versus a non-movement based action occuring.")]
+    [Range(0f, 1.0f)]
+    public float moveActionChance = 0.5f;
+
+    [Tooltip("Chance of a run action versus a walk action when a move action is occuring.")]
+    [Range(0f, 1.0f)]
+    public float runActionChance = 0.5f;
+
+    [HideInInspector]
+    [SerializeField]
+        public float eatActionChance = 0.3f;
+    [HideInInspector]
+    [SerializeField]
+    public float lookAroundActionChance = 0.6f;
+    
+
     public GameObject meatNodeToSpawnOnDeath;
     private Vector3 startPosition;
     private Animator animator;
-    private float normalSpeed;
+    private float normalMovementSpeed;
+
+    bool isRunnng;
+    float newDecisionTimer;
+    float actionTime;
+    
+    
     public override void Initialize()
     {
         base.Initialize();
         startPosition = transform.position;
-        normalSpeed = movementSpeed;
+        normalMovementSpeed = movementSpeed;
         animator = GetComponentInChildren<Animator>();
     }
 
-    bool isRunnng;
-    float timer;
-    float actionTime;
+    enum FaunaActions
+    {
+        Idle = 0,
+        Walk = 1,
+        Run = 2,
+    }
 
     public override void Tick()
     {
         base.Tick();
-
-        
-        if (timer > actionTime)
+            
+        if (newDecisionTimer > actionTime && !IsMoving())
         {
-            int action = Random.Range(1, 100);
+            
             isRunnng = false;
 
-            // Eat/Idle
-            if (action <= 40)
-            {
-                actionTime = Random.Range(0.05f, 0.15f);
-            }
-            // Walk
-            else if (action <= 75)            
-            {
-                Vector3 randomPos = startPosition + (Vector3)(Random.insideUnitSphere * radius);
-                Goto(World.ToWorldSpace(randomPos));
-                actionTime = Random.Range(0.05f, 0.2f);
-            }
-            // Run
-            else
-            {
-                Vector3 randomPos = startPosition + ((Vector3)Random.insideUnitCircle * radius);
-                Goto(World.ToWorldSpace(randomPos));
-                actionTime = Random.Range(0.05f, 0.2f);
-                isRunnng = true;
-            }
+            MakeNewDecision();            
 
-            timer = 0.0f;
+            newDecisionTimer = 0.0f;
             
-        }
-        
-        animator.SetBool("Run", false);
-        animator.SetBool("Walk", false);
-        animator.SetBool("Eat", false);
-        animator.SetBool("Turn Head", false);
+        }                
 
         if (IsMoving())
         {
             if (isRunnng)
             {
-                animator.SetBool("Run", true);
+                animator.SetInteger("FaunaActionState", (int)FaunaActions.Run);
                 movementSpeed = runSpeed;
             }
             else
             {
-                movementSpeed = normalSpeed;
-                animator.SetBool("Walk", true);
+                movementSpeed = normalMovementSpeed;
+                animator.SetInteger("FaunaActionState", (int)FaunaActions.Walk);
             }
         }
-        else
+        // Idle action
+        else if (actionTime > 0)
         {
-            if (Random.Range(1, 100) <= 50)
-                animator.SetBool("Eat", true);
+            float idleAction = Random.Range(0.0f, 1.0f);
+
+            if (idleAction < eatActionChance)
+            {
+                // meatAmount += eatRate * Time.deltaTime;
+                // float scale = meatAmount * 0.02f;
+                // transform.localScale *= scale;
+                animator.SetTrigger("Eat");
+            }
+            else if (idleAction < lookAroundActionChance)    
+                animator.SetTrigger("LookAround");
             else
-                animator.SetBool("Turn Head", true);
+                animator.SetInteger("Idle", (int)FaunaActions.Idle);
         }
 
-        timer += Time.deltaTime;
+        newDecisionTimer += Time.deltaTime;
     }
 
+    // float meatAmount= 50.0f;
+    // float eatRate = 0.1f;
 
-    public void OnDrawGizmos()
+    void MakeNewDecision()
     {
-        Gizmos.DrawWireSphere(startPosition, radius);
+        float action = Random.Range(0.0f, 1.0f);
+
+        // Non-movement action
+        if (action >= moveActionChance)
+        {                
+            animator.SetInteger("FaunaActionState", (int)FaunaActions.Idle);
+            actionTime = Random.Range(0.05f, 0.2f);            
+        }
+        else 
+        {
+            float moveAction = Random.Range(0.0f, 1.0f);
+            if (moveAction <= runActionChance)            
+                RunAction();
+            else
+                WalkAction();
+        }
+    }
+
+    void WalkAction()
+    {
+        GotoRandomPositionInRadius(actionRadius);
+        actionTime = 0;
+    }
+
+    void RunAction()
+    {
+        GotoRandomPositionInRadius(actionRadius);
+        actionTime = 0;
+        isRunnng = true;        
+    }
+
+    void GotoRandomPositionInRadius(float radius)
+    {
+        Vector3 randomPos = startPosition + ((Vector3)Random.insideUnitSphere * radius);
+
+        Goto(World.ToWorldSpace(randomPos));
+    }
+
+    public override void OnDrawGizmosSelected()
+    {
+        base.OnDrawGizmosSelected();
+        // if (Time.time > 0)
+        //     startPosition = transform.position;
+
+    #if UNITY_EDITOR
+        UnityEditor.Handles.color = Color.red;
+        UnityEditor.Handles.DrawWireDisc(startPosition, Vector3.up, 1);
+    #endif
     }
 }
