@@ -78,9 +78,10 @@ public class AutoSpawner : MonoBehaviour
 
         if (unitData.prefab)
         {
-            Vector3 randomPos = (Vector3)Random.insideUnitCircle * unitSpawnPointRadius;
+            Vector3 randomPos = (Vector3)Random.insideUnitSphere * unitSpawnPointRadius;
             Vector3 position = unitSpawnPoint.transform.position + randomPos;
-
+            position.y = unitSpawnPoint.transform.position.y;
+            
             GameObject unitGameObject = Instantiate(unitData.prefab, position, Quaternion.identity);
             
             if (NetworkManager.Singleton.IsServer)

@@ -19,6 +19,7 @@ public class UnitData : ScriptableObject
     public float farmingRate;
     public float huntingRate;
     public float lumberjackingRate;
+    public float fishingRate;
     public int populationCost;
     public int goldCost;
     public int stoneCost;

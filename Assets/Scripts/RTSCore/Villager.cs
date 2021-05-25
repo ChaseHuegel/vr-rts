@@ -41,6 +41,9 @@ public class Villager : Unit
     public GameObject stoneHandToolDisplayObject;
     public GameObject goldHandToolDisplayObject;
     public GameObject builderHandToolDisplayObject;
+    public GameObject fishermanHandToolDisplayObject;
+    public GameObject hunterHandToolDisplayObject;
+    
     GameObject currentCargoDisplayObject;
     GameObject currentHandToolDisplayObject;
     public VillagerHoverMenu villagerHoverMenu;
@@ -178,6 +181,14 @@ public class Villager : Unit
                     SetUnitType(RTSUnitType.Farmer);
                     break;
 
+                case ResourceGatheringType.Berries:
+                    SetUnitType(RTSUnitType.Forager);
+                    break;
+
+                case ResourceGatheringType.Meat:
+                    SetUnitType(RTSUnitType.Hunter);
+                    break;
+
                 case ResourceGatheringType.Wood:
                     SetUnitType(RTSUnitType.Lumberjack);
                     break;
@@ -186,8 +197,8 @@ public class Villager : Unit
                     SetUnitType(RTSUnitType.StoneMiner);
                     break;
                 
-                case ResourceGatheringType.Berries:
-                    SetUnitType(RTSUnitType.Forager);
+                case ResourceGatheringType.Fish:
+                    SetUnitType(RTSUnitType.Fisherman);
                     break;
 
                 default:
@@ -300,6 +311,18 @@ public class Villager : Unit
                 goals.Add<GoalGatherResource>().type = ResourceGatheringType.Berries;
                 break;
 
+            case RTSUnitType.Hunter:
+                state = UnitState.GATHERING;
+                currentResource = ResourceGatheringType.Meat;
+                goals.Add<GoalGatherResource>().type = ResourceGatheringType.Meat;
+                break;
+
+            case RTSUnitType.Fisherman:
+                state = UnitState.GATHERING;
+                currentResource = ResourceGatheringType.Fish;
+                goals.Add<GoalGatherResource>().type = ResourceGatheringType.Fish;
+                break;
+
             case RTSUnitType.Lumberjack:
                 state = UnitState.GATHERING;
                 currentResource = ResourceGatheringType.Wood;
@@ -324,6 +347,8 @@ public class Villager : Unit
                 goals.Add<GoalBuildRepair>();
                 goals.Add<GoalGatherResource>().type = ResourceGatheringType.Grain;
                 goals.Add<GoalGatherResource>().type = ResourceGatheringType.Berries;
+                goals.Add<GoalGatherResource>().type = ResourceGatheringType.Meat;
+                goals.Add<GoalGatherResource>().type = ResourceGatheringType.Fish;
                 goals.Add<GoalGatherResource>().type = ResourceGatheringType.Gold;
                 goals.Add<GoalGatherResource>().type = ResourceGatheringType.Stone;
                 goals.Add<GoalGatherResource>().type = ResourceGatheringType.Wood;
@@ -350,6 +375,8 @@ public class Villager : Unit
 
                 case ResourceGatheringType.Grain:
                 case ResourceGatheringType.Berries:
+                case ResourceGatheringType.Meat:
+                case ResourceGatheringType.Fish:
                     audioSource.clip = GameMaster.GetAudio("farmer").GetClip();
                     audioSource.Play();
                     break;
@@ -401,6 +428,16 @@ public class Villager : Unit
                     // Equip nothing.
                     break;
 
+                case ResourceGatheringType.Meat:
+                    hunterHandToolDisplayObject.SetActive(true);
+                    currentHandToolDisplayObject = hunterHandToolDisplayObject;
+                    break;
+
+                case ResourceGatheringType.Fish:
+                    fishermanHandToolDisplayObject.SetActive(true);
+                    currentHandToolDisplayObject = fishermanHandToolDisplayObject;
+                    break;
+
                 case ResourceGatheringType.Wood:
                     woodHandToolDisplayObject.SetActive(true);
                     currentHandToolDisplayObject = woodHandToolDisplayObject;
@@ -426,6 +463,8 @@ public class Villager : Unit
         {
             case ResourceGatheringType.Grain:
             case ResourceGatheringType.Berries:
+            case ResourceGatheringType.Meat:
+            case ResourceGatheringType.Fish:
             {
                 grainCargoDisplayObject.SetActive(visible);
                 currentCargoDisplayObject = grainCargoDisplayObject;
@@ -567,6 +606,49 @@ public class Villager : Unit
 
         return true;
     }
+    
+    protected float GetWorkRate(ResourceGatheringType resourceType)
+    {
+        float rate = 0.0f;
+
+        switch (resourceType)
+        {
+            case ResourceGatheringType.Grain:
+                rate = rtsUnitTypeData.farmingRate;
+                break;
+
+            case ResourceGatheringType.Berries:
+                rate = rtsUnitTypeData.foragingRate;
+                break;
+
+            case ResourceGatheringType.Wood:
+                rate = rtsUnitTypeData.lumberjackingRate;
+                break;
+
+            case ResourceGatheringType.Stone:
+                rate = rtsUnitTypeData.stoneMiningRate;
+                break;
+
+            case ResourceGatheringType.Gold:    
+                rate = rtsUnitTypeData.goldMiningRate;
+                break;
+
+            case ResourceGatheringType.Fish: 
+            rate = rtsUnitTypeData.fishingRate; 
+                break;
+            
+            case ResourceGatheringType.Meat:    
+                rate = rtsUnitTypeData.huntingRate;
+                break;
+            
+            default:
+                break;
+        }
+
+        rate = rate / (60/Constants.ACTOR_TICK_RATE);
+
+        return rate;
+    }
 
     public bool TryGather(Resource resource)
     {
@@ -574,7 +656,7 @@ public class Villager : Unit
             return false;
 
         //  Convert per second to per tick and clamp to how much cargo space we have
-        float amount = ((float)workRate / (60/Constants.ACTOR_TICK_RATE));
+        float amount = GetWorkRate(resource.type);
         amount = Mathf.Clamp(maxCargo - currentCargo, 0, amount);
         amount = resource.GetRemoveAmount(amount);
 
@@ -593,9 +675,17 @@ public class Villager : Unit
             case ResourceGatheringType.Grain:
                 animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.FARMING);
             break;
-            
+
             case ResourceGatheringType.Berries:
                 animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.FORAGING);
+            break;
+
+            case ResourceGatheringType.Meat:
+                animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.HUNTING);
+            break;
+
+            case ResourceGatheringType.Fish:
+                animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.FISHING);
             break;
 
             case ResourceGatheringType.Gold:
@@ -620,7 +710,7 @@ public class Villager : Unit
             return false;
 
         //  Convert per second to per tick
-        float amount = (repairRate / (60/Constants.ACTOR_TICK_RATE));
+        float amount = (rtsUnitTypeData.repairRate / (60/Constants.ACTOR_TICK_RATE));
 
         //  Trigger a repair event
         RepairEvent e = new RepairEvent{ villager = this, structure = structure, amount = amount };
@@ -644,7 +734,7 @@ public class Villager : Unit
             return false;
             
         //  Convert per second to per tick
-        float amount = (buildRate / (60/Constants.ACTOR_TICK_RATE));
+        float amount = (rtsUnitTypeData.buildRate / (60/Constants.ACTOR_TICK_RATE));
 
         //  Trigger a build event
         BuildEvent e = new BuildEvent{ villager = this, constructible = construction, amount = amount };

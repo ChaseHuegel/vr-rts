@@ -14,7 +14,9 @@ public enum ActorAnimationState
     ATTACKING = 6,    
     ATTACKING2 = 7,
     FORAGING = 8,
+    FISHING = 9,
     DYING = 10,
-    DYING2 = 11,
+    DYING2 = 11,    
+    HUNTING = 12,
 
 }

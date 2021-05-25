@@ -6,6 +6,7 @@ using UnityEngine;
 namespace Swordfish.Navigation
 {
 
+[RequireComponent(typeof(Damageable))]
 public class Actor : Body
 {
     protected GoalHolder goals = new GoalHolder();
