@@ -28,6 +28,7 @@ public class UnitData : ScriptableObject
     public int maxHitPoints;
     public int maxCargo;
     public float huntingDamage;
+    public int attackRange;
     public float attackDamage;
     
     public float armor;

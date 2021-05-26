@@ -16,14 +16,12 @@ public class Actor : Body
     public Damageable AttributeHandler { get { return damageable; } }
 
     [Header("Actor")]
-    public float movementSpeed = 1f;
-
-    // TODO: Move to UnitData
-    public int maxGoalInteractRange = 1;
+    public float movementSpeed = 1f;    
 
     [SerializeField] private byte goalSearchDistance = 20;
     private byte goalSearchGrowth;
     private byte currentGoalSearchDistance;
+    protected int maxGoalInteractRange = 1;
 
     protected Cell currentGoalTarget = null;
     protected Cell previousGoalTarget = null;
@@ -216,7 +214,7 @@ public class Actor : Body
     public void Goto(Vector3 vec, bool ignoreActors = true) { Goto((int)vec.x, (int)vec.z, ignoreActors); }
     public void Goto(int x, int y, bool ignoreActors = true)
     {
-        if (!isPathLocked && !HasValidPath() && DistanceTo(x, y) > 1)
+        if (!isPathLocked && !HasValidPath() && DistanceTo(x, y) > maxGoalInteractRange)
             PathManager.RequestPath(this, x, y, ignoreActors);
     }
 
@@ -225,7 +223,7 @@ public class Actor : Body
     public void GotoForced(Vector3 vec, bool ignoreActors = true) { Goto((int)vec.x, (int)vec.z, ignoreActors); }
     public void GotoForced(int x, int y, bool ignoreActors = true)
     {
-        if (!isPathLocked && DistanceTo(x, y) > 1)
+        if (!isPathLocked && DistanceTo(x, y) > maxGoalInteractRange)
             PathManager.RequestPath(this, x, y, ignoreActors);
     }
 
