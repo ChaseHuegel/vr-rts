@@ -12,20 +12,21 @@ public class AutoSpawner : MonoBehaviour
 {
     [Header("Autospawn Settings")]
     public bool autospawn;
+    public bool randomize;
 
-    [Min(0.0f)]
-    public float timeToAutospawnStart;
+    [Range(0.0f, 600.0f)]
+    public float secondsToAutospawnStart;
 
-    [Min(3.0f)]
-    public float timeBetweenSpawns = 5.0f;
-    
-    [Header("Unit")]
-    public RTSUnitType unitToAutospawn;
+    [Range(2.0f, 600.0f)]
+    public float timeBetweenSpawns = 30.0f;
+        
+    [Header("Unit")]    
     public byte factionID;
     public Transform unitSpawnPoint;
     public float unitSpawnPointRadius;
     public Transform unitRallyWaypoint;
     public float unitRallyWaypointRadius;
+    public RTSUnitType[] unitSpawnList;
 
     [Header("Instant Spawn")]
     public RTSUnitType unit;
@@ -43,12 +44,17 @@ public class AutoSpawner : MonoBehaviour
             unitSpawnPoint = transform;
         if (!unitRallyWaypoint)
             unitRallyWaypoint = unitSpawnPoint;
+
+        if (randomize)
+            currentSpawnListIndex = Random.Range(0, unitSpawnList.Length);
     }
 
     private void OnSpawnClicked()
     {
         SpawnUnit(unit);
     }
+
+    private int currentSpawnListIndex;
 
     void Update()
     {
@@ -59,11 +65,20 @@ public class AutoSpawner : MonoBehaviour
         {
             if (spawnTimer >= timeBetweenSpawns)
             {
-                SpawnUnit(unitToAutospawn);
+                SpawnUnit(unitSpawnList[currentSpawnListIndex]);
                 spawnTimer = 0.0f;
+                
+                if (randomize)
+                    currentSpawnListIndex = Random.Range(0, unitSpawnList.Length);
+                else
+                {
+                    currentSpawnListIndex++;
+                    if (currentSpawnListIndex > unitSpawnList.Length)
+                        currentSpawnListIndex = 0;
+                }
             }
         }
-        else if (spawnTimer >= timeToAutospawnStart)
+        else if (spawnTimer >= secondsToAutospawnStart)
         {
             started = true;
             spawnTimer = 0.0f;
@@ -94,7 +109,7 @@ public class AutoSpawner : MonoBehaviour
             unit.factionID = factionID;
             unit.SyncPosition();
 
-            randomPos = (Vector3)Random.insideUnitCircle * unitSpawnPointRadius; 
+            randomPos = (Vector3)Random.insideUnitSphere * unitSpawnPointRadius; 
             position = unitRallyWaypoint.transform.position + randomPos;
 
             unit.GotoForced(World.ToWorldSpace(position));

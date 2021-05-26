@@ -11,6 +11,7 @@ public class Soldier : Unit
 {
     [Header("AI")]
 
+    public bool isRanged;
     public bool huntVillagers = true;
     public bool huntMilitary = true;
     public bool huntBuildings = true;
@@ -22,7 +23,7 @@ public class Soldier : Unit
     {
         base.Initialize();
         HookIntoEvents();        
-        
+        maxGoalInteractRange = 20;
         SetAIAttackGoals(huntVillagers, huntMilitary, huntBuildings);
 
         animator = gameObject.GetComponentInChildren<Animator>();
@@ -32,12 +33,14 @@ public class Soldier : Unit
         if(PlayerManager.instance.factionID == factionID)
             PlayerManager.instance.AddToPopulation((Unit)this);     
 
+        
     }
     
     public void HookIntoEvents()
     {
         PathfindingGoal.OnGoalFoundEvent += OnGoalFound;
         PathfindingGoal.OnGoalInteractEvent += OnGoalInteract;
+        PathfindingGoal.OnGoalChangeEvent += OnGoalChange;
         AttributeHandler.OnDamageEvent += OnDamage;
         Damageable.OnDeathEvent += OnDeath;
     }
@@ -132,16 +135,28 @@ public class Soldier : Unit
         AudioSource.PlayClipAtPoint(GameMaster.GetAudio(clipName).GetClip(), transform.position, 0.75f);
     }
 
+
     public void OnGoalFound(object sender, PathfindingGoal.GoalFoundEvent e)
     {
         if (e.actor != this) 
             return;
 
-        //Debug.Log(string.Format("Found target {0}!", e.cell.GetFirstOccupant().name));
+        //if (isRanged)
+        // if (DistanceTo(e.cell) < 10)
+        //      Debug.Log(string.Format("Found target {0}!", e.cell.GetFirstOccupant().name));
 
         //  default cancel the goal so that another can take priority
         //ResetGoal();
         //e.Cancel();
+    }
+
+    public void OnGoalChange(object sender, PathfindingGoal.GoalChangeEvent e)
+    {
+        if (e.actor != this)
+            return;
+
+        if (previousGoal is GoalHuntUnits || previousGoal is GoalHuntMilitary || previousGoal is GoalHuntVillagers)
+            animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.IDLE);
     }
 
     public void OnGoalInteract(object sender, PathfindingGoal.GoalInteractEvent e)
@@ -151,17 +166,11 @@ public class Soldier : Unit
         
         if (e.goal is GoalHuntUnits || e.goal is GoalHuntMilitary || e.goal is GoalHuntVillagers)
         {
-            Unit unit = e.cell.GetFirstOccupant<Unit>();
+            Unit unit = e.cell.GetFirstOccupant<Unit>();            
             
-
             Damageable damageable = unit.GetComponent<Damageable>();            
             damageable.Damage(rtsUnitTypeData.attackDamage, AttributeChangeCause.ATTACKED, null, DamageType.SLASHING);
-            
-            if (unit.IsDead())
-                animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.IDLE);
-            else
-                SetAttackAnimationState();
-
+            SetAttackAnimationState();                
             return;
         }
         else if (e.goal is GoalHuntBuildings)
@@ -185,10 +194,7 @@ public class Soldier : Unit
                 Damageable damageable = unit.GetComponent<Damageable>();
                 damageable.Damage(rtsUnitTypeData.attackDamage, AttributeChangeCause.ATTACKED, null, DamageType.SLASHING);
                
-                if (unit.IsDead())
-                    animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.IDLE);
-                else
-                    SetAttackAnimationState();
+                SetAttackAnimationState();
                     
                 return;
             }
@@ -226,6 +232,7 @@ public class Soldier : Unit
     }
     public void CleanupEvents()
     {
+        PathfindingGoal.OnGoalChangeEvent -= OnGoalChange;
         PathfindingGoal.OnGoalFoundEvent -= OnGoalFound;
         PathfindingGoal.OnGoalInteractEvent -= OnGoalInteract;
         Damageable.OnDeathEvent -= OnDeath;

@@ -18,6 +18,9 @@ public class Actor : Body
     [Header("Actor")]
     public float movementSpeed = 1f;
 
+    // TODO: Move to UnitData
+    public int maxGoalInteractRange = 1;
+
     [SerializeField] private byte goalSearchDistance = 20;
     private byte goalSearchGrowth;
     private byte currentGoalSearchDistance;
@@ -239,7 +242,7 @@ public class Actor : Body
 #endregion
 
 
-#region monobehavior
+#region monobehavior    
 
     //  Perform ticks at a regular interval. FixedUpdate is called 60x/s
     public void FixedUpdate()
@@ -260,7 +263,7 @@ public class Actor : Body
             if (!moving && HasValidTarget())
             {
                 //  Check if we have reached our target, or the path ahead matches our goal
-                if (DistanceTo(currentGoalTarget) <= 1 || (HasValidPath() && PathfindingGoal.CheckGoal(this, currentPath[0], currentGoal)))
+                if (DistanceTo(currentGoalTarget) <= maxGoalInteractRange || (HasValidPath() && PathfindingGoal.CheckGoal(this, currentPath[0], currentGoal)))
                 {
                     //  Assume our currentGoal is a valid match since it was found successfully.
                     //  Forcibly trigger reached under that assumption
