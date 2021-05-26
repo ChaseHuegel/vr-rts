@@ -9,7 +9,7 @@ public class GoalGatherResource : PathfindingGoal
     {
         Resource resource = cell?.GetFirstOccupant<Resource>();
 
-        if (resource != null && resource.type.HasFlag(type))
+        if (resource != null && resource.type.HasFlag(type) && !resource.IsBusy())
             return true;
 
         return false;
