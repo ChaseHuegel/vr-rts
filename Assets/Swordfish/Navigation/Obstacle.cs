@@ -33,6 +33,10 @@ public class Obstacle : Body
             }
         }
 
+        UpdateTransform();
+
+        // transform.position += new Vector3(boundingOrigin.x, 0f, boundingOrigin.y);
+
         //-------------------------------------------------------------------------
         // MapTools window has snap settings/tools and for some reason snapping/position here
         // doesn't line up with snapping/position setting in the scene view so just leave it
@@ -47,7 +51,7 @@ public class Obstacle : Body
         // Vector3 modPos = transform.position;
         // if (boundingDimensions.x % 2 == 0)
         //     modPos.x = transform.position.x + World.GetUnit() * -0.5f;
-        
+
         // if (boundingDimensions.y % 2 == 0)
         //     modPos.z = transform.position.z + World.GetUnit() * -0.5f;
 

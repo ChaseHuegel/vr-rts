@@ -193,32 +193,25 @@ public class Body : MonoBehaviour
         cell.occupants.Remove(this);
     }
 
-    //  Perform a 'soft' snap by truncating. Inaccurate but less overhead.
-    // public void SnapToGrid()
-    // {
-    //     Vector3 pos = World.ToWorldSpace(transform.position);
-
-    //     gridPosition.x = (int)pos.x;
-    //     gridPosition.y = (int)pos.z;
-
-    //     UpdateTransform();
-    // }
-
-    //  Perform a 'hard' snap by rounding. More accurate with more overhead.
-    public void HardSnapToGrid()
-    {
-        Vector3 pos = World.ToWorldSpace(transform.position);
-
-        gridPosition.x = Mathf.RoundToInt(pos.x);
-        gridPosition.y = Mathf.RoundToInt(pos.z);
-
-        UpdateTransform();
-    }
-
     //  Force the transform to match the grid position
     public void UpdateTransform()
     {
         transform.position = World.ToTransformSpace(new Vector3(gridPosition.x, transform.position.y, gridPosition.y));
+
+        //  If origin has been set, use it. Otherwise, calculate it.
+        if (boundingOrigin != Vector2.zero)
+            transform.position += new Vector3(boundingOrigin.x, 0f, boundingOrigin.y);
+        else
+        {
+            Vector3 modPos = transform.position;
+            if (boundingDimensions.x % 2 == 0)
+                modPos.x = transform.position.x + World.GetUnit() * -0.5f;
+
+            if (boundingDimensions.y % 2 == 0)
+                modPos.z = transform.position.z + World.GetUnit() * -0.5f;
+
+            transform.position = modPos;
+        }
     }
 #endregion
 }
