@@ -486,7 +486,6 @@ MonoBehaviour:
     x: 0
     y: 0
   movementSpeed: 0.3
-  maxGoalInteractRange: 1
   goalSearchDistance: 30
   factionID: 0
   rtsUnitType: 12
@@ -495,10 +494,12 @@ MonoBehaviour:
   isDying: 0
   wasThrownOrDropped: 0
   audioSource: {fileID: 0}
-  isRanged: 0
   huntVillagers: 1
   huntMilitary: 1
   huntBuildings: 1
+  rangedProjectile: {fileID: 3740421758085118616, guid: 33ebc7103c3a4b64ca93d64149b5fa33,
+    type: 3}
+  isRanged: 0
 --- !u!114 &7309498301198521886
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -515,7 +516,7 @@ MonoBehaviour:
   factionId: 0
   meshesToChange: []
   skinnedMeshesToChange:
-  - {fileID: 0}
+  - {fileID: 3628467702706709231}
 --- !u!114 &782091929014317462
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2030,15 +2031,21 @@ PrefabInstance:
       objectReference: {fileID: 9100000, guid: 6c0451b3f81df6e48a979ae3603fae7b, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6652791f0d19f3b408a94277d330b59b, type: 3}
---- !u!1 &3628467702695144319 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 177316, guid: 6652791f0d19f3b408a94277d330b59b,
+--- !u!137 &3628467702706709231 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 13778228, guid: 6652791f0d19f3b408a94277d330b59b,
     type: 3}
   m_PrefabInstance: {fileID: 3628467702695043035}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &3628467702694872503 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 432748, guid: 6652791f0d19f3b408a94277d330b59b,
+    type: 3}
+  m_PrefabInstance: {fileID: 3628467702695043035}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &3628467702695144319 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 177316, guid: 6652791f0d19f3b408a94277d330b59b,
     type: 3}
   m_PrefabInstance: {fileID: 3628467702695043035}
   m_PrefabAsset: {fileID: 0}
