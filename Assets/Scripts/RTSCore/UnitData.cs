@@ -26,6 +26,7 @@ public class UnitData : ScriptableObject
     public int foodCost;
     public int woodCost;
     public int maxHitPoints;
+    public int maxCargo;
     public float huntingDamage;
     public float attackDamage;
     

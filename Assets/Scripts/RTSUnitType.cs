@@ -20,3 +20,14 @@ public enum RTSUnitType
     
 };
 
+public enum VillagerType
+{
+    Builder,
+    Lumberjack,
+    GoldMiner,
+    StoneMiner,
+    Farmer,
+    Fisherman,
+    Hunter,
+}
+

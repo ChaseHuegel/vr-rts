@@ -10,26 +10,12 @@ using Valve.VR.InteractionSystem;
 public class Villager : Unit
 {
     [Header("Villager")]
-    public ResourceGatheringType currentResource;
+    protected ResourceGatheringType currentResource;
     protected ResourceGatheringType previousResource;
-    public GoalTransportResource transportGoal;
-
-    // Should we have different cargo capacities based on resource
-    // type? We use cargo as a generic container for resources and
-    // the capacity changes on resource:
-    // 1 cargo unit == 5 grain unit
-    // 1 cargo unit == 3 wood units
-    // 1 cargo unit == 2 stone units
-    // 1 cargo unit == 1 gold unit
-    // Could also use this system to get around the limits of our
-    // currently used work rate, currently you can't go below a
-    // work rate of 3 because the math puts the amount under 1 and
-    // we're using INT's to store amount/capacity.
-    public int maxCargo = 20;
-    public float currentCargo = 0;
-    public float workRate = 3;
-    public float buildRate = 6;
-    public float repairRate = 3;
+    protected GoalTransportResource transportGoal;
+    
+    [SerializeField]
+    protected float currentCargo = 0;
 
     [Header ("Visuals")]
     public GameObject grainCargoDisplayObject;
@@ -44,84 +30,36 @@ public class Villager : Unit
     public GameObject fishermanHandToolDisplayObject;
     public GameObject hunterHandToolDisplayObject;
     
-    GameObject currentCargoDisplayObject;
-    GameObject currentHandToolDisplayObject;
+    protected GameObject currentCargoDisplayObject;
+    protected GameObject currentHandToolDisplayObject;
     public VillagerHoverMenu villagerHoverMenu;
-    public bool IsCargoFull() { return currentCargo >= maxCargo; }
+    protected float detachFromHandTime;
+    protected PathfindingGoal currentGoalFound;
+    protected PathfindingGoal previousGoalFound;
+
+    public bool IsCargoFull() { return currentCargo >= rtsUnitTypeData.maxCargo; }
     public bool HasCargo() { return currentCargo > 0; }
+
+    public override void Initialize()
+    {
+        base.Initialize();
+        HookIntoEvents();
+        
+        SetUnitType(rtsUnitType);
+
+        if(PlayerManager.instance.factionID == factionID)
+            PlayerManager.instance.AddToPopulation((Unit)this);
+    }
 
     public void HookIntoEvents()
     {
-        AttributeHandler.OnDamageEvent += OnDamage;
         PathfindingGoal.OnGoalFoundEvent += OnGoalFound;
         PathfindingGoal.OnGoalInteractEvent += OnGoalInteract;
         PathfindingGoal.OnGoalChangeEvent += OnGoalChange;
         Damageable.OnDeathEvent += OnDeath;
     }
 
-    public void CleanupEvents()
-    {
-        PathfindingGoal.OnGoalFoundEvent -= OnGoalFound;
-        PathfindingGoal.OnGoalInteractEvent -= OnGoalInteract;
-        PathfindingGoal.OnGoalChangeEvent -= OnGoalChange;
-        Damageable.OnDeathEvent -= OnDeath;
-    }
-
-
-    public override void Initialize()
-    {
-        base.Initialize();
-        HookIntoEvents();
-
-        SetUnitType(rtsUnitType);
-
-        if(PlayerManager.instance.factionID == factionID)
-            PlayerManager.instance.AddToPopulation((Unit)this);
-       
-
-        //ChangeTaskVisuals();
-
-    }
-
-    public void OnDamage(object sender, Damageable.DamageEvent e)
-    {
-    }
-
-    public void OnDeath(object sender, Damageable.DeathEvent e)
-    {
-        if (e.victim != this)
-            return;
-            
-        if (!isDying)
-        {
-            isDying = true;
-            Freeze();
-            ResetAI(); 
-
-            if (UnityEngine.Random.Range(1, 100) < 50)
-                animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.DYING);
-            else
-                animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.DYING2);
-
-            audioSource.PlayOneShot(GameMaster.GetAudio("unit_death").GetClip(), 0.5f);
-            Destroy(this.gameObject, GameMaster.Instance.unitCorpseDecayTime);
-        }
-    }
-
-    public void OnDestroy()
-    {        
-        CleanupEvents();
-    }
-
-    public bool TaskChanged()
-    {
-        return StateChanged() && previousResource != currentResource;
-    }
-
-    bool StateChanged()
-    {
-        return state != previousState;
-    }
+#region Hand Events
 
     public override void OnHandHoverBegin(Hand hand)
     {
@@ -148,7 +86,30 @@ public class Villager : Unit
         detachFromHandTime = Time.time;
     }
 
-    float detachFromHandTime;
+#endregion
+
+#region Event Handlers
+
+    public void OnDeath(object sender, Damageable.DeathEvent e)
+    {
+        if (e.victim != this)
+            return;
+            
+        if (!isDying)
+        {
+            isDying = true;
+            Freeze();
+            ResetAI(); 
+
+            if (UnityEngine.Random.Range(1, 100) < 50)
+                animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.DYING);
+            else
+                animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.DYING2);
+
+            audioSource.PlayOneShot(GameMaster.GetAudio("unit_death").GetClip(), 0.5f);
+            Destroy(this.gameObject, GameMaster.Instance.unitCorpseDecayTime);
+        }
+    }
 
     // This is is used to reenable the character after they have been
     // released from the hand AND after they have landed somewhere.
@@ -226,7 +187,100 @@ public class Villager : Unit
         }
     }
 
+    public void OnGoalChange(object sender, PathfindingGoal.GoalChangeEvent e)
+    {
+        if (e.actor != this) return;
 
+        if (HasTargetChanged())
+        {
+            Resource resource = previousGoalTarget?.GetFirstOccupant<Resource>();
+            if (resource) resource.interactors--;
+        }
+
+        ChangeEquippedItems();
+    }
+
+    public void OnGoalFound(object sender, PathfindingGoal.GoalFoundEvent e)
+    {
+        if (e.actor != this) return;
+
+        Villager villager = (Villager)e.actor;
+
+        // if (e.cell != previousGoalTarget)
+        // {
+        //     Resource resource = previousGoalTarget?.GetFirstOccupant<Resource>();
+        //     if (resource) resource.interactors--;
+        // }
+
+        //  Need C# 7 in Unity for switching by type!!!
+        if (e.goal is GoalGatherResource && !villager.IsCargoFull())
+        {
+            villager.state = UnitState.GATHERING;
+            villager.currentResource = ((GoalGatherResource)e.goal).type;
+            currentGoalFound = e.goal;
+            DisplayCargo(false);
+
+            Resource resource = e.cell?.GetFirstOccupant<Resource>();
+
+            if (!resource.IsBusy())
+            {
+                resource.interactors++;
+                return;
+            }
+        }
+        else if (e.goal is GoalTransportResource && villager.HasCargo())
+        {
+            villager.state = UnitState.TRANSPORTING;
+            currentGoalFound = e.goal;
+            DisplayCargo(true);
+            return;
+        }
+        else if (e.goal is GoalHuntFauna && !villager.IsCargoFull())
+        {
+            villager.state = UnitState.GATHERING;
+            currentGoalFound = e.goal;
+            //DisplayCargo(true);
+            return;
+        }
+        else if (e.goal is GoalBuildRepair)
+        {
+            villager.state = UnitState.BUILDANDREPAIR;
+            currentGoalFound = e.goal;
+            return;
+        }
+
+        //  default cancel the goal so that another can take priority
+        ResetGoal();
+        e.Cancel();
+    }
+
+    public void OnGoalInteract(object sender, PathfindingGoal.GoalInteractEvent e)
+    {
+        if (e.actor != this || isHeld)
+            return;
+
+        Villager villager = (Villager)e.actor;
+        Resource resource = e.cell.GetOccupant<Resource>();
+        Structure structure = e.cell.GetOccupant<Structure>();
+        Constructible construction = e.cell.GetOccupant<Constructible>();
+        Fauna fauna = e.cell.GetOccupant<Fauna>();
+
+        if  (e.goal is GoalGatherResource && villager.TryGather(resource) ||
+            (e.goal is GoalHuntFauna && villager.TryHunt(fauna) ||
+            (e.goal is GoalTransportResource && villager.TryDropoff(structure) ||
+            (e.goal is GoalBuildRepair && (villager.TryRepair(structure) || 
+            villager.TryBuild(construction))))))
+        {
+            return;
+        }
+
+        //  default cancel the interaction
+        ResetGoal();
+        e.Cancel();
+    }
+
+#endregion
+    
     public override void Tick()
     {
         if (isHeld || isDying)
@@ -242,44 +296,31 @@ public class Villager : Unit
         switch (state)
         {
             case UnitState.ROAMING:
-                // Goto(
-                //     UnityEngine.Random.Range(gridPosition.x - 4, gridPosition.x + 4),
-                //     UnityEngine.Random.Range(gridPosition.x - 4, gridPosition.x + 4)
-                // );
-                // ChangeTaskVisuals();
-            break;
-
             case UnitState.GATHERING:
-                //if (IsCargoFull()) state = UnitState.IDLE;
-            break;
-
             case UnitState.TRANSPORTING:
-                //if (!HasCargo()) state = UnitState.IDLE;
-            break;
-
             case UnitState.BUILDANDREPAIR:
-            break;
-
             case UnitState.IDLE:
-                //animator.SetInteger("VillagerActorState", (int)ActorAnimationState.IDLE);
             break;
         }
-
-        //Debug.Log("State: " + state.ToString() + " PreviousState: " + previousState.ToString());
 
         if (IsMoving() )
-        {
             animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.MOVING);
-        }
 
         if (TaskChanged())
-        {
             ChangeEquippedItems();
-            //PlayChangeTaskAudio();
-        }
 
         previousState = state;
         previousResource = currentResource;
+    }
+
+    public bool TaskChanged()
+    {
+        return StateChanged() && previousResource != currentResource;
+    }
+
+    bool StateChanged()
+    {
+        return state != previousState;
     }
 
      // Used by animator to play sound effects
@@ -288,9 +329,7 @@ public class Villager : Unit
         AudioSource.PlayClipAtPoint(GameMaster.GetAudio(clipName).GetClip(), transform.position, 0.75f);
     }
 
-    // TODO: Should this be part of the unit base class to be
-    // overridden by inheritors? Should unitType be changed to
-    // unitTask or unitJob?
+    // TODO: Should unitType be changed to unitTask or unitJob?
     public override void SetUnitType(RTSUnitType unitType)
     {
         base.SetUnitType(unitType);
@@ -374,8 +413,10 @@ public class Villager : Unit
 
     public void PlayChangeTaskAudio()
     {
-        audioSource.clip = GameMaster.GetAudio("farmer").GetClip();
+        // TODO: Just needs to be changed, for now use unit_command_response
+        audioSource.clip = GameMaster.GetAudio("unit_command_response").GetClip();
         audioSource.Play();
+        
         // if (state == UnitState.GATHERING)
         // {
         //     switch (currentResource)
@@ -478,128 +519,25 @@ public class Villager : Unit
             case ResourceGatheringType.Berries:
             case ResourceGatheringType.Meat:
             case ResourceGatheringType.Fish:
-            {
                 grainCargoDisplayObject.SetActive(visible);
                 currentCargoDisplayObject = grainCargoDisplayObject;
                 break;
-            }
 
             case ResourceGatheringType.Wood:
-            {
                 woodCargoDisplayObject.SetActive(visible);
                 currentCargoDisplayObject = woodCargoDisplayObject;
                 break;
-            }
 
             case ResourceGatheringType.Stone:
-            {
                 stoneCargoDisplayObject.SetActive(visible);
                 currentCargoDisplayObject = stoneCargoDisplayObject;
                 break;
-            }
 
             case ResourceGatheringType.Gold:
-            {
                 goldCargoDisplayObject.SetActive(visible);
                 currentCargoDisplayObject = goldCargoDisplayObject;
                 break;
-            }
         }
-    }
-
-    PathfindingGoal currentGoalFound;
-    PathfindingGoal previousGoalFound;
-
-    public void OnGoalChange(object sender, PathfindingGoal.GoalChangeEvent e)
-    {
-        if (e.actor != this) return;
-
-        if (HasTargetChanged())
-        {
-            Resource resource = previousGoalTarget?.GetFirstOccupant<Resource>();
-            if (resource) resource.interactors--;
-        }
-
-        ChangeEquippedItems();
-    }
-
-    public void OnGoalFound(object sender, PathfindingGoal.GoalFoundEvent e)
-    {
-        if (e.actor != this) return;
-
-        Villager villager = (Villager)e.actor;
-
-        // if (e.cell != previousGoalTarget)
-        // {
-        //     Resource resource = previousGoalTarget?.GetFirstOccupant<Resource>();
-        //     if (resource) resource.interactors--;
-        // }
-
-        //  Need C# 7 in Unity for switching by type!!!
-        if (e.goal is GoalGatherResource && !villager.IsCargoFull())
-        {
-            villager.state = UnitState.GATHERING;
-            villager.currentResource = ((GoalGatherResource)e.goal).type;
-            currentGoalFound = e.goal;
-            DisplayCargo(false);
-
-            Resource resource = e.cell?.GetFirstOccupant<Resource>();
-
-            if (!resource.IsBusy())
-            {
-                resource.interactors++;
-                return;
-            }
-        }
-        else if (e.goal is GoalTransportResource && villager.HasCargo())
-        {
-            villager.state = UnitState.TRANSPORTING;
-            currentGoalFound = e.goal;
-            DisplayCargo(true);
-            return;
-        }
-        else if (e.goal is GoalHuntFauna && !villager.IsCargoFull())
-        {
-            villager.state = UnitState.GATHERING;
-            currentGoalFound = e.goal;
-            //DisplayCargo(true);
-            return;
-        }
-        else if (e.goal is GoalBuildRepair)
-        {
-            villager.state = UnitState.BUILDANDREPAIR;
-            currentGoalFound = e.goal;
-            return;
-        }
-
-        //  default cancel the goal so that another can take priority
-        ResetGoal();
-        e.Cancel();
-    }
-
-    public void OnGoalInteract(object sender, PathfindingGoal.GoalInteractEvent e)
-    {
-        if (e.actor != this || isHeld)
-            return;
-
-        Villager villager = (Villager)e.actor;
-        Resource resource = e.cell.GetOccupant<Resource>();
-        Structure structure = e.cell.GetOccupant<Structure>();
-        Constructible construction = e.cell.GetOccupant<Constructible>();
-        Fauna fauna = e.cell.GetOccupant<Fauna>();
-
-        if  (e.goal is GoalGatherResource && villager.TryGather(resource) ||
-            (e.goal is GoalHuntFauna && villager.TryHunt(fauna) ||
-            (e.goal is GoalTransportResource && villager.TryDropoff(structure) ||
-            (e.goal is GoalBuildRepair && (villager.TryRepair(structure) || 
-            villager.TryBuild(construction))))))
-        {
-            return;
-        }
-
-        //  default cancel the interaction
-        ResetGoal();
-        e.Cancel();
     }
 
     public bool TryDropoff(Structure structure)
@@ -619,9 +557,6 @@ public class Villager : Unit
         if (e.cancel) return false;   //  return if the event has been cancelled by any subscriber
 
         currentCargo -= e.amount;
-
-        // Moved to static event handler OnVillagerDropoff in PlayerManager
-        //PlayerManager.instance.AddResourceToStockpile(currentResource, (int)e.amount);
 
         //  Send an indicator
         GameMaster.SendFloatingIndicator(structure.transform.position, $"+{(int)e.amount} {currentResource.ToString()}", Color.green);
@@ -656,7 +591,7 @@ public class Villager : Unit
                 break;
 
             case ResourceGatheringType.Fish: 
-            rate = rtsUnitTypeData.fishingRate; 
+                rate = rtsUnitTypeData.fishingRate; 
                 break;
             
             case ResourceGatheringType.Meat:    
@@ -680,7 +615,7 @@ public class Villager : Unit
 
         //  Convert per second to per tick and clamp to how much cargo space we have
         float amount = GetWorkRate(resource.type);
-        amount = Mathf.Clamp(maxCargo - currentCargo, 0, amount);
+        amount = Mathf.Clamp(rtsUnitTypeData.maxCargo - currentCargo, 0, amount);
         amount = resource.GetRemoveAmount(amount);
 
         //  Trigger a gather event
@@ -697,25 +632,25 @@ public class Villager : Unit
         {
             case ResourceGatheringType.Grain:
                 animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.FARMING);
-            break;
+                break;
 
             case ResourceGatheringType.Berries:
             case ResourceGatheringType.Meat:
                 animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.FORAGING);
-            break;
+                break;
 
             case ResourceGatheringType.Fish:
                 animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.FISHING);
-            break;
+                break;
 
             case ResourceGatheringType.Gold:
             case ResourceGatheringType.Stone:
                 animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.MINING);
-            break;
+                break;
 
             case ResourceGatheringType.Wood:
                 animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.LUMBERJACKING);
-            break;
+                break;
         }
 
         return true;
@@ -727,9 +662,7 @@ public class Villager : Unit
             return false;
 
         if (fauna.IsDead())
-        {
             return TryGather(fauna.GetComponent<Resource>());
-        }
         else
         {
             float amount = (rtsUnitTypeData.huntingDamage / (60/Constants.ACTOR_TICK_RATE));
@@ -787,6 +720,19 @@ public class Villager : Unit
         animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.BUILDANDREPAIR);
 
         return true;
+    }
+
+    public void CleanupEvents()
+    {
+        PathfindingGoal.OnGoalFoundEvent -= OnGoalFound;
+        PathfindingGoal.OnGoalInteractEvent -= OnGoalInteract;
+        PathfindingGoal.OnGoalChangeEvent -= OnGoalChange;
+        Damageable.OnDeathEvent -= OnDeath;
+    }
+
+    public void OnDestroy()
+    {        
+        CleanupEvents();
     }
 
     public static event EventHandler<GatherEvent> OnGatherEvent;
