@@ -18,14 +18,14 @@ public class Obstacle : Body
 
     public void BakeToGrid()
     {
+        Vector3 pos = World.ToWorldSpace(transform.position);
+
         //  Block all cells within bounds
         Cell cell;
         for (int x = -(int)(boundingDimensions.x/2); x < boundingDimensions.x/2; x++)
         {
             for (int y = -(int)(boundingDimensions.y/2); y < boundingDimensions.y/2; y++)
             {
-                Vector3 pos = World.ToWorldSpace(transform.position);
-
                 cell = World.at( (int)pos.x + x, (int)pos.z + y );
 
                 cell.passable = false;
@@ -33,7 +33,25 @@ public class Obstacle : Body
             }
         }
 
-        transform.position += new Vector3(boundingOrigin.x, 0f, boundingOrigin.y);
+        //-------------------------------------------------------------------------
+        // MapTools window has snap settings/tools and for some reason snapping/position here
+        // doesn't line up with snapping/position setting in the scene view so just leave it
+        // up to the user to snap things to the grid themselves and set the position of buildings
+        // etc...
+
+        // gridPosition.x = Mathf.RoundToInt(pos.x);
+        // gridPosition.y = Mathf.RoundToInt(pos.z);
+        // transform.position = World.ToTransformSpace(new Vector3(gridPosition.x, transform.position.y, gridPosition.y));
+
+        // This should do away with the need to have boundingOrigin settings.
+        // Vector3 modPos = transform.position;
+        // if (boundingDimensions.x % 2 == 0)
+        //     modPos.x = transform.position.x + World.GetUnit() * -0.5f;
+        
+        // if (boundingDimensions.y % 2 == 0)
+        //     modPos.z = transform.position.z + World.GetUnit() * -0.5f;
+
+        // transform.position = modPos;
     }
 
     public void UnbakeFromGrid()
