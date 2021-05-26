@@ -27,7 +27,8 @@ public class Fauna : Actor
     public float lookAroundActionChance = 0.6f;
     
 
-    public GameObject meatNodeToSpawnOnDeath;
+    public GameObject liveFaunaObject;
+    public GameObject deadFaunaObject;
     private Vector3 startPosition;
     private Animator animator;
     private float normalMovementSpeed;
@@ -36,6 +37,8 @@ public class Fauna : Actor
     float newDecisionTimer;
     float actionTime;
     
+    Resource resource;
+    Fauna fauna;
     
     public override void Initialize()
     {
@@ -43,6 +46,7 @@ public class Fauna : Actor
         startPosition = transform.position;
         normalMovementSpeed = movementSpeed;
         animator = GetComponentInChildren<Animator>();
+        resource = GetComponent<Resource>();
     }
 
     enum FaunaActions
@@ -55,7 +59,10 @@ public class Fauna : Actor
     public override void Tick()
     {
         base.Tick();
-            
+
+        if (isDead)
+            return;
+
         if (newDecisionTimer > actionTime && !IsMoving())
         {
             
@@ -103,6 +110,22 @@ public class Fauna : Actor
 
     // float meatAmount= 50.0f;
     // float eatRate = 0.1f;
+    
+    private bool isDead;
+    public bool IsDead()
+    {
+        if (AttributeHandler.GetAttributePercent(Swordfish.Attributes.HEALTH) <= 0.0f)
+        {
+            isDead = true;
+            resource.enabled = true;
+            AttributeHandler.enabled = false;
+            liveFaunaObject.SetActive(false);
+            deadFaunaObject.SetActive(true);
+            animator.enabled = false;
+        }
+
+        return isDead;
+    }
 
     void MakeNewDecision()
     {

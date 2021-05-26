@@ -209,11 +209,20 @@ public class Villager : Unit
             return;
         }
 
+        Fauna fauna = collision.gameObject.GetComponent<Fauna>();
+        if (fauna)
+        {
+            SetUnitType(RTSUnitType.Hunter);
+            ResetAI();
+            return;
+        }
+
         Structure building = collision.gameObject.GetComponentInParent<Structure>();
         if (building)
         {
             SetUnitType(RTSUnitType.Builder);
             ResetAI();
+            return;
         }
     }
 
@@ -314,7 +323,8 @@ public class Villager : Unit
             case RTSUnitType.Hunter:
                 state = UnitState.GATHERING;
                 currentResource = ResourceGatheringType.Meat;
-                goals.Add<GoalGatherResource>().type = ResourceGatheringType.Meat;
+                goals.Add<GoalHuntFauna>();
+                goals.Add<GoalGatherResource>().type = ResourceGatheringType.Meat;                
                 break;
 
             case RTSUnitType.Fisherman:
@@ -347,6 +357,7 @@ public class Villager : Unit
                 goals.Add<GoalBuildRepair>();
                 goals.Add<GoalGatherResource>().type = ResourceGatheringType.Grain;
                 goals.Add<GoalGatherResource>().type = ResourceGatheringType.Berries;
+                goals.Add<GoalHuntFauna>();
                 goals.Add<GoalGatherResource>().type = ResourceGatheringType.Meat;
                 goals.Add<GoalGatherResource>().type = ResourceGatheringType.Fish;
                 goals.Add<GoalGatherResource>().type = ResourceGatheringType.Gold;
@@ -363,38 +374,40 @@ public class Villager : Unit
 
     public void PlayChangeTaskAudio()
     {
-        if (state == UnitState.GATHERING)
-        {
-            switch (currentResource)
-            {
-                case ResourceGatheringType.Gold:
-                case ResourceGatheringType.Stone:
-                    audioSource.clip = GameMaster.GetAudio("miner").GetClip();
-                    audioSource.Play();
-                    break;
+        audioSource.clip = GameMaster.GetAudio("farmer").GetClip();
+        audioSource.Play();
+        // if (state == UnitState.GATHERING)
+        // {
+        //     switch (currentResource)
+        //     {
+        //         case ResourceGatheringType.Gold:
+        //         case ResourceGatheringType.Stone:
+        //             audioSource.clip = GameMaster.GetAudio("miner").GetClip();
+        //             audioSource.Play();
+        //             break;
 
-                case ResourceGatheringType.Grain:
-                case ResourceGatheringType.Berries:
-                case ResourceGatheringType.Meat:
-                case ResourceGatheringType.Fish:
-                    audioSource.clip = GameMaster.GetAudio("farmer").GetClip();
-                    audioSource.Play();
-                    break;
+        //         case ResourceGatheringType.Grain:
+        //         case ResourceGatheringType.Berries:
+        //         case ResourceGatheringType.Meat:
+        //         case ResourceGatheringType.Fish:
+        //             audioSource.clip = GameMaster.GetAudio("farmer").GetClip();
+        //             audioSource.Play();
+        //             break;
 
-                case ResourceGatheringType.Wood:
-                    audioSource.clip = GameMaster.GetAudio("lumberjack").GetClip();
-                    audioSource.Play();
-                    break;
+        //         case ResourceGatheringType.Wood:
+        //             audioSource.clip = GameMaster.GetAudio("lumberjack").GetClip();
+        //             audioSource.Play();
+        //             break;
 
-                default:
-                    break;
-            }
-        }
-        else if (state == UnitState.BUILDANDREPAIR)
-        {
-            audioSource.clip = GameMaster.GetAudio("builder").GetClip();
-            audioSource.Play();
-        }
+        //         default:
+        //             break;
+        //     }
+        // }
+        // else if (state == UnitState.BUILDANDREPAIR)
+        // {
+        //     audioSource.clip = GameMaster.GetAudio("builder").GetClip();
+        //     audioSource.Play();
+        // }
     }
 
     public void ChangeEquippedItems(ResourceGatheringType resourceType = ResourceGatheringType.None)
@@ -545,12 +558,18 @@ public class Villager : Unit
             DisplayCargo(true);
             return;
         }
+        else if (e.goal is GoalHuntFauna && !villager.IsCargoFull())
+        {
+            villager.state = UnitState.GATHERING;
+            currentGoalFound = e.goal;
+            //DisplayCargo(true);
+            return;
+        }
         else if (e.goal is GoalBuildRepair)
         {
             villager.state = UnitState.BUILDANDREPAIR;
             currentGoalFound = e.goal;
             return;
-
         }
 
         //  default cancel the goal so that another can take priority
@@ -567,10 +586,13 @@ public class Villager : Unit
         Resource resource = e.cell.GetOccupant<Resource>();
         Structure structure = e.cell.GetOccupant<Structure>();
         Constructible construction = e.cell.GetOccupant<Constructible>();
+        Fauna fauna = e.cell.GetOccupant<Fauna>();
 
         if  (e.goal is GoalGatherResource && villager.TryGather(resource) ||
+            (e.goal is GoalHuntFauna && villager.TryHunt(fauna) ||
             (e.goal is GoalTransportResource && villager.TryDropoff(structure) ||
-            (e.goal is GoalBuildRepair && (villager.TryRepair(structure) || villager.TryBuild(construction)))))
+            (e.goal is GoalBuildRepair && (villager.TryRepair(structure) || 
+            villager.TryBuild(construction))))))
         {
             return;
         }
@@ -650,6 +672,7 @@ public class Villager : Unit
         return rate;
     }
 
+    
     public bool TryGather(Resource resource)
     {
         if (!resource || IsCargoFull())
@@ -677,11 +700,8 @@ public class Villager : Unit
             break;
 
             case ResourceGatheringType.Berries:
-                animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.FORAGING);
-            break;
-
             case ResourceGatheringType.Meat:
-                animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.HUNTING);
+                animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.FORAGING);
             break;
 
             case ResourceGatheringType.Fish:
@@ -700,6 +720,26 @@ public class Villager : Unit
 
         return true;
     }
+
+    public bool TryHunt(Fauna fauna)
+    {
+        if (!fauna || IsCargoFull())
+            return false;
+
+        if (fauna.IsDead())
+        {
+            return TryGather(fauna.GetComponent<Resource>());
+        }
+        else
+        {
+            float amount = (rtsUnitTypeData.huntingDamage / (60/Constants.ACTOR_TICK_RATE));
+            fauna.AttributeHandler.Damage(amount, AttributeChangeCause.ATTACKED, AttributeHandler, DamageType.PIERCING);
+            animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.HUNTING);
+        }
+
+        return true;
+    }
+
 
     public bool TryRepair(Structure structure)
     {
