@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5159221434457056221}
   - component: {fileID: 3242159438290096864}
   - component: {fileID: -1832274208755310593}
+  - component: {fileID: 8085791480531434196}
   m_Layer: 11
   m_Name: Stone_Node_Large_Variant_01
   m_TagString: Untagged
@@ -57,6 +58,8 @@ MonoBehaviour:
   bakeOnStart: 1
   type: 4
   amount: 1000
+  maxInteractors: 0
+  interactors: 0
 --- !u!135 &-1832274208755310593
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -70,6 +73,21 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 1.2423282
   m_Center: {x: -0, y: 0.15, z: 0}
+--- !u!114 &8085791480531434196
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1850317118507013886}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 847aeadd287e865488f59b558e0b9caf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  highlightMaterial: {fileID: 0}
+  highlightOnHover: 1
+  hideHighlight: []
 --- !u!1001 &7022904134951779405
 PrefabInstance:
   m_ObjectHideFlags: 0

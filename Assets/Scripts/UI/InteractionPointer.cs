@@ -801,7 +801,7 @@ public class InteractionPointer : MonoBehaviour
 
 			if ( hitPointerInteractable != null )
 			{
-				//hitPointerInteractable.Highlight( true );
+				hitPointerInteractable.Highlight( true );
 				prevPointedAtPosition = pointedAtPosition;
 				PlayPointerHaptic( true );//!hitPointerInteractable.locked );
 				// PlayAudioClip( reticleAudioSource, goodHighlightSound );

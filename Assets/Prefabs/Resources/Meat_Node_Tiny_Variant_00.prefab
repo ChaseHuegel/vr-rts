@@ -92,6 +92,7 @@ GameObject:
   - component: {fileID: 27361046067829939}
   - component: {fileID: 7711990923086572942}
   - component: {fileID: 2407873728343777425}
+  - component: {fileID: -6636617993697747985}
   m_Layer: 11
   m_Name: Meat_Node_Tiny_Variant_00
   m_TagString: Untagged
@@ -149,3 +150,18 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.035981026
   m_Center: {x: 0, y: 0.012094941, z: 0}
+--- !u!114 &-6636617993697747985
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6797530162729970064}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 847aeadd287e865488f59b558e0b9caf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  highlightMaterial: {fileID: 0}
+  highlightOnHover: 1
+  hideHighlight: []

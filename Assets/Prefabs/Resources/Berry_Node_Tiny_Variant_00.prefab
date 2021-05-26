@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8601071924827813316}
   - component: {fileID: 2034060243891160313}
   - component: {fileID: 6221280364675008998}
+  - component: {fileID: 2454037941676378929}
   m_Layer: 11
   m_Name: Berry_Node_Tiny_Variant_00
   m_TagString: Untagged
@@ -69,6 +70,21 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 1.17124
   m_Center: {x: 0, y: 0.32, z: 0}
+--- !u!114 &2454037941676378929
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2984123256857542887}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 847aeadd287e865488f59b558e0b9caf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  highlightMaterial: {fileID: 0}
+  highlightOnHover: 1
+  hideHighlight: []
 --- !u!1 &3927122667428736791
 GameObject:
   m_ObjectHideFlags: 0

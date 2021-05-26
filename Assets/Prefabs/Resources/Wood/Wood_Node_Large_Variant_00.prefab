@@ -173,6 +173,7 @@ GameObject:
   - component: {fileID: 8724854349296649426}
   - component: {fileID: 3005501262304796899}
   - component: {fileID: -7570714190537514692}
+  - component: {fileID: -2932894190710498476}
   m_Layer: 11
   m_Name: Wood_Node_Large_Variant_00
   m_TagString: Untagged
@@ -233,6 +234,21 @@ MonoBehaviour:
   amount: 1000
   maxInteractors: 0
   interactors: 0
+--- !u!114 &-2932894190710498476
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4113687766330663205}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 847aeadd287e865488f59b558e0b9caf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  highlightMaterial: {fileID: 0}
+  highlightOnHover: 1
+  hideHighlight: []
 --- !u!1 &4122654588568883214
 GameObject:
   m_ObjectHideFlags: 0

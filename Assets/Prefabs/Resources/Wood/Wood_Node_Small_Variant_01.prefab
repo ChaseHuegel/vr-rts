@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6441448133473810767}
   - component: {fileID: 3202701579385015251}
   - component: {fileID: -8693574958295946587}
+  - component: {fileID: 8221146506101823324}
   m_Layer: 11
   m_Name: Wood_Node_Small_Variant_01
   m_TagString: Untagged
@@ -69,6 +70,21 @@ MonoBehaviour:
   amount: 1000
   maxInteractors: 0
   interactors: 0
+--- !u!114 &8221146506101823324
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1830351532706766008}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 847aeadd287e865488f59b558e0b9caf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  highlightMaterial: {fileID: 0}
+  highlightOnHover: 1
+  hideHighlight: []
 --- !u!1001 &5132202862740585289
 PrefabInstance:
   m_ObjectHideFlags: 0

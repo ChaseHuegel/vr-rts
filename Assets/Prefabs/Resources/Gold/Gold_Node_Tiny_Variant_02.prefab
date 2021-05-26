@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 9055808516643236364}
   - component: {fileID: 4902118972136907333}
   - component: {fileID: 8733340807589499909}
+  - component: {fileID: 1672868915755721543}
   m_Layer: 11
   m_Name: Gold_Node_Tiny_Variant_02
   m_TagString: Untagged
@@ -54,6 +55,8 @@ MonoBehaviour:
   bakeOnStart: 1
   type: 8
   amount: 1000
+  maxInteractors: 0
+  interactors: 0
 --- !u!135 &8733340807589499909
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -67,6 +70,21 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 1.2423282
   m_Center: {x: -0, y: 0.15, z: 0}
+--- !u!114 &1672868915755721543
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2564844858392026927}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 847aeadd287e865488f59b558e0b9caf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  highlightMaterial: {fileID: 0}
+  highlightOnHover: 1
+  hideHighlight: []
 --- !u!1001 &4827040048462579572
 PrefabInstance:
   m_ObjectHideFlags: 0
