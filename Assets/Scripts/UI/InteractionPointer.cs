@@ -368,6 +368,18 @@ public class InteractionPointer : MonoBehaviour
 						case ResourceGatheringType.Wood:
 							villager.SetUnitType(RTSUnitType.Lumberjack);										
 							break;
+						
+						case ResourceGatheringType.Berries:
+							villager.SetUnitType(RTSUnitType.Forager);										
+							break;
+
+						case ResourceGatheringType.Fish:
+							villager.SetUnitType(RTSUnitType.Fisherman);										
+							break;
+
+						case ResourceGatheringType.Meat:
+							villager.SetUnitType(RTSUnitType.Hunter);										
+							break;
 					}
 					
 					PathfindingGoal.TryGoal((Actor)villager, World.at(pointedAtResource.gridPosition), villager.GetGoals());
@@ -380,6 +392,17 @@ public class InteractionPointer : MonoBehaviour
 				if (unit is Villager && !pointedAtResource)
 				// if (civilian && !pointedAtResource)
 				{
+					if (pointedAtPointerInteractable)
+					{	
+						Villager villager = unit.GetComponent<Villager>();
+						Fauna fauna = pointedAtPointerInteractable.GetComponent<Fauna>();
+						if (fauna)
+						{
+							villager.SetUnitType(RTSUnitType.Hunter);
+							continue;
+						}
+					}
+					
 					unit.GotoForced(World.ToWorldSpace(pointedAtPosition));						
 					unit.ResetGoal();
 					continue;
@@ -417,6 +440,7 @@ public class InteractionPointer : MonoBehaviour
 				}
 			}
 			
+
 			// Cleanup
 			isInUnitSelectiodMode = false;
 			pointedAtResource = null;

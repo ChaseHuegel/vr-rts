@@ -273,7 +273,7 @@ public class Villager : Unit
         {
             return;
         }
-
+       
         //  default cancel the interaction
         ResetGoal();
         e.Cancel();
@@ -606,7 +606,6 @@ public class Villager : Unit
 
         return rate;
     }
-
     
     public bool TryGather(Resource resource)
     {
@@ -673,14 +672,13 @@ public class Villager : Unit
         return true;
     }
 
-
     public bool TryRepair(Structure structure)
     {
         if (!structure || !structure.NeedsRepairs())
             return false;
 
         if (structure.factionID != factionID)
-            return false;
+            return false;        
 
         //  Convert per second to per tick
         float amount = (rtsUnitTypeData.repairRate / (60/Constants.ACTOR_TICK_RATE));
@@ -692,20 +690,23 @@ public class Villager : Unit
 
         structure.TryRepair(e.amount, this);
 
-        // Use lumberjack animation
-        animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.BUILDANDREPAIR);
+        if (!structure.NeedsRepairs())
+            animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.IDLE);
+        else
+            animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.BUILDANDREPAIR);
 
         return true;
     }
 
     public bool TryBuild(Constructible construction)
     {
-        if (!construction || construction.IsBuilt())
+        if (!construction)
             return false;
 
         if (construction.factionID != factionID)
             return false;
             
+        
         //  Convert per second to per tick
         float amount = (rtsUnitTypeData.buildRate / (60/Constants.ACTOR_TICK_RATE));
 
@@ -716,8 +717,10 @@ public class Villager : Unit
 
         construction.TryBuild(e.amount, this);
 
-        // Use lumberjack animation
-        animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.BUILDANDREPAIR);
+        if (construction.IsBuilt())
+            animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.IDLE);
+        else
+            animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.BUILDANDREPAIR);
 
         return true;
     }

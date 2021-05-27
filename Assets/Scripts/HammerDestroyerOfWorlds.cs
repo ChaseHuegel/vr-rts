@@ -38,26 +38,39 @@ public class HammerDestroyerOfWorlds : MonoBehaviour
         isWielding = false;
     }
 
-    void OnTriggerEnter(Collider other)
+    void OnTriggerEnter(Collider collider)
     {    
         if (!isWielding)
             return;
-            
-        Structure structure = other.gameObject.GetComponentInParent<Structure>();
+
+        Structure structure = collider.gameObject.GetComponentInParent<Structure>();        
         if (structure)
         {
+            Vector3 pos = new Vector3(collider.transform.position.x, 0, collider.transform.position.z);
             Destroy(structure.gameObject);
 
             // TODO: Shoot a ray down to find a ground position.
-            Vector3 pos = new Vector3(structure.transform.position.x, 0, structure.transform.position.z);
             GameObject spawned = GameObject.Instantiate(objectDestroyedEffect, pos, Quaternion.identity);
-            AudioSource.PlayClipAtPoint( destroyedObjectAudio, structure.transform.position);
-
+            AudioSource.PlayClipAtPoint( destroyedObjectAudio, pos);
+            return;
         }
-        else if (other.gameObject.GetComponent<Villager>())
+
+        Constructible constructible = collider.GetComponentInParent<Constructible>();
+        if (constructible)
+        {
+            Vector3 pos = new Vector3(collider.transform.position.x, 0, collider.transform.position.z);
+            Destroy(constructible.gameObject);
+
+            // TODO: Shoot a ray down to find a ground position.
+            GameObject spawned = GameObject.Instantiate(objectDestroyedEffect, pos, Quaternion.identity);
+            AudioSource.PlayClipAtPoint( destroyedObjectAudio, pos);
+            return;
+        }
+        
+        if (collider.gameObject.GetComponent<Villager>())
         {
             GameObject spawned = GameObject.Instantiate(unitDestroyedEffect);
-            spawned.transform.position = other.transform.position;
+            spawned.transform.position = collider.transform.position;
             audioSource.PlayOneShot(unitHitAudio);
         }
     }

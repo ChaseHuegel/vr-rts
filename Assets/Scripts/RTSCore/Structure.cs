@@ -54,6 +54,19 @@ public class Structure : Obstacle, IFactioned
         if (!GameMaster.Instance.buildingDamagedFX)
             Debug.Log("buildingDamagedFX not set in GameMaster.", this);
 
+        if (buildingData.populationSupported > 0)
+            PlayerManager.instance.IncreasePopulationLimit(buildingData.populationSupported);
+
+        // Only refresh visuals if hit points are not full so we don't generate
+        // building damage FX particle systems on buildings that don't need them yet.
+        // We can generate them at startup later on to gain real time performance
+        // if needed.
+        if (damageable.GetAttributePercent(Attributes.HEALTH) < 1.0f)
+            RefreshVisuals();
+    }
+
+    protected void CreateBuildingDamageFX()
+    {
         buildingDamagedFX = Instantiate(GameMaster.Instance.buildingDamagedFX, transform.position, Quaternion.identity, transform);
         foreach (ParticleSystem pSystem in buildingDamagedFX.transform.GetComponentsInChildren<ParticleSystem>(true))
         {
@@ -72,11 +85,6 @@ public class Structure : Obstacle, IFactioned
             else if (pSystem.name == "Flames")
                 flamesParticleSystem = pSystem.gameObject;
         }
-
-        if (buildingData.populationSupported > 0)
-            PlayerManager.instance.IncreasePopulationLimit(buildingData.populationSupported);
-
-        RefreshVisuals();
     }
 
     void OnDamage(object sender, Damageable.DamageEvent e)
@@ -99,7 +107,7 @@ public class Structure : Obstacle, IFactioned
     void RefreshVisuals()
     {        
         if (!buildingDamagedFX)
-            return;
+            CreateBuildingDamageFX();
 
         float healthPercent = damageable.GetAttributePercent(Attributes.HEALTH);
         if (healthPercent >= 1.0f)
@@ -109,6 +117,7 @@ public class Structure : Obstacle, IFactioned
         }
 
         var emission = smokeParticleSystem.emission;
+        
         // Base rate desired + percent health missing * modifier.
         emission.rateOverTime = 4.0f + ((1.0f - healthPercent) * 30);
  
