@@ -109,7 +109,7 @@ public class Fauna : Actor
     }
 
     // float meatAmount= 50.0f;
-    // float eatRate = 0.1f;
+    // float eatRate = 0.01f;
     
     private bool isDead;
     public bool IsDead()

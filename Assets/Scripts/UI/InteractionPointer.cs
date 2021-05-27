@@ -201,6 +201,31 @@ public class InteractionPointer : MonoBehaviour
 			if ( WasInteractButtonPressed(hand))
 				newPointerHand = hand;		
 
+			if (WasQueueButtonPressed(hand))
+				newPointerHand = hand;
+
+			if (WasQueueButtonReleased(hand) && pointedAtPointerInteractable)
+				if (pointerHand == hand)
+				{
+					Debug.Log(hand.ToString());
+					BuildingSpawnQueue buildingSpawnQueue = pointedAtPointerInteractable.GetComponentInChildren<BuildingSpawnQueue>();
+					if (buildingSpawnQueue)
+						buildingSpawnQueue.QueueLastUnitQueued();
+				}
+
+			if (WasDequeueButtonPressed(hand))
+				newPointerHand = hand;
+				
+			if (WasDequeueButtonReleased(hand) && pointedAtPointerInteractable)
+			{
+				if (pointerHand == hand)
+				{
+					BuildingSpawnQueue buildingSpawnQueue = pointedAtPointerInteractable.GetComponentInChildren<BuildingSpawnQueue>();
+					if (buildingSpawnQueue)
+						buildingSpawnQueue.DequeueUnit();
+				}
+			}
+
 			if (isInBuildingPlacementMode)
 			{
 				if (WasRotateClockwiseButtonPressed(hand))
@@ -249,6 +274,26 @@ public class InteractionPointer : MonoBehaviour
 	private bool isInBuildingPlacementMode;
 	private GameObject buildingPlacementPreviewObject;
 	private float lastBuildingRotation;
+
+	private bool WasQueueButtonPressed(Hand hand)
+	{
+		return queueAction.GetStateDown(hand.handType);
+	}
+	
+	private bool WasQueueButtonReleased(Hand hand)
+	{
+		return queueAction.GetStateUp(hand.handType);
+	}
+
+	private bool WasDequeueButtonPressed(Hand hand)
+	{
+		return dequeueAction.GetStateDown(hand.handType);
+	}
+
+	private bool WasDequeueButtonReleased(Hand hand)
+	{
+		return dequeueAction.GetStateUp(hand.handType);
+	}
 
 	private bool WasRotateClockwiseButtonPressed(Hand hand)
     {

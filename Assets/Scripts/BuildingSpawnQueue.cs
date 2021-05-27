@@ -32,6 +32,8 @@ public class BuildingSpawnQueue : MonoBehaviour
     public GameObject buttonLockPrefab;
     protected AudioSource audioSource;
 
+    private RTSUnitType lastUnitQueued;
+
     void Awake()
     {
         // TODO: Pick a spot around the building and set it as the spawn point
@@ -69,6 +71,10 @@ public class BuildingSpawnQueue : MonoBehaviour
 
         if (!(queueProgressImage = GetComponentInChildren<UnityEngine.UI.Image>(true)))
             Debug.Log("queueProgressImage not found.", this);
+
+        QueueUnitButton firstButton = GetComponentInChildren<QueueUnitButton>(true);
+        if (firstButton)
+            lastUnitQueued = firstButton.unitTypeToQueue;        
     }
 
     public void SetUnitRallyWaypoint(Vector3 position)
@@ -90,6 +96,8 @@ public class BuildingSpawnQueue : MonoBehaviour
     {
         audioSource.PlayOneShot(onButtonUpAudio);
     }
+
+    public void QueueLastUnitQueued() { QueueUnit(lastUnitQueued); }
 
     public void QueueUnit(RTSUnitType unitTypeToQueue)
     {
