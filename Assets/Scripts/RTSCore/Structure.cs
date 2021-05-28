@@ -6,7 +6,6 @@ using UnityEngine;
 [RequireComponent(typeof(Damageable))]
 public class Structure : Obstacle, IFactioned
 {
-    public byte factionID = 0;
     private Faction faction;
     public BuildingData buildingData;
     private Damageable damageable;
@@ -20,8 +19,8 @@ public class Structure : Obstacle, IFactioned
     private GameObject sparksParticleSystem;
     private PlayerManager playerManager;
     public Faction GetFaction() { return faction; }
-
-    public void UpdateFaction() { faction = GameMaster.Factions.Find(x => x.index == factionID); }
+    
+    public void UpdateFaction() { faction = GameMaster.Factions.Find(x => x.index == factionId); }
 
     public bool NeedsRepairs() { return damageable.GetHealthPercent() < 1f; }
 

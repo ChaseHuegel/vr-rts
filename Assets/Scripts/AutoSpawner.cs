@@ -106,7 +106,7 @@ public class AutoSpawner : MonoBehaviour
             
             Unit unit = unitGameObject.GetComponent<Unit>();
             unit.rtsUnitType = unitData.unitType;
-            unit.teamId = factionID;
+            unit.factionId = factionID;
             unit.SyncPosition();
 
             randomPos = (Vector3)Random.insideUnitSphere * unitSpawnPointRadius; 

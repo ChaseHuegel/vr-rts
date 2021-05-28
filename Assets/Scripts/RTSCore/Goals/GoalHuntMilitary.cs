@@ -5,13 +5,12 @@ using Swordfish;
 [System.Serializable]
 public class GoalHuntMilitary: PathfindingGoal
 {
-    public int myFactionID;
     public override bool CheckGoal(Cell cell, Actor actor = null)
     {
         Unit unit = cell.GetFirstOccupant<Unit>();
 
-        if (unit && !unit.IsCivilian() && !unit.isDying && unit.teamId != myFactionID)
-                return true;
+        if (unit && !unit.IsCivilian() && !unit.isDying && !unit.IsSameFaction(actor.factionId))
+            return true;
 
         return false;
     }

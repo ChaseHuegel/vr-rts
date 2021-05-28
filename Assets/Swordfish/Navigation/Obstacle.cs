@@ -7,7 +7,7 @@ namespace Swordfish.Navigation
 
 public class Obstacle : Body
 {
-    public bool bakeOnStart = true;
+        public bool bakeOnStart = true;
 
     public override void Initialize()
     {

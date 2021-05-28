@@ -47,7 +47,7 @@ public class Villager : Unit
 
         SetUnitType(rtsUnitType);
 
-        if(IsSameTeam(playerManager.teamId))
+        if(IsSameFaction(playerManager.factionId))
             playerManager.AddToPopulation((Unit)this);
     }
 
@@ -234,6 +234,10 @@ public class Villager : Unit
         }
         else if (e.goal is GoalTransportResource && villager.HasCargo())
         {
+            // ! Moved to goalcheck
+            // // Structure structure = e.cell?.GetFirstOccupant<Structure>();
+            // // if (structure && structure.IsSameFaction(factionId))
+            // // {
             villager.state = UnitState.TRANSPORTING;
             currentGoalFound = e.goal;
             DisplayCargo(true);
@@ -248,6 +252,12 @@ public class Villager : Unit
         }
         else if (e.goal is GoalBuildRepair)
         {
+            // ! Moved to goalcheck
+            // // Structure structure = e.cell?.GetFirstOccupant<Structure>();
+            // // Constructible constructible = e.cell?.GetFirstOccupant<Constructible>();
+            // // if ((structure && structure.IsSameFaction(factionId)) ||
+            // //     (constructible && constructible.IsSameFaction(factionId)))
+            // // {
             villager.state = UnitState.BUILDANDREPAIR;
             currentGoalFound = e.goal;
             return;
@@ -549,11 +559,14 @@ public class Villager : Unit
         if (!structure || !HasCargo())
             return false;
 
-        if (structure.factionID != teamId)
-            return false;
+        // ! Moved to OnGoalFound
+        // // if (structure.IsSameTeam(teamId))
+        // //     return false;
 
-        if (!structure.CanDropOff(currentResource))
-            return false;
+        // ! Redundant, checked in the goal itself. Remove if no problems
+        // ! arise from commenting out.
+        // // if (!structure.CanDropOff(currentResource))
+        // //     return false;
 
         //  Trigger a dropoff event
         DropoffEvent e = new DropoffEvent{ villager = this, structure = structure, resourceType = currentResource, amount = currentCargo };
@@ -681,8 +694,9 @@ public class Villager : Unit
         if (!structure || !structure.NeedsRepairs())
             return false;
 
-        if (structure.factionID != teamId)
-            return false;        
+        // ! Moved to OnGoalFound
+        // // if (structure.teamId != teamId)
+        // //     return false;        
 
         //  Convert per second to per tick
         float amount = (rtsUnitTypeData.repairRate / (60/Constants.ACTOR_TICK_RATE));
@@ -707,9 +721,9 @@ public class Villager : Unit
         if (!construction)
             return false;
 
-        if (construction.factionID != teamId)
-            return false;
-            
+        // ! Moved to OnGoalFound
+        // // if (construction.teamId != teamId)
+        // //     return false;
         
         //  Convert per second to per tick
         float amount = (rtsUnitTypeData.buildRate / (60/Constants.ACTOR_TICK_RATE));

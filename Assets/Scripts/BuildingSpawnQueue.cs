@@ -112,7 +112,7 @@ public class BuildingSpawnQueue : MonoBehaviour
         if (unitSpawnQueue.Count >= structure.buildingData.maxUnitQueueSize)
             return;
 
-        if (structure.factionID == playerManager.teamId &&
+        if (structure.IsSameFaction(playerManager.factionId) &&
             !playerManager.CanQueueUnit(unitTypeToQueue))
             return;
 
@@ -184,7 +184,7 @@ public class BuildingSpawnQueue : MonoBehaviour
             GameObject unitGameObject = Instantiate(unitSpawnQueue.First.Value.prefab, unitSpawnPoint.transform.position, Quaternion.identity);
             Unit unit = unitGameObject.GetComponent<Unit>();
             unit.rtsUnitType = unitSpawnQueue.First.Value.unitType;
-            unit.teamId = structure.factionID;
+            unit.factionId = structure.factionId;
             unit.SyncPosition();
             unit.GotoForced(World.ToWorldSpace(unitRallyWaypoint.position));
             unit.LockPath();

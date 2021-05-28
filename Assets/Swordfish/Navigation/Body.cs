@@ -12,6 +12,18 @@ public class Body : MonoBehaviour
     public Vector2 boundingOrigin = Vector2.zero;
     public Coord2D gridPosition = new Coord2D(0, 0);
 
+    public byte factionId;
+    
+    public bool IsSameFaction(Actor actor)
+    {
+        return this.factionId == actor.factionId;
+    }
+
+    public bool IsSameFaction(byte factionId)
+    {
+        return this.factionId == factionId;
+    }
+
     public virtual void Initialize() {}
     public virtual void Tick() {}
 

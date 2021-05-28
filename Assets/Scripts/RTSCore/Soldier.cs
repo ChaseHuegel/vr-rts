@@ -21,13 +21,11 @@ public class Soldier : Unit
 
     protected GameObject projectileTarget;
     protected float arrowSpeed = 5.0f;
-    protected PlayerManager playerManager;
 
     public override void Initialize()
     {
         base.Initialize();
         HookIntoEvents();
-        playerManager = PlayerManager.instance;
 
         maxGoalInteractRange = rtsUnitTypeData.attackRange;
 
@@ -37,7 +35,7 @@ public class Soldier : Unit
         if (!animator)
             Debug.Log("No animator component found.");
 
-        if(IsSameTeam(playerManager.teamId))
+        if(IsSameFaction(playerManager.factionId))
             playerManager.AddToPopulation((Unit)this);     
 
         
@@ -55,13 +53,13 @@ public class Soldier : Unit
     public void SetAIAttackGoals(bool villagers, bool military, bool buildings)
     {
         if (villagers)
-            goals.Add<GoalHuntVillagers>().myFactionID = teamId;
+            goals.Add<GoalHuntVillagers>();
 
         if (military)
-            goals.Add<GoalHuntMilitary>().myFactionID = teamId;        
+            goals.Add<GoalHuntMilitary>();        
         
         if (buildings)
-            goals.Add<GoalHuntBuildings>().myFactionID = teamId;
+            goals.Add<GoalHuntBuildings>();
 
         ResetAI();
     }

@@ -10,10 +10,9 @@ public class Constructible : Obstacle, IFactioned
     private Damageable damageable;
     public Damageable AttributeHandler { get { return damageable; } }
 
-    public byte factionID = 0;
     private Faction faction;
     public Faction GetFaction() { return faction; }
-    public void UpdateFaction() { faction = GameMaster.Factions.Find(x => x.index == factionID); }
+    public void UpdateFaction() { faction = GameMaster.Factions.Find(x => x.index == factionId); }
 
     public bool DestroyOnBuilt = true;
     public BuildingData buildingData;

@@ -15,12 +15,11 @@ public enum UnitState
 
 public class Unit : Actor, IFactioned
 {
-    [Header("Faction")]
-    public byte teamId = 0;
-    private Faction faction;
+    [SerializeField]
+    protected Faction faction;
 
     public Faction GetFaction() { return faction; }
-    public void UpdateFaction() { faction = GameMaster.Factions.Find(x => x.index == teamId); }
+    public void UpdateFaction() { faction = GameMaster.Factions.Find(x => x.index == factionId); }
 
     [Header("Unit")]
     public RTSUnitType rtsUnitType;
@@ -77,11 +76,6 @@ public class Unit : Actor, IFactioned
         return (int)rtsUnitTypeData.unitType < (int)RTSUnitType.Swordsman;
     }
 
-    public virtual bool IsSameTeam(int teamId)
-    {
-        return this.teamId == teamId;
-    }
-
     public bool IsDead()
     {
         return AttributeHandler.GetAttributePercent(Attributes.HEALTH) <= 0.0f;
@@ -95,7 +89,7 @@ public class Unit : Actor, IFactioned
 
         animator.SetInteger("AnimationActorState", (int)ActorAnimationState.IDLE);
 
-        if(teamId == playerManager.teamId)
+        if(factionId == playerManager.factionId)
             audioSource.PlayOneShot(GameMaster.GetAudio("unit_pickup_friendly").GetClip(), 0.5f);
         else
             audioSource.PlayOneShot(GameMaster.GetAudio("unit_pickup_enemy").GetClip(), 0.5f);

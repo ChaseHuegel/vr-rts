@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class PlayerManager : MonoBehaviour
 {
     [Header("Stats/Resources")]
-    public byte teamId = 0;
+    public byte factionId = 0;
     public Faction faction;
     public int woodCollected;
     public int goldCollected;
@@ -115,13 +115,13 @@ public class PlayerManager : MonoBehaviour
 
     public void OnVillagerDropoff(object sender, Villager.DropoffEvent e)
     {
-        if (e.villager.teamId == teamId)
+        if (e.villager.factionId == factionId)
             AddResourceToStockpile(e.resourceType, (int)e.amount);
     }
 
     public void OnVillagerRepair(object sender, Villager.RepairEvent e)
     {
-        if (e.villager.teamId == teamId)
+        if (e.villager.factionId == factionId)
             RemoveResourcesFromStockpile(1, 1, 1, 1);
     }
 

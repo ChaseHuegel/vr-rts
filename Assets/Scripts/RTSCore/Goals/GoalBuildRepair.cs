@@ -9,7 +9,7 @@ public class GoalBuildRepair: PathfindingGoal
         Structure structure = cell?.GetFirstOccupant<Structure>();
         Constructible construction = cell?.GetFirstOccupant<Constructible>();
 
-        if (structure != null && structure.NeedsRepairs())
+        if (structure != null && structure.NeedsRepairs() && structure.IsSameFaction(actor))
             return true;
 
         if (construction != null && !construction.IsBuilt())
