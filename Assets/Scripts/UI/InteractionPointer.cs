@@ -394,8 +394,12 @@ public class InteractionPointer : MonoBehaviour
 				if (unit is Villager && pointedAtResource)
 				{
 					Villager villager = unit.GetComponent<Villager>();
-					
-					switch (pointedAtResource.type)
+                    
+					// Needed for fauna since fauna has an inactive resource component
+					// that doesn't have a grid position to be fetched.
+					Swordfish.Coord2D gridPosition = pointedAtResource.gridPosition;
+                  
+                    switch (pointedAtResource.type)
 					{
 						case ResourceGatheringType.Gold:
 							villager.SetUnitType(RTSUnitType.GoldMiner);								
@@ -422,35 +426,16 @@ public class InteractionPointer : MonoBehaviour
 							break;
 
 						case ResourceGatheringType.Meat:
-							villager.SetUnitType(RTSUnitType.Hunter);										
-							break;
+                            gridPosition = pointedAtResource.GetComponent<Fauna>().gridPosition;
+                            villager.SetUnitType(RTSUnitType.Hunter);
+                            break;
 					}
-					
-					PathfindingGoal.TryGoal((Actor)villager, World.at(pointedAtResource.gridPosition), villager.GetGoals());
-					villager.GotoForced(pointedAtResource.gridPosition.x, pointedAtResource.gridPosition.y);
+                    
+                    PathfindingGoal.TryGoal((Actor)villager, World.at(gridPosition), villager.GetGoals());
+					villager.GotoForced(gridPosition.x, gridPosition.y);
 					villager.ResetGoal();
 					continue;
-				}
-
-				// Villager unit and not targeting a resource.
-				if (unit is Villager && !pointedAtResource)
-				// if (civilian && !pointedAtResource)
-				{
-					if (pointedAtPointerInteractable)
-					{	
-						Villager villager = unit.GetComponent<Villager>();
-						Fauna fauna = pointedAtPointerInteractable.GetComponent<Fauna>();
-						if (fauna)
-						{
-							villager.SetUnitType(RTSUnitType.Hunter);
-							continue;
-						}
-					}
-					
-					unit.GotoForced(World.ToWorldSpace(pointedAtPosition));						
-					unit.ResetGoal();
-					continue;
-				}
+				}				
 
 				// Military unit.
 				if (unit is Soldier)

@@ -73,7 +73,7 @@ public class AutoSpawner : MonoBehaviour
                 else
                 {
                     currentSpawnListIndex++;
-                    if (currentSpawnListIndex > unitSpawnList.Length)
+                    if (currentSpawnListIndex >= unitSpawnList.Length)
                         currentSpawnListIndex = 0;
                 }
             }

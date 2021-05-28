@@ -24,12 +24,16 @@ public class Resource : Obstacle
     /// <summary>
     /// Returns true (can interact) if unit is already slotted at this
     /// resource or is added to the available slots. Returns false 
-    /// if unit can not interact with this resource.
+    /// if unit can not interact with this resource. Returns true if
+    /// maxInteractors is set to 0 (unlimited).
     /// </summary>
     /// <param name="actor">The unit requesting interaction.</param>
     /// <returns>True if unit can interact, false otherwise.</returns>
     public bool AddInteractor(Actor actor)
     {
+        if (maxInteractors == 0)
+            return true;
+
         if (interactors.Contains(actor))
             return true;
 
