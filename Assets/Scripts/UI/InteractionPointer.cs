@@ -207,7 +207,6 @@ public class InteractionPointer : MonoBehaviour
 			if (WasQueueButtonReleased(hand) && pointedAtPointerInteractable)
 				if (pointerHand == hand)
 				{
-					Debug.Log(hand.ToString());
 					BuildingSpawnQueue buildingSpawnQueue = pointedAtPointerInteractable.GetComponentInChildren<BuildingSpawnQueue>();
 					if (buildingSpawnQueue)
 						buildingSpawnQueue.QueueLastUnitQueued();
@@ -326,16 +325,17 @@ public class InteractionPointer : MonoBehaviour
 				{
 					buildingSpawnQueue = pointedAtPointerInteractable.GetComponentInChildren<BuildingSpawnQueue>();
 					
-					if (buildingSpawnQueue && !isSettingRallyPoint)
+					if (buildingSpawnQueue && buildingSpawnQueue.enabled && !isSettingRallyPoint)
 					{ 
 						rallyWaypointArcStartPosition = pointedAtPointerInteractable.transform.position;
 						isSettingRallyPoint = true;	
+						wayPointReticle.SetActive(true);
 						return true;											
 					}
 
 					Unit hoveredUnit = pointedAtPointerInteractable.GetComponent<Unit>();
 					if (hoveredUnit && !isInUnitSelectiodMode &&
-						factionID == hoveredUnit.factionID)
+						hoveredUnit.IsSameFaction(factionID))
 					{
 						selectedUnits.Add(hoveredUnit);
 						isInUnitSelectiodMode = true;
@@ -343,7 +343,6 @@ public class InteractionPointer : MonoBehaviour
 					}					
 
 					//Debug.Log(string.Format("Unit: {0} interactable: {1}", selectedUnit, pointedAtPointerInteractable));
-					wayPointReticle.SetActive(true);
 				}
 
 				return true;
@@ -351,7 +350,8 @@ public class InteractionPointer : MonoBehaviour
 		}
 
 		// Make sure it's off.
-		wayPointReticle.SetActive(false);
+		if (wayPointReticle.activeSelf)
+			wayPointReticle.SetActive(false);
 
 		return false;
 	}
@@ -365,7 +365,8 @@ public class InteractionPointer : MonoBehaviour
 		}
 
 		// Make sure it's off.
-		wayPointReticle.SetActive(false);
+		if (wayPointReticle.activeSelf)
+			wayPointReticle.SetActive(false);
 
 		return false;
 	}
@@ -391,15 +392,13 @@ public class InteractionPointer : MonoBehaviour
 
 				// Villager unit and we're targeting a resource.
 				if (unit is Villager && pointedAtResource)
-				//if (civilian && pointedAtResource)
 				{
 					Villager villager = unit.GetComponent<Villager>();
-					//Villager villager = unit as Villager;
 					
 					switch (pointedAtResource.type)
 					{
 						case ResourceGatheringType.Gold:
-							villager.SetUnitType(RTSUnitType.GoldMiner);										
+							villager.SetUnitType(RTSUnitType.GoldMiner);								
 							break;
 
 						case ResourceGatheringType.Grain:
@@ -514,7 +513,7 @@ public class InteractionPointer : MonoBehaviour
 		float dotForward = Vector3.Dot( pointerDir, player.hmdTransform.forward );
 		bool pointerAtBadAngle = false;
 
-		if ( ( dotForward > 0 && dotUp > 0.75f ) || ( dotForward < 0.0f && dotUp > 0.5f ) )
+		if ((dotForward > 0 && dotUp > 0.75f) || (dotForward < 0.0f && dotUp > 0.5f))
 			pointerAtBadAngle = true;
 
 		//Trace to see if the pointer hit anything
@@ -523,10 +522,10 @@ public class InteractionPointer : MonoBehaviour
 
 		teleportArc.FindProjectileCollision( out hitInfo );
 		//if ( teleportArc.DrawArc( out hitInfo ) )
-		if ( hitInfo.collider )
+		if (hitInfo.collider)
 		{	
 			hitSomething = true;
-			hitPointValid = LayerMatchTest( allowedPlacementLayers, hitInfo.collider.gameObject );
+			hitPointValid = LayerMatchTest(allowedPlacementLayers, hitInfo.collider.gameObject);
 			
 			if (selectedUnits.Count > 0)
 				pointedAtResource = hitInfo.collider.GetComponentInParent<Resource>();

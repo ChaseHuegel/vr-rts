@@ -174,7 +174,7 @@ public class Soldier : Unit
             Unit unit = e.cell.GetFirstOccupant<Unit>();            
             projectileTarget = unit.gameObject;
             Damageable damageable = unit.GetComponent<Damageable>();            
-            damageable.Damage(rtsUnitTypeData.attackDamage, AttributeChangeCause.ATTACKED, null, DamageType.SLASHING);
+            damageable.Damage(rtsUnitTypeData.attackDamage, AttributeChangeCause.ATTACKED, AttributeHandler, DamageType.SLASHING);
             SetAttackAnimationState();                
             return;
         }
@@ -189,7 +189,7 @@ public class Soldier : Unit
             
             projectileTarget = structure.gameObject;
 
-            damageable.Damage(rtsUnitTypeData.attackDamage, AttributeChangeCause.ATTACKED, null, DamageType.SLASHING);
+            damageable.Damage(rtsUnitTypeData.attackDamage, AttributeChangeCause.ATTACKED, AttributeHandler, DamageType.SLASHING);
             SetAttackAnimationState();
             return;
         }
@@ -200,7 +200,7 @@ public class Soldier : Unit
             {
                 projectileTarget = unit.gameObject;
                 Damageable damageable = unit.GetComponent<Damageable>();
-                damageable.Damage(rtsUnitTypeData.attackDamage, AttributeChangeCause.ATTACKED, null, DamageType.SLASHING);
+                damageable.Damage(rtsUnitTypeData.attackDamage, AttributeChangeCause.ATTACKED, AttributeHandler, DamageType.SLASHING);
                
                 SetAttackAnimationState();
                     
@@ -212,7 +212,7 @@ public class Soldier : Unit
             {
                 projectileTarget = structure.gameObject;
                 Damageable damageable = structure.GetComponent<Damageable>();
-                damageable.Damage(rtsUnitTypeData.attackDamage, AttributeChangeCause.ATTACKED, null, DamageType.SLASHING);
+                damageable.Damage(rtsUnitTypeData.attackDamage, AttributeChangeCause.ATTACKED, AttributeHandler, DamageType.SLASHING);
                 SetAttackAnimationState();
                 return;
             }
@@ -222,7 +222,7 @@ public class Soldier : Unit
             {
                 projectileTarget = construction.gameObject;
                 Damageable damageable = construction.GetComponent<Damageable>();
-                damageable.Damage(rtsUnitTypeData.attackDamage, AttributeChangeCause.ATTACKED, null, DamageType.SLASHING);
+                damageable.Damage(rtsUnitTypeData.attackDamage, AttributeChangeCause.ATTACKED, AttributeHandler, DamageType.SLASHING);
                 SetAttackAnimationState();
                 return;
             }

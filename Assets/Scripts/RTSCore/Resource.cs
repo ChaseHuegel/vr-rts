@@ -1,6 +1,7 @@
 using UnityEngine;
 using Swordfish;
 using Swordfish.Navigation;
+using System.Collections.Generic;
 
 public class Resource : Obstacle
 {
@@ -8,11 +9,42 @@ public class Resource : Obstacle
     public float amount = 1000;
 
     public int maxInteractors = 0;
-    public int interactors = 0;
+    //public int interactors = 0;
+    public List<Unit> interactors;
 
-    public bool IsBusy()
+    // ! Can probable remove this if the new functionality works out.
+    public bool IsBusy()//Unit unit = null)
     {
-        return (maxInteractors > 0 && interactors >= maxInteractors);
+        // if (interactors.Contains(unit))
+        //     return false;
+
+        return (maxInteractors > 0 && interactors.Count >= maxInteractors);
+    }
+
+    /// <summary>
+    /// Returns true (can interact) if unit is already slotted at this
+    /// resource or is added to the available slots. Returns false 
+    /// if unit can not interact with this resource.
+    /// </summary>
+    /// <param name="unit">The unit requesting interaction.</param>
+    /// <returns>True if unit can interact, false otherwise.</returns>
+    public bool AddInteractor(Unit unit)
+    {
+        if (interactors.Contains(unit))
+            return true;
+
+        if (interactors.Count < maxInteractors)
+        {
+            interactors.Add(unit);
+            return true;
+        }
+
+        return false;
+    }
+
+    public void RemoveInteractor(Unit unit)
+    {
+        interactors.Remove(unit);
     }
 
     public float GetRemoveAmount(float count)

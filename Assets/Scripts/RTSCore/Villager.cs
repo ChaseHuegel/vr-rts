@@ -92,7 +92,7 @@ public class Villager : Unit
 
     public void OnDeath(object sender, Damageable.DeathEvent e)
     {
-        if (e.victim != this)
+        if (e.victim != AttributeHandler)
             return;
             
         if (!isDying)
@@ -193,12 +193,16 @@ public class Villager : Unit
 
         if (HasTargetChanged())
         {
-            Resource resource = previousGoalTarget?.GetFirstOccupant<Resource>();
-            if (resource) resource.interactors--;
+            //Resource resource = previousGoalTarget?.GetFirstOccupant<Resource>();
+            // if (resource) 
+            //     //resource.interactors--;
+            //     resource.RemoveInteractor(this);
         }
 
         ChangeEquippedItems();
     }
+
+    public Resource myResource;
 
     public void OnGoalFound(object sender, PathfindingGoal.GoalFoundEvent e)
     {
@@ -206,11 +210,11 @@ public class Villager : Unit
 
         Villager villager = (Villager)e.actor;
 
-        // if (e.cell != previousGoalTarget)
-        // {
-        //     Resource resource = previousGoalTarget?.GetFirstOccupant<Resource>();
-        //     if (resource) resource.interactors--;
-        // }
+        if (e.cell != previousGoalTarget)
+        {
+            Resource resource = previousGoalTarget?.GetFirstOccupant<Resource>();
+            if (resource) resource.RemoveInteractor(this);
+        }
 
         //  Need C# 7 in Unity for switching by type!!!
         if (e.goal is GoalGatherResource && !villager.IsCargoFull())
@@ -221,12 +225,15 @@ public class Villager : Unit
             DisplayCargo(false);
 
             Resource resource = e.cell?.GetFirstOccupant<Resource>();
-
-            if (!resource.IsBusy())
-            {
-                resource.interactors++;
+            
+            if (resource.AddInteractor(this))
                 return;
-            }
+
+            // if (!resource.IsBusy())
+            // {
+            //     resource.interactors++;
+            //     return;
+            // }
         }
         else if (e.goal is GoalTransportResource && villager.HasCargo())
         {
@@ -279,8 +286,8 @@ public class Villager : Unit
         e.Cancel();
     }
 
-#endregion
-    
+    #endregion
+
     public override void Tick()
     {
         if (isHeld || isDying)
