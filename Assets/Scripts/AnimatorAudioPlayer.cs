@@ -6,13 +6,13 @@ public class AnimatorAudioPlayer : MonoBehaviour
 {   
     private AudioSource audioSource;
 
-    private Soldier soldier;
+    private Unit unit;
 
 
     // TODO: Change to events and have parent subscribe to them?
     void Start()
     {
-        soldier = GetComponentInParent<Soldier>();
+        unit = GetComponentInParent<Unit>();
 
         if (!(audioSource = GetComponentInParent<AudioSource>()))
         {
@@ -29,7 +29,7 @@ public class AnimatorAudioPlayer : MonoBehaviour
 
     public void LaunchProjectile()
     {
-        if (soldier)
-            soldier.LaunchProjectile();
+        if (unit)
+            unit.LaunchProjectile();
     }
 }

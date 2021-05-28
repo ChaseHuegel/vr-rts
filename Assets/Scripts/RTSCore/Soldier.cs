@@ -14,20 +14,15 @@ public class Soldier : Unit
     public bool huntMilitary = true;
     public bool huntBuildings = true;
 
-    [Header("Unit")]
-    public GameObject rangedProjectile;
-    public bool isRanged;
     //public VillagerHoverMenu villagerHoverMenu;
-
-    protected GameObject projectileTarget;
-    protected float arrowSpeed = 5.0f;
 
     public override void Initialize()
     {
         base.Initialize();
         HookIntoEvents();
 
-        maxGoalInteractRange = rtsUnitTypeData.attackRange;
+        // ! Moved to Unit.cs
+        // //maxGoalInteractRange = rtsUnitTypeData.attackRange;
 
         SetAIAttackGoals(huntVillagers, huntMilitary, huntBuildings);
 
@@ -36,11 +31,10 @@ public class Soldier : Unit
             Debug.Log("No animator component found.");
 
         if(IsSameFaction(playerManager.factionId))
-            playerManager.AddToPopulation((Unit)this);     
+            playerManager.AddToPopulation((Unit)this);
 
-        
     }
-    
+
     public void HookIntoEvents()
     {
         PathfindingGoal.OnGoalFoundEvent += OnGoalFound;
@@ -56,8 +50,8 @@ public class Soldier : Unit
             goals.Add<GoalHuntVillagers>();
 
         if (military)
-            goals.Add<GoalHuntMilitary>();        
-        
+            goals.Add<GoalHuntMilitary>();
+
         if (buildings)
             goals.Add<GoalHuntBuildings>();
 
@@ -68,7 +62,7 @@ public class Soldier : Unit
 
     public override void OnHandHoverBegin(Hand hand)
     {
-        base.OnHandHoverBegin(hand);        
+        base.OnHandHoverBegin(hand);
         // villagerHoverMenu.Show();
     }
 
@@ -80,7 +74,7 @@ public class Soldier : Unit
 
     public override void OnAttachedToHand(Hand hand)
     {
-        base.OnAttachedToHand(hand);        
+        base.OnAttachedToHand(hand);
     }
 
     public override void OnDetachedFromHand(Hand hand)
@@ -96,10 +90,10 @@ public class Soldier : Unit
         base.Tick();
 
         GotoNearestGoalWithPriority();
-        
+
         if (IsMoving() )
             animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.MOVING);
-        
+
         // if (TaskChanged())
         // {
         //     ChangeEquippedItems();
@@ -122,7 +116,7 @@ public class Soldier : Unit
         {
             isDying = true;
             Freeze();
-            ResetAI(); 
+            ResetAI();
 
             if (UnityEngine.Random.Range(1, 100) < 50)
                 animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.DYING);
@@ -143,7 +137,7 @@ public class Soldier : Unit
 
     public void OnGoalFound(object sender, PathfindingGoal.GoalFoundEvent e)
     {
-        if (e.actor != this) 
+        if (e.actor != this)
             return;
 
         //if (isRanged)
@@ -157,7 +151,7 @@ public class Soldier : Unit
 
     public void OnGoalChange(object sender, PathfindingGoal.GoalChangeEvent e)
     {
-        if (e.actor != this)
+        if (e.actor != this || isDying)
             return;
 
         if (previousGoal is GoalHuntUnits || previousGoal is GoalHuntMilitary || previousGoal is GoalHuntVillagers)
@@ -166,27 +160,27 @@ public class Soldier : Unit
 
     public void OnGoalInteract(object sender, PathfindingGoal.GoalInteractEvent e)
     {
-        if (e.actor != this || isHeld) 
+        if (e.actor != this || isHeld)
             return;
-        
+
         if (e.goal is GoalHuntUnits || e.goal is GoalHuntMilitary || e.goal is GoalHuntVillagers)
         {
-            Unit unit = e.cell.GetFirstOccupant<Unit>();            
+            Unit unit = e.cell.GetFirstOccupant<Unit>();
             projectileTarget = unit.gameObject;
-            Damageable damageable = unit.GetComponent<Damageable>();            
+            Damageable damageable = unit.GetComponent<Damageable>();
             damageable.Damage(rtsUnitTypeData.attackDamage, AttributeChangeCause.ATTACKED, AttributeHandler, DamageType.SLASHING);
-            SetAttackAnimationState();                
+            SetAttackAnimationState();
             return;
         }
         else if (e.goal is GoalHuntBuildings)
-        {                     
-            Damageable damageable; 
-            Structure structure = e.cell.GetFirstOccupant<Structure>();  
-            if (structure) 
+        {
+            Damageable damageable;
+            Structure structure = e.cell.GetFirstOccupant<Structure>();
+            if (structure)
                 damageable = structure.GetComponent<Damageable>();
             else
                 damageable = e.cell.GetFirstOccupant<Constructible>().GetComponent<Damageable>();
-            
+
             projectileTarget = structure.gameObject;
 
             damageable.Damage(rtsUnitTypeData.attackDamage, AttributeChangeCause.ATTACKED, AttributeHandler, DamageType.SLASHING);
@@ -201,9 +195,9 @@ public class Soldier : Unit
                 projectileTarget = unit.gameObject;
                 Damageable damageable = unit.GetComponent<Damageable>();
                 damageable.Damage(rtsUnitTypeData.attackDamage, AttributeChangeCause.ATTACKED, AttributeHandler, DamageType.SLASHING);
-               
+
                 SetAttackAnimationState();
-                    
+
                 return;
             }
 
@@ -227,11 +221,11 @@ public class Soldier : Unit
                 return;
             }
         }
-        
+
         //  default cancel the interaction
         ResetGoal();
         e.Cancel();
-    }   
+    }
 
     private void SetAttackAnimationState()
     {
@@ -241,53 +235,54 @@ public class Soldier : Unit
             animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.ATTACKING2);
     }
 
-    void Update()
-    {
-        if (projectile)
-            LaunchProjectile();
+    // ! Moved to Unit.cs
+    // // void Update()
+    // // {
+    // //     if (projectile)
+    // //         LaunchProjectile();
 
-    }
+    // // }
 
-    GameObject projectile;
-    Vector3 projectileTargetPos;
-    public void LaunchProjectile()
-    {
-        if (!projectile)
-        {
-            projectile = Instantiate(rangedProjectile);
-            projectile.transform.position = transform.position;
-            projectile.transform.position += new Vector3(0, 0.09f, 0);            
-            projectileTargetPos = projectileTarget.transform.position;
-            projectileTargetPos += new Vector3(0, 0.09f, 0);    
-        }
+    // // GameObject projectile;
+    // // Vector3 projectileTargetPos;
+    // // public void LaunchProjectile()
+    // // {
+    // //     if (!projectile)
+    // //     {
+    // //         projectile = Instantiate(rangedProjectile);
+    // //         projectile.transform.position = transform.position;
+    // //         projectile.transform.position += new Vector3(0, 0.09f, 0);
+    // //         projectileTargetPos = projectileTarget.transform.position;
+    // //         projectileTargetPos += new Vector3(0, 0.09f, 0);
+    // //     }
 
-        // First we get the direction of the arrow's forward vector to the target position.
-        Vector3 tDir = projectileTargetPos - projectile.transform.position;
-        
+    // //     // First we get the direction of the arrow's forward vector to the target position.
+    // //     Vector3 tDir = projectileTargetPos - projectile.transform.position;
 
-        // Now we use a Quaternion function to get the rotation based on the direction
-        Quaternion rot = Quaternion.LookRotation(tDir);
-    
-        // And finally, set the arrow's rotation to the one we just created.
-        projectile.transform.rotation = rot;
-    
-        //Get the distance from the arrow to the target
-        float dist = Vector3.Distance(projectile.transform.position, projectileTargetPos);
-    
-        if(dist <= 0.1f)
-        {
-            // This will destroy the arrow when it is within .1 units
-            // of the target location. You can set this to whatever
-            // distance you're comfortable with.
-            GameObject.Destroy(projectile);
-    
-        }
-        else
-        {
-            // If not, then we just keep moving forward
-            projectile.transform.Translate(Vector3.forward * (arrowSpeed * Time.deltaTime));
-        }
-    }
+
+    // //     // Now we use a Quaternion function to get the rotation based on the direction
+    // //     Quaternion rot = Quaternion.LookRotation(tDir);
+
+    // //     // And finally, set the arrow's rotation to the one we just created.
+    // //     projectile.transform.rotation = rot;
+
+    // //     //Get the distance from the arrow to the target
+    // //     float dist = Vector3.Distance(projectile.transform.position, projectileTargetPos);
+
+    // //     if(dist <= 0.1f)
+    // //     {
+    // //         // This will destroy the arrow when it is within .1 units
+    // //         // of the target location. You can set this to whatever
+    // //         // distance you're comfortable with.
+    // //         GameObject.Destroy(projectile);
+
+    // //     }
+    // //     else
+    // //     {
+    // //         // If not, then we just keep moving forward
+    // //         projectile.transform.Translate(Vector3.forward * (arrowSpeed * Time.deltaTime));
+    // //     }
+    // // }
 
     public void CleanupEvents()
     {

@@ -23,6 +23,11 @@ public class Unit : Actor, IFactioned
 
     [Header("Unit")]
     public RTSUnitType rtsUnitType;
+     public GameObject rangedProjectile;
+    protected GameObject projectileTarget;
+    protected float arrowSpeed = 5.0f;
+    GameObject projectile;
+    Vector3 projectileTargetPos;
 
     [Header("AI")]
     public UnitState state;
@@ -51,6 +56,7 @@ public class Unit : Actor, IFactioned
     public override void Initialize()
     {
         base.Initialize();
+        playerManager = PlayerManager.instance;
 
         animator = gameObject.GetComponentInChildren<Animator>();
         if (!animator)
@@ -58,6 +64,8 @@ public class Unit : Actor, IFactioned
 
         if (!m_rtsUnitTypeData)
             m_rtsUnitTypeData = GameMaster.GetUnit(rtsUnitType);
+
+        maxGoalInteractRange = rtsUnitTypeData.attackRange;
 
         UpdateFaction();
     }
@@ -135,6 +143,53 @@ public class Unit : Actor, IFactioned
                 // Debug.Log(string.Format("Magnitude: {0} Damage: {1} Health: {2}", collision.relativeVelocity.magnitude,
                 //             damage, AttributeHandler.GetAttributePercent(Attributes.HEALTH).ToString()));
             }
+        }
+    }
+
+    public virtual void Update()
+    {
+        if (projectile)
+            LaunchProjectile();
+
+    }
+
+
+    public virtual void LaunchProjectile()
+    {
+        if (!projectile)
+        {
+            projectile = Instantiate(rangedProjectile);
+            projectile.transform.position = transform.position;
+            projectile.transform.position += new Vector3(0, 0.09f, 0);            
+            projectileTargetPos = projectileTarget.transform.position;
+            projectileTargetPos += new Vector3(0, 0.09f, 0);    
+        }
+
+        // First we get the direction of the arrow's forward vector to the target position.
+        Vector3 tDir = projectileTargetPos - projectile.transform.position;
+        
+
+        // Now we use a Quaternion function to get the rotation based on the direction
+        Quaternion rot = Quaternion.LookRotation(tDir);
+    
+        // And finally, set the arrow's rotation to the one we just created.
+        projectile.transform.rotation = rot;
+    
+        //Get the distance from the arrow to the target
+        float dist = Vector3.Distance(projectile.transform.position, projectileTargetPos);
+    
+        if(dist <= 0.1f)
+        {
+            // This will destroy the arrow when it is within .1 units
+            // of the target location. You can set this to whatever
+            // distance you're comfortable with.
+            GameObject.Destroy(projectile);
+    
+        }
+        else
+        {
+            // If not, then we just keep moving forward
+            projectile.transform.Translate(Vector3.forward * (arrowSpeed * Time.deltaTime));
         }
     }
 }

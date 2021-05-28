@@ -12,7 +12,7 @@ public class GoalBuildRepair: PathfindingGoal
         if (structure != null && structure.NeedsRepairs() && structure.IsSameFaction(actor))
             return true;
 
-        if (construction != null && !construction.IsBuilt())
+        if (construction != null && !construction.IsBuilt() && construction.IsSameFaction(actor))
             return true;
 
         return false;

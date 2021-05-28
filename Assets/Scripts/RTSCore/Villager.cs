@@ -199,7 +199,7 @@ public class Villager : Unit
             //     resource.RemoveInteractor(this);
         }
 
-        ChangeEquippedItems();
+        ChangeEquippedItems(e.goal);
     }
 
     public void OnGoalFound(object sender, PathfindingGoal.GoalFoundEvent e)
@@ -279,8 +279,8 @@ public class Villager : Unit
         Constructible construction = e.cell.GetOccupant<Constructible>();
         Fauna fauna = e.cell.GetOccupant<Fauna>();
 
-        if  (e.goal is GoalGatherResource && villager.TryGather(resource) ||
-            (e.goal is GoalHuntFauna && villager.TryHunt(fauna) ||
+        if  (e.goal is GoalHuntFauna && villager.TryHunt(fauna) ||
+            (e.goal is GoalGatherResource && villager.TryGather(resource) ||
             (e.goal is GoalTransportResource && villager.TryDropoff(structure) ||
             (e.goal is GoalBuildRepair && (villager.TryRepair(structure) || 
             villager.TryBuild(construction))))))
@@ -321,7 +321,7 @@ public class Villager : Unit
             animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.MOVING);
 
         if (TaskChanged())
-            ChangeEquippedItems();
+            ChangeEquippedItems(currentGoal);
 
         previousState = state;
         previousResource = currentResource;
@@ -465,61 +465,69 @@ public class Villager : Unit
         // }
     }
 
-    public void ChangeEquippedItems(ResourceGatheringType resourceType = ResourceGatheringType.None)
+    public void ChangeEquippedItems(PathfindingGoal goal)
     {
         if (currentHandToolDisplayObject)
             currentHandToolDisplayObject.SetActive(false);
 
-        if (resourceType == ResourceGatheringType.None)
-            resourceType = currentResource;
+        if (goal == null)
+            return;
 
-        if (state == UnitState.GATHERING)
-        {
-            switch (resourceType)
+        if (goal is GoalGatherResource)
+        {            
+            switch (((GoalGatherResource)goal).type)
             {
                 case ResourceGatheringType.Gold:
                     goldHandToolDisplayObject.SetActive(true);
                     currentHandToolDisplayObject = goldHandToolDisplayObject;
-                    break;
+                    return;
 
                 case ResourceGatheringType.Stone:
                     stoneHandToolDisplayObject.SetActive(true);
                     currentHandToolDisplayObject = stoneHandToolDisplayObject;
-                    break;
+                    return;
 
                 case ResourceGatheringType.Grain:
                     grainHandToolDisplayObject.SetActive(true);
                     currentHandToolDisplayObject = grainHandToolDisplayObject;
-                    break;
+                    return;
 
                 case ResourceGatheringType.Berries:
+                case ResourceGatheringType.None:
                     // Equip nothing.
-                    break;
+                    return;
 
                 case ResourceGatheringType.Meat:
                     hunterHandToolDisplayObject.SetActive(true);
                     currentHandToolDisplayObject = hunterHandToolDisplayObject;
-                    break;
+                    return;
 
                 case ResourceGatheringType.Fish:
                     fishermanHandToolDisplayObject.SetActive(true);
                     currentHandToolDisplayObject = fishermanHandToolDisplayObject;
-                    break;
+                    return;
 
                 case ResourceGatheringType.Wood:
                     woodHandToolDisplayObject.SetActive(true);
                     currentHandToolDisplayObject = woodHandToolDisplayObject;
-                    break;
+                    return;
 
                 default:
-                    break;
+                    return;
             }
         }
-        else if (state == UnitState.BUILDANDREPAIR)
+        else if (goal is GoalBuildRepair)
         {
             builderHandToolDisplayObject.SetActive(true);
             currentHandToolDisplayObject = builderHandToolDisplayObject;
+            return;
         }
+        else if (goal is GoalHuntFauna)
+        {
+            hunterHandToolDisplayObject.SetActive(true);
+            currentHandToolDisplayObject = hunterHandToolDisplayObject;
+            return;
+        }        
     }
 
     private void DisplayCargo(bool visible)
@@ -564,7 +572,8 @@ public class Villager : Unit
         // //     return false;
 
         // ! Redundant, checked in the goal itself. Remove if no problems
-        // ! arise from commenting out.
+        // ! arise from commenting out. Might still be needed in case of
+        // ! building damage changes?
         // // if (!structure.CanDropOff(currentResource))
         // //     return false;
 
@@ -681,6 +690,7 @@ public class Villager : Unit
             return TryGather(fauna.GetComponent<Resource>());
         else
         {
+            projectileTarget = fauna.gameObject;
             float amount = (rtsUnitTypeData.huntingDamage / (60/Constants.ACTOR_TICK_RATE));
             fauna.AttributeHandler.Damage(amount, AttributeChangeCause.ATTACKED, AttributeHandler, DamageType.PIERCING);
             animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.HUNTING);
