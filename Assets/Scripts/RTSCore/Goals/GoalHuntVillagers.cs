@@ -6,7 +6,7 @@ using Swordfish;
 public class GoalHuntVillagers: PathfindingGoal
 {   
     public int myFactionID;
-    public override bool CheckGoal(Cell cell)
+    public override bool CheckGoal(Cell cell, Actor actor = null)
     {
         Villager villager = cell?.GetFirstOccupant<Villager>();
 

@@ -202,8 +202,6 @@ public class Villager : Unit
         ChangeEquippedItems();
     }
 
-    public Resource myResource;
-
     public void OnGoalFound(object sender, PathfindingGoal.GoalFoundEvent e)
     {
         if (e.actor != this) return;
@@ -223,9 +221,8 @@ public class Villager : Unit
             villager.currentResource = ((GoalGatherResource)e.goal).type;
             currentGoalFound = e.goal;
             DisplayCargo(false);
-
-            Resource resource = e.cell?.GetFirstOccupant<Resource>();
             
+            Resource resource = e.cell?.GetFirstOccupant<Resource>();            
             if (resource.AddInteractor(this))
                 return;
 
@@ -346,7 +343,7 @@ public class Villager : Unit
         goals.Clear();
         transportGoal = goals.Add<GoalTransportResource>();
 
-        switch ( unitType )
+        switch (unitType)
         {
             case RTSUnitType.Builder:
                 state = UnitState.BUILDANDREPAIR;

@@ -5,7 +5,7 @@ public class GoalTransportResource : PathfindingGoal
 {
     public ResourceGatheringType type;
 
-    public override bool CheckGoal(Cell cell)
+    public override bool CheckGoal(Cell cell, Actor actor = null)
     {
         Structure structure = cell?.GetFirstOccupant<Structure>();
 

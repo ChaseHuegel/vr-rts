@@ -10,9 +10,9 @@ public class Resource : Obstacle
 
     public int maxInteractors = 0;
     //public int interactors = 0;
-    public List<Unit> interactors;
+    public List<Actor> interactors;
 
-    // ! Can probable remove this if the new functionality works out.
+    // ! Can probably remove this if the new functionality works out.
     public bool IsBusy()//Unit unit = null)
     {
         // if (interactors.Contains(unit))
@@ -26,25 +26,25 @@ public class Resource : Obstacle
     /// resource or is added to the available slots. Returns false 
     /// if unit can not interact with this resource.
     /// </summary>
-    /// <param name="unit">The unit requesting interaction.</param>
+    /// <param name="actor">The unit requesting interaction.</param>
     /// <returns>True if unit can interact, false otherwise.</returns>
-    public bool AddInteractor(Unit unit)
+    public bool AddInteractor(Actor actor)
     {
-        if (interactors.Contains(unit))
+        if (interactors.Contains(actor))
             return true;
 
         if (interactors.Count < maxInteractors)
         {
-            interactors.Add(unit);
+            interactors.Add(actor);
             return true;
         }
 
         return false;
     }
 
-    public void RemoveInteractor(Unit unit)
+    public void RemoveInteractor(Actor actor)
     {
-        interactors.Remove(unit);
+        interactors.Remove(actor);
     }
 
     public float GetRemoveAmount(float count)

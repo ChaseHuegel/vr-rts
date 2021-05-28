@@ -6,7 +6,7 @@ using Swordfish;
 public class GoalHuntMilitary: PathfindingGoal
 {
     public int myFactionID;
-    public override bool CheckGoal(Cell cell)
+    public override bool CheckGoal(Cell cell, Actor actor = null)
     {
         Unit unit = cell.GetFirstOccupant<Unit>();
 

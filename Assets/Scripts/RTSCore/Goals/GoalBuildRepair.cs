@@ -4,7 +4,7 @@ using UnityEditor;
 
 public class GoalBuildRepair: PathfindingGoal
 {
-    public override bool CheckGoal(Cell cell)
+    public override bool CheckGoal(Cell cell, Actor actor = null)
     {
         Structure structure = cell?.GetFirstOccupant<Structure>();
         Constructible construction = cell?.GetFirstOccupant<Constructible>();

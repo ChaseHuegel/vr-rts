@@ -6,7 +6,7 @@ public class GoalHuntBuildings: PathfindingGoal
 {
     public int myFactionID;   
 
-    public override bool CheckGoal(Cell cell)
+    public override bool CheckGoal(Cell cell, Actor actor = null)
     {
         Structure structure = cell.GetFirstOccupant<Structure>();
         if (structure && structure.factionID != myFactionID)
