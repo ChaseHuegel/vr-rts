@@ -5,12 +5,18 @@ using Valve.VR.InteractionSystem;
 
 public class IgnorePanning : MonoBehaviour
 {
+    PlayerManager playerManager;
+
+    void Start()
+    {
+        playerManager = PlayerManager.instance;
+    }
     void OnTriggerEnter(Collider other)
     {        
         Hand hand = other.GetComponentInParent<Hand>();
         if (hand)
         {
-                PlayerManager.instance.DisableGripPanning(hand);   
+                playerManager.DisableGripPanning(hand);   
         }
     }
 
@@ -19,7 +25,7 @@ public class IgnorePanning : MonoBehaviour
         Hand hand = other.GetComponentInParent<Hand>();
         if (hand)
         {
-            PlayerManager.instance.EnableGripPanning(hand);   
+            playerManager.EnableGripPanning(hand);   
         }
     }
 }

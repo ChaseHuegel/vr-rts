@@ -44,11 +44,11 @@ public class Villager : Unit
     {
         base.Initialize();
         HookIntoEvents();
-        
+
         SetUnitType(rtsUnitType);
 
-        if(PlayerManager.instance.factionID == factionID)
-            PlayerManager.instance.AddToPopulation((Unit)this);
+        if(IsSameTeam(playerManager.teamId))
+            playerManager.AddToPopulation((Unit)this);
     }
 
     public void HookIntoEvents()
@@ -549,7 +549,7 @@ public class Villager : Unit
         if (!structure || !HasCargo())
             return false;
 
-        if (structure.factionID != factionID)
+        if (structure.factionID != teamId)
             return false;
 
         if (!structure.CanDropOff(currentResource))
@@ -681,7 +681,7 @@ public class Villager : Unit
         if (!structure || !structure.NeedsRepairs())
             return false;
 
-        if (structure.factionID != factionID)
+        if (structure.factionID != teamId)
             return false;        
 
         //  Convert per second to per tick
@@ -707,7 +707,7 @@ public class Villager : Unit
         if (!construction)
             return false;
 
-        if (construction.factionID != factionID)
+        if (construction.factionID != teamId)
             return false;
             
         

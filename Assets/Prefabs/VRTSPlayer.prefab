@@ -1545,7 +1545,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4603657073280454864}
   m_Layer: 26
-  m_Name: handMenuTrackingPoint
+  m_Name: HandMenuTrackingPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3336,23 +3336,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a3e71b7592171349abeac5713d6d99d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  woodCollected: 1000
-  goldCollected: 1000
-  stoneCollected: 1000
-  grainCollected: 1000
+  woodCollected: 0
+  goldCollected: 0
+  stoneCollected: 0
+  grainCollected: 200
   civilianPopulation: 0
   militaryPopulation: 0
   totalPopulation: 0
   populationLimit: 0
   queueCount: 0
-  autoHideHandMenuEnabled: 1
+  autoHideHandMenuEnabled: 0
   handMenuTrackingSensitivity: 0.5
   hammerOnLeft: 1
   hammerOnRight: 1
   rHandHammerAttachmentpoint: {fileID: 4603657074131860891}
   lHandHammerAttachmentPoint: {fileID: 4603657074113939285}
   autohideHandMenuObject: {fileID: 4603657073450519542}
-  rHandPalmUpAttachmentPoint: {fileID: 4603657074740535202}
+  rHandMenuAttachmentPoint: {fileID: 0}
+  rHandAttachmentPoint: {fileID: 5795123720537680829}
+  lHandAttachmentPoint: {fileID: 4603657075116992510}
   rHandPalmUpTrackingPoint: {fileID: 5795123720537680829}
   lHandPalmUpAttachmentPoint: {fileID: 4603657075116992510}
   lHandPalmUpTrackingPoint: {fileID: 4603657073280454864}
@@ -3597,7 +3599,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4603657074740535202}
   m_Layer: 0
-  m_Name: RHandPalmUpAttachmentPoint
+  m_Name: HandMenuAttachmentPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3628,7 +3630,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4603657075116992510}
   m_Layer: 0
-  m_Name: LHandPalmUpAttachmentPoint
+  m_Name: HandMenuAttachmentPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3720,7 +3722,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5795123720537680829}
   m_Layer: 26
-  m_Name: handMenuTrackingPoint
+  m_Name: HandMenuTrackingPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

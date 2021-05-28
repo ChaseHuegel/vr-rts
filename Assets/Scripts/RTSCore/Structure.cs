@@ -18,6 +18,7 @@ public class Structure : Obstacle, IFactioned
     private GameObject fireGlowParticleSystem;
     private GameObject flamesParticleSystem;
     private GameObject sparksParticleSystem;
+    private PlayerManager playerManager;
     public Faction GetFaction() { return faction; }
 
     public void UpdateFaction() { faction = GameMaster.Factions.Find(x => x.index == factionID); }
@@ -33,6 +34,8 @@ public class Structure : Obstacle, IFactioned
     public override void Initialize()
     {
         base.Initialize();
+
+        playerManager = PlayerManager.instance;
 
         // Setup some defaults that tend to get switched in the editor.
         IgnorePanning ignorePanning = GetComponentInChildren<IgnorePanning>();
@@ -55,7 +58,7 @@ public class Structure : Obstacle, IFactioned
             Debug.Log("buildingDamagedFX not set in GameMaster.", this);
 
         if (buildingData.populationSupported > 0)
-            PlayerManager.instance.IncreasePopulationLimit(buildingData.populationSupported);
+            playerManager.IncreasePopulationLimit(buildingData.populationSupported);
 
         // Only refresh visuals if hit points are not full so we don't generate
         // building damage FX particle systems on buildings that don't need them yet.

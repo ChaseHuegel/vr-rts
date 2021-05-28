@@ -84,10 +84,11 @@ public class InteractionPointer : MonoBehaviour
 	bool isSettingRallyPoint;
 	
 	private int maxUnitSelectionCount;
-	private byte factionID;
+	private byte teamId;
+    private PlayerManager playerManager;
 
-	//-------------------------------------------------
-	private static InteractionPointer _instance;
+    //-------------------------------------------------
+    private static InteractionPointer _instance;
 	public static InteractionPointer instance
 	{
 		get
@@ -132,15 +133,18 @@ public class InteractionPointer : MonoBehaviour
 	void Start()
 	{
 		HookIntoEvents();
-		// Used to un-highlight things
-		interactableObjects = GameObject.FindObjectsOfType<PointerInteractable>();
+
+        playerManager = PlayerManager.instance;
+		
+        // Used to un-highlight things
+        interactableObjects = GameObject.FindObjectsOfType<PointerInteractable>();
 		
 		selectedUnits = new List<Unit>();
 
 		// Cache some values, going to need them a lot and don't need to keep
 		// bothering the GameMaster/PlayerManager for them.
 		maxUnitSelectionCount = GameMaster.Instance.maximumUnitSelectionCount;
-		factionID = PlayerManager.instance.factionID;
+		teamId = playerManager.teamId;
 
 		// Setup LineRenderers for unit selection
 		lineRenderers = new LineRenderer[maxUnitSelectionCount];
@@ -335,7 +339,7 @@ public class InteractionPointer : MonoBehaviour
 
 					Unit hoveredUnit = pointedAtPointerInteractable.GetComponent<Unit>();
 					if (hoveredUnit && !isInUnitSelectiodMode &&
-						hoveredUnit.IsSameFaction(factionID))
+						hoveredUnit.IsSameTeam(teamId))
 					{
 						selectedUnits.Add(hoveredUnit);
 						isInUnitSelectiodMode = true;
@@ -446,7 +450,7 @@ public class InteractionPointer : MonoBehaviour
 						Unit pointedAtUnit = pointedAtPointerInteractable.GetComponent<Unit>();
 
 						// Not the same faction.
-						if (pointedAtUnit && !unit.IsSameFaction(factionID))
+						if (pointedAtUnit && !unit.IsSameTeam(teamId))
 						{
 							// TODO: Force attack unit/set target
 							// Attack unit
@@ -549,7 +553,7 @@ public class InteractionPointer : MonoBehaviour
 		{
 			Unit hoveredUnit = pointedAtPointerInteractable.GetComponent<Unit>();
 			if (hoveredUnit && !selectedUnits.Contains(hoveredUnit) &&
-				factionID == hoveredUnit.factionID)
+				teamId == hoveredUnit.teamId)
 			{
 				selectedUnits.Add(hoveredUnit);
 			}

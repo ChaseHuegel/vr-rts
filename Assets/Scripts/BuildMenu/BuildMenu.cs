@@ -8,8 +8,10 @@ using Valve.VR.InteractionSystem;
 public class BuildMenu : MonoBehaviour
 {
     public BuildMenuTab[] tabs;
+    protected PlayerManager playerManager;
     void Start()
     {
+        playerManager = PlayerManager.instance;
         RefreshSlots();
     }
 
@@ -26,7 +28,7 @@ public class BuildMenu : MonoBehaviour
         {
             foreach(BuildMenuSlot slot in tab.GetComponentsInChildren<BuildMenuSlot>())
             {
-                bool canBuild = PlayerManager.instance.CanConstructBuilding(slot.rtsTypeData.buildingType);                
+                bool canBuild = playerManager.CanConstructBuilding(slot.rtsTypeData.buildingType);                
                 slot.SlotEnabled(canBuild); 
             }
         }

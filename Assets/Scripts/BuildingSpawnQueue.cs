@@ -34,6 +34,8 @@ public class BuildingSpawnQueue : MonoBehaviour
 
     private RTSUnitType lastUnitQueued;
 
+    private PlayerManager playerManager;
+
     void Awake()
     {
         // TODO: Pick a spot around the building and set it as the spawn point
@@ -47,6 +49,8 @@ public class BuildingSpawnQueue : MonoBehaviour
 
     void Start()
     {
+        playerManager = PlayerManager.instance;
+
         if (!(damageable = gameObject.GetComponentInParent<Damageable>()))
             Debug.Log("Missing damageable component in parent.", this);
 
@@ -108,12 +112,12 @@ public class BuildingSpawnQueue : MonoBehaviour
         if (unitSpawnQueue.Count >= structure.buildingData.maxUnitQueueSize)
             return;
 
-        if (structure.factionID == PlayerManager.instance.factionID &&
-            !PlayerManager.instance.CanQueueUnit(unitTypeToQueue))
+        if (structure.factionID == playerManager.teamId &&
+            !playerManager.CanQueueUnit(unitTypeToQueue))
             return;
 
         UnitData unitData = GameMaster.GetUnit(unitTypeToQueue);
-        PlayerManager.instance.RemoveUnitQueueCostFromStockpile(unitData);
+        playerManager.RemoveUnitQueueCostFromStockpile(unitData);
 
         unitSpawnQueue.AddLast(unitData);
 
@@ -159,7 +163,7 @@ public class BuildingSpawnQueue : MonoBehaviour
 
         else if (unitSpawnQueue.Count == 1)
         {
-            PlayerManager.instance.RemoveFromQueueCount(unitSpawnQueue.Last.Value.populationCost);
+            playerManager.RemoveFromQueueCount(unitSpawnQueue.Last.Value.populationCost);
             unitSpawnQueue.RemoveLast();
             queueProgressImage.fillAmount = 0;
             queueProgressImage.enabled = false;
@@ -168,7 +172,7 @@ public class BuildingSpawnQueue : MonoBehaviour
         }
         else
         {
-            PlayerManager.instance.RemoveFromQueueCount(unitSpawnQueue.Last.Value.populationCost);
+            playerManager.RemoveFromQueueCount(unitSpawnQueue.Last.Value.populationCost);
             unitSpawnQueue.RemoveLast();
         }
     }
@@ -180,7 +184,7 @@ public class BuildingSpawnQueue : MonoBehaviour
             GameObject unitGameObject = Instantiate(unitSpawnQueue.First.Value.prefab, unitSpawnPoint.transform.position, Quaternion.identity);
             Unit unit = unitGameObject.GetComponent<Unit>();
             unit.rtsUnitType = unitSpawnQueue.First.Value.unitType;
-            unit.factionID = structure.factionID;
+            unit.teamId = structure.factionID;
             unit.SyncPosition();
             unit.GotoForced(World.ToWorldSpace(unitRallyWaypoint.position));
             unit.LockPath();

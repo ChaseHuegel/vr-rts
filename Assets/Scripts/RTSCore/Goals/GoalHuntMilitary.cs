@@ -10,7 +10,7 @@ public class GoalHuntMilitary: PathfindingGoal
     {
         Unit unit = cell.GetFirstOccupant<Unit>();
 
-        if (unit && !unit.IsCivilian() && !unit.isDying && unit.factionID != myFactionID)
+        if (unit && !unit.IsCivilian() && !unit.isDying && unit.teamId != myFactionID)
                 return true;
 
         return false;

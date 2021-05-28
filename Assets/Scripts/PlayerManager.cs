@@ -8,6 +8,8 @@ using UnityEngine.UI;
 public class PlayerManager : MonoBehaviour
 {
     [Header("Stats/Resources")]
+    public byte teamId = 0;
+    public Faction faction;
     public int woodCollected;
     public int goldCollected;
     public int stoneCollected;
@@ -19,29 +21,29 @@ public class PlayerManager : MonoBehaviour
     public int queueCount;
 
     [Header("UI")]
-    [Tooltip("Switch between clipboard build menu or palm build menu.")]
-    public bool autoHideHandMenuEnabled;      
-    public float handMenuTrackingSensitivity = 0.5f;
+    public SteamVR_Action_Boolean handMenuToggle;
+      
+    [Header("Hammer")]
     public bool hammerOnLeft = true;
     public bool hammerOnRight = false;
-
     public Transform rHandHammerAttachmentpoint;
     public Transform lHandHammerAttachmentPoint;
-    public GameObject autohideHandMenuObject;    
-    public Transform rHandPalmUpAttachmentPoint;
-    public Transform rHandPalmUpTrackingPoint;
-    public Transform lHandPalmUpAttachmentPoint;
-    public Transform lHandPalmUpTrackingPoint;
 
+    [Header("Autohide Hand Menu")]
+    [Tooltip("Switch between clipboard build menu or palm build menu.")]
+    public bool autoHideHandMenuEnabled;    
+    public float handMenuTrackingSensitivity = 0.5f;
+    public Transform rHandAttachmentPoint;
+    public Transform rHandTrackingPoint;
+    public Transform lHandAttachmentPoint;
+    public Transform lHandTrackingPoint;
+    public GameObject autohideHandMenuObject;
     public WristDisplay WristDisplay;
-    public SteamVR_Action_Boolean handMenuToggle;
     private GripPan gripPan;
     private Hand buildMenuHand;
     private Hand selectionHand;
     public GameObject handBuildMenu;
     protected BuildMenu buildMenu;
-    public byte factionID = 0;
-
     private Hand rightHand;
     private Hand leftHand;
 
@@ -95,7 +97,7 @@ public class PlayerManager : MonoBehaviour
     {
         if (autoHideHandMenuEnabled)
         {
-            if (lHandPalmUpTrackingPoint.right.y > handMenuTrackingSensitivity)
+            if (lHandTrackingPoint.right.y > handMenuTrackingSensitivity)
             {
                 buildMenu.RefreshSlots();
                 SetLeftHandInteraction(false);
@@ -113,13 +115,13 @@ public class PlayerManager : MonoBehaviour
 
     public void OnVillagerDropoff(object sender, Villager.DropoffEvent e)
     {
-        if (e.villager.factionID == factionID)
+        if (e.villager.teamId == teamId)
             AddResourceToStockpile(e.resourceType, (int)e.amount);
     }
 
     public void OnVillagerRepair(object sender, Villager.RepairEvent e)
     {
-        if (e.villager.factionID == factionID)
+        if (e.villager.teamId == teamId)
             RemoveResourcesFromStockpile(1, 1, 1, 1);
     }
 

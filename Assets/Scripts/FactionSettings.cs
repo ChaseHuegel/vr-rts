@@ -21,7 +21,7 @@ public class FactionSettings : MonoBehaviour
             if (unit)
             {
                 isUnit = true;
-                factionId = unit.factionID;
+                factionId = unit.teamId;
             }
             else
             {
