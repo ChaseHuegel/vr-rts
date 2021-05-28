@@ -119,6 +119,8 @@ public class Fauna : Actor
             isDead = true;
             resource.enabled = true;
             AttributeHandler.enabled = false;
+            Freeze();
+            ResetAI();
             liveFaunaObject.SetActive(false);
             deadFaunaObject.SetActive(true);
             animator.enabled = false;

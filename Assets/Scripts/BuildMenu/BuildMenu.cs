@@ -24,6 +24,9 @@ public class BuildMenu : MonoBehaviour
     // performance gains.
     public void RefreshSlots()
     {
+        if (!playerManager)
+            playerManager = PlayerManager.instance;
+            
         foreach(BuildMenuTab tab in tabs)
         {
             foreach(BuildMenuSlot slot in tab.GetComponentsInChildren<BuildMenuSlot>())

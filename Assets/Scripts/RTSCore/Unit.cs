@@ -63,9 +63,7 @@ public class Unit : Actor, IFactioned
             Debug.Log("No animator component found.");
 
         if (!m_rtsUnitTypeData)
-            m_rtsUnitTypeData = GameMaster.GetUnit(rtsUnitType);
-
-        maxGoalInteractRange = rtsUnitTypeData.attackRange;
+            m_rtsUnitTypeData = GameMaster.GetUnit(rtsUnitType);       
 
         UpdateFaction();
     }

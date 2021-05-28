@@ -214,6 +214,8 @@ public class Villager : Unit
             if (resource) resource.RemoveInteractor(this);
         }
 
+        maxGoalInteractRange = 1;
+
         //  Need C# 7 in Unity for switching by type!!!
         if (e.goal is GoalGatherResource && !villager.IsCargoFull())
         {
@@ -245,6 +247,7 @@ public class Villager : Unit
         }
         else if (e.goal is GoalHuntFauna && !villager.IsCargoFull())
         {
+            maxGoalInteractRange = rtsUnitTypeData.attackRange;
             villager.state = UnitState.GATHERING;
             currentGoalFound = e.goal;
             //DisplayCargo(true);
@@ -375,9 +378,9 @@ public class Villager : Unit
 
             case RTSUnitType.Hunter:
                 state = UnitState.GATHERING;
-                currentResource = ResourceGatheringType.Meat;
-                goals.Add<GoalHuntFauna>();
+                currentResource = ResourceGatheringType.Meat;                
                 goals.Add<GoalGatherResource>().type = ResourceGatheringType.Meat;                
+                goals.Add<GoalHuntFauna>();
                 break;
 
             case RTSUnitType.Fisherman:
@@ -497,7 +500,7 @@ public class Villager : Unit
                     // Equip nothing.
                     return;
 
-                case ResourceGatheringType.Meat:
+                case ResourceGatheringType.Meat:               
                     hunterHandToolDisplayObject.SetActive(true);
                     currentHandToolDisplayObject = hunterHandToolDisplayObject;
                     return;
@@ -686,15 +689,17 @@ public class Villager : Unit
         if (!fauna || IsCargoFull())
             return false;
 
-        if (fauna.IsDead())
-            return TryGather(fauna.GetComponent<Resource>());
-        else
-        {
+        // if (fauna.IsDead())
+        // {
+        //     return false; //TryGather(fauna.GetComponent<Resource>());
+        // }
+        // else
+        // {
             projectileTarget = fauna.gameObject;
-            float amount = (rtsUnitTypeData.huntingDamage / (60/Constants.ACTOR_TICK_RATE));
+            float amount = (rtsUnitTypeData.huntingDamage / (60 / Constants.ACTOR_TICK_RATE));
             fauna.AttributeHandler.Damage(amount, AttributeChangeCause.ATTACKED, AttributeHandler, DamageType.PIERCING);
             animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.HUNTING);
-        }
+        // }
 
         return true;
     }

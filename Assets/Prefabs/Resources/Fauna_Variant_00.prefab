@@ -889,11 +889,12 @@ MonoBehaviour:
   gridPosition:
     x: 0
     y: 0
+  factionId: 0
   bakeOnStart: 1
   type: 64
   amount: 200
   maxInteractors: 0
-  interactors: 2
+  interactors: []
 --- !u!135 &1985173774085784218
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -921,8 +922,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attributes:
   - attribute: 0
-    value: 50
-    max: 50
+    value: 10
+    max: 10
   invulnerable: 0
   weaknesses: 
   resistances: 
@@ -944,6 +945,7 @@ MonoBehaviour:
   gridPosition:
     x: 0
     y: 0
+  factionId: 0
   movementSpeed: 0.1
   goalSearchDistance: 20
   runSpeed: 0.3

@@ -21,8 +21,7 @@ public class Soldier : Unit
         base.Initialize();
         HookIntoEvents();
 
-        // ! Moved to Unit.cs
-        // //maxGoalInteractRange = rtsUnitTypeData.attackRange;
+        maxGoalInteractRange = rtsUnitTypeData.attackRange;
 
         SetAIAttackGoals(huntVillagers, huntMilitary, huntBuildings);
 

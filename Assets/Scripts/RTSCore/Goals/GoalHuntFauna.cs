@@ -8,7 +8,7 @@ public class GoalHuntFauna: PathfindingGoal
     {
         Fauna fauna = cell?.GetFirstOccupant<Fauna>();
 
-        if (fauna)
+        if (fauna && !fauna.IsDead())
             return true;
             
         return false;
