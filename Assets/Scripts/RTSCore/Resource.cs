@@ -12,6 +12,16 @@ public class Resource : Obstacle
     //public int interactors = 0;
     public List<Actor> interactors;
 
+    // ! No info in database aboun resource bounding dimensions, has to be 
+    // ! set in the prefab.
+    // public override void FetchBoundingDimensions()
+    // {
+    //     base.FetchBoundingDimensions();
+
+    //     boundingDimensions.x = buildingData.boundingDimensionX;
+    //     boundingDimensions.y = buildingData.boundingDimensionY;
+    // }
+    
     // ! Can probably remove this if the new functionality works out.
     public bool IsBusy()//Unit unit = null)
     {

@@ -7,16 +7,20 @@ namespace Swordfish.Navigation
 
 public class Obstacle : Body
 {
-        public bool bakeOnStart = true;
-
+    public bool bakeOnStart = true;
+         
     public override void Initialize()
     {
         base.Initialize();
 
+        FetchBoundingDimensions();
         if (bakeOnStart) BakeToGrid();
     }
 
-    public void BakeToGrid()
+        public virtual void FetchBoundingDimensions()
+        { }
+
+        public void BakeToGrid()
     {
         Vector3 pos = World.ToWorldSpace(transform.position);
 

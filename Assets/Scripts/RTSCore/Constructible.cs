@@ -39,6 +39,14 @@ public class Constructible : Obstacle, IFactioned
         ResetStages();
     }
 
+    public override void FetchBoundingDimensions()
+    {
+        base.FetchBoundingDimensions();
+
+        boundingDimensions.x = buildingData.boundingDimensionX;
+        boundingDimensions.y = buildingData.boundingDimensionY;
+    }
+
     public bool IsBuilt()
     {
         return AttributeHandler.GetAttributePercent(Attributes.HEALTH) >= 1.0f;

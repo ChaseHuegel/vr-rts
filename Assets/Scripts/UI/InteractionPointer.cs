@@ -159,12 +159,21 @@ public class InteractionPointer : MonoBehaviour
 			Debug.LogError("<b>[SteamVR Interaction]</b> ObjectPlacementPointer: No Player instance found in map.", this);
 			Destroy( this.gameObject );
 			return;
-		}
+		}        
 
-        woodWallMiddlePreviewPrefab = Instantiate(GameMaster.GetBuilding(RTSBuildingType.Wood_Wall_1x1).worldPreviewPrefab);
-		woodWallWorld = Instantiate(GameMaster.GetBuilding(RTSBuildingType.Wood_Wall_1x1).worldPrefab);
         ShowPointer();
 
+		// if (wallPlacementMode == WallPlacementMode.ONEBYONE)
+		// {
+		// 	woodWallWorld_1x1 = Instantiate(GameMaster.GetBuilding(RTSBuildingType.Wood_Wall_1x1).worldPrefab);
+		// 	woodWallWorld_1x1_Preview = Instantiate(GameMaster.GetBuilding(RTSBuildingType.Wood_Wall_1x1).worldPreviewPrefab);
+		// }
+		// else if (wallPlacementMode == WallPlacementMode.STRETCH)
+		// {
+		// 	woodWallMiddlePreviewPrefab = Instantiate(GameMaster.GetBuilding(RTSBuildingType.Wood_Wall_1x1).worldPreviewPrefab);
+		// 	woodWallWorld_1x1 = Instantiate(GameMaster.GetBuilding(RTSBuildingType.Wood_Wall_1x1).worldPrefab);
+		// 	woodWallWorld_1x1_Preview = Instantiate(GameMaster.GetBuilding(RTSBuildingType.Wood_Wall_1x1).worldPreviewPrefab);
+		// }
 	}	
 
 	
@@ -264,7 +273,8 @@ public class InteractionPointer : MonoBehaviour
 
 			if (isInWallPlacementMode)
 			{
-				HardSnapToGrid(destinationReticleTransform, placementBuildingData);
+				if (snapWalls)
+					HardSnapToGrid(destinationReticleTransform, placementBuildingData);
 			}
 
             if (isInBuildingPlacementMode)
@@ -388,18 +398,33 @@ public class InteractionPointer : MonoBehaviour
 
 		return false;
 	}
-
-    private GameObject wallPlacementPreviewObjectStart;
+  
     private void StartInteraction(Hand hand)
 	{	
-		if (isInWallPlacementMode && !wallPlacementPreviewObjectStart)
+		if (isInWallPlacementMode)
 		{
-            wallPlacementPreviewObjectStart = Instantiate(buildingPlacementPreviewObject);
-			wallPlacementPreviewObjectStart.transform.Rotate(0, 0, lastBuildingRotation);
-			wallPlacementPreviewObjectStart.transform.position = buildingPlacementPreviewObject.transform.position;
-			
-            if (!woodWallMiddlePreviewPrefab.activeSelf)
-            	woodWallMiddlePreviewPrefab.SetActive(true);
+			if (!wallPlacementPreviewStartObject)
+            {
+				wallPlacementPreviewStartObject = Instantiate(buildingPlacementPreviewObject);
+				wallPlacementPreviewStartObject.transform.Rotate(0, 0, lastBuildingRotation);
+				wallPlacementPreviewStartObject.transform.position = buildingPlacementPreviewObject.transform.position;				
+			}
+
+			if (wallPlacementMode == WallPlacementMode.ONEBYONE)
+			{
+				woodWallWorld_1x1 = Instantiate(GameMaster.GetBuilding(RTSBuildingType.Wood_Wall_1x1).worldPrefab);
+		 		woodWallWorld_1x1_Preview = Instantiate(GameMaster.GetBuilding(RTSBuildingType.Wood_Wall_1x1).worldPreviewPrefab);
+			}
+            else if (wallPlacementMode == WallPlacementMode.STRETCH)
+            {
+				if (!woodWallMiddlePreviewPrefab)
+					woodWallMiddlePreviewPrefab = Instantiate(GameMaster.GetBuilding(RTSBuildingType.Wood_Wall).worldPreviewPrefab);
+                
+				originalWallScale = woodWallMiddlePreviewPrefab.transform.localScale;
+
+                if (!woodWallMiddlePreviewPrefab.activeSelf)
+                    woodWallMiddlePreviewPrefab.SetActive(true);
+            }
         }
 		else if (pointedAtPointerInteractable != null)
 		{
@@ -430,25 +455,27 @@ public class InteractionPointer : MonoBehaviour
 	{
 		if (isInWallPlacementMode)
 		{
-            woodWallMiddlePreviewPrefab.transform.localScale = originalWallScale;
+            if (wallPlacementMode == WallPlacementMode.STRETCH)
+            {
+                woodWallMiddlePreviewPrefab.transform.localScale = originalWallScale;
+            }
 
-            Vector3 pos1 = wallPlacementPreviewObjectStart.transform.position;
+            Vector3 pos1 = wallPlacementPreviewStartObject.transform.position;
 			Vector3 pos2 = buildingPlacementPreviewObject.transform.position;
 
         	float dist = Vector3.Distance(pos1, pos2);
-			float dimWallLength = 0.125f * 2.0f;
-			float sectionCount = dist / dimWallLength;
-            float halfWall = dimWallLength * 0.5f;
-            
-			Vector3 dir = pos2 - pos1;
-            dir.Normalize();
 
-            Vector3 segmentPos = pos1 + (dir * dimWallLength);
+			// Grid unit * bounding dimension
+			float wallWorldLength = 0.125f * 1.0f;
+			float sectionCount = dist / wallWorldLength;
+            
+			Vector3 dir = (pos2 - pos1).normalized;
+            Vector3 segmentPos = pos1 + (dir * wallWorldLength);
 
             for (int i = 0; i < sectionCount - 1; i++)
 			{
-				Instantiate(woodWallWorld, segmentPos, buildingPlacementPreviewObject.transform.rotation);
-				segmentPos += dir * dimWallLength;
+				Instantiate(woodWallWorld_1x1, segmentPos, buildingPlacementPreviewObject.transform.rotation);
+				segmentPos += dir * wallWorldLength;
             }
 
 			EndWallPlacementMode();
@@ -555,8 +582,8 @@ public class InteractionPointer : MonoBehaviour
 			pointedAtResource = null;
 		}
 	}
-
-	private void EndBuildingPlacementMode()
+	
+    private void EndBuildingPlacementMode()
 	{
 		isInBuildingPlacementMode = false;	
 		Destroy(buildingPlacementPreviewObject);
@@ -571,22 +598,106 @@ public class InteractionPointer : MonoBehaviour
 	{
         isInWallPlacementMode = false;
 
-		if (woodWallMiddlePreviewPrefab.activeSelf)
-            woodWallMiddlePreviewPrefab.SetActive(false);
+        if (wallPlacementMode == WallPlacementMode.ONEBYONE)
+        {
+            GameObject[] walls = wallPreviewSections.ToArray();
+            for (int i = 0; i < walls.Length; i++)
+            {
+                Destroy(walls[i]);
+            }
 
-        if (wallPlacementPreviewObjectStart)
-            wallPlacementPreviewObjectStart.transform.SetParent(null);
+            wallPreviewSections.Clear();
+        }
+		else if (wallPlacementMode == WallPlacementMode.STRETCH)
+        {
+            if (woodWallMiddlePreviewPrefab.activeSelf)
+                woodWallMiddlePreviewPrefab.SetActive(false);
+        }
+		
+        if (wallPlacementPreviewStartObject)
+            wallPlacementPreviewStartObject.transform.SetParent(null);
         //Destroy(wallPlacmentPreviewObjectStart);
 
         if (buildingPlacementPreviewObject)
             buildingPlacementPreviewObject.transform.SetParent(null);
         //Destroy(buildingPlacementPreviewObject);
 
-        wallPlacementPreviewObjectStart = null;
+        wallPlacementPreviewStartObject = null;
         buildingPlacementPreviewObject = null;
 
-        //SetSnapTurnEnabled(true, true);
+        SetSnapTurnEnabled(true, true);
     }
+
+	private GameObject wallPlacementPreviewStartObject;
+    private GameObject wallPlacementPreviewEndObject;
+    public enum WallPlacementMode
+	{
+		ONEBYONE,
+		STRETCH
+	}
+    public WallPlacementMode wallPlacementMode;
+    private GameObject woodWallMiddlePreviewPrefab;
+    private GameObject woodWallWorld_1x1;
+	private GameObject woodWallWorld_1x1_Preview;
+    Vector3 originalWallScale = new Vector3(0.124533f, 0.124533f, 0.124533f);
+    private List<GameObject> wallPreviewSections = new List<GameObject>();
+    public bool snapWalls = true;
+    private void DrawWallPreview()
+	{        
+        Vector3 pos1 = wallPlacementPreviewStartObject.transform.position;
+		Vector3 pos2 = buildingPlacementPreviewObject.transform.position;
+
+        float dist = Vector3.Distance(pos1, pos2);
+
+		// Grid unit * bounding dimension
+        float wallWorldLength = 0.125f * 1.0f;
+        float sectionCount = dist / wallWorldLength;
+
+		Vector3 dir = (pos2 - pos1).normalized;
+		Vector3 segmentPos = pos1 + (dir * wallWorldLength);
+		
+		if (wallPlacementMode == WallPlacementMode.ONEBYONE)
+		{
+			if (sectionCount >= wallPreviewSections.Count - 1)
+			{
+				GameObject obj = Instantiate(woodWallWorld_1x1_Preview, segmentPos, buildingPlacementPreviewObject.transform.rotation);
+				wallPreviewSections.Add(obj);
+			}
+
+			int i = 0;
+			foreach (GameObject obj in wallPreviewSections)
+			{
+				if (i < sectionCount - 1)
+				{
+					segmentPos += dir * wallWorldLength;
+					obj.transform.position = segmentPos;
+					obj.SetActive(true);
+					
+					if (snapWalls)
+						HardSnapToGrid(obj.transform, placementBuildingData);
+				}
+				else
+					obj.SetActive(false);
+
+				i++;
+			}
+		}
+		else if (wallPlacementMode == WallPlacementMode.STRETCH)
+        {
+            Vector3 newScale = originalWallScale;
+			Vector3 posCenter = Vector3.Lerp(pos1, pos2, 0.5f);// pos1 + ((pos2 - pos1) * 0.5f);
+            newScale.y = originalWallScale.y * sectionCount;
+            woodWallMiddlePreviewPrefab.transform.localScale = newScale;
+            woodWallMiddlePreviewPrefab.transform.position = posCenter;            
+            woodWallMiddlePreviewPrefab.transform.LookAt(buildingPlacementPreviewObject.transform, Vector3.down);
+            woodWallMiddlePreviewPrefab.transform.Rotate(90f, 0, 0);
+
+            if (snapWalls)
+                HardSnapToGrid(woodWallMiddlePreviewPrefab.transform, placementBuildingData);
+        }		
+    }
+
+	BuildingData placementBuildingData;
 
 	private void EndUnitSelectionMode()
 	{
@@ -680,7 +791,7 @@ public class InteractionPointer : MonoBehaviour
 		}
 		else if (isInWallPlacementMode)
 		{
-            if (wallPlacementPreviewObjectStart)// && buildingPlacementPreviewObject)
+            if (wallPlacementPreviewStartObject)// && buildingPlacementPreviewObject)
             {				
                 DrawWallPreview();                
             }
@@ -716,43 +827,8 @@ public class InteractionPointer : MonoBehaviour
 			}
 		}
 	}
-
-    private List<GameObject> wallPreviews = new List<GameObject>();
-    private GameObject woodWallMiddlePreviewPrefab;
-    private GameObject woodWallWorld;
-    Vector3 originalWallScale = new Vector3(0.124533f, 0.124533f, 0.124533f);
-    private Material woodWallMaterialObject;
-
-    private void DrawWallPreview()
-	{
-		// Note: Wall are 5 x 2 @ 0.125 world units.
-        Vector3 pos1 = wallPlacementPreviewObjectStart.transform.position;
-		Vector3 pos2 = buildingPlacementPreviewObject.transform.position;
-        Vector3 posCenter = pos1 + ((pos2 - pos1) * 0.5f);
-
-        float dist = Vector3.Distance(pos1, pos2);
-        float dimWallLength = 0.125f * 2.0f;
-        float sectionCount = dist / dimWallLength;
-
-		// woodWallMaterialObject = woodWallMiddlePreviewPrefab.GetComponentInChildren<MeshRenderer>().sharedMaterial;
-        // Vector2 texScale = woodWallMaterialObject.mainTextureScale;
-        // texScale.x = sectionCount;
-        // woodWallMaterialObject.mainTextureScale = texScale;
-
-		HardSnapToGrid(destinationReticleTransform, placementBuildingData);
-		
-        Vector3 newScale = originalWallScale;
-        newScale.y = originalWallScale.y * sectionCount;
-        woodWallMiddlePreviewPrefab.transform.localScale = newScale;
-        woodWallMiddlePreviewPrefab.transform.position = posCenter;
-		HardSnapToGrid(woodWallMiddlePreviewPrefab.transform, placementBuildingData);
-        woodWallMiddlePreviewPrefab.transform.LookAt(buildingPlacementPreviewObject.transform, Vector3.down);
-        woodWallMiddlePreviewPrefab.transform.Rotate(90f, 0, 0);
-
-		
-    }
-
-	BuildingData placementBuildingData;
+    
+	
 	public void OnBuildingPlacementStarted(object sender, BuildMenuSlot.BuildingPlacementEvent e)
 	{
 		// ! Want to eventually switch action maps based on activity.
@@ -761,9 +837,7 @@ public class InteractionPointer : MonoBehaviour
 		SetSnapTurnEnabled(false, false);
 		placementBuildingData = e.buildingData;
 
-		if (placementBuildingData.buildingType == RTSBuildingType.Wood_Wall || placementBuildingData.buildingType == RTSBuildingType.Wood_Wall_1x1 ||
-			placementBuildingData.buildingType == RTSBuildingType.Wood_Wall_Corner || placementBuildingData.buildingType == RTSBuildingType.Stone_Wall ||
-			placementBuildingData.buildingType == RTSBuildingType.Stone_Wall_1x1 || placementBuildingData.buildingType == RTSBuildingType.Stone_Wall_Corner)
+		if (placementBuildingData.buildingType == RTSBuildingType.Wood_Wall_1x1)
 		{
 			isInWallPlacementMode = true;
             BuildingData buildingData = GameMaster.GetBuilding(RTSBuildingType.Wood_Wall_Corner);
