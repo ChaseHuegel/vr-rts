@@ -262,6 +262,11 @@ public class InteractionPointer : MonoBehaviour
             //     buildingPlacementPreviewObject.transform.parent = null;
             // }
 
+			if (isInWallPlacementMode)
+			{
+				HardSnapToGrid(destinationReticleTransform, placementBuildingData);
+			}
+
             if (isInBuildingPlacementMode)
 			{
 				if (WasRotateClockwiseButtonPressed(hand))
@@ -384,15 +389,15 @@ public class InteractionPointer : MonoBehaviour
 		return false;
 	}
 
-    private GameObject wallPlacmentPreviewObjectStart;
+    private GameObject wallPlacementPreviewObjectStart;
     private void StartInteraction(Hand hand)
 	{	
-		if (isInWallPlacementMode && !wallPlacmentPreviewObjectStart)
+		if (isInWallPlacementMode && !wallPlacementPreviewObjectStart)
 		{
-            wallPlacmentPreviewObjectStart = Instantiate(buildingPlacementPreviewObject);
-			wallPlacmentPreviewObjectStart.transform.Rotate(0, 0, lastBuildingRotation);
-			wallPlacmentPreviewObjectStart.transform.position = buildingPlacementPreviewObject.transform.position;
-
+            wallPlacementPreviewObjectStart = Instantiate(buildingPlacementPreviewObject);
+			wallPlacementPreviewObjectStart.transform.Rotate(0, 0, lastBuildingRotation);
+			wallPlacementPreviewObjectStart.transform.position = buildingPlacementPreviewObject.transform.position;
+			
             if (!woodWallMiddlePreviewPrefab.activeSelf)
             	woodWallMiddlePreviewPrefab.SetActive(true);
         }
@@ -427,7 +432,7 @@ public class InteractionPointer : MonoBehaviour
 		{
             woodWallMiddlePreviewPrefab.transform.localScale = originalWallScale;
 
-            Vector3 pos1 = wallPlacmentPreviewObjectStart.transform.position;
+            Vector3 pos1 = wallPlacementPreviewObjectStart.transform.position;
 			Vector3 pos2 = buildingPlacementPreviewObject.transform.position;
 
         	float dist = Vector3.Distance(pos1, pos2);
@@ -438,11 +443,11 @@ public class InteractionPointer : MonoBehaviour
 			Vector3 dir = pos2 - pos1;
             dir.Normalize();
 
-            Vector3 segmentPos = pos1 + dir * halfWall;
+            Vector3 segmentPos = pos1 + (dir * dimWallLength);
 
-            for (int i = 0; i < sectionCount; i++)
+            for (int i = 0; i < sectionCount - 1; i++)
 			{
-				Instantiate(woodWallWorld, segmentPos, woodWallMiddlePreviewPrefab.transform.rotation);
+				Instantiate(woodWallWorld, segmentPos, buildingPlacementPreviewObject.transform.rotation);
 				segmentPos += dir * dimWallLength;
             }
 
@@ -569,13 +574,15 @@ public class InteractionPointer : MonoBehaviour
 		if (woodWallMiddlePreviewPrefab.activeSelf)
             woodWallMiddlePreviewPrefab.SetActive(false);
 
-        if (wallPlacmentPreviewObjectStart)
-        	Destroy(wallPlacmentPreviewObjectStart);
-		
-		if (buildingPlacementPreviewObject)
-        	Destroy(buildingPlacementPreviewObject);
+        if (wallPlacementPreviewObjectStart)
+            wallPlacementPreviewObjectStart.transform.SetParent(null);
+        //Destroy(wallPlacmentPreviewObjectStart);
 
-        wallPlacmentPreviewObjectStart = null;
+        if (buildingPlacementPreviewObject)
+            buildingPlacementPreviewObject.transform.SetParent(null);
+        //Destroy(buildingPlacementPreviewObject);
+
+        wallPlacementPreviewObjectStart = null;
         buildingPlacementPreviewObject = null;
 
         //SetSnapTurnEnabled(true, true);
@@ -673,8 +680,8 @@ public class InteractionPointer : MonoBehaviour
 		}
 		else if (isInWallPlacementMode)
 		{
-            if (wallPlacmentPreviewObjectStart)// && buildingPlacementPreviewObject)
-            {
+            if (wallPlacementPreviewObjectStart)// && buildingPlacementPreviewObject)
+            {				
                 DrawWallPreview();                
             }
 
@@ -713,18 +720,18 @@ public class InteractionPointer : MonoBehaviour
     private List<GameObject> wallPreviews = new List<GameObject>();
     private GameObject woodWallMiddlePreviewPrefab;
     private GameObject woodWallWorld;
-    Vector3 originalWallScale = new Vector3(0.09f, 0.09f, 0.09f);
+    Vector3 originalWallScale = new Vector3(0.124533f, 0.124533f, 0.124533f);
     private Material woodWallMaterialObject;
 
     private void DrawWallPreview()
 	{
 		// Note: Wall are 5 x 2 @ 0.125 world units.
-        Vector3 pos1 = wallPlacmentPreviewObjectStart.transform.position;
+        Vector3 pos1 = wallPlacementPreviewObjectStart.transform.position;
 		Vector3 pos2 = buildingPlacementPreviewObject.transform.position;
         Vector3 posCenter = pos1 + ((pos2 - pos1) * 0.5f);
 
         float dist = Vector3.Distance(pos1, pos2);
-        float dimWallLength = 0.125f * 5.0f;
+        float dimWallLength = 0.125f * 2.0f;
         float sectionCount = dist / dimWallLength;
 
 		// woodWallMaterialObject = woodWallMiddlePreviewPrefab.GetComponentInChildren<MeshRenderer>().sharedMaterial;
@@ -732,12 +739,17 @@ public class InteractionPointer : MonoBehaviour
         // texScale.x = sectionCount;
         // woodWallMaterialObject.mainTextureScale = texScale;
 
+		HardSnapToGrid(destinationReticleTransform, placementBuildingData);
+		
         Vector3 newScale = originalWallScale;
         newScale.y = originalWallScale.y * sectionCount;
         woodWallMiddlePreviewPrefab.transform.localScale = newScale;
         woodWallMiddlePreviewPrefab.transform.position = posCenter;
-        woodWallMiddlePreviewPrefab.transform.LookAt(pos2, Vector3.down);
+		HardSnapToGrid(woodWallMiddlePreviewPrefab.transform, placementBuildingData);
+        woodWallMiddlePreviewPrefab.transform.LookAt(buildingPlacementPreviewObject.transform, Vector3.down);
         woodWallMiddlePreviewPrefab.transform.Rotate(90f, 0, 0);
+
+		
     }
 
 	BuildingData placementBuildingData;
