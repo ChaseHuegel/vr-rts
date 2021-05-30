@@ -36,20 +36,26 @@ public class BuildingSpawnQueue : MonoBehaviour
 
     private PlayerManager playerManager;
 
-    void Awake()
-    {
-        // TODO: Pick a spot around the building and set it as the spawn point
-        // when no spawn point is found. Using transform center currently.
+    void Start()
+    {       
+        playerManager = PlayerManager.instance;
+
         if (!unitSpawnPoint)
         {
-            unitSpawnPoint = transform;
-            Debug.Log("UnitSpawnPoint not set.", this);
+            Structure structure = GetComponentInParent<Structure>();
+            if (structure)
+            {
+                unitSpawnPoint = structure.transform;
+                unitRallyWaypoint = unitSpawnPoint;
+                Debug.Log("UnitSpawnPoint not set, using structure transform.", this);
+            }
+            else
+            {
+                Debug.Log("UnitSpawnPoint not set and no structure found.", this);
+            }
+            
+            
         }
-    }
-
-    void Start()
-    {
-        playerManager = PlayerManager.instance;
 
         if (!(damageable = gameObject.GetComponentInParent<Damageable>()))
             Debug.Log("Missing damageable component in parent.", this);

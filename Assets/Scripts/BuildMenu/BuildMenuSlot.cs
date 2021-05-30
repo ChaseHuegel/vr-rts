@@ -224,7 +224,7 @@ public class BuildMenuSlot : MonoBehaviour
             {
                 
                 BuildingPlacementEvent e = new BuildingPlacementEvent{ buildingData = rtsTypeData, hand = hand };
-                OnBuildingPlacementEvent?.Invoke(null, e);
+                OnBuildingPlacementEvent?.Invoke(this, e);
                 // itemIsSpawned = true;
                 // useFadedPreview = true;
                 // CreatePreviewObject();

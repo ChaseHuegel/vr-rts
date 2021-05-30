@@ -56,6 +56,10 @@ public class Body : MonoBehaviour
 
 #region getters setters
 
+    /// <summary>
+    /// Get the grid cell located at the transform of this body.
+    /// </summary>
+    /// <returns>Cell - The grid cell the body is located in.</returns>
     public Cell GetCellAtTransform()
     {
         Vector3 pos = World.ToWorldSpace(transform.position);

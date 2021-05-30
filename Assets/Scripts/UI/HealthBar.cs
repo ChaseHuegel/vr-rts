@@ -66,17 +66,21 @@ public class HealthBar : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Get the health bar image filled amount.
+    /// </summary>
+    /// <returns>The amount the bar is filled, between 0 and 1</returns>
     public float GetFilledAmount()
     {
         return healthBarBackgroundImage.fillAmount;
     }
 
-    // Set fill amount, between 0 and 1
+    /// <summary>
+    /// Set the health bar image filled amount and the text display if enabled.
+    /// </summary>
+    /// <param name="amount">0.0f - 1.0f</param>
     public void SetFilledAmount(float amount)
     {
-        if (showBarBackground)
-            healthBarBackgroundImage.fillAmount = amount;
-
         if (showBarForeground)
             healthBarForegroundImage.fillAmount = amount;
 
@@ -89,8 +93,16 @@ public class HealthBar : MonoBehaviour
             Show();
     }
 
+    /// <summary>
+    /// Hides the enabled health bar components unless the filled amount is less
+    /// than the autoshowAt setting and greater than zero
+    /// </summary>
     public void Hide()
     {
+        float filledAmount = GetFilledAmount();
+        if (filledAmount < autoshowAt && filledAmount > 0)
+            return;
+            
         if (showBarBackground)
             healthBarBackgroundImage.gameObject.SetActive(false);
         if (showBarForeground)

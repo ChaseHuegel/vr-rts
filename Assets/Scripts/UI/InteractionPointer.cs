@@ -53,7 +53,7 @@ public class InteractionPointer : MonoBehaviour
 	private Player player = null;
 	private TeleportArc teleportArc = null;
 	public bool visible = false;
-	private PointerInteractable[] interactableObjects;
+	//private PointerInteractable[] interactableObjects;
 	private PointerInteractable pointedAtPointerInteractable;
 	private	BuildingSpawnQueue buildingSpawnQueue;
 	private List<Unit> selectedUnits;
@@ -136,9 +136,7 @@ public class InteractionPointer : MonoBehaviour
 
         playerManager = PlayerManager.instance;
 
-        // Used to un-highlight things
-        interactableObjects = GameObject.FindObjectsOfType<PointerInteractable>();
-		
+        //interactableObjects = GameObject.FindObjectsOfType<PointerInteractable>();		
 		selectedUnits = new List<Unit>();
 
 		// Cache some values, going to need them a lot and don't need to keep
@@ -162,8 +160,11 @@ public class InteractionPointer : MonoBehaviour
 			Destroy( this.gameObject );
 			return;
 		}
-		
-		ShowPointer();
+
+        woodWallMiddlePreviewPrefab = Instantiate(GameMaster.GetBuilding(RTSBuildingType.Wood_Wall_1x1).worldPreviewPrefab);
+		woodWallWorld = Instantiate(GameMaster.GetBuilding(RTSBuildingType.Wood_Wall_1x1).worldPrefab);
+        ShowPointer();
+
 	}	
 
 	
@@ -187,36 +188,41 @@ public class InteractionPointer : MonoBehaviour
 		Hand oldPointerHand = pointerHand;
 		Hand newPointerHand = null;
 
-		foreach ( Hand hand in player.hands )
+		foreach (Hand hand in player.hands)
 		{
-			if ( WasTeleportButtonReleased( hand ) )
-				if ( pointerHand == hand ) //This is the pointer hand
+			if (WasTeleportButtonReleased(hand))
+				if (pointerHand == hand) //This is the pointer hand
 					TryTeleportPlayer();
 
-			if ( WasTeleportButtonPressed( hand ) )
+			if (WasTeleportButtonPressed(hand))
 				newPointerHand = hand;
 
 			//hand.uiInteractAction.GetStateDown(hand.handType)
 			
 			if (WasInteractButtonReleased(hand))
 				if (pointerHand == hand)
-					TryInteract();
+					FinishInteraction();
 
-			if ( WasInteractButtonPressed(hand))
-				newPointerHand = hand;		
+            if (WasInteractButtonPressed(hand))
+            {
+                newPointerHand = hand;
+                StartInteraction(hand);
+            }            
 
-			if (WasQueueButtonPressed(hand))
+            if (WasQueueButtonPressed(hand))
 				newPointerHand = hand;
 
-			if (WasQueueButtonReleased(hand) && pointedAtPointerInteractable)
-				if (pointerHand == hand)
-				{
-					BuildingSpawnQueue buildingSpawnQueue = pointedAtPointerInteractable.GetComponentInChildren<BuildingSpawnQueue>();
-					if (buildingSpawnQueue)
-						buildingSpawnQueue.QueueLastUnitQueued();
-				}
+            if (WasQueueButtonReleased(hand) && pointedAtPointerInteractable)
+            {
+                if (pointerHand == hand)
+                {
+                    BuildingSpawnQueue buildingSpawnQueue = pointedAtPointerInteractable.GetComponentInChildren<BuildingSpawnQueue>();
+                    if (buildingSpawnQueue)
+                        buildingSpawnQueue.QueueLastUnitQueued();
+                }
+            }
 
-			if (WasDequeueButtonPressed(hand))
+            if (WasDequeueButtonPressed(hand))
 				newPointerHand = hand;
 				
 			if (WasDequeueButtonReleased(hand) && pointedAtPointerInteractable)
@@ -229,7 +235,34 @@ public class InteractionPointer : MonoBehaviour
 				}
 			}
 
-			if (isInBuildingPlacementMode)
+			if (WasCancelButtonPressed(hand))
+			{
+				if (isInUnitSelectiodMode)
+                    EndUnitSelectionMode();
+            }
+			
+			// 	if (isSettingRallyPoint)
+			// 	{
+            //         isSettingRallyPoint = false;
+            //     }
+			// }
+
+			if (WasSelectButtonPressed(hand))
+                newPointerHand = hand;
+
+            if (WasSelectButtonReleased(hand))
+            { 
+				if (pointerHand == hand)
+				{
+
+				}
+			}
+            // if (isInWallPlacementMode)
+            // {
+            //     buildingPlacementPreviewObject.transform.parent = null;
+            // }
+
+            if (isInBuildingPlacementMode)
 			{
 				if (WasRotateClockwiseButtonPressed(hand))
 					buildingPlacementPreviewObject.transform.Rotate(0.0f, 0.0f, 45.0f);
@@ -254,14 +287,8 @@ public class InteractionPointer : MonoBehaviour
 
 				if (WasCancelButtonPressed(hand))
 				{
-					isInBuildingPlacementMode = false;	
-					Destroy(buildingPlacementPreviewObject);
-					buildingPlacementPreviewObject = null;
-					
-					// TODO: Restore resources to player
-
-					SetSnapTurnEnabled(true, true);
-				}
+                    EndBuildingPlacementMode();
+                }
 			}
 		}
 	}
@@ -275,7 +302,8 @@ public class InteractionPointer : MonoBehaviour
 
 	private bool isInUnitSelectiodMode;
 	private bool isInBuildingPlacementMode;
-	private GameObject buildingPlacementPreviewObject;
+    private bool isInWallPlacementMode;
+    private GameObject buildingPlacementPreviewObject;
 	private float lastBuildingRotation;
 
 	private bool WasQueueButtonPressed(Hand hand)
@@ -283,6 +311,11 @@ public class InteractionPointer : MonoBehaviour
 		return queueAction.GetStateDown(hand.handType);
 	}
 	
+	private bool WasSelectButtonReleased(Hand hand)
+	{
+		return selectAction.GetStateUp(hand.handType);
+	}
+
 	private bool WasQueueButtonReleased(Hand hand)
 	{
 		return queueAction.GetStateUp(hand.handType);
@@ -320,34 +353,10 @@ public class InteractionPointer : MonoBehaviour
 
 	private bool WasInteractButtonPressed(Hand hand)
 	{
-		// TODO: listen for different button to cancel
 		if (CanInteract(hand))
 		{
 			if (uiInteractAction.GetStateDown(hand.handType))
-			{
-				if (pointedAtPointerInteractable != null)
-				{
-					buildingSpawnQueue = pointedAtPointerInteractable.GetComponentInChildren<BuildingSpawnQueue>();
-					
-					if (buildingSpawnQueue && buildingSpawnQueue.enabled && !isSettingRallyPoint)
-					{ 
-						rallyWaypointArcStartPosition = pointedAtPointerInteractable.transform.position;
-						isSettingRallyPoint = true;	
-						wayPointReticle.SetActive(true);
-						return true;											
-					}
-
-					Unit hoveredUnit = pointedAtPointerInteractable.GetComponent<Unit>();
-					if (hoveredUnit && !isInUnitSelectiodMode &&
-						hoveredUnit.IsSameFaction(teamId))
-					{
-						selectedUnits.Add(hoveredUnit);
-						isInUnitSelectiodMode = true;
-						return true;
-					}					
-
-					//Debug.Log(string.Format("Unit: {0} interactable: {1}", selectedUnit, pointedAtPointerInteractable));
-				}
+			{				
 
 				return true;
 			}
@@ -362,7 +371,7 @@ public class InteractionPointer : MonoBehaviour
 	
 	private bool WasInteractButtonReleased(Hand hand)
 	{
-		if ( CanInteract(hand))
+		if (CanInteract(hand))
 		{
 			if (uiInteractAction.GetStateUp(hand.handType))
 				return true;
@@ -375,8 +384,71 @@ public class InteractionPointer : MonoBehaviour
 		return false;
 	}
 
-	private void TryInteract()
+    private GameObject wallPlacmentPreviewObjectStart;
+    private void StartInteraction(Hand hand)
+	{	
+		if (isInWallPlacementMode && !wallPlacmentPreviewObjectStart)
+		{
+            wallPlacmentPreviewObjectStart = Instantiate(buildingPlacementPreviewObject);
+			wallPlacmentPreviewObjectStart.transform.Rotate(0, 0, lastBuildingRotation);
+			wallPlacmentPreviewObjectStart.transform.position = buildingPlacementPreviewObject.transform.position;
+
+            if (!woodWallMiddlePreviewPrefab.activeSelf)
+            	woodWallMiddlePreviewPrefab.SetActive(true);
+        }
+		else if (pointedAtPointerInteractable != null)
+		{
+			buildingSpawnQueue = pointedAtPointerInteractable.GetComponentInChildren<BuildingSpawnQueue>();
+
+			if (buildingSpawnQueue && buildingSpawnQueue.enabled && !isSettingRallyPoint)
+			{
+				rallyWaypointArcStartPosition = pointedAtPointerInteractable.transform.position;
+				isSettingRallyPoint = true;
+				wayPointReticle.SetActive(true);
+				return;
+			}
+
+			Unit hoveredUnit = pointedAtPointerInteractable.GetComponent<Unit>();
+			if (hoveredUnit && !isInUnitSelectiodMode &&
+				hoveredUnit.IsSameFaction(teamId))
+			{
+				selectedUnits.Add(hoveredUnit);
+				isInUnitSelectiodMode = true;
+				return;
+			}
+
+			//Debug.Log(string.Format("Unit: {0} interactable: {1}", selectedUnit, pointedAtPointerInteractable));
+		}
+	}
+
+	private void FinishInteraction()
 	{
+		if (isInWallPlacementMode)
+		{
+            woodWallMiddlePreviewPrefab.transform.localScale = originalWallScale;
+
+            Vector3 pos1 = wallPlacmentPreviewObjectStart.transform.position;
+			Vector3 pos2 = buildingPlacementPreviewObject.transform.position;
+
+        	float dist = Vector3.Distance(pos1, pos2);
+			float dimWallLength = 0.125f * 2.0f;
+			float sectionCount = dist / dimWallLength;
+            float halfWall = dimWallLength * 0.5f;
+            
+			Vector3 dir = pos2 - pos1;
+            dir.Normalize();
+
+            Vector3 segmentPos = pos1 + dir * halfWall;
+
+            for (int i = 0; i < sectionCount; i++)
+			{
+				Instantiate(woodWallWorld, segmentPos, woodWallMiddlePreviewPrefab.transform.rotation);
+				segmentPos += dir * dimWallLength;
+            }
+
+			EndWallPlacementMode();
+        }
+
 		if (isSettingRallyPoint)
 		{
 			buildingSpawnQueue.SetUnitRallyWaypoint(wayPointReticle.transform.position);
@@ -472,16 +544,51 @@ public class InteractionPointer : MonoBehaviour
 					unit.ResetGoal();
 				}
 			}
-			
 
-			// Cleanup
-			isInUnitSelectiodMode = false;
+            // Cleanup
+            EndUnitSelectionMode();
 			pointedAtResource = null;
-			selectedUnits.Clear();
-			foreach(LineRenderer lineRenderer in lineRenderers)
-			{
-				lineRenderer.enabled = false;
-			}
+		}
+	}
+
+	private void EndBuildingPlacementMode()
+	{
+		isInBuildingPlacementMode = false;	
+		Destroy(buildingPlacementPreviewObject);
+		buildingPlacementPreviewObject = null;
+		
+		// TODO: Restore resources to player
+
+		SetSnapTurnEnabled(true, true);
+	}
+
+	private void EndWallPlacementMode()
+	{
+        isInWallPlacementMode = false;
+
+		if (woodWallMiddlePreviewPrefab.activeSelf)
+            woodWallMiddlePreviewPrefab.SetActive(false);
+
+        if (wallPlacmentPreviewObjectStart)
+        	Destroy(wallPlacmentPreviewObjectStart);
+		
+		if (buildingPlacementPreviewObject)
+        	Destroy(buildingPlacementPreviewObject);
+
+        wallPlacmentPreviewObjectStart = null;
+        buildingPlacementPreviewObject = null;
+
+        //SetSnapTurnEnabled(true, true);
+    }
+
+	private void EndUnitSelectionMode()
+	{
+		isInUnitSelectiodMode = false;
+		pointedAtResource = null;
+		selectedUnits.Clear();
+		foreach(LineRenderer lineRenderer in lineRenderers)
+		{
+			lineRenderer.enabled = false;
 		}
 	}
 
@@ -564,6 +671,17 @@ public class InteractionPointer : MonoBehaviour
 			if (pointerLineRenderer.enabled == false)
 				pointerLineRenderer.enabled = true;
 		}
+		else if (isInWallPlacementMode)
+		{
+            if (wallPlacmentPreviewObjectStart)// && buildingPlacementPreviewObject)
+            {
+                DrawWallPreview();                
+            }
+
+            //DrawQuadraticBezierCurve(pointerLineRenderer, pointerStart, destinationReticleTransform.position);
+            if (pointerLineRenderer.enabled == false)
+				pointerLineRenderer.enabled = true;
+		}
 		else
 			if (pointerLineRenderer.enabled == true)
 				pointerLineRenderer.enabled = false;
@@ -592,24 +710,66 @@ public class InteractionPointer : MonoBehaviour
 		}
 	}
 
+    private List<GameObject> wallPreviews = new List<GameObject>();
+    private GameObject woodWallMiddlePreviewPrefab;
+    private GameObject woodWallWorld;
+    Vector3 originalWallScale = new Vector3(0.09f, 0.09f, 0.09f);
+    private Material woodWallMaterialObject;
+
+    private void DrawWallPreview()
+	{
+		// Note: Wall are 5 x 2 @ 0.125 world units.
+        Vector3 pos1 = wallPlacmentPreviewObjectStart.transform.position;
+		Vector3 pos2 = buildingPlacementPreviewObject.transform.position;
+        Vector3 posCenter = pos1 + ((pos2 - pos1) * 0.5f);
+
+        float dist = Vector3.Distance(pos1, pos2);
+        float dimWallLength = 0.125f * 5.0f;
+        float sectionCount = dist / dimWallLength;
+
+		// woodWallMaterialObject = woodWallMiddlePreviewPrefab.GetComponentInChildren<MeshRenderer>().sharedMaterial;
+        // Vector2 texScale = woodWallMaterialObject.mainTextureScale;
+        // texScale.x = sectionCount;
+        // woodWallMaterialObject.mainTextureScale = texScale;
+
+        Vector3 newScale = originalWallScale;
+        newScale.y = originalWallScale.y * sectionCount;
+        woodWallMiddlePreviewPrefab.transform.localScale = newScale;
+        woodWallMiddlePreviewPrefab.transform.position = posCenter;
+        woodWallMiddlePreviewPrefab.transform.LookAt(pos2, Vector3.down);
+        woodWallMiddlePreviewPrefab.transform.Rotate(90f, 0, 0);
+    }
+
 	BuildingData placementBuildingData;
 	public void OnBuildingPlacementStarted(object sender, BuildMenuSlot.BuildingPlacementEvent e)
 	{
-		//SteamVR_Actions.construction.Activate();
-		SetSnapTurnEnabled(false, false);
-		isInBuildingPlacementMode = true;
+		// ! Want to eventually switch action maps based on activity.
+		// SteamVR_Actions.construction.Activate();
 
+		SetSnapTurnEnabled(false, false);
 		placementBuildingData = e.buildingData;
-		
-		// Get the world prefab and instatiate it.
-		buildingPlacementPreviewObject = Instantiate(placementBuildingData.worldPreviewPrefab, destinationReticleTransform);
+
+		if (placementBuildingData.buildingType == RTSBuildingType.Wood_Wall || placementBuildingData.buildingType == RTSBuildingType.Wood_Wall_1x1 ||
+			placementBuildingData.buildingType == RTSBuildingType.Wood_Wall_Corner || placementBuildingData.buildingType == RTSBuildingType.Stone_Wall ||
+			placementBuildingData.buildingType == RTSBuildingType.Stone_Wall_1x1 || placementBuildingData.buildingType == RTSBuildingType.Stone_Wall_Corner)
+		{
+			isInWallPlacementMode = true;
+            BuildingData buildingData = GameMaster.GetBuilding(RTSBuildingType.Wood_Wall_Corner);
+            buildingPlacementPreviewObject = Instantiate(buildingData.worldPreviewPrefab, destinationReticleTransform);
+        }
+        else
+        {
+            isInBuildingPlacementMode = true;			
+			buildingPlacementPreviewObject = Instantiate(placementBuildingData.worldPreviewPrefab, destinationReticleTransform);
+        }
+
 		buildingPlacementPreviewObject.transform.Rotate(0, 0, lastBuildingRotation);
 		buildingPlacementPreviewObject.transform.localPosition = Vector3.zero;
-	}
+    }
 
 	private bool CanInteract( Hand hand)
 	{
-		//!PlayerManager.instance.handBuildMenu.activeSelf
+		// !PlayerManager.instance.handBuildMenu.activeSelf
 		if (!hand.currentAttachedObject && !hand.hoveringInteractable)	
 			return true;
 
@@ -798,8 +958,8 @@ public class InteractionPointer : MonoBehaviour
 			//pointerObject.SetActive( false );
 			teleportArc.Show();
 
-			foreach ( PointerInteractable interactObject in interactableObjects )
-				interactObject.Highlight( false );
+			// foreach ( PointerInteractable interactObject in interactableObjects )
+			// 	interactObject.Highlight( false );
 
 			startingFeetOffset = player.trackingOriginTransform.position - player.feetPositionGuess;
 			movedFeetFarEnough = false;
