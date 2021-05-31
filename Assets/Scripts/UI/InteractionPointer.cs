@@ -612,37 +612,76 @@ public class InteractionPointer : MonoBehaviour
 		Vector3 segmentPos = pos1 + (dir * wallWorldLength);			
 
 		ClearWallPreviewSections();
-        //Swordfish.Coord2D startPosition = World.ToWorldCoord(pos1);
+        Swordfish.Coord2D startPosition = World.ToWorldCoord(pos1);
         Swordfish.Coord2D endPosition = World.ToWorldCoord(pos2);
-        //Swordfish.Coord2D difference = startPosition - endPosition;		
+        Swordfish.Coord2D difference = startPosition - endPosition;		
 
         // Track the position of the previous wall segment so we can decide 
         // the rotation of the next wall segment in relation to the previous 
         // wall segment.
         Swordfish.Coord2D previousSegmentPosition = World.ToWorldCoord(pos1);
 		Swordfish.Coord2D nextSegmentPosition = World.ToWorldCoord(segmentPos);
+
+		GameObject obj = null;
+
 		
-		while (nextSegmentPosition != endPosition)
+		// Diagonal from start position, draw 45 degree walls.
+		if (Mathf.Abs(difference.x) == Mathf.Abs(difference.y))
+		{				
+			// ! Doesn't work, only draws a single wall.
+			// Create 45 segment
+			obj = CreateWallSegment(previousSegmentPosition, nextSegmentPosition, woodWallWorld_1x1_Preview, woodWallWorld_1x1_Diagonal_Preview);
+		}			
+		else
 		{
-			GameObject obj = CreateWallSegment(previousSegmentPosition, nextSegmentPosition, woodWallWorld_1x1_Preview, woodWallWorld_1x1_Diagonal_Preview);
-			
-			previousSegmentPosition = nextSegmentPosition;
-            segmentPos += (dir * wallWorldLength);
-            nextSegmentPosition = World.ToWorldCoord(segmentPos);
+			//-----------------------------------------------------------------
+			// East - West
+            int diff = Mathf.Abs(difference.x);
+            Swordfish.Coord2D currentPosition = startPosition;
+			currentPosition.x -= (int)Mathf.Sign(difference.x);
+			diff--;
 
-            if (!obj)
+			while (diff > 0)
 			{
-				// Debug.Log(string.Format(
-				// "lastPosition: {0}, {1}  nextPosition: {2}, {3}  segmentPos: {4}", lastPosition.x, lastPosition.y, nextPosition.x, nextPosition.y, segmentPos));
-				return;
-			}
+				Vector3 segPos = World.ToTransformSpace(currentPosition);
 
-            // Preview objects don't have buildingDimensions on the object
-			// so we have to snap ourselves.
-            HardSnapToGrid(obj.transform, 1, 1);
+				obj = Instantiate(woodWallWorld_1x1_Preview, segPos, buildingPlacementPreviewObject.transform.rotation);
+				obj.transform.Rotate(0, 0, 90);
+				HardSnapToGrid(obj.transform, 1, 1);
+				wallPreviewSections.Add(obj);
 
+                currentPosition.x -= (int)Mathf.Sign(difference.x);
+                diff--;
+            }
+
+			currentPosition = startPosition;
+			
+			obj = Instantiate(wallPlacementPreviewStartObject, World.ToTransformSpace(currentPosition), buildingPlacementPreviewObject.transform.rotation);
+			obj.transform.Rotate(0, 0, 90);
+			HardSnapToGrid(obj.transform, 1, 1);
 			wallPreviewSections.Add(obj);
-		} 
+
+			//-----------------------------------------------------------------
+			// North - South
+			diff = Mathf.Abs(difference.y);
+            currentPosition.y -= (int)Mathf.Sign(difference.y);
+            diff--;
+
+            while (diff > 0)
+			{
+				Vector3 segPos = World.ToTransformSpace(currentPosition);
+			
+				obj = Instantiate(woodWallWorld_1x1_Preview, segPos, buildingPlacementPreviewObject.transform.rotation);
+				
+				HardSnapToGrid(obj.transform, 1, 1);
+				wallPreviewSections.Add(obj);
+
+                currentPosition.y -= (int)Mathf.Sign(difference.y);
+                diff--;
+            }
+		}
+
+        return;
 
 		// !===================================================================
 		// ! OLD METHOD
@@ -678,6 +717,59 @@ public class InteractionPointer : MonoBehaviour
 		// }
 		// ! END OLD METHOD
 		// !-------------------------------------------------------------------
+    }
+
+	private void DrawWallPreview2()
+	{   
+		// This is a corner piece that has been placed already when the 
+		// trigger was pressed, it is the beginning point of the wall.
+		Vector3 pos1 = wallPlacementPreviewStartObject.transform.position;
+
+		// This is the current reticle location with a corner wall preview 
+		// piece attached, this is the end of the wall.
+		Vector3 pos2 = buildingPlacementPreviewObject.transform.position;
+
+		// ! This is to reduce DrawWallPreview calls, commented out for testing.
+		// if (lastPreviewPointerPosition == World.ToWorldCoord(pos2))
+        //     return;
+        // lastPreviewPointerPosition = World.ToWorldCoord(pos2);
+
+		// Grid unit * bounding dimension
+        float wallWorldLength = 0.125f * 1.0f;
+		Vector3 dir = (pos2 - pos1).normalized;
+		
+		Vector3 segmentPos = pos1 + (dir * wallWorldLength);			
+
+		ClearWallPreviewSections();
+        Swordfish.Coord2D endPosition = World.ToWorldCoord(pos2);
+
+        // Track the position of the previous wall segment so we can decide 
+        // the rotation of the next wall segment in relation to the previous 
+        // wall segment.
+        Swordfish.Coord2D previousSegmentPosition = World.ToWorldCoord(pos1);
+		Swordfish.Coord2D nextSegmentPosition = World.ToWorldCoord(segmentPos);
+
+        while (nextSegmentPosition != endPosition)
+		{
+			GameObject obj = CreateWallSegment(previousSegmentPosition, nextSegmentPosition, woodWallWorld_1x1_Preview, woodWallWorld_1x1_Diagonal_Preview);
+            
+			previousSegmentPosition = nextSegmentPosition;
+            segmentPos += (dir * wallWorldLength);
+            nextSegmentPosition = World.ToWorldCoord(segmentPos);
+
+            if (!obj)
+			{
+				// Debug.Log(string.Format(
+				// "lastPosition: {0}, {1}  nextPosition: {2}, {3}  segmentPos: {4}", lastPosition.x, lastPosition.y, nextPosition.x, nextPosition.y, segmentPos));
+				continue;
+			}
+
+            // Preview objects don't have buildingDimensions on the object
+			// so we have to snap ourselves.
+            HardSnapToGrid(obj.transform, 1, 1);
+
+			wallPreviewSections.Add(obj);
+		} 
     }
 
 	private GameObject CreateWallSegment(Coord2D lastPosition, Coord2D nextPosition, GameObject normalWall, GameObject diagonalWall)
@@ -833,8 +925,10 @@ public class InteractionPointer : MonoBehaviour
 		{
 			HardSnapToGrid(destinationReticleTransform, placementBuildingData.boundingDimensionX, placementBuildingData.boundingDimensionY);
             if (wallPlacementPreviewStartObject)// && buildingPlacementPreviewObject)
-            {				
-                DrawWallPreview();                
+            {		
+				// ! Choose a method to use....		
+                //DrawWallPreview(); // AOE2 style, 45's don't work.
+				DrawWallPreview2();  // No corners ala AOE2, 45's are buggy.              
             }
 
             //DrawQuadraticBezierCurve(pointerLineRenderer, pointerStart, destinationReticleTransform.position);
