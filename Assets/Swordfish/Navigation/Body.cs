@@ -220,6 +220,7 @@ public class Body : MonoBehaviour
         else
         {
             Vector3 modPos = transform.position;
+
             if (boundingDimensions.x % 2 == 0)
                 modPos.x = transform.position.x + World.GetUnit() * -0.5f;
 
