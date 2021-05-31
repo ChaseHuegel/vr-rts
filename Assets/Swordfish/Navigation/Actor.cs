@@ -357,40 +357,8 @@ public class Actor : Body
             //  We can pass thru actors if the path ahead is clear and we are going beyond the next spot
             bool canPassThruActors = currentPath.Count > 2 ? !World.at(currentPath[1].x, currentPath[1].y).IsBlocked() : false;
             
-            Cell north = World.at(gridPosition.x, gridPosition.y + 1);
-            Cell south = World.at(gridPosition.x, gridPosition.y - 1);
-            Cell east = World.at(gridPosition.x + 1, gridPosition.y);
-            Cell west = World.at(gridPosition.x - 1, gridPosition.y);
-
-            bool canMoveDiagonally = true;
-            
-            // Moving northeast
-            if (currentPath[0].x > gridPosition.x && currentPath[0].y > gridPosition.y)
-            {
-                if (!north.passable && !east.passable)
-                    canMoveDiagonally = false;
-            }
-            // Moving northwest
-            else if (currentPath[0].x < gridPosition.x && currentPath[0].y > gridPosition.y)
-            {
-                if (!north.passable && !west.passable)
-                    canMoveDiagonally = false;
-            }
-            // Moving southeast
-            else if (currentPath[0].x > gridPosition.x && currentPath[0].y < gridPosition.y)
-            {
-                if (!south.passable && !east.passable)
-                    canMoveDiagonally = false;
-            }
-            // Moving southwest
-            else if (currentPath[0].x < gridPosition.x && currentPath[0].y < gridPosition.y)
-            {
-                if (!south.passable && !west.passable)
-                    canMoveDiagonally = false;
-            }
-
             //  Attempt to move to the next point
-            if ( canMoveDiagonally && CanSetPosition(currentPath[0].x, currentPath[0].y, canPassThruActors) )
+            if (CanSetPosition(currentPath[0].x, currentPath[0].y, canPassThruActors) )
             {
                 //  If the path is clear, reset pathing logic
                 ResetPathingBrain();

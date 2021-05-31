@@ -77,6 +77,26 @@ public class Cell : IHeapItem<Cell>
             y + (int)dir.toVector3().z
             );
     }
+    
+    public Cell neighborNE()
+    {
+            return grid.at(x + 1, y + 1);
+    }
+
+    public Cell neighborNW()
+    {
+            return grid.at(x - 1, y + 1);
+    }
+    
+    public Cell neighborSE()
+    {
+            return grid.at(x + 1, y - 1);
+    }
+    
+    public Cell neighborSW()
+    {
+            return grid.at(x - 1, y - 1);
+    }
 
     public List<Cell> neighbors()
     {
