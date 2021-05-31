@@ -609,8 +609,7 @@ public class InteractionPointer : MonoBehaviour
 		// Grid unit * wall bounding dimension
         float wallWorldLength = 0.125f * 1.0f;
 		Vector3 dir = (pos2 - pos1).normalized;		
-		Vector3 segmentPos = pos1 + (dir * wallWorldLength);			
-
+		Vector3 segmentPos = pos1 + (dir * wallWorldLength);	
         Swordfish.Coord2D startPosition = World.ToWorldCoord(pos1);
         Swordfish.Coord2D endPosition = World.ToWorldCoord(pos2);
         	
@@ -618,8 +617,7 @@ public class InteractionPointer : MonoBehaviour
         // the rotation of the next wall segment in relation to the previous 
         // wall segment.
         Swordfish.Coord2D previousSegmentPosition = startPosition;
-		Swordfish.Coord2D nextSegmentPosition = World.ToWorldCoord(segmentPos);
-		
+		Swordfish.Coord2D nextSegmentPosition = World.ToWorldCoord(segmentPos);		
 		Swordfish.Coord2D difference = startPosition - endPosition;	
 
 		GameObject obj = null;
@@ -665,6 +663,7 @@ public class InteractionPointer : MonoBehaviour
 		{
 			//-----------------------------------------------------------------
 			// East - West
+			previousSegmentPosition = startPosition;
 			previousSegmentPosition.x -= (int)Mathf.Sign(difference.x);
 
             for (int i = 0; i < absX - 1; ++i)
@@ -679,6 +678,7 @@ public class InteractionPointer : MonoBehaviour
 
 			//-----------------------------------------------------------------
 			// Corner
+			previousSegmentPosition = startPosition;
 			obj = Instantiate(wallPlacementPreviewStartObject, World.ToTransformSpace(previousSegmentPosition), buildingPlacementPreviewObject.transform.rotation);
 			obj.transform.Rotate(0, 0, 90);
 			HardSnapToGrid(obj.transform, 1, 1);
@@ -776,44 +776,13 @@ public class InteractionPointer : MonoBehaviour
 		return obj;
     }
 
-	private GameObject CreateDiagonalWallSegment(Coord2D lastPosition, Coord2D nextPosition, GameObject normalWall, GameObject diagonalWall)
-	{
-        GameObject obj = null;
-		
-		Vector3 segmentPos = World.ToTransformSpace(nextPosition);
-
-		// Southeast
-		if (nextPosition.x > lastPosition.x && nextPosition.y < lastPosition.y)
-		{
-			obj = Instantiate(diagonalWall, segmentPos, buildingPlacementPreviewObject.transform.rotation);
-			obj.transform.Rotate(0, 0, 90);
-		}
-		// Northeast
-		else if (nextPosition.x > lastPosition.x && nextPosition.y > lastPosition.y)
-		{
-			obj = Instantiate(diagonalWall, segmentPos, buildingPlacementPreviewObject.transform.rotation);
-		}
-		// Southwest
-		else if (nextPosition.x < lastPosition.x && nextPosition.y < lastPosition.y)
-		{
-			obj = Instantiate(diagonalWall, segmentPos, buildingPlacementPreviewObject.transform.rotation);
-		}
-		// Northwest
-		else if (nextPosition.x < lastPosition.x && nextPosition.y > lastPosition.y)
-		{
-            obj = Instantiate(diagonalWall, segmentPos, buildingPlacementPreviewObject.transform.rotation);
-			obj.transform.Rotate(0, 0, 90);
-		}
-		
-        return obj;
-    }
-
 	private GameObject CreateWallSegment(Coord2D lastPosition, Coord2D nextPosition, GameObject normalWall, GameObject diagonalWall)
 	{
         GameObject obj = null;
 		
 		Vector3 segmentPos = World.ToTransformSpace(nextPosition);
 
+		//---------------------------------------------------------------------
 		// Eastward (nextPosition.x > lastPosition.x)
 		// East
 		if (nextPosition.x > lastPosition.x && nextPosition.y == lastPosition.y)
@@ -833,6 +802,7 @@ public class InteractionPointer : MonoBehaviour
 			obj = Instantiate(diagonalWall, segmentPos, buildingPlacementPreviewObject.transform.rotation);
 		}
 		
+		//---------------------------------------------------------------------
 		// Westward (nextPosition.x < lastPosition.x)
 		// West
 		else if (nextPosition.x < lastPosition.x && nextPosition.y == lastPosition.y)
@@ -851,11 +821,15 @@ public class InteractionPointer : MonoBehaviour
             obj = Instantiate(diagonalWall, segmentPos, buildingPlacementPreviewObject.transform.rotation);
 			obj.transform.Rotate(0, 0, 90);
 		}
+
+		//---------------------------------------------------------------------
 		// South
 		else if (nextPosition.y > lastPosition.y)
 		{
 			obj = Instantiate(normalWall, segmentPos, buildingPlacementPreviewObject.transform.rotation);
 		}
+
+		//---------------------------------------------------------------------
 		// North
 		else if (nextPosition.y < lastPosition.y)
 		{

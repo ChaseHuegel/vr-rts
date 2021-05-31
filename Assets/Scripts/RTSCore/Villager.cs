@@ -425,6 +425,7 @@ public class Villager : Unit
                 break;
         }
 
+        ResetPath();
         PlayChangeTaskAudio();
     }
 
