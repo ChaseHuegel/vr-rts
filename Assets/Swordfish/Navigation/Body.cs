@@ -116,11 +116,26 @@ public class Body : MonoBehaviour
     public bool CanSetPosition(int x, int y, bool ignoreOccupied = false)
     {
         Cell to = World.at(x, y);
-
         if (to.passable)
-        {
+        {   
             if (to.occupied && !ignoreOccupied)
                 return false;
+
+            Cell north = World.at(x, y + 1);
+            Cell south = World.at(x, y - 1);
+            Cell east = World.at(x + 1, y);
+            Cell west = World.at(x - 1, y);
+            Cell northwest = World.at(x - 1, y + 1);
+            Cell northeast = World.at(x + 1, y + 1);
+            Cell southwest = World.at(x - 1, y - 1);
+            Cell southeast = World.at(x + 1, y - 1);
+
+            // Moving Northeast
+            // if (x > gridPosition.x && y > gridPosition.y)
+            // {
+            //     if (north.passable && east.passable)
+            //         return false;
+            // }
 
             return true;
         }

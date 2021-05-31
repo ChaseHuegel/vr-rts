@@ -37,14 +37,14 @@ public class InteractionPointer : MonoBehaviour
 
 	[Header( "Sounds" )]
 	public SoundElement setRallyPointSound;
-	public AudioClip teleportSound;
+	public AudioClip queueSuccessSound;
+    public AudioClip queueFailedSound;
+    public AudioClip teleportSound;
 	public AudioClip pointerLoopSound;
 	public AudioClip pointerStopSound;
 	public AudioClip goodHighlightSound;
 	public AudioClip badHighlightSound;
-
-
-	private LineRenderer pointerLineRenderer;
+    private LineRenderer pointerLineRenderer;
 	private LineRenderer[] lineRenderers;
 	private GameObject pointerObject;
 	private Transform pointerStartTransform;
@@ -226,8 +226,10 @@ public class InteractionPointer : MonoBehaviour
                 if (pointerHand == hand)
                 {
                     BuildingSpawnQueue buildingSpawnQueue = pointedAtPointerInteractable.GetComponentInChildren<BuildingSpawnQueue>();
-                    if (buildingSpawnQueue)
-                        buildingSpawnQueue.QueueLastUnitQueued();
+                    if (buildingSpawnQueue && buildingSpawnQueue.QueueLastUnitQueued())
+                        PlayAudioClip(headAudioSource, queueSuccessSound);
+					else
+						PlayAudioClip(headAudioSource, queueFailedSound);
                 }
             }
 
@@ -239,15 +241,20 @@ public class InteractionPointer : MonoBehaviour
 				if (pointerHand == hand)
 				{
 					BuildingSpawnQueue buildingSpawnQueue = pointedAtPointerInteractable.GetComponentInChildren<BuildingSpawnQueue>();
-					if (buildingSpawnQueue)
-						buildingSpawnQueue.DequeueUnit();
-				}
+                    if (buildingSpawnQueue)
+                    {
+                        buildingSpawnQueue.DequeueUnit();
+                        PlayAudioClip(headAudioSource, queueSuccessSound);
+                    }
+                }
 			}
 
 			if (WasCancelButtonPressed(hand))
 			{
 				if (isInUnitSelectiodMode)
                     EndUnitSelectionMode();
+				else if (isInBuildingPlacementMode)
+                    EndBuildingPlacementMode();
             }
 			
 			// 	if (isSettingRallyPoint)
@@ -260,13 +267,8 @@ public class InteractionPointer : MonoBehaviour
                 newPointerHand = hand;
 
             if (WasSelectButtonReleased(hand))
-            { 
 				if (pointerHand == hand)
-				{
-
-				}
-			}
-			
+				{}
 
             if (isInBuildingPlacementMode)
 			{
@@ -278,23 +280,23 @@ public class InteractionPointer : MonoBehaviour
 
 				HardSnapToGrid(destinationReticleTransform, placementBuildingData.boundingDimensionX, placementBuildingData.boundingDimensionY);
 				
-				if (WasSelectButtonPressed(hand))
-				{
-					isInBuildingPlacementMode = false;		
-					Instantiate(placementBuildingData.constructablePrefab, buildingPlacementPreviewObject.transform.position, buildingPlacementPreviewObject.transform.rotation);
+				// if (WasSelectButtonPressed(hand))
+				// {
+				// 	isInBuildingPlacementMode = false;		
+				// 	Instantiate(placementBuildingData.constructablePrefab, buildingPlacementPreviewObject.transform.position, buildingPlacementPreviewObject.transform.rotation);
 					
-					lastBuildingRotation = buildingPlacementPreviewObject.transform.localRotation.eulerAngles.y;
+				// 	lastBuildingRotation = buildingPlacementPreviewObject.transform.localRotation.eulerAngles.y;
 
-					Destroy(buildingPlacementPreviewObject);
-					buildingPlacementPreviewObject = null;
+				// 	Destroy(buildingPlacementPreviewObject);
+				// 	buildingPlacementPreviewObject = null;
 
-					SetSnapTurnEnabled(true, true);
-				}
+				// 	SetSnapTurnEnabled(true, true);
+				// }
 
-				if (WasCancelButtonPressed(hand))
-				{
-                    EndBuildingPlacementMode();
-                }
+				// if (WasCancelButtonPressed(hand))
+				// {
+                //     EndBuildingPlacementMode();
+                // }
 			}
 		}
 	}
@@ -443,11 +445,23 @@ public class InteractionPointer : MonoBehaviour
 
             EndWallPlacementMode();
         }
+		else if (isInBuildingPlacementMode)
+		{		
+			isInBuildingPlacementMode = false;		
+			Instantiate(placementBuildingData.constructablePrefab, buildingPlacementPreviewObject.transform.position, buildingPlacementPreviewObject.transform.rotation);
+			
+			lastBuildingRotation = buildingPlacementPreviewObject.transform.localRotation.eulerAngles.y;
+
+			Destroy(buildingPlacementPreviewObject);
+			buildingPlacementPreviewObject = null;
+
+			SetSnapTurnEnabled(true, true);
+		}
 
 		if (isSettingRallyPoint)
 		{
 			buildingSpawnQueue.SetUnitRallyWaypoint(wayPointReticle.transform.position);
-			headAudioSource.PlayOneShot(setRallyPointSound.GetClip());
+            PlayAudioClip(headAudioSource, setRallyPointSound.GetClip());
 			wayPointReticle.SetActive(false);
 			buildingSpawnQueue = null;
 			isSettingRallyPoint = false;
@@ -982,7 +996,7 @@ public class InteractionPointer : MonoBehaviour
 		SetSnapTurnEnabled(false, false);
 		placementBuildingData = e.buildingData;
 
-		if (placementBuildingData.buildingType == RTSBuildingType.Wood_Wall_1x1)
+		if (placementBuildingData.buildingType == RTSBuildingType.Wood_Wall_Corner)
 		{
 			isInWallPlacementMode = true;
             BuildingData buildingData = GameMaster.GetBuilding(RTSBuildingType.Wood_Wall_Corner);

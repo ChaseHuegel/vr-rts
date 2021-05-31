@@ -107,27 +107,28 @@ public class BuildingSpawnQueue : MonoBehaviour
         audioSource.PlayOneShot(onButtonUpAudio);
     }
 
-    public void QueueLastUnitQueued() { QueueUnit(lastUnitQueued); }
+    public bool QueueLastUnitQueued() { return QueueUnit(lastUnitQueued); }
 
-    public void QueueUnit(RTSUnitType unitTypeToQueue)
+    public bool QueueUnit(RTSUnitType unitTypeToQueue)
     {
         // TODO: Reenable this later
         // if (damageable.GetAttributePercent(Attributes.HEALTH) < 1.0f)
         //     return;
         
         if (unitSpawnQueue.Count >= structure.buildingData.maxUnitQueueSize)
-            return;
+            return false;
 
         if (structure.IsSameFaction(playerManager.factionId) &&
             !playerManager.CanQueueUnit(unitTypeToQueue))
-            return;
+            return false;
 
         UnitData unitData = GameMaster.GetUnit(unitTypeToQueue);
         playerManager.RemoveUnitQueueCostFromStockpile(unitData);
-
         unitSpawnQueue.AddLast(unitData);
-
+        
         // Debug.Log("Queued " + unitData.unitType);
+        
+        return true;
     }
 
     private void UpdateUnitSpawnQueue()

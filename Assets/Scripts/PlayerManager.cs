@@ -46,7 +46,6 @@ public class PlayerManager : MonoBehaviour
     protected BuildMenu buildMenu;
     private Hand rightHand;
     private Hand leftHand;
-
     private static PlayerManager _instance;
     public static PlayerManager instance
     {

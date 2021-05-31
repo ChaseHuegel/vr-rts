@@ -21,9 +21,13 @@ public class HealthBar : MonoBehaviour
     public Text healthBarStatusText;
     private Damageable damageable;
 
+    public bool isVisible { get; private set; }
+
     // Start is called before the first frame update
     void Start()
     {
+        isVisible = false;
+
         if (!showText)
             healthBarStatusText.enabled = false;
 
@@ -62,7 +66,7 @@ public class HealthBar : MonoBehaviour
             SetFilledAmount((damageable.GetHealth() - e.damage) / damageable.GetMaxHealth());
 
         if (GetFilledAmount() <= 0.0f)
-            Hide();
+            ForceHide();
 
     }
 
@@ -81,7 +85,7 @@ public class HealthBar : MonoBehaviour
     /// <param name="amount">0.0f - 1.0f</param>
     public void SetFilledAmount(float amount)
     {
-        if (showBarForeground)
+        if (healthBarForegroundImage)
             healthBarForegroundImage.fillAmount = amount;
 
         if (showText)
@@ -91,6 +95,9 @@ public class HealthBar : MonoBehaviour
             Hide();
         else if (amount < autoshowAt)
             Show();
+        
+        if (amount <= 0.0f)
+            ForceHide();
     }
 
     /// <summary>
@@ -102,22 +109,45 @@ public class HealthBar : MonoBehaviour
         float filledAmount = GetFilledAmount();
         if (filledAmount < autoshowAt && filledAmount > 0)
             return;
-            
+
         if (showBarBackground)
             healthBarBackgroundImage.gameObject.SetActive(false);
         if (showBarForeground)
             healthBarForegroundImage.gameObject.SetActive(false);
         if (showText)
             healthBarStatusText.gameObject.SetActive(false);
+
+        isVisible = false;
+    }
+
+    public void ForceHide()
+    {
+        healthBarBackgroundImage.gameObject.SetActive(false);
+        healthBarForegroundImage.gameObject.SetActive(false);
+        healthBarStatusText.gameObject.SetActive(false);
+        isVisible = false;
+    }
+
+    public void TryShow()
+    {
+        if (GetFilledAmount() <= 0.0f)
+        {
+            ForceHide();
+            return;
+        }
+
+        Show();
     }
 
     public void Show()
-    {
+    {        
         if (showBarBackground)
             healthBarBackgroundImage.gameObject.SetActive(true);
         if (showBarForeground)
             healthBarForegroundImage.gameObject.SetActive(true);
         if (showText)
-            healthBarStatusText.gameObject.SetActive(true);
+            healthBarStatusText.gameObject.SetActive(true);       
+
+        isVisible = true;     
     }
 }

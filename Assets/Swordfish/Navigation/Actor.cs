@@ -323,7 +323,7 @@ public class Actor : Body
 
             //  We can pass thru actors if the path ahead is clear and we are going beyond the next spot
             bool canPassThruActors = currentPath.Count > 2 ? !World.at(currentPath[1].x, currentPath[1].y).IsBlocked() : false;
-
+            
             //  Attempt to move to the next point
             if ( CanSetPosition(currentPath[0].x, currentPath[0].y, canPassThruActors) )
             {
