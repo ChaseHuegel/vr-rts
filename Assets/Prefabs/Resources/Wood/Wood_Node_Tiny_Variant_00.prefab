@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 529303400958546870}
   - component: {fileID: -6034955544542369529}
   - component: {fileID: -6932742772242099376}
+  - component: {fileID: -4901886957995223648}
   m_Layer: 11
   m_Name: Wood_Node_Tiny_Variant_00
   m_TagString: Untagged
@@ -44,9 +45,9 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.12832999
-  m_Height: 0.5085831
+  m_Height: 0.32843828
   m_Direction: 1
-  m_Center: {x: 0, y: 0.25473776, z: 0}
+  m_Center: {x: 0, y: 0.3448102, z: 0}
 --- !u!114 &-6932742772242099376
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -67,6 +68,23 @@ MonoBehaviour:
   bakeOnStart: 1
   type: 2
   amount: 1000
+  maxInteractors: 0
+  interactors: 0
+--- !u!114 &-4901886957995223648
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5141526739168622145}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 847aeadd287e865488f59b558e0b9caf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  highlightMaterial: {fileID: 0}
+  highlightOnHover: 1
+  hideHighlight: []
 --- !u!1001 &9062653132985078406
 PrefabInstance:
   m_ObjectHideFlags: 0

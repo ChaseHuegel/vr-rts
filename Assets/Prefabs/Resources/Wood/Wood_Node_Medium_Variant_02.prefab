@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1653143408084180964}
   - component: {fileID: -6200001528163044178}
   - component: {fileID: -4486351338732053752}
+  - component: {fileID: -8004011371967593198}
   m_Layer: 11
   m_Name: Wood_Node_Medium_Variant_02
   m_TagString: Untagged
@@ -45,9 +46,9 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.24466848
-  m_Height: 0.7425662
+  m_Height: 0.5035368
   m_Direction: 1
-  m_Center: {x: 0, y: 0.37274265, z: 0}
+  m_Center: {x: 0, y: 0.49225736, z: 0}
 --- !u!114 &-4486351338732053752
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -68,6 +69,23 @@ MonoBehaviour:
   bakeOnStart: 1
   type: 2
   amount: 1000
+  maxInteractors: 0
+  interactors: 0
+--- !u!114 &-8004011371967593198
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6265365646750120467}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 847aeadd287e865488f59b558e0b9caf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  highlightMaterial: {fileID: 0}
+  highlightOnHover: 1
+  hideHighlight: []
 --- !u!1001 &3953841140372554646
 PrefabInstance:
   m_ObjectHideFlags: 0

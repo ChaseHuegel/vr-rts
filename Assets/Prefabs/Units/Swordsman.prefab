@@ -486,14 +486,16 @@ MonoBehaviour:
     x: 0
     y: 0
   movementSpeed: 0.3
+  maxGoalInteractRange: 1
   goalSearchDistance: 30
   factionID: 0
-  rtsUnitType: 7
+  rtsUnitType: 10
   state: 0
   isHeld: 0
   isDying: 0
   wasThrownOrDropped: 0
   audioSource: {fileID: 0}
+  isRanged: 0
   huntVillagers: 1
   huntMilitary: 1
   huntBuildings: 1
@@ -1657,7 +1659,7 @@ PrefabInstance:
     - target: {fileID: 9542722, guid: bcc60fdbd3a37b44cbc0cb99db483477, type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 9100000, guid: f5a5df21e2ce72749aab436d5667e57b, type: 2}
+      objectReference: {fileID: 9100000, guid: f7691aa4785838d42a222f0d9ba19126, type: 2}
     - target: {fileID: 13734496, guid: bcc60fdbd3a37b44cbc0cb99db483477, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 

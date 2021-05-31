@@ -10,34 +10,35 @@ using Valve.VR.InteractionSystem;
 public class Soldier : Unit
 {
     [Header("AI")]
-
     public bool huntVillagers = true;
     public bool huntMilitary = true;
     public bool huntBuildings = true;
-
 
     //public VillagerHoverMenu villagerHoverMenu;
 
     public override void Initialize()
     {
         base.Initialize();
-        HookIntoEvents();        
-        
+        HookIntoEvents();
+
+        maxGoalInteractRange = rtsUnitTypeData.attackRange;
+
         SetAIAttackGoals(huntVillagers, huntMilitary, huntBuildings);
 
         animator = gameObject.GetComponentInChildren<Animator>();
         if (!animator)
             Debug.Log("No animator component found.");
 
-        if(PlayerManager.instance.factionID == factionID)
-            PlayerManager.instance.AddToPopulation((Unit)this);     
+        if(IsSameFaction(playerManager.factionId))
+            playerManager.AddToPopulation((Unit)this);
 
     }
-    
+
     public void HookIntoEvents()
     {
         PathfindingGoal.OnGoalFoundEvent += OnGoalFound;
         PathfindingGoal.OnGoalInteractEvent += OnGoalInteract;
+        PathfindingGoal.OnGoalChangeEvent += OnGoalChange;
         AttributeHandler.OnDamageEvent += OnDamage;
         Damageable.OnDeathEvent += OnDeath;
     }
@@ -45,13 +46,13 @@ public class Soldier : Unit
     public void SetAIAttackGoals(bool villagers, bool military, bool buildings)
     {
         if (villagers)
-            goals.Add<GoalHuntVillagers>().myFactionID = factionID;
+            goals.Add<GoalHuntVillagers>();
 
         if (military)
-            goals.Add<GoalHuntMilitary>().myFactionID = factionID;        
-        
+            goals.Add<GoalHuntMilitary>();
+
         if (buildings)
-            goals.Add<GoalHuntBuildings>().myFactionID = factionID;
+            goals.Add<GoalHuntBuildings>();
 
         ResetAI();
     }
@@ -60,7 +61,7 @@ public class Soldier : Unit
 
     public override void OnHandHoverBegin(Hand hand)
     {
-        base.OnHandHoverBegin(hand);        
+        base.OnHandHoverBegin(hand);
         // villagerHoverMenu.Show();
     }
 
@@ -72,7 +73,7 @@ public class Soldier : Unit
 
     public override void OnAttachedToHand(Hand hand)
     {
-        base.OnAttachedToHand(hand);        
+        base.OnAttachedToHand(hand);
     }
 
     public override void OnDetachedFromHand(Hand hand)
@@ -88,10 +89,10 @@ public class Soldier : Unit
         base.Tick();
 
         GotoNearestGoalWithPriority();
-        
+
         if (IsMoving() )
             animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.MOVING);
-        
+
         // if (TaskChanged())
         // {
         //     ChangeEquippedItems();
@@ -114,7 +115,7 @@ public class Soldier : Unit
         {
             isDying = true;
             Freeze();
-            ResetAI(); 
+            ResetAI();
 
             if (UnityEngine.Random.Range(1, 100) < 50)
                 animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.DYING);
@@ -132,48 +133,56 @@ public class Soldier : Unit
         AudioSource.PlayClipAtPoint(GameMaster.GetAudio(clipName).GetClip(), transform.position, 0.75f);
     }
 
+
     public void OnGoalFound(object sender, PathfindingGoal.GoalFoundEvent e)
     {
-        if (e.actor != this) 
+        if (e.actor != this)
             return;
 
-        //Debug.Log(string.Format("Found target {0}!", e.cell.GetFirstOccupant().name));
+        //if (isRanged)
+        // if (DistanceTo(e.cell) < 10)
+        //      Debug.Log(string.Format("Found target {0}!", e.cell.GetFirstOccupant().name));
 
         //  default cancel the goal so that another can take priority
         //ResetGoal();
         //e.Cancel();
     }
 
+    public void OnGoalChange(object sender, PathfindingGoal.GoalChangeEvent e)
+    {
+        if (e.actor != this || isDying)
+            return;
+
+        if (previousGoal is GoalHuntUnits || previousGoal is GoalHuntMilitary || previousGoal is GoalHuntVillagers)
+            animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.IDLE);
+    }
+
     public void OnGoalInteract(object sender, PathfindingGoal.GoalInteractEvent e)
     {
-        if (e.actor != this || isHeld) 
+        if (e.actor != this || isHeld)
             return;
-        
+
         if (e.goal is GoalHuntUnits || e.goal is GoalHuntMilitary || e.goal is GoalHuntVillagers)
         {
             Unit unit = e.cell.GetFirstOccupant<Unit>();
-            
-
-            Damageable damageable = unit.GetComponent<Damageable>();            
-            damageable.Damage(rtsUnitTypeData.attackDamage, AttributeChangeCause.ATTACKED, null, DamageType.SLASHING);
-            
-            if (unit.IsDead())
-                animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.IDLE);
-            else
-                SetAttackAnimationState();
-
+            projectileTarget = unit.gameObject;
+            Damageable damageable = unit.GetComponent<Damageable>();
+            damageable.Damage(rtsUnitTypeData.attackDamage, AttributeChangeCause.ATTACKED, AttributeHandler, DamageType.SLASHING);
+            SetAttackAnimationState();
             return;
         }
         else if (e.goal is GoalHuntBuildings)
-        {                     
-            Damageable damageable; 
-            Structure structure = e.cell.GetFirstOccupant<Structure>();  
-            if (structure) 
+        {
+            Damageable damageable;
+            Structure structure = e.cell.GetFirstOccupant<Structure>();
+            if (structure)
                 damageable = structure.GetComponent<Damageable>();
             else
                 damageable = e.cell.GetFirstOccupant<Constructible>().GetComponent<Damageable>();
-            
-            damageable.Damage(rtsUnitTypeData.attackDamage, AttributeChangeCause.ATTACKED, null, DamageType.SLASHING);
+
+            projectileTarget = structure.gameObject;
+
+            damageable.Damage(rtsUnitTypeData.attackDamage, AttributeChangeCause.ATTACKED, AttributeHandler, DamageType.SLASHING);
             SetAttackAnimationState();
             return;
         }
@@ -182,22 +191,21 @@ public class Soldier : Unit
             Unit unit = e.cell.GetFirstOccupant<Unit>();
             if (unit)
             {
+                projectileTarget = unit.gameObject;
                 Damageable damageable = unit.GetComponent<Damageable>();
-                damageable.Damage(rtsUnitTypeData.attackDamage, AttributeChangeCause.ATTACKED, null, DamageType.SLASHING);
-               
-                if (unit.IsDead())
-                    animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.IDLE);
-                else
-                    SetAttackAnimationState();
-                    
+                damageable.Damage(rtsUnitTypeData.attackDamage, AttributeChangeCause.ATTACKED, AttributeHandler, DamageType.SLASHING);
+
+                SetAttackAnimationState();
+
                 return;
             }
 
             Structure structure = e.cell.GetFirstOccupant<Structure>();
             if (structure)
             {
+                projectileTarget = structure.gameObject;
                 Damageable damageable = structure.GetComponent<Damageable>();
-                damageable.Damage(rtsUnitTypeData.attackDamage, AttributeChangeCause.ATTACKED, null, DamageType.SLASHING);
+                damageable.Damage(rtsUnitTypeData.attackDamage, AttributeChangeCause.ATTACKED, AttributeHandler, DamageType.SLASHING);
                 SetAttackAnimationState();
                 return;
             }
@@ -205,17 +213,18 @@ public class Soldier : Unit
             Constructible construction = e.cell.GetFirstOccupant<Constructible>();
             if (construction)
             {
+                projectileTarget = construction.gameObject;
                 Damageable damageable = construction.GetComponent<Damageable>();
-                damageable.Damage(rtsUnitTypeData.attackDamage, AttributeChangeCause.ATTACKED, null, DamageType.SLASHING);
+                damageable.Damage(rtsUnitTypeData.attackDamage, AttributeChangeCause.ATTACKED, AttributeHandler, DamageType.SLASHING);
                 SetAttackAnimationState();
                 return;
             }
         }
-        
+
         //  default cancel the interaction
         ResetGoal();
         e.Cancel();
-    }   
+    }
 
     private void SetAttackAnimationState()
     {
@@ -224,8 +233,59 @@ public class Soldier : Unit
         else
             animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.ATTACKING2);
     }
+
+    // ! Moved to Unit.cs
+    // // void Update()
+    // // {
+    // //     if (projectile)
+    // //         LaunchProjectile();
+
+    // // }
+
+    // // GameObject projectile;
+    // // Vector3 projectileTargetPos;
+    // // public void LaunchProjectile()
+    // // {
+    // //     if (!projectile)
+    // //     {
+    // //         projectile = Instantiate(rangedProjectile);
+    // //         projectile.transform.position = transform.position;
+    // //         projectile.transform.position += new Vector3(0, 0.09f, 0);
+    // //         projectileTargetPos = projectileTarget.transform.position;
+    // //         projectileTargetPos += new Vector3(0, 0.09f, 0);
+    // //     }
+
+    // //     // First we get the direction of the arrow's forward vector to the target position.
+    // //     Vector3 tDir = projectileTargetPos - projectile.transform.position;
+
+
+    // //     // Now we use a Quaternion function to get the rotation based on the direction
+    // //     Quaternion rot = Quaternion.LookRotation(tDir);
+
+    // //     // And finally, set the arrow's rotation to the one we just created.
+    // //     projectile.transform.rotation = rot;
+
+    // //     //Get the distance from the arrow to the target
+    // //     float dist = Vector3.Distance(projectile.transform.position, projectileTargetPos);
+
+    // //     if(dist <= 0.1f)
+    // //     {
+    // //         // This will destroy the arrow when it is within .1 units
+    // //         // of the target location. You can set this to whatever
+    // //         // distance you're comfortable with.
+    // //         GameObject.Destroy(projectile);
+
+    // //     }
+    // //     else
+    // //     {
+    // //         // If not, then we just keep moving forward
+    // //         projectile.transform.Translate(Vector3.forward * (arrowSpeed * Time.deltaTime));
+    // //     }
+    // // }
+
     public void CleanupEvents()
     {
+        PathfindingGoal.OnGoalChangeEvent -= OnGoalChange;
         PathfindingGoal.OnGoalFoundEvent -= OnGoalFound;
         PathfindingGoal.OnGoalInteractEvent -= OnGoalInteract;
         Damageable.OnDeathEvent -= OnDeath;

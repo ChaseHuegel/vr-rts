@@ -17,6 +17,7 @@ public enum RTSUnitType
     Hunter,
     Swordsman,
     OrcGrunt,
+    Scout,
     
 };
 

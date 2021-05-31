@@ -4,11 +4,11 @@ using Swordfish;
 
 public class GoalHuntFauna: PathfindingGoal
 {   
-    public override bool CheckGoal(Cell cell)
+    public override bool CheckGoal(Cell cell, Actor actor = null)
     {
         Fauna fauna = cell?.GetFirstOccupant<Fauna>();
 
-        if (fauna)
+        if (fauna && !fauna.IsDead())
             return true;
             
         return false;

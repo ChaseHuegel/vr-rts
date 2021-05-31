@@ -255,8 +255,8 @@ GameObject:
   - component: {fileID: 2747820869390259530}
   - component: {fileID: 8580054357101469083}
   - component: {fileID: 4424245338257627667}
-  - component: {fileID: -162982284593069479}
   - component: {fileID: -7167361800687799736}
+  - component: {fileID: -162982284593069479}
   - component: {fileID: -4049048120592359859}
   m_Layer: 10
   m_Name: TownHall_World
@@ -447,26 +447,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   highlightMaterial: {fileID: 0}
---- !u!114 &-162982284593069479
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1129064322338806663}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6494f394dde4732498f2aecf5968b6e8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  boundingDimensions: {x: 6, y: 6}
-  boundingOrigin: {x: -0.0625, y: -0.0625}
-  gridPosition:
-    x: 0
-    y: 0
-  bakeOnStart: 1
-  factionID: 0
-  buildingData: {fileID: 11400000, guid: acd2012d81514a643bd75779f8900a24, type: 2}
+  highlightOnHover: 1
+  hideHighlight: []
 --- !u!114 &-7167361800687799736
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -487,6 +469,26 @@ MonoBehaviour:
   weaknesses: 
   resistances: 
   immunities: 
+--- !u!114 &-162982284593069479
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1129064322338806663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6494f394dde4732498f2aecf5968b6e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  boundingDimensions: {x: 6, y: 6}
+  boundingOrigin: {x: -0.0625, y: -0.0625}
+  gridPosition:
+    x: 0
+    y: 0
+  factionId: 0
+  bakeOnStart: 1
+  buildingData: {fileID: 11400000, guid: acd2012d81514a643bd75779f8900a24, type: 2}
 --- !u!114 &-4049048120592359859
 MonoBehaviour:
   m_ObjectHideFlags: 0

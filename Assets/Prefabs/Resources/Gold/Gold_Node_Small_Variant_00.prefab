@@ -173,6 +173,7 @@ GameObject:
   - component: {fileID: 6714141725660377601}
   - component: {fileID: 2490615598333574247}
   - component: {fileID: -1946808600278826207}
+  - component: {fileID: -2505378129511948697}
   m_Layer: 11
   m_Name: Gold_Node_Small_Variant_00
   m_TagString: Untagged
@@ -214,11 +215,13 @@ MonoBehaviour:
   boundingDimensions: {x: 3, y: 3}
   boundingOrigin: {x: 0, y: 0}
   gridPosition:
-    x: 0
-    y: 0
+    x: 61
+    y: 158
   bakeOnStart: 1
   type: 8
   amount: 1000
+  maxInteractors: 0
+  interactors: 0
 --- !u!135 &-1946808600278826207
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -230,8 +233,23 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 1.2423282
-  m_Center: {x: -0, y: 0.15, z: 0}
+  m_Radius: 1.51
+  m_Center: {x: -0, y: -0.42, z: 0}
+--- !u!114 &-2505378129511948697
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3429597340349181409}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 847aeadd287e865488f59b558e0b9caf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  highlightMaterial: {fileID: 0}
+  highlightOnHover: 1
+  hideHighlight: []
 --- !u!1 &4421607315335650614
 GameObject:
   m_ObjectHideFlags: 0

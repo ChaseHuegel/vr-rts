@@ -21,13 +21,13 @@ public class FactionSettings : MonoBehaviour
             if (unit)
             {
                 isUnit = true;
-                factionId = unit.factionID;
+                factionId = unit.factionId;
             }
             else
             {
                 Structure structure = GetComponent<Structure>();
                 if (structure)
-                    factionId = structure.factionID;  
+                    factionId = structure.factionId;  
                 else
                 {
                     factionId = GetComponent<FactionSettings>().factionId;

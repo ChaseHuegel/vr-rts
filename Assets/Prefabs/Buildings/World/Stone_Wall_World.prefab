@@ -228,7 +228,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5451351604132603944}
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -5.960226, y: -0.0010000467, z: -9.889307}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.09, y: 0.09, z: 0.09}
   m_Children:
   - {fileID: 1835070445468244776}
@@ -349,6 +349,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   highlightMaterial: {fileID: 0}
+  highlightOnHover: 1
+  hideHighlight: []
 --- !u!114 &6886904724329495847
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -386,8 +388,8 @@ MonoBehaviour:
   gridPosition:
     x: 0
     y: 0
+  factionId: 0
   bakeOnStart: 1
-  factionID: 0
   buildingData: {fileID: 11400000, guid: f9ee3b0f318b305498e27a32d891acfd, type: 2}
 --- !u!114 &6886904724329495849
 MonoBehaviour:

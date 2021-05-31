@@ -32,19 +32,31 @@ public class BuildingSpawnQueue : MonoBehaviour
     public GameObject buttonLockPrefab;
     protected AudioSource audioSource;
 
-    void Awake()
-    {
-        // TODO: Pick a spot around the building and set it as the spawn point
-        // when no spawn point is found. Using transform center currently.
-        if (!unitSpawnPoint)
-        {
-            unitSpawnPoint = transform;
-            Debug.Log("UnitSpawnPoint not set.", this);
-        }
-    }
+    private RTSUnitType lastUnitQueued;
+
+    private PlayerManager playerManager;
 
     void Start()
-    {
+    {       
+        playerManager = PlayerManager.instance;
+
+        if (!unitSpawnPoint)
+        {
+            Structure structure = GetComponentInParent<Structure>();
+            if (structure)
+            {
+                unitSpawnPoint = structure.transform;
+                unitRallyWaypoint = unitSpawnPoint;
+                Debug.Log("UnitSpawnPoint not set, using structure transform.", this);
+            }
+            else
+            {
+                Debug.Log("UnitSpawnPoint not set and no structure found.", this);
+            }
+            
+            
+        }
+
         if (!(damageable = gameObject.GetComponentInParent<Damageable>()))
             Debug.Log("Missing damageable component in parent.", this);
 
@@ -69,6 +81,10 @@ public class BuildingSpawnQueue : MonoBehaviour
 
         if (!(queueProgressImage = GetComponentInChildren<UnityEngine.UI.Image>(true)))
             Debug.Log("queueProgressImage not found.", this);
+
+        QueueUnitButton firstButton = GetComponentInChildren<QueueUnitButton>(true);
+        if (firstButton)
+            lastUnitQueued = firstButton.unitTypeToQueue;        
     }
 
     public void SetUnitRallyWaypoint(Vector3 position)
@@ -91,20 +107,23 @@ public class BuildingSpawnQueue : MonoBehaviour
         audioSource.PlayOneShot(onButtonUpAudio);
     }
 
+    public void QueueLastUnitQueued() { QueueUnit(lastUnitQueued); }
+
     public void QueueUnit(RTSUnitType unitTypeToQueue)
     {
-        if (damageable.GetAttributePercent(Attributes.HEALTH) < 1.0f)
-            return;
-
+        // TODO: Reenable this later
+        // if (damageable.GetAttributePercent(Attributes.HEALTH) < 1.0f)
+        //     return;
+        
         if (unitSpawnQueue.Count >= structure.buildingData.maxUnitQueueSize)
             return;
 
-        if (structure.factionID == PlayerManager.instance.factionID &&
-            !PlayerManager.instance.CanQueueUnit(unitTypeToQueue))
+        if (structure.IsSameFaction(playerManager.factionId) &&
+            !playerManager.CanQueueUnit(unitTypeToQueue))
             return;
 
         UnitData unitData = GameMaster.GetUnit(unitTypeToQueue);
-        PlayerManager.instance.RemoveUnitQueueCostFromStockpile(unitData);
+        playerManager.RemoveUnitQueueCostFromStockpile(unitData);
 
         unitSpawnQueue.AddLast(unitData);
 
@@ -150,7 +169,7 @@ public class BuildingSpawnQueue : MonoBehaviour
 
         else if (unitSpawnQueue.Count == 1)
         {
-            PlayerManager.instance.RemoveFromQueueCount(unitSpawnQueue.Last.Value.populationCost);
+            playerManager.RemoveFromQueueCount(unitSpawnQueue.Last.Value.populationCost);
             unitSpawnQueue.RemoveLast();
             queueProgressImage.fillAmount = 0;
             queueProgressImage.enabled = false;
@@ -159,7 +178,7 @@ public class BuildingSpawnQueue : MonoBehaviour
         }
         else
         {
-            PlayerManager.instance.RemoveFromQueueCount(unitSpawnQueue.Last.Value.populationCost);
+            playerManager.RemoveFromQueueCount(unitSpawnQueue.Last.Value.populationCost);
             unitSpawnQueue.RemoveLast();
         }
     }
@@ -171,7 +190,7 @@ public class BuildingSpawnQueue : MonoBehaviour
             GameObject unitGameObject = Instantiate(unitSpawnQueue.First.Value.prefab, unitSpawnPoint.transform.position, Quaternion.identity);
             Unit unit = unitGameObject.GetComponent<Unit>();
             unit.rtsUnitType = unitSpawnQueue.First.Value.unitType;
-            unit.factionID = structure.factionID;
+            unit.factionId = structure.factionId;
             unit.SyncPosition();
             unit.GotoForced(World.ToWorldSpace(unitRallyWaypoint.position));
             unit.LockPath();

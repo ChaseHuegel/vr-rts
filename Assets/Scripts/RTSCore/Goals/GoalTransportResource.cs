@@ -5,11 +5,11 @@ public class GoalTransportResource : PathfindingGoal
 {
     public ResourceGatheringType type;
 
-    public override bool CheckGoal(Cell cell)
+    public override bool CheckGoal(Cell cell, Actor actor = null)
     {
         Structure structure = cell?.GetFirstOccupant<Structure>();
 
-        if (structure != null && structure.CanDropOff(type))
+        if (structure != null && structure.CanDropOff(type) && structure.IsSameFaction(actor))
             return true;
 
         return false;

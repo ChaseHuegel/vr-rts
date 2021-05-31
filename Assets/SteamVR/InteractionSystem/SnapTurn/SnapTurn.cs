@@ -51,8 +51,8 @@ namespace Valve.VR.InteractionSystem
                 rotateRightFX.SetActive(false);
         }
 
-        public bool rightHandEnabled;
-        public bool leftHandEnabled;
+        public bool rightHandEnabled = true;
+        public bool leftHandEnabled = true;
 
         private void Update()
         {

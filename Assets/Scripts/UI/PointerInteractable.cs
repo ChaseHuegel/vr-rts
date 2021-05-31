@@ -5,13 +5,16 @@ using UnityEngine;
 public class PointerInteractable : MonoBehaviour
 {
     public Material highlightMaterial;
+    public bool highlightOnHover = true;
     protected GameObject highlightHolder;
+    [Tooltip("An array of child gameObjects to not render a highlight for. Things like transparent parts, vfx, etc.")]
+    public GameObject[] hideHighlight;
     protected MeshRenderer[] highlightRenderers;
     protected MeshRenderer[] existingRenderers;
     protected SkinnedMeshRenderer[] highlightSkinnedRenderers;
     protected SkinnedMeshRenderer[] existingSkinnedRenderers;
-    protected bool highlightOn;
-    protected bool wasHighlightOn;
+    protected bool isPointedAt;
+    protected bool wasPointedAt;
 
     void Start()
     {
@@ -19,41 +22,63 @@ public class PointerInteractable : MonoBehaviour
 #if UNITY_URP
             highlightMaterial = (Material)Resources.Load("SteamVR_HoverHighlight_URP", typeof(Material));
 #else
-            highlightMaterial = (Material)Resources.Load("SteamVR_HoverHighlight", typeof(Material));
+            highlightMaterial = (Material)Resources.Load("PointerHoverHighlight", typeof(Material));
 #endif
 
         if (highlightMaterial == null)
-            Debug.LogError("<b>[SteamVR Interaction]</b> Hover Highlight Material is missing. Please create a material named 'SteamVR_HoverHighlight' and place it in a Resources folder", this);
+            Debug.LogError("<b>[SteamVR Interaction]</b> Hover Highlight Material is missing. Please create a material named 'PointerHoverHighlight' and place it in a Resources folder", this);
         
     }
 
-    // protected virtual void Update()
-    // {
-    //     if (highlightOn)
-    //     { 
-    //         UpdateHighlightRenderers();
+    protected virtual void Update()
+    {
         
-    //         if (highlightOn == false && highlightHolder != null)
-    //             Destroy(highlightHolder);
-    //     }
-    // }
+        UpdateHighlightRenderers();
+    
+        if (isPointedAt == false && highlightHolder != null)
+            Destroy(highlightHolder);
+    }
 
     public void Highlight( bool highlight )
     {
-        // wasHighlightOn = highlightOn;        
-        // highlightOn = highlight;  
+        if (highlight)
+        {
+            wasPointedAt = isPointedAt;        
+            isPointedAt = true;  
 
-        // // if (highlightOnHover == true && wasHovering == false)
-        // if (highlightOn == true && wasHighlightOn == false)
-        // {
-        //     CreateHighlightRenderers();
-        //     UpdateHighlightRenderers();
-        // }
+            if (wasPointedAt == false)
+            {
+                CreateHighlightRenderers();
+                UpdateHighlightRenderers();
+            }
+        }
+        else
+        {
+            wasPointedAt = isPointedAt;
+            isPointedAt = false;
 
-        // if (highlightOn = false && highlightHolder != null)
-        //     Destroy(highlightHolder);
+            if (highlightHolder != null)
+                Destroy(highlightHolder);
+        }
+
     }
 
+    protected virtual bool ShouldIgnoreHighlight(Component component)
+    {
+        return ShouldIgnore(component.gameObject);
+    }
+
+    protected virtual bool ShouldIgnore(GameObject check)
+    {
+        for (int ignoreIndex = 0; ignoreIndex < hideHighlight.Length; ignoreIndex++)
+        {
+            if (check == hideHighlight[ignoreIndex])
+                return true;
+        }
+
+        return false;
+    }
+    
     protected virtual void CreateHighlightRenderers()
     {
         existingSkinnedRenderers = this.GetComponentsInChildren<SkinnedMeshRenderer>(true);
@@ -63,6 +88,9 @@ public class PointerInteractable : MonoBehaviour
         for (int skinnedIndex = 0; skinnedIndex < existingSkinnedRenderers.Length; skinnedIndex++)
         {
             SkinnedMeshRenderer existingSkinned = existingSkinnedRenderers[skinnedIndex];
+
+            if (ShouldIgnoreHighlight(existingSkinned))
+                    continue;
 
             GameObject newSkinnedHolder = new GameObject("SkinnedHolder");
             newSkinnedHolder.transform.parent = highlightHolder.transform;
@@ -91,7 +119,7 @@ public class PointerInteractable : MonoBehaviour
             MeshFilter existingFilter = existingFilters[filterIndex];
             MeshRenderer existingRenderer = existingFilter.GetComponent<MeshRenderer>();
 
-            if (existingFilter == null || existingRenderer == null)
+            if (existingFilter == null || existingRenderer == null || ShouldIgnoreHighlight(existingFilter))
                 continue;
 
             GameObject newFilterHolder = new GameObject("FilterHolder");
@@ -122,13 +150,13 @@ public class PointerInteractable : MonoBehaviour
             SkinnedMeshRenderer existingSkinned = existingSkinnedRenderers[skinnedIndex];
             SkinnedMeshRenderer highlightSkinned = highlightSkinnedRenderers[skinnedIndex];
 
-            if (existingSkinned != null && highlightSkinned != null && highlightOn == true)
+            if (existingSkinned != null && highlightSkinned != null && isPointedAt == true)
             {
                 highlightSkinned.transform.position = existingSkinned.transform.position;
                 highlightSkinned.transform.rotation = existingSkinned.transform.rotation;
                 highlightSkinned.transform.localScale = existingSkinned.transform.lossyScale;
                 highlightSkinned.localBounds = existingSkinned.localBounds;
-                highlightSkinned.enabled = highlightOn && existingSkinned.enabled && existingSkinned.gameObject.activeInHierarchy;
+                highlightSkinned.enabled = isPointedAt && existingSkinned.enabled && existingSkinned.gameObject.activeInHierarchy;
 
                 int blendShapeCount = existingSkinned.sharedMesh.blendShapeCount;
                 for (int blendShapeIndex = 0; blendShapeIndex < blendShapeCount; blendShapeIndex++)
@@ -146,16 +174,28 @@ public class PointerInteractable : MonoBehaviour
             MeshRenderer existingRenderer = existingRenderers[rendererIndex];
             MeshRenderer highlightRenderer = highlightRenderers[rendererIndex];
 
-            if (existingRenderer != null && highlightRenderer != null && highlightOn == true)
+            if (existingRenderer != null && highlightRenderer != null && isPointedAt == true)
             {
                 highlightRenderer.transform.position = existingRenderer.transform.position;
                 highlightRenderer.transform.rotation = existingRenderer.transform.rotation;
                 highlightRenderer.transform.localScale = existingRenderer.transform.lossyScale;
-                highlightRenderer.enabled = highlightOn && existingRenderer.enabled && existingRenderer.gameObject.activeInHierarchy;
+                highlightRenderer.enabled = isPointedAt && existingRenderer.enabled && existingRenderer.gameObject.activeInHierarchy;
             }
             else if (highlightRenderer != null)
                 highlightRenderer.enabled = false;
         }
     }
     
+
+    protected virtual void OnDestroy()
+    {
+        if (highlightHolder != null)
+                Destroy(highlightHolder);
+    }
+
+    protected virtual void OnDisable()
+    {
+        if (highlightHolder != null)
+            Destroy(highlightHolder);
+    }
 }

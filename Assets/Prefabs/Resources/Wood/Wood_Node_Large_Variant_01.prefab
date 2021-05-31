@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6319131350853889515}
   - component: {fileID: -3939586259646018535}
   - component: {fileID: -8177771772452882204}
+  - component: {fileID: -662594377695860650}
   m_Layer: 11
   m_Name: Wood_Node_Large_Variant_01
   m_TagString: Untagged
@@ -46,9 +47,9 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.24735773
-  m_Height: 0.7317836
+  m_Height: 0.5354363
   m_Direction: 1
-  m_Center: {x: -0.00000023841858, y: 0.36598563, z: -0.0017303228}
+  m_Center: {x: -0.00000023840207, y: 0.46416038, z: -0.001730323}
 --- !u!114 &-8177771772452882204
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -69,6 +70,23 @@ MonoBehaviour:
   bakeOnStart: 1
   type: 2
   amount: 1000
+  maxInteractors: 0
+  interactors: 0
+--- !u!114 &-662594377695860650
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1706927533363365916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 847aeadd287e865488f59b558e0b9caf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  highlightMaterial: {fileID: 0}
+  highlightOnHover: 1
+  hideHighlight: []
 --- !u!1001 &673716630459816750
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -12,6 +12,18 @@ public class Body : MonoBehaviour
     public Vector2 boundingOrigin = Vector2.zero;
     public Coord2D gridPosition = new Coord2D(0, 0);
 
+    public byte factionId;
+    
+    public bool IsSameFaction(Actor actor)
+    {
+        return this.factionId == actor.factionId;
+    }
+
+    public bool IsSameFaction(byte factionId)
+    {
+        return this.factionId == factionId;
+    }
+
     public virtual void Initialize() {}
     public virtual void Tick() {}
 
@@ -44,6 +56,10 @@ public class Body : MonoBehaviour
 
 #region getters setters
 
+    /// <summary>
+    /// Get the grid cell located at the transform of this body.
+    /// </summary>
+    /// <returns>Cell - The grid cell the body is located in.</returns>
     public Cell GetCellAtTransform()
     {
         Vector3 pos = World.ToWorldSpace(transform.position);
@@ -204,6 +220,7 @@ public class Body : MonoBehaviour
         else
         {
             Vector3 modPos = transform.position;
+
             if (boundingDimensions.x % 2 == 0)
                 modPos.x = transform.position.x + World.GetUnit() * -0.5f;
 

@@ -109,7 +109,7 @@ public class Fauna : Actor
     }
 
     // float meatAmount= 50.0f;
-    // float eatRate = 0.1f;
+    // float eatRate = 0.01f;
     
     private bool isDead;
     public bool IsDead()
@@ -119,6 +119,8 @@ public class Fauna : Actor
             isDead = true;
             resource.enabled = true;
             AttributeHandler.enabled = false;
+            Freeze();
+            ResetAI();
             liveFaunaObject.SetActive(false);
             deadFaunaObject.SetActive(true);
             animator.enabled = false;

@@ -848,6 +848,7 @@ GameObject:
   - component: {fileID: 1985173774085784218}
   - component: {fileID: 8250106713922096492}
   - component: {fileID: 3960956299071650860}
+  - component: {fileID: 67447672098668577}
   m_Layer: 11
   m_Name: Fauna_Variant_00
   m_TagString: Untagged
@@ -888,11 +889,12 @@ MonoBehaviour:
   gridPosition:
     x: 0
     y: 0
+  factionId: 0
   bakeOnStart: 1
   type: 64
   amount: 200
   maxInteractors: 0
-  interactors: 2
+  interactors: []
 --- !u!135 &1985173774085784218
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -904,8 +906,8 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.03605585
-  m_Center: {x: 0, y: 0.03596509, z: 0}
+  m_Radius: 0.058902025
+  m_Center: {x: -0.0004889965, y: 0.06, z: 0}
 --- !u!114 &8250106713922096492
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -920,8 +922,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attributes:
   - attribute: 0
-    value: 20
-    max: 20
+    value: 10
+    max: 10
   invulnerable: 0
   weaknesses: 
   resistances: 
@@ -943,6 +945,7 @@ MonoBehaviour:
   gridPosition:
     x: 0
     y: 0
+  factionId: 0
   movementSpeed: 0.1
   goalSearchDistance: 20
   runSpeed: 0.3
@@ -953,6 +956,21 @@ MonoBehaviour:
   lookAroundActionChance: 0.748744
   liveFaunaObject: {fileID: 829677607288320686}
   deadFaunaObject: {fileID: 7636095663992753484}
+--- !u!114 &67447672098668577
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7256161887071947675}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 847aeadd287e865488f59b558e0b9caf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  highlightMaterial: {fileID: 0}
+  highlightOnHover: 1
+  hideHighlight: []
 --- !u!1 &7636095663992753484
 GameObject:
   m_ObjectHideFlags: 0

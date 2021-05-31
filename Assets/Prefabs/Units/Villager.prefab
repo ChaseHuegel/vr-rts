@@ -18088,21 +18088,19 @@ MonoBehaviour:
   gridPosition:
     x: 0
     y: 0
+  factionId: 0
   movementSpeed: 0.3
   goalSearchDistance: 30
-  factionID: 0
+  faction: {fileID: 0}
   rtsUnitType: 1
+  rangedProjectile: {fileID: 3740421758085118616, guid: 33ebc7103c3a4b64ca93d64149b5fa33,
+    type: 3}
   state: 0
   isHeld: 0
   isDying: 0
   wasThrownOrDropped: 0
   audioSource: {fileID: 0}
-  currentResource: 0
-  maxCargo: 10
   currentCargo: 0
-  workRate: 0.5
-  buildRate: 7
-  repairRate: 5
   grainCargoDisplayObject: {fileID: 668154613715088764}
   woodCargoDisplayObject: {fileID: 2787404010531457095}
   stoneCargoDisplayObject: {fileID: 7579505042717709888}
@@ -18230,6 +18228,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   highlightMaterial: {fileID: 0}
+  highlightOnHover: 1
+  hideHighlight: []
 --- !u!1 &1405613437724166983
 GameObject:
   m_ObjectHideFlags: 0

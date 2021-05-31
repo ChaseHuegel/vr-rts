@@ -16,11 +16,12 @@ public class Actor : Body
     public Damageable AttributeHandler { get { return damageable; } }
 
     [Header("Actor")]
-    public float movementSpeed = 1f;
+    public float movementSpeed = 1f;    
 
     [SerializeField] private byte goalSearchDistance = 20;
     private byte goalSearchGrowth;
     private byte currentGoalSearchDistance;
+    protected int maxGoalInteractRange = 1;
 
     protected Cell currentGoalTarget = null;
     protected Cell previousGoalTarget = null;
@@ -243,7 +244,7 @@ public class Actor : Body
     public void Goto(Vector3 vec, bool ignoreActors = true) { Goto((int)vec.x, (int)vec.z, ignoreActors); }
     public void Goto(int x, int y, bool ignoreActors = true)
     {
-        if (!isPathLocked && !HasValidPath() && DistanceTo(x, y) > 1)
+        if (!isPathLocked && !HasValidPath() && DistanceTo(x, y) > maxGoalInteractRange)
             PathManager.RequestPath(this, x, y, ignoreActors);
     }
 
@@ -252,7 +253,7 @@ public class Actor : Body
     public void GotoForced(Vector3 vec, bool ignoreActors = true) { Goto((int)vec.x, (int)vec.z, ignoreActors); }
     public void GotoForced(int x, int y, bool ignoreActors = true)
     {
-        if (!isPathLocked && DistanceTo(x, y) > 1)
+        if (!isPathLocked && DistanceTo(x, y) > maxGoalInteractRange)
             PathManager.RequestPath(this, x, y, ignoreActors);
     }
 
@@ -269,7 +270,7 @@ public class Actor : Body
 #endregion
 
 
-#region monobehavior
+#region monobehavior    
 
     //  Perform ticks at a regular interval. FixedUpdate is called 60x/s
     public void FixedUpdate()
@@ -293,7 +294,7 @@ public class Actor : Body
             if (!moving && HasValidTarget())
             {
                 //  Check if we have reached our target, or the path ahead matches our goal
-                if (DistanceTo(currentGoalTarget) <= 1 || (HasValidPath() && PathfindingGoal.CheckGoal(this, currentPath[0], currentGoal)))
+                if (DistanceTo(currentGoalTarget) <= maxGoalInteractRange || (HasValidPath() && PathfindingGoal.CheckGoal(this, currentPath[0], currentGoal)))
                 {
                     //  Assume our currentGoal is a valid match since it was found successfully.
                     //  Forcibly trigger reached under that assumption

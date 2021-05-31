@@ -280,6 +280,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   highlightMaterial: {fileID: 0}
+  highlightOnHover: 1
+  hideHighlight: []
 --- !u!114 &2566623956823716198
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -295,7 +297,7 @@ MonoBehaviour:
   attributes:
   - attribute: 0
     value: 0
-    max: 550
+    max: 50
   invulnerable: 0
   weaknesses: 
   resistances: 
@@ -1246,8 +1248,8 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 4.86
-  m_Center: {x: -1.38, y: 0.01, z: 6.7}
+  m_Radius: 3.25
+  m_Center: {x: 0, y: 0, z: 6.89}
 --- !u!114 &5465849972442543059
 MonoBehaviour:
   m_ObjectHideFlags: 0

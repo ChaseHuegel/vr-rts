@@ -15,15 +15,19 @@ public enum UnitState
 
 public class Unit : Actor, IFactioned
 {
-    [Header("Faction")]
-    public byte factionID = 0;
-    private Faction faction;
+    [SerializeField]
+    protected Faction faction;
 
     public Faction GetFaction() { return faction; }
-    public void UpdateFaction() { faction = GameMaster.Factions.Find(x => x.index == factionID); }
+    public void UpdateFaction() { faction = GameMaster.Factions.Find(x => x.index == factionId); }
 
     [Header("Unit")]
     public RTSUnitType rtsUnitType;
+     public GameObject rangedProjectile;
+    protected GameObject projectileTarget;
+    protected float arrowSpeed = 5.0f;
+    GameObject projectile;
+    Vector3 projectileTargetPos;
 
     [Header("AI")]
     public UnitState state;
@@ -40,6 +44,7 @@ public class Unit : Actor, IFactioned
 
     public AudioSource audioSource;
     protected Animator animator;
+    protected PlayerManager playerManager;
 
     public void Awake()
     {
@@ -51,13 +56,14 @@ public class Unit : Actor, IFactioned
     public override void Initialize()
     {
         base.Initialize();
+        playerManager = PlayerManager.instance;
 
         animator = gameObject.GetComponentInChildren<Animator>();
         if (!animator)
             Debug.Log("No animator component found.");
 
         if (!m_rtsUnitTypeData)
-            m_rtsUnitTypeData = GameMaster.GetUnit(rtsUnitType);
+            m_rtsUnitTypeData = GameMaster.GetUnit(rtsUnitType);       
 
         UpdateFaction();
     }
@@ -76,11 +82,6 @@ public class Unit : Actor, IFactioned
         return (int)rtsUnitTypeData.unitType < (int)RTSUnitType.Swordsman;
     }
 
-    public virtual bool IsSameFaction(int factionId)
-    {
-        return this.factionID == factionId;
-    }
-
     public bool IsDead()
     {
         return AttributeHandler.GetAttributePercent(Attributes.HEALTH) <= 0.0f;
@@ -94,7 +95,7 @@ public class Unit : Actor, IFactioned
 
         animator.SetInteger("AnimationActorState", (int)ActorAnimationState.IDLE);
 
-        if(factionID == PlayerManager.instance.factionID)
+        if(factionId == playerManager.factionId)
             audioSource.PlayOneShot(GameMaster.GetAudio("unit_pickup_friendly").GetClip(), 0.5f);
         else
             audioSource.PlayOneShot(GameMaster.GetAudio("unit_pickup_enemy").GetClip(), 0.5f);
@@ -140,6 +141,53 @@ public class Unit : Actor, IFactioned
                 // Debug.Log(string.Format("Magnitude: {0} Damage: {1} Health: {2}", collision.relativeVelocity.magnitude,
                 //             damage, AttributeHandler.GetAttributePercent(Attributes.HEALTH).ToString()));
             }
+        }
+    }
+
+    public virtual void Update()
+    {
+        if (projectile)
+            LaunchProjectile();
+
+    }
+
+
+    public virtual void LaunchProjectile()
+    {
+        if (!projectile)
+        {
+            projectile = Instantiate(rangedProjectile);
+            projectile.transform.position = transform.position;
+            projectile.transform.position += new Vector3(0, 0.09f, 0);            
+            projectileTargetPos = projectileTarget.transform.position;
+            projectileTargetPos += new Vector3(0, 0.09f, 0);    
+        }
+
+        // First we get the direction of the arrow's forward vector to the target position.
+        Vector3 tDir = projectileTargetPos - projectile.transform.position;
+        
+
+        // Now we use a Quaternion function to get the rotation based on the direction
+        Quaternion rot = Quaternion.LookRotation(tDir);
+    
+        // And finally, set the arrow's rotation to the one we just created.
+        projectile.transform.rotation = rot;
+    
+        //Get the distance from the arrow to the target
+        float dist = Vector3.Distance(projectile.transform.position, projectileTargetPos);
+    
+        if(dist <= 0.1f)
+        {
+            // This will destroy the arrow when it is within .1 units
+            // of the target location. You can set this to whatever
+            // distance you're comfortable with.
+            GameObject.Destroy(projectile);
+    
+        }
+        else
+        {
+            // If not, then we just keep moving forward
+            projectile.transform.Translate(Vector3.forward * (arrowSpeed * Time.deltaTime));
         }
     }
 }

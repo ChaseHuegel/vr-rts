@@ -18,7 +18,7 @@ public class PathfindingGoal
 
     public static bool CheckGoal(Actor actor, Cell cell, PathfindingGoal goal)
     {
-        if (goal != null && goal.active && goal.CheckGoal(cell))
+        if (goal != null && goal.active && goal.CheckGoal(cell, actor))
             return true;
 
         return false;
@@ -54,7 +54,7 @@ public class PathfindingGoal
 
     public static bool TryInteractGoal(Actor actor, Cell cell, PathfindingGoal goal)
     {
-        if (goal != null && goal.active && goal.CheckGoal(cell))
+        if (goal != null && goal.active && goal.CheckGoal(cell, actor))
         {
             //  Trigger interact event
             GoalInteractEvent e = new GoalInteractEvent{ actor = actor, goal = goal, cell = cell };
@@ -107,7 +107,7 @@ public class PathfindingGoal
     public bool active = true;
     public bool dynamic = true;
 
-    public virtual bool CheckGoal(Cell cell) { return false; }
+    public virtual bool CheckGoal(Cell cell, Actor actor = null) { return false; }
 
 #region events
 
