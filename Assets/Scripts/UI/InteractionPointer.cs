@@ -624,14 +624,38 @@ public class InteractionPointer : MonoBehaviour
 
 		GameObject obj = null;
 
-		
-		// Diagonal from start position, draw 45 degree walls.
-		if (Mathf.Abs(difference.x) == Mathf.Abs(difference.y))
-		{				
-			// ! Doesn't work, only draws a single wall.
-			// Create 45 segment
-			obj = CreateWallSegment(previousSegmentPosition, nextSegmentPosition, woodWallWorld_1x1_Preview, woodWallWorld_1x1_Diagonal_Preview);
-		}			
+        int absX = Mathf.Abs(difference.x);
+        int absY = Mathf.Abs(difference.y);
+
+        int count = absX > absY ? absX : absY;
+
+        // Diagonal from start position, draw 45 degree walls.
+        if (absX == absY)
+		{
+            // ! Doesn't work, only draws a single wall.
+            // Create 45 segment
+            //for (int i = 0; i <= count; i++)
+			while (nextSegmentPosition != endPosition)
+            {
+                obj = CreateDiagonalWallSegment(previousSegmentPosition, nextSegmentPosition, woodWallWorld_1x1_Preview, woodWallWorld_1x1_Diagonal_Preview);
+                previousSegmentPosition = nextSegmentPosition;
+                segmentPos += (dir * wallWorldLength);
+                nextSegmentPosition = World.ToWorldCoord(segmentPos);
+
+                if (!obj)
+                {
+                    // Debug.Log(string.Format(
+                    // "lastPosition: {0}, {1}  nextPosition: {2}, {3}  segmentPos: {4}", lastPosition.x, lastPosition.y, nextPosition.x, nextPosition.y, segmentPos));
+                    continue;
+                }
+
+                // Preview objects don't have buildingDimensions on the object
+                // so we have to snap ourselves.
+                HardSnapToGrid(obj.transform, 1, 1);
+
+                wallPreviewSections.Add(obj);
+            }
+        }			
 		else
 		{
 			//-----------------------------------------------------------------
@@ -770,6 +794,38 @@ public class InteractionPointer : MonoBehaviour
 
 			wallPreviewSections.Add(obj);
 		} 
+    }
+
+	private GameObject CreateDiagonalWallSegment(Coord2D lastPosition, Coord2D nextPosition, GameObject normalWall, GameObject diagonalWall)
+	{
+        GameObject obj = null;
+		
+		Vector3 segmentPos = World.ToTransformSpace(nextPosition);
+
+		// Southeast
+		if (nextPosition.x > lastPosition.x && nextPosition.y < lastPosition.y)
+		{
+			obj = Instantiate(diagonalWall, segmentPos, buildingPlacementPreviewObject.transform.rotation);
+			obj.transform.Rotate(0, 0, 90);
+		}
+		// Northeast
+		else if (nextPosition.x > lastPosition.x && nextPosition.y > lastPosition.y)
+		{
+			obj = Instantiate(diagonalWall, segmentPos, buildingPlacementPreviewObject.transform.rotation);
+		}
+		// Southwest
+		else if (nextPosition.x < lastPosition.x && nextPosition.y < lastPosition.y)
+		{
+			obj = Instantiate(diagonalWall, segmentPos, buildingPlacementPreviewObject.transform.rotation);
+		}
+		// Northwest
+		else if (nextPosition.x < lastPosition.x && nextPosition.y > lastPosition.y)
+		{
+            obj = Instantiate(diagonalWall, segmentPos, buildingPlacementPreviewObject.transform.rotation);
+			obj.transform.Rotate(0, 0, 90);
+		}
+		
+        return obj;
     }
 
 	private GameObject CreateWallSegment(Coord2D lastPosition, Coord2D nextPosition, GameObject normalWall, GameObject diagonalWall)
@@ -927,8 +983,8 @@ public class InteractionPointer : MonoBehaviour
             if (wallPlacementPreviewStartObject)// && buildingPlacementPreviewObject)
             {		
 				// ! Choose a method to use....		
-                //DrawWallPreview(); // AOE2 style, 45's don't work.
-				DrawWallPreview2();  // No corners ala AOE2, 45's are buggy.              
+                DrawWallPreview(); // AOE2 style, 45's don't work.
+				//DrawWallPreview2();  // No corners ala AOE2, 45's are buggy.              
             }
 
             //DrawQuadraticBezierCurve(pointerLineRenderer, pointerStart, destinationReticleTransform.position);
