@@ -27,6 +27,9 @@ public class Actor : Body
     protected PathfindingGoal currentGoal = null;
     protected PathfindingGoal previousGoal = null;
 
+    //  Memory functionality
+    protected Dictionary<PathfindingGoal, Cell> discoveredGoals = new Dictionary<PathfindingGoal, Cell>();
+
     private float movementInterpolation;
     private bool moving = false;
     private bool idle = false;
@@ -125,11 +128,21 @@ public class Actor : Body
         current = World.at(gridPosition.x + relativeX, gridPosition.y + relativeY);
         currentDistance = DistanceTo(current);
 
-        if (PathfindingGoal.TryGoal(this, current, goal) && currentDistance < nearestDistance)
+        if (currentDistance < nearestDistance && PathfindingGoal.TryGoal(this, current, goal))
         {
             nearestDistance = currentDistance;
             result = current;
         }
+    }
+
+    public void TryDiscoverGoal(PathfindingGoal goal, Cell cell)
+    {
+        if (goal == null || cell == null) return;
+
+        if (discoveredGoals.ContainsKey(goal))
+            discoveredGoals.Remove(goal);
+
+        discoveredGoals.Add(goal, cell);
     }
 
     public Cell FindNearestGoalWithPriority() { return FindNearestGoal(true); }
@@ -140,6 +153,23 @@ public class Actor : Body
 
         int currentDistance = 0;
         int nearestDistance = int.MaxValue;
+
+        //  If using priority, try checking our memorized goals first
+        if (usePriority && discoveredGoals.Count > 0)
+        {
+            foreach (PathfindingGoal goal in GetGoals())
+            {
+                if (discoveredGoals.TryGetValue(goal, out result) && result != null)
+                {
+                    if (DistanceTo(result) < goalSearchDistance && PathfindingGoal.TryGoal(this, result, goal))
+                    {
+                        currentGoal = goal;
+                        currentGoalSearchDistance = goalSearchGrowth;
+                        return result;
+                    }
+                }
+            }
+        }
 
         foreach (PathfindingGoal goal in GetGoals())
         {
@@ -251,7 +281,10 @@ public class Actor : Body
             tickTimer = 0;
 
             if (previousGoal != currentGoal)
+            {
                 PathfindingGoal.TriggerGoalChanged(this, previousGoal, currentGoal);
+                TryDiscoverGoal(currentGoal, currentGoalTarget);
+            }
 
             previousGoalTarget = currentGoalTarget;
             previousGoal = currentGoal;
