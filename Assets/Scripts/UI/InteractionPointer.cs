@@ -427,18 +427,18 @@ public class InteractionPointer : MonoBehaviour
 	{
 		if (isInWallPlacementMode)
 		{
-			Swordfish.Coord2D lastPosition = World.ToWorldCoord(wallPlacementPreviewStartObject.transform.position);
+			Swordfish.Coord2D previousSegmentPosition = World.ToWorldCoord(wallPlacementPreviewStartObject.transform.position);
 
 			// TODO: Instantiate start/end world pieces in place of preview pieces.
 			foreach (GameObject go in wallPreviewSections)
 			{
-				Swordfish.Coord2D nextPosition = World.ToWorldCoord(go.transform.position);
+				Swordfish.Coord2D nextSegmentPosition = World.ToWorldCoord(go.transform.position);
 				//Instantiate(woodWallWorld_1x1, obj.transform.position, obj.transform.rotation);
 				//Vector3 segmentPos = World.ToTransformSpace(nextPosition);
 
-				GameObject obj = CreateWallSegment(lastPosition, nextPosition, woodWallWorld_1x1, woodWallWorld_1x1_Diagonal);
+				GameObject obj = CreateWallSegment(previousSegmentPosition, nextSegmentPosition, woodWallWorld_1x1, woodWallWorld_1x1_Diagonal);
 				
-				lastPosition = nextPosition;
+				previousSegmentPosition = nextSegmentPosition;
 			}
 
             EndWallPlacementMode();
@@ -632,14 +632,13 @@ public class InteractionPointer : MonoBehaviour
         // Diagonal from start position, draw 45 degree walls.
         if (absX == absY)
 		{
-            nextSegmentPosition = startPosition;
-            // int count = absX > absY ? absX : absY;
+			previousSegmentPosition = World.ToWorldCoord(wallPlacementPreviewStartObject.transform.position);
+            // nextSegmentPosition = startPosition;
             // Create 45 segment
             for (int i = 0; i < absX; ++i)
-			//while (nextSegmentPosition != endPosition)
             {
-                //obj = CreateDiagonalWallSegment(previousSegmentPosition, nextSegmentPosition, woodWallWorld_1x1_Preview, woodWallWorld_1x1_Diagonal_Preview);
-                obj = Instantiate(woodWallWorld_1x1_Preview, World.ToTransformSpace(nextSegmentPosition), buildingPlacementPreviewObject.transform.rotation);
+                obj = GetDiagonalWallRotated(previousSegmentPosition, nextSegmentPosition, woodWallWorld_1x1_Diagonal_Preview);
+                //obj = Instantiate(woodWallWorld_1x1_Preview, World.ToTransformSpace(nextSegmentPosition), buildingPlacementPreviewObject.transform.rotation);
 				previousSegmentPosition = nextSegmentPosition;
                 //segmentPos += (dir * wallWorldLength);
                 //nextSegmentPosition = World.ToWorldCoord(segmentPos);
@@ -793,6 +792,30 @@ public class InteractionPointer : MonoBehaviour
 
 			wallPreviewSections.Add(obj);
 		} 
+    }
+
+	private GameObject GetDiagonalWallRotated(Coord2D previousPosition, Coord2D nextPosition, GameObject diagonalWall)
+	{
+        GameObject obj = null;
+		
+		Vector3 segmentPos = World.ToTransformSpace(nextPosition);
+
+		// Southeast
+		if (nextPosition.x > previousPosition.x && nextPosition.y < previousPosition.y)
+		{
+			obj = Instantiate(diagonalWall, segmentPos, buildingPlacementPreviewObject.transform.rotation);
+			obj.transform.Rotate(0, 0, 90);
+		}
+		// Northwest
+		else if (nextPosition.x < previousPosition.x && nextPosition.y > previousPosition.y)
+		{
+            obj = Instantiate(diagonalWall, segmentPos, buildingPlacementPreviewObject.transform.rotation);
+			obj.transform.Rotate(0, 0, 90);
+		}
+		else
+		 	obj = Instantiate(diagonalWall, segmentPos, buildingPlacementPreviewObject.transform.rotation);
+        
+		return obj;
     }
 
 	private GameObject CreateDiagonalWallSegment(Coord2D lastPosition, Coord2D nextPosition, GameObject normalWall, GameObject diagonalWall)
