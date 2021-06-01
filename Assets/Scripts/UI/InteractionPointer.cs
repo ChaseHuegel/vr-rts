@@ -685,22 +685,17 @@ public class InteractionPointer : MonoBehaviour
 			// Reset to start position
             nextSegmentPosition = startPosition;
 
-            // Shifts the wall start by one to remove the wall that becomes 
-			// occupied by the starting corner piece.
-            nextSegmentPosition.x += 1 * (int)Mathf.Sign(difference.x);
-
-			// sizeX - 1 because we shifted the wall starting position.
-            for (int i = 0; i < sizeX - 1; ++i)
+			// Start at 1 because the first wall segment will be a corner piece,
+			// not a wall piece.
+            for (int i = 1; i < sizeX; ++i)
             {
+				nextSegmentPosition.x += 1 * (int)Mathf.Sign(difference.x);
                 segmentPos = World.ToTransformSpace(nextSegmentPosition);
                 obj = Instantiate(woodWallWorld_1x1_Preview, segmentPos, buildingPlacementPreviewObject.transform.rotation);
                 obj.transform.Rotate(0, 0, 90);
                 HardSnapToGrid(obj.transform, 1, 1);
                 wallPreviewSections.Add(obj);
-                nextSegmentPosition.x += 1 * (int)Mathf.Sign(difference.x);
             }
-			
-			//nextSegmentPosition.x += 1 * (int)Mathf.Sign(difference.x);
 			
 			// Not a straight wall, need a corner
 			// if (nextSegmentPosition.x != startPosition.x || nextSegmentPosition.y != startPosition.y)
@@ -719,19 +714,15 @@ public class InteractionPointer : MonoBehaviour
 			// Reset to start position
             nextSegmentPosition = startPosition;
 
-			// Shifts the wall start by one to remove the wall that becomes 
-			// occupied by the starting corner piece.
-			nextSegmentPosition.y += 1 * (int)Mathf.Sign(difference.y);
-			//nextSegmentPosition.x += 1 * (int)Mathf.Sign(difference.x);
-
-			// sizeY - 1 because we shifted the wall starting position.
-            for (int i = 0; i < sizeY - 1; ++i)
+			// Start at 1 because the first wall segment will be a corner piece,
+			// not a wall piece.
+            for (int i = 1; i < sizeY; ++i)
             {
+				nextSegmentPosition.y += 1 * (int)Mathf.Sign(difference.y);
                 segmentPos = World.ToTransformSpace(nextSegmentPosition);
                 obj = Instantiate(woodWallWorld_1x1_Preview, segmentPos, buildingPlacementPreviewObject.transform.rotation);
                 HardSnapToGrid(obj.transform, 1, 1);
-                wallPreviewSections.Add(obj);
-                nextSegmentPosition.y += 1 * (int)Mathf.Sign(difference.y);
+                wallPreviewSections.Add(obj);                
             }
         }
     }
