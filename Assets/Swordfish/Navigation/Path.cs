@@ -66,11 +66,12 @@ public class Path
             //  Not there yet! Go through all neighbors of the current cell..
             foreach(Cell neighbor in current.neighbors())
             {
-                if (neighbor != end )
+                //  Can path thru allows a cell to be a valid path regardless of conditions
+                if (neighbor != end && neighbor.canPathThru == false)
                 {
                     //-------------------------------------------------------
                     // Check diagonals
-                    
+
                     if (neighbor == current.neighborNW())
                     {
                         if (!current.neighbor(Direction.WEST).passable &&

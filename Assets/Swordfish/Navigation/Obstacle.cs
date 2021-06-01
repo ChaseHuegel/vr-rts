@@ -8,7 +8,8 @@ namespace Swordfish.Navigation
 public class Obstacle : Body
 {
     public bool bakeOnStart = true;
-         
+    public bool allowPathThru = false;
+
     public override void Initialize()
     {
         base.Initialize();
@@ -17,10 +18,9 @@ public class Obstacle : Body
         if (bakeOnStart) BakeToGrid();
     }
 
-        public virtual void FetchBoundingDimensions()
-        { }
+    public virtual void FetchBoundingDimensions() {}
 
-        public void BakeToGrid()
+    public void BakeToGrid()
     {
         Vector3 pos = World.ToWorldSpace(transform.position);
 
@@ -33,6 +33,7 @@ public class Obstacle : Body
                 cell = World.at( (int)pos.x + x, (int)pos.z + y );
 
                 cell.passable = false;
+                cell.canPathThru = allowPathThru;
                 cell.occupants.Add(this);
             }
         }
@@ -75,6 +76,7 @@ public class Obstacle : Body
                 cell = World.at( (int)pos.x + x, (int)pos.z + y );
 
                 cell.passable = true;
+                cell.canPathThru = false;
                 cell.occupants.Remove(this);
             }
         }
