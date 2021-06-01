@@ -647,7 +647,7 @@ public class InteractionPointer : MonoBehaviour
         if (sizeX == sizeY)
 		{
             // Create 45 degree segments
-            for (int i = 0; i < sizeX; ++i)
+            for (int i = 1; i < sizeX; ++i)
             {
 				// ! CreateWallSegment works as it is for the final world wall generation
 				// ! so bugs aren't from it. Has to be something else.
@@ -698,27 +698,27 @@ public class InteractionPointer : MonoBehaviour
             }
 			
 			// Not a straight wall, need a corner
-			// if (nextSegmentPosition.x != startPosition.x || nextSegmentPosition.y != startPosition.y)
-			// {
-			// 	//-----------------------------------------------------------------
-			// 	// Corner
-			// 	obj = Instantiate(wallPlacementPreviewStartObject, World.ToTransformSpace(nextSegmentPosition), buildingPlacementPreviewObject.transform.rotation);
-			// 	obj.transform.Rotate(0, 0, 90);
-			// 	HardSnapToGrid(obj.transform, 1, 1);
-			// 	wallPreviewSections.Add(obj);
-			// }
+			if (endPosition.x != nextSegmentPosition.x && endPosition.y != nextSegmentPosition.y)
+			{
+				nextSegmentPosition.x += 1 * (int)Mathf.Sign(difference.x);
+				obj = Instantiate(wallPlacementPreviewStartObject, World.ToTransformSpace(nextSegmentPosition), buildingPlacementPreviewObject.transform.rotation);
+				obj.transform.Rotate(0, 0, 90);
+				HardSnapToGrid(obj.transform, 1, 1);
+				wallPreviewSections.Add(obj);
+			}
 
 			//-----------------------------------------------------------------
 			// North - South
 
 			// Reset to start position
             nextSegmentPosition = startPosition;
-
+			nextSegmentPosition.x = endPosition.x;
+			
 			// Start at 1 because the first wall segment will be a corner piece,
 			// not a wall piece.
             for (int i = 1; i < sizeY; ++i)
             {
-				nextSegmentPosition.y += 1 * (int)Mathf.Sign(difference.y);
+                nextSegmentPosition.y += 1 * (int)Mathf.Sign(difference.y);
                 segmentPos = World.ToTransformSpace(nextSegmentPosition);
                 obj = Instantiate(woodWallWorld_1x1_Preview, segmentPos, buildingPlacementPreviewObject.transform.rotation);
                 HardSnapToGrid(obj.transform, 1, 1);
