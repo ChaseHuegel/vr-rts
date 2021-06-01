@@ -227,19 +227,9 @@ public class Villager : Unit
             Resource resource = e.cell?.GetFirstOccupant<Resource>();            
             if (resource.AddInteractor(this))
                 return;
-
-            // if (!resource.IsBusy())
-            // {
-            //     resource.interactors++;
-            //     return;
-            // }
         }
         else if (e.goal is GoalTransportResource && villager.HasCargo())
         {
-            // ! Moved to goalcheck
-            // // Structure structure = e.cell?.GetFirstOccupant<Structure>();
-            // // if (structure && structure.IsSameFaction(factionId))
-            // // {
             villager.state = UnitState.TRANSPORTING;
             currentGoalFound = e.goal;
             DisplayCargo(true);
@@ -255,12 +245,6 @@ public class Villager : Unit
         }
         else if (e.goal is GoalBuildRepair)
         {
-            // ! Moved to goalcheck
-            // // Structure structure = e.cell?.GetFirstOccupant<Structure>();
-            // // Constructible constructible = e.cell?.GetFirstOccupant<Constructible>();
-            // // if ((structure && structure.IsSameFaction(factionId)) ||
-            // //     (constructible && constructible.IsSameFaction(factionId)))
-            // // {
             villager.state = UnitState.BUILDANDREPAIR;
             currentGoalFound = e.goal;
             return;
@@ -469,7 +453,12 @@ public class Villager : Unit
         // }
     }
 
-    public void ChangeEquippedItems(PathfindingGoal goal)
+    /// <summary>
+    /// Changes equipped items based on the goal. If goal is null, clears hands
+    /// of all items.
+    /// </summary>
+    /// <param name="goal">The goal that should be equipped for.</param>
+    public void ChangeEquippedItems(PathfindingGoal goal = null)
     {
         if (currentHandToolDisplayObject)
             currentHandToolDisplayObject.SetActive(false);
@@ -498,12 +487,8 @@ public class Villager : Unit
 
                 case ResourceGatheringType.Berries:
                 case ResourceGatheringType.None:
+                case ResourceGatheringType.Meat:  
                     // Equip nothing.
-                    return;
-
-                case ResourceGatheringType.Meat:               
-                    hunterHandToolDisplayObject.SetActive(true);
-                    currentHandToolDisplayObject = hunterHandToolDisplayObject;
                     return;
 
                 case ResourceGatheringType.Fish:
@@ -527,7 +512,7 @@ public class Villager : Unit
             return;
         }
         else if (goal is GoalHuntFauna)
-        {
+        {            
             hunterHandToolDisplayObject.SetActive(true);
             currentHandToolDisplayObject = hunterHandToolDisplayObject;
             return;
@@ -570,10 +555,6 @@ public class Villager : Unit
     {
         if (!structure || !HasCargo())
             return false;
-
-        // ! Moved to OnGoalFound
-        // // if (structure.IsSameTeam(teamId))
-        // //     return false;
 
         // ! Redundant, checked in the goal itself. Remove if no problems
         // ! arise from commenting out. Might still be needed in case of
@@ -666,6 +647,8 @@ public class Villager : Unit
             case ResourceGatheringType.Berries:
             case ResourceGatheringType.Meat:
                 animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.FORAGING);
+                // // TODO: Clearing equipped items here for hunting
+                // ChangeEquippedItems(null);
                 break;
 
             case ResourceGatheringType.Fish:
@@ -690,17 +673,10 @@ public class Villager : Unit
         if (!fauna || IsCargoFull())
             return false;
 
-        // if (fauna.IsDead())
-        // {
-        //     return false; //TryGather(fauna.GetComponent<Resource>());
-        // }
-        // else
-        // {
-            projectileTarget = fauna.gameObject;
-            float amount = (rtsUnitTypeData.huntingDamage / (60 / Constants.ACTOR_TICK_RATE));
-            fauna.AttributeHandler.Damage(amount, AttributeChangeCause.ATTACKED, AttributeHandler, DamageType.PIERCING);
-            animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.HUNTING);
-        // }
+        projectileTarget = fauna.gameObject;
+        float amount = (rtsUnitTypeData.huntingDamage / (60 / Constants.ACTOR_TICK_RATE));
+        fauna.AttributeHandler.Damage(amount, AttributeChangeCause.ATTACKED, AttributeHandler, DamageType.PIERCING);
+        animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.HUNTING);
 
         return true;
     }
@@ -709,10 +685,6 @@ public class Villager : Unit
     {
         if (!structure || !structure.NeedsRepairs())
             return false;
-
-        // ! Moved to OnGoalFound
-        // // if (structure.teamId != teamId)
-        // //     return false;        
 
         //  Convert per second to per tick
         float amount = (rtsUnitTypeData.repairRate / (60/Constants.ACTOR_TICK_RATE));
@@ -737,10 +709,6 @@ public class Villager : Unit
         if (!construction)
             return false;
 
-        // ! Moved to OnGoalFound
-        // // if (construction.teamId != teamId)
-        // //     return false;
-        
         //  Convert per second to per tick
         float amount = (rtsUnitTypeData.buildRate / (60/Constants.ACTOR_TICK_RATE));
 

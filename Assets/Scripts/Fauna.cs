@@ -102,7 +102,7 @@ public class Fauna : Actor
             else if (idleAction < lookAroundActionChance)    
                 animator.SetTrigger("LookAround");
             else
-                animator.SetInteger("Idle", (int)FaunaActions.Idle);
+                animator.SetInteger("FaunaActionState", (int)FaunaActions.Idle);
         }
 
         newDecisionTimer += Time.deltaTime;

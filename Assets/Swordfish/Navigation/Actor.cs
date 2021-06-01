@@ -155,22 +155,23 @@ public class Actor : Body
         int currentDistance = 0;
         int nearestDistance = int.MaxValue;
 
-        //  If using priority, try checking our memorized goals first
-        if (usePriority && discoveredGoals.Count > 0)
-        {
-            foreach (PathfindingGoal goal in GetGoals())
-            {
-                if (discoveredGoals.TryGetValue(goal, out result) && result != null)
-                {
-                    if (DistanceTo(result) < goalSearchDistance && PathfindingGoal.TryGoal(this, result, goal))
-                    {
-                        currentGoal = goal;
-                        currentGoalSearchDistance = goalSearchGrowth;
-                        return result;
-                    }
-                }
-            }
-        }
+        // ! Disabled due to effect on hunter villagers (never stop shooting target even if dead)
+        //  If using priority, try checking our memorized goals first        
+        // if (usePriority && discoveredGoals.Count > 0)
+        // {
+        //     foreach (PathfindingGoal goal in GetGoals())
+        //     {
+        //         if (discoveredGoals.TryGetValue(goal, out result) && result != null)
+        //         {
+        //             if (DistanceTo(result) < goalSearchDistance && PathfindingGoal.TryGoal(this, result, goal))
+        //             {
+        //                 currentGoal = goal;
+        //                 currentGoalSearchDistance = goalSearchGrowth;
+        //                 return result;
+        //             }
+        //         }
+        //     }
+        // }
 
         foreach (PathfindingGoal goal in GetGoals())
         {

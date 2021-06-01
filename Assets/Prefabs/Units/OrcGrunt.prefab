@@ -383,10 +383,12 @@ MonoBehaviour:
   gridPosition:
     x: 0
     y: 0
+  factionId: 0
   movementSpeed: 0.3
   goalSearchDistance: 30
-  factionID: 4
-  rtsUnitType: 10
+  faction: {fileID: 0}
+  rtsUnitType: 11
+  rangedProjectile: {fileID: 0}
   state: 0
   isHeld: 0
   isDying: 0
@@ -490,6 +492,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   highlightMaterial: {fileID: 0}
+  highlightOnHover: 1
+  hideHighlight: []
 --- !u!1 &2112391497335649583
 GameObject:
   m_ObjectHideFlags: 0

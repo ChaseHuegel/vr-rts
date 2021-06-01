@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Swordfish.Navigation;
 
 public class WallGate : MonoBehaviour
 {
@@ -23,7 +24,13 @@ public class WallGate : MonoBehaviour
         playerManager = PlayerManager.instance;
         structure = GetComponentInParent<Structure>();
         faction = structure.GetFaction();
-        animator = GetComponentInChildren<Animator>();
+        animator = GetComponentInChildren<Animator>();  
+
+        // ? Is this neccassary? I'm not sure, do it anyway.             
+        structure.UnbakeFromGrid();
+
+        RemoveExistingWalls();        
+        structure.BakeToGrid();
     }
 
     private void OnTriggerEnter(Collider collider)
@@ -82,6 +89,25 @@ public class WallGate : MonoBehaviour
             CloseDoors();
         else if (!isOpen)
             OpenDoors();
+    }
+
+    private void RemoveExistingWalls()
+    {
+        Cell thisCell = structure.GetCellAtGrid();
+        Cell[] neighbors = thisCell.neighbors().ToArray();
+
+        for (int i = 0; i < neighbors.Length; ++i)
+        {
+            WallSegment wallSegment = neighbors[i].GetFirstOccupant<Structure>()?.GetComponent<WallSegment>();
+            
+            if (wallSegment)
+                Destroy(wallSegment.gameObject);            
+        }
+
+        WallSegment thisWallSegment = thisCell.GetFirstOccupant<Structure>().GetComponent<WallSegment>();
+
+        if (thisWallSegment)
+            Destroy(thisWallSegment.gameObject);
     }
 
     [System.Flags]
