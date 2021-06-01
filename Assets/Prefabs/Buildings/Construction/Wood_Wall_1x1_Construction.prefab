@@ -1146,6 +1146,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   highlightMaterial: {fileID: 0}
+  highlightOnHover: 1
+  hideHighlight: []
 --- !u!114 &7503964221174341062
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1253,13 +1255,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbe24ab2fb7303741b59f236fc26e5ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boundingDimensions: {x: 2, y: 2}
-  boundingOrigin: {x: -0.0625, y: -0.0625}
+  boundingDimensions: {x: 1, y: 1}
+  boundingOrigin: {x: 0, y: 0}
   gridPosition:
     x: 0
     y: 0
+  factionId: 0
   bakeOnStart: 1
-  factionID: 0
   DestroyOnBuilt: 1
   buildingData: {fileID: 11400000, guid: 412ca5bfc723ea246a4344dd6e74d8bf, type: 2}
   OnBuiltPrefab: {fileID: 3348021951122487145, guid: 2a67419f6948cae4a9cde953ff20192c,

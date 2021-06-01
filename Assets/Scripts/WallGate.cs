@@ -6,7 +6,6 @@ using Valve.VR.InteractionSystem;
 
 public class WallGate : MonoBehaviour
 {
-    
     public OpenCondition openConditions = OpenCondition.None;
 
     private PlayerManager playerManager;
@@ -28,10 +27,10 @@ public class WallGate : MonoBehaviour
         animator = GetComponentInChildren<Animator>();  
 
         // ? Is this neccassary? I'm not sure, do it anyway.             
-        //structure.UnbakeFromGrid();
+        structure.UnbakeFromGrid();
 
-       // RemoveExistingWalls();        
-        //structure.BakeToGrid();
+        RemoveExistingWalls();        
+        structure.BakeToGrid();
     }
 
     void OnTriggerEnter(Collider collider)
