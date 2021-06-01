@@ -24,13 +24,7 @@ public class WallGate : MonoBehaviour
         playerManager = PlayerManager.instance;
         structure = GetComponentInParent<Structure>();
         faction = structure.GetFaction();
-        animator = GetComponentInChildren<Animator>();  
-
-        // ? Is this neccassary? I'm not sure, do it anyway.             
-        structure.UnbakeFromGrid();
-
-        RemoveExistingWalls();        
-        structure.BakeToGrid();
+        animator = GetComponentInChildren<Animator>();                  
     }
 
     void OnTriggerEnter(Collider collider)
@@ -81,14 +75,14 @@ public class WallGate : MonoBehaviour
     private void OpenDoors()
     {
         animator.SetTrigger("Open");
-        //structure.UnbakeFromGrid();
+        structure.UnbakeFromGrid();
         isOpen = true;
     }
 
     private void CloseDoors()
     {
         animator.SetTrigger("Close");
-        //structure.BakeToGrid();
+        structure.BakeToGrid();
         isOpen = false;
     }
 
@@ -98,25 +92,6 @@ public class WallGate : MonoBehaviour
             CloseDoors();
         else
             OpenDoors();
-    }
-
-    private void RemoveExistingWalls()
-    {
-        Cell thisCell = structure.GetCellAtGrid();
-        Cell[] neighbors = thisCell.neighbors().ToArray();
-
-        for (int i = 0; i < neighbors.Length; ++i)
-        {
-            WallSegment wallSegment = neighbors[i].GetFirstOccupant<Structure>()?.GetComponent<WallSegment>();
-            
-            if (wallSegment)
-                Destroy(wallSegment.gameObject);            
-        }
-
-        WallSegment thisWallSegment = thisCell.GetFirstOccupant<Structure>()?.GetComponent<WallSegment>();
-
-        if (thisWallSegment)
-            Destroy(thisWallSegment.gameObject);
     }
 
     [System.Flags]

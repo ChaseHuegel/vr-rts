@@ -15,6 +15,7 @@ public class Constructible : Obstacle, IFactioned
     public void UpdateFaction() { faction = GameMaster.Factions.Find(x => x.index == factionId); }
 
     public bool DestroyOnBuilt = true;
+    public bool ClearExistingWalls;
     public BuildingData buildingData;
     public GameObject OnBuiltPrefab;
     public GameObject[] ConstructionStages;
@@ -37,6 +38,32 @@ public class Constructible : Obstacle, IFactioned
             Debug.Log("Audiosource component missing.", this);
 
         ResetStages();
+
+        if (ClearExistingWalls)
+        {
+            UnbakeFromGrid();
+            RemoveExistingWalls();    
+            BakeToGrid();
+        }
+    }
+
+    private void RemoveExistingWalls()
+    {
+        Cell thisCell = GetCellAtGrid();
+        Cell[] neighbors = thisCell.neighbors().ToArray();
+
+        for (int i = 0; i < neighbors.Length; ++i)
+        {
+            WallSegment wallSegment = neighbors[i].GetFirstOccupant<Structure>()?.GetComponent<WallSegment>();
+            
+            if (wallSegment)
+                Destroy(wallSegment.gameObject);            
+        }
+
+        WallSegment thisWallSegment = thisCell.GetFirstOccupant<Structure>()?.GetComponent<WallSegment>();
+
+        if (thisWallSegment)
+            Destroy(thisWallSegment.gameObject);
     }
 
     public override void FetchBoundingDimensions()
