@@ -267,10 +267,10 @@ public class Villager : Unit
         Fauna fauna = e.cell.GetOccupant<Fauna>();
 
         if  (e.goal is GoalHuntFauna && villager.TryHunt(fauna) ||
-            (e.goal is GoalGatherResource && villager.TryGather(resource) ||
-            (e.goal is GoalTransportResource && villager.TryDropoff(structure) ||
-            (e.goal is GoalBuildRepair && (villager.TryRepair(structure) || 
-            villager.TryBuild(construction))))))
+            e.goal is GoalGatherResource && villager.TryGather(resource) ||
+            e.goal is GoalTransportResource && villager.TryDropoff(structure) ||
+            e.goal is GoalBuildRepair && (villager.TryRepair(structure) || 
+            villager.TryBuild(construction)))
         {
             return;
         }
@@ -306,8 +306,8 @@ public class Villager : Unit
 
         if (IsMoving() )
             animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.MOVING);
-        else
-            animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.IDLE);
+        // else
+        //     animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.IDLE);
 
         if (TaskChanged())
             ChangeEquippedItems(currentGoal);
@@ -347,6 +347,17 @@ public class Villager : Unit
         // villager.GotoForced(gridPosition.x, gridPosition.y);
         // villager.ResetGoal();
 
+    }
+
+    public void GotoPosition(Vector3 position)
+    {
+        foreach (PathfindingGoal goal in GetGoals())
+        {
+            goal.active = false;
+        }
+
+        ResetAI();
+        GotoForced(World.ToWorldSpace(position));
     }
 
     // TODO: Should unitType be changed to unitTask or unitJob?
@@ -428,7 +439,7 @@ public class Villager : Unit
                 break;
         }
 
-        
+
         ResetPath();
         PlayChangeTaskAudio();
     }

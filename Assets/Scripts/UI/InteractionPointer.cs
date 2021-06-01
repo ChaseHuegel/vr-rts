@@ -476,18 +476,16 @@ public class InteractionPointer : MonoBehaviour
 			{
 				if (unit is Villager)
 				{
-					// TODO: Check for buildings being pointed at.
+					// TODO: Check for buildings being pointed at.                    
 
-                    if (!pointedAtResource)
+                    Villager villager = unit.GetComponent<Villager>();
+
+					if (!pointedAtResource)
                     {
-                        unit.ResetAI();
-                        unit.GotoForced(World.ToWorldSpace(pointedAtPosition));
-                        unit.ResetGoal();
+                        villager.GotoPosition(pointedAtPosition);                        
                         continue;
                     }
 
-                    Villager villager = unit.GetComponent<Villager>();
-                    
 					// Needed for fauna since fauna has an inactive resource component
 					// that doesn't have a grid position to be fetched.
 					Swordfish.Coord2D gridPosition = pointedAtResource.gridPosition;
@@ -524,9 +522,9 @@ public class InteractionPointer : MonoBehaviour
                             break;						
                     }
 
-					PathfindingGoal.TryGoal((Actor)villager, World.at(gridPosition), villager.GetGoals());
-					villager.GotoForced(gridPosition.x, gridPosition.y);
-					villager.ResetGoal();
+					// PathfindingGoal.TryGoal((Actor)villager, World.at(gridPosition), villager.GetGoals());
+					// villager.GotoForced(gridPosition.x, gridPosition.y);
+					// villager.ResetGoal();
 					continue;
 				}				
 
