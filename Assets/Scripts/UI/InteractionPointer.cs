@@ -523,6 +523,10 @@ public class InteractionPointer : MonoBehaviour
                             gridPosition = pointedAtResource.GetComponent<Fauna>().gridPosition;
                             break;						
                     }
+
+					PathfindingGoal.TryGoal((Actor)villager, World.at(gridPosition), villager.GetGoals());
+					villager.GotoForced(gridPosition.x, gridPosition.y);
+					villager.ResetGoal();
 					continue;
 				}				
 
