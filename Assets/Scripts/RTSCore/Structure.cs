@@ -104,6 +104,7 @@ public class Structure : Obstacle, IFactioned
         if (AttributeHandler.GetAttributePercent(Attributes.HEALTH) <= 0.0f)
         {
             AudioSource.PlayClipAtPoint(GameMaster.GetAudio("building_collapsed").GetClip(), transform.position, 0.5f);
+            UnbakeFromGrid();
             Destroy(this.gameObject);
         }
     }
