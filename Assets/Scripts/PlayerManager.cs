@@ -218,12 +218,14 @@ public class PlayerManager : MonoBehaviour
 
     public void SetRightHandInteraction(bool canInteract)
     {
-        rightHand.useHoverSphere = rightHand.useFingerJointHover = canInteract;
+        if (rightHand)
+            rightHand.useHoverSphere = rightHand.useFingerJointHover = canInteract;
     }
 
     public void SetLeftHandInteraction(bool canInteract)
     {
-        leftHand.useHoverSphere = leftHand.useFingerJointHover = canInteract;
+        if (leftHand)
+            leftHand.useHoverSphere = leftHand.useFingerJointHover = canInteract;
     }
 
     public void DisableGripPanning(Hand hand) { gripPan.DisablePanning(hand); }

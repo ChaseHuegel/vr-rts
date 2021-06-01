@@ -24,7 +24,7 @@ public class WallGate : MonoBehaviour
         playerManager = PlayerManager.instance;
         structure = GetComponentInParent<Structure>();
         faction = structure.GetFaction();
-        animator = GetComponentInChildren<Animator>();                  
+        animator = GetComponentInChildren<Animator>();
     }
 
     void OnTriggerEnter(Collider collider)
