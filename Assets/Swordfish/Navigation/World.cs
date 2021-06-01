@@ -36,7 +36,7 @@ public class World : Singleton<World>
     /// <param name="coord"></param>
     /// <returns></returns>
     public static Cell at(Coord2D coord) { return Grid.at(coord.x, coord.y); }
-    
+
     /// <summary>
     /// Shorthand access to grid
     /// </summary>
@@ -52,7 +52,7 @@ public class World : Singleton<World>
     /// <param name="z"></param>
     /// <returns></returns>
     public static Vector3 ToTransformSpace(float x, float y, float z) { return ToTransformSpace(new Vector3(x, y, z)); }
-    
+
     /// <summary>
     /// Convert from grid units to transform units.
     /// </summary>
@@ -61,7 +61,7 @@ public class World : Singleton<World>
     /// <param name="z"></param>
     /// <returns></returns>
     public static Vector3 ToTransformSpace(int x, int y, int z) { return ToTransformSpace(new Vector3(x, y, z)); }
-    
+
     public static Vector3 ToTransformSpace(int x, int y) { return ToTransformSpace(new Vector3(x, 0, y)); }
     /// <summary>
     /// Convert from grid units to transform units.
@@ -70,7 +70,7 @@ public class World : Singleton<World>
     /// <param name="y"></param>
     /// <param name="z"></param>
     /// <returns></returns>
-    
+
     public static Vector3 ToTransformSpace(Coord2D coord) { return ToTransformSpace(new Vector3(coord.x, 0, coord.y)); }
     /// <summary>
     /// Convert from grid units to transform units.
@@ -92,7 +92,7 @@ public class World : Singleton<World>
     /// <param name="pos"></param>
     /// <returns></returns>
     public static Coord2D ToWorldCoord(Vector3 pos) { pos = ToWorldSpace(pos); return new Coord2D((int)pos.x, (int)pos.z); }
-    
+
     /// <summary>
     /// Convert from transform units to grid units
     /// </summary>
@@ -147,7 +147,9 @@ public class World : Singleton<World>
 
                 if (grid != null)
                 {
-                    if (!at(x, y).passable)
+                    if (at(x, y).canPathThru)
+                        Gizmos.color = Color.cyan;
+                    else if (!at(x, y).passable)
                         Gizmos.color = Color.yellow;
                     else if (at(x, y).occupied)
                         Gizmos.color = Color.blue;

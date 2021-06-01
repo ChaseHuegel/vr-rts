@@ -66,7 +66,6 @@ public class Path
             //  Not there yet! Go through all neighbors of the current cell..
             foreach(Cell neighbor in current.neighbors())
             {
-                //  Can path thru allows a cell to be a valid path regardless of conditions
                 if (neighbor != end && neighbor.canPathThru == false)
                 {
                     //-------------------------------------------------------
@@ -97,8 +96,8 @@ public class Path
                             continue;
                     }
 
-                    //  Ignore this neighbor if its solid or it has already been tested
-                    if (!neighbor.passable || testedList.Contains(neighbor))
+                    //  Ignore this neighbor if its solid
+                    if (!neighbor.passable)
                         continue;
 
                     //  Are we pathing around actors? If so, ignore occupied neighbors
@@ -107,6 +106,10 @@ public class Path
                     if (!ignoreActors && neighbor.occupied)
                         continue;
                 }
+
+                //  Last resort, ignore neighbor if it has been tested
+                if (testedList.Contains(neighbor))
+                    continue;
 
                 bool neighborInOpenList = openList.Contains(neighbor);
 
