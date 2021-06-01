@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Swordfish.Navigation;
+using Valve.VR.InteractionSystem;
 
 public class WallGate : MonoBehaviour
 {
@@ -27,22 +28,29 @@ public class WallGate : MonoBehaviour
         animator = GetComponentInChildren<Animator>();  
 
         // ? Is this neccassary? I'm not sure, do it anyway.             
-        structure.UnbakeFromGrid();
+        //structure.UnbakeFromGrid();
 
-        RemoveExistingWalls();        
-        structure.BakeToGrid();
+       // RemoveExistingWalls();        
+        //structure.BakeToGrid();
     }
 
-    private void OnTriggerEnter(Collider collider)
+    void OnTriggerEnter(Collider collider)
     {
-        if (openConditions.HasFlag(OpenCondition.None))
-            return;
+        // Hand hand = collider.GetComponentInParent<Hand>();
+        // if (hand)
+        // {
+        //     ToggleDoors();
+        //     return;
+        // }
+        
+        // if (openConditions.HasFlag(OpenCondition.None))
+        //     return;
 
-        Unit unit = collider.GetComponentInParent<Unit>();
+        Unit unit = collider.gameObject.GetComponentInParent<Unit>();
         if (unit)
         {
             // Friendly
-            if (unit.IsSameFaction(playerManager.factionId) &&  openConditions.HasFlag(OpenCondition.Friendly))
+            if (unit.IsSameFaction(playerManager.factionId) && openConditions.HasFlag(OpenCondition.Friendly))
             {
                 OpenDoors();
                 return;
@@ -56,30 +64,32 @@ public class WallGate : MonoBehaviour
             }
 
             // Ally
-            if (faction.IsAllied(unit.GetFaction()) && openConditions.HasFlag(OpenCondition.Ally))
-            {
-                OpenDoors();
-                return;
-            }
+            // if (faction.IsAllied(unit.GetFaction()) && openConditions.HasFlag(OpenCondition.Ally))
+            // {
+            //     OpenDoors();
+            //     return;
+            // }
         }
     }
 
-    private void OnTriggerExit(Collider collider)
+    void OnTriggerExit(Collider collider)
     {
-        //CloseDoors();
+        Unit unit = collider.gameObject.GetComponentInParent<Unit>();
+        if (unit && isOpen)
+            CloseDoors();
     }
 
     private void OpenDoors()
     {
         animator.SetTrigger("Open");
-        structure.UnbakeFromGrid();
+        //structure.UnbakeFromGrid();
         isOpen = true;
     }
 
     private void CloseDoors()
     {
         animator.SetTrigger("Close");
-        structure.BakeToGrid();
+        //structure.BakeToGrid();
         isOpen = false;
     }
 
@@ -87,7 +97,7 @@ public class WallGate : MonoBehaviour
     {
         if (isOpen)
             CloseDoors();
-        else if (!isOpen)
+        else
             OpenDoors();
     }
 
@@ -104,7 +114,7 @@ public class WallGate : MonoBehaviour
                 Destroy(wallSegment.gameObject);            
         }
 
-        WallSegment thisWallSegment = thisCell.GetFirstOccupant<Structure>().GetComponent<WallSegment>();
+        WallSegment thisWallSegment = thisCell.GetFirstOccupant<Structure>()?.GetComponent<WallSegment>();
 
         if (thisWallSegment)
             Destroy(thisWallSegment.gameObject);

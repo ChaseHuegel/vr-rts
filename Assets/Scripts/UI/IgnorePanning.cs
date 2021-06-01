@@ -16,7 +16,7 @@ public class IgnorePanning : MonoBehaviour
         Hand hand = other.GetComponentInParent<Hand>();
         if (hand)
         {
-                playerManager.DisableGripPanning(hand);   
+            playerManager.DisableGripPanning(hand);   
         }
     }
 

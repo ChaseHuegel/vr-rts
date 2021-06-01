@@ -306,6 +306,8 @@ public class Villager : Unit
 
         if (IsMoving() )
             animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.MOVING);
+        else
+            animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.IDLE);
 
         if (TaskChanged())
             ChangeEquippedItems(currentGoal);
@@ -328,6 +330,23 @@ public class Villager : Unit
     public void AnimatorPlayAudio(string clipName)
     {
         AudioSource.PlayClipAtPoint(GameMaster.GetAudio(clipName).GetClip(), transform.position, 0.75f);
+    }
+    
+    public void Do_Fucking_Lumberjacking_Where_I_Fucking_Told_You_To(Resource resource)
+    {    
+        SetUnitType(RTSUnitType.Lumberjack);
+        ResetAI();
+        transportGoal = goals.Add<GoalTransportResource>();
+
+        GoalGatherResource getTheFuckingWood = new GoalGatherResource();
+        getTheFuckingWood.type = ResourceGatheringType.Wood;
+        currentGoal = getTheFuckingWood;
+        currentGoalTarget = resource.GetCellAtGrid();
+        //Goto(currentGoalTarget.x, currentGoalTarget.y);
+        PathfindingGoal.TryGoal((Actor)this, World.at(resource.gridPosition), getTheFuckingWood);
+        // villager.GotoForced(gridPosition.x, gridPosition.y);
+        // villager.ResetGoal();
+
     }
 
     // TODO: Should unitType be changed to unitTask or unitJob?

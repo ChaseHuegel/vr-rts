@@ -278,6 +278,7 @@ public class InteractionPointer : MonoBehaviour
 				if (WasRotateCounterclockwiseButtonPressed(hand))
 					buildingPlacementPreviewObject.transform.Rotate(0.0f, 0.0f, -45.0f);
 
+				// TODO: Should probably be moved to update pointer.
 				HardSnapToGrid(destinationReticleTransform, placementBuildingData.boundingDimensionX, placementBuildingData.boundingDimensionY);
 				
 				// if (WasSelectButtonPressed(hand))
@@ -473,12 +474,19 @@ public class InteractionPointer : MonoBehaviour
 		{
 			foreach (Unit unit in selectedUnits)
 			{
-				bool civilian = unit.IsCivilian();
-
-				// Villager unit and we're targeting a resource.
-				if (unit is Villager && pointedAtResource)
+				if (unit is Villager)
 				{
-					Villager villager = unit.GetComponent<Villager>();
+					// TODO: Check for buildings being pointed at.
+
+                    if (!pointedAtResource)
+                    {
+                        unit.ResetAI();
+                        unit.GotoForced(World.ToWorldSpace(pointedAtPosition));
+                        unit.ResetGoal();
+                        continue;
+                    }
+
+                    Villager villager = unit.GetComponent<Villager>();
                     
 					// Needed for fauna since fauna has an inactive resource component
 					// that doesn't have a grid position to be fetched.
@@ -487,38 +495,34 @@ public class InteractionPointer : MonoBehaviour
                     switch (pointedAtResource.type)
 					{
 						case ResourceGatheringType.Gold:
-							villager.SetUnitType(RTSUnitType.GoldMiner);								
+							villager.SetUnitType(RTSUnitType.GoldMiner);
 							break;
 
 						case ResourceGatheringType.Grain:
-							villager.SetUnitType(RTSUnitType.Farmer);										
+							villager.SetUnitType(RTSUnitType.Farmer);
 							break;
 
 						case ResourceGatheringType.Stone:
-							villager.SetUnitType(RTSUnitType.StoneMiner);										
+							villager.SetUnitType(RTSUnitType.StoneMiner);
 							break;
 
 						case ResourceGatheringType.Wood:
-							villager.SetUnitType(RTSUnitType.Lumberjack);										
+                            villager.Do_Fucking_Lumberjacking_Where_I_Fucking_Told_You_To(pointedAtResource);
+                            //villager.SetUnitType(RTSUnitType.Lumberjack);
 							break;
 						
 						case ResourceGatheringType.Berries:
-							villager.SetUnitType(RTSUnitType.Forager);										
+							villager.SetUnitType(RTSUnitType.Forager);
 							break;
 
 						case ResourceGatheringType.Fish:
-							villager.SetUnitType(RTSUnitType.Fisherman);										
+							villager.SetUnitType(RTSUnitType.Fisherman);
 							break;
 
 						case ResourceGatheringType.Meat:
                             gridPosition = pointedAtResource.GetComponent<Fauna>().gridPosition;
-                            villager.SetUnitType(RTSUnitType.Hunter);
-                            break;
-					}
-                    
-                    PathfindingGoal.TryGoal((Actor)villager, World.at(gridPosition), villager.GetGoals());
-					villager.GotoForced(gridPosition.x, gridPosition.y);
-					villager.ResetGoal();
+                            break;						
+                    }
 					continue;
 				}				
 

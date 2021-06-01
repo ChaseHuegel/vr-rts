@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 370903931665495540}
   - component: {fileID: 5738479937897218868}
   - component: {fileID: 6502996895932478754}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: NoPan
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -115,7 +115,7 @@ GameObject:
   - component: {fileID: 720358927761101226}
   - component: {fileID: 6879031468652339584}
   - component: {fileID: 6579518688826985445}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: building_health_bar_background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -240,7 +240,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7241933706910786212}
   - component: {fileID: 6008673339048128657}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Wall_A_gate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -275,7 +275,7 @@ Animator:
   m_GameObject: {fileID: 1009727172541456869}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 7ae56a8428b94f24b854dac395c7c925, type: 3}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 1be3c44a3e179364c9a8c494fcae19cc, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -294,7 +294,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1119240106095273504}
   - component: {fileID: 1318014236775810314}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Wall_A_door_B
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -377,7 +377,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1977080925068690138}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Bone_door_B
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -409,7 +409,7 @@ GameObject:
   - component: {fileID: 6366783440100233174}
   - component: {fileID: 8666039433538064492}
   - component: {fileID: 2000579801349422959}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: building_health_bar_foreground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -489,6 +489,7 @@ GameObject:
   - component: {fileID: 6604127596648191160}
   - component: {fileID: 6604127596648191163}
   - component: {fileID: -3040173863063974761}
+  - component: {fileID: 1313241953}
   m_Layer: 10
   m_Name: Wood_Wall_Gate_World
   m_TagString: Untagged
@@ -511,7 +512,6 @@ Transform:
   - {fileID: 8815554840477354667}
   - {fileID: 6740115100542905409}
   - {fileID: 954228412490905001}
-  - {fileID: 1433974140645099324}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
@@ -658,11 +658,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6494f394dde4732498f2aecf5968b6e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boundingDimensions: {x: 3, y: 1}
+  boundingDimensions: {x: 3, y: 3}
   boundingOrigin: {x: 0, y: 0}
   gridPosition:
-    x: 140
-    y: 110
+    x: 0
+    y: 0
   factionId: 0
   bakeOnStart: 1
   buildingData: {fileID: 11400000, guid: 5563b94f1188a1c4e8f99f9596e6f399, type: 2}
@@ -753,101 +753,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c9c47e9f81d15a45bdafb388a2c2dc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  openConditions: 0
---- !u!1 &5845337758796955755
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1433974140645099324}
-  - component: {fileID: 142759818440368384}
-  - component: {fileID: 5363535125750854161}
-  - component: {fileID: 5651013420937070696}
-  m_Layer: 10
-  m_Name: UnitTrigger
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1433974140645099324
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5845337758796955755}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0, z: -0}
-  m_LocalScale: {x: 4.502185, y: 4.502185, z: 4.502185}
-  m_Children: []
-  m_Father: {fileID: 5733846702584782233}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &142759818440368384
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5845337758796955755}
-  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &5363535125750854161
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5845337758796955755}
-  m_Enabled: 0
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &5651013420937070696
+  openConditions: 1
+  toggleDoors: 0
+--- !u!135 &1313241953
 SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5845337758796955755}
+  m_GameObject: {fileID: 5733846702584742329}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 3
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5961063802323506598
 GameObject:
@@ -858,7 +777,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8658791418294980419}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Bone_door_A
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -947,7 +866,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4402906265974195991}
   - component: {fileID: 7452560615941617889}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Wall_A_gate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1031,7 +950,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5934431635212399586}
   - component: {fileID: 9136405110758045158}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Wall_A_door_A
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1117,7 +1036,7 @@ GameObject:
   - component: {fileID: 2035265263285716470}
   - component: {fileID: 423833931891811921}
   - component: {fileID: 7430747048383255478}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: building_health_bar_text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1209,7 +1128,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2789223123860190616}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Bone_Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1245,7 +1164,7 @@ GameObject:
   - component: {fileID: 2269055651862377942}
   - component: {fileID: 7692227838219674360}
   - component: {fileID: 3161855299820559637}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: BuildingHealthBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1367,7 +1286,7 @@ GameObject:
   - component: {fileID: 3255368645289040287}
   - component: {fileID: 6805980277524194667}
   - component: {fileID: 6738974792565256787}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: BuildingTitle
   m_TagString: Untagged
   m_Icon: {fileID: 0}

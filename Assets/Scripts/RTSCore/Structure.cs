@@ -110,11 +110,6 @@ public class Structure : Obstacle, IFactioned
         }
     }
 
-    void OnDestroy()
-    {
-        UnbakeFromGrid();     
-    }
-
     public void TryRepair(float count, Actor repairer = null)
     {
         AttributeHandler.Heal(count, AttributeChangeCause.HEALED, repairer.AttributeHandler);
