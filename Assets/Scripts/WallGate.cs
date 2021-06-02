@@ -6,7 +6,7 @@ using Valve.VR.InteractionSystem;
 
 public class WallGate : MonoBehaviour
 {
-    public OpenCondition openConditions = OpenCondition.None;
+    public OpenCondition openConditions;
 
     private PlayerManager playerManager;
     private Structure structure;
@@ -97,9 +97,8 @@ public class WallGate : MonoBehaviour
     [System.Flags]
     public enum OpenCondition
     {
-        None,
-        Friendly,
-        Enemy,
-        Ally,
+        Friendly = 1,
+        Enemy = 2,
+        Ally = 4,
     }
 }

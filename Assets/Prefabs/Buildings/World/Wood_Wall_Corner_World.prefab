@@ -29,8 +29,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7584774138680985255}
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.051461797, y: 0.051461797, z: 0.051461797}
+  m_LocalPosition: {x: 0.0625, y: 0, z: 0.0625}
+  m_LocalScale: {x: 0.065, y: 0.065, z: 0.065}
   m_Children:
   - {fileID: 6170959508181994911}
   m_Father: {fileID: 0}
@@ -182,10 +182,11 @@ MonoBehaviour:
   boundingDimensions: {x: 1, y: 1}
   boundingOrigin: {x: 0, y: 0}
   gridPosition:
-    x: 0
-    y: 0
+    x: 160
+    y: 160
   factionId: 0
   bakeOnStart: 1
+  allowPathThru: 0
   buildingData: {fileID: 11400000, guid: d80244fe3c265014b995084835caf5fd, type: 2}
 --- !u!114 &9040593457955754918
 MonoBehaviour:

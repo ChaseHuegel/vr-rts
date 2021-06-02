@@ -15,7 +15,7 @@ public class Soldier : Unit
     public bool huntBuildings = true;
 
     //public VillagerHoverMenu villagerHoverMenu;
-
+    
     public override void Initialize()
     {
         base.Initialize();
