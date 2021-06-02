@@ -18,6 +18,12 @@ public class Obstacle : Body
         if (bakeOnStart) BakeToGrid();
     }
 
+    private void OnDestroy()
+    {
+        if (Application.isPlaying && gameObject.scene.isLoaded)
+            UnbakeFromGrid();
+    }
+
     public virtual void FetchBoundingDimensions() {}
 
     public void BakeToGrid()

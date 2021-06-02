@@ -11,7 +11,7 @@ public class SelfDestructTimer : MonoBehaviour
 
     private void Start()
     {
-        Destroy(this, maxLifetime);
+        Destroy(this.gameObject, maxLifetime);
     }
 }
 

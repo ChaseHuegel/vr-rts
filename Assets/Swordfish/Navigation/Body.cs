@@ -13,7 +13,7 @@ public class Body : MonoBehaviour
     public Coord2D gridPosition = new Coord2D(0, 0);
 
     public byte factionId;
-    
+
     public bool IsSameFaction(Actor actor)
     {
         return this.factionId == actor.factionId;
@@ -31,6 +31,12 @@ public class Body : MonoBehaviour
     {
         SyncPosition();
         Initialize();
+    }
+
+    private void OnDestroy()
+    {
+        if (Application.isPlaying && gameObject.scene.isLoaded)
+            RemoveFromGrid();
     }
 
     // public virtual void OnDrawGizmos()
@@ -117,7 +123,7 @@ public class Body : MonoBehaviour
     {
         Cell to = World.at(x, y);
         if (to.passable)
-        {   
+        {
             if (to.occupied && !ignoreOccupied)
                 return false;
 
@@ -205,6 +211,7 @@ public class Body : MonoBehaviour
     {
         Cell cell = World.at(gridPosition);
         cell.passable = true;
+        cell.canPathThru = false;
         cell.occupants.Remove(this);
     }
 
