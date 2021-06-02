@@ -98,6 +98,7 @@ Transform:
   - {fileID: 9062292112798693930}
   - {fileID: 6203525864732295163}
   - {fileID: 1986652924787650130}
+  - {fileID: 4966044655566892574}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
@@ -341,9 +342,13 @@ MonoBehaviour:
   bakeOnStart: 1
   allowPathThru: 0
   buildingData: {fileID: 11400000, guid: bc71de8f503ea984dab70f06ddc0dac4, type: 2}
-  attackRange: 5
+  attackRange: 20
   attackSpeed: 3
   attackDamage: 10
+  rangedProjectile: {fileID: 3740421758085118616, guid: 33ebc7103c3a4b64ca93d64149b5fa33,
+    type: 3}
+  projectileSpeed: 5
+  projectileOrigin: {fileID: 4966044655566892574}
 --- !u!1 &4732433485010001907
 GameObject:
   m_ObjectHideFlags: 0
@@ -375,6 +380,36 @@ Transform:
   m_Father: {fileID: 1455828424763501175}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!1 &5571034005489079450
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4966044655566892574}
+  m_Layer: 10
+  m_Name: ProjectileOrigin
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4966044655566892574
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5571034005489079450}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0, z: 0.4105}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1455828424763501175}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6448088319306873277
 GameObject:
   m_ObjectHideFlags: 0

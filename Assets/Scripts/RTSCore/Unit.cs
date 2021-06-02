@@ -23,11 +23,11 @@ public class Unit : Actor, IFactioned
 
     [Header("Unit")]
     public RTSUnitType rtsUnitType;
-     public GameObject rangedProjectile;
+    public GameObject rangedProjectile;
     protected GameObject projectileTarget;
-    protected float arrowSpeed = 5.0f;
-    GameObject projectile;
-    Vector3 projectileTargetPos;
+    public float projectileSpeed = 5.0f;
+    private GameObject projectile;
+    private Vector3 projectileTargetPos;
 
     [Header("AI")]
     public UnitState state;
@@ -152,7 +152,6 @@ public class Unit : Actor, IFactioned
 
     }
 
-
     public virtual void LaunchProjectile()
     {
         if (!projectile)
@@ -188,7 +187,7 @@ public class Unit : Actor, IFactioned
         else
         {
             // If not, then we just keep moving forward
-            projectile.transform.Translate(Vector3.forward * (arrowSpeed * Time.deltaTime));
+            projectile.transform.Translate(Vector3.forward * (projectileSpeed * Time.deltaTime));
         }
     }
 }
