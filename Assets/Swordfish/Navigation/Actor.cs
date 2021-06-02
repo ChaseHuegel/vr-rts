@@ -258,6 +258,8 @@ public class Actor : Body
 
         if (goal != null)
         {
+            ResetMemory();
+
             currentGoalTarget = cell;
             currentGoal = goal;
         }
