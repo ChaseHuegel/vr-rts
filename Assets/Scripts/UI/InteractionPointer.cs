@@ -280,24 +280,6 @@ public class InteractionPointer : MonoBehaviour
 
 				// TODO: Should probably be moved to update pointer.
 				HardSnapToGrid(destinationReticleTransform, placementBuildingData.boundingDimensionX, placementBuildingData.boundingDimensionY);
-
-				// if (WasSelectButtonPressed(hand))
-				// {
-				// 	isInBuildingPlacementMode = false;
-				// 	Instantiate(placementBuildingData.constructablePrefab, buildingPlacementPreviewObject.transform.position, buildingPlacementPreviewObject.transform.rotation);
-
-				// 	lastBuildingRotation = buildingPlacementPreviewObject.transform.localRotation.eulerAngles.y;
-
-				// 	Destroy(buildingPlacementPreviewObject);
-				// 	buildingPlacementPreviewObject = null;
-
-				// 	SetSnapTurnEnabled(true, true);
-				// }
-
-				// if (WasCancelButtonPressed(hand))
-				// {
-                //     EndBuildingPlacementMode();
-                // }
 			}
 		}
 	}
@@ -357,13 +339,8 @@ public class InteractionPointer : MonoBehaviour
 	private bool WasInteractButtonPressed(Hand hand)
 	{
 		if (CanInteract(hand))
-		{
 			if (uiInteractAction.GetStateDown(hand.handType))
-			{
-
 				return true;
-			}
-		}
 
 		// Make sure it's off.
 		if (wayPointReticle.activeSelf)
@@ -375,10 +352,8 @@ public class InteractionPointer : MonoBehaviour
 	private bool WasInteractButtonReleased(Hand hand)
 	{
 		if (CanInteract(hand))
-		{
 			if (uiInteractAction.GetStateUp(hand.handType))
 				return true;
-		}
 
 		// Make sure it's off.
 		if (wayPointReticle.activeSelf)
