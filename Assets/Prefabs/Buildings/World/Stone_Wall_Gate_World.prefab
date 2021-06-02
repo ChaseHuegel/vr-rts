@@ -131,6 +131,7 @@ GameObject:
   - component: {fileID: 2843186804932039898}
   - component: {fileID: 2843186804932039897}
   - component: {fileID: 4318787690255218291}
+  - component: {fileID: 1363663276483560402}
   m_Layer: 10
   m_Name: Stone_Wall_Gate_World
   m_TagString: Untagged
@@ -397,6 +398,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   openConditions: 1
   toggleDoors: 0
+--- !u!135 &1363663276483560402
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3693272101881856475}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 3.5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &7770228574733430891
 GameObject:
   m_ObjectHideFlags: 0
