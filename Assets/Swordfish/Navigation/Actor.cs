@@ -160,7 +160,6 @@ public class Actor : Body
         int currentDistance = 0;
         int nearestDistance = int.MaxValue;
 
-        // ! Disabled due to effect on hunter villagers (never stop shooting target even if dead)
         //  If using priority, try checking our memorized goals first
         if (usePriority && discoveredGoals.Count > 0)
         {
