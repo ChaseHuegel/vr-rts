@@ -332,23 +332,6 @@ public class Villager : Unit
         AudioSource.PlayClipAtPoint(GameMaster.GetAudio(clipName).GetClip(), transform.position, 0.75f);
     }
 
-    public void Do_Fucking_Lumberjacking_Where_I_Fucking_Told_You_To(Resource resource)
-    {
-        SetUnitType(RTSUnitType.Lumberjack);
-        ResetAI();
-        transportGoal = goals.Add<GoalTransportResource>();
-
-        GoalGatherResource getTheFuckingWood = new GoalGatherResource();
-        getTheFuckingWood.type = ResourceGatheringType.Wood;
-        currentGoal = getTheFuckingWood;
-        currentGoalTarget = resource.GetCellAtGrid();
-        //Goto(currentGoalTarget.x, currentGoalTarget.y);
-        PathfindingGoal.TryGoal((Actor)this, World.at(resource.gridPosition), getTheFuckingWood);
-        // villager.GotoForced(gridPosition.x, gridPosition.y);
-        // villager.ResetGoal();
-
-    }
-
     public void GotoPosition(Vector3 position)
     {
         foreach (PathfindingGoal goal in GetGoals())

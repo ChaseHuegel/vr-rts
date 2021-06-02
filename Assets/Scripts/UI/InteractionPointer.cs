@@ -492,11 +492,12 @@ public class InteractionPointer : MonoBehaviour
 							break;
 
 						case ResourceGatheringType.Meat:
+							villager.SetUnitType(RTSUnitType.Hunter);
                             gridPosition = pointedAtResource.GetComponent<Fauna>().gridPosition;
                             break;
                     }
 
-                    villager.GotoGoalForced(World.at(gridPosition));
+                    villager.TrySetGoal(World.at(gridPosition));
 					continue;
 				}
 
