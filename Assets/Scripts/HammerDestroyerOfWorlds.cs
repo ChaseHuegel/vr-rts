@@ -67,7 +67,7 @@ public class HammerDestroyerOfWorlds : MonoBehaviour
             return;
         }
         
-        if (collider.gameObject.GetComponent<Villager>())
+        if (collider.gameObject.GetComponent<Unit>())
         {
             GameObject spawned = GameObject.Instantiate(unitDestroyedEffect);
             spawned.transform.position = collider.transform.position;
