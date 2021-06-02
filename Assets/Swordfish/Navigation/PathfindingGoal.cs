@@ -16,12 +16,30 @@ public class PathfindingGoal
         return false;
     }
 
+    public static bool CheckGoal(Actor actor, Cell cell, PathfindingGoal[] goals)
+    {
+        foreach (PathfindingGoal goal in goals)
+            if (CheckGoal(actor, cell, goal))
+                return true;
+
+        return false;
+    }
+
     public static bool CheckGoal(Actor actor, Cell cell, PathfindingGoal goal)
     {
         if (goal != null && goal.active && goal.CheckGoal(cell, actor))
             return true;
 
         return false;
+    }
+
+    public static PathfindingGoal GetGoal(Actor actor, Cell cell, PathfindingGoal[] goals)
+    {
+        foreach (PathfindingGoal goal in goals)
+            if (CheckGoal(actor, cell, goal))
+                return goal;
+
+        return null;
     }
 
     //  Try a set of goals

@@ -252,6 +252,20 @@ public class Actor : Body
         return false;
     }
 
+    public void GotoGoalForced(Cell cell)
+    {
+        PathfindingGoal goal = PathfindingGoal.GetGoal(this, cell, GetGoals());
+
+        if (goal != null)
+        {
+            currentGoalTarget = cell;
+            currentGoal = goal;
+        }
+
+        if (HasValidTarget())
+            GotoForced(currentGoalTarget.x, currentGoalTarget.y);
+    }
+
     public void Goto(Direction dir, int distance, bool ignoreActors = true) { Goto(dir.toVector3() * distance, ignoreActors); }
     public void Goto(Coord2D coord, bool ignoreActors = true) { Goto(coord.x, coord.y, ignoreActors); }
     public void Goto(Vector2 vec, bool ignoreActors = true) { Goto((int)vec.x, (int)vec.y, ignoreActors); }
