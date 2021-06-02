@@ -19,7 +19,7 @@ public class Structure : Obstacle, IFactioned
     private GameObject sparksParticleSystem;
     private PlayerManager playerManager;
     public Faction GetFaction() { return faction; }
-    
+
     public void UpdateFaction() { faction = GameMaster.Factions.Find(x => x.index == factionId); }
 
     public bool NeedsRepairs() { return damageable.GetHealthPercent() < 1f; }
@@ -74,7 +74,7 @@ public class Structure : Obstacle, IFactioned
         boundingDimensions.x = buildingData.boundingDimensionX;
         boundingDimensions.y = buildingData.boundingDimensionY;
     }
-    
+
     protected void CreateBuildingDamageFX()
     {
         buildingDamagedFX = Instantiate(GameMaster.Instance.buildingDamagedFX, transform.position, Quaternion.identity, transform);
@@ -97,15 +97,15 @@ public class Structure : Obstacle, IFactioned
         }
     }
 
-    
+
     void OnDamage(object sender, Damageable.DamageEvent e)
     {
         RefreshVisuals();
 
         if (AttributeHandler.GetAttributePercent(Attributes.HEALTH) <= 0.0f)
         {
-            AudioSource.PlayClipAtPoint(GameMaster.GetAudio("building_collapsed").GetClip(), transform.position, 0.5f);                   
-            UnbakeFromGrid();     
+            AudioSource.PlayClipAtPoint(GameMaster.GetAudio("building_collapsed").GetClip(), transform.position, 0.5f);
+            UnbakeFromGrid();
             Destroy(this.gameObject);
         }
     }
@@ -117,23 +117,23 @@ public class Structure : Obstacle, IFactioned
     }
 
     void RefreshVisuals()
-    {        
+    {
         if (!buildingDamagedFX)
             CreateBuildingDamageFX();
 
         float healthPercent = damageable.GetAttributePercent(Attributes.HEALTH);
         if (healthPercent >= 1.0f)
         {
-            if (buildingDamagedFX.activeSelf) buildingDamagedFX.SetActive(false);            
+            if (buildingDamagedFX.activeSelf) buildingDamagedFX.SetActive(false);
             return;
         }
 
         var emission = smokeParticleSystem.emission;
-        
+
         // Base rate desired + percent health missing * modifier.
         emission.rateOverTime = 4.0f + ((1.0f - healthPercent) * 30);
- 
-        float modifier = 2.0f - healthPercent;  
+
+        float modifier = 2.0f - healthPercent;
         psMain.startLifetime = new ParticleSystem.MinMaxCurve(2.0f + modifier, 3.0f + modifier);
 
         modifier = (1.0f - healthPercent) * 0.75f;
@@ -151,7 +151,7 @@ public class Structure : Obstacle, IFactioned
             if (!fireGlowParticleSystem.activeSelf) fireGlowParticleSystem.SetActive(true);
             if (!flamesParticleSystem.activeSelf) flamesParticleSystem.SetActive(true);
 
-            if (sparksParticleSystem.activeSelf) sparksParticleSystem.SetActive(false);            
+            if (sparksParticleSystem.activeSelf) sparksParticleSystem.SetActive(false);
         }
         else
         {
@@ -159,7 +159,7 @@ public class Structure : Obstacle, IFactioned
                 audioSource.Stop();
 
             if (fireGlowParticleSystem.activeSelf) fireGlowParticleSystem.SetActive(false);
-            if (flamesParticleSystem.activeSelf) flamesParticleSystem.SetActive(false);            
+            if (flamesParticleSystem.activeSelf) flamesParticleSystem.SetActive(false);
             if (sparksParticleSystem.activeSelf) sparksParticleSystem.SetActive(false);
         }
 

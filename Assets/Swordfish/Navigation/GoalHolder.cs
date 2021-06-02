@@ -7,7 +7,7 @@ namespace Swordfish.Navigation
 public class GoalHolder
 {
     private List<PathfindingGoal> goals = new List<PathfindingGoal>();
-    public PathfindingGoal[] entries;
+    public PathfindingGoal[] entries = new PathfindingGoal[0];
 
     public void Cycle()
     {

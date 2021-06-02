@@ -106,11 +106,6 @@ public class Actor : Body
         currentGoalTarget = null;
     }
 
-    public void ResetMemory()
-    {
-        discoveredGoals.Clear();
-    }
-
     public void ResetPathingBrain()
     {
         pathWaitTries = 0;
@@ -127,6 +122,19 @@ public class Actor : Body
         ResetPath();
         ResetGoal();
         ResetPathingBrain();
+    }
+
+    //  Shouldn't be used outside of core actor logic
+    private void ResetMemory()
+    {
+        discoveredGoals.Clear();
+    }
+
+    //  Shouldn't be used outside of core actor logic
+    private void WipeAI()
+    {
+        ResetAI();
+        ResetMemory();
     }
 
     public void TryGoalAtHelper(int relativeX, int relativeY, PathfindingGoal goal, ref Cell current, ref Cell result, ref int currentDistance, ref int nearestDistance)
@@ -164,13 +172,18 @@ public class Actor : Body
         if (usePriority && discoveredGoals.Count > 0)
         {
             foreach (PathfindingGoal goal in GetGoals())
-                if (discoveredGoals.TryGetValue(goal, out result) && result != null)
-                    if (DistanceTo(result) < goalSearchDistance && PathfindingGoal.TryGoal(this, result, goal))
+            {
+                currentGoal = goal;
+
+                if (discoveredGoals.TryGetValue(goal, out result)
+                    && result != null
+                    && DistanceTo(result) < goalSearchDistance
+                    && PathfindingGoal.TryGoal(this, result, goal))
                     {
-                        currentGoal = goal;
                         currentGoalSearchDistance = goalSearchGrowth;
                         return result;
                     }
+            }
         }
 
         foreach (PathfindingGoal goal in GetGoals())
@@ -214,7 +227,7 @@ public class Actor : Body
 
         //  No matching goal found
         if (result == null)
-            currentGoal = null;
+            WipeAI();
 
         //  Expand the search
         currentGoalSearchDistance = (byte)Mathf.Clamp(currentGoalSearchDistance + goalSearchGrowth, 1, goalSearchDistance);
@@ -312,7 +325,7 @@ public class Actor : Body
             }
 
             UpdateIdle();
-            if (IsIdle()) ResetAI();
+            if (IsIdle()) WipeAI();
 
             Tick();
         }
@@ -412,8 +425,8 @@ public class Actor : Body
                     //  Unable to repath
                     else
                     {
-                        //  Reset pathing
-                        ResetAI();
+                        //  Reset pathing and memory
+                        WipeAI();
 
                         //  Trigger repath failed event
                         RepathFailedEvent e = new RepathFailedEvent{ actor = this };
