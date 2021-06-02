@@ -165,17 +165,13 @@ public class Actor : Body
         if (usePriority && discoveredGoals.Count > 0)
         {
             foreach (PathfindingGoal goal in GetGoals())
-            {
                 if (discoveredGoals.TryGetValue(goal, out result) && result != null)
-                {
                     if (DistanceTo(result) < goalSearchDistance && PathfindingGoal.TryGoal(this, result, goal))
                     {
                         currentGoal = goal;
                         currentGoalSearchDistance = goalSearchGrowth;
                         return result;
                     }
-                }
-            }
         }
 
         foreach (PathfindingGoal goal in GetGoals())
