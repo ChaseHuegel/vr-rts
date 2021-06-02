@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 370903931665495540}
   - component: {fileID: 5738479937897218868}
   - component: {fileID: 6502996895932478754}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: NoPan
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -80,7 +80,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1030030526595675556}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -115,7 +115,7 @@ GameObject:
   - component: {fileID: 720358927761101226}
   - component: {fileID: 6879031468652339584}
   - component: {fileID: 6579518688826985445}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: building_health_bar_background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -189,7 +189,7 @@ GameObject:
   m_Component:
   - component: {fileID: 954228412490905001}
   - component: {fileID: 858736279421885337}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: BuildingHoverDisplay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -240,7 +240,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7241933706910786212}
   - component: {fileID: 6008673339048128657}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Wall_A_gate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -294,7 +294,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1119240106095273504}
   - component: {fileID: 1318014236775810314}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Wall_A_door_B
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -377,7 +377,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1977080925068690138}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Bone_door_B
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -409,7 +409,7 @@ GameObject:
   - component: {fileID: 6366783440100233174}
   - component: {fileID: 8666039433538064492}
   - component: {fileID: 2000579801349422959}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: building_health_bar_foreground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -490,7 +490,7 @@ GameObject:
   - component: {fileID: 6604127596648191163}
   - component: {fileID: -3040173863063974761}
   - component: {fileID: 1313241953}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Wood_Wall_Gate_World
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -505,7 +505,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5733846702584742329}
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0.0625, y: 0, z: 0.0625}
   m_LocalScale: {x: 0.0770835, y: 0.0770835, z: 0.0770835}
   m_Children:
   - {fileID: 7241933706910786212}
@@ -661,8 +661,8 @@ MonoBehaviour:
   boundingDimensions: {x: 3, y: 3}
   boundingOrigin: {x: 0, y: 0}
   gridPosition:
-    x: 0
-    y: 0
+    x: 160
+    y: 160
   factionId: 0
   bakeOnStart: 1
   allowPathThru: 1
@@ -778,7 +778,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8658791418294980419}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Bone_door_A
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -809,7 +809,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8815554840477354667}
   - component: {fileID: 6320187030379763693}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Knock
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -853,7 +853,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4402906265974195991}
   - component: {fileID: 7452560615941617889}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Wall_A_gate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -937,7 +937,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5934431635212399586}
   - component: {fileID: 9136405110758045158}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Wall_A_door_A
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1023,7 +1023,7 @@ GameObject:
   - component: {fileID: 2035265263285716470}
   - component: {fileID: 423833931891811921}
   - component: {fileID: 7430747048383255478}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: building_health_bar_text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1115,7 +1115,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2789223123860190616}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Bone_Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1151,7 +1151,7 @@ GameObject:
   - component: {fileID: 2269055651862377942}
   - component: {fileID: 7692227838219674360}
   - component: {fileID: 3161855299820559637}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: BuildingHealthBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1273,7 +1273,7 @@ GameObject:
   - component: {fileID: 3255368645289040287}
   - component: {fileID: 6805980277524194667}
   - component: {fileID: 6738974792565256787}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: BuildingTitle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
