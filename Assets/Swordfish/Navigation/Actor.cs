@@ -106,11 +106,6 @@ public class Actor : Body
         currentGoalTarget = null;
     }
 
-    public void ResetMemory()
-    {
-        discoveredGoals.Clear();
-    }
-
     public void ResetPathingBrain()
     {
         pathWaitTries = 0;
@@ -129,7 +124,14 @@ public class Actor : Body
         ResetPathingBrain();
     }
 
-    public void WipeAI()
+    //  Shouldn't be used outside of core actor logic
+    private void ResetMemory()
+    {
+        discoveredGoals.Clear();
+    }
+
+    //  Shouldn't be used outside of core actor logic
+    private void WipeAI()
     {
         ResetAI();
         ResetMemory();
