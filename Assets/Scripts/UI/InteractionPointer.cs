@@ -73,7 +73,7 @@ public class InteractionPointer : MonoBehaviour
 	public bool useHandAsReticle;
 	private bool teleporting = false;
 	private float currentFadeTime = 0.0f;
-	
+
 	public bool placementStarted;
 	public Hand placementHand;
 	public bool placementEnded;
@@ -82,7 +82,7 @@ public class InteractionPointer : MonoBehaviour
 	private Resource pointedAtResource;
 	private Vector3 rallyWaypointArcStartPosition;
 	bool isSettingRallyPoint;
-	
+
 	private int maxUnitSelectionCount;
 	private byte teamId;
     private PlayerManager playerManager;
@@ -118,7 +118,7 @@ public class InteractionPointer : MonoBehaviour
 	void Awake()
 	{
 		_instance = this;
-		
+
 		pointerLineRenderer = GetComponentInChildren<LineRenderer>();
 		pointerObject = pointerLineRenderer.gameObject;
 		handReticle.enabled = useHandAsReticle;
@@ -148,7 +148,7 @@ public class InteractionPointer : MonoBehaviour
 
         playerManager = PlayerManager.instance;
 
-        //interactableObjects = GameObject.FindObjectsOfType<PointerInteractable>();		
+        //interactableObjects = GameObject.FindObjectsOfType<PointerInteractable>();
 		selectedUnits = new List<Unit>();
 
 		// Cache some values, going to need them a lot and don't need to keep
@@ -171,12 +171,12 @@ public class InteractionPointer : MonoBehaviour
 			Debug.LogError("<b>[SteamVR Interaction]</b> ObjectPlacementPointer: No Player instance found in map.", this);
 			Destroy( this.gameObject );
 			return;
-		}        
+		}
 
         ShowPointer();
-	}	
+	}
 
-	
+
 
 	//=========================================================================
 	void Update()
@@ -186,14 +186,14 @@ public class InteractionPointer : MonoBehaviour
 		{
 			//HidePointer();
 		}
-		
+
 		//UpdatePointer();
 
 		// if ( visible )
 			UpdatePointer();
 		// else
 		// 	ShowPointer();
-			
+
 		Hand oldPointerHand = pointerHand;
 		Hand newPointerHand = null;
 
@@ -207,7 +207,7 @@ public class InteractionPointer : MonoBehaviour
 				newPointerHand = hand;
 
 			//hand.uiInteractAction.GetStateDown(hand.handType)
-			
+
 			if (WasInteractButtonReleased(hand))
 				if (pointerHand == hand)
 					FinishInteraction();
@@ -216,7 +216,7 @@ public class InteractionPointer : MonoBehaviour
             {
                 newPointerHand = hand;
                 StartInteraction(hand);
-            }            
+            }
 
             if (WasQueueButtonPressed(hand))
 				newPointerHand = hand;
@@ -235,7 +235,7 @@ public class InteractionPointer : MonoBehaviour
 
             if (WasDequeueButtonPressed(hand))
 				newPointerHand = hand;
-				
+
 			if (WasDequeueButtonReleased(hand) && pointedAtPointerInteractable)
 			{
 				if (pointerHand == hand)
@@ -256,7 +256,7 @@ public class InteractionPointer : MonoBehaviour
 				else if (isInBuildingPlacementMode)
                     EndBuildingPlacementMode();
             }
-			
+
 			// 	if (isSettingRallyPoint)
 			// 	{
             //         isSettingRallyPoint = false;
@@ -295,7 +295,7 @@ public class InteractionPointer : MonoBehaviour
 	{
 		return queueAction.GetStateDown(hand.handType);
 	}
-	
+
 	private bool WasSelectButtonReleased(Hand hand)
 	{
 		return selectAction.GetStateUp(hand.handType);
@@ -348,7 +348,7 @@ public class InteractionPointer : MonoBehaviour
 
 		return false;
 	}
-	
+
 	private bool WasInteractButtonReleased(Hand hand)
 	{
 		if (CanInteract(hand))
@@ -361,16 +361,16 @@ public class InteractionPointer : MonoBehaviour
 
 		return false;
 	}
-  
+
     private void StartInteraction(Hand hand)
-	{	
+	{
 		if (isInWallPlacementMode)
 		{
 			if (!wallPlacementPreviewStartObject)
             {
 				wallPlacementPreviewStartObject = Instantiate(buildingPlacementPreviewObject);
 				wallPlacementPreviewStartObject.transform.Rotate(0, 0, lastBuildingRotation);
-				wallPlacementPreviewStartObject.transform.position = buildingPlacementPreviewObject.transform.position;				
+				wallPlacementPreviewStartObject.transform.position = buildingPlacementPreviewObject.transform.position;
 			}
 
 			woodWallWorld_1x1 = GameMaster.GetBuilding(RTSBuildingType.Wood_Wall_1x1).worldPrefab;
@@ -415,17 +415,17 @@ public class InteractionPointer : MonoBehaviour
 				//Vector3 segmentPos = World.ToTransformSpace(nextPosition);
 
 				GameObject obj = CreateWallSegment(previousSegmentPosition, nextSegmentPosition, woodWallWorld_1x1, woodWallWorld_1x1_Diagonal);
-				
+
 				previousSegmentPosition = nextSegmentPosition;
 			}
 
             EndWallPlacementMode();
         }
 		else if (isInBuildingPlacementMode)
-		{		
-			isInBuildingPlacementMode = false;		
+		{
+			isInBuildingPlacementMode = false;
 			Instantiate(placementBuildingData.constructablePrefab, buildingPlacementPreviewObject.transform.position, buildingPlacementPreviewObject.transform.rotation);
-			
+
 			lastBuildingRotation = buildingPlacementPreviewObject.transform.localRotation.eulerAngles.y;
 
 			Destroy(buildingPlacementPreviewObject);
@@ -451,20 +451,20 @@ public class InteractionPointer : MonoBehaviour
 			{
 				if (unit is Villager)
 				{
-					// TODO: Check for buildings being pointed at.                    
+					// TODO: Check for buildings being pointed at.
 
                     Villager villager = unit.GetComponent<Villager>();
 
 					if (!pointedAtResource)
                     {
-                        villager.GotoPosition(pointedAtPosition);                        
+                        villager.GotoPosition(pointedAtPosition);
                         continue;
                     }
 
 					// Needed for fauna since fauna has an inactive resource component
 					// that doesn't have a grid position to be fetched.
 					Swordfish.Coord2D gridPosition = pointedAtResource.gridPosition;
-                  
+
                     switch (pointedAtResource.type)
 					{
 						case ResourceGatheringType.Gold:
@@ -480,10 +480,9 @@ public class InteractionPointer : MonoBehaviour
 							break;
 
 						case ResourceGatheringType.Wood:
-                            villager.Do_Fucking_Lumberjacking_Where_I_Fucking_Told_You_To(pointedAtResource);
-                            //villager.SetUnitType(RTSUnitType.Lumberjack);
+                            villager.SetUnitType(RTSUnitType.Lumberjack);
 							break;
-						
+
 						case ResourceGatheringType.Berries:
 							villager.SetUnitType(RTSUnitType.Forager);
 							break;
@@ -494,19 +493,17 @@ public class InteractionPointer : MonoBehaviour
 
 						case ResourceGatheringType.Meat:
                             gridPosition = pointedAtResource.GetComponent<Fauna>().gridPosition;
-                            break;						
+                            break;
                     }
 
-					// PathfindingGoal.TryGoal((Actor)villager, World.at(gridPosition), villager.GetGoals());
-					// villager.GotoForced(gridPosition.x, gridPosition.y);
-					// villager.ResetGoal();
+                    villager.GotoGoalForced(World.at(gridPosition));
 					continue;
-				}				
+				}
 
 				// Military unit.
 				if (unit is Soldier)
 				// if (!civilian)
-				{	
+				{
 					if (pointedAtPointerInteractable)
 					{
 						Unit pointedAtUnit = pointedAtPointerInteractable.GetComponent<Unit>();
@@ -516,21 +513,21 @@ public class InteractionPointer : MonoBehaviour
 						{
 							// TODO: Force attack unit/set target
 							// Attack unit
-							unit.GotoForced(World.ToWorldSpace(pointedAtPosition));						
-							unit.ResetGoal();						
+							unit.GotoForced(World.ToWorldSpace(pointedAtPosition));
+							unit.ResetGoal();
 							continue;
 						}
 						// Same faction, go to units position.
 						else if (pointedAtUnit)
 						{
-							unit.GotoForced(unit.gridPosition.x, unit.gridPosition.y);						
+							unit.GotoForced(unit.gridPosition.x, unit.gridPosition.y);
 							unit.ResetGoal();
 							continue;
 						}
 					}
 
 					// Default go to position.
-					unit.GotoForced(World.ToWorldSpace(pointedAtPosition));						
+					unit.GotoForced(World.ToWorldSpace(pointedAtPosition));
 					unit.ResetGoal();
 				}
 			}
@@ -540,13 +537,13 @@ public class InteractionPointer : MonoBehaviour
 			pointedAtResource = null;
 		}
 	}
-	
+
     private void EndBuildingPlacementMode()
 	{
-		isInBuildingPlacementMode = false;	
+		isInBuildingPlacementMode = false;
 		Destroy(buildingPlacementPreviewObject);
 		buildingPlacementPreviewObject = null;
-		
+
 		// TODO: Restore resources to player
 
 		SetSnapTurnEnabled(true, true);
@@ -566,7 +563,7 @@ public class InteractionPointer : MonoBehaviour
 	private void EndWallPlacementMode()
 	{
         isInWallPlacementMode = false;
-		
+
 		ClearWallPreviewSections();
 
 		// TODO: Destroy these after the start/end pieces have been instantiated.
@@ -583,14 +580,14 @@ public class InteractionPointer : MonoBehaviour
 
         SetSnapTurnEnabled(true, true);
     }
-	
+
     private void DrawWallPreview()
-	{   
-		// This is a corner piece that has been placed already when the 
+	{
+		// This is a corner piece that has been placed already when the
 		// trigger was pressed, it is the beginning point of the wall.
 		Vector3 pos1 = wallPlacementPreviewStartObject.transform.position;
 
-		// This is the current reticle location with a corner wall preview 
+		// This is the current reticle location with a corner wall preview
 		// piece attached, this is the end of the wall.
 		Vector3 pos2 = buildingPlacementPreviewObject.transform.position;
 
@@ -603,17 +600,17 @@ public class InteractionPointer : MonoBehaviour
 
 		// Grid unit * wall bounding dimension
         float wallWorldLength = 0.125f * 1.0f;
-		Vector3 dir = (pos2 - pos1).normalized;		
-		Vector3 segmentPos = pos1 + (dir * wallWorldLength);	
+		Vector3 dir = (pos2 - pos1).normalized;
+		Vector3 segmentPos = pos1 + (dir * wallWorldLength);
         Swordfish.Coord2D startPosition = World.ToWorldCoord(pos1);
         Swordfish.Coord2D endPosition = World.ToWorldCoord(pos2);
-        	
-        // Track the position of the previous wall segment so we can decide 
-        // the rotation of the next wall segment in relation to the previous 
+
+        // Track the position of the previous wall segment so we can decide
+        // the rotation of the next wall segment in relation to the previous
         // wall segment.
         Swordfish.Coord2D previousSegmentPosition = startPosition;
-		Swordfish.Coord2D nextSegmentPosition = World.ToWorldCoord(segmentPos);		
-		Swordfish.Coord2D difference = endPosition - startPosition;	
+		Swordfish.Coord2D nextSegmentPosition = World.ToWorldCoord(segmentPos);
+		Swordfish.Coord2D difference = endPosition - startPosition;
 
 		GameObject obj = null;
 
@@ -629,13 +626,13 @@ public class InteractionPointer : MonoBehaviour
 				// ! CreateWallSegment works as it is for the final world wall generation
 				// ! so bugs aren't from it. Has to be something else.
 				//obj = CreateWallSegment(previousSegmentPosition, nextSegmentPosition, woodWallWorld_1x1_Preview, woodWallWorld_1x1_Diagonal_Preview);
-                
+
 				// ! Just an abbreviated CreateWallSegment that only deals with diagonals, or
 				// ! atleast should.
 				//obj = GetDiagonalWallRotated(previousSegmentPosition, nextSegmentPosition, woodWallWorld_1x1_Diagonal_Preview);
-                
+
 				obj = Instantiate(woodWallWorld_1x1_Preview, World.ToTransformSpace(nextSegmentPosition), buildingPlacementPreviewObject.transform.rotation);
-				
+
 				previousSegmentPosition = nextSegmentPosition;
 				nextSegmentPosition.x += 1 * (int)Mathf.Sign(difference.x);
 				nextSegmentPosition.y += 1 * (int)Mathf.Sign(difference.y);
@@ -653,7 +650,7 @@ public class InteractionPointer : MonoBehaviour
 
                 wallPreviewSections.Add(obj);
             }
-        }			
+        }
 		else
 		{
             //-----------------------------------------------------------------
@@ -673,7 +670,7 @@ public class InteractionPointer : MonoBehaviour
                 HardSnapToGrid(obj.transform, 1, 1);
                 wallPreviewSections.Add(obj);
             }
-			
+
 			// Not a straight wall, need a corner
 			if (endPosition.x != nextSegmentPosition.x && endPosition.y != nextSegmentPosition.y)
 			{
@@ -690,7 +687,7 @@ public class InteractionPointer : MonoBehaviour
 			// Reset to start position
             nextSegmentPosition = startPosition;
 			nextSegmentPosition.x = endPosition.x;
-			
+
 			// Start at 1 because the first wall segment will be a corner piece,
 			// not a wall piece.
             for (int i = 1; i < sizeY; ++i)
@@ -699,18 +696,18 @@ public class InteractionPointer : MonoBehaviour
                 segmentPos = World.ToTransformSpace(nextSegmentPosition);
                 obj = Instantiate(woodWallWorld_1x1_Preview, segmentPos, buildingPlacementPreviewObject.transform.rotation);
                 HardSnapToGrid(obj.transform, 1, 1);
-                wallPreviewSections.Add(obj);                
+                wallPreviewSections.Add(obj);
             }
         }
     }
 
 	private void DrawWallPreview2()
-	{   
-		// This is a corner piece that has been placed already when the 
+	{
+		// This is a corner piece that has been placed already when the
 		// trigger was pressed, it is the beginning point of the wall.
 		Vector3 pos1 = wallPlacementPreviewStartObject.transform.position;
 
-		// This is the current reticle location with a corner wall preview 
+		// This is the current reticle location with a corner wall preview
 		// piece attached, this is the end of the wall.
 		Vector3 pos2 = buildingPlacementPreviewObject.transform.position;
 
@@ -722,14 +719,14 @@ public class InteractionPointer : MonoBehaviour
 		// Grid unit * bounding dimension
         float wallWorldLength = 0.125f * 1.0f;
 		Vector3 dir = (pos2 - pos1).normalized;
-		
-		Vector3 segmentPos = pos1 + (dir * wallWorldLength);			
+
+		Vector3 segmentPos = pos1 + (dir * wallWorldLength);
 
 		ClearWallPreviewSections();
         Swordfish.Coord2D endPosition = World.ToWorldCoord(pos2);
 
-        // Track the position of the previous wall segment so we can decide 
-        // the rotation of the next wall segment in relation to the previous 
+        // Track the position of the previous wall segment so we can decide
+        // the rotation of the next wall segment in relation to the previous
         // wall segment.
         Swordfish.Coord2D previousSegmentPosition = World.ToWorldCoord(pos1);
 		Swordfish.Coord2D nextSegmentPosition = World.ToWorldCoord(segmentPos);
@@ -737,7 +734,7 @@ public class InteractionPointer : MonoBehaviour
         while (nextSegmentPosition != endPosition)
 		{
 			GameObject obj = CreateWallSegment(previousSegmentPosition, nextSegmentPosition, woodWallWorld_1x1_Preview, woodWallWorld_1x1_Diagonal_Preview);
-            
+
 			previousSegmentPosition = nextSegmentPosition;
             segmentPos += (dir * wallWorldLength);
             nextSegmentPosition = World.ToWorldCoord(segmentPos);
@@ -754,13 +751,13 @@ public class InteractionPointer : MonoBehaviour
             HardSnapToGrid(obj.transform, 1, 1);
 
 			wallPreviewSections.Add(obj);
-		} 
+		}
     }
 
 	private GameObject GetDiagonalWallRotated(Coord2D previousPosition, Coord2D nextPosition, GameObject diagonalWall)
 	{
         GameObject obj = null;
-		
+
 		Vector3 segmentPos = World.ToTransformSpace(nextPosition);
 
 		// Southeast
@@ -777,21 +774,21 @@ public class InteractionPointer : MonoBehaviour
 		}
 		else
 		 	obj = Instantiate(diagonalWall, segmentPos, buildingPlacementPreviewObject.transform.rotation);
-        
+
 		return obj;
     }
 
 	private GameObject CreateWallSegment(Coord2D lastPosition, Coord2D nextPosition, GameObject normalWall, GameObject diagonalWall)
 	{
         GameObject obj = null;
-		
+
 		Vector3 segmentPos = World.ToTransformSpace(nextPosition);
 
 		//---------------------------------------------------------------------
 		// Eastward (nextPosition.x > lastPosition.x)
 		// East
 		if (nextPosition.x > lastPosition.x && nextPosition.y == lastPosition.y)
-		{		
+		{
 			obj = Instantiate(normalWall, segmentPos, buildingPlacementPreviewObject.transform.rotation);
 			obj.transform.Rotate(0, 0, 90);
 		}
@@ -806,12 +803,12 @@ public class InteractionPointer : MonoBehaviour
 		{
 			obj = Instantiate(diagonalWall, segmentPos, buildingPlacementPreviewObject.transform.rotation);
 		}
-		
+
 		//---------------------------------------------------------------------
 		// Westward (nextPosition.x < lastPosition.x)
 		// West
 		else if (nextPosition.x < lastPosition.x && nextPosition.y == lastPosition.y)
-		{			
+		{
 			obj = Instantiate(normalWall, segmentPos, buildingPlacementPreviewObject.transform.rotation);
 			obj.transform.Rotate(0, 0, 90);
 		}
@@ -879,27 +876,27 @@ public class InteractionPointer : MonoBehaviour
 
 		//Trace to see if the pointer hit anything
 		RaycastHit hitInfo;
-		teleportArc.SetArcData( pointerStart, arcVelocity, true, pointerAtBadAngle );		
+		teleportArc.SetArcData( pointerStart, arcVelocity, true, pointerAtBadAngle );
 
 		teleportArc.FindProjectileCollision( out hitInfo );
 		//if ( teleportArc.DrawArc( out hitInfo ) )
 		if (hitInfo.collider)
-		{	
+		{
 			hitSomething = true;
 			hitPointValid = LayerMatchTest(allowedPlacementLayers, hitInfo.collider.gameObject);
-			
+
 			if (selectedUnits.Count > 0)
 				pointedAtResource = hitInfo.collider.GetComponentInParent<Resource>();
-			
+
 			hitPointerInteractable = hitInfo.collider.GetComponent<PointerInteractable>();
 			if (!hitPointerInteractable)
 				hitPointerInteractable = hitInfo.collider.GetComponentInParent<PointerInteractable>();
-		}		
-		
+		}
+
 		HighlightSelected( hitPointerInteractable );
-		
+
 		if (hitPointerInteractable != null)
-			pointedAtPointerInteractable = hitPointerInteractable;			
+			pointedAtPointerInteractable = hitPointerInteractable;
 		else
 			pointedAtPointerInteractable = null;
 
@@ -915,7 +912,7 @@ public class InteractionPointer : MonoBehaviour
 		destinationReticleTransform.gameObject.SetActive( true );
 
 		if (isSettingRallyPoint)
-		{			
+		{
 			DrawQuadraticBezierCurve(pointerLineRenderer, rallyWaypointArcStartPosition, pointedAtPosition);
 			if (pointerLineRenderer.enabled == false)
 				pointerLineRenderer.enabled = true;
@@ -940,10 +937,10 @@ public class InteractionPointer : MonoBehaviour
 		{
 			HardSnapToGrid(destinationReticleTransform, placementBuildingData.boundingDimensionX, placementBuildingData.boundingDimensionY);
             if (wallPlacementPreviewStartObject)// && buildingPlacementPreviewObject)
-            {		
-				// ! Choose a method to use....		
+            {
+				// ! Choose a method to use....
                 DrawWallPreview(); // AOE2 style, 45's don't work.
-				//DrawWallPreview2();  // No corners ala AOE2, 45's are buggy.              
+				//DrawWallPreview2();  // No corners ala AOE2, 45's are buggy.
             }
 
             //DrawQuadraticBezierCurve(pointerLineRenderer, pointerStart, destinationReticleTransform.position);
@@ -958,15 +955,15 @@ public class InteractionPointer : MonoBehaviour
 		{
 			int i = 0;
 			foreach (Unit unit in selectedUnits)
-			{	
+			{
 				LineRenderer lineRenderer = lineRenderers[i];
 
 				if (!unit)
-				{ 
+				{
 					selectedUnits.Remove(unit);
 					if (lineRenderers[i].enabled)
 						lineRenderers[i].enabled = false;
-				}			
+				}
 				else
 				{
 					DrawQuadraticBezierCurve(lineRenderers[i], unit.transform.position, pointedAtPosition);
@@ -977,8 +974,8 @@ public class InteractionPointer : MonoBehaviour
 			}
 		}
 	}
-    
-	
+
+
 	public void OnBuildingPlacementStarted(object sender, BuildMenuSlot.BuildingPlacementEvent e)
 	{
 		// ! Want to eventually switch action maps based on activity.
@@ -995,7 +992,7 @@ public class InteractionPointer : MonoBehaviour
         }
         else
         {
-            isInBuildingPlacementMode = true;			
+            isInBuildingPlacementMode = true;
 			buildingPlacementPreviewObject = Instantiate(placementBuildingData.worldPreviewPrefab, destinationReticleTransform);
         }
 
@@ -1006,7 +1003,7 @@ public class InteractionPointer : MonoBehaviour
 	private bool CanInteract( Hand hand)
 	{
 		// !PlayerManager.instance.handBuildMenu.activeSelf
-		if (!hand.currentAttachedObject && !hand.hoveringInteractable)	
+		if (!hand.currentAttachedObject && !hand.hoveringInteractable)
 			return true;
 
 		return false;
@@ -1024,8 +1021,8 @@ public class InteractionPointer : MonoBehaviour
 
 		return false;
 	}
-	
-	
+
+
 	public bool IsEligibleForTeleport( Hand hand )
 	{
 		// TODO: Clean this up so it works for both hands. Ideally, just have different action
@@ -1061,7 +1058,7 @@ public class InteractionPointer : MonoBehaviour
 
 		return true;
 	}
-	
+
 	private bool WasTeleportButtonPressed( Hand hand )
 	{
 		if ( IsEligibleForTeleport( hand ) )
@@ -1075,7 +1072,7 @@ public class InteractionPointer : MonoBehaviour
 
 		return false;
 	}
-	
+
 
 	private void TryTeleportPlayer()
 	{
@@ -1089,7 +1086,7 @@ public class InteractionPointer : MonoBehaviour
 			// {
 				//Pointing at an unlocked teleport marker
 				//teleportingToMarker = pointedAtTeleportMarker;
-				
+
 				InitiateTeleportFade();
 				//CancelTeleportHint();
 			// }
@@ -1138,7 +1135,7 @@ public class InteractionPointer : MonoBehaviour
 			// {
 			// 	teleportingToMarker.TeleportPlayer( pointedAtPosition );
 			// }
-		}	
+		}
 
 	public void DrawQuadraticBezierCurve(LineRenderer lineRenderer, Vector3 start, Vector3 end)
     {
@@ -1146,7 +1143,7 @@ public class InteractionPointer : MonoBehaviour
 		Vector3 dir = (end - start).normalized;
 		Vector3 mid = start + (dir * dist);
 		mid.y += 1;
-			
+
         lineRenderer.positionCount = 200;
         float t = 0f;
         Vector3 B = new Vector3(0, 0, 0);
@@ -1173,11 +1170,11 @@ public class InteractionPointer : MonoBehaviour
 		BuildMenuSlot.OnBuildingPlacementEvent -= OnBuildingPlacementStarted;
 	}
 	private void HidePointer()
-	{		
+	{
 		if ( visible )
 			pointerHideStartTime = Time.time;
 
-		visible = false;		
+		visible = false;
 		//pointerObject.SetActive( false );
 		teleportArc.Hide();
 	}
@@ -1214,17 +1211,17 @@ public class InteractionPointer : MonoBehaviour
         Vector3 pos = World.ToWorldSpace(obj.position);
 
         obj.position = World.ToTransformSpace(new Vector3(Mathf.RoundToInt(pos.x), obj.position.y, Mathf.RoundToInt(pos.z)));
-        	
+
         Vector3 modPos = obj.position;
         if (boundingDimensionX % 2 == 0)
             modPos.x = obj.position.x + World.GetUnit() * -0.5f;
-        
+
         if (boundingDimensionY % 2 == 0)
             modPos.z = obj.position.z + World.GetUnit() * -0.5f;
 
         obj.position = modPos;
     }
-		
+
 	//=========================================================================
 	private void PlayAudioClip( AudioSource source, AudioClip clip )
 	{
@@ -1247,7 +1244,7 @@ public class InteractionPointer : MonoBehaviour
 	private void HighlightSelected( PointerInteractable hitPointerInteractable )
 	{
 		// Pointing at a new interactable
-		if ( pointedAtPointerInteractable != hitPointerInteractable ) 
+		if ( pointedAtPointerInteractable != hitPointerInteractable )
 		{
 			if ( pointedAtPointerInteractable != null )
 				pointedAtPointerInteractable.Highlight( false );
@@ -1267,7 +1264,7 @@ public class InteractionPointer : MonoBehaviour
 			}
 		}
 		// Pointing at the same interactable
-		else if ( hitPointerInteractable != null ) 
+		else if ( hitPointerInteractable != null )
 		{
 			if ( Vector3.Distance( prevPointedAtPosition, pointedAtPosition ) > 1.0f )
 			{
@@ -1276,7 +1273,7 @@ public class InteractionPointer : MonoBehaviour
 			}
 		}
 	}
-	
+
 	//=========================================================================
 	private bool ShouldOverrideHoverLock()
 	{
@@ -1305,9 +1302,9 @@ public class InteractionPointer : MonoBehaviour
 
 	public void StopPlacement(Hand hand)
 	{
-		placementStarted = false;	
-		placementEnded = true;		
-		visible = false;	
+		placementStarted = false;
+		placementEnded = true;
+		visible = false;
 		HidePointer();
 	}
 }
