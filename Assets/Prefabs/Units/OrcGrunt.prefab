@@ -389,6 +389,7 @@ MonoBehaviour:
   faction: {fileID: 0}
   rtsUnitType: 11
   rangedProjectile: {fileID: 0}
+  projectileSpeed: 5
   state: 0
   isHeld: 0
   isDying: 0
@@ -410,7 +411,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   overrideFaction: 0
-  factionId: 4
+  factionId: 0
   meshesToChange: []
   skinnedMeshesToChange:
   - {fileID: 184236362287703926}
@@ -932,7 +933,7 @@ PrefabInstance:
     - target: {fileID: 13700000, guid: aad05534a7ba0dd49b8c54ce188308ec, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: cad6fa3a83060754d98d2fb182f98fd5, type: 2}
+      objectReference: {fileID: 2100000, guid: 792a4bad9e08b8e41bfbd3f0b8aac1ab, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: aad05534a7ba0dd49b8c54ce188308ec, type: 3}
 --- !u!137 &184236362287703926 stripped
