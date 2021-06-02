@@ -95,6 +95,7 @@ GameObject:
   - component: {fileID: 6189036909755370363}
   - component: {fileID: 6189036909755370356}
   - component: {fileID: 6189036909755370357}
+  - component: {fileID: -5025880408837353435}
   m_Layer: 10
   m_Name: Stone_Wall_1x1_World
   m_TagString: Untagged
@@ -110,8 +111,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4744476761566879348}
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.09, y: 0.09, z: 0.09}
+  m_LocalPosition: {x: 0.0625, y: 0, z: 0.0625}
+  m_LocalScale: {x: 0.065, y: 0.065, z: 0.065}
   m_Children:
   - {fileID: 8270800033298909971}
   m_Father: {fileID: 0}
@@ -263,10 +264,11 @@ MonoBehaviour:
   boundingDimensions: {x: 1, y: 1}
   boundingOrigin: {x: 0, y: 0}
   gridPosition:
-    x: 0
-    y: 0
+    x: 160
+    y: 160
   factionId: 0
   bakeOnStart: 1
+  allowPathThru: 0
   buildingData: {fileID: 11400000, guid: 1847bf8b7e2c0594b80f4dd83cf909f4, type: 2}
 --- !u!114 &6189036909755370357
 MonoBehaviour:
@@ -320,3 +322,15 @@ MonoBehaviour:
   highlightOnHover: 0
   hideHighlight: []
   hoverPriority: 0
+--- !u!114 &-5025880408837353435
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4744476761566879348}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c362b754f813994ab39ad41753fe2bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

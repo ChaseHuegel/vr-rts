@@ -57,7 +57,7 @@ public class Structure : Obstacle, IFactioned
             Debug.Log("buildingDamagedFX not set in GameMaster.", this);
 
         if (buildingData.populationSupported > 0)
-            playerManager.IncreasePopulationLimit(buildingData.populationSupported);
+            playerManager.IncreasePopulationLimit(buildingData.populationSupported);        
 
         // Only refresh visuals if hit points are not full so we don't generate
         // building damage FX particle systems on buildings that don't need them yet.

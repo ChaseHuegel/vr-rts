@@ -22,6 +22,7 @@ public class Constructible : Obstacle, IFactioned
     private int currentStage;
     private AudioSource audioSource;
 
+
     public override void Initialize()
     {
         base.Initialize();
@@ -42,7 +43,19 @@ public class Constructible : Obstacle, IFactioned
         if (ClearExistingWalls)
         {
             UnbakeFromGrid();
-            RemoveExistingWalls();    
+
+            // TODO: Switch to rotated/fixed prefab?
+            // Stretch if diagonal gate
+            if (buildingData.buildingType == RTSBuildingType.Wood_Wall_Gate ||
+                buildingData.buildingType == RTSBuildingType.Stone_Wall_Gate)
+            {                    
+                float angle = Mathf.Round(transform.eulerAngles.y);
+                if (angle == 45.0f || angle == 135.0f || angle == 225.0f || angle == 315.0f)
+                    transform.localScale += new Vector3(0.0f, 0.01199419f, 0.0f);
+            }
+
+            RemoveExistingWalls();
+            
             BakeToGrid();
         }
     }

@@ -482,14 +482,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5733846702584782233}
+  - component: {fileID: 1313241953}
   - component: {fileID: 3626730025151612172}
   - component: {fileID: 3788212890412211216}
   - component: {fileID: 6604127596648191158}
-  - component: {fileID: 6604127596648191161}
   - component: {fileID: 6604127596648191160}
   - component: {fileID: 6604127596648191163}
   - component: {fileID: -3040173863063974761}
-  - component: {fileID: 1313241953}
+  - component: {fileID: 6604127596648191161}
   m_Layer: 10
   m_Name: Wood_Wall_Gate_World
   m_TagString: Untagged
@@ -515,6 +515,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
+--- !u!135 &1313241953
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5733846702584742329}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 3.5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!82 &3626730025151612172
 AudioSource:
   m_ObjectHideFlags: 0
@@ -646,27 +659,6 @@ MonoBehaviour:
   weaknesses: 
   resistances: 
   immunities: 
---- !u!114 &6604127596648191161
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5733846702584742329}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6494f394dde4732498f2aecf5968b6e8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  boundingDimensions: {x: 3, y: 3}
-  boundingOrigin: {x: 0, y: 0}
-  gridPosition:
-    x: 160
-    y: 160
-  factionId: 0
-  bakeOnStart: 1
-  allowPathThru: 1
-  buildingData: {fileID: 11400000, guid: 5563b94f1188a1c4e8f99f9596e6f399, type: 2}
 --- !u!114 &6604127596648191160
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -756,19 +748,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   openConditions: 1
   toggleDoors: 0
---- !u!135 &1313241953
-SphereCollider:
+--- !u!114 &6604127596648191161
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5733846702584742329}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 3.5
-  m_Center: {x: 0, y: 0, z: 0}
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6494f394dde4732498f2aecf5968b6e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  boundingDimensions: {x: 3, y: 3}
+  boundingOrigin: {x: 0, y: 0}
+  gridPosition:
+    x: 160
+    y: 160
+  factionId: 0
+  bakeOnStart: 1
+  allowPathThru: 1
+  buildingData: {fileID: 11400000, guid: 5563b94f1188a1c4e8f99f9596e6f399, type: 2}
 --- !u!1 &5961063802323506598
 GameObject:
   m_ObjectHideFlags: 0
