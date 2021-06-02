@@ -485,10 +485,14 @@ MonoBehaviour:
   gridPosition:
     x: 0
     y: 0
+  factionId: 0
   movementSpeed: 0.3
   goalSearchDistance: 30
-  factionID: 0
+  faction: {fileID: 0}
   rtsUnitType: 12
+  rangedProjectile: {fileID: 3740421758085118616, guid: 33ebc7103c3a4b64ca93d64149b5fa33,
+    type: 3}
+  projectileSpeed: 5
   state: 0
   isHeld: 0
   isDying: 0
@@ -497,9 +501,6 @@ MonoBehaviour:
   huntVillagers: 1
   huntMilitary: 1
   huntBuildings: 1
-  rangedProjectile: {fileID: 3740421758085118616, guid: 33ebc7103c3a4b64ca93d64149b5fa33,
-    type: 3}
-  isRanged: 0
 --- !u!114 &7309498301198521886
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -595,6 +596,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   highlightMaterial: {fileID: 0}
+  highlightOnHover: 1
+  hideHighlight: []
 --- !u!1 &1295956549424057722
 GameObject:
   m_ObjectHideFlags: 0
@@ -2029,6 +2032,10 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 6c0451b3f81df6e48a979ae3603fae7b, type: 2}
+    - target: {fileID: 13778228, guid: 6652791f0d19f3b408a94277d330b59b, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 792a4bad9e08b8e41bfbd3f0b8aac1ab, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6652791f0d19f3b408a94277d330b59b, type: 3}
 --- !u!137 &3628467702706709231 stripped
