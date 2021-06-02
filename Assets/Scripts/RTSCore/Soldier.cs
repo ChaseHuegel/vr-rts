@@ -190,9 +190,7 @@ public class Soldier : Unit
                 projectileTarget = unit.gameObject;
                 Damageable damageable = unit.GetComponent<Damageable>();
                 damageable.Damage(rtsUnitTypeData.attackDamage, AttributeChangeCause.ATTACKED, AttributeHandler, DamageType.SLASHING);
-
                 SetAttackAnimationState();
-
                 return;
             }
 

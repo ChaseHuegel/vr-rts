@@ -13,7 +13,7 @@ public class Villager : Unit
     protected ResourceGatheringType currentResource;
     protected ResourceGatheringType previousResource;
     protected GoalTransportResource transportGoal;
-    
+
     [SerializeField]
     protected float currentCargo = 0;
 
@@ -29,7 +29,7 @@ public class Villager : Unit
     public GameObject builderHandToolDisplayObject;
     public GameObject fishermanHandToolDisplayObject;
     public GameObject hunterHandToolDisplayObject;
-    
+
     protected GameObject currentCargoDisplayObject;
     protected GameObject currentHandToolDisplayObject;
     public VillagerHoverMenu villagerHoverMenu;
@@ -94,12 +94,12 @@ public class Villager : Unit
     {
         if (e.victim != AttributeHandler)
             return;
-            
+
         if (!isDying)
         {
             isDying = true;
             Freeze();
-            ResetAI(); 
+            ResetAI();
 
             if (UnityEngine.Random.Range(1, 100) < 50)
                 animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.DYING);
@@ -157,7 +157,7 @@ public class Villager : Unit
                 case ResourceGatheringType.Stone:
                     SetUnitType(RTSUnitType.StoneMiner);
                     break;
-                
+
                 case ResourceGatheringType.Fish:
                     SetUnitType(RTSUnitType.Fisherman);
                     break;
@@ -194,7 +194,7 @@ public class Villager : Unit
         if (HasTargetChanged())
         {
             //Resource resource = previousGoalTarget?.GetFirstOccupant<Resource>();
-            // if (resource) 
+            // if (resource)
             //     //resource.interactors--;
             //     resource.RemoveInteractor(this);
         }
@@ -214,7 +214,7 @@ public class Villager : Unit
             if (resource) resource.RemoveInteractor(this);
         }
 
-        maxGoalInteractRange = 1;
+        maxGoalInteractRange = rtsUnitTypeData.attackRange;
 
         //  Need C# 7 in Unity for switching by type!!!
         if (e.goal is GoalGatherResource && !villager.IsCargoFull())
@@ -223,8 +223,8 @@ public class Villager : Unit
             villager.currentResource = ((GoalGatherResource)e.goal).type;
             currentGoalFound = e.goal;
             DisplayCargo(false);
-            
-            Resource resource = e.cell?.GetFirstOccupant<Resource>();            
+
+            Resource resource = e.cell?.GetFirstOccupant<Resource>();
             if (resource.AddInteractor(this))
                 return;
         }
@@ -237,7 +237,7 @@ public class Villager : Unit
         }
         else if (e.goal is GoalHuntFauna && !villager.IsCargoFull())
         {
-            maxGoalInteractRange = rtsUnitTypeData.attackRange;
+            maxGoalInteractRange = GameMaster.GetUnit(RTSUnitType.Hunter).attackRange;
             villager.state = UnitState.GATHERING;
             currentGoalFound = e.goal;
             //DisplayCargo(true);
@@ -269,12 +269,12 @@ public class Villager : Unit
         if  (e.goal is GoalHuntFauna && villager.TryHunt(fauna) ||
             (e.goal is GoalGatherResource && villager.TryGather(resource) ||
             (e.goal is GoalTransportResource && villager.TryDropoff(structure) ||
-            (e.goal is GoalBuildRepair && (villager.TryRepair(structure) || 
+            (e.goal is GoalBuildRepair && (villager.TryRepair(structure) ||
             villager.TryBuild(construction))))))
         {
             return;
         }
-       
+
         //  default cancel the interaction
         ResetGoal();
         e.Cancel();
@@ -331,9 +331,9 @@ public class Villager : Unit
     {
         AudioSource.PlayClipAtPoint(GameMaster.GetAudio(clipName).GetClip(), transform.position, 0.75f);
     }
-    
+
     public void Do_Fucking_Lumberjacking_Where_I_Fucking_Told_You_To(Resource resource)
-    {    
+    {
         SetUnitType(RTSUnitType.Lumberjack);
         ResetAI();
         transportGoal = goals.Add<GoalTransportResource>();
@@ -381,8 +381,8 @@ public class Villager : Unit
 
             case RTSUnitType.Hunter:
                 state = UnitState.GATHERING;
-                currentResource = ResourceGatheringType.Meat;                
-                goals.Add<GoalGatherResource>().type = ResourceGatheringType.Meat;                
+                currentResource = ResourceGatheringType.Meat;
+                goals.Add<GoalGatherResource>().type = ResourceGatheringType.Meat;
                 goals.Add<GoalHuntFauna>();
                 break;
 
@@ -428,7 +428,7 @@ public class Villager : Unit
                 break;
         }
 
-        
+
         ResetPath();
         PlayChangeTaskAudio();
     }
@@ -438,7 +438,7 @@ public class Villager : Unit
         // TODO: Just needs to be changed, for now use unit_command_response
         audioSource.clip = GameMaster.GetAudio("unit_command_response").GetClip();
         audioSource.Play();
-        
+
         // if (state == UnitState.GATHERING)
         // {
         //     switch (currentResource)
@@ -487,7 +487,7 @@ public class Villager : Unit
             return;
 
         if (goal is GoalGatherResource)
-        {            
+        {
             switch (((GoalGatherResource)goal).type)
             {
                 case ResourceGatheringType.Gold:
@@ -507,7 +507,7 @@ public class Villager : Unit
 
                 case ResourceGatheringType.Berries:
                 case ResourceGatheringType.None:
-                case ResourceGatheringType.Meat:  
+                case ResourceGatheringType.Meat:
                     // Equip nothing.
                     return;
 
@@ -532,11 +532,11 @@ public class Villager : Unit
             return;
         }
         else if (goal is GoalHuntFauna)
-        {            
+        {
             hunterHandToolDisplayObject.SetActive(true);
             currentHandToolDisplayObject = hunterHandToolDisplayObject;
             return;
-        }        
+        }
     }
 
     private void DisplayCargo(bool visible)
@@ -594,7 +594,7 @@ public class Villager : Unit
 
         return true;
     }
-    
+
     protected float GetWorkRate(ResourceGatheringType resourceType)
     {
         float rate = 0.0f;
@@ -617,18 +617,18 @@ public class Villager : Unit
                 rate = rtsUnitTypeData.stoneMiningRate;
                 break;
 
-            case ResourceGatheringType.Gold:    
+            case ResourceGatheringType.Gold:
                 rate = rtsUnitTypeData.goldMiningRate;
                 break;
 
-            case ResourceGatheringType.Fish: 
-                rate = rtsUnitTypeData.fishingRate; 
+            case ResourceGatheringType.Fish:
+                rate = rtsUnitTypeData.fishingRate;
                 break;
-            
-            case ResourceGatheringType.Meat:    
+
+            case ResourceGatheringType.Meat:
                 rate = rtsUnitTypeData.huntingRate;
                 break;
-            
+
             default:
                 break;
         }
@@ -637,7 +637,7 @@ public class Villager : Unit
 
         return rate;
     }
-    
+
     public bool TryGather(Resource resource)
     {
         if (!resource || IsCargoFull())
@@ -756,7 +756,7 @@ public class Villager : Unit
     }
 
     public void OnDestroy()
-    {        
+    {
         CleanupEvents();
     }
 

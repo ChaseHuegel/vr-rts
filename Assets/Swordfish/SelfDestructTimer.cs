@@ -7,15 +7,11 @@ namespace Swordfish
 
 public class SelfDestructTimer : MonoBehaviour
 {
-    [SerializeField] private float maxLifetime = 1.0f;
+    public float maxLifetime = 1.0f;
 
-    private float lifetime = 0f;
-
-    public void Update()
+    private void Start()
     {
-        if (lifetime >= maxLifetime) Destroy(this.gameObject);
-
-        lifetime += Time.deltaTime;
+        Destroy(this, maxLifetime);
     }
 }
 

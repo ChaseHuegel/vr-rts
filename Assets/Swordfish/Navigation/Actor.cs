@@ -16,7 +16,7 @@ public class Actor : Body
     public Damageable AttributeHandler { get { return damageable; } }
 
     [Header("Actor")]
-    public float movementSpeed = 1f;    
+    public float movementSpeed = 1f;
 
     [SerializeField] private byte goalSearchDistance = 20;
     private byte goalSearchGrowth;
@@ -106,6 +106,11 @@ public class Actor : Body
         currentGoalTarget = null;
     }
 
+    public void ResetMemory()
+    {
+        discoveredGoals.Clear();
+    }
+
     public void ResetPathingBrain()
     {
         pathWaitTries = 0;
@@ -156,22 +161,22 @@ public class Actor : Body
         int nearestDistance = int.MaxValue;
 
         // ! Disabled due to effect on hunter villagers (never stop shooting target even if dead)
-        //  If using priority, try checking our memorized goals first        
-        // if (usePriority && discoveredGoals.Count > 0)
-        // {
-        //     foreach (PathfindingGoal goal in GetGoals())
-        //     {
-        //         if (discoveredGoals.TryGetValue(goal, out result) && result != null)
-        //         {
-        //             if (DistanceTo(result) < goalSearchDistance && PathfindingGoal.TryGoal(this, result, goal))
-        //             {
-        //                 currentGoal = goal;
-        //                 currentGoalSearchDistance = goalSearchGrowth;
-        //                 return result;
-        //             }
-        //         }
-        //     }
-        // }
+        //  If using priority, try checking our memorized goals first
+        if (usePriority && discoveredGoals.Count > 0)
+        {
+            foreach (PathfindingGoal goal in GetGoals())
+            {
+                if (discoveredGoals.TryGetValue(goal, out result) && result != null)
+                {
+                    if (DistanceTo(result) < goalSearchDistance && PathfindingGoal.TryGoal(this, result, goal))
+                    {
+                        currentGoal = goal;
+                        currentGoalSearchDistance = goalSearchGrowth;
+                        return result;
+                    }
+                }
+            }
+        }
 
         foreach (PathfindingGoal goal in GetGoals())
         {
@@ -271,7 +276,7 @@ public class Actor : Body
 #endregion
 
 
-#region monobehavior    
+#region monobehavior
 
     //  Perform ticks at a regular interval. FixedUpdate is called 60x/s
     public void FixedUpdate()
@@ -285,14 +290,14 @@ public class Actor : Body
             if (previousGoal != currentGoal)
             {
                 PathfindingGoal.TriggerGoalChanged(this, previousGoal, currentGoal);
-                TryDiscoverGoal(currentGoal, currentGoalTarget);
+                TryDiscoverGoal(previousGoal, previousGoalTarget);
             }
 
             previousGoalTarget = currentGoalTarget;
             previousGoal = currentGoal;
 
             //  Handle interacting with goals
-            if (!moving && HasValidTarget())
+            if ( HasValidTarget() && (!moving || DistanceTo(currentGoalTarget) <= maxGoalInteractRange) )
             {
                 //  Check if we have reached our target, or the path ahead matches our goal
                 if (DistanceTo(currentGoalTarget) <= maxGoalInteractRange || (HasValidPath() && PathfindingGoal.CheckGoal(this, currentPath[0], currentGoal)))
@@ -357,7 +362,7 @@ public class Actor : Body
 
             //  We can pass thru actors if the path ahead is clear and we are going beyond the next spot
             bool canPassThruActors = currentPath.Count > 2 ? !World.at(currentPath[1].x, currentPath[1].y).IsBlocked() : false;
-            
+
             //  Attempt to move to the next point
             if (CanSetPosition(currentPath[0].x, currentPath[0].y, canPassThruActors) )
             {

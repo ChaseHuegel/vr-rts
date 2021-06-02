@@ -63,7 +63,7 @@ public class Unit : Actor, IFactioned
             Debug.Log("No animator component found.");
 
         if (!m_rtsUnitTypeData)
-            m_rtsUnitTypeData = GameMaster.GetUnit(rtsUnitType);       
+            m_rtsUnitTypeData = GameMaster.GetUnit(rtsUnitType);
 
         UpdateFaction();
     }
@@ -74,6 +74,7 @@ public class Unit : Actor, IFactioned
     {
         rtsUnitType = unitType;
         m_rtsUnitTypeData = GameMaster.GetUnit(rtsUnitType);
+        maxGoalInteractRange = rtsUnitTypeData.attackRange;
         ResetGoal();
     }
 
@@ -158,31 +159,31 @@ public class Unit : Actor, IFactioned
         {
             projectile = Instantiate(rangedProjectile);
             projectile.transform.position = transform.position;
-            projectile.transform.position += new Vector3(0, 0.09f, 0);            
+            projectile.transform.position += new Vector3(0, 0.09f, 0);
             projectileTargetPos = projectileTarget.transform.position;
-            projectileTargetPos += new Vector3(0, 0.09f, 0);    
+            projectileTargetPos += new Vector3(0, 0.09f, 0);
         }
 
         // First we get the direction of the arrow's forward vector to the target position.
         Vector3 tDir = projectileTargetPos - projectile.transform.position;
-        
+
 
         // Now we use a Quaternion function to get the rotation based on the direction
         Quaternion rot = Quaternion.LookRotation(tDir);
-    
+
         // And finally, set the arrow's rotation to the one we just created.
         projectile.transform.rotation = rot;
-    
+
         //Get the distance from the arrow to the target
         float dist = Vector3.Distance(projectile.transform.position, projectileTargetPos);
-    
+
         if(dist <= 0.1f)
         {
             // This will destroy the arrow when it is within .1 units
             // of the target location. You can set this to whatever
             // distance you're comfortable with.
             GameObject.Destroy(projectile);
-    
+
         }
         else
         {
