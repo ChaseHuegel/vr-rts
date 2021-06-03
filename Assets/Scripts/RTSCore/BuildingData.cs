@@ -24,6 +24,12 @@ public class BuildingData : ScriptableObject
     public GameObject throwablePrefab;
     public GameObject constructablePrefab;
     public GameObject worldPrefab;
+    
+    [Header("Wall Specific Prefabs")]
+    public GameObject diagonalWorldPrefab;
+    public GameObject diagonalWorldPreviewPrefab;
+    public GameObject diagonalConstructablePrefab;
+    
     public int boundingDimensionX;
     public int boundingDimensionY;
     public List<RTSUnitType> allowedUnitsToSpawn;

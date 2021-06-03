@@ -498,7 +498,7 @@ Transform:
   m_GameObject: {fileID: 4635650548955431340}
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: -12.283058, y: -0.0009999275, z: -11.739019}
-  m_LocalScale: {x: 0.09, y: 0.09, z: 0.09}
+  m_LocalScale: {x: 0.065, y: 0.065, z: 0.065}
   m_Children:
   - {fileID: 8306096938379203787}
   - {fileID: 8301504497465295391}
@@ -734,7 +734,9 @@ MonoBehaviour:
     y: 0
   factionId: 0
   bakeOnStart: 1
+  allowPathThru: 0
   DestroyOnBuilt: 1
+  ClearExistingWalls: 0
   buildingData: {fileID: 11400000, guid: 1847bf8b7e2c0594b80f4dd83cf909f4, type: 2}
   OnBuiltPrefab: {fileID: 4744476761566879348, guid: 8941e29677e987b42b9c58271beed777,
     type: 3}

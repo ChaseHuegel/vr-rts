@@ -117,18 +117,14 @@ public class InteractionPointer : MonoBehaviour
     private BuildingData placementBuildingData;
     
     //=========================================================================
-    [Header("Walls")]
-    public GameObject woodWallWorld_1x1_Diagonal;
-    public GameObject woodWallWorld_1x1_Diagonal_Preview;
-    public GameObject stoneWallWorld_1x1_Diagonal;
-    public GameObject stoneWallWorld_1x1_Diagonal_Preview;
+	// Wall Related
 	private GameObject wallPlacementPreviewStartObject;
 
     //=========================================================================
 	// Cached wall objects
-    private GameObject wallWorld_1x1;
+    private GameObject wallWorld_1x1_Constructible;
 	private GameObject wallWorld_1x1_Preview;
-    private GameObject wallWorld_1x1_Diagonal;
+    private GameObject wallWorld_1x1_Diagonal_Constructable;
     private GameObject wallWorld_1x1_Diagonal_Preview;
 
     private List<GameObject> wallPreviewSections = new List<GameObject>();
@@ -370,17 +366,19 @@ public class InteractionPointer : MonoBehaviour
 
             if (placementBuildingData.buildingType == RTSBuildingType.Wood_Wall_Corner)
             {
-				wallWorld_1x1 = GameMaster.GetBuilding(RTSBuildingType.Wood_Wall_1x1).worldPrefab;
-                wallWorld_1x1_Preview = GameMaster.GetBuilding(RTSBuildingType.Wood_Wall_1x1).worldPreviewPrefab;
-                wallWorld_1x1_Diagonal = woodWallWorld_1x1_Diagonal;
-                wallWorld_1x1_Diagonal_Preview = woodWallWorld_1x1_Diagonal_Preview;
+				BuildingData bData = GameMaster.GetBuilding(RTSBuildingType.Wood_Wall_1x1);
+				wallWorld_1x1_Constructible = bData.constructablePrefab;
+                wallWorld_1x1_Diagonal_Constructable = bData.diagonalConstructablePrefab;
+                wallWorld_1x1_Preview = bData.worldPreviewPrefab;                
+                wallWorld_1x1_Diagonal_Preview = bData.diagonalWorldPreviewPrefab;
             }
 			else if (placementBuildingData.buildingType == RTSBuildingType.Stone_Wall_Corner)
 			{
-                wallWorld_1x1 = GameMaster.GetBuilding(RTSBuildingType.Stone_Wall_1x1).worldPrefab;
-                wallWorld_1x1_Preview = GameMaster.GetBuilding(RTSBuildingType.Stone_Wall_1x1).worldPreviewPrefab;
-                wallWorld_1x1_Diagonal = stoneWallWorld_1x1_Diagonal;
-                wallWorld_1x1_Diagonal_Preview = stoneWallWorld_1x1_Diagonal_Preview;
+                BuildingData bData = GameMaster.GetBuilding(RTSBuildingType.Stone_Wall_1x1);
+                wallWorld_1x1_Constructible = bData.constructablePrefab;
+                wallWorld_1x1_Diagonal_Constructable = bData.diagonalConstructablePrefab;
+                wallWorld_1x1_Preview = bData.worldPreviewPrefab;
+                wallWorld_1x1_Diagonal_Preview = bData.diagonalWorldPreviewPrefab;
 			}
         }
 		else if (pointedAtPointerInteractable != null)
@@ -418,7 +416,6 @@ public class InteractionPointer : MonoBehaviour
 		{
 			Swordfish.Coord2D previousSegmentPosition = World.ToWorldCoord(wallPlacementPreviewStartObject.transform.position);
 
-			// TODO: Instantiate start/end world pieces in place of preview pieces.
 			foreach (GameObject go in wallPreviewSections)
 			{
 				Swordfish.Coord2D currentSegmentPosition = World.ToWorldCoord(go.transform.position);
@@ -440,20 +437,20 @@ public class InteractionPointer : MonoBehaviour
 					(currentSegmentPosition.x == previousSegmentPosition.x ||
 					currentSegmentPosition.y == previousSegmentPosition.y))
                 {
-                    Instantiate(placementBuildingData.worldPreviewPrefab, World.ToTransformSpace(currentSegmentPosition), buildingPlacementPreviewObject.transform.rotation);
+                    Instantiate(placementBuildingData.constructablePrefab, World.ToTransformSpace(currentSegmentPosition), buildingPlacementPreviewObject.transform.rotation);
                 }
 				else
-					CreateWallSegment(previousSegmentPosition, currentSegmentPosition, previousSegmentPosition, wallWorld_1x1, wallWorld_1x1_Diagonal);
+					CreateWallSegment(previousSegmentPosition, currentSegmentPosition, previousSegmentPosition, wallWorld_1x1_Constructible, wallWorld_1x1_Diagonal_Constructable);
 
 				previousSegmentPosition = currentSegmentPosition;
 			}
 
             if (buildingPlacementPreviewObject.activeSelf)
-                Instantiate(placementBuildingData.worldPrefab, buildingPlacementPreviewObject.transform.position, buildingPlacementPreviewObject.transform.rotation);
+                Instantiate(placementBuildingData.constructablePrefab, buildingPlacementPreviewObject.transform.position, buildingPlacementPreviewObject.transform.rotation);
             // else if (!buildingPlacementPreviewObject.activeSelf && !World.at(endPosition).occupied)
             //     buildingPlacementPreviewObject.SetActive(true);
 
-            Instantiate(placementBuildingData.worldPrefab, wallPlacementPreviewStartObject.transform.position, wallPlacementPreviewStartObject.transform.rotation);
+            Instantiate(placementBuildingData.constructablePrefab, wallPlacementPreviewStartObject.transform.position, wallPlacementPreviewStartObject.transform.rotation);
             //Instantiate(placementBuildingData.worldPrefab, buildingPlacementPreviewObject.transform.position, buildingPlacementPreviewObject.transform.rotation);
             
 			EndWallPlacementMode();
@@ -759,16 +756,30 @@ public class InteractionPointer : MonoBehaviour
                 {
                     // Draw corner piece.
                     Structure structure = nextCell.GetFirstOccupant<Structure>();
-                    if (structure?.buildingData.buildingType == RTSBuildingType.Wood_Wall_1x1 ||
-                        structure?.buildingData.buildingType == RTSBuildingType.Stone_Wall_1x1 ||
-                        structure?.buildingData.buildingType == RTSBuildingType.Wood_Wall_Corner ||
-                		structure?.buildingData.buildingType == RTSBuildingType.Stone_Wall_Corner)
-                    {
-                        segmentPos = World.ToTransformSpace(nextSegmentPosition);
-                        obj = Instantiate(placementBuildingData.worldPreviewPrefab, segmentPos, buildingPlacementPreviewObject.transform.rotation);
-                        HardSnapToGrid(obj.transform, 1, 1);
-                        wallPreviewSections.Add(obj);
-                    }
+					if (structure)
+						if (structure?.buildingData.buildingType == RTSBuildingType.Wood_Wall_1x1 ||
+							structure?.buildingData.buildingType == RTSBuildingType.Stone_Wall_1x1 ||
+							structure?.buildingData.buildingType == RTSBuildingType.Wood_Wall_Corner ||
+							structure?.buildingData.buildingType == RTSBuildingType.Stone_Wall_Corner)
+						{
+							segmentPos = World.ToTransformSpace(nextSegmentPosition);
+							obj = Instantiate(placementBuildingData.worldPreviewPrefab, segmentPos, buildingPlacementPreviewObject.transform.rotation);
+							HardSnapToGrid(obj.transform, 1, 1);
+							wallPreviewSections.Add(obj);
+						}
+
+                    Constructible constructible = nextCell.GetFirstOccupant<Constructible>();
+					if (constructible)
+						if (constructible?.buildingData.buildingType == RTSBuildingType.Wood_Wall_1x1 ||
+							constructible?.buildingData.buildingType == RTSBuildingType.Stone_Wall_1x1 ||
+							constructible?.buildingData.buildingType == RTSBuildingType.Wood_Wall_Corner ||
+							constructible?.buildingData.buildingType == RTSBuildingType.Stone_Wall_Corner)
+						{
+							segmentPos = World.ToTransformSpace(nextSegmentPosition);
+							obj = Instantiate(placementBuildingData.worldPreviewPrefab, segmentPos, buildingPlacementPreviewObject.transform.rotation);
+							HardSnapToGrid(obj.transform, 1, 1);
+							wallPreviewSections.Add(obj);
+						}					
                 }
             }
 
@@ -805,28 +816,42 @@ public class InteractionPointer : MonoBehaviour
             segmentPos = World.ToTransformSpace(segmentPosition);
             obj = Instantiate(wallPrefab, segmentPos, buildingPlacementPreviewObject.transform.rotation);
             obj.transform.Rotate(0, 0, wallRotation);
+            HardSnapToGrid(obj.transform, 1, 1);
+            wallPreviewSections.Add(obj);
         } // End !nextCell.occupied
 
         // nextCell.occupied = true
         else
         {
-            // Draw a corner piece.
+            // Draw a corner piece.			
             Structure structure = nextCell.GetFirstOccupant<Structure>();
-            if (structure?.buildingData.buildingType == RTSBuildingType.Wood_Wall_1x1 ||
-                structure?.buildingData.buildingType == RTSBuildingType.Stone_Wall_1x1 ||
-                structure?.buildingData.buildingType == RTSBuildingType.Wood_Wall_Corner ||
-                structure?.buildingData.buildingType == RTSBuildingType.Stone_Wall_Corner)
-            {
-                segmentPos = World.ToTransformSpace(segmentPosition);
-                obj = Instantiate(placementBuildingData.worldPreviewPrefab, segmentPos, buildingPlacementPreviewObject.transform.rotation);
-            }
-            else
-                return;
-        }
+            if (structure)
+            	if (structure.buildingData.buildingType == RTSBuildingType.Wood_Wall_1x1 ||
+            		structure.buildingData.buildingType == RTSBuildingType.Stone_Wall_1x1 ||
+            		structure.buildingData.buildingType == RTSBuildingType.Wood_Wall_Corner ||
+            		structure.buildingData.buildingType == RTSBuildingType.Stone_Wall_Corner)
+            	{
+            		segmentPos = World.ToTransformSpace(segmentPosition);
+            		obj = Instantiate(placementBuildingData.worldPreviewPrefab, segmentPos, buildingPlacementPreviewObject.transform.rotation);
+                    HardSnapToGrid(obj.transform, 1, 1);
+                    wallPreviewSections.Add(obj);
+            	}
 
-        HardSnapToGrid(obj.transform, 1, 1);
-        wallPreviewSections.Add(obj);
+            Constructible constructible = nextCell.GetFirstOccupant<Constructible>();
+            if (constructible)
+                if (constructible.buildingData.buildingType == RTSBuildingType.Wood_Wall_1x1 ||
+                    constructible.buildingData.buildingType == RTSBuildingType.Stone_Wall_1x1 ||
+                    constructible.buildingData.buildingType == RTSBuildingType.Wood_Wall_Corner ||
+                    constructible.buildingData.buildingType == RTSBuildingType.Stone_Wall_Corner)
+                {
+                    segmentPos = World.ToTransformSpace(segmentPosition);
+                    obj = Instantiate(placementBuildingData.worldPreviewPrefab, segmentPos, buildingPlacementPreviewObject.transform.rotation);
+                    HardSnapToGrid(obj.transform, 1, 1);
+                    wallPreviewSections.Add(obj);
+                }
+        }
 	}
+	
 	private GameObject GetDiagonalWallRotated(Coord2D previousPosition, Coord2D nextPosition, GameObject diagonalWall)
 	{
         GameObject obj = null;
@@ -863,22 +888,39 @@ public class InteractionPointer : MonoBehaviour
         if (nextCell.occupied)
         {
             // Replace the 1x1 with a corner if this is a 1x1 wall segment.
+            Constructible constructable = nextCell.GetFirstOccupant<Constructible>();
+            if (constructable && 
+				constructable.buildingData.buildingType == RTSBuildingType.Wood_Wall_1x1 ||
+                constructable.buildingData.buildingType == RTSBuildingType.Stone_Wall_1x1 ||
+                constructable.buildingData.buildingType == RTSBuildingType.Wood_Wall_Corner ||
+                constructable.buildingData.buildingType == RTSBuildingType.Stone_Wall_Corner)
+            {
+                constructable.UnbakeFromGrid();
+                constructable.gameObject.SetActive(false);
+                Destroy(constructable);
+
+                segmentPos = World.ToTransformSpace(currentPosition);
+                obj = Instantiate(placementBuildingData.constructablePrefab, segmentPos, buildingPlacementPreviewObject.transform.rotation);
+                return obj;
+            }
+
             Structure structure = nextCell.GetFirstOccupant<Structure>();
-            if (structure?.buildingData.buildingType == RTSBuildingType.Wood_Wall_1x1 ||
-                structure?.buildingData.buildingType == RTSBuildingType.Stone_Wall_1x1 ||
-                structure?.buildingData.buildingType == RTSBuildingType.Wood_Wall_Corner ||
-                structure?.buildingData.buildingType == RTSBuildingType.Stone_Wall_Corner)
+            if (structure &&
+                structure.buildingData.buildingType == RTSBuildingType.Wood_Wall_1x1 ||
+                structure.buildingData.buildingType == RTSBuildingType.Stone_Wall_1x1 ||
+                structure.buildingData.buildingType == RTSBuildingType.Wood_Wall_Corner ||
+                structure.buildingData.buildingType == RTSBuildingType.Stone_Wall_Corner)
             {
                 structure.UnbakeFromGrid();
                 structure.gameObject.SetActive(false);
                 Destroy(structure);
 
                 segmentPos = World.ToTransformSpace(currentPosition);
-                obj = Instantiate(placementBuildingData.worldPreviewPrefab, segmentPos, buildingPlacementPreviewObject.transform.rotation);
-            }
-            // Space is occupied, do nothing.
-            else
+                obj = Instantiate(placementBuildingData.constructablePrefab, segmentPos, buildingPlacementPreviewObject.transform.rotation);
                 return obj;
+            }
+
+            return obj;
         }		
 
         //---------------------------------------------------------------------
