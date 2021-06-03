@@ -39,8 +39,9 @@ public class InteractionPointer : MonoBehaviour
 	public AudioSource reticleAudioSource;
 
     //=========================================================================
-    [Header( "Sounds" )]
-	public SoundElement setRallyPointSound;
+    [Header("Sounds")]
+    
+    public SoundElement setRallyPointSound;
 	public AudioClip queueSuccessSound;
     public AudioClip queueFailedSound;
     public AudioClip teleportSound;
@@ -49,7 +50,14 @@ public class InteractionPointer : MonoBehaviour
 	public AudioClip goodHighlightSound;
 	public AudioClip badHighlightSound;
 
-	//=========================================================================
+    //=========================================================================
+	// Cached sounds
+	private AudioClip buildingPlacementAllowedSound;
+    private AudioClip buildingPlacementDeniedSound;
+
+    //=========================================================================
+    public Material buildingPlacementInvalidMat;
+    private Material buildingPlacementCachedMat;
     private LineRenderer pointerLineRenderer;
 	private LineRenderer[] lineRenderers;
 	private GameObject pointerObject;
@@ -176,8 +184,14 @@ public class InteractionPointer : MonoBehaviour
 
         playerManager = PlayerManager.instance;
 
+        headAudioSource.transform.SetParent(Player.instance.hmdTransform);
+        headAudioSource.transform.localPosition = Vector3.zero;
+
+        buildingPlacementAllowedSound = GameMaster.Instance.buildingPlacementAllowedSound;
+        buildingPlacementDeniedSound = GameMaster.Instance.buildingPlacementDeniedSound;
+
         //interactableObjects = GameObject.FindObjectsOfType<PointerInteractable>();
-		selectedUnits = new List<Unit>();
+        selectedUnits = new List<Unit>();
 
 		// Cache some values, going to need them a lot and don't need to keep
 		// bothering the GameMaster/PlayerManager for them.
@@ -434,18 +448,37 @@ public class InteractionPointer : MonoBehaviour
 				previousSegmentPosition = currentSegmentPosition;
 			}
 
+            if (buildingPlacementPreviewObject.activeSelf)
+                Instantiate(placementBuildingData.worldPrefab, buildingPlacementPreviewObject.transform.position, buildingPlacementPreviewObject.transform.rotation);
+            // else if (!buildingPlacementPreviewObject.activeSelf && !World.at(endPosition).occupied)
+            //     buildingPlacementPreviewObject.SetActive(true);
+
             Instantiate(placementBuildingData.worldPrefab, wallPlacementPreviewStartObject.transform.position, wallPlacementPreviewStartObject.transform.rotation);
-            Instantiate(placementBuildingData.worldPrefab, buildingPlacementPreviewObject.transform.position, buildingPlacementPreviewObject.transform.rotation);
+            //Instantiate(placementBuildingData.worldPrefab, buildingPlacementPreviewObject.transform.position, buildingPlacementPreviewObject.transform.rotation);
             
 			EndWallPlacementMode();
         }
 		else if (isInBuildingPlacementMode)
 		{
 			isInBuildingPlacementMode = false;
-			Instantiate(placementBuildingData.constructablePrefab, buildingPlacementPreviewObject.transform.position, buildingPlacementPreviewObject.transform.rotation);
+            
+			bool cellsOccupied = CellsOccupied(buildingPlacementPreviewObject.transform.position, placementBuildingData.boundingDimensionX, placementBuildingData.boundingDimensionY);
 
-			lastBuildingRotation = buildingPlacementPreviewObject.transform.localRotation.eulerAngles.y;
+            if (!cellsOccupied)
+            {
+                PlayBuildingPlacementAllowedAudio();
+                Instantiate(placementBuildingData.constructablePrefab, buildingPlacementPreviewObject.transform.position, buildingPlacementPreviewObject.transform.rotation);
+                PlayerManager.instance.RemoveResourcesFromStockpile(placementBuildingData.goldCost,
+                                                placementBuildingData.grainCost,
+                                                placementBuildingData.woodCost,
+                                                placementBuildingData.stoneCost);
+            }			
+			else // cellsOccupied = true
+			{
+                PlayBuildingPlacementDeniedAudio();
+			}
 
+            lastBuildingRotation = buildingPlacementPreviewObject.transform.localRotation.eulerAngles.y;
 			Destroy(buildingPlacementPreviewObject);
 			buildingPlacementPreviewObject = null;
 
@@ -572,15 +605,42 @@ public class InteractionPointer : MonoBehaviour
 		}
 	}
 
+    private bool CellsOccupied(Vector3 position, int dimensionX, int dimensionY)
+    {
+        Cell cell = World.at(World.ToWorldCoord(position));
+
+        int startX = cell.x - dimensionX / 2;
+        int startY = cell.y - dimensionY / 2;
+        int endX = startX + dimensionX;
+        int endY = startY + dimensionY;
+
+        for (int x = startX; x < endX; x++)
+        {
+            for (int y = startY; y < endY; y++)
+            {
+                Cell curCell = World.at(x, y);
+                if (curCell.occupied)
+                {
+                    // Debug.Log(string.Format("x: {0} y: {1} name: {2}",
+                    //         curCell.x, curCell.y, curCell.occupants[0].name));
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     private void EndBuildingPlacementMode()
 	{
 		isInBuildingPlacementMode = false;
 		Destroy(buildingPlacementPreviewObject);
 		buildingPlacementPreviewObject = null;
+        buildingPlacementCachedMat = null;
 
-		// TODO: Restore resources to player
+        // TODO: Restore resources to player?
 
-		SetSnapTurnEnabled(true, true);
+        SetSnapTurnEnabled(true, true);
 	}
 
 	private void ClearWallPreviewSections()
@@ -727,6 +787,11 @@ public class InteractionPointer : MonoBehaviour
                 DrawWallSegmentPreview(nextSegmentPosition, 0.0f, wallWorld_1x1_Preview);
             }
         }
+
+		if (buildingPlacementPreviewObject.activeSelf && World.at(endPosition).occupied)
+            buildingPlacementPreviewObject.SetActive(false);
+		else if (!buildingPlacementPreviewObject.activeSelf && !World.at(endPosition).occupied)
+            buildingPlacementPreviewObject.SetActive(true);
     }	
 
 	private void DrawWallSegmentPreview(Coord2D segmentPosition, float wallRotation, GameObject wallPrefab)
@@ -959,14 +1024,21 @@ public class InteractionPointer : MonoBehaviour
 		}
 		else if (isInBuildingPlacementMode)
 		{
-			DrawQuadraticBezierCurve(pointerLineRenderer, pointerStart, destinationReticleTransform.position);
+            bool cellsOccupied = CellsOccupied(buildingPlacementPreviewObject.transform.position, placementBuildingData.boundingDimensionX, placementBuildingData.boundingDimensionY);
+			
+			if (cellsOccupied)
+                buildingPlacementPreviewObject.GetComponentInChildren<MeshRenderer>().sharedMaterial = buildingPlacementInvalidMat;
+            else 
+                buildingPlacementPreviewObject.GetComponentInChildren<MeshRenderer>().sharedMaterial = buildingPlacementCachedMat;
+
+            DrawQuadraticBezierCurve(pointerLineRenderer, pointerStart, destinationReticleTransform.position);
 			if (pointerLineRenderer.enabled == false)
 				pointerLineRenderer.enabled = true;
 		}
 		else if (isInWallPlacementMode)
 		{
-			HardSnapToGrid(destinationReticleTransform, placementBuildingData.boundingDimensionX, placementBuildingData.boundingDimensionY);
-            if (wallPlacementPreviewStartObject)// && buildingPlacementPreviewObject)
+			HardSnapToGrid(destinationReticleTransform, placementBuildingData.boundingDimensionX, placementBuildingData.boundingDimensionY);            
+			if (wallPlacementPreviewStartObject)// && buildingPlacementPreviewObject)
             {
 				// ! Choose a method to use....
                 DrawWallPreview(); // AOE2 style, 45's don't work.
@@ -1040,6 +1112,7 @@ public class InteractionPointer : MonoBehaviour
             isInBuildingPlacementMode = true;
 			buildingPlacementPreviewObject = Instantiate(placementBuildingData.worldPreviewPrefab, destinationReticleTransform);
             buildingPlacementPreviewObject.transform.Rotate(0, 0, lastBuildingRotation);
+            buildingPlacementCachedMat = buildingPlacementPreviewObject.GetComponentInChildren<MeshRenderer>().sharedMaterial;
         }
 
 		buildingPlacementPreviewObject.transform.localPosition = Vector3.zero;
@@ -1339,6 +1412,21 @@ public class InteractionPointer : MonoBehaviour
             modPos.z = obj.position.z + World.GetUnit() * -0.5f;
 
         obj.position = modPos;
+    }
+
+	public void PlayBuildingPlacementAllowedAudio()
+	{
+        PlayAudioClip(headAudioSource, buildingPlacementAllowedSound);
+	}
+
+    public void PlayBuildingPlacementDeniedAudio()
+    {
+        PlayAudioClip(headAudioSource, buildingPlacementDeniedSound);
+    }
+
+	public void PlayAudioAtHeadSource(AudioClip clip)
+	{
+        PlayAudioClip(headAudioSource, clip);
     }
 
 	//=========================================================================

@@ -8,10 +8,6 @@ using MLAPI;
 
 public class ThrowableBuilding : Throwable
 {
-    //public GameObject worldPrefabToSpawn;
-    public GameObject placementDeniedEffect;
-    public SoundElement placementDeniedAudio;
-    public SoundElement placementAllowedAudio;
     //public LayerMask allowedLayersMask;
     public LayerMask disallowedLayersMask;
     public BuildingData rtsBuildingTypeData;
@@ -39,7 +35,7 @@ public class ThrowableBuilding : Throwable
             spawned.transform.rotation = rtsBuildingTypeData.worldPrefab.transform.rotation;
             spawned.transform.Rotate(0f, 0f, Random.Range(0, 4) * 90);
 
-            AudioSource.PlayClipAtPoint( placementAllowedAudio.GetClip(), groundPosition );
+            InteractionPointer.instance.PlayBuildingPlacementAllowedAudio();
 
             // Remove resources only when valid placement.
             PlayerManager.instance.RemoveResourcesFromStockpile(rtsBuildingTypeData.goldCost,
@@ -50,9 +46,9 @@ public class ThrowableBuilding : Throwable
         else
         {
             ContactPoint contact = collision.contacts[0];
-            GameObject spawned = GameObject.Instantiate(placementDeniedEffect);
+            GameObject spawned = GameObject.Instantiate(GameMaster.Instance.buildingPlacementDeniedFX);
             spawned.transform.position = contact.point;
-            AudioSource.PlayClipAtPoint( placementDeniedAudio.GetClip(),contact.point );
+            InteractionPointer.instance.PlayBuildingPlacementDeniedAudio();
         }
 
         Destroy(this.gameObject);

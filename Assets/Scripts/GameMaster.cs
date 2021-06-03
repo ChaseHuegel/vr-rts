@@ -36,9 +36,16 @@ public class GameMaster : Singleton<GameMaster>
 
     [Header("Prefabs")]
     public GameObject floatingIndicatorPrefab;
+
+    [Header("FX")]
     public GameObject buildingDamagedFX;
     public GameObject buildingDestroyedFX;
+    public GameObject buildingPlacementDeniedFX;
+
+    [Header("Sounds")]
     public AudioClip buildingDestroyedSound;
+    public AudioClip buildingPlacementAllowedSound;
+    public AudioClip buildingPlacementDeniedSound;
 
     public int maximumUnitSelectionCount = 20;
     public float unitCorpseDecayTime = 30.0f;
