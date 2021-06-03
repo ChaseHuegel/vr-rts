@@ -69,8 +69,12 @@ public class Unit : Actor, IFactioned
     }
 
     //=========================================================================
-    // Sets the unit type and unitTypeData
-    public virtual void SetUnitType(RTSUnitType unitType)
+    /// <summary>
+    /// Sets the unit type, fetches unitData, sets maxGoalInteractRange to
+    /// unitData.attackRange, and resets the goal.
+    /// </summary>
+    /// <param name="unitType"></param>
+    public virtual void SetUnitTask(RTSUnitType unitType)
     {
         rtsUnitType = unitType;
         m_rtsUnitTypeData = GameMaster.GetUnit(rtsUnitType);
@@ -107,7 +111,10 @@ public class Unit : Actor, IFactioned
     {
         isHeld = false;
         wasThrownOrDropped = true;
-        ResetAI();
+
+        // ! Unfreeze calls ResetAI() if no problems arise, remove.
+        //ResetAI();
+        
         Unfreeze();
     }
 
@@ -145,11 +152,32 @@ public class Unit : Actor, IFactioned
         }
     }
 
+    public void GotoPosition(Vector3 position)
+    {
+        DeactivateGoals();
+        //ResetAI();
+        GotoForced(World.ToWorldSpace(position));
+    }
+
+    public void ActivateGoals()
+    {
+        foreach (PathfindingGoal goal in GetGoals())
+        {
+            goal.active = true;
+        }
+    }
+    public void DeactivateGoals()
+    {
+        foreach(PathfindingGoal goal in GetGoals())
+        {
+            goal.active = false;
+        }
+    }
+
     public virtual void Update()
     {
         if (projectile)
             LaunchProjectile();
-
     }
 
     public virtual void LaunchProjectile()

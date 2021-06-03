@@ -172,12 +172,16 @@ public class Soldier : Unit
             Damageable damageable;
             Structure structure = e.cell.GetFirstOccupant<Structure>();
             if (structure)
+            {
                 damageable = structure.GetComponent<Damageable>();
+                projectileTarget = structure.gameObject;
+            }
             else
                 damageable = e.cell.GetFirstOccupant<Constructible>().GetComponent<Damageable>();
 
-            projectileTarget = structure.gameObject;
-
+            if (!damageable)
+                return;
+                
             damageable.Damage(rtsUnitTypeData.attackDamage, AttributeChangeCause.ATTACKED, AttributeHandler, DamageType.SLASHING);
             SetAttackAnimationState();
             return;

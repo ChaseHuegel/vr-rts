@@ -45,10 +45,32 @@ public class Villager : Unit
         base.Initialize();
         HookIntoEvents();
 
-        SetUnitType(rtsUnitType);
+        goals.Add<GoalBuildRepair>();
+        goals.Add<GoalGatherGrain>();
+        goals.Add<GoalGatherBerries>();
+        goals.Add<GoalGatherFish>();
+        goals.Add<GoalHuntFauna>();
+        goals.Add<GoalGatherMeat>();
+        goals.Add<GoalGatherWood>();
+        goals.Add<GoalGatherStone>();
+        goals.Add<GoalGatherGold>();
+
+        // goals.Add<GoalBuildRepair>();
+        // goals.Add<GoalGatherResource>().type = ResourceGatheringType.Grain;
+        // goals.Add<GoalGatherResource>().type = ResourceGatheringType.Berries;
+        // goals.Add<GoalHuntFauna>();
+        // goals.Add<GoalGatherResource>().type = ResourceGatheringType.Meat;
+        // goals.Add<GoalGatherResource>().type = ResourceGatheringType.Fish;
+        // goals.Add<GoalGatherResource>().type = ResourceGatheringType.Wood;
+        // goals.Add<GoalGatherResource>().type = ResourceGatheringType.Stone;
+        // goals.Add<GoalGatherResource>().type = ResourceGatheringType.Gold;
+
+        SetUnitTask(rtsUnitType);
 
         if(IsSameFaction(playerManager.factionId))
             playerManager.AddToPopulation((Unit)this);
+
+        
     }
 
     public void HookIntoEvents()
@@ -120,6 +142,8 @@ public class Villager : Unit
         if (!wasThrownOrDropped)
             return;
 
+        // TODO: could just switch this to a cell lookup where
+        // TODO: they land.
         // Don't wait for a collision indefinitely.
         if (Time.time - detachFromHandTime >= 3.0f)
         {
@@ -135,31 +159,31 @@ public class Villager : Unit
             switch (node.type)
             {
                 case ResourceGatheringType.Gold:
-                    SetUnitType(RTSUnitType.GoldMiner);
+                    SetUnitTask(RTSUnitType.GoldMiner);
                     break;
 
                 case ResourceGatheringType.Grain:
-                    SetUnitType(RTSUnitType.Farmer);
+                    SetUnitTask(RTSUnitType.Farmer);
                     break;
 
                 case ResourceGatheringType.Berries:
-                    SetUnitType(RTSUnitType.Forager);
+                    SetUnitTask(RTSUnitType.Forager);
                     break;
 
                 case ResourceGatheringType.Meat:
-                    SetUnitType(RTSUnitType.Hunter);
+                    SetUnitTask(RTSUnitType.Hunter);
                     break;
 
                 case ResourceGatheringType.Wood:
-                    SetUnitType(RTSUnitType.Lumberjack);
+                    SetUnitTask(RTSUnitType.Lumberjack);
                     break;
 
                 case ResourceGatheringType.Stone:
-                    SetUnitType(RTSUnitType.StoneMiner);
+                    SetUnitTask(RTSUnitType.StoneMiner);
                     break;
 
                 case ResourceGatheringType.Fish:
-                    SetUnitType(RTSUnitType.Fisherman);
+                    SetUnitTask(RTSUnitType.Fisherman);
                     break;
 
                 default:
@@ -173,7 +197,7 @@ public class Villager : Unit
         Fauna fauna = collision.gameObject.GetComponent<Fauna>();
         if (fauna)
         {
-            SetUnitType(RTSUnitType.Hunter);
+            SetUnitTask(RTSUnitType.Hunter);
             ResetAI();
             return;
         }
@@ -181,7 +205,7 @@ public class Villager : Unit
         Structure building = collision.gameObject.GetComponentInParent<Structure>();
         if (building)
         {
-            SetUnitType(RTSUnitType.Builder);
+            SetUnitTask(RTSUnitType.Builder);
             ResetAI();
             return;
         }
@@ -215,14 +239,74 @@ public class Villager : Unit
         }
 
         maxGoalInteractRange = rtsUnitTypeData.attackRange;
+        DisplayCargo(false);
 
         //  Need C# 7 in Unity for switching by type!!!
-        if (e.goal is GoalGatherResource && !villager.IsCargoFull())
+        if (e.goal is GoalGatherBerries && !villager.IsCargoFull())
         {
             villager.state = UnitState.GATHERING;
-            villager.currentResource = ((GoalGatherResource)e.goal).type;
+            villager.currentResource = ResourceGatheringType.Berries;
             currentGoalFound = e.goal;
-            DisplayCargo(false);
+
+            Resource resource = e.cell?.GetFirstOccupant<Resource>();
+            if (resource.AddInteractor(this))
+                return;
+        }
+        else if (e.goal is GoalGatherFish && !villager.IsCargoFull())
+        {
+            villager.state = UnitState.GATHERING;
+            villager.currentResource = ResourceGatheringType.Fish;
+            currentGoalFound = e.goal;
+
+            Resource resource = e.cell?.GetFirstOccupant<Resource>();
+            if (resource.AddInteractor(this))
+                return;
+        }
+        else if (e.goal is GoalGatherGold && !villager.IsCargoFull())
+        {
+            villager.state = UnitState.GATHERING;
+            villager.currentResource = ResourceGatheringType.Gold;
+            currentGoalFound = e.goal;
+
+            Resource resource = e.cell?.GetFirstOccupant<Resource>();
+            if (resource.AddInteractor(this))
+                return;
+        }
+        else if (e.goal is GoalGatherGrain && !villager.IsCargoFull())
+        {
+            villager.state = UnitState.GATHERING;
+            villager.currentResource = ResourceGatheringType.Grain;
+            currentGoalFound = e.goal;
+
+            Resource resource = e.cell?.GetFirstOccupant<Resource>();
+            if (resource.AddInteractor(this))
+                return;
+        }
+        else if (e.goal is GoalGatherMeat && !villager.IsCargoFull())
+        {
+            villager.state = UnitState.GATHERING;
+            villager.currentResource = ResourceGatheringType.Meat;
+            currentGoalFound = e.goal;
+
+            Resource resource = e.cell?.GetFirstOccupant<Resource>();
+            if (resource.AddInteractor(this))
+                return;
+        }
+        else if (e.goal is GoalGatherStone && !villager.IsCargoFull())
+        {
+            villager.state = UnitState.GATHERING;
+            villager.currentResource = ResourceGatheringType.Stone;
+            currentGoalFound = e.goal;
+
+            Resource resource = e.cell?.GetFirstOccupant<Resource>();
+            if (resource.AddInteractor(this))
+                return;
+        }
+        else if (e.goal is GoalGatherWood && !villager.IsCargoFull())
+        {
+            villager.state = UnitState.GATHERING;
+            villager.currentResource = ResourceGatheringType.Wood;
+            currentGoalFound = e.goal;
 
             Resource resource = e.cell?.GetFirstOccupant<Resource>();
             if (resource.AddInteractor(this))
@@ -240,7 +324,6 @@ public class Villager : Unit
             maxGoalInteractRange = GameMaster.GetUnit(RTSUnitType.Hunter).attackRange;
             villager.state = UnitState.GATHERING;
             currentGoalFound = e.goal;
-            //DisplayCargo(true);
             return;
         }
         else if (e.goal is GoalBuildRepair)
@@ -267,7 +350,13 @@ public class Villager : Unit
         Fauna fauna = e.cell.GetOccupant<Fauna>();
 
         if  (e.goal is GoalHuntFauna && villager.TryHunt(fauna) ||
-            e.goal is GoalGatherResource && villager.TryGather(resource) ||
+            e.goal is GoalGatherBerries && villager.TryGather(resource) ||
+            e.goal is GoalGatherFish && villager.TryGather(resource) ||
+            e.goal is GoalGatherGold && villager.TryGather(resource) ||
+            e.goal is GoalGatherGrain && villager.TryGather(resource) ||
+            e.goal is GoalGatherMeat && villager.TryGather(resource) ||
+            e.goal is GoalGatherStone && villager.TryGather(resource) ||
+            e.goal is GoalGatherWood && villager.TryGather(resource) ||
             e.goal is GoalTransportResource && villager.TryDropoff(structure) ||
             e.goal is GoalBuildRepair && (villager.TryRepair(structure) ||
             villager.TryBuild(construction)))
@@ -332,25 +421,13 @@ public class Villager : Unit
         AudioSource.PlayClipAtPoint(GameMaster.GetAudio(clipName).GetClip(), transform.position, 0.75f);
     }
 
-    public void GotoPosition(Vector3 position)
+    
+    public override void SetUnitTask(RTSUnitType unitType)
     {
-        foreach (PathfindingGoal goal in GetGoals())
-        {
-            goal.active = false;
-        }
-
-        ResetAI();
-        GotoForced(World.ToWorldSpace(position));
-    }
-
-    // TODO: Should unitType be changed to unitTask or unitJob?
-    public override void SetUnitType(RTSUnitType unitType)
-    {
-        base.SetUnitType(unitType);
-        // SetUnitData(GameMaster.Instance.unitDatabase.Get(unitType));
+        base.SetUnitTask(unitType);
 
         // Turn off all goals except the transport goal.
-        goals.Clear();
+        DeactivateGoals();
         transportGoal = goals.Add<GoalTransportResource>();
 
         switch (unitType)
@@ -358,70 +435,61 @@ public class Villager : Unit
             case RTSUnitType.Builder:
                 state = UnitState.BUILDANDREPAIR;
                 currentResource = ResourceGatheringType.None;
-                goals.Add<GoalBuildRepair>();
+                goals.Get<GoalBuildRepair>().active = true;
                 break;
 
             case RTSUnitType.Farmer:
                 state = UnitState.GATHERING;
                 currentResource = ResourceGatheringType.Grain;
-                goals.Add<GoalGatherResource>().type = ResourceGatheringType.Grain;
+                goals.Get<GoalGatherGrain>().active = true;
                 break;
 
             case RTSUnitType.Forager:
                 state = UnitState.GATHERING;
                 currentResource = ResourceGatheringType.Berries;
-                goals.Add<GoalGatherResource>().type = ResourceGatheringType.Berries;
+                goals.Get<GoalGatherBerries>().active = true;
                 break;
 
             case RTSUnitType.Hunter:
                 state = UnitState.GATHERING;
                 currentResource = ResourceGatheringType.Meat;
-                goals.Add<GoalGatherResource>().type = ResourceGatheringType.Meat;
-                goals.Add<GoalHuntFauna>();
+                goals.Get<GoalGatherMeat>().active = true;
+                goals.Get<GoalHuntFauna>().active = true;
                 break;
 
             case RTSUnitType.Fisherman:
                 state = UnitState.GATHERING;
                 currentResource = ResourceGatheringType.Fish;
-                goals.Add<GoalGatherResource>().type = ResourceGatheringType.Fish;
+                goals.Get<GoalGatherFish>().active = true;
                 break;
 
             case RTSUnitType.Lumberjack:
                 state = UnitState.GATHERING;
                 currentResource = ResourceGatheringType.Wood;
-                goals.Add<GoalGatherResource>().type = ResourceGatheringType.Wood;
+                goals.Get<GoalGatherWood>().active = true;
                 break;
 
             case RTSUnitType.GoldMiner:
                 state = UnitState.GATHERING;
                 currentResource = ResourceGatheringType.Gold;
-                goals.Add<GoalGatherResource>().type = ResourceGatheringType.Gold;
+                goals.Get<GoalGatherGold>().active = true;
                 break;
 
             case RTSUnitType.StoneMiner:
                 state = UnitState.GATHERING;
                 currentResource = ResourceGatheringType.Stone;
-                goals.Add<GoalGatherResource>().type = ResourceGatheringType.Stone;
+                goals.Get<GoalGatherStone>().active = true;
                 break;
 
             case RTSUnitType.Drifter:
                 state = UnitState.ROAMING;
                 currentResource = ResourceGatheringType.None;
-                goals.Add<GoalBuildRepair>();
-                goals.Add<GoalGatherResource>().type = ResourceGatheringType.Grain;
-                goals.Add<GoalGatherResource>().type = ResourceGatheringType.Berries;
-                goals.Add<GoalHuntFauna>();
-                goals.Add<GoalGatherResource>().type = ResourceGatheringType.Meat;
-                goals.Add<GoalGatherResource>().type = ResourceGatheringType.Fish;
-                goals.Add<GoalGatherResource>().type = ResourceGatheringType.Gold;
-                goals.Add<GoalGatherResource>().type = ResourceGatheringType.Stone;
-                goals.Add<GoalGatherResource>().type = ResourceGatheringType.Wood;
+                ActivateGoals();
                 break;
 
             default:
                 break;
         }
-
 
         ResetPath();
         PlayChangeTaskAudio();
@@ -480,44 +548,35 @@ public class Villager : Unit
         if (goal == null)
             return;
 
-        if (goal is GoalGatherResource)
+        if (goal is GoalGatherFish)
         {
-            switch (((GoalGatherResource)goal).type)
-            {
-                case ResourceGatheringType.Gold:
-                    goldHandToolDisplayObject.SetActive(true);
-                    currentHandToolDisplayObject = goldHandToolDisplayObject;
-                    return;
-
-                case ResourceGatheringType.Stone:
-                    stoneHandToolDisplayObject.SetActive(true);
-                    currentHandToolDisplayObject = stoneHandToolDisplayObject;
-                    return;
-
-                case ResourceGatheringType.Grain:
-                    grainHandToolDisplayObject.SetActive(true);
-                    currentHandToolDisplayObject = grainHandToolDisplayObject;
-                    return;
-
-                case ResourceGatheringType.Berries:
-                case ResourceGatheringType.None:
-                case ResourceGatheringType.Meat:
-                    // Equip nothing.
-                    return;
-
-                case ResourceGatheringType.Fish:
-                    fishermanHandToolDisplayObject.SetActive(true);
-                    currentHandToolDisplayObject = fishermanHandToolDisplayObject;
-                    return;
-
-                case ResourceGatheringType.Wood:
-                    woodHandToolDisplayObject.SetActive(true);
-                    currentHandToolDisplayObject = woodHandToolDisplayObject;
-                    return;
-
-                default:
-                    return;
-            }
+            fishermanHandToolDisplayObject.SetActive(true);
+            currentHandToolDisplayObject = fishermanHandToolDisplayObject;
+            return;
+        }
+        else if (goal is GoalGatherGold)
+        {
+            goldHandToolDisplayObject.SetActive(true);
+            currentHandToolDisplayObject = goldHandToolDisplayObject;
+            return;
+        }
+        else if (goal is GoalGatherGrain)
+        {
+            grainHandToolDisplayObject.SetActive(true);
+            currentHandToolDisplayObject = grainHandToolDisplayObject;
+            return;
+        }
+        else if (goal is GoalGatherStone)
+        {
+            stoneHandToolDisplayObject.SetActive(true);
+            currentHandToolDisplayObject = stoneHandToolDisplayObject;
+            return;
+        }
+        else if (goal is GoalGatherWood)
+        {
+            woodHandToolDisplayObject.SetActive(true);
+            currentHandToolDisplayObject = woodHandToolDisplayObject;
+            return;
         }
         else if (goal is GoalBuildRepair)
         {
@@ -531,6 +590,8 @@ public class Villager : Unit
             currentHandToolDisplayObject = hunterHandToolDisplayObject;
             return;
         }
+        // else if (goal is GoalGatherBerries || goal is GoalGatherMeat)
+            // Equip nothing.
     }
 
     private void DisplayCargo(bool visible)

@@ -468,58 +468,76 @@ public class InteractionPointer : MonoBehaviour
 			{
 				if (unit is Villager)
 				{
-					// TODO: Check for buildings being pointed at.
-
                     Villager villager = unit.GetComponent<Villager>();
 
-					if (!pointedAtResource)
+                    if (pointedAtPointerInteractable)
                     {
-                        villager.GotoPosition(pointedAtPosition);
-                        continue;
+                        Structure structure = pointedAtPointerInteractable.GetComponent<Structure>();
+						if (structure)
+                        {
+                            villager.SetUnitTask(RTSUnitType.Builder);
+                            villager.TrySetGoal(World.at(structure.gridPosition));
+                            continue;
+                        }
+
+                        Constructible constructible = pointedAtPointerInteractable.GetComponent<Constructible>();
+						if (constructible)
+						{
+                            villager.SetUnitTask(RTSUnitType.Builder);							
+                            villager.TrySetGoal(World.at(constructible.gridPosition));
+                            continue;
+                        }
+                        
+                        Resource resource = pointedAtPointerInteractable.GetComponent<Resource>();
+                        if (resource)
+                        {
+                            // Needed for fauna since fauna has an inactive resource component
+                            // that doesn't have a grid position to be fetched.
+                            Swordfish.Coord2D gridPosition = resource.gridPosition;
+
+                            switch (resource.type)
+                            {
+                                case ResourceGatheringType.Gold:
+                                    villager.SetUnitTask(RTSUnitType.GoldMiner);
+                                    break;
+
+                                case ResourceGatheringType.Grain:
+                                    villager.SetUnitTask(RTSUnitType.Farmer);
+                                    break;
+
+                                case ResourceGatheringType.Stone:
+                                    villager.SetUnitTask(RTSUnitType.StoneMiner);
+                                    break;
+
+                                case ResourceGatheringType.Wood:
+                                    villager.SetUnitTask(RTSUnitType.Lumberjack);
+                                    break;
+
+                                case ResourceGatheringType.Berries:
+                                    villager.SetUnitTask(RTSUnitType.Forager);
+                                    break;
+
+                                case ResourceGatheringType.Fish:
+                                    villager.SetUnitTask(RTSUnitType.Fisherman);
+                                    break;
+
+                                case ResourceGatheringType.Meat:
+                                    villager.SetUnitTask(RTSUnitType.Hunter);
+                                    gridPosition = resource.GetComponent<Fauna>().gridPosition;
+                                    break;
+                            }
+
+                            villager.TrySetGoal(World.at(resource.gridPosition));
+                            continue;
+                        }
                     }
 
-					// Needed for fauna since fauna has an inactive resource component
-					// that doesn't have a grid position to be fetched.
-					Swordfish.Coord2D gridPosition = pointedAtResource.gridPosition;
-
-                    switch (pointedAtResource.type)
-					{
-						case ResourceGatheringType.Gold:
-							villager.SetUnitType(RTSUnitType.GoldMiner);
-							break;
-
-						case ResourceGatheringType.Grain:
-							villager.SetUnitType(RTSUnitType.Farmer);
-							break;
-
-						case ResourceGatheringType.Stone:
-							villager.SetUnitType(RTSUnitType.StoneMiner);
-							break;
-
-						case ResourceGatheringType.Wood:
-                            villager.SetUnitType(RTSUnitType.Lumberjack);
-							break;
-
-						case ResourceGatheringType.Berries:
-							villager.SetUnitType(RTSUnitType.Forager);
-							break;
-
-						case ResourceGatheringType.Fish:
-							villager.SetUnitType(RTSUnitType.Fisherman);
-							break;
-
-						case ResourceGatheringType.Meat:
-							villager.SetUnitType(RTSUnitType.Hunter);
-                            gridPosition = pointedAtResource.GetComponent<Fauna>().gridPosition;
-                            break;
-                    }
-
-                    villager.TrySetGoal(World.at(gridPosition));
+					villager.GotoPosition(pointedAtPosition);
 					continue;
 				}
 
 				// Military unit.
-				if (unit is Soldier)
+				else if (unit is Soldier)
 				// if (!civilian)
 				{
 					if (pointedAtPointerInteractable)
@@ -529,24 +547,21 @@ public class InteractionPointer : MonoBehaviour
 						// Not the same faction.
 						if (pointedAtUnit && !unit.IsSameFaction(factionId))
 						{
-							// TODO: Force attack unit/set target
-							// Attack unit
-							unit.GotoForced(World.ToWorldSpace(pointedAtPosition));
-							unit.ResetGoal();
+                            // TODO: Force attack unit/set target
+                            // Attack unit
+                            unit.TrySetGoal(World.at(World.ToWorldCoord(pointedAtPosition)));
 							continue;
 						}
 						// Same faction, go to units position.
 						else if (pointedAtUnit)
 						{
-							unit.GotoForced(unit.gridPosition.x, unit.gridPosition.y);
-							unit.ResetGoal();
+                            unit.GotoPosition(pointedAtUnit.transform.position);
 							continue;
 						}
 					}
-
-					// Default go to position.
-					unit.GotoForced(World.ToWorldSpace(pointedAtPosition));
-					unit.ResetGoal();
+					else
+                    	// Default go to position.
+                    	unit.GotoPosition(pointedAtPosition);
 				}
 			}
 

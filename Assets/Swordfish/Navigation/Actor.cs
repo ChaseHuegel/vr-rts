@@ -255,7 +255,10 @@ public class Actor : Body
     public void TrySetGoal(Cell cell)
     {
         PathfindingGoal goal = PathfindingGoal.GetGoal(this, cell, GetGoals());
-
+        
+        if (!goal.active)
+            goal.active = true;
+        
         WipeAI();
 
         currentGoalTarget = cell;
