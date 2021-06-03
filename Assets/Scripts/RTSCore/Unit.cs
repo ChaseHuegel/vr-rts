@@ -202,7 +202,7 @@ public class Unit : Actor, IFactioned
 
     public virtual void LaunchProjectile()
     {
-        if (!projectile)
+        if (!projectile && projectileTarget)
         {
             projectile = Instantiate(rangedProjectile);
             projectile.transform.position = transform.position;
@@ -213,7 +213,6 @@ public class Unit : Actor, IFactioned
 
         // First we get the direction of the arrow's forward vector to the target position.
         Vector3 tDir = projectileTargetPos - projectile.transform.position;
-
 
         // Now we use a Quaternion function to get the rotation based on the direction
         Quaternion rot = Quaternion.LookRotation(tDir);
@@ -230,7 +229,6 @@ public class Unit : Actor, IFactioned
             // of the target location. You can set this to whatever
             // distance you're comfortable with.
             GameObject.Destroy(projectile);
-
         }
         else
         {

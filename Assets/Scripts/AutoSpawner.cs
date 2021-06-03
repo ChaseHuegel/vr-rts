@@ -18,8 +18,19 @@ public class AutoSpawner : MonoBehaviour
     public float secondsToAutospawnStart;
 
     [Range(2.0f, 600.0f)]
-    public float timeBetweenSpawns = 30.0f;
-        
+    public float timeBetweenWaves = 30.0f;
+    public byte unitsToSpawnPerWave = 1;
+
+    [Tooltip("How much to increase the spawns per wave by after each wave spawn increment interval.")]
+    public byte waveSpawnIncrement = 0;
+    public byte maxUnitsPerWave = 5;
+
+    [Tooltip("The number of waves between each wave spawn increment change.")]
+    public byte waveSpawnIncrementInterval = 10;
+
+    private byte currentWaveSpawnIncrementInterval;
+    private int currentWave;
+
     [Header("Unit")]    
     public byte factionID;
     public Transform unitSpawnPoint;
@@ -63,18 +74,31 @@ public class AutoSpawner : MonoBehaviour
 
         if (started)
         {
-            if (spawnTimer >= timeBetweenSpawns)
+            if (spawnTimer >= timeBetweenWaves)
             {
-                SpawnUnit(unitSpawnList[currentSpawnListIndex]);
-                spawnTimer = 0.0f;
-                
-                if (randomize)
-                    currentSpawnListIndex = Random.Range(0, unitSpawnList.Length);
-                else
+                byte countToSpawn = unitsToSpawnPerWave < maxUnitsPerWave ? unitsToSpawnPerWave : maxUnitsPerWave;
+                for (byte i = 0; i < countToSpawn; i++)
                 {
-                    currentSpawnListIndex++;
-                    if (currentSpawnListIndex >= unitSpawnList.Length)
-                        currentSpawnListIndex = 0;
+                    SpawnUnit(unitSpawnList[currentSpawnListIndex]);
+                    
+                    if (randomize)
+                        currentSpawnListIndex = Random.Range(0, unitSpawnList.Length);
+                    else
+                    {
+                        currentSpawnListIndex++;
+                        if (currentSpawnListIndex >= unitSpawnList.Length)
+                            currentSpawnListIndex = 0;
+                    }                
+                }
+
+                currentWave++;
+                spawnTimer = 0.0f;
+                currentWaveSpawnIncrementInterval++;
+
+                if (currentWaveSpawnIncrementInterval == waveSpawnIncrementInterval)
+                {
+                    unitsToSpawnPerWave += waveSpawnIncrement;
+                    currentWaveSpawnIncrementInterval = 0;
                 }
             }
         }

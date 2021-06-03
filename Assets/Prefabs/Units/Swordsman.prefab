@@ -130,7 +130,6 @@ GameObject:
   - component: {fileID: 1171748269997364152}
   - component: {fileID: 8903573299592951069}
   - component: {fileID: 8408527075323145128}
-  - component: {fileID: 7309498301198521886}
   - component: {fileID: 782091929014317462}
   - component: {fileID: -8950132925645451015}
   - component: {fileID: -8452315851360116358}
@@ -488,10 +487,13 @@ MonoBehaviour:
   factionId: 0
   movementSpeed: 0.3
   goalSearchDistance: 30
-  faction: {fileID: 0}
+  faction: {fileID: 11400000, guid: effa210fcfc5796468bcaecb24cb5693, type: 2}
   rtsUnitType: 10
   rangedProjectile: {fileID: 0}
   projectileSpeed: 5
+  meshes: []
+  skinnedMeshes:
+  - {fileID: 3628467702706474427}
   state: 0
   isHeld: 0
   isDying: 0
@@ -500,23 +502,6 @@ MonoBehaviour:
   huntVillagers: 1
   huntMilitary: 1
   huntBuildings: 1
---- !u!114 &7309498301198521886
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1271416209190090558}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 381a631b4e6c2514d9223a6b5a7d8fb3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  overrideFaction: 0
-  factionId: 0
-  meshesToChange: []
-  skinnedMeshesToChange:
-  - {fileID: 3628467702706474427}
 --- !u!114 &782091929014317462
 MonoBehaviour:
   m_ObjectHideFlags: 0

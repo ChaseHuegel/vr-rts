@@ -130,7 +130,6 @@ GameObject:
   - component: {fileID: 1171748269997364152}
   - component: {fileID: 8903573299592951069}
   - component: {fileID: 8408527075323145128}
-  - component: {fileID: 7309498301198521886}
   - component: {fileID: 782091929014317462}
   - component: {fileID: -8950132925645451015}
   - component: {fileID: -8452315851360116358}
@@ -488,11 +487,14 @@ MonoBehaviour:
   factionId: 0
   movementSpeed: 0.3
   goalSearchDistance: 30
-  faction: {fileID: 0}
+  faction: {fileID: 11400000, guid: effa210fcfc5796468bcaecb24cb5693, type: 2}
   rtsUnitType: 12
   rangedProjectile: {fileID: 3740421758085118616, guid: 33ebc7103c3a4b64ca93d64149b5fa33,
     type: 3}
   projectileSpeed: 5
+  meshes: []
+  skinnedMeshes:
+  - {fileID: 3628467702706709231}
   state: 0
   isHeld: 0
   isDying: 0
@@ -501,23 +503,6 @@ MonoBehaviour:
   huntVillagers: 1
   huntMilitary: 1
   huntBuildings: 1
---- !u!114 &7309498301198521886
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1271416209190090558}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 381a631b4e6c2514d9223a6b5a7d8fb3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  overrideFaction: 0
-  factionId: 0
-  meshesToChange: []
-  skinnedMeshesToChange:
-  - {fileID: 3628467702706709231}
 --- !u!114 &782091929014317462
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2038,6 +2023,12 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 792a4bad9e08b8e41bfbd3f0b8aac1ab, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6652791f0d19f3b408a94277d330b59b, type: 3}
+--- !u!1 &3628467702695144319 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 177316, guid: 6652791f0d19f3b408a94277d330b59b,
+    type: 3}
+  m_PrefabInstance: {fileID: 3628467702695043035}
+  m_PrefabAsset: {fileID: 0}
 --- !u!137 &3628467702706709231 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: 13778228, guid: 6652791f0d19f3b408a94277d330b59b,
@@ -2047,12 +2038,6 @@ SkinnedMeshRenderer:
 --- !u!4 &3628467702694872503 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 432748, guid: 6652791f0d19f3b408a94277d330b59b,
-    type: 3}
-  m_PrefabInstance: {fileID: 3628467702695043035}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &3628467702695144319 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 177316, guid: 6652791f0d19f3b408a94277d330b59b,
     type: 3}
   m_PrefabInstance: {fileID: 3628467702695043035}
   m_PrefabAsset: {fileID: 0}

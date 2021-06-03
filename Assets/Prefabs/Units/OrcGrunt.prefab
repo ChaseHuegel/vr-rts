@@ -29,7 +29,6 @@ GameObject:
   - component: {fileID: 2084730763766606829}
   - component: {fileID: 8584786662924471624}
   - component: {fileID: 8655223117144118269}
-  - component: {fileID: 7628003446343233099}
   - component: {fileID: 465591726281918915}
   - component: {fileID: 1109623579988469932}
   - component: {fileID: -9200534466598773922}
@@ -386,10 +385,12 @@ MonoBehaviour:
   factionId: 0
   movementSpeed: 0.3
   goalSearchDistance: 30
-  faction: {fileID: 0}
+  faction: {fileID: 11400000, guid: effa210fcfc5796468bcaecb24cb5693, type: 2}
   rtsUnitType: 11
   rangedProjectile: {fileID: 0}
   projectileSpeed: 5
+  meshes: []
+  skinnedMeshes: []
   state: 0
   isHeld: 0
   isDying: 0
@@ -398,23 +399,6 @@ MonoBehaviour:
   huntVillagers: 1
   huntMilitary: 1
   huntBuildings: 1
---- !u!114 &7628003446343233099
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2092039726793936747}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 381a631b4e6c2514d9223a6b5a7d8fb3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  overrideFaction: 0
-  factionId: 0
-  meshesToChange: []
-  skinnedMeshesToChange:
-  - {fileID: 184236362287703926}
 --- !u!114 &465591726281918915
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -933,15 +917,9 @@ PrefabInstance:
     - target: {fileID: 13700000, guid: aad05534a7ba0dd49b8c54ce188308ec, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 792a4bad9e08b8e41bfbd3f0b8aac1ab, type: 2}
+      objectReference: {fileID: 2100000, guid: cad6fa3a83060754d98d2fb182f98fd5, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: aad05534a7ba0dd49b8c54ce188308ec, type: 3}
---- !u!137 &184236362287703926 stripped
-SkinnedMeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 13700000, guid: aad05534a7ba0dd49b8c54ce188308ec,
-    type: 3}
-  m_PrefabInstance: {fileID: 184236362274139350}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &184236362273748580 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400050, guid: aad05534a7ba0dd49b8c54ce188308ec,
