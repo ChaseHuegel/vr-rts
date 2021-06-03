@@ -12,7 +12,7 @@ public class Constructible : Obstacle, IFactioned
 
     private Faction faction;
     public Faction GetFaction() { return faction; }
-    public void UpdateFaction() { faction = GameMaster.Factions.Find(x => x.index == factionId); }
+    public void UpdateFaction() { faction = GameMaster.Factions.Find(x => x.Id == factionId); }
 
     public bool DestroyOnBuilt = true;
     public bool ClearExistingWalls;

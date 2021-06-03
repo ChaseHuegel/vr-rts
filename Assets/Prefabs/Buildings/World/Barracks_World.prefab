@@ -452,7 +452,6 @@ GameObject:
   - component: {fileID: 392103825219517332}
   - component: {fileID: 7276087696547761952}
   - component: {fileID: 8152206264667250991}
-  - component: {fileID: 1166179457}
   m_Layer: 10
   m_Name: Barracks_World
   m_TagString: Untagged
@@ -608,9 +607,13 @@ MonoBehaviour:
   gridPosition:
     x: 0
     y: 0
+  factionId: 0
   bakeOnStart: 1
-  factionID: 0
+  allowPathThru: 0
   buildingData: {fileID: 11400000, guid: 963461a3aaf76f0458420eb41fae093d, type: 2}
+  meshes:
+  - {fileID: 8568534243046181887}
+  skinnedMeshes: []
 --- !u!114 &1850214248461142744
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -725,30 +728,6 @@ MonoBehaviour:
   PrefabHashGenerator: Barracks_World
   AlwaysReplicateAsRoot: 0
   DontDestroyWithOwner: 0
---- !u!114 &1166179457
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5294818226044083075}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f428c6e35fb2c284ab2c94d7b43c7fd2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  autospawn: 0
-  randomize: 0
-  secondsToAutospawnStart: 0
-  timeBetweenSpawns: 5
-  factionID: 0
-  unitSpawnPoint: {fileID: 8875223623447510564}
-  unitSpawnPointRadius: 0
-  unitRallyWaypoint: {fileID: 1202978433152163223}
-  unitRallyWaypointRadius: 0
-  unitSpawnList: 
-  unit: 10
-  spawn: 0
 --- !u!1 &5447006979966127191
 GameObject:
   m_ObjectHideFlags: 0
@@ -1478,11 +1457,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2300000, guid: e2f28d7d7478cb64597ebb9077abfe6e, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 4a8b820c98c7b4540bab4e4f3d70d7fb, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e2f28d7d7478cb64597ebb9077abfe6e, type: 3}
 --- !u!4 &8568534243048474911 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: e2f28d7d7478cb64597ebb9077abfe6e,
+    type: 3}
+  m_PrefabInstance: {fileID: 8568534243048346527}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &8568534243046181887 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 2300000, guid: e2f28d7d7478cb64597ebb9077abfe6e,
     type: 3}
   m_PrefabInstance: {fileID: 8568534243048346527}
   m_PrefabAsset: {fileID: 0}

@@ -342,6 +342,9 @@ MonoBehaviour:
   bakeOnStart: 1
   allowPathThru: 0
   buildingData: {fileID: 11400000, guid: bc71de8f503ea984dab70f06ddc0dac4, type: 2}
+  meshes:
+  - {fileID: 917778318219486434}
+  skinnedMeshes: []
   attackRange: 20
   attackSpeed: 3
   attackDamage: 10
@@ -646,8 +649,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2300000, guid: 5921e45280d702e44ad0fb582ac16d26, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 4a8b820c98c7b4540bab4e4f3d70d7fb, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5921e45280d702e44ad0fb582ac16d26, type: 3}
+--- !u!23 &917778318219486434 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 2300000, guid: 5921e45280d702e44ad0fb582ac16d26,
+    type: 3}
+  m_PrefabInstance: {fileID: 917778318221393026}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &917778318221256194 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: 5921e45280d702e44ad0fb582ac16d26,

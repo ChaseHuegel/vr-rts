@@ -8,6 +8,12 @@ public class Structure : Obstacle, IFactioned
 {
     private Faction faction;
     public BuildingData buildingData;
+
+    [Header("Skin Settings")]
+    public MeshRenderer[] meshes;
+    public SkinnedMeshRenderer[] skinnedMeshes;
+
+
     private Damageable damageable;
     public Damageable AttributeHandler { get { return damageable; } }
     private AudioSource audioSource;
@@ -20,7 +26,7 @@ public class Structure : Obstacle, IFactioned
     private PlayerManager playerManager;
     public Faction GetFaction() { return faction; }
 
-    public void UpdateFaction() { faction = GameMaster.Factions.Find(x => x.index == factionId); }
+    public void UpdateFaction() { faction = GameMaster.Factions.Find(x => x.Id == factionId); }
 
     public bool NeedsRepairs() { return damageable.GetHealthPercent() < 1f; }
 
@@ -45,6 +51,7 @@ public class Structure : Obstacle, IFactioned
             Debug.Log("BuildingData not set.");
 
         UpdateFaction();
+        SetSkin();
 
         if (!(damageable = GetComponent<Damageable>()))
             Debug.Log("No damageable component on structure!");
@@ -97,6 +104,19 @@ public class Structure : Obstacle, IFactioned
         }
     }
 
+    private void SetSkin()
+    {
+        if (!faction) return;
+
+        if (faction.skin?.buildingMaterial)
+        {
+            foreach (MeshRenderer mesh in meshes)
+                mesh.sharedMaterial = faction.skin.buildingMaterial;
+
+            foreach (SkinnedMeshRenderer skinnedMesh in skinnedMeshes)
+                skinnedMesh.sharedMaterial = faction.skin.buildingMaterial;
+        }
+    }
 
     void OnDamage(object sender, Damageable.DamageEvent e)
     {
@@ -170,5 +190,10 @@ public class Structure : Obstacle, IFactioned
     public bool CanDropOff(ResourceGatheringType type)
     {
         return buildingData.dropoffTypes.HasFlag(type);
+    }
+    void OnValidate()
+    {
+        UpdateFaction();
+        SetSkin();
     }
 }

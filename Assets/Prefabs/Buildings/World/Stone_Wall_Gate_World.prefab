@@ -309,6 +309,9 @@ MonoBehaviour:
   bakeOnStart: 1
   allowPathThru: 1
   buildingData: {fileID: 11400000, guid: 18b0f2fbce743bc40b00edc6681b3bcc, type: 2}
+  meshes: []
+  skinnedMeshes:
+  - {fileID: 407757870596418816}
 --- !u!114 &2843186804932039898
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -530,11 +533,21 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 762f1220ac032d24886f2df27e4b0e4a, type: 2}
+    - target: {fileID: 13700000, guid: e9554c943e8d60643a12a6ee55c092e6, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 4a8b820c98c7b4540bab4e4f3d70d7fb, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e9554c943e8d60643a12a6ee55c092e6, type: 3}
 --- !u!4 &407757870601600032 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: e9554c943e8d60643a12a6ee55c092e6,
+    type: 3}
+  m_PrefabInstance: {fileID: 407757870601725600}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &407757870596418816 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 13700000, guid: e9554c943e8d60643a12a6ee55c092e6,
     type: 3}
   m_PrefabInstance: {fileID: 407757870601725600}
   m_PrefabAsset: {fileID: 0}

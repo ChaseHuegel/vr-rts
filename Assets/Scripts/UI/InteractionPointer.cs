@@ -84,8 +84,9 @@ public class InteractionPointer : MonoBehaviour
 
 	// Cache value
 	private int maxUnitSelectionCount;
-	
-	// Cache value
+
+    // Cache value
+    private Faction faction;
 	private byte factionId;
     private PlayerManager playerManager;
 
@@ -125,7 +126,7 @@ public class InteractionPointer : MonoBehaviour
     private List<GameObject> wallPreviewSections = new List<GameObject>();
     private Swordfish.Coord2D lastPreviewPointerPosition;
 
-    
+
 
     //=========================================================================
     private static InteractionPointer _instance;

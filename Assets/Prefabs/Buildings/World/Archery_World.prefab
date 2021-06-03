@@ -698,9 +698,13 @@ MonoBehaviour:
   gridPosition:
     x: 115
     y: 122
+  factionId: 0
   bakeOnStart: 1
-  factionID: 0
+  allowPathThru: 0
   buildingData: {fileID: 11400000, guid: ffca4340b49b17e4e93030ba6c0d567e, type: 2}
+  meshes:
+  - {fileID: 7372687789392802980}
+  skinnedMeshes: []
 --- !u!114 &-8151898422001902557
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1233,6 +1237,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7fb19797225db2c4488e2990249299f1, type: 3}
+--- !u!4 &7071496680686572659 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2887167846287423306, guid: 7fb19797225db2c4488e2990249299f1,
+    type: 3}
+  m_PrefabInstance: {fileID: 5346413877091984185}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &5959909024254018618 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1767555883321468675, guid: 7fb19797225db2c4488e2990249299f1,
+    type: 3}
+  m_PrefabInstance: {fileID: 5346413877091984185}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1832078780024337312 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6007413679436910745, guid: 7fb19797225db2c4488e2990249299f1,
@@ -1260,18 +1276,6 @@ MonoBehaviour:
 --- !u!4 &7589516896681575876 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2549361127315121917, guid: 7fb19797225db2c4488e2990249299f1,
-    type: 3}
-  m_PrefabInstance: {fileID: 5346413877091984185}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &7071496680686572659 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2887167846287423306, guid: 7fb19797225db2c4488e2990249299f1,
-    type: 3}
-  m_PrefabInstance: {fileID: 5346413877091984185}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &5959909024254018618 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1767555883321468675, guid: 7fb19797225db2c4488e2990249299f1,
     type: 3}
   m_PrefabInstance: {fileID: 5346413877091984185}
   m_PrefabAsset: {fileID: 0}
@@ -1407,8 +1411,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2300000, guid: 7036859d28e2cb84c9948a1fcf49fe95, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 4a8b820c98c7b4540bab4e4f3d70d7fb, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7036859d28e2cb84c9948a1fcf49fe95, type: 3}
+--- !u!23 &7372687789392802980 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 2300000, guid: 7036859d28e2cb84c9948a1fcf49fe95,
+    type: 3}
+  m_PrefabInstance: {fileID: 7372687789394832580}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7372687789394703940 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: 7036859d28e2cb84c9948a1fcf49fe95,

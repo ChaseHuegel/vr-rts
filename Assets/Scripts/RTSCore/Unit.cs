@@ -17,9 +17,8 @@ public class Unit : Actor, IFactioned
 {
     [SerializeField]
     protected Faction faction;
-
     public Faction GetFaction() { return faction; }
-    public void UpdateFaction() { faction = GameMaster.Factions.Find(x => x.index == factionId); }
+    public void UpdateFaction() { faction = GameMaster.Factions.Find(x => x.Id == factionId); }
 
     [Header("Unit")]
     public RTSUnitType rtsUnitType;
@@ -28,6 +27,10 @@ public class Unit : Actor, IFactioned
     public float projectileSpeed = 5.0f;
     private GameObject projectile;
     private Vector3 projectileTargetPos;
+    
+    [Header("Skin Settings")]
+    public MeshRenderer[] meshes;
+    public SkinnedMeshRenderer[] skinnedMeshes;
 
     [Header("AI")]
     public UnitState state;
@@ -64,8 +67,25 @@ public class Unit : Actor, IFactioned
 
         if (!m_rtsUnitTypeData)
             m_rtsUnitTypeData = GameMaster.GetUnit(rtsUnitType);
-
+        
         UpdateFaction();
+        SetSkin();
+    }
+
+    private void SetSkin()
+    {
+        UpdateFaction();
+
+        if (!faction) return;
+
+        if (faction.skin.unitMaterial)
+        {
+            foreach (MeshRenderer mesh in meshes)
+                mesh.sharedMaterial = faction.skin.unitMaterial;
+
+            foreach (SkinnedMeshRenderer skinnedMesh in skinnedMeshes)
+                skinnedMesh.sharedMaterial = faction.skin.unitMaterial;
+        }
     }
 
     //=========================================================================
@@ -217,5 +237,10 @@ public class Unit : Actor, IFactioned
             // If not, then we just keep moving forward
             projectile.transform.Translate(Vector3.forward * (projectileSpeed * Time.deltaTime));
         }
+    }
+    void OnValidate()
+    {
+        UpdateFaction();
+        SetSkin();
     }
 }

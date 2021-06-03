@@ -29,7 +29,6 @@ public class Villager : Unit
     public GameObject builderHandToolDisplayObject;
     public GameObject fishermanHandToolDisplayObject;
     public GameObject hunterHandToolDisplayObject;
-
     protected GameObject currentCargoDisplayObject;
     protected GameObject currentHandToolDisplayObject;
     public VillagerHoverMenu villagerHoverMenu;
@@ -67,7 +66,7 @@ public class Villager : Unit
 
         SetUnitTask(rtsUnitType);
 
-        if(IsSameFaction(playerManager.factionId))
+        if(faction.IsSameFaction(playerManager.factionId))
             playerManager.AddToPopulation((Unit)this);
 
         
@@ -420,7 +419,6 @@ public class Villager : Unit
     {
         AudioSource.PlayClipAtPoint(GameMaster.GetAudio(clipName).GetClip(), transform.position, 0.75f);
     }
-
     
     public override void SetUnitTask(RTSUnitType unitType)
     {
@@ -722,8 +720,6 @@ public class Villager : Unit
             case ResourceGatheringType.Berries:
             case ResourceGatheringType.Meat:
                 animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.FORAGING);
-                // // TODO: Clearing equipped items here for hunting
-                // ChangeEquippedItems(null);
                 break;
 
             case ResourceGatheringType.Fish:

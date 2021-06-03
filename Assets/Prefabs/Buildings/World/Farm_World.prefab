@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 1498620696}
   - component: {fileID: 6355609625548158117}
   - component: {fileID: 6611738123303705844}
-  - component: {fileID: 1606106129523757696}
+  - component: {fileID: 5356693978240170431}
   m_Layer: 10
   m_Name: Farm_World
   m_TagString: Untagged
@@ -272,7 +272,7 @@ MonoBehaviour:
   menuGameObject: {fileID: 0}
   healthBar: {fileID: 9018394265720730084}
   objectsToAutohide: []
---- !u!114 &1606106129523757696
+--- !u!114 &5356693978240170431
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -281,14 +281,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 899507145775679583}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 381a631b4e6c2514d9223a6b5a7d8fb3, type: 3}
+  m_Script: {fileID: 11500000, guid: c8b9540b2f14ddc4daf607654d5108aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  overrideFaction: 0
   factionId: 0
-  meshesToChange:
+  meshes:
   - {fileID: 8987644490305071615}
-  skinnedMeshesToChange: []
+  skinnedMeshes: []
 --- !u!1 &3163886759887789236
 GameObject:
   m_ObjectHideFlags: 0

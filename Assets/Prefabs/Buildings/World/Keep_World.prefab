@@ -278,6 +278,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   highlightMaterial: {fileID: 0}
+  highlightOnHover: 1
+  hideHighlight: []
 --- !u!114 &-8879928426266428292
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -295,9 +297,13 @@ MonoBehaviour:
   gridPosition:
     x: 0
     y: 0
+  factionId: 0
   bakeOnStart: 1
-  factionID: 0
+  allowPathThru: 0
   buildingData: {fileID: 11400000, guid: bba364c27ad0bef4d83572c38df0a3a1, type: 2}
+  meshes:
+  - {fileID: 6035761300695265883}
+  skinnedMeshes: []
 --- !u!114 &-6447204745470228519
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -855,11 +861,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2300000, guid: 003306f67c7bed24b8be307fb52fb0ab, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 4a8b820c98c7b4540bab4e4f3d70d7fb, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 003306f67c7bed24b8be307fb52fb0ab, type: 3}
 --- !u!4 &6035761300692840635 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: 003306f67c7bed24b8be307fb52fb0ab,
+    type: 3}
+  m_PrefabInstance: {fileID: 6035761300693232187}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &6035761300695265883 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 2300000, guid: 003306f67c7bed24b8be307fb52fb0ab,
     type: 3}
   m_PrefabInstance: {fileID: 6035761300693232187}
   m_PrefabAsset: {fileID: 0}
