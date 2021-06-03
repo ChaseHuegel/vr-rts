@@ -415,10 +415,21 @@ public class InteractionPointer : MonoBehaviour
 		if (isInWallPlacementMode)
 		{
 			Swordfish.Coord2D previousSegmentPosition = World.ToWorldCoord(wallPlacementPreviewStartObject.transform.position);
+            if (!playerManager.CanConstructBuilding(placementBuildingData.buildingType))
+            {
+                EndWallPlacementMode();
+                return;
+            }
 
-			foreach (GameObject go in wallPreviewSections)
-			{
-				Swordfish.Coord2D currentSegmentPosition = World.ToWorldCoord(go.transform.position);
+            // Start corner piece
+            playerManager.DeductBuildingCost(placementBuildingData);
+			Instantiate(placementBuildingData.constructablePrefab, wallPlacementPreviewStartObject.transform.position, wallPlacementPreviewStartObject.transform.rotation);
+            
+            foreach (GameObject go in wallPreviewSections)
+			{            
+                playerManager.DeductBuildingCost(placementBuildingData);
+
+                Swordfish.Coord2D currentSegmentPosition = World.ToWorldCoord(go.transform.position);
                 int currentIndex = wallPreviewSections.IndexOf(go);
                 currentIndex++;
                 GameObject nextObject = null;
@@ -439,19 +450,29 @@ public class InteractionPointer : MonoBehaviour
                 {
                     Instantiate(placementBuildingData.constructablePrefab, World.ToTransformSpace(currentSegmentPosition), buildingPlacementPreviewObject.transform.rotation);
                 }
-				else
-					CreateWallSegment(previousSegmentPosition, currentSegmentPosition, previousSegmentPosition, wallWorld_1x1_Constructible, wallWorld_1x1_Diagonal_Constructable);
+                else
+                {
+					// If this is the last piece we are able to build, make it a corner.
+                    if (!playerManager.CanConstructBuilding(placementBuildingData.buildingType))
+                    {
+                        Instantiate(placementBuildingData.constructablePrefab, World.ToTransformSpace(currentSegmentPosition), buildingPlacementPreviewObject.transform.rotation);
+                        EndWallPlacementMode();
+                        return;
+                    }
+					else
+                    	CreateWallSegment(previousSegmentPosition, currentSegmentPosition, previousSegmentPosition, wallWorld_1x1_Constructible, wallWorld_1x1_Diagonal_Constructable);
+                }
+                
 
 				previousSegmentPosition = currentSegmentPosition;
 			}
-
-            if (buildingPlacementPreviewObject.activeSelf)
-                Instantiate(placementBuildingData.constructablePrefab, buildingPlacementPreviewObject.transform.position, buildingPlacementPreviewObject.transform.rotation);
-            // else if (!buildingPlacementPreviewObject.activeSelf && !World.at(endPosition).occupied)
-            //     buildingPlacementPreviewObject.SetActive(true);
-
-            Instantiate(placementBuildingData.constructablePrefab, wallPlacementPreviewStartObject.transform.position, wallPlacementPreviewStartObject.transform.rotation);
-            //Instantiate(placementBuildingData.worldPrefab, buildingPlacementPreviewObject.transform.position, buildingPlacementPreviewObject.transform.rotation);
+			
+			if (playerManager.CanConstructBuilding(placementBuildingData.buildingType))
+			{
+                playerManager.DeductBuildingCost(placementBuildingData);
+                if (buildingPlacementPreviewObject.activeSelf)
+                    Instantiate(placementBuildingData.constructablePrefab, buildingPlacementPreviewObject.transform.position, buildingPlacementPreviewObject.transform.rotation);
+            }
             
 			EndWallPlacementMode();
         }
@@ -465,7 +486,7 @@ public class InteractionPointer : MonoBehaviour
             {
                 PlayBuildingPlacementAllowedAudio();
                 Instantiate(placementBuildingData.constructablePrefab, buildingPlacementPreviewObject.transform.position, buildingPlacementPreviewObject.transform.rotation);
-                PlayerManager.instance.RemoveResourcesFromStockpile(placementBuildingData.goldCost,
+                PlayerManager.instance.DeductResourcesFromStockpile(placementBuildingData.goldCost,
                                                 placementBuildingData.grainCost,
                                                 placementBuildingData.woodCost,
                                                 placementBuildingData.stoneCost);
@@ -851,7 +872,7 @@ public class InteractionPointer : MonoBehaviour
                 }
         }
 	}
-	
+
 	private GameObject GetDiagonalWallRotated(Coord2D previousPosition, Coord2D nextPosition, GameObject diagonalWall)
 	{
         GameObject obj = null;

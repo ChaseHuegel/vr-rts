@@ -121,7 +121,7 @@ public class PlayerManager : MonoBehaviour
     public void OnVillagerRepair(object sender, Villager.RepairEvent e)
     {
         if (e.villager.factionId == factionId)
-            RemoveResourcesFromStockpile(1, 1, 1, 1);
+            DeductResourcesFromStockpile(1, 1, 1, 1);
     }
 
     public void HookIntoEvents()
@@ -332,7 +332,7 @@ public class PlayerManager : MonoBehaviour
         buildMenu.RefreshSlots();
     }
 
-    public void RemoveResourcesFromStockpile(int gold, int grain, int wood, int stone)
+    public void DeductResourcesFromStockpile(int gold, int grain, int wood, int stone)
     {
         goldCollected -= gold;
         grainCollected -= grain;
@@ -342,6 +342,7 @@ public class PlayerManager : MonoBehaviour
         UpdateWristDisplayResourceText();
         buildMenu.RefreshSlots();
     }
+
 
     public bool CanConstructBuilding(RTSBuildingType buildingType)
     {
@@ -375,7 +376,12 @@ public class PlayerManager : MonoBehaviour
         return true;
     }
 
-    public void RemoveUnitQueueCostFromStockpile(UnitData unitType)
+    public void DeductBuildingCost(BuildingData buildingData)
+    {
+        DeductResourcesFromStockpile(buildingData.goldCost, buildingData.grainCost, buildingData.woodCost, buildingData.stoneCost);
+    }
+
+    public void DeductUnitQueueCostFromStockpile(UnitData unitType)
     {
         woodCollected -= unitType.woodCost;
         grainCollected -= unitType.foodCost;

@@ -38,7 +38,7 @@ public class ThrowableBuilding : Throwable
             InteractionPointer.instance.PlayBuildingPlacementAllowedAudio();
 
             // Remove resources only when valid placement.
-            PlayerManager.instance.RemoveResourcesFromStockpile(rtsBuildingTypeData.goldCost,
+            PlayerManager.instance.DeductResourcesFromStockpile(rtsBuildingTypeData.goldCost,
                                                 rtsBuildingTypeData.grainCost,
                                                 rtsBuildingTypeData.woodCost,
                                                 rtsBuildingTypeData.stoneCost);            

@@ -123,7 +123,7 @@ public class BuildingSpawnQueue : MonoBehaviour
             return false;
 
         UnitData unitData = GameMaster.GetUnit(unitTypeToQueue);
-        playerManager.RemoveUnitQueueCostFromStockpile(unitData);
+        playerManager.DeductUnitQueueCostFromStockpile(unitData);
         unitSpawnQueue.AddLast(unitData);
         
         // Debug.Log("Queued " + unitData.unitType);
