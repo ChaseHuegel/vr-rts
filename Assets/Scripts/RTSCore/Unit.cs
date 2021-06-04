@@ -175,7 +175,12 @@ public class Unit : Actor, IFactioned
     {
         DeactivateGoals();
         //ResetAI();
-        GotoForced(World.ToWorldSpace(position));
+        Coord2D pos = World.ToWorldCoord(position);
+
+        // Debug.Log(gridPosition.x + " " + gridPosition.y +
+        //                         " ----- " + pos.x + " " + pos.y);
+
+        GotoForced(pos.x, pos.y);
     }
 
     public void ActivateGoals()

@@ -583,7 +583,7 @@ public class InteractionPointer : MonoBehaviour
                             continue;
                         }
                     }
-
+					
 					villager.GotoPosition(pointedAtPosition);
 					continue;
 				}
@@ -1233,7 +1233,7 @@ public class InteractionPointer : MonoBehaviour
 
 		return false;
 	}
-
+	
 	private bool WasTeleportButtonReleased( Hand hand )
 	{
 		if ( IsEligibleForTeleport( hand ) )
@@ -1246,8 +1246,7 @@ public class InteractionPointer : MonoBehaviour
 
 		return false;
 	}
-
-
+	
 	public bool IsEligibleForTeleport( Hand hand )
 	{
 		// TODO: Clean this up so it works for both hands. Ideally, just have different action
@@ -1283,7 +1282,7 @@ public class InteractionPointer : MonoBehaviour
 
 		return true;
 	}
-
+	
 	private bool WasTeleportButtonPressed( Hand hand )
 	{
 		if ( IsEligibleForTeleport( hand ) )
@@ -1297,7 +1296,6 @@ public class InteractionPointer : MonoBehaviour
 
 		return false;
 	}
-
 
 	private void TryTeleportPlayer()
 	{
@@ -1339,7 +1337,6 @@ public class InteractionPointer : MonoBehaviour
 
 		Invoke( "TeleportPlayer", currentFadeTime );
 	}
-
 	private void TeleportPlayer()
 		{
 			teleporting = false;

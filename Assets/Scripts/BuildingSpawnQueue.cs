@@ -192,9 +192,11 @@ public class BuildingSpawnQueue : MonoBehaviour
             Unit unit = unitGameObject.GetComponent<Unit>();
             unit.rtsUnitType = unitSpawnQueue.First.Value.unitType;
             unit.factionId = structure.factionId;
-            unit.SyncPosition();
-            unit.GotoForced(World.ToWorldSpace(unitRallyWaypoint.position));
-            unit.LockPath();
+
+            // ! Dsabled, none of this works for rally points anymore.
+            //unit.SyncPosition();
+            //unit.GotoForced(World.ToWorldSpace(unitRallyWaypoint.position));
+            //unit.LockPath();
 
             // Debug.Log("Spawned " + unit.rtsUnitType + ".");
         }
@@ -213,7 +215,7 @@ public class BuildingSpawnQueue : MonoBehaviour
         int i = 0;
         foreach (UnitData unitData in unitSpawnQueue)
         {
-            //  TODO clamping is a bandaid fix
+            // TODO: clamping is a bandaid fix
             QueueSlotImage[Mathf.Clamp(i, 0, QueueSlotImage.Length-1)].overrideSprite = unitData.queueImage;
             i++;
         }
