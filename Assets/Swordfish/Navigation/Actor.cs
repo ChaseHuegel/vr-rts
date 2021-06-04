@@ -256,7 +256,7 @@ public class Actor : Body
     {
         PathfindingGoal goal = PathfindingGoal.GetGoal(this, cell, GetGoals());
         
-        if (!goal.active)
+        if (goal != null && !goal.active)
             goal.active = true;
         
         WipeAI();

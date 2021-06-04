@@ -47,7 +47,6 @@ public class Villager : Unit
         go.active = true;
         go.x = x;
         go.y = y;
-        // GotoForced(x, y);
     }
 
     [InspectorButton("Go2")]
