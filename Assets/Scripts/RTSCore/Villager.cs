@@ -39,7 +39,7 @@ public class Villager : Unit
     public int y = 0;
 
     [InspectorButton("Go")]
-    public bool Goto;
+    public bool GoLocationGoal;
 
     public void Go()
     {
@@ -50,6 +50,13 @@ public class Villager : Unit
         // GotoForced(x, y);
     }
 
+    [InspectorButton("Go2")]
+    public bool GotoForce;
+
+    public void Go2()
+    {
+        GotoForced(x, y);
+    }
 
     public bool IsCargoFull() { return currentCargo >= rtsUnitTypeData.maxCargo; }
     public bool HasCargo() { return currentCargo > 0; }
