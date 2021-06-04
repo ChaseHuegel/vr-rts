@@ -206,13 +206,19 @@ public class Unit : Actor, IFactioned
 
     public virtual void LaunchProjectile()
     {
-        if (!projectile && projectileTarget)
+        if (!projectile)
         {
             projectile = Instantiate(rangedProjectile);
             projectile.transform.position = transform.position;
             projectile.transform.position += new Vector3(0, 0.09f, 0);
             projectileTargetPos = projectileTarget.transform.position;
             projectileTargetPos += new Vector3(0, 0.09f, 0);
+
+            if (projectileTarget)
+            {
+                projectileTargetPos = projectileTarget.transform.position;
+                projectileTargetPos += new Vector3(0, 0.09f, 0);
+            }
         }
 
         // First we get the direction of the arrow's forward vector to the target position.

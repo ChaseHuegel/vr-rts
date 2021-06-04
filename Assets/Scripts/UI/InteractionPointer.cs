@@ -41,9 +41,10 @@ public class InteractionPointer : MonoBehaviour
     //=========================================================================
     [Header("Sounds")]
     
-    public SoundElement setRallyPointSound;
+    public SoundElement setRallyPointSound;	
 	public AudioClip queueSuccessSound;
     public AudioClip queueFailedSound;
+    public AudioClip dequeueSound;
     public AudioClip teleportSound;
 	public AudioClip pointerLoopSound;
 	public AudioClip pointerStopSound;
@@ -280,7 +281,7 @@ public class InteractionPointer : MonoBehaviour
                     if (buildingSpawnQueue)
                     {
                         buildingSpawnQueue.DequeueUnit();
-                        PlayAudioClip(headAudioSource, queueSuccessSound);
+                        PlayAudioClip(headAudioSource, dequeueSound);
                     }
                 }
 			}
