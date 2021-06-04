@@ -1090,11 +1090,25 @@ public class InteractionPointer : MonoBehaviour
             bool cellsOccupied = CellsOccupied(buildingPlacementPreviewObject.transform.position, placementBuildingData.boundingDimensionX, placementBuildingData.boundingDimensionY);
 			
 			if (cellsOccupied)
-                buildingPlacementPreviewObject.GetComponentInChildren<MeshRenderer>().sharedMaterial = buildingPlacementInvalidMat;
-            else 
-                buildingPlacementPreviewObject.GetComponentInChildren<MeshRenderer>().sharedMaterial = buildingPlacementCachedMat;
+            {
+                MeshRenderer meshRenderer = buildingPlacementPreviewObject.GetComponentInChildren<MeshRenderer>();
+				if (meshRenderer)
+					meshRenderer.sharedMaterial = buildingPlacementInvalidMat;
+				else
+					foreach(SkinnedMeshRenderer skinnedMeshRenderer in buildingPlacementPreviewObject.GetComponents<SkinnedMeshRenderer>())
+                        skinnedMeshRenderer.sharedMaterial = buildingPlacementInvalidMat;
+			}
+			else
+			{
+                MeshRenderer meshRenderer = buildingPlacementPreviewObject.GetComponentInChildren<MeshRenderer>();
+                if (meshRenderer)
+                    meshRenderer.sharedMaterial = buildingPlacementCachedMat;
+                else
+                    foreach (SkinnedMeshRenderer skinnedMeshRenderer in buildingPlacementPreviewObject.GetComponents<SkinnedMeshRenderer>())
+                        skinnedMeshRenderer.sharedMaterial = buildingPlacementCachedMat;
+			}
 
-            DrawQuadraticBezierCurve(pointerLineRenderer, pointerStart, destinationReticleTransform.position);
+			DrawQuadraticBezierCurve(pointerLineRenderer, pointerStart, destinationReticleTransform.position);
 			if (pointerLineRenderer.enabled == false)
 				pointerLineRenderer.enabled = true;
 		}
@@ -1175,7 +1189,15 @@ public class InteractionPointer : MonoBehaviour
             isInBuildingPlacementMode = true;
 			buildingPlacementPreviewObject = Instantiate(placementBuildingData.worldPreviewPrefab, destinationReticleTransform);
             buildingPlacementPreviewObject.transform.Rotate(0, 0, lastBuildingRotation);
-            buildingPlacementCachedMat = buildingPlacementPreviewObject.GetComponentInChildren<MeshRenderer>().sharedMaterial;
+            MeshRenderer meshRenderer = buildingPlacementPreviewObject.GetComponentInChildren<MeshRenderer>();
+            if (meshRenderer)
+                buildingPlacementCachedMat = meshRenderer.sharedMaterial;
+            else
+			{
+                SkinnedMeshRenderer skinnedMeshRenderer = buildingPlacementPreviewObject.GetComponentInChildren<SkinnedMeshRenderer>();
+				if (skinnedMeshRenderer)
+                    buildingPlacementCachedMat = skinnedMeshRenderer.sharedMaterial;
+			}    
         }
 
 		buildingPlacementPreviewObject.transform.localPosition = Vector3.zero;

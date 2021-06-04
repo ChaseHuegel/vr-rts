@@ -131,12 +131,9 @@ public class Unit : Actor, IFactioned
     public virtual void OnDetachedFromHand(Hand hand)
     {
         isHeld = false;
-        wasThrownOrDropped = true;
-
-        // ! Unfreeze calls ResetAI() if no problems arise, remove.
-        //ResetAI();
-        
-        Unfreeze();
+        wasThrownOrDropped = true;        
+        // Unfreeze();
+        detachFromHandTime = Time.time;
     }
 
     public virtual void OnHandHoverBegin(Hand hand)
@@ -167,6 +164,7 @@ public class Unit : Actor, IFactioned
                 transform.rotation = Quaternion.identity;
                 wasThrownOrDropped = false;
 
+                Unfreeze();                
                 // Debug.Log(string.Format("Magnitude: {0} Damage: {1} Health: {2}", collision.relativeVelocity.magnitude,
                 //             damage, AttributeHandler.GetAttributePercent(Attributes.HEALTH).ToString()));
             }

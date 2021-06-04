@@ -92,7 +92,9 @@ public class Soldier : Unit
 
         if (IsMoving() )
             animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.MOVING);
-
+        else if (IsIdle())
+            animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.IDLE);
+            
         // if (TaskChanged())
         // {
         //     ChangeEquippedItems();
@@ -125,6 +127,11 @@ public class Soldier : Unit
             audioSource.PlayOneShot(GameMaster.GetAudio("unit_death").GetClip(), 0.5f);
             Destroy(this.gameObject, GameMaster.Instance.unitCorpseDecayTime);
         }
+    }
+
+    public override void OnCollisionEnter(Collision collision)
+    {
+        base.OnCollisionEnter(collision);
     }
 
     // This is is used to reenable the character after they have been
