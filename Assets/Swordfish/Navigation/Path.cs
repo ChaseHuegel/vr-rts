@@ -66,35 +66,35 @@ public class Path
             //  Not there yet! Go through all neighbors of the current cell..
             foreach(Cell neighbor in current.neighbors())
             {
-                if (neighbor != end && neighbor.canPathThru == false)
+                if (neighbor != end)// && neighbor.canPathThru == false)
                 {
                     //-------------------------------------------------------
                     // Check diagonals
 
-                    if (neighbor == current.neighborNW())
-                    {
-                        if (!current.neighbor(Direction.WEST).passable &&
-                            !current.neighbor(Direction.NORTH).passable)
-                            continue;
-                    }
-                    else if (neighbor == current.neighborNE())
-                    {
-                        if (!current.neighbor(Direction.EAST).passable &&
-                            !current.neighbor(Direction.NORTH).passable)
-                            continue;
-                    }
-                    else if (neighbor == current.neighborSE())
-                    {
-                        if (!current.neighbor(Direction.EAST).passable &&
-                            !current.neighbor(Direction.SOUTH).passable)
-                            continue;
-                    }
-                    else if (neighbor == current.neighborSW())
-                    {
-                        if (!current.neighbor(Direction.WEST).passable &&
-                            !current.neighbor(Direction.SOUTH).passable)
-                            continue;
-                    }
+                    // if (neighbor == current.neighborNW())
+                    // {
+                    //     if (!current.neighbor(Direction.WEST).passable &&
+                    //         !current.neighbor(Direction.NORTH).passable)
+                    //         continue;
+                    // }
+                    // else if (neighbor == current.neighborNE())
+                    // {
+                    //     if (!current.neighbor(Direction.EAST).passable &&
+                    //         !current.neighbor(Direction.NORTH).passable)
+                    //         continue;
+                    // }
+                    // else if (neighbor == current.neighborSE())
+                    // {
+                    //     if (!current.neighbor(Direction.EAST).passable &&
+                    //         !current.neighbor(Direction.SOUTH).passable)
+                    //         continue;
+                    // }
+                    // else if (neighbor == current.neighborSW())
+                    // {
+                    //     if (!current.neighbor(Direction.WEST).passable &&
+                    //         !current.neighbor(Direction.SOUTH).passable)
+                    //         continue;
+                    // }
 
                     //  Ignore this neighbor if its solid
                     if (!neighbor.passable)

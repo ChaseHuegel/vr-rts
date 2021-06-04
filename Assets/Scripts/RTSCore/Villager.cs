@@ -35,6 +35,22 @@ public class Villager : Unit
     protected PathfindingGoal currentGoalFound;
     protected PathfindingGoal previousGoalFound;
 
+    public int x = 0;
+    public int y = 0;
+
+    [InspectorButton("Go")]
+    public bool Goto;
+
+    public void Go()
+    {
+        GoalGotoLocation go = goals.Get<GoalGotoLocation>();
+        go.active = true;
+        go.x = x;
+        go.y = y;
+        // GotoForced(x, y);
+    }
+
+
     public bool IsCargoFull() { return currentCargo >= rtsUnitTypeData.maxCargo; }
     public bool HasCargo() { return currentCargo > 0; }
 
@@ -52,17 +68,8 @@ public class Villager : Unit
         goals.Add<GoalGatherWood>();
         goals.Add<GoalGatherStone>();
         goals.Add<GoalGatherGold>();
-
-        // goals.Add<GoalBuildRepair>();
-        // goals.Add<GoalGatherResource>().type = ResourceGatheringType.Grain;
-        // goals.Add<GoalGatherResource>().type = ResourceGatheringType.Berries;
-        // goals.Add<GoalHuntFauna>();
-        // goals.Add<GoalGatherResource>().type = ResourceGatheringType.Meat;
-        // goals.Add<GoalGatherResource>().type = ResourceGatheringType.Fish;
-        // goals.Add<GoalGatherResource>().type = ResourceGatheringType.Wood;
-        // goals.Add<GoalGatherResource>().type = ResourceGatheringType.Stone;
-        // goals.Add<GoalGatherResource>().type = ResourceGatheringType.Gold;
-
+        goals.Add<GoalGotoLocation>();
+        
         SetUnitTask(rtsUnitType);
 
         if(faction.IsSameFaction(playerManager.factionId))
@@ -333,6 +340,14 @@ public class Villager : Unit
             currentGoalFound = e.goal;
             return;
         }
+        else if (e.goal is GoalGotoLocation)
+        {
+            GoalGotoLocation g = (GoalGotoLocation)e.goal;
+
+            Debug.Log(e.goal.ToString() + " " + g.x + " " + g.y);
+            currentGoalFound = e.goal;
+            return;
+        }
 
         //  default cancel the goal so that another can take priority
         ResetGoal();
@@ -364,6 +379,12 @@ public class Villager : Unit
         {
             return;
         }
+        else if (e.goal is GoalGotoLocation)
+        {
+            // ? Would this work instead?
+            //e.goal.active = false;
+            goals.Get<GoalGotoLocation>().active = false;
+        }
 
         //  default cancel the interaction
         ResetGoal();
@@ -381,9 +402,9 @@ public class Villager : Unit
 
         //  Transport type always matches what our current resource is
         if (transportGoal != null) transportGoal.type = currentResource;
-
+        
         GotoNearestGoalWithPriority();
-
+        
         switch (state)
         {
             case UnitState.ROAMING:

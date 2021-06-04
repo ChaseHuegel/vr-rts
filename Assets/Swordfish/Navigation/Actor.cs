@@ -286,7 +286,7 @@ public class Actor : Body
     public void GotoForced(Vector3 vec, bool ignoreActors = true) { Goto((int)vec.x, (int)vec.z, ignoreActors); }
     public void GotoForced(int x, int y, bool ignoreActors = true)
     {
-        if (!isPathLocked && DistanceTo(x, y) > maxGoalInteractRange)
+        //if (!isPathLocked && DistanceTo(x, y) > maxGoalInteractRange)
             PathManager.RequestPath(this, x, y, ignoreActors);
     }
 

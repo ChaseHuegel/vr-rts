@@ -14,18 +14,7 @@ public enum UnitState
 }
 
 public class Unit : Actor, IFactioned
-{
-    public int x = 0;
-    public int y = 0;
-
-    [InspectorButton("Go")]
-    public bool Goto;
-
-    public void Go()
-    {
-        GotoForced(x, y);
-    }
-
+{    
     [SerializeField]
     protected Faction faction;
     public Faction GetFaction() { return faction; }
