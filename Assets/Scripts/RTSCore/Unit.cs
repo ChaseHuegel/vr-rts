@@ -15,10 +15,21 @@ public enum UnitState
 
 public class Unit : Actor, IFactioned
 {
+    public int x = 0;
+    public int y = 0;
+
+    [InspectorButton("Go")]
+    public bool Goto;
+
+    public void Go()
+    {
+        GotoForced(x, y);
+    }
+
     [SerializeField]
     protected Faction faction;
     public Faction GetFaction() { return faction; }
-    public void UpdateFaction() { faction = GameMaster.Factions.Find(x => x.Id == factionId); }
+    public void UpdateFaction() { faction = GameMaster.Factions?.Find(x => x.Id == factionId); }
 
     [Header("Unit")]
     public RTSUnitType rtsUnitType;
@@ -242,6 +253,9 @@ public class Unit : Actor, IFactioned
     }
     void OnValidate()
     {
+        if (!GameMaster.Instance)
+            return;
+
         UpdateFaction();
         SetSkin();
     }

@@ -8,7 +8,7 @@ using Valve.VR.InteractionSystem;
 
 [RequireComponent(typeof(Damageable))]
 public class Villager : Unit
-{
+{   
     [Header("Villager")]
     protected ResourceGatheringType currentResource;
     protected ResourceGatheringType previousResource;

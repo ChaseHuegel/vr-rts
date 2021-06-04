@@ -26,7 +26,7 @@ public class Structure : Obstacle, IFactioned
     private PlayerManager playerManager;
     public Faction GetFaction() { return faction; }
 
-    public void UpdateFaction() { faction = GameMaster.Factions.Find(x => x.Id == factionId); }
+    public void UpdateFaction() { faction = GameMaster.Factions?.Find(x => x.Id == factionId); }
 
     public bool NeedsRepairs() { return damageable.GetHealthPercent() < 1f; }
 
@@ -193,6 +193,9 @@ public class Structure : Obstacle, IFactioned
     }
     void OnValidate()
     {
+        if (!GameMaster.Instance)
+            return;
+
         UpdateFaction();
         SetSkin();
     }

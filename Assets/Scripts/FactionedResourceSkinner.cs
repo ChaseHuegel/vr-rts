@@ -27,7 +27,7 @@ public class FactionedResourceSkinner : MonoBehaviour
 
     private void SetSkin()
     {
-        Faction faction = GameMaster.Factions.Find(x => x.Id == factionId); ;
+        Faction faction = GameMaster.Factions?.Find(x => x.Id == factionId); ;
 
         if (!faction) return;
 
