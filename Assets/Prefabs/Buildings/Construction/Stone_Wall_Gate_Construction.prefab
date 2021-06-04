@@ -688,6 +688,7 @@ GameObject:
   - component: {fileID: 3508794545436289094}
   - component: {fileID: 3508794545436289093}
   - component: {fileID: 2631679092763983174}
+  - component: {fileID: 1580822981561466422}
   m_Layer: 10
   m_Name: Stone_Wall_Gate_Construction
   m_TagString: Untagged
@@ -703,14 +704,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2631679092763983175}
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -12.283058, y: -0.0009999275, z: -11.739019}
-  m_LocalScale: {x: 0.09, y: 0.09, z: 0.09}
+  m_LocalPosition: {x: -12.3125, y: -0.0009999275, z: -11.6875}
+  m_LocalScale: {x: 0.065, y: 0.065, z: 0.065}
   m_Children:
   - {fileID: 1327467630437613756}
   - {fileID: 5074458325170820244}
   - {fileID: 8669789824043455256}
-  - {fileID: 1243003842719643221}
-  - {fileID: 3935759021633704127}
   - {fileID: 8771636004187526603}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -936,10 +935,11 @@ MonoBehaviour:
   boundingDimensions: {x: 3, y: 3}
   boundingOrigin: {x: 0, y: 0}
   gridPosition:
-    x: 0
-    y: 0
+    x: 61
+    y: 66
   factionId: 0
   bakeOnStart: 1
+  allowPathThru: 0
   DestroyOnBuilt: 1
   ClearExistingWalls: 1
   buildingData: {fileID: 11400000, guid: 18b0f2fbce743bc40b00edc6681b3bcc, type: 2}
@@ -949,64 +949,19 @@ MonoBehaviour:
   - {fileID: 8669789824043945784}
   - {fileID: 5074458325170718900}
   - {fileID: 1327467630438112412}
---- !u!1 &3691572806475063943
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1243003842719643221}
-  - component: {fileID: 4369333439871986451}
-  - component: {fileID: 4426117379990379926}
-  m_Layer: 10
-  m_Name: Knock
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1243003842719643221
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3691572806475063943}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 4.02}
-  m_LocalScale: {x: 0.2996666, y: 0.29966664, z: 0.29966664}
-  m_Children: []
-  m_Father: {fileID: 2631679092763877735}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &4369333439871986451
+--- !u!65 &1580822981561466422
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3691572806475063943}
+  m_GameObject: {fileID: 2631679092763983175}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 8.85496, y: 8.180282, z: 22.939056}
-  m_Center: {x: 0.017662466, y: 0.13710147, z: -6.8104324}
---- !u!135 &4426117379990379926
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3691572806475063943}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 4.2276893
-  m_Center: {x: -0.031863187, y: -6.586418e-14, z: 3.950723}
+  m_Size: {x: 1.9300168, y: 5.9909477, z: 3.1987412}
+  m_Center: {x: -0.025492448, y: -0.12266224, z: 1.5869893}
 --- !u!1 &5074458325170718900
 GameObject:
   m_ObjectHideFlags: 0
@@ -1163,77 +1118,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!1 &7623899439258874541
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3935759021633704127}
-  - component: {fileID: 7940578599456246026}
-  - component: {fileID: 2644738996702216138}
-  - component: {fileID: 3542191314086578652}
-  m_Layer: 5
-  m_Name: NoPan
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &3935759021633704127
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7623899439258874541}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 5.4}
-  m_LocalScale: {x: 0.90356, y: 0.9035601, z: 0.9035601}
-  m_Children: []
-  m_Father: {fileID: 2631679092763877735}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!135 &7940578599456246026
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7623899439258874541}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 3.73
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &2644738996702216138
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7623899439258874541}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f5a1be5da1c87864582d778e52de4e9b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  onlyIgnoreHand: {fileID: 0}
---- !u!114 &3542191314086578652
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7623899439258874541}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eddc86840f043bc4498c935173e22886, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &8669789824043945784
 GameObject:
   m_ObjectHideFlags: 0
@@ -1420,7 +1304,7 @@ Transform:
   m_Children:
   - {fileID: 8849118730388379078}
   m_Father: {fileID: 2631679092763877735}
-  m_RootOrder: 5
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0.012, y: -630.021, z: 90}
 --- !u!114 &9182802046681332731
 MonoBehaviour:

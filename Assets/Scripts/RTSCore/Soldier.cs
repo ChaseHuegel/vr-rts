@@ -94,7 +94,7 @@ public class Soldier : Unit
             animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.MOVING);
         else if (IsIdle())
             animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.IDLE);
-            
+
         // if (TaskChanged())
         // {
         //     ChangeEquippedItems();
