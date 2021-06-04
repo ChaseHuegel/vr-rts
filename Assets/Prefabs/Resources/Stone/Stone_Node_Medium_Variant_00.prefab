@@ -54,11 +54,13 @@ MonoBehaviour:
   gridPosition:
     x: 61
     y: 158
+  factionId: 0
   bakeOnStart: 1
+  allowPathThru: 0
   type: 4
   amount: 1000
   maxInteractors: 0
-  interactors: 0
+  interactors: []
 --- !u!135 &7630421984165033620
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -67,7 +69,7 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8605518433616612353}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 1.48

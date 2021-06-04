@@ -206,7 +206,7 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4113687766330663205}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   m_Radius: 0.24735773
   m_Height: 0.5316302
@@ -229,11 +229,13 @@ MonoBehaviour:
   gridPosition:
     x: 0
     y: 0
+  factionId: 0
   bakeOnStart: 1
+  allowPathThru: 0
   type: 2
   amount: 1000
   maxInteractors: 0
-  interactors: 0
+  interactors: []
 --- !u!114 &-2932894190710498476
 MonoBehaviour:
   m_ObjectHideFlags: 0

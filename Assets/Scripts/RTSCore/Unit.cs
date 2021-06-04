@@ -48,6 +48,7 @@ public class Unit : Actor, IFactioned
     public AudioSource audioSource;
     protected Animator animator;
     protected PlayerManager playerManager;
+    protected float detachFromHandTime;
 
     public void Awake()
     {

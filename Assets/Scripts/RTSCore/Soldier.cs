@@ -127,6 +127,59 @@ public class Soldier : Unit
         }
     }
 
+    // This is is used to reenable the character after they have been
+    // released from the hand AND after they have landed somewhere.
+    void OnTriggerEnter(Collider collider)
+    {
+        if (!wasThrownOrDropped)
+            return;
+
+        // TODO: could just switch this to a cell lookup where
+        // TODO: they land.
+        // Don't wait for a collision indefinitely.
+        if (Time.time - detachFromHandTime >= 2.0f)
+        {
+            wasThrownOrDropped = false;
+            return;
+        }
+
+        Unfreeze();
+
+        Unit unit = collider.gameObject.GetComponent<Unit>();
+        if (unit)
+        {
+            if (!IsSameFaction(unit))
+                TrySetGoal(unit.GetCellAtGrid());
+
+            return;
+        }
+
+        // Soldiers should kill fauna they are tasked to target.
+        Fauna fauna = collider.gameObject.GetComponent<Fauna>();
+        if (fauna)
+        {
+            return;
+        }
+
+        Structure building = collider.gameObject.GetComponentInParent<Structure>();
+        if (building)
+        {
+            if (!IsSameFaction(building.factionId))
+                TrySetGoal(building.GetCellAtGrid());
+
+            return;
+        }
+
+        Constructible constructible = collider.gameObject.GetComponentInParent<Constructible>();
+        if (constructible)
+        {
+            if (!IsSameFaction(constructible.factionId))
+                TrySetGoal(constructible.GetCellAtGrid());
+            
+            return;
+        }
+    }
+
      // Used by animator to play sound effects
     public void AnimatorPlayAudio(string clipName)
     {

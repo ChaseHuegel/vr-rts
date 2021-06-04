@@ -31,8 +31,7 @@ public class Villager : Unit
     public GameObject hunterHandToolDisplayObject;
     protected GameObject currentCargoDisplayObject;
     protected GameObject currentHandToolDisplayObject;
-    public VillagerHoverMenu villagerHoverMenu;
-    protected float detachFromHandTime;
+    public VillagerHoverMenu villagerHoverMenu;    
     protected PathfindingGoal currentGoalFound;
     protected PathfindingGoal previousGoalFound;
 
@@ -67,9 +66,7 @@ public class Villager : Unit
         SetUnitTask(rtsUnitType);
 
         if(faction.IsSameFaction(playerManager.factionId))
-            playerManager.AddToPopulation((Unit)this);
-
-        
+            playerManager.AddToPopulation((Unit)this);        
     }
 
     public void HookIntoEvents()
@@ -134,17 +131,15 @@ public class Villager : Unit
 
     // This is is used to reenable the character after they have been
     // released from the hand AND after they have landed somewhere.
-    public override void OnCollisionEnter(Collision collision)
+    void OnTriggerEnter(Collider collider)
     {
-        base.OnCollisionEnter(collision);
-
         if (!wasThrownOrDropped)
             return;
 
         // TODO: could just switch this to a cell lookup where
         // TODO: they land.
         // Don't wait for a collision indefinitely.
-        if (Time.time - detachFromHandTime >= 3.0f)
+        if (Time.time - detachFromHandTime >= 2.0f)
         {
             wasThrownOrDropped = false;
             return;
@@ -152,7 +147,7 @@ public class Villager : Unit
 
         Unfreeze();
 
-        Resource node = collision.gameObject.GetComponent<Resource>();
+        Resource node = collider.gameObject.GetComponent<Resource>();
         if (node)
         {
             switch (node.type)
@@ -193,7 +188,7 @@ public class Villager : Unit
             return;
         }
 
-        Fauna fauna = collision.gameObject.GetComponent<Fauna>();
+        Fauna fauna = collider.gameObject.GetComponent<Fauna>();
         if (fauna)
         {
             SetUnitTask(RTSUnitType.Hunter);
@@ -201,13 +196,92 @@ public class Villager : Unit
             return;
         }
 
-        Structure building = collision.gameObject.GetComponentInParent<Structure>();
+        Structure building = collider.gameObject.GetComponentInParent<Structure>();
         if (building)
         {
             SetUnitTask(RTSUnitType.Builder);
             ResetAI();
             return;
         }
+    }
+
+
+    // This is is used to reenable the character after they have been
+    // released from the hand AND after they have landed somewhere.
+    public override void OnCollisionEnter(Collision collision)
+    {
+        base.OnCollisionEnter(collision);
+
+        // if (!wasThrownOrDropped)
+        //     return;
+
+        // // TODO: could just switch this to a cell lookup where
+        // // TODO: they land.
+        // // Don't wait for a collision indefinitely.
+        // if (Time.time - detachFromHandTime >= 3.0f)
+        // {
+        //     wasThrownOrDropped = false;
+        //     return;
+        // }
+
+        // Unfreeze();
+
+        // Resource node = collision.gameObject.GetComponent<Resource>();
+        // if (node)
+        // {
+        //     switch (node.type)
+        //     {
+        //         case ResourceGatheringType.Gold:
+        //             SetUnitTask(RTSUnitType.GoldMiner);
+        //             break;
+
+        //         case ResourceGatheringType.Grain:
+        //             SetUnitTask(RTSUnitType.Farmer);
+        //             break;
+
+        //         case ResourceGatheringType.Berries:
+        //             SetUnitTask(RTSUnitType.Forager);
+        //             break;
+
+        //         case ResourceGatheringType.Meat:
+        //             SetUnitTask(RTSUnitType.Hunter);
+        //             break;
+
+        //         case ResourceGatheringType.Wood:
+        //             SetUnitTask(RTSUnitType.Lumberjack);
+        //             break;
+
+        //         case ResourceGatheringType.Stone:
+        //             SetUnitTask(RTSUnitType.StoneMiner);
+        //             break;
+
+        //         case ResourceGatheringType.Fish:
+        //             SetUnitTask(RTSUnitType.Fisherman);
+        //             break;
+
+        //         default:
+        //             break;
+        //     }
+
+        //     ResetAI();
+        //     return;
+        // }
+
+        // Fauna fauna = collision.gameObject.GetComponent<Fauna>();
+        // if (fauna)
+        // {
+        //     SetUnitTask(RTSUnitType.Hunter);
+        //     ResetAI();
+        //     return;
+        // }
+
+        // Structure building = collision.gameObject.GetComponentInParent<Structure>();
+        // if (building)
+        // {
+        //     SetUnitTask(RTSUnitType.Builder);
+        //     ResetAI();
+        //     return;
+        // }
     }
 
     public void OnGoalChange(object sender, PathfindingGoal.GoalChangeEvent e)

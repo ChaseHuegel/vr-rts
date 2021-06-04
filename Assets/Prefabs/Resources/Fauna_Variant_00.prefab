@@ -849,6 +849,7 @@ GameObject:
   - component: {fileID: 8250106713922096492}
   - component: {fileID: 3960956299071650860}
   - component: {fileID: 67447672098668577}
+  - component: {fileID: -3979950784523814000}
   m_Layer: 11
   m_Name: Fauna_Variant_00
   m_TagString: Untagged
@@ -891,6 +892,7 @@ MonoBehaviour:
     y: 0
   factionId: 0
   bakeOnStart: 1
+  allowPathThru: 0
   type: 64
   amount: 200
   maxInteractors: 0
@@ -971,6 +973,19 @@ MonoBehaviour:
   highlightMaterial: {fileID: 0}
   highlightOnHover: 1
   hideHighlight: []
+--- !u!135 &-3979950784523814000
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7256161887071947675}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.058902025
+  m_Center: {x: -0.0004889965, y: 0.06, z: 0}
 --- !u!1 &7636095663992753484
 GameObject:
   m_ObjectHideFlags: 0
