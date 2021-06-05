@@ -23,6 +23,7 @@ public class BuildingSpawnQueue : MonoBehaviour
     public UnityEngine.UI.Image queueProgressImage;
     public UnityEngine.UI.Image[] QueueSlotImage;
     public List<RTSUnitType> unitQueueButtons;
+    public GameObject resourceCostPrefab;
     private Structure structure;
     private Damageable damageable;
     public AudioClip onButtonDownAudio;
@@ -235,7 +236,6 @@ public class BuildingSpawnQueue : MonoBehaviour
             GameObject buildingHoverButton = new GameObject("BuildingHoverButton", typeof(QueueUnitButton));
             buildingHoverButton.transform.parent = this.transform.GetChild(0).transform;
             buildingHoverButton.transform.localPosition = startPosition;
-            //buildingHoverButton.transform.Rotate(0, -90, 0);
             buildingHoverButton.name = string.Format("Queue_{0}_Button",unitType.ToString());
             buildingHoverButton.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
 
@@ -249,15 +249,25 @@ public class BuildingSpawnQueue : MonoBehaviour
             buttonBase.transform.parent = buildingHoverButton.transform;
             buttonBase.transform.localScale = new Vector3(0.309937507f,0.312250197f,0.0399999991f);
             buttonBase.transform.localPosition = new Vector3(0.0f, 0.0f, -0.016f);
-            //buttonBase.transform.Rotate(0, -90, 0);
             buttonBase.transform.GetComponent<MeshRenderer>().sharedMaterial = buttonBaseMaterial;
+
+            // Instantiate the resource cost gameobject
+            GameObject resourceCost = Instantiate(resourceCostPrefab, Vector3.zero, Quaternion.identity, buildingHoverButton.transform);
+            resourceCost.transform.localPosition = new Vector3(0.0f, 0.0f, -0.014f);
+            resourceCost.transform.localRotation = Quaternion.identity;
+
+            // Popluate the resource cost prefab text objects
+            BuildMenuResouceCost cost = resourceCost.GetComponent<BuildMenuResouceCost>();
+            cost.woodText.text = typeData.woodCost.ToString();
+            cost.goldText.text = typeData.goldCost.ToString();
+            cost.grainText.text = typeData.foodCost.ToString();
+            cost.stoneText.text = typeData.stoneCost.ToString();
 
             // Face (child of BuildingHoverButton)
             GameObject face = new GameObject("Face", typeof(Interactable), typeof(HoverButton), typeof(AudioSource));
             face.transform.parent = buildingHoverButton.transform;
             face.transform.localPosition = Vector3.zero;
             face.transform.localScale = new Vector3(0.259453088f,0.259453088f,0.0487500019f);
-            //face.transform.Rotate(0, -90, 0);
             HoverButton hoverButton = face.GetComponent<HoverButton>();
             hoverButton.localMoveDistance = new Vector3(0, 0, -0.3f);
             face.GetComponent<Interactable>().highlightOnHover = false;
@@ -268,7 +278,6 @@ public class BuildingSpawnQueue : MonoBehaviour
             buttonLock.transform.localPosition = new Vector3(0.0f, 0.0f, 0.0254f);
             buttonLock.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
             buttonLock.SetActive(false);
-            //buttonLock.transform.Rotate(0, -90, 0);
 
             // MovingPart (child of Face)
             GameObject buttonMovingPart = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -277,11 +286,9 @@ public class BuildingSpawnQueue : MonoBehaviour
             buttonMovingPart.transform.SetParent(face.transform);
             buttonMovingPart.transform.localScale = new Vector3(1, 1, 1);
             buttonMovingPart.transform.localPosition = Vector3.zero;
-            //buttonMovingPart.transform.Rotate(0, -90, 0);
             buttonMovingPart.transform.GetComponent<MeshRenderer>().sharedMaterial = typeData.worldButtonMaterial;
 
             hoverButton.movingPart = buttonMovingPart.transform;
-            //buildingHoverButton.transform.Rotate(0, 0, 0);
             buildingHoverButton.transform.localRotation = Quaternion.identity;
             if (Time.time <= 0)
                 Destroy(buttonBase.GetComponent<BoxCollider>());
