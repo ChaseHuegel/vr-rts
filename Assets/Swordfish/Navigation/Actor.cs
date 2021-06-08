@@ -16,6 +16,7 @@ public class Actor : Body
     public Damageable AttributeHandler { get { return damageable; } }
 
     [Header("Actor")]
+    public bool doMicroSearching = false;
     public float movementSpeed = 1f;
 
     [SerializeField] private byte goalSearchDistance = 20;
@@ -159,17 +160,18 @@ public class Actor : Body
         discoveredGoals.Add(goal, cell);
     }
 
-    public Cell FindNearestGoalWithPriority() { return FindNearestGoal(true); }
-    public Cell FindNearestGoal(bool usePriority = false)
+    public Cell FindNearestGoalWithPriority(bool useBehavior = true) { return FindNearestGoal(true, useBehavior); }
+    public Cell FindNearestGoal(bool usePriority = false, bool useBehavior = true)
     {
         Cell result = null;
         Cell current = null;
 
         int currentDistance = 0;
         int nearestDistance = int.MaxValue;
+        int searchDistance = useBehavior ? currentGoalSearchDistance : goalSearchGrowth;
 
         //  If using priority, try checking our memorized goals first
-        if (usePriority && discoveredGoals.Count > 0)
+        if (useBehavior && usePriority && discoveredGoals.Count > 0)
         {
             foreach (PathfindingGoal goal in GetGoals())
             {
@@ -180,7 +182,7 @@ public class Actor : Body
                     && DistanceTo(result) < goalSearchDistance
                     && PathfindingGoal.TryGoal(this, result, goal))
                     {
-                        currentGoalSearchDistance = goalSearchGrowth;
+                        searchDistance = goalSearchGrowth;
                         return result;
                     }
             }
@@ -193,7 +195,7 @@ public class Actor : Body
             //  TODO: There is a cleaner way to do this
 
             //  Radiate out layer by layer around the actor without searching previous layers
-            for (int radius = 1; radius < currentGoalSearchDistance; radius++)
+            for (int radius = 1; radius < searchDistance; radius++)
             {
                 //  Search the top/bottom rows
                 for (int x = -radius; x < radius; x++)
@@ -204,7 +206,7 @@ public class Actor : Body
                     //  Return the first match if goals are being tested in order of priority
                     if (usePriority && result != null)
                     {
-                        currentGoalSearchDistance = goalSearchGrowth;  //  Reset search distance
+                        searchDistance = goalSearchGrowth;  //  Reset search distance
                         return result;
                     }
                 }
@@ -218,7 +220,7 @@ public class Actor : Body
                     //  Return the first match if goals are being tested in order of priority
                     if (usePriority && result != null)
                     {
-                        currentGoalSearchDistance = goalSearchGrowth;  //  Reset search distance
+                        searchDistance = goalSearchGrowth;  //  Reset search distance
                         return result;
                     }
                 }
@@ -226,26 +228,27 @@ public class Actor : Body
         }
 
         //  No matching goal found
-        if (result == null)
+        if (useBehavior && result == null)
             WipeAI();
 
         //  Expand the search
-        currentGoalSearchDistance = (byte)Mathf.Clamp(currentGoalSearchDistance + goalSearchGrowth, 1, goalSearchDistance);
+        if (useBehavior)
+            currentGoalSearchDistance = (byte)Mathf.Clamp(searchDistance + goalSearchGrowth, 1, goalSearchDistance);
 
         return result;
     }
 
-    public bool GotoNearestGoalWithPriority() { return GotoNearestGoal(true); }
-    public bool GotoNearestGoal(bool usePriority = false)
+    public bool GotoNearestGoalWithPriority(bool useBehavior = true) { return GotoNearestGoal(true, useBehavior); }
+    public bool GotoNearestGoal(bool usePriority = false, bool useBehavior = true)
     {
         if (isPathLocked) return false;
 
         if (!HasValidTarget())
-            currentGoalTarget = FindNearestGoal(usePriority);
+            currentGoalTarget = FindNearestGoal(usePriority, useBehavior);
 
         if (HasValidTarget())
         {
-            Goto(currentGoalTarget.x, currentGoalTarget.y);
+            GotoForced(currentGoalTarget.x, currentGoalTarget.y);
             return true;
         }
 
@@ -389,6 +392,10 @@ public class Actor : Body
             //  We can pass thru actors if the path ahead is clear and we are going beyond the next spot
             bool canPassThruActors = currentPath.Count > 2 ? !World.at(currentPath[1].x, currentPath[1].y).IsBlocked() : false;
 
+            //  Try performing a micro goal search at this point before moving forward
+            if (doMicroSearching)
+                GotoNearestGoalWithPriority(false);
+
             //  Attempt to move to the next point
             if (CanSetPosition(currentPath[0].x, currentPath[0].y, canPassThruActors) )
             {
@@ -405,7 +412,6 @@ public class Actor : Body
                     currentPath.RemoveAt(0);
                 }
             }
-
             //  Unable to reach the next point, handle pathing logic on tick
             else if (pathTimer == 0)
             {
