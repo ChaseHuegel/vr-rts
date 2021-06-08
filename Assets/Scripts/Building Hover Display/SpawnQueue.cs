@@ -10,39 +10,34 @@ using UnityEngine.UI;
 
 public class SpawnQueue : MonoBehaviour
 {
-    public AudioClip onButtonDownAudio;
-    public AudioClip onButtonUpAudio;
-
     [Header("Unit Spawn Queue Settings")]
     public Transform unitSpawnPoint;
     public Transform unitRallyWaypoint;
-
-    // Meant to be used so units pick a random spot within the radius to
-    // go to so they don't fight over a single point.
     public float unitRallyWaypointRadius;
 
+    [Header("Generated Settings")]
+    public AudioClip onButtonDownAudio;
+    public AudioClip onButtonUpAudio;
     public Image[] queueSlotImages;
-
     public TMPro.TMP_Text progressText;
     public Image progressImage;
-
-    protected float timeElapsed = 0.0f;
-    protected LinkedList<UnitData> unitSpawnQueue = new LinkedList<UnitData>();
-    private Structure structure;
-    private Damageable damageable;
-    protected AudioSource audioSource;
-    private RTSUnitType lastUnitQueued;
-    private PlayerManager playerManager;
-
-    // Holds the next position of the next queue slot, position used as
-    // start position of queue progress bar.
-    private Vector3 progressPosition;
-    private Vector3 cancelButtonPosition;
     public GameObject buttonsParent;
     public GameObject menuParentObject;
     public HoverButton cancelButton;
-    private int currentButtonRow = 0;
-    private int currentButtonColumn = 0;
+
+    //=========================================================================
+    protected float timeElapsed = 0.0f;
+    protected LinkedList<UnitData> unitSpawnQueue = new LinkedList<UnitData>();
+
+    //=========================================================================
+    // Cached references
+    private Structure structure;
+    private Damageable damageable;
+    protected AudioSource audioSource;    
+    private PlayerManager playerManager;
+
+    //=========================================================================
+    private RTSUnitType lastUnitQueued;
 
     void Start()
     {
@@ -74,24 +69,12 @@ public class SpawnQueue : MonoBehaviour
 
         HookIntoEvents();        
 
-        // Should be generated now
-        // if (!(queueProgressText = GetComponentInChildren<TMPro.TextMeshPro>(true)))
-        //     Debug.Log("queueProgressText object not found.", this);
-
-        // if (!(queueProgressImage = GetComponentInChildren<UnityEngine.UI.Image>(true)))
-        //     Debug.Log("queueProgressImage not found.", this);
-
         QueueUnitButton firstButton = GetComponentInChildren<QueueUnitButton>(true);
         if (firstButton)
             lastUnitQueued = firstButton.unitTypeToQueue;
     }
 
-    
-    
-    void Update()
-    {
-        UpdateUnitSpawnQueue();
-    }
+    void Update() { UpdateUnitSpawnQueue(); }
 
     public void OnButtonDown(Hand hand)
     {
@@ -99,21 +82,13 @@ public class SpawnQueue : MonoBehaviour
         
         QueueUnitButton queueUnitButton = hand.hoveringInteractable.GetComponentInParent<QueueUnitButton>();
         if (queueUnitButton)
-        {
             QueueUnit(queueUnitButton.unitTypeToQueue);
-        }
 
     }
 
-    public void OnButtonUp(Hand hand)
-    {
-        audioSource.PlayOneShot(onButtonUpAudio);       
-    }
+    public void OnButtonUp(Hand hand) { audioSource.PlayOneShot(onButtonUpAudio); }
 
-    public void OnCancelButtonDown(Hand hand)
-    {
-        DequeueUnit();
-    }
+    public void OnCancelButtonDown(Hand hand) { DequeueUnit(); }
 
     public bool QueueLastUnitQueued() { return QueueUnit(lastUnitQueued); }
 
@@ -135,7 +110,6 @@ public class SpawnQueue : MonoBehaviour
         unitSpawnQueue.AddLast(unitData);
 
         // Debug.Log("Queued " + unitData.unitType);
-
         return true;
     }
 
@@ -166,9 +140,7 @@ public class SpawnQueue : MonoBehaviour
             RefreshQueueImages();
         }
         else
-        {
             timeElapsed = 0.0f;
-        }
     }
 
     public void DequeueUnit()

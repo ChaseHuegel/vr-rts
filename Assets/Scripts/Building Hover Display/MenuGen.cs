@@ -44,22 +44,6 @@ public class MenuGen : MonoBehaviour
     private float queueSlotSize = 1.0f;
     private float spaceBetweenQueueSlots = 0.15f;
     private UnityEngine.UI.Image[] queueSlotImages;
-
-    // [Header("Unit Spawn Queue Settings")]
-    // public Transform unitSpawnPoint;
-    // public Transform unitRallyWaypoint;
-
-    // Meant to be used so units pick a random spot within the radius to
-    // go to so they don't fight over a single point.
-    // public float unitRallyWaypointRadius;
-
-    // protected float timeElapsed = 0.0f;
-    // protected LinkedList<UnitData> unitSpawnQueue = new LinkedList<UnitData>();
-    // private Structure structure;
-    // private Damageable damageable;
-    // protected AudioSource audioSource;
-    // private RTSUnitType lastUnitQueued;
-    // private PlayerManager playerManager;
     private Vector3 nextButtonPosition;
 
     // Holds the next position of the next queue slot, position used as
@@ -81,13 +65,6 @@ public class MenuGen : MonoBehaviour
         if (!(spawnQueue = gameObject.GetComponentInParent<SpawnQueue>()))
             Debug.Log("Missing SpawnQueue component in parent.", this);
     }
-
-    // [ExecuteInEditMode]
-    // public void GenerateButtonMenu(bool autoselect)
-    // {
-    //     IsCreatingUnitQueueMenu = false;
-    //     GenerateMenu(autoselect);
-    // }
 
     [ExecuteInEditMode]
     public void GenerateQueueMenu(bool autoselect)
@@ -343,8 +320,6 @@ public class MenuGen : MonoBehaviour
     {
         if (!menuParentObject)
         {
-            // Transform mParent = CreateMenuParent(this.transform);
-            // buttonsParent = CreateButtonsParent(mParent.transform);
             IsCreatingUnitQueueMenu = false;
             GenerateMenu(false);
         }
@@ -492,43 +467,7 @@ public class MenuGen : MonoBehaviour
             Destroy(buttonBase.GetComponent<BoxCollider>());
         else
             DestroyImmediate(buttonBase.GetComponent<BoxCollider>());
-    }
-
-
-    // private void HookIntoEvents()
-    // {
-    //     HoverButton[] hoverButtons = GetComponentsInChildren<HoverButton>(true);
-    //     if (hoverButtons.Length > 0)
-    //         foreach (HoverButton hButton in hoverButtons)
-    //         {
-    //             hButton.onButtonDown.AddListener(OnButtonDown);
-    //             hButton.onButtonUp.AddListener(OnButtonUp);
-    //         }
-
-    //     if (cancelButton)
-    //         cancelButton.onButtonDown.AddListener(OnCancelButtonDown);
-    // }
-
-    // private void CleanupEvents()
-    // {
-    //     HoverButton[] hoverButtons = GetComponentsInChildren<HoverButton>(true);
-    //     if (hoverButtons.Length > 0)
-    //         foreach (HoverButton hButton in hoverButtons)
-    //         {
-    //             hButton.onButtonDown.RemoveListener(OnButtonDown);
-    //             hButton.onButtonUp.RemoveListener(OnButtonUp);
-    //         }
-
-    //     if (cancelButton)
-    //         cancelButton.onButtonDown.RemoveListener(OnCancelButtonDown);
-    // }
-
-    // void OnDestroy()
-    // {
-    //     CleanupEvents();
-    // }
-
-   
+    }   
 
     [ExecuteInEditMode]
     private GameObject GenerateEmptyButton(Vector3 position, Transform parent)
@@ -595,154 +534,4 @@ public class MenuGen : MonoBehaviour
 
         return button;
     }
-
-    
-
-    // public void SetUnitRallyWaypoint(Vector3 position)
-    // {
-    //     unitRallyWaypoint.transform.position = position;
-    // }
-
-    // void Update()
-    // {
-    //     UpdateUnitSpawnQueue();
-    // }
-
-    // public void OnButtonDown(Hand hand)
-    // {
-    //     audioSource.PlayOneShot(onButtonDownAudio);
-
-    //     QueueUnitButton queueUnitButton = hand.hoveringInteractable.GetComponentInParent<QueueUnitButton>();
-    //     if (queueUnitButton)
-    //     {
-    //         QueueUnit(queueUnitButton.unitTypeToQueue);
-    //     }
-
-    // }
-
-    // public void OnButtonUp(Hand hand)
-    // {
-    //     audioSource.PlayOneShot(onButtonUpAudio);       
-    // }
-
-    // public void OnCancelButtonDown(Hand hand)
-    // {
-    //     DequeueUnit();
-    // }
-
-    // public bool QueueLastUnitQueued() { return QueueUnit(lastUnitQueued); }
-
-    // public bool QueueUnit(RTSUnitType unitTypeToQueue)
-    // {
-    //     // TODO: Reenable this later
-    //     // if (damageable.GetAttributePercent(Attributes.HEALTH) < 1.0f)
-    //     //     return;
-
-    //     if (unitSpawnQueue.Count >= structure.buildingData.maxUnitQueueSize)
-    //         return false;
-
-    //     if (structure.IsSameFaction(playerManager.factionId) &&
-    //         !playerManager.CanQueueUnit(unitTypeToQueue))
-    //         return false;
-
-    //     UnitData unitData = GameMaster.GetUnit(unitTypeToQueue);
-    //     playerManager.DeductUnitQueueCostFromStockpile(unitData);
-    //     unitSpawnQueue.AddLast(unitData);
-
-    //     // Debug.Log("Queued " + unitData.unitType);
-
-    //     return true;
-    // }
-
-    // private void UpdateUnitSpawnQueue()
-    // {
-    //     if (unitSpawnQueue.Count > 0)
-    //     {
-    //         timeElapsed += Time.deltaTime;
-    //         progressImage.fillAmount = (timeElapsed / unitSpawnQueue.First.Value.queueTime);
-    //         float progressPercent = UnityEngine.Mathf.Round(progressImage.fillAmount * 100);
-    //         progressText.text = progressPercent.ToString() + "%";
-
-    //         if (timeElapsed >= unitSpawnQueue.First.Value.queueTime)
-    //         {
-    //             SpawnUnit();
-    //             timeElapsed = 0.0f;
-    //             unitSpawnQueue.RemoveFirst();
-    //             progressImage.fillAmount = 0;
-    //             progressImage.enabled = false;
-    //             progressText.enabled = false;
-    //         }
-    //         else
-    //         {
-    //             progressImage.enabled = true;
-    //             progressText.enabled = true;
-    //         }
-
-    //         RefreshQueueImages();
-    //     }
-    //     else
-    //     {
-    //         timeElapsed = 0.0f;
-    //     }
-    // }
-
-    // public void DequeueUnit()
-    // {
-    //     if (unitSpawnQueue.Count <= 0)
-    //         return;
-
-    //     else if (unitSpawnQueue.Count == 1)
-    //     {
-    //         playerManager.RemoveFromQueueCount(unitSpawnQueue.Last.Value.populationCost);
-    //         unitSpawnQueue.RemoveLast();
-    //         progressImage.fillAmount = 0;
-    //         progressImage.enabled = false;
-    //         progressText.enabled = false;
-    //         RefreshQueueImages();
-    //     }
-    //     else
-    //     {
-    //         playerManager.RemoveFromQueueCount(unitSpawnQueue.Last.Value.populationCost);
-    //         unitSpawnQueue.RemoveLast();
-    //     }
-    // }
-
-    // private void SpawnUnit()
-    // {
-    //     if (unitSpawnQueue.First.Value.prefab)
-    //     {
-    //         GameObject unitGameObject = Instantiate(unitSpawnQueue.First.Value.prefab, unitSpawnPoint.transform.position, Quaternion.identity);
-    //         Unit unit = unitGameObject.GetComponent<Unit>();
-    //         unit.rtsUnitType = unitSpawnQueue.First.Value.unitType;
-    //         unit.factionId = structure.factionId;
-
-    //         // ! Dsabled, none of this works for rally points anymore.
-    //         //unit.SyncPosition();
-    //         //unit.GotoForced(World.ToWorldSpace(unitRallyWaypoint.position));
-    //         //unit.LockPath();
-
-    //         // Debug.Log("Spawned " + unit.rtsUnitType + ".");
-    //     }
-    //     else
-    //         Debug.Log(string.Format("Spawn {0} failed. Missing prefabToSpawn.", unitSpawnQueue.First.Value.unitType));
-    // }
-
-    // private void RefreshQueueImages()
-    // {
-    //     foreach (UnityEngine.UI.Image image in queueSlotImages)
-    //     {
-    //         // Clearing override sprite reenables the original
-    //         image.overrideSprite = null;
-    //     }
-
-    //     int i = 0;
-    //     foreach (UnitData unitData in unitSpawnQueue)
-    //     {
-    //         queueSlotImages[i].overrideSprite = unitData.queueImage;
-    //         i++;
-
-    //         if (i >= unitSpawnQueue.Count)
-    //             break;
-    //     }
-    // }
 }

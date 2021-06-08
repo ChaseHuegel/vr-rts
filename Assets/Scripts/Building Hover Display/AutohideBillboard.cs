@@ -27,7 +27,7 @@ public class AutohideBillboard : MonoBehaviour
 
     [Tooltip("The speed used when rotating to face the target.")]
     
-    public float rotationSpeed = 1.0f;
+    public float rotationSpeed = 5.0f;
     private float radiusExitTime; 
     private bool autohideTimerStarted;
     
@@ -46,12 +46,19 @@ public class AutohideBillboard : MonoBehaviour
     {
         if (faceTarget)
         {
-            Vector3 t = faceTarget.position - transform.position;
-            t.y = 0;
-            Quaternion rot = Quaternion.LookRotation(t);
-            transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime * rotationSpeed);            
+            float distance = Vector3.Distance(faceTarget.position, transform.position);
+             if (distance > 0.75f)
+            {
+                //Vector3 t = (faceTarget.position - transform.position);
+                //t.y = 0;
+                //Quaternion rot = Quaternion.LookRotation(t);
+                Quaternion rot = faceTarget.transform.rotation;// Quaternion.LookRotation(t);
+                rot.z = rot.x = 0;
+                transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime * rotationSpeed);
+            }
+
         }
-        
+
         if (autohideTimerStarted)
         {
             if (Time.time - radiusExitTime >= autohideDelay)
