@@ -201,7 +201,7 @@ public class Actor : Body
                 for (int x = -radius; x < radius; x++)
                 {
                     TryGoalAtHelper(x, radius, goal, ref current, ref result, ref currentDistance, ref nearestDistance);
-                    TryGoalAtHelper(x, -radius, goal, ref current, ref result, ref currentDistance, ref nearestDistance);
+                    if (result == null) TryGoalAtHelper(x, -radius, goal, ref current, ref result, ref currentDistance, ref nearestDistance);
 
                     //  Return the first match if goals are being tested in order of priority
                     if (usePriority && result != null)
@@ -215,7 +215,7 @@ public class Actor : Body
                 for (int y = -radius; y < radius; y++)
                 {
                     TryGoalAtHelper(radius, y, goal, ref current, ref result, ref currentDistance, ref nearestDistance);
-                    TryGoalAtHelper(-radius, y, goal, ref current, ref result, ref currentDistance, ref nearestDistance);
+                    if (result == null) TryGoalAtHelper(-radius, y, goal, ref current, ref result, ref currentDistance, ref nearestDistance);
 
                     //  Return the first match if goals are being tested in order of priority
                     if (usePriority && result != null)
