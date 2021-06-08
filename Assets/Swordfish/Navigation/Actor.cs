@@ -255,10 +255,10 @@ public class Actor : Body
     public void TrySetGoal(Cell cell)
     {
         PathfindingGoal goal = PathfindingGoal.GetGoal(this, cell, GetGoals());
-        
-        if (goal != null && !goal.active)
-            goal.active = true;
-        
+
+        // if (goal != null && !goal.active)
+        //     goal.active = true;
+
         WipeAI();
 
         currentGoalTarget = cell;
@@ -286,7 +286,7 @@ public class Actor : Body
     public void GotoForced(Vector3 vec, bool ignoreActors = true) { Goto((int)vec.x, (int)vec.z, ignoreActors); }
     public void GotoForced(int x, int y, bool ignoreActors = true)
     {
-        //if (!isPathLocked && DistanceTo(x, y) > maxGoalInteractRange)
+        if (!isPathLocked && DistanceTo(x, y) > maxGoalInteractRange)
             PathManager.RequestPath(this, x, y, ignoreActors);
     }
 
@@ -294,11 +294,10 @@ public class Actor : Body
     {
         Vector3 temp = World.ToTransformSpace(new Vector3(x, 0, y));
 
-        // float damping = 1.0f;
         var lookPos = temp - transform.position;
         lookPos.y = 0;
         var rotation = Quaternion.LookRotation(lookPos);
-        transform.rotation = rotation;// Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * damping);
+        transform.rotation = rotation;
     }
 #endregion
 
