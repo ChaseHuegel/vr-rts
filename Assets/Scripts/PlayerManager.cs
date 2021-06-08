@@ -120,8 +120,11 @@ public class PlayerManager : MonoBehaviour
 
     public void OnVillagerRepair(object sender, Villager.RepairEvent e)
     {
+        // ? Is this needed?
         if (e.villager.factionId == factionId)
-            DeductResourcesFromStockpile(1, 1, 1, 1);
+        {
+            DeductResourcesFromStockpile(0, 0, 1, 0);
+        }
     }
 
     public void HookIntoEvents()
@@ -228,9 +231,18 @@ public class PlayerManager : MonoBehaviour
             leftHand.useHoverSphere = leftHand.useFingerJointHover = canInteract;
     }
 
-    public void DisableGripPanning(Hand hand) { gripPan.DisablePanning(hand); }
+    public void DisableGripPanning(Hand hand)
+    {
+        gripPan.DisablePanning(hand);
+        InteractionPointer.instance.DisableInteraction();
+    }
 
-    public void EnableGripPanning(Hand hand) { gripPan.EnablePanning(hand); }
+    public void EnableGripPanning(Hand hand)
+    { 
+        gripPan.EnablePanning(hand);
+        InteractionPointer.instance.EnableInteraction();
+        //InteractionPointer.instance.enabled = true;
+    }
 
     public void AddToPopulation(Unit unit)
     {

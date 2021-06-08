@@ -9,7 +9,12 @@ using Swordfish.Navigation;
 
 public class BuildingSpawnQueue : MonoBehaviour
 {
+    [Header("Settings")]
+    [Tooltip("Currently not used for anything.")]
     public RTSBuildingType buildingType;
+    public int numberOfQueueSlots = 12;
+    public List<RTSUnitType> unitQueueButtons;
+
     [Header( "Unit Stuff" )]
     public Transform unitSpawnPoint;
     public Transform unitRallyWaypoint;
@@ -19,10 +24,11 @@ public class BuildingSpawnQueue : MonoBehaviour
     public float unitRallyWaypointRadius;
     protected float timeElapsed = 0.0f;
     protected LinkedList<UnitData> unitSpawnQueue = new LinkedList<UnitData>();
+
     public TMPro.TMP_Text queueProgressText;
-    public UnityEngine.UI.Image queueProgressImage;
+    public UnityEngine.UI.Image queueProgressImage;    
     public UnityEngine.UI.Image[] QueueSlotImage;
-    public List<RTSUnitType> unitQueueButtons;
+    
     public GameObject resourceCostPrefab;
     private Structure structure;
     private Damageable damageable;
@@ -225,8 +231,20 @@ public class BuildingSpawnQueue : MonoBehaviour
     [ExecuteInEditMode]
     public void Generate()
     {
-        Vector3 startPosition = new Vector3(0.66f, 0.642f);
-        float gap = -0.33f;
+        Vector3 buttonsStartPosition = new Vector3(0.66f, 0.642f);
+        GenerateButtons(buttonsStartPosition, -0.33f);
+    }
+
+    /// <summary>
+    /// Currently limited to 5 buttons only.
+    /// </summary>
+    /// <param name="startPosition"></param>
+    /// <param name="gap"></param>
+    /// <param name="orientation"></param>
+    [ExecuteInEditMode]
+    public void GenerateButtons(Vector3 startPosition, float gap, byte orientation = 0)
+    {
+        // Orientation not used currently.
 
         foreach(RTSUnitType unitType in unitQueueButtons)
         {

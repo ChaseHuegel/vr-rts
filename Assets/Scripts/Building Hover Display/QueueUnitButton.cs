@@ -15,12 +15,13 @@ public class QueueUnitButton : MonoBehaviour
     HoverButton hoverButton;
     void Start()
     {
-        buildingSpawnQueue = GetComponentInParent<BuildingSpawnQueue>();
-
         hoverButton = GetComponentInChildren<HoverButton>();
-        hoverButton.onButtonDown.AddListener(OnButtonDown);
+        // buildingSpawnQueue = GetComponentInParent<BuildingSpawnQueue>();
+        // hoverButton.onButtonDown.AddListener(OnButtonDown);
     }
 
+    // TODO: Instantiate lock object when needed rather than every button
+    // having an inactive object?
     public void Lock()
     {
         buttonLockedObject.SetActive(true);
@@ -28,17 +29,17 @@ public class QueueUnitButton : MonoBehaviour
         locked = true;
     }
 
-    public void UnLock()
+    public void Unlock()
     {
         buttonLockedObject.SetActive(false);
         hoverButton.enabled = true;
         locked = false;
     }
 
-    // TODO: Switch this to use C# event rather than HandEvent which inherits from
-    // UnityEvent.
-    public void OnButtonDown(Hand hand)
-    {   
-        buildingSpawnQueue.QueueUnit(unitTypeToQueue);
-    }
+    // // TODO: Switch this to use C# event rather than HandEvent which inherits from
+    // // UnityEvent.
+    // public void OnButtonDown(Hand hand)
+    // {   
+    //     buildingSpawnQueue.QueueUnit(unitTypeToQueue);
+    // }
 }

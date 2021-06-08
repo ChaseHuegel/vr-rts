@@ -2596,6 +2596,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buildingType: 0
+  numberOfQueueSlots: 12
+  unitQueueButtons: 0200000003000000060000000500000001000000
   unitSpawnPoint: {fileID: 0}
   unitRallyWaypoint: {fileID: 0}
   unitRallyWaypointRadius: 0
@@ -2614,7 +2616,7 @@ MonoBehaviour:
   - {fileID: 7022314703773249115}
   - {fileID: 6935043574392646717}
   - {fileID: 7195834524237744570}
-  unitQueueButtons: 0200000003000000060000000500000001000000
+  resourceCostPrefab: {fileID: 0}
   onButtonDownAudio: {fileID: 8300000, guid: dcebca48962a9454cab218611adb729f, type: 3}
   onButtonUpAudio: {fileID: 8300000, guid: ceaa897b8429f1340bb8221533272abf, type: 3}
   buttonBaseMaterial: {fileID: 2100000, guid: df52f4d0325777d49bbe6e566536e284, type: 2}

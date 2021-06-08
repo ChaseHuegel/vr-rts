@@ -301,6 +301,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46abea78a890cdd45aa463439741b0e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  selectAction:
+    actionPath: /actions/default/in/Select
+    needsReinit: 0
+  cancelAction:
+    actionPath: /actions/default/in/Cancel
+    needsReinit: 0
   rtsTypeData: {fileID: 11400000, guid: 0f3112edaf0fe3a41b2dd89127e50682, type: 2}
   requireGrabActionToTake: 1
   requireReleaseActionToReturn: 0
@@ -906,6 +912,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46abea78a890cdd45aa463439741b0e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  selectAction:
+    actionPath: /actions/default/in/Select
+    needsReinit: 0
+  cancelAction:
+    actionPath: /actions/default/in/Cancel
+    needsReinit: 0
   rtsTypeData: {fileID: 11400000, guid: cbb11055f42a2b24e8fb15c34c9ec0cc, type: 2}
   requireGrabActionToTake: 1
   requireReleaseActionToReturn: 0
@@ -2640,6 +2652,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46abea78a890cdd45aa463439741b0e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  selectAction:
+    actionPath: /actions/default/in/Select
+    needsReinit: 0
+  cancelAction:
+    actionPath: /actions/default/in/Cancel
+    needsReinit: 0
   rtsTypeData: {fileID: 11400000, guid: acd2012d81514a643bd75779f8900a24, type: 2}
   requireGrabActionToTake: 1
   requireReleaseActionToReturn: 0
@@ -3171,6 +3189,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a3e71b7592171349abeac5713d6d99d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  factionId: 0
+  faction: {fileID: 0}
   woodCollected: 100
   goldCollected: 100
   stoneCollected: 0
@@ -3179,22 +3199,22 @@ MonoBehaviour:
   militaryPopulation: 0
   totalPopulation: 0
   populationLimit: 0
-  usePalmMenu: 0
+  queueCount: 0
+  handMenuToggle:
+    actionPath: 
+    needsReinit: 0
   hammerOnLeft: 1
   hammerOnRight: 0
   rHandHammerAttachmentpoint: {fileID: 0}
   lHandHammerAttachmentPoint: {fileID: 0}
-  palmMenu: {fileID: 1657365727962519884}
-  rHandClipboardAttachmentPoint: {fileID: 0}
-  rHandPalmUpAttachmentPoint: {fileID: 0}
-  rHandPalmUpTrackingPoint: {fileID: 0}
-  lHandClipboardAttachmentPoint: {fileID: 0}
-  lHandPalmUpAttachmentPoint: {fileID: 0}
-  lHandPalmUpTrackingPoint: {fileID: 0}
+  autoHideHandMenuEnabled: 0
+  handMenuTrackingSensitivity: 0.5
+  rHandAttachmentPoint: {fileID: 0}
+  rHandTrackingPoint: {fileID: 0}
+  lHandAttachmentPoint: {fileID: 0}
+  lHandTrackingPoint: {fileID: 0}
+  autohideHandMenuObject: {fileID: 0}
   WristDisplay: {fileID: 773600372}
-  handMenuToggle:
-    actionPath: 
-    needsReinit: 0
   handBuildMenu: {fileID: 0}
 --- !u!114 &194433363
 MonoBehaviour:
@@ -3730,6 +3750,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46abea78a890cdd45aa463439741b0e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  selectAction:
+    actionPath: /actions/default/in/Select
+    needsReinit: 0
+  cancelAction:
+    actionPath: /actions/default/in/Cancel
+    needsReinit: 0
   rtsTypeData: {fileID: 11400000, guid: ea6c6aaa4bc2b384a978f7e67e1707b0, type: 2}
   requireGrabActionToTake: 1
   requireReleaseActionToReturn: 0
@@ -5636,6 +5662,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46abea78a890cdd45aa463439741b0e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  selectAction:
+    actionPath: /actions/default/in/Select
+    needsReinit: 0
+  cancelAction:
+    actionPath: /actions/default/in/Cancel
+    needsReinit: 0
   rtsTypeData: {fileID: 11400000, guid: bba364c27ad0bef4d83572c38df0a3a1, type: 2}
   requireGrabActionToTake: 1
   requireReleaseActionToReturn: 0
@@ -5960,6 +5992,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46abea78a890cdd45aa463439741b0e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  selectAction:
+    actionPath: /actions/default/in/Select
+    needsReinit: 0
+  cancelAction:
+    actionPath: /actions/default/in/Cancel
+    needsReinit: 0
   rtsTypeData: {fileID: 11400000, guid: d1b91593e6e54de4aac4adb643ac76c5, type: 2}
   requireGrabActionToTake: 1
   requireReleaseActionToReturn: 0
@@ -6201,6 +6239,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46abea78a890cdd45aa463439741b0e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  selectAction:
+    actionPath: /actions/default/in/Select
+    needsReinit: 0
+  cancelAction:
+    actionPath: /actions/default/in/Cancel
+    needsReinit: 0
   rtsTypeData: {fileID: 11400000, guid: 2f7f4977aa58e7c46ab5a611830a99fc, type: 2}
   requireGrabActionToTake: 1
   requireReleaseActionToReturn: 0
@@ -13104,6 +13148,15 @@ MonoBehaviour:
   factions:
   - {fileID: 11400000, guid: effa210fcfc5796468bcaecb24cb5693, type: 2}
   - {fileID: 11400000, guid: 8bc1d4a30d578944cb3853e5531e68e4, type: 2}
+  floatingIndicatorPrefab: {fileID: 0}
+  buildingDamagedFX: {fileID: 0}
+  buildingDestroyedFX: {fileID: 0}
+  buildingPlacementDeniedFX: {fileID: 0}
+  buildingDestroyedSound: {fileID: 0}
+  buildingPlacementAllowedSound: {fileID: 0}
+  buildingPlacementDeniedSound: {fileID: 0}
+  maximumUnitSelectionCount: 20
+  unitCorpseDecayTime: 30
 --- !u!4 &1028106422
 Transform:
   m_ObjectHideFlags: 0
@@ -13150,6 +13203,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a3e71b7592171349abeac5713d6d99d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  factionId: 0
+  faction: {fileID: 0}
   woodCollected: 0
   goldCollected: 0
   stoneCollected: 0
@@ -13158,22 +13213,22 @@ MonoBehaviour:
   militaryPopulation: 0
   totalPopulation: 0
   populationLimit: 0
-  usePalmMenu: 0
+  queueCount: 0
+  handMenuToggle:
+    actionPath: 
+    needsReinit: 0
   hammerOnLeft: 1
   hammerOnRight: 0
   rHandHammerAttachmentpoint: {fileID: 0}
   lHandHammerAttachmentPoint: {fileID: 0}
-  palmMenu: {fileID: 0}
-  rHandClipboardAttachmentPoint: {fileID: 0}
-  rHandPalmUpAttachmentPoint: {fileID: 0}
-  rHandPalmUpTrackingPoint: {fileID: 0}
-  lHandClipboardAttachmentPoint: {fileID: 0}
-  lHandPalmUpAttachmentPoint: {fileID: 0}
-  lHandPalmUpTrackingPoint: {fileID: 0}
+  autoHideHandMenuEnabled: 0
+  handMenuTrackingSensitivity: 0.5
+  rHandAttachmentPoint: {fileID: 0}
+  rHandTrackingPoint: {fileID: 0}
+  lHandAttachmentPoint: {fileID: 0}
+  lHandTrackingPoint: {fileID: 0}
+  autohideHandMenuObject: {fileID: 0}
   WristDisplay: {fileID: 0}
-  handMenuToggle:
-    actionPath: 
-    needsReinit: 0
   handBuildMenu: {fileID: 0}
 --- !u!1 &1031388151
 GameObject:
@@ -13853,6 +13908,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46abea78a890cdd45aa463439741b0e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  selectAction:
+    actionPath: /actions/default/in/Select
+    needsReinit: 0
+  cancelAction:
+    actionPath: /actions/default/in/Cancel
+    needsReinit: 0
   rtsTypeData: {fileID: 11400000, guid: 7be3d59cc22b5e9488db57b9034e2c21, type: 2}
   requireGrabActionToTake: 1
   requireReleaseActionToReturn: 0
@@ -14317,6 +14378,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46abea78a890cdd45aa463439741b0e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  selectAction:
+    actionPath: /actions/default/in/Select
+    needsReinit: 0
+  cancelAction:
+    actionPath: /actions/default/in/Cancel
+    needsReinit: 0
   rtsTypeData: {fileID: 11400000, guid: 5c95a25871bd007468afb167a2a15b21, type: 2}
   requireGrabActionToTake: 1
   requireReleaseActionToReturn: 0
@@ -15229,6 +15296,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46abea78a890cdd45aa463439741b0e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  selectAction:
+    actionPath: /actions/default/in/Select
+    needsReinit: 0
+  cancelAction:
+    actionPath: /actions/default/in/Cancel
+    needsReinit: 0
   rtsTypeData: {fileID: 11400000, guid: 5e5e9e576832b814f849782a9f0673aa, type: 2}
   requireGrabActionToTake: 1
   requireReleaseActionToReturn: 0
@@ -17930,9 +18003,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8204ab90ca74ad8428d19557ef6f3147, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  trackingPoint: {fileID: 384285279}
-  gazeMenuAttachmentPoint: {fileID: 0}
-  clipBoardMenuAttachmentPoint: {fileID: 0}
 --- !u!114 &1459045025
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18125,9 +18195,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8204ab90ca74ad8428d19557ef6f3147, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  trackingPoint: {fileID: 1635068234}
-  gazeMenuAttachmentPoint: {fileID: 594626973}
-  clipBoardMenuAttachmentPoint: {fileID: 1123882944}
 --- !u!114 &1481376285
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18343,6 +18410,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46abea78a890cdd45aa463439741b0e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  selectAction:
+    actionPath: /actions/default/in/Select
+    needsReinit: 0
+  cancelAction:
+    actionPath: /actions/default/in/Cancel
+    needsReinit: 0
   rtsTypeData: {fileID: 11400000, guid: 963461a3aaf76f0458420eb41fae093d, type: 2}
   requireGrabActionToTake: 1
   requireReleaseActionToReturn: 0
@@ -19074,6 +19147,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46abea78a890cdd45aa463439741b0e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  selectAction:
+    actionPath: /actions/default/in/Select
+    needsReinit: 0
+  cancelAction:
+    actionPath: /actions/default/in/Cancel
+    needsReinit: 0
   rtsTypeData: {fileID: 11400000, guid: 0a6955903bc9adf4b99d7b5435304a44, type: 2}
   requireGrabActionToTake: 1
   requireReleaseActionToReturn: 0
@@ -19589,7 +19668,7 @@ PrefabInstance:
     - target: {fileID: 1129064322339030951, guid: 9b01cde0f07486643a93faa1b4864738,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2.613
+      value: -2.75
       objectReference: {fileID: 0}
     - target: {fileID: 1129064322339030951, guid: 9b01cde0f07486643a93faa1b4864738,
         type: 3}
@@ -19599,7 +19678,7 @@ PrefabInstance:
     - target: {fileID: 1129064322339030951, guid: 9b01cde0f07486643a93faa1b4864738,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 9.962
+      value: 9.75
       objectReference: {fileID: 0}
     - target: {fileID: 1129064322339030951, guid: 9b01cde0f07486643a93faa1b4864738,
         type: 3}
@@ -19635,6 +19714,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4048042722683114108, guid: 9b01cde0f07486643a93faa1b4864738,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9b01cde0f07486643a93faa1b4864738, type: 3}
@@ -21505,6 +21589,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46abea78a890cdd45aa463439741b0e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  selectAction:
+    actionPath: /actions/default/in/Select
+    needsReinit: 0
+  cancelAction:
+    actionPath: /actions/default/in/Cancel
+    needsReinit: 0
   rtsTypeData: {fileID: 11400000, guid: b4162a14bb133c04fb82dac32bc40a47, type: 2}
   requireGrabActionToTake: 1
   requireReleaseActionToReturn: 0
@@ -22217,6 +22307,8 @@ MonoBehaviour:
   distanceFromFace: 1.3
   additionalOffset: {x: 0, y: -0.3, z: 0}
   canTurnEverySeconds: 0.25
+  rightHandEnabled: 1
+  leftHandEnabled: 1
 --- !u!1 &1884559797
 GameObject:
   m_ObjectHideFlags: 0
@@ -22824,6 +22916,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46abea78a890cdd45aa463439741b0e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  selectAction:
+    actionPath: /actions/default/in/Select
+    needsReinit: 0
+  cancelAction:
+    actionPath: /actions/default/in/Cancel
+    needsReinit: 0
   rtsTypeData: {fileID: 11400000, guid: ffca4340b49b17e4e93030ba6c0d567e, type: 2}
   requireGrabActionToTake: 1
   requireReleaseActionToReturn: 0
@@ -25652,6 +25750,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46abea78a890cdd45aa463439741b0e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  selectAction:
+    actionPath: /actions/default/in/Select
+    needsReinit: 0
+  cancelAction:
+    actionPath: /actions/default/in/Cancel
+    needsReinit: 0
   rtsTypeData: {fileID: 11400000, guid: 72a538aa312227c4eb1e2feb1e70e40e, type: 2}
   requireGrabActionToTake: 1
   requireReleaseActionToReturn: 0
@@ -27088,7 +27192,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8db83e2efefc4e74581e04fe6e8ab761, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
 --- !u!1 &44799305955939758
 GameObject:
   m_ObjectHideFlags: 0
@@ -27493,6 +27596,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitTypeToQueue: 0
+  buttonLockedObject: {fileID: 0}
+  locked: 0
 --- !u!114 &193378520245550914
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -28067,6 +28172,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceCostPrefab: {fileID: 8028878907510991247, guid: 2a5e08ee9a327174cbaec9d53adcc988,
     type: 3}
+  slotEnabledMaterial: {fileID: 0}
+  slotDisabledMaterial: {fileID: 0}
   Buttons: 
 --- !u!33 &502084584646200854
 MeshFilter:
@@ -28232,6 +28339,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitTypeToQueue: 0
+  buttonLockedObject: {fileID: 0}
+  locked: 0
 --- !u!114 &551476887123853084
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -28626,7 +28735,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1129064321614101532}
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -2.613, y: 0.474, z: 9.962}
+  m_LocalPosition: {x: -2.625, y: 0.474, z: 9.875}
   m_LocalScale: {x: 0.09, y: 0.089999996, z: 0.089999996}
   m_Children:
   - {fileID: 3284518357967176511}
@@ -29413,6 +29522,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitTypeToQueue: 0
+  buttonLockedObject: {fileID: 0}
+  locked: 0
 --- !u!114 &1425913457247273441
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30103,6 +30214,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitTypeToQueue: 0
+  buttonLockedObject: {fileID: 0}
+  locked: 0
 --- !u!1 &1983431080428577425
 GameObject:
   m_ObjectHideFlags: 0
@@ -30464,6 +30577,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceCostPrefab: {fileID: 8028878907510991247, guid: 2a5e08ee9a327174cbaec9d53adcc988,
     type: 3}
+  slotEnabledMaterial: {fileID: 0}
+  slotDisabledMaterial: {fileID: 0}
   Buttons: 
 --- !u!1 &2220693454986237076
 GameObject:
@@ -30760,7 +30875,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8db83e2efefc4e74581e04fe6e8ab761, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
 --- !u!1 &2397670715774569506
 GameObject:
   m_ObjectHideFlags: 0
@@ -30921,6 +31035,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitTypeToQueue: 0
+  buttonLockedObject: {fileID: 0}
+  locked: 0
 --- !u!224 &2585992611261211247
 RectTransform:
   m_ObjectHideFlags: 0
@@ -31228,7 +31344,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: ee90f878377271b4fbbf915249f24476, type: 2}
+  - {fileID: 2100000, guid: 4a8b820c98c7b4540bab4e4f3d70d7fb, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -32221,6 +32337,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitTypeToQueue: 0
+  buttonLockedObject: {fileID: 0}
+  locked: 0
 --- !u!114 &3126333146059796851
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -32456,10 +32574,12 @@ MonoBehaviour:
   gridPosition:
     x: 0
     y: 0
+  factionId: 0
   bakeOnStart: 1
-  factionID: 0
+  allowPathThru: 0
   DestroyOnBuilt: 1
-  OnBuiltBuildingType: 0
+  ClearExistingWalls: 0
+  buildingData: {fileID: 0}
   OnBuiltPrefab: {fileID: 899507145775679583, guid: 98885f5b4fafa1c4d9c5fb6ecd229b0b,
     type: 3}
   ConstructionStages:
@@ -32505,7 +32625,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: ee90f878377271b4fbbf915249f24476, type: 2}
+  - {fileID: 2100000, guid: 4a8b820c98c7b4540bab4e4f3d70d7fb, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -34349,6 +34469,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitTypeToQueue: 0
+  buttonLockedObject: {fileID: 0}
+  locked: 0
 --- !u!23 &4209099842894539818
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -34836,6 +34958,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   highlightMaterial: {fileID: 0}
+  highlightOnHover: 1
+  hideHighlight: []
 --- !u!1 &4425529903009871845
 GameObject:
   m_ObjectHideFlags: 0
@@ -35210,6 +35334,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitTypeToQueue: 0
+  buttonLockedObject: {fileID: 0}
+  locked: 0
 --- !u!222 &4597989333422689578
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -35499,6 +35625,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitTypeToQueue: 0
+  buttonLockedObject: {fileID: 0}
+  locked: 0
 --- !u!33 &4742438182987278521
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -36403,7 +36531,8 @@ MonoBehaviour:
   showBarBackground: 1
   showBarForeground: 1
   showText: 1
-  hideWhenFull: 1
+  autoshowAt: 0.98
+  autohideAt: 1
   healthBarBackgroundImage: {fileID: 4321002905854535503}
   healthBarForegroundImage: {fileID: 8897724070308647877}
   healthBarStatusText: {fileID: 7303060597889518331}
@@ -36999,6 +37128,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceCostPrefab: {fileID: 8028878907510991247, guid: 2a5e08ee9a327174cbaec9d53adcc988,
     type: 3}
+  slotEnabledMaterial: {fileID: 0}
+  slotDisabledMaterial: {fileID: 0}
   Buttons: 280000001400000087000000
 --- !u!114 &6070976155030584933
 MonoBehaviour:
@@ -39918,6 +40049,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceCostPrefab: {fileID: 8028878907510991247, guid: 2a5e08ee9a327174cbaec9d53adcc988,
     type: 3}
+  slotEnabledMaterial: {fileID: 0}
+  slotDisabledMaterial: {fileID: 0}
   Buttons: 82000000410000003c000000550000000a00000005000000320000000f0000002d00000019000000230000001e000000
 --- !u!33 &8240591945767138988
 MeshFilter:
@@ -40614,6 +40747,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitTypeToQueue: 0
+  buttonLockedObject: {fileID: 0}
+  locked: 0
 --- !u!114 &8653316444908457401
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -41334,11 +41469,17 @@ MonoBehaviour:
   boundingDimensions: {x: 3, y: 3}
   boundingOrigin: {x: 0, y: 0}
   gridPosition:
-    x: 0
-    y: 0
+    x: 69
+    y: 119
+  factionId: 0
   bakeOnStart: 1
-  factionID: 0
-  rtsBuildingType: 85
+  allowPathThru: 0
+  buildingData: {fileID: 0}
+  meshes:
+  - {fileID: 3284518357965406687}
+  - {fileID: 9099679967605084946}
+  - {fileID: 2723764392151455840}
+  skinnedMeshes: []
 --- !u!224 &9069237106107573336
 RectTransform:
   m_ObjectHideFlags: 0
@@ -41536,7 +41677,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: ee90f878377271b4fbbf915249f24476, type: 2}
+  - {fileID: 2100000, guid: 4a8b820c98c7b4540bab4e4f3d70d7fb, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

@@ -34,6 +34,7 @@ public class BuildingHoverDisplay : MonoBehaviour
     {
         if (!autoHideBillboard && !(autoHideBillboard = GetComponentInChildren<AutohideBillboard>()))
             Debug.Log("AutoHideBillboard not found.", this);
+            
         else if (autoHideBillboard)        
         {
             autoHideBillboard.SetAutohideParameters(true, false, autohideDelay, autohideDistance);

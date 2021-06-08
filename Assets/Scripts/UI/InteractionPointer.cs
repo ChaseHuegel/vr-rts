@@ -215,6 +215,16 @@ public class InteractionPointer : MonoBehaviour
         ShowPointer();
 	}
 
+	public void DisableInteraction()
+	{
+        this.enabled = false;
+    }
+
+	public void EnableInteraction()
+	{
+        this.enabled = true;
+    }
+
 	//=========================================================================
 	void Update()
 	{
