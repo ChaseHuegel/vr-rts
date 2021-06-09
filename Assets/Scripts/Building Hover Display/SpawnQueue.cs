@@ -172,6 +172,8 @@ public class SpawnQueue : MonoBehaviour
             Unit unit = unitGameObject.GetComponent<Unit>();
             unit.rtsUnitType = unitSpawnQueue.First.Value.unitType;
             unit.factionId = structure.factionId;
+            unit.Initialize();
+            //unit.SyncPosition();
             unit.MoveToLocation(unitRallyWaypoint.position);
             // Debug.Log("Spawned " + unit.rtsUnitType + ".");
         }

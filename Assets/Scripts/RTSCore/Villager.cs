@@ -200,6 +200,8 @@ public class Villager : Unit
         base.OnCollisionEnter(collision);
     }
 
+    public override bool IsCivilian() { return true; }
+
     public void OnGoalChange(object sender, PathfindingGoal.GoalChangeEvent e)
     {
         if (e.actor != this) return;

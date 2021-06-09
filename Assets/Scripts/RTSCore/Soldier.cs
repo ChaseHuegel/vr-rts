@@ -293,6 +293,8 @@ public class Soldier : Unit
         e.Cancel();
     }
 
+    public override bool IsCivilian() { return false; }
+
     private void SetAttackAnimationState()
     {
         if (UnityEngine.Random.Range(1, 100) < 50)

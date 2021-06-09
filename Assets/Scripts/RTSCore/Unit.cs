@@ -42,7 +42,17 @@ public class Unit : Actor, IFactioned
 
     // Make this read only, we should only be able to change unit properties
     // through the database.
-    public UnitData rtsUnitTypeData { get { return m_rtsUnitTypeData; } }
+    public UnitData rtsUnitTypeData 
+    { 
+        get 
+        { 
+            if (!m_rtsUnitTypeData)
+                m_rtsUnitTypeData = GameMaster.GetUnit(rtsUnitType);
+                
+            return m_rtsUnitTypeData; 
+        } 
+    }
+
     protected UnitData m_rtsUnitTypeData;
 
     protected AudioSource audioSource;
@@ -61,16 +71,16 @@ public class Unit : Actor, IFactioned
     {
         base.Initialize();
         playerManager = PlayerManager.instance;
-        
+
         goals.Add<GoalGotoLocation>().active = false;
 
         animator = gameObject.GetComponentInChildren<Animator>();
         if (!animator)
             Debug.Log("No animator component found.");
 
-        if (!m_rtsUnitTypeData)
-            m_rtsUnitTypeData = GameMaster.GetUnit(rtsUnitType);
-        
+        if (!(m_rtsUnitTypeData = GameMaster.GetUnit(rtsUnitType)))
+            Debug.Log(string.Format("{0} data not found.", rtsUnitType));
+
         UpdateFaction();
         SetSkin();
     }
@@ -105,10 +115,7 @@ public class Unit : Actor, IFactioned
         ResetGoal();
     }
 
-    public virtual bool IsCivilian()
-    {
-        return (int)rtsUnitTypeData.unitType < (int)RTSUnitType.Swordsman;
-    }
+    public virtual bool IsCivilian() { return true; }
 
     public bool IsDead()
     {

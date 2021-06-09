@@ -12201,7 +12201,7 @@ PrefabInstance:
     - target: {fileID: 1271416209190090558, guid: 492bb1abf889d6a43a068d05a30f6d2e,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8408527075323145128, guid: 492bb1abf889d6a43a068d05a30f6d2e,
         type: 3}
@@ -56395,7 +56395,7 @@ PrefabInstance:
     - target: {fileID: 1271416209190090558, guid: e9ee513f3e1c58848bed57b959eaebc8,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8408527075323145128, guid: e9ee513f3e1c58848bed57b959eaebc8,
         type: 3}
@@ -56438,7 +56438,6 @@ GameObject:
   - component: {fileID: 7114132094003056355}
   - component: {fileID: 141332369}
   - component: {fileID: 6355609624726886444}
-  - component: {fileID: 6611738122479956093}
   - component: {fileID: 5356693977414571318}
   m_Layer: 10
   m_Name: Farm_World_01
@@ -57741,29 +57740,6 @@ Transform:
   m_Father: {fileID: 1029163850}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
---- !u!114 &6611738122479956093
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 899507146597410006}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 77fa36798b3959c44a46f72d97c3fdb1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  title: Farm
-  startHidden: 1
-  autohide: 1
-  menuEnabled: 0
-  autohideDelay: 15
-  autohideDistance: 2
-  autoHideBillboard: {fileID: 0}
-  titleGameObject: {fileID: 0}
-  menuGameObject: {fileID: 0}
-  healthBar: {fileID: 0}
-  objectsToAutohide: []
 --- !u!82 &6935284045241681798
 AudioSource:
   m_ObjectHideFlags: 0
