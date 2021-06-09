@@ -266,7 +266,7 @@ public class Actor : Body
 
         currentGoalTarget = cell;
         currentGoal = goal;
-
+            
         previousGoalTarget = currentGoalTarget;
         previousGoal = currentGoal;
 

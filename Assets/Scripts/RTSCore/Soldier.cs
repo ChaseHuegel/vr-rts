@@ -282,10 +282,7 @@ public class Soldier : Unit
         else if (e.goal is GoalGotoLocation)
         {
             ActivateAllGoals();
-            // ? Would this work instead?
-            //e.goal.active = false;
-            goals.Get<GoalGotoLocation>().active = false;
-
+            e.goal.active = false;
         }
 
         //  default cancel the interaction

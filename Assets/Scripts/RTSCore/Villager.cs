@@ -135,10 +135,10 @@ public class Villager : Unit
 
         Unfreeze();
 
-        Resource node = collider.gameObject.GetComponent<Resource>();
-        if (node)
+        Resource resource = collider.gameObject.GetComponent<Resource>();
+        if (resource)
         {
-            switch (node.type)
+            switch (resource.type)
             {
                 case ResourceGatheringType.Gold:
                     SetUnitTask(RTSUnitType.GoldMiner);
@@ -438,7 +438,8 @@ public class Villager : Unit
         // Turn off all goals except the transport goal.
         DeactivateAllGoals();
         transportGoal = goals.Add<GoalTransportResource>();
-
+        animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.IDLE);
+        
         switch (unitType)
         {
             case RTSUnitType.Builder:
@@ -501,7 +502,6 @@ public class Villager : Unit
         }
 
         ResetAI();
-        ResetPath();
         PlayChangeTaskAudio();
     }
 

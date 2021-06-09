@@ -151,7 +151,7 @@ public class PlayerManager : MonoBehaviour
     }
 
     public void OnSpawnEvent(object sender, Damageable.SpawnEvent e)
-    {
+    {        
         Unit unit = e.entity.GetComponentInChildren<Unit>();
         if (unit && IsSameFaction(unit))
         {

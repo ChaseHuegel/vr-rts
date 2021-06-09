@@ -534,7 +534,7 @@ public class InteractionPointer : MonoBehaviour
 						if (structure)
                         {
                             villager.SetUnitTask(RTSUnitType.Builder);
-                            villager.TrySetGoal(World.at(structure.gridPosition));
+                            villager.TrySetGoal(structure.GetCellAtGrid());
                             continue;
                         }
 
@@ -542,21 +542,17 @@ public class InteractionPointer : MonoBehaviour
 						if (constructible)
 						{
                             villager.SetUnitTask(RTSUnitType.Builder);							
-                            villager.TrySetGoal(World.at(constructible.gridPosition));
+                            villager.TrySetGoal(constructible.GetCellAtGrid());
                             continue;
                         }
                         
                         Resource resource = pointedAtPointerInteractable.GetComponent<Resource>();
                         if (resource)
                         {
-                            // Needed for fauna since fauna has an inactive resource component
-                            // that doesn't have a grid position to be fetched.
-                            Swordfish.Coord2D gridPosition = resource.gridPosition;
-
                             switch (resource.type)
                             {
                                 case ResourceGatheringType.Gold:
-                                    villager.SetUnitTask(RTSUnitType.GoldMiner);
+                                    villager.SetUnitTask(RTSUnitType.GoldMiner);                                    
                                     break;
 
                                 case ResourceGatheringType.Grain:
@@ -581,11 +577,10 @@ public class InteractionPointer : MonoBehaviour
 
                                 case ResourceGatheringType.Meat:
                                     villager.SetUnitTask(RTSUnitType.Hunter);
-                                    gridPosition = resource.GetComponent<Fauna>().gridPosition;
                                     break;
                             }
 
-                            villager.TrySetGoal(World.at(gridPosition));
+                            villager.TrySetGoal(World.at(resource.GetNearbyCoord()));//GetCellAtGrid());
                             continue;
                         }
                     }
