@@ -272,7 +272,7 @@ public class MenuGen : MonoBehaviour
         text.sortingOrder = 1;
         text.horizontalAlignment = TMPro.HorizontalAlignmentOptions.Center;
         text.verticalAlignment = TMPro.VerticalAlignmentOptions.Middle;
-        text.fontSize = 4.0f;
+        text.fontSize = 5.0f;
         text.font = progressFont;
         text.text = "100%";
 

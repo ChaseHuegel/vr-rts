@@ -39,6 +39,9 @@ public class AutohideBillboard : MonoBehaviour
     void Start()
     {
         radiusExitTime = Time.time;
+        Quaternion rot = faceTarget.transform.rotation;
+        rot.z = rot.x = 0;
+        transform.rotation = rot;
     }
 
     // Update is called once per frame
@@ -47,7 +50,7 @@ public class AutohideBillboard : MonoBehaviour
         if (faceTarget)
         {
             float distance = Vector3.Distance(faceTarget.position, transform.position);
-             if (distance > 0.75f)
+            if (distance > 0.75f)
             {
                 //Vector3 t = (faceTarget.position - transform.position);
                 //t.y = 0;

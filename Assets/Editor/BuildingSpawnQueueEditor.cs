@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
- [CustomEditor(typeof(BuildingSpawnQueue))]
+ [CustomEditor(typeof(SpawnQueue))]
  public class BuildingSpawnQueueEditor : Editor
  {
      public override void OnInspectorGUI ()

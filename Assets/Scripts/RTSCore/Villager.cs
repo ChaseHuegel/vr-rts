@@ -31,32 +31,9 @@ public class Villager : Unit
     public GameObject hunterHandToolDisplayObject;
     protected GameObject currentCargoDisplayObject;
     protected GameObject currentHandToolDisplayObject;
-    public VillagerHoverMenu villagerHoverMenu;    
+    public VillagerHoverMenu handCommandMenu;    
     protected PathfindingGoal currentGoalFound;
     protected PathfindingGoal previousGoalFound;
-
-    public int x = 0;
-    public int y = 0;
-
-    [InspectorButton("Go")]
-    public bool GoLocationGoal;
-
-    public void Go()
-    {
-        GoalGotoLocation go = goals.Get<GoalGotoLocation>();
-        go.active = true;
-        go.x = x;
-        go.y = y;
-    }
-
-    [InspectorButton("Go2")]
-    public bool GotoForce;
-
-    public void Go2()
-    {
-        GotoForced(x, y);
-    }
-
     public bool IsCargoFull() { return currentCargo >= rtsUnitTypeData.maxCargo; }
     public bool HasCargo() { return currentCargo > 0; }
 
@@ -64,17 +41,16 @@ public class Villager : Unit
     {
         base.Initialize();
         HookIntoEvents();
-
+        
+        goals.Add<GoalGatherStone>();
         goals.Add<GoalBuildRepair>();
         goals.Add<GoalGatherGrain>();
         goals.Add<GoalGatherBerries>();
         goals.Add<GoalGatherFish>();
         goals.Add<GoalHuntFauna>();
         goals.Add<GoalGatherMeat>();
-        goals.Add<GoalGatherWood>();
-        goals.Add<GoalGatherStone>();
+        goals.Add<GoalGatherWood>();        
         goals.Add<GoalGatherGold>();
-        goals.Add<GoalGotoLocation>();
         
         SetUnitTask(rtsUnitType);
 
@@ -95,25 +71,25 @@ public class Villager : Unit
     public override void OnHandHoverBegin(Hand hand)
     {
         base.OnHandHoverBegin(hand);
-        villagerHoverMenu.Show();
+        handCommandMenu.Show();
     }
 
     public override void OnHandHoverEnd(Hand hand)
     {
         base.OnHandHoverEnd(hand);
-        villagerHoverMenu.Hide();
+        handCommandMenu.Hide();
     }
 
     public override void OnAttachedToHand(Hand hand)
     {
         base.OnAttachedToHand(hand);
-        villagerHoverMenu.Show();
+        handCommandMenu.Show();
     }
 
     public override void OnDetachedFromHand(Hand hand)
     {
         base.OnDetachedFromHand(hand);
-        villagerHoverMenu.Hide();        
+        handCommandMenu.Hide();        
     }
 
 #endregion
@@ -196,7 +172,7 @@ public class Villager : Unit
                     break;
             }
 
-            ResetAI();
+            // ResetAI();
             return;
         }
 
@@ -204,7 +180,7 @@ public class Villager : Unit
         if (fauna)
         {
             SetUnitTask(RTSUnitType.Hunter);
-            ResetAI();
+            //ResetAI();
             return;
         }
 
@@ -212,11 +188,10 @@ public class Villager : Unit
         if (building)
         {
             SetUnitTask(RTSUnitType.Builder);
-            ResetAI();
+            //ResetAI();
             return;
         }
     }
-
 
     // This is is used to reenable the character after they have been
     // released from the hand AND after they have landed somewhere.
@@ -349,8 +324,6 @@ public class Villager : Unit
         else if (e.goal is GoalGotoLocation)
         {
             GoalGotoLocation g = (GoalGotoLocation)e.goal;
-
-            Debug.Log(e.goal.ToString() + " " + g.x + " " + g.y);
             currentGoalFound = e.goal;
             return;
         }
@@ -387,9 +360,11 @@ public class Villager : Unit
         }
         else if (e.goal is GoalGotoLocation)
         {
+            ActivateAllGoals();
             // ? Would this work instead?
             //e.goal.active = false;
             goals.Get<GoalGotoLocation>().active = false;
+
         }
 
         //  default cancel the interaction
@@ -454,7 +429,7 @@ public class Villager : Unit
         base.SetUnitTask(unitType);
 
         // Turn off all goals except the transport goal.
-        DeactivateGoals();
+        //DeactivateAllGoals();
         transportGoal = goals.Add<GoalTransportResource>();
 
         switch (unitType)
@@ -511,13 +486,14 @@ public class Villager : Unit
             case RTSUnitType.Drifter:
                 state = UnitState.ROAMING;
                 currentResource = ResourceGatheringType.None;
-                ActivateGoals();
+                ActivateAllGoals();
                 break;
 
             default:
                 break;
         }
 
+        ResetAI();
         ResetPath();
         PlayChangeTaskAudio();
     }

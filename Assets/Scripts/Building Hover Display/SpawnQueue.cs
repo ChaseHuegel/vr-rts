@@ -172,12 +172,7 @@ public class SpawnQueue : MonoBehaviour
             Unit unit = unitGameObject.GetComponent<Unit>();
             unit.rtsUnitType = unitSpawnQueue.First.Value.unitType;
             unit.factionId = structure.factionId;
-
-            // ! Dsabled, none of this works for rally points anymore.
-            //unit.SyncPosition();
-            //unit.GotoForced(World.ToWorldSpace(unitRallyWaypoint.position));
-            //unit.LockPath();
-
+            unit.MoveToLocation(unitRallyWaypoint.position);
             // Debug.Log("Spawned " + unit.rtsUnitType + ".");
         }
         else

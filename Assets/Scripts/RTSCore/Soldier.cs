@@ -23,7 +23,7 @@ public class Soldier : Unit
 
         maxGoalInteractRange = rtsUnitTypeData.attackRange;
 
-        SetAIAttackGoals(huntVillagers, huntMilitary, huntBuildings);
+        SetAIAttackGoals(huntMilitary, huntVillagers, huntBuildings);        
 
         animator = gameObject.GetComponentInChildren<Animator>();
         if (!animator)
@@ -43,18 +43,18 @@ public class Soldier : Unit
         Damageable.OnDeathEvent += OnDeath;
     }
 
-    public void SetAIAttackGoals(bool villagers, bool military, bool buildings)
+    public void SetAIAttackGoals(bool military, bool villagers,  bool buildings)
     {
-        if (villagers)
-            goals.Add<GoalHuntVillagers>();
-
         if (military)
             goals.Add<GoalHuntMilitary>();
+
+        if (villagers)
+            goals.Add<GoalHuntVillagers>();
 
         if (buildings)
             goals.Add<GoalHuntBuildings>();
 
-        ResetAI();
+        //ResetAI();
     }
 
     bool StateChanged() { return state != previousState; }
@@ -103,6 +103,7 @@ public class Soldier : Unit
 
         previousState = state;
     }
+    
 
     public void OnDamage(object sender, Damageable.DamageEvent e)
     {
@@ -277,6 +278,14 @@ public class Soldier : Unit
                 SetAttackAnimationState();
                 return;
             }
+        }
+        else if (e.goal is GoalGotoLocation)
+        {
+            ActivateAllGoals();
+            // ? Would this work instead?
+            //e.goal.active = false;
+            goals.Get<GoalGotoLocation>().active = false;
+
         }
 
         //  default cancel the interaction

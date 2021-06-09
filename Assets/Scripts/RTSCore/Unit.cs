@@ -33,11 +33,11 @@ public class Unit : Actor, IFactioned
     public SkinnedMeshRenderer[] skinnedMeshes;
 
     [Header("AI")]
-    public UnitState state;
-
-    public bool isHeld;
-    public bool isDying;
-    public bool wasThrownOrDropped;
+    [SerializeField]
+    protected UnitState state;
+    public bool isHeld { get; protected set; }
+    public bool isDying { get; protected set; }
+    public bool wasThrownOrDropped { get; protected set; }
     protected UnitState previousState;
 
     // Make this read only, we should only be able to change unit properties
@@ -45,7 +45,7 @@ public class Unit : Actor, IFactioned
     public UnitData rtsUnitTypeData { get { return m_rtsUnitTypeData; } }
     protected UnitData m_rtsUnitTypeData;
 
-    public AudioSource audioSource;
+    protected AudioSource audioSource;
     protected Animator animator;
     protected PlayerManager playerManager;
     protected float detachFromHandTime;
@@ -61,6 +61,8 @@ public class Unit : Actor, IFactioned
     {
         base.Initialize();
         playerManager = PlayerManager.instance;
+        
+        goals.Add<GoalGotoLocation>().active = false;
 
         animator = gameObject.GetComponentInChildren<Animator>();
         if (!animator)
@@ -171,26 +173,54 @@ public class Unit : Actor, IFactioned
         }
     }
 
-    public void GotoPosition(Vector3 position)
-    {
-        DeactivateGoals();
-        //ResetAI();
+    /// <summary>
+    /// Brute force a unit to go to a position on the map optionally disabling all
+    /// active goals.
+    /// </summary>
+    /// <param name="position">Position to go to in transform space.</param>
+    /// <param name="deactivateGoals">Should all goals be deactivated? True/False</param>
+    public virtual void MoveToPosition(Vector3 position, bool deactivateGoals = false)
+    {        
+        if (deactivateGoals)
+            DeactivateAllGoals();
         Coord2D pos = World.ToWorldCoord(position);
-
-        // Debug.Log(gridPosition.x + " " + gridPosition.y +
-        //                         " ----- " + pos.x + " " + pos.y);
-
+        ResetPath();    
         GotoForced(pos.x, pos.y);
+        LockPath();
     }
 
-    public void ActivateGoals()
+    /// <summary>
+    /// Use GoalGotoLocation to send a unit to a position on the map optionally disabling all
+    /// active goals.
+    /// </summary>
+    /// <param name="position">Target position to go to in transform space.</param>
+    /// <param name="deactivateGoals">Should all goals be deactivated? True / False</param>
+    public virtual void MoveToLocation(Vector3 position, bool deactivateGoals = false)
+    {
+        if (deactivateGoals)
+            DeactivateAllGoals();
+
+        Coord2D pos = World.ToWorldCoord(position);
+
+        GoalGotoLocation goal = goals.Get<GoalGotoLocation>();
+        if (goal != null)
+        {
+            goal.active = true;
+            TrySetGoal(World.at(pos));
+        }
+        else
+            Debug.Log("GoalGotoLocation not found.");
+    }
+
+    public void ActivateAllGoals()
     {
         foreach (PathfindingGoal goal in GetGoals())
         {
             goal.active = true;
         }
     }
-    public void DeactivateGoals()
+
+    public void DeactivateAllGoals()
     {
         foreach(PathfindingGoal goal in GetGoals())
         {

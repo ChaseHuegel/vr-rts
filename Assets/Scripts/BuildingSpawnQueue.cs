@@ -199,13 +199,9 @@ public class BuildingSpawnQueue : MonoBehaviour
             Unit unit = unitGameObject.GetComponent<Unit>();
             unit.rtsUnitType = unitSpawnQueue.First.Value.unitType;
             unit.factionId = structure.factionId;
-
-            // ! Dsabled, none of this works for rally points anymore.
-            //unit.SyncPosition();
-            //unit.GotoForced(World.ToWorldSpace(unitRallyWaypoint.position));
-            //unit.LockPath();
-
-            // Debug.Log("Spawned " + unit.rtsUnitType + ".");
+            
+            unit.SyncPosition();
+            unit.MoveToLocation(unitRallyWaypoint.position);
         }
         else
             Debug.Log (string.Format("Spawn {0} failed. Missing prefabToSpawn.", unitSpawnQueue.First.Value.unitType));

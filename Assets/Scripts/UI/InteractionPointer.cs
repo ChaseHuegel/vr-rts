@@ -69,7 +69,7 @@ public class InteractionPointer : MonoBehaviour
 	private TeleportArc teleportArc = null;
 	public bool visible = false;
 	private PointerInteractable pointedAtPointerInteractable;
-	private	BuildingSpawnQueue buildingSpawnQueue;
+	private	SpawnQueue spawnQueue;
 	private List<Unit> selectedUnits;
 	private Vector3 pointedAtPosition;
 	private Vector3 prevPointedAtPosition;
@@ -168,7 +168,6 @@ public class InteractionPointer : MonoBehaviour
 		teleportArc.traceLayerMask = traceLayerMask;
 
 		// loopingAudioMaxVolume = loopingAudioSource.volume;
-
 		// float invalidReticleStartingScale = invalidReticleTransform.localScale.x;
 		// invalidReticleMinScale *= invalidReticleStartingScale;
 		// invalidReticleMaxScale *= invalidReticleStartingScale;
@@ -180,13 +179,10 @@ public class InteractionPointer : MonoBehaviour
 		HookIntoEvents();
 
         playerManager = PlayerManager.instance;
-
         headAudioSource.transform.SetParent(Player.instance.hmdTransform);
         headAudioSource.transform.localPosition = Vector3.zero;
-
         buildingPlacementAllowedSound = GameMaster.Instance.buildingPlacementAllowedSound;
         buildingPlacementDeniedSound = GameMaster.Instance.buildingPlacementDeniedSound;
-
         //interactableObjects = GameObject.FindObjectsOfType<PointerInteractable>();
         selectedUnits = new List<Unit>();
 
@@ -204,7 +200,6 @@ public class InteractionPointer : MonoBehaviour
 		}
 
 		player = Valve.VR.InteractionSystem.Player.instance;
-
 		if ( player == null )
 		{
 			Debug.LogError("<b>[SteamVR Interaction]</b> ObjectPlacementPointer: No Player instance found in map.", this);
@@ -272,7 +267,7 @@ public class InteractionPointer : MonoBehaviour
             {
                 if (pointerHand == hand)
                 {
-                    BuildingSpawnQueue buildingSpawnQueue = pointedAtPointerInteractable.GetComponentInChildren<BuildingSpawnQueue>();
+                    SpawnQueue buildingSpawnQueue = pointedAtPointerInteractable.GetComponentInChildren<SpawnQueue>();
                     if (buildingSpawnQueue && buildingSpawnQueue.QueueLastUnitQueued())
                         PlayAudioClip(headAudioSource, queueSuccessSound);
 					else
@@ -287,7 +282,7 @@ public class InteractionPointer : MonoBehaviour
 			{
 				if (pointerHand == hand)
 				{
-					BuildingSpawnQueue buildingSpawnQueue = pointedAtPointerInteractable.GetComponentInChildren<BuildingSpawnQueue>();
+					SpawnQueue buildingSpawnQueue = pointedAtPointerInteractable.GetComponentInChildren<SpawnQueue>();
                     if (buildingSpawnQueue)
                     {
                         buildingSpawnQueue.DequeueUnit();
@@ -394,9 +389,9 @@ public class InteractionPointer : MonoBehaviour
         }
 		else if (pointedAtPointerInteractable != null)
 		{
-			buildingSpawnQueue = pointedAtPointerInteractable.GetComponentInChildren<BuildingSpawnQueue>();
+			spawnQueue = pointedAtPointerInteractable.GetComponentInChildren<SpawnQueue>();
 
-			if (buildingSpawnQueue && buildingSpawnQueue.enabled && !isSettingRallyPoint)
+			if (spawnQueue && spawnQueue.enabled && !isSettingRallyPoint)
 			{
 				rallyWaypointArcStartPosition = pointedAtPointerInteractable.transform.position;
 				isSettingRallyPoint = true;
@@ -516,10 +511,10 @@ public class InteractionPointer : MonoBehaviour
 
 		if (isSettingRallyPoint)
 		{
-			buildingSpawnQueue.SetUnitRallyWaypoint(wayPointReticle.transform.position);
+			spawnQueue.SetUnitRallyWaypoint(wayPointReticle.transform.position);
             PlayAudioClip(headAudioSource, setRallyPointSound.GetClip());
 			wayPointReticle.SetActive(false);
-			buildingSpawnQueue = null;
+			spawnQueue = null;
 			isSettingRallyPoint = false;
 			pointerLineRenderer.enabled = false;
 			return;
@@ -590,12 +585,12 @@ public class InteractionPointer : MonoBehaviour
                                     break;
                             }
 
-                            villager.TrySetGoal(World.at(resource.gridPosition));
+                            villager.TrySetGoal(World.at(gridPosition));
                             continue;
                         }
                     }
 					
-					villager.GotoPosition(pointedAtPosition);
+					villager.MoveToLocation(pointedAtPosition);
 					continue;
 				}
 
@@ -612,19 +607,19 @@ public class InteractionPointer : MonoBehaviour
 						{
                             // TODO: Force attack unit/set target
                             // Attack unit
-                            unit.TrySetGoal(World.at(World.ToWorldCoord(pointedAtPosition)));
+                            unit.TrySetGoal(pointedAtUnit.GetCellAtGrid());
 							continue;
 						}
 						// Same faction, go to units position.
 						else if (pointedAtUnit)
 						{
-                            unit.GotoPosition(pointedAtUnit.transform.position);
+                            unit.MoveToLocation(pointedAtUnit.transform.position);
 							continue;
 						}
 					}
 					else
                     	// Default go to position.
-                    	unit.GotoPosition(pointedAtPosition);
+                    	unit.MoveToLocation(pointedAtPosition);
 				}
 			}
 

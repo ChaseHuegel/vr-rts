@@ -105,7 +105,7 @@ public class BuildingHoverDisplay : MonoBehaviour
         titleGameObject.SetActive(false); 
         if (menuEnabled) menuGameObject?.SetActive(false); 
             
-        // TODO: Should be based on the healtbars autoshowAt/autohideAt values.
+        // TODO: Should be based on the healthbars autoshowAt/autohideAt values.
         // TODO: Change to healthbar events that autohideBillboard can subscribe to.
         if (healthBar.isVisible)
             autoHideBillboard.enabled = true;
@@ -115,9 +115,7 @@ public class BuildingHoverDisplay : MonoBehaviour
         healthBar.Hide();
 
         foreach (GameObject go in objectsToAutohide)
-        {
             go.SetActive(false);
-        }        
     }
     
     public void Show() 
