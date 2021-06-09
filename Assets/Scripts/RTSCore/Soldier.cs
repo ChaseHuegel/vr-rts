@@ -29,8 +29,8 @@ public class Soldier : Unit
         if (!animator)
             Debug.Log("No animator component found.");
 
-        if(faction.IsSameFaction(playerManager.factionId))
-            playerManager.AddToPopulation((Unit)this);
+        // if(faction.IsSameFaction(playerManager.factionId))
+        //     playerManager.AddToPopulation((Unit)this);
 
     }
 

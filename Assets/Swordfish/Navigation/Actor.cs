@@ -179,7 +179,7 @@ public class Actor : Body
 
                 if (discoveredGoals.TryGetValue(goal, out result)
                     && result != null
-                    && DistanceTo(result) < goalSearchDistance
+                    // && DistanceTo(result) < goalSearchDistance
                     && PathfindingGoal.TryGoal(this, result, goal))
                     {
                         searchDistance = goalSearchGrowth;

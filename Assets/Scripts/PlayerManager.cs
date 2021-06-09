@@ -4,6 +4,8 @@ using UnityEngine;
 using Valve.VR;
 using Valve.VR.InteractionSystem;
 using UnityEngine.UI;
+using Swordfish;
+using Swordfish.Navigation;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -131,12 +133,49 @@ public class PlayerManager : MonoBehaviour
     {
         Villager.OnDropoffEvent += OnVillagerDropoff;
         Villager.OnRepairEvent += OnVillagerRepair;
+        Damageable.OnDeathEvent += OnDeathEvent;
+        Damageable.OnSpawnEvent += OnSpawnEvent;
     }
 
     public void CleanupEvents()
     {
         Villager.OnDropoffEvent -= OnVillagerDropoff;
         Villager.OnRepairEvent -= OnVillagerRepair;
+        Damageable.OnDeathEvent -= OnDeathEvent;
+        Damageable.OnSpawnEvent -= OnSpawnEvent;
+    }
+
+    public bool IsSameFaction(Body body)
+    {
+        return this.factionId == body.factionId;
+    }
+
+    public void OnSpawnEvent(object sender, Damageable.SpawnEvent e)
+    {
+        Unit unit = e.entity.GetComponentInChildren<Unit>();
+        if (unit && IsSameFaction(unit))
+        {
+            AddToPopulation(unit);
+            return;
+        }
+
+        Structure structure = e.entity.GetComponentInChildren<Structure>();
+        if (structure && IsSameFaction(structure))
+            IncreasePopulationLimit(structure.buildingData.populationSupported);
+    }
+
+    public void OnDeathEvent(object sender, Damageable.DeathEvent e)
+    {
+        Unit unit = e.victim.GetComponentInChildren<Unit>();
+        if (unit && IsSameFaction(unit))
+        {
+            RemoveFromPopulation(unit);
+            return;
+        }
+
+        Structure structure = e.victim.GetComponentInChildren<Structure>();
+        if (structure && IsSameFaction(structure))
+            DecreasePopulationLimit(structure.buildingData.populationSupported);
     }
 
     protected bool IsClipboardPalmMenuVisible;

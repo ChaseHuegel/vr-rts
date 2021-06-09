@@ -54,8 +54,8 @@ public class Villager : Unit
         
         SetUnitTask(rtsUnitType);
 
-        if(faction.IsSameFaction(playerManager.factionId))
-            playerManager.AddToPopulation((Unit)this);        
+        // if(faction.IsSameFaction(playerManager.factionId))
+        //     playerManager.AddToPopulation((Unit)this);        
     }
 
     public void HookIntoEvents()
@@ -361,9 +361,7 @@ public class Villager : Unit
         else if (e.goal is GoalGotoLocation)
         {
             ActivateAllGoals();
-            // ? Would this work instead?
-            //e.goal.active = false;
-            goals.Get<GoalGotoLocation>().active = false;
+            e.goal.active = false;
 
         }
 
@@ -424,12 +422,19 @@ public class Villager : Unit
         AudioSource.PlayClipAtPoint(GameMaster.GetAudio(clipName).GetClip(), transform.position, 0.75f);
     }
     
+    /// <summary>
+    /// Sets a unit to a specific task to the exclusion of all others by 
+    /// deactivating all goals except the desired goal and a transport 
+    /// goal. The exception to this is the drifter unit type which has 
+    /// all goals active.
+    /// </summary>
+    /// <param name="unitType">The units new job/task.</param>
     public override void SetUnitTask(RTSUnitType unitType)
     {
         base.SetUnitTask(unitType);
 
         // Turn off all goals except the transport goal.
-        //DeactivateAllGoals();
+        DeactivateAllGoals();
         transportGoal = goals.Add<GoalTransportResource>();
 
         switch (unitType)
