@@ -813,7 +813,7 @@ Transform:
   m_GameObject: {fileID: 1129064322338806663}
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.09, y: 0.089999996, z: 0.089999996}
+  m_LocalScale: {x: 0.09, y: 0.08999999, z: 0.08999999}
   m_Children:
   - {fileID: 3284518357399790756}
   - {fileID: 7868201759040133185}
@@ -1068,27 +1068,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3439c744800a7349a89c48d836dfb06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  position: {x: 0, y: 0, z: 11}
+  position: {x: 0, y: 0, z: 10}
   rotation: {x: 0, y: 90, z: 90}
   buttonSize: 2
   spaceBetweenButtons: 0.15
   buttonColumns: 5
-  buttonBaseMaterial: {fileID: 2100000, guid: df52f4d0325777d49bbe6e566536e284, type: 2}
-  cancelButtonMaterial: {fileID: 2100000, guid: 9efd5b26b67a6d04c887a980faf6ec9e,
-    type: 2}
-  buttonLockPrefab: {fileID: 511682889863231528, guid: 58c674a4dec1ed94e8abe759dd10060d,
-    type: 3}
-  onButtonDownAudio: {fileID: 8300000, guid: dcebca48962a9454cab218611adb729f, type: 3}
-  onButtonUpAudio: {fileID: 8300000, guid: ceaa897b8429f1340bb8221533272abf, type: 3}
-  progressSprite: {fileID: 21300000, guid: 99a941ae1b6ae874587381380f3516e5, type: 3}
-  progressSpriteColor: {r: 1, g: 0, b: 0, a: 1}
-  progressFont: {fileID: 11400000, guid: 15aa7cfd1a885d9478e1b2718f8ba276, type: 2}
-  resourceCostPrefab: {fileID: 6832047161754982391, guid: 238785b53a6892647a8da91395c427be,
-    type: 3}
-  queueUnitButtons: 06000000030000000500000001000000
+  buttonBaseMaterial: {fileID: 0}
+  cancelButtonMaterial: {fileID: 0}
+  buttonLockPrefab: {fileID: 0}
+  onButtonDownAudio: {fileID: 0}
+  onButtonUpAudio: {fileID: 0}
+  progressSprite: {fileID: 0}
+  progressSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+  progressFont: {fileID: 0}
+  resourceCostPrefab: {fileID: 0}
+  queueUnitButtons: 
   numberOfQueueSlots: 12
-  emptyQueueSlotSprite: {fileID: 21300000, guid: 85867c66586f9ea45a4c1f56a281d550,
-    type: 3}
+  emptyQueueSlotSprite: {fileID: 0}
+  menuParentObject: {fileID: 1660511579026461822}
+  buttonsParent: {fileID: 7296969907036266888}
+  cancelButton: {fileID: 8980484778791345252}
+  spawnQueue: {fileID: 5065858798564515463}
 --- !u!114 &5065858798564515463
 MonoBehaviour:
   m_ObjectHideFlags: 0

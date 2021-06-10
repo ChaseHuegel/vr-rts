@@ -176,7 +176,8 @@ public class SpawnQueue : MonoBehaviour
             unit.rtsUnitType = unitSpawnQueue.First.Value.unitType;
             unit.factionId = structure.factionId;
             unit.Initialize();
-            unit.MoveToLocation(unitRallyWaypoint.position);
+            unit.SyncPosition();
+            unit.MoveToPosition(unitRallyWaypoint.position, true);
 
             // Coord2D pos = World.ToWorldCoord(unitRallyWaypoint.position);
             // unit.TrySetGoal(World.at(pos));
