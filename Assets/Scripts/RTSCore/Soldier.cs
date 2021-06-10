@@ -39,7 +39,7 @@ public class Soldier : Unit
         PathfindingGoal.OnGoalFoundEvent += OnGoalFound;
         PathfindingGoal.OnGoalInteractEvent += OnGoalInteract;
         PathfindingGoal.OnGoalChangeEvent += OnGoalChange;
-        AttributeHandler.OnDamageEvent += OnDamage;
+        AttributeHandler.OnDamageEvent += OnDamaged;
         Damageable.OnDeathEvent += OnDeath;
     }
 
@@ -105,8 +105,13 @@ public class Soldier : Unit
     }
     
 
-    public void OnDamage(object sender, Damageable.DamageEvent e)
+    public void OnDamaged(object sender, Damageable.DamageEvent e)
     {
+        if (e.victim != AttributeHandler)
+            return;
+            
+        if (!currentGoalTarget.GetOccupant<Soldier>())
+            TrySetGoal(e.attacker.GetComponentInChildren<Body>().GetCellAtGrid());
     }
 
     public void OnDeath(object sender, Damageable.DeathEvent e)

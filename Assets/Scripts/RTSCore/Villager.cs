@@ -64,6 +64,7 @@ public class Villager : Unit
         PathfindingGoal.OnGoalInteractEvent += OnGoalInteract;
         PathfindingGoal.OnGoalChangeEvent += OnGoalChange;
         Damageable.OnDeathEvent += OnDeath;
+        AttributeHandler.OnDamageEvent += OnDamaged;
     }
 
 #region Hand Events
@@ -95,6 +96,20 @@ public class Villager : Unit
 #endregion
 
 #region Event Handlers
+
+    public void OnDamaged(object sender, Damageable.DamageEvent e)
+    {
+        if (e.victim != AttributeHandler)
+            return;
+
+        if (!IsMoving())
+        {
+            //DeactivateAllGoals();
+            GotoForced(UnityEngine.Random.Range(-5, 5) + gridPosition.x,
+               UnityEngine.Random.Range(-5, 5) + gridPosition.y);
+            LockPath();
+        }
+    }
 
     public void OnDeath(object sender, Damageable.DeathEvent e)
     {
@@ -439,7 +454,7 @@ public class Villager : Unit
         DeactivateAllGoals();
         transportGoal = goals.Add<GoalTransportResource>();
         animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.IDLE);
-        
+
         switch (unitType)
         {
             case RTSUnitType.Builder:
