@@ -13,6 +13,7 @@ public class SpawnQueue : MonoBehaviour
     [Header("Unit Spawn Queue Settings")]
     public Transform unitSpawnPoint;
     public Transform unitRallyWaypoint;
+    private Cell unitRallyPointCell;
     public float unitRallyWaypointRadius;
 
     [Header("Generated Settings")]
@@ -49,7 +50,7 @@ public class SpawnQueue : MonoBehaviour
             if (structure)
             {
                 unitSpawnPoint = structure.transform;
-                unitRallyWaypoint = unitSpawnPoint;
+                unitRallyWaypoint = unitSpawnPoint;                
                 Debug.Log("UnitSpawnPoint not set, using structure transform.", this);
             }
             else
@@ -57,6 +58,8 @@ public class SpawnQueue : MonoBehaviour
                 Debug.Log("UnitSpawnPoint not set and no structure found.", this);
             }
         }
+
+        unitRallyPointCell = World.at(World.ToWorldCoord(unitRallyWaypoint.position));
 
         if (!(damageable = gameObject.GetComponentInParent<Damageable>()))
             Debug.Log("Missing damageable component in parent.", this);
@@ -173,9 +176,10 @@ public class SpawnQueue : MonoBehaviour
             unit.rtsUnitType = unitSpawnQueue.First.Value.unitType;
             unit.factionId = structure.factionId;
             unit.Initialize();
-            //unit.SyncPosition();
             unit.MoveToLocation(unitRallyWaypoint.position);
-            // Debug.Log("Spawned " + unit.rtsUnitType + ".");
+
+            // Coord2D pos = World.ToWorldCoord(unitRallyWaypoint.position);
+            // unit.TrySetGoal(World.at(pos));
         }
         else
             Debug.Log(string.Format("Spawn {0} failed. Missing prefabToSpawn.", unitSpawnQueue.First.Value.unitType));
@@ -220,7 +224,8 @@ public class SpawnQueue : MonoBehaviour
 
     public void SetUnitRallyWaypoint(Vector3 position)
     {
-        if (unitRallyWaypoint) unitRallyWaypoint.transform.position = position;
+        unitRallyWaypoint.position = position;
+        unitRallyPointCell = World.at(World.ToWorldCoord(unitRallyWaypoint.position));
     }
 
     public void SetCancelButton(HoverButton button)

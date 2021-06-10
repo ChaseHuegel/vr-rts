@@ -339,10 +339,6 @@ public class InteractionPointer : MonoBehaviour
 			if (uiInteractAction.GetStateDown(hand.handType))
 				return true;
 
-		// Make sure it's off.
-		if (wayPointReticle.activeSelf)
-			wayPointReticle.SetActive(false);
-
 		return false;
 	}
 
@@ -351,10 +347,6 @@ public class InteractionPointer : MonoBehaviour
 		if (CanInteract(hand))
 			if (uiInteractAction.GetStateUp(hand.handType))
 				return true;
-
-		// Make sure it's off.
-		if (wayPointReticle.activeSelf)
-			wayPointReticle.SetActive(false);
 
 		return false;
 	}
@@ -511,13 +503,14 @@ public class InteractionPointer : MonoBehaviour
 
 		if (isSettingRallyPoint)
 		{
-			spawnQueue.SetUnitRallyWaypoint(wayPointReticle.transform.position);
-            PlayAudioClip(headAudioSource, setRallyPointSound.GetClip());
+			spawnQueue.SetUnitRallyWaypoint(wayPointReticle.transform.position);            
+			PlayAudioClip(headAudioSource, setRallyPointSound.GetClip());
 			wayPointReticle.SetActive(false);
 			spawnQueue = null;
 			isSettingRallyPoint = false;
 			pointerLineRenderer.enabled = false;
-			return;
+
+            return;
 		}
 
 		if (selectedUnits.Count > 0)

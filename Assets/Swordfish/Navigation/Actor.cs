@@ -255,7 +255,7 @@ public class Actor : Body
         return false;
     }
 
-    public void TrySetGoal(Cell cell)
+    public bool TrySetGoal(Cell cell)
     {
         PathfindingGoal goal = PathfindingGoal.GetGoal(this, cell, GetGoals());
 
@@ -263,15 +263,18 @@ public class Actor : Body
         //     goal.active = true;
 
         WipeAI();
-
         currentGoalTarget = cell;
         currentGoal = goal;
-            
         previousGoalTarget = currentGoalTarget;
         previousGoal = currentGoal;
 
         if (PathfindingGoal.TryGoal(this, cell, goal))
+        {
             GotoForced(cell.x, cell.y);
+            return true;
+        }
+        
+        return false;
     }
 
     public void Goto(Direction dir, int distance, bool ignoreActors = true) { Goto(dir.toVector3() * distance, ignoreActors); }
