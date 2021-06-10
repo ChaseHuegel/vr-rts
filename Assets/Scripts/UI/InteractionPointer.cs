@@ -101,7 +101,7 @@ public class InteractionPointer : MonoBehaviour
 
     //=========================================================================
 	// Modes
-    private bool isInUnitSelectiodMode;
+    private bool isInUnitSelectionMode;
 	private bool isInBuildingPlacementMode;
     private bool isInWallPlacementMode;
     private bool isSettingRallyPoint;
@@ -293,7 +293,7 @@ public class InteractionPointer : MonoBehaviour
 
 			if (WasCancelButtonPressed(hand))
 			{
-				if (isInUnitSelectiodMode)
+				if (isInUnitSelectionMode)
                     EndUnitSelectionMode();
 				else if (isInBuildingPlacementMode)
                     EndBuildingPlacementMode();
@@ -392,11 +392,11 @@ public class InteractionPointer : MonoBehaviour
 			}
 
 			Unit hoveredUnit = pointedAtPointerInteractable.GetComponent<Unit>();
-			if (hoveredUnit && !isInUnitSelectiodMode &&
+			if (hoveredUnit && !isInUnitSelectionMode &&
 				hoveredUnit.IsSameFaction(factionId))
 			{
 				selectedUnits.Add(hoveredUnit);
-				isInUnitSelectiodMode = true;
+				isInUnitSelectionMode = true;
 				return;
 			}
 
@@ -527,7 +527,7 @@ public class InteractionPointer : MonoBehaviour
 						if (structure)
                         {
                             villager.SetUnitTask(RTSUnitType.Builder);
-                            villager.TrySetGoal(structure.GetCellAtGrid());
+                            villager.TrySetGoal(World.at(structure.GetNearbyCoord()));
                             continue;
                         }
 
@@ -535,7 +535,7 @@ public class InteractionPointer : MonoBehaviour
 						if (constructible)
 						{
                             villager.SetUnitTask(RTSUnitType.Builder);							
-                            villager.TrySetGoal(constructible.GetCellAtGrid());
+                            villager.TrySetGoal(World.at(constructible.GetNearbyCoord()));
                             continue;
                         }
                         
@@ -604,6 +604,20 @@ public class InteractionPointer : MonoBehaviour
                             unit.MoveToLocation(pointedAtUnit.transform.position);
 							continue;
 						}
+
+                        Structure structure = pointedAtPointerInteractable.GetComponent<Structure>();
+                        if (structure)
+                        {
+                            unit.TrySetGoal(World.at(structure.GetNearbyCoord()));
+                            continue;
+                        }
+
+                        Constructible constructible = pointedAtPointerInteractable.GetComponent<Constructible>();
+                        if (constructible)
+                        {
+                            unit.TrySetGoal(World.at(constructible.GetNearbyCoord()));
+                            continue;
+                        }
 					}
 					else
                     	// Default go to position.
@@ -997,7 +1011,7 @@ public class InteractionPointer : MonoBehaviour
 
 	private void EndUnitSelectionMode()
 	{
-		isInUnitSelectiodMode = false;
+		isInUnitSelectionMode = false;
 		pointedAtResource = null;
 		selectedUnits.Clear();
 		foreach(LineRenderer lineRenderer in lineRenderers)
@@ -1070,7 +1084,7 @@ public class InteractionPointer : MonoBehaviour
 				pointerLineRenderer.enabled = true;
 
 		}
-		else if (isInUnitSelectiodMode && pointedAtPointerInteractable != null)
+		else if (isInUnitSelectionMode && pointedAtPointerInteractable != null)
 		{
 			Unit hoveredUnit = pointedAtPointerInteractable.GetComponent<Unit>();
 			if (hoveredUnit && !selectedUnits.Contains(hoveredUnit) &&
@@ -1111,9 +1125,7 @@ public class InteractionPointer : MonoBehaviour
 			HardSnapToGrid(destinationReticleTransform, placementBuildingData.boundingDimensionX, placementBuildingData.boundingDimensionY);            
 			if (wallPlacementPreviewStartObject)// && buildingPlacementPreviewObject)
             {
-				// ! Choose a method to use....
-                DrawWallPreview(); // AOE2 style, 45's don't work.
-				//DrawWallPreview2();  // No corners ala AOE2, 45's are buggy.
+                DrawWallPreview();
             }
 
             //DrawQuadraticBezierCurve(pointerLineRenderer, pointerStart, destinationReticleTransform.position);
@@ -1147,7 +1159,6 @@ public class InteractionPointer : MonoBehaviour
 			}
 		}
 	}
-
 
     //=========================================================================
 	// Walls

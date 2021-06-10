@@ -52,7 +52,10 @@ public class MapGenerator : MonoBehaviour
 
         foreach (Transform child in this.transform)
         {
-            Destroy(child.gameObject);
+            if (Time.time <= 0)
+                Destroy(child.gameObject);
+            else
+                DestroyImmediate(child.gameObject);
         }
 
         for (int x = 0; x < World.GetLength(); x++)

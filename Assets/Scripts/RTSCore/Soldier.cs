@@ -45,14 +45,18 @@ public class Soldier : Unit
 
     public void SetAIAttackGoals(bool military, bool villagers,  bool buildings)
     {
+        goals.Add<GoalHuntMilitary>().active = false;
+        goals.Add<GoalHuntVillagers>().active = false;
+        goals.Add<GoalHuntBuildings>().active = false;
+        
         if (military)
-            goals.Add<GoalHuntMilitary>();
+            goals.Get<GoalHuntMilitary>().active = true;
 
         if (villagers)
-            goals.Add<GoalHuntVillagers>();
+            goals.Get<GoalHuntVillagers>().active = true;
 
         if (buildings)
-            goals.Add<GoalHuntBuildings>();
+            goals.Get<GoalHuntBuildings>().active = true;
 
         //ResetAI();
     }

@@ -190,8 +190,9 @@ public class Unit : Actor, IFactioned
     {        
         if (deactivateGoals)
             DeactivateAllGoals();
+        
+        ResetPath();
         Coord2D pos = World.ToWorldCoord(position);
-        ResetPath();    
         GotoForced(pos.x, pos.y);
         LockPath();
     }
