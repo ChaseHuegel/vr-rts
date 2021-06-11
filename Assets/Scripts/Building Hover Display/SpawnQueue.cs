@@ -50,7 +50,6 @@ public class SpawnQueue : MonoBehaviour
             if (structure)
             {
                 unitSpawnPoint = structure.transform;
-                unitRallyWaypoint = unitSpawnPoint;                
                 Debug.Log("UnitSpawnPoint not set, using structure transform.", this);
             }
             else
@@ -58,8 +57,8 @@ public class SpawnQueue : MonoBehaviour
                 Debug.Log("UnitSpawnPoint not set and no structure found.", this);
             }
         }
-
-        unitRallyPointCell = World.at(World.ToWorldCoord(unitRallyWaypoint.position));
+        
+        SetUnitRallyWaypoint(unitSpawnPoint.position);
 
         if (!(damageable = gameObject.GetComponentInParent<Damageable>()))
             Debug.Log("Missing damageable component in parent.", this);
@@ -177,7 +176,10 @@ public class SpawnQueue : MonoBehaviour
             unit.factionId = structure.factionId;
             unit.Initialize();
             unit.SyncPosition();
-            unit.MoveToPosition(unitRallyWaypoint.position);
+            
+            unit.GotoRallyPoint(unitRallyPointCell);
+
+            //unit.MoveToPosition(unitRallyWaypoint.position);
 
             // Coord2D pos = World.ToWorldCoord(unitRallyWaypoint.position);
             // unit.TrySetGoal(World.at(pos));

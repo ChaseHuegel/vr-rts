@@ -78,7 +78,8 @@ public class Unit : Actor, IFactioned
         if (!animator)
             Debug.Log("No animator component found.");
 
-        if (!(m_rtsUnitTypeData = GameMaster.GetUnit(rtsUnitType)))
+        SetUnitData(rtsUnitType);
+        if (m_rtsUnitTypeData)
             Debug.Log(string.Format("{0} data not found.", rtsUnitType));
 
         UpdateFaction();
@@ -205,6 +206,19 @@ public class Unit : Actor, IFactioned
         ResetPath();
         Coord2D pos = World.ToWorldCoord(position);
         GotoForced(pos.x, pos.y);
+        LockPath();
+    }
+
+    public virtual void GotoRallyPoint(Cell cell)
+    {
+        if (!cell.occupied)
+            GotoForced(cell.x, cell.y);
+        else
+        {
+            Coord2D nearbyPosition = cell.GetFirstOccupant().GetNearbyCoord();
+            GotoForced(nearbyPosition.x, nearbyPosition.y);
+        }
+        
         LockPath();
     }
 
