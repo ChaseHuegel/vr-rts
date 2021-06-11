@@ -209,6 +209,11 @@ public class Unit : Actor, IFactioned
         LockPath();
     }
 
+    /// <summary>
+    /// Sends a unit to a target cell. If the cell is occupied, sends unit to a cell
+    /// near the target cell.
+    /// </summary>
+    /// <param name="cell"></param>
     public virtual void GotoRallyPoint(Cell cell)
     {
         if (!cell.occupied)
@@ -218,7 +223,7 @@ public class Unit : Actor, IFactioned
             Coord2D nearbyPosition = cell.GetFirstOccupant().GetNearbyCoord();
             GotoForced(nearbyPosition.x, nearbyPosition.y);
         }
-        
+
         LockPath();
     }
 
