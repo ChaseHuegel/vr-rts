@@ -299,12 +299,6 @@ public class InteractionPointer : MonoBehaviour
                     EndBuildingPlacementMode();
             }
 
-			// 	if (isSettingRallyPoint)
-			// 	{
-            //         isSettingRallyPoint = false;
-            //     }
-			// }
-
 			if (WasSelectButtonPressed(hand))
                 newPointerHand = hand;
 
@@ -517,112 +511,46 @@ public class InteractionPointer : MonoBehaviour
 		{
 			foreach (Unit unit in selectedUnits)
 			{
-				if (unit is Villager)
+				if (pointedAtPointerInteractable)
 				{
-                    Villager villager = unit.GetComponent<Villager>();
-
-                    if (pointedAtPointerInteractable)
-                    {
-                        Structure structure = pointedAtPointerInteractable.GetComponent<Structure>();
-						if (structure)
-                        {
-                            villager.SetUnitTask(RTSUnitType.Builder);
-                            villager.TrySetGoal(World.at(structure.GetNearbyCoord()));
-                            continue;
-                        }
-
-                        Constructible constructible = pointedAtPointerInteractable.GetComponent<Constructible>();
-						if (constructible)
-						{
-                            villager.SetUnitTask(RTSUnitType.Builder);							
-                            villager.TrySetGoal(World.at(constructible.GetNearbyCoord()));
-                            continue;
-                        }
-                        
-                        Resource resource = pointedAtPointerInteractable.GetComponent<Resource>();
-                        if (resource)
-                        {
-                            switch (resource.type)
-                            {
-                                case ResourceGatheringType.Gold:
-                                    villager.SetUnitTask(RTSUnitType.GoldMiner);                                    
-                                    break;
-
-                                case ResourceGatheringType.Grain:
-                                    villager.SetUnitTask(RTSUnitType.Farmer);
-                                    break;
-
-                                case ResourceGatheringType.Stone:
-                                    villager.SetUnitTask(RTSUnitType.StoneMiner);
-                                    break;
-
-                                case ResourceGatheringType.Wood:
-                                    villager.SetUnitTask(RTSUnitType.Lumberjack);
-                                    break;
-
-                                case ResourceGatheringType.Berries:
-                                    villager.SetUnitTask(RTSUnitType.Forager);
-                                    break;
-
-                                case ResourceGatheringType.Fish:
-                                    villager.SetUnitTask(RTSUnitType.Fisherman);
-                                    break;
-
-                                case ResourceGatheringType.Meat:
-                                    villager.SetUnitTask(RTSUnitType.Hunter);
-                                    break;
-                            }
-
-                            villager.TrySetGoal(World.at(resource.GetNearbyCoord()));//GetCellAtGrid());
-                            continue;
-                        }
-                    }
-					
-					villager.MoveToLocation(pointedAtPosition);
-					continue;
-				}
-
-				// Military unit.
-				else if (unit is Soldier)
-				// if (!civilian)
-				{
-					if (pointedAtPointerInteractable)
+					Resource resource = pointedAtPointerInteractable.GetComponent<Resource>();
+					if (resource)
 					{
-						Unit pointedAtUnit = pointedAtPointerInteractable.GetComponent<Unit>();
-
-						// Not the same faction.
-						if (pointedAtUnit && !unit.IsSameFaction(factionId))
-						{
-                            // TODO: Force attack unit/set target
-                            // Attack unit
-                            unit.TrySetGoal(pointedAtUnit.GetCellAtGrid());
-							continue;
-						}
-						// Same faction, go to units position.
-						else if (pointedAtUnit)
-						{
-                            unit.MoveToLocation(pointedAtUnit.transform.position);
-							continue;
-						}
-
-                        Structure structure = pointedAtPointerInteractable.GetComponent<Structure>();
-                        if (structure)
-                        {
-                            unit.TrySetGoal(World.at(structure.GetNearbyCoord()));
-                            continue;
-                        }
-
-                        Constructible constructible = pointedAtPointerInteractable.GetComponent<Constructible>();
-                        if (constructible)
-                        {
-                            unit.TrySetGoal(World.at(constructible.GetNearbyCoord()));
-                            continue;
-                        }
+						unit.SetUnitTask(resource);
+						continue;
 					}
-					else
-                    	// Default go to position.
-                    	unit.MoveToLocation(pointedAtPosition);
+
+					Unit pointedAtUnit = pointedAtPointerInteractable.GetComponent<Unit>();
+					if (pointedAtUnit)
+					{
+						unit.SetUnitTask(pointedAtUnit);
+						continue;
+					}
+					
+					Fauna fauna = pointedAtPointerInteractable.GetComponent<Fauna>();
+					if (fauna)
+					{
+						unit.SetUnitTask(fauna);
+						continue;
+					}
+
+					Structure structure = pointedAtPointerInteractable.GetComponent<Structure>();
+					if (structure)
+					{
+						unit.SetUnitTask(structure);
+						continue;
+					}
+
+					Constructible constructible = pointedAtPointerInteractable.GetComponent<Constructible>();
+					if (constructible)
+					{
+						unit.SetUnitTask(constructible);
+						continue;
+					}                                                
 				}
+					
+				unit.MoveToLocation(pointedAtPosition);
+				continue;
 			}
 
             // Cleanup

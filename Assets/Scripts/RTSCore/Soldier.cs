@@ -43,12 +43,85 @@ public class Soldier : Unit
         Damageable.OnDeathEvent += OnDeath;
     }
 
+
+    public void CleanupEvents()
+    {
+        PathfindingGoal.OnGoalChangeEvent -= OnGoalChange;
+        PathfindingGoal.OnGoalFoundEvent -= OnGoalFound;
+        PathfindingGoal.OnGoalInteractEvent -= OnGoalInteract;
+        AttributeHandler.OnDamageEvent -= OnDamaged;
+        Damageable.OnDeathEvent -= OnDeath;
+    }
+
+    /// <summary>
+    /// Sets the soldiers task to the passed in structure location. If structure
+    /// is an enemy structure soldier is set attacks the
+    /// structure. If structure is friendly soldier moves to location.
+    /// </summary>
+    /// <param name="structure"></param>
+    public override void SetUnitTask(Structure structure)
+    {
+        if (IsSameFaction(structure.factionId))
+            MoveToLocation(structure.transform.position);
+        else
+        {
+            goals.Get<GoalHuntBuildings>().active = true;
+            TrySetGoal(World.at(structure.GetNearbyCoord()));
+        }    
+    }
+
+    /// <summary>
+    /// Sets the soldiers task to the passed in constructible location. If 
+    /// constructible is an enemy constructible soldier is set attacks the
+    /// constructible. If constructible is friendly soldier moves to location.
+    /// </summary>
+    /// <param name="constructible"></param>
+    public override void SetUnitTask(Constructible constructible)
+    {
+        if (IsSameFaction(constructible.factionId))
+            MoveToLocation(constructible.transform.position);
+        else
+        {
+            goals.Get<GoalHuntBuildings>().active = true;
+            TrySetGoal(World.at(constructible.GetNearbyCoord()));
+        }
+    }
+
+    /// <summary>
+    /// Sets the soldiers task to the passed in unit location.
+    /// </summary>
+    /// <param name="unit"></param>
+    public override void SetUnitTask(Unit unit)
+    {
+        if (IsSameFaction(unit))
+            MoveToLocation(unit.transform.position);
+        else
+        {
+            if (unit.IsCivilian())
+                goals.Get<GoalHuntVillagers>().active = true;
+            else
+                goals.Get<GoalHuntMilitary>().active = true;
+
+            TrySetGoal(unit.GetCellAtGrid());
+        }
+    }
+
+    /// <summary>
+    /// Sets the soldiers task to the passed in fauna and sets
+    /// the soldier to attack it.
+    /// </summary>
+    /// <param name="fauna"></param>
+    public override void SetUnitTask(Fauna fauna)
+    {
+        TrySetGoal(fauna.GetCellAtGrid());
+    }
+
     public void SetAIAttackGoals(bool military, bool villagers,  bool buildings)
     {
         goals.Add<GoalHuntMilitary>().active = false;
         goals.Add<GoalHuntVillagers>().active = false;
         goals.Add<GoalHuntBuildings>().active = false;
-        
+                
         if (military)
             goals.Get<GoalHuntMilitary>().active = true;
 
@@ -165,9 +238,7 @@ public class Soldier : Unit
         Unit unit = collider.gameObject.GetComponent<Unit>();
         if (unit)
         {
-            if (!IsSameFaction(unit))
-                TrySetGoal(unit.GetCellAtGrid());
-
+            SetUnitTask(unit);
             return;
         }
 
@@ -175,24 +246,21 @@ public class Soldier : Unit
         Fauna fauna = collider.gameObject.GetComponent<Fauna>();
         if (fauna)
         {
+            SetUnitTask(fauna);
             return;
         }
 
-        Structure building = collider.gameObject.GetComponentInParent<Structure>();
-        if (building)
+        Structure structure = collider.gameObject.GetComponentInParent<Structure>();
+        if (structure)
         {
-            if (!IsSameFaction(building.factionId))
-                TrySetGoal(building.GetCellAtGrid());
-
+            SetUnitTask(structure);
             return;
         }
 
         Constructible constructible = collider.gameObject.GetComponentInParent<Constructible>();
         if (constructible)
         {
-            if (!IsSameFaction(constructible.factionId))
-                TrySetGoal(constructible.GetCellAtGrid());
-            
+            SetUnitTask(constructible);
             return;
         }
     }
@@ -309,13 +377,6 @@ public class Soldier : Unit
             animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.ATTACKING2);
     }
 
-    public void CleanupEvents()
-    {
-        PathfindingGoal.OnGoalChangeEvent -= OnGoalChange;
-        PathfindingGoal.OnGoalFoundEvent -= OnGoalFound;
-        PathfindingGoal.OnGoalInteractEvent -= OnGoalInteract;
-        Damageable.OnDeathEvent -= OnDeath;
-    }
 
     public void OnDestroy()
     {

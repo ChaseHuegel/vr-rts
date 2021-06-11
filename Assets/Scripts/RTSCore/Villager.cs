@@ -51,11 +51,8 @@ public class Villager : Unit
         goals.Add<GoalGatherMeat>();
         goals.Add<GoalGatherWood>();        
         goals.Add<GoalGatherGold>();
-        
-        SetUnitTask(rtsUnitType);
 
-        // if(faction.IsSameFaction(playerManager.factionId))
-        //     playerManager.AddToPopulation((Unit)this);        
+        ChangeVillagerType(rtsUnitType);      
     }
 
     public void HookIntoEvents()
@@ -65,6 +62,15 @@ public class Villager : Unit
         PathfindingGoal.OnGoalChangeEvent += OnGoalChange;
         Damageable.OnDeathEvent += OnDeath;
         AttributeHandler.OnDamageEvent += OnDamaged;
+    }
+
+    public void CleanupEvents()
+    {
+        PathfindingGoal.OnGoalFoundEvent -= OnGoalFound;
+        PathfindingGoal.OnGoalInteractEvent -= OnGoalInteract;
+        PathfindingGoal.OnGoalChangeEvent -= OnGoalChange;
+        Damageable.OnDeathEvent -= OnDeath;
+        AttributeHandler.OnDamageEvent -= OnDamaged;
     }
 
 #region Hand Events
@@ -153,57 +159,28 @@ public class Villager : Unit
         Resource resource = collider.gameObject.GetComponent<Resource>();
         if (resource)
         {
-            switch (resource.type)
-            {
-                case ResourceGatheringType.Gold:
-                    SetUnitTask(RTSUnitType.GoldMiner);
-                    break;
-
-                case ResourceGatheringType.Grain:
-                    SetUnitTask(RTSUnitType.Farmer);
-                    break;
-
-                case ResourceGatheringType.Berries:
-                    SetUnitTask(RTSUnitType.Forager);
-                    break;
-
-                case ResourceGatheringType.Meat:
-                    SetUnitTask(RTSUnitType.Hunter);
-                    break;
-
-                case ResourceGatheringType.Wood:
-                    SetUnitTask(RTSUnitType.Lumberjack);
-                    break;
-
-                case ResourceGatheringType.Stone:
-                    SetUnitTask(RTSUnitType.StoneMiner);
-                    break;
-
-                case ResourceGatheringType.Fish:
-                    SetUnitTask(RTSUnitType.Fisherman);
-                    break;
-
-                default:
-                    break;
-            }
-
-            // ResetAI();
+            SetUnitTask(resource);
             return;
         }
 
         Fauna fauna = collider.gameObject.GetComponent<Fauna>();
         if (fauna)
         {
-            SetUnitTask(RTSUnitType.Hunter);
-            //ResetAI();
+            SetUnitTask(fauna);
             return;
         }
 
-        Structure building = collider.gameObject.GetComponentInParent<Structure>();
-        if (building)
+        Structure structure = collider.gameObject.GetComponentInParent<Structure>();
+        if (structure)
         {
-            SetUnitTask(RTSUnitType.Builder);
-            //ResetAI();
+            SetUnitTask(structure);
+            return;
+        }
+
+        Constructible constructible = collider.gameObject.GetComponentInParent<Constructible>();
+        if (constructible)
+        {
+            SetUnitTask(constructible);
             return;
         }
     }
@@ -443,17 +420,105 @@ public class Villager : Unit
     /// Sets a unit to a specific task to the exclusion of all others by 
     /// deactivating all goals except the desired goal and a transport 
     /// goal. The exception to this is the drifter unit type which has 
-    /// all goals active.
+    /// all goals active. Also attempts to set the goal of the unit to the
+    /// location passed in.
     /// </summary>
     /// <param name="unitType">The units new job/task.</param>
-    public override void SetUnitTask(RTSUnitType unitType)
+    /// <param name="taskLocation">The transform space location of the task.</param>
+    public override void SetUnitTask(RTSUnitType unitType, Cell taskLocation = null)
     {
-        base.SetUnitTask(unitType);
+        ChangeVillagerType(unitType);
 
-        // Turn off all goals except the transport goal.
+        animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.IDLE);        
+
+        if (taskLocation != null)
+            TrySetGoal(taskLocation);
+
+        ResetAI();
+        PlayChangeTaskAudio();
+    }
+
+    /// <summary>
+    /// Changes villager type to builder and sets it's task to the passed in
+    /// structure location.
+    /// </summary>
+    /// <param name="structure"></param>
+    public override void SetUnitTask(Structure structure)
+    {
+        SetUnitTask(RTSUnitType.Builder, World.at(structure.GetNearbyCoord()));
+    }
+
+    /// <summary>
+    /// Changes villager type to builder and sets it's task to the passed in
+    /// constructible location.
+    /// </summary>
+    /// <param name="constructible"></param>
+    public override void SetUnitTask(Constructible constructible)
+    {
+        SetUnitTask(RTSUnitType.Builder, World.at(constructible.GetNearbyCoord()));
+    }
+
+    /// <summary>
+    /// Changes villager type to hunter and sets it's task to the passed in
+    /// fauna location.
+    /// </summary>
+    /// <param name="fauna"></param>
+    public override void SetUnitTask(Fauna fauna)
+    {
+        SetUnitTask(RTSUnitType.Hunter, World.at(fauna.GetNearbyCoord()));
+    }
+
+    /// <summary>
+    /// Changes villager type and sets it's task to the passed in resource
+    /// location.
+    /// </summary>
+    /// <param name="resource"></param>
+    public override void SetUnitTask(Resource resource)
+    {
+        switch (resource.type)
+        {
+            case ResourceGatheringType.Gold:
+                ChangeVillagerType(RTSUnitType.GoldMiner);
+                break;
+
+            case ResourceGatheringType.Grain:
+                ChangeVillagerType(RTSUnitType.Farmer);
+                break;
+
+            case ResourceGatheringType.Stone:
+                ChangeVillagerType(RTSUnitType.StoneMiner);
+                break;
+
+            case ResourceGatheringType.Wood:
+                ChangeVillagerType(RTSUnitType.Lumberjack);
+                break;
+
+            case ResourceGatheringType.Berries:
+                ChangeVillagerType(RTSUnitType.Forager);
+                break;
+
+            case ResourceGatheringType.Fish:
+                ChangeVillagerType(RTSUnitType.Fisherman);
+                break;
+
+            case ResourceGatheringType.Meat:
+                ChangeVillagerType(RTSUnitType.Hunter);
+                break;
+        }
+
+        SetUnitTask(rtsUnitTypeData.unitType, World.at(resource.GetNearbyCoord()));
+    }
+
+    /// <summary>
+    /// Sets the state, currentResource, and activates/deactivates the goals for
+    /// the villager that correspond to the unitType passed in.
+    /// </summary>
+    /// <param name="unitType">The new type of villager to change to.</param>
+    protected void ChangeVillagerType(RTSUnitType unitType)
+    {
+        SetUnitData(unitType);
         DeactivateAllGoals();
-        transportGoal = goals.Add<GoalTransportResource>();
-        animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.IDLE);
+        goals.Get<GoalTransportResource>().active = true;
 
         switch (unitType)
         {
@@ -511,14 +576,9 @@ public class Villager : Unit
                 currentResource = ResourceGatheringType.None;
                 ActivateAllGoals();
                 break;
-
-            default:
-                break;
         }
-
-        ResetAI();
-        PlayChangeTaskAudio();
     }
+
 
     public void PlayChangeTaskAudio()
     {
@@ -825,13 +885,7 @@ public class Villager : Unit
         return true;
     }
 
-    public void CleanupEvents()
-    {
-        PathfindingGoal.OnGoalFoundEvent -= OnGoalFound;
-        PathfindingGoal.OnGoalInteractEvent -= OnGoalInteract;
-        PathfindingGoal.OnGoalChangeEvent -= OnGoalChange;
-        Damageable.OnDeathEvent -= OnDeath;
-    }
+ 
 
     public void OnDestroy()
     {

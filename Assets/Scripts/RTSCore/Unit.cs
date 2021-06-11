@@ -101,18 +101,29 @@ public class Unit : Actor, IFactioned
         }
     }
 
+    public virtual void SetUnitTask(RTSUnitType unitType, Cell taskLocation = null) {}
+
+    public virtual void SetUnitTask(Structure structure) {}
+
+    public virtual void SetUnitTask(Constructible constructible) {}
+
+    public virtual void SetUnitTask(Fauna fauna) {}
+
+    public virtual void SetUnitTask(Unit unit) {}
+
+    public virtual void SetUnitTask(Resource resource) {}
+
     //=========================================================================
     /// <summary>
-    /// Sets the unit type, fetches unitData, sets maxGoalInteractRange to
-    /// unitData.attackRange, and resets the goal.
+    /// Sets the unit type, fetches unitData, and sets maxGoalInteractRange to
+    /// unitData.attackRange.
     /// </summary>
     /// <param name="unitType"></param>
-    public virtual void SetUnitTask(RTSUnitType unitType)
+    protected void SetUnitData(RTSUnitType unitType)
     {
         rtsUnitType = unitType;
         m_rtsUnitTypeData = GameMaster.GetUnit(rtsUnitType);
         maxGoalInteractRange = rtsUnitTypeData.attackRange;
-        ResetGoal();
     }
 
     public virtual bool IsCivilian() { return true; }

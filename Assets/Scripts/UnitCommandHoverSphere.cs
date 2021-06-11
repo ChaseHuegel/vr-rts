@@ -44,15 +44,16 @@ public class UnitCommandHoverSphere : MonoBehaviour
             {
 				if (!hand.noSteamVRFallbackCamera)
               		hand.TriggerHapticPulse(1000);
+					  
                 villager.SetUnitTask(rtsUnitJob);
 
-                // // Call this to continue receiving HandHoverUpdate messages,
-                // // and prevent the hand from hovering over anything else
+                // Call this to continue receiving HandHoverUpdate messages,
+                // and prevent the hand from hovering over anything else
                 // hand.HoverLock(interactable);
             }
             else if (isGrabEnding)
             {
-                // // Call this to undo HoverLock
+                // Call this to undo HoverLock
                 // hand.HoverUnlock(interactable);
             }
 		}
