@@ -222,6 +222,31 @@ public class Unit : Actor, IFactioned
         {
             Coord2D nearbyPosition = cell.GetFirstOccupant().GetNearbyCoord();
             GotoForced(nearbyPosition.x, nearbyPosition.y);
+
+            // ! The below code could result in rally points set to empty cells
+            // ! when set becoming occupied and changing the task of the unit.
+            // ! Probably undesirable, leaving code in for future use in the
+            // ! event we store rally points or have a method of determining the
+            // ! state of the rally point when it was set.
+            // Resource resource = cell.GetOccupant<Resource>();
+            // if (resource)
+            //     SetUnitTask(resource);
+
+            // Unit pointedAtUnit = cell.GetOccupant<Unit>();
+            // if (pointedAtUnit)
+            //     SetUnitTask(pointedAtUnit);
+
+            // Fauna fauna = cell.GetOccupant<Fauna>();
+            // if (fauna)
+            //     SetUnitTask(fauna);
+
+            // Structure structure = cell.GetOccupant<Structure>();
+            // if (structure)
+            //     SetUnitTask(structure);
+
+            // Constructible constructible = cell.GetOccupant<Constructible>();
+            // if (constructible)
+            //     SetUnitTask(constructible);                       
         }
 
         LockPath();
