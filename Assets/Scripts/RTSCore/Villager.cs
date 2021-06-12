@@ -51,7 +51,8 @@ public class Villager : Unit
         goals.Add<GoalGatherMeat>();
         goals.Add<GoalGatherWood>();        
         goals.Add<GoalGatherGold>();
-
+        goals.Add<GoalTransportResource>();
+        
         ChangeVillagerType(rtsUnitType);      
     }
 
@@ -831,7 +832,7 @@ public class Villager : Unit
         if (!fauna || IsCargoFull())
             return false;
 
-        projectileTarget = fauna.gameObject;
+        targetDamageable = fauna.AttributeHandler;
         float amount = (rtsUnitTypeData.huntingDamage / (60 / Constants.ACTOR_TICK_RATE));
         fauna.AttributeHandler.Damage(amount, AttributeChangeCause.ATTACKED, AttributeHandler, DamageType.PIERCING);
         animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.HUNTING);

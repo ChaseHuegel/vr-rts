@@ -22,8 +22,9 @@ public class Unit : Actor, IFactioned
 
     [Header("Unit")]
     public RTSUnitType rtsUnitType;
+    public bool maxHitPointsOnStart = true;
     public GameObject rangedProjectile;
-    protected GameObject projectileTarget;
+    protected Damageable targetDamageable;
     public float projectileSpeed = 5.0f;
     private GameObject projectile;
     private Vector3 projectileTargetPos;
@@ -60,6 +61,7 @@ public class Unit : Actor, IFactioned
     protected PlayerManager playerManager;
     protected float detachFromHandTime;
 
+
     public void Awake()
     {
         audioSource = gameObject.GetComponent<AudioSource>();
@@ -79,8 +81,11 @@ public class Unit : Actor, IFactioned
             Debug.Log("No animator component found.");
 
         SetUnitData(rtsUnitType);
-        if (m_rtsUnitTypeData)
+        if (!m_rtsUnitTypeData)
             Debug.Log(string.Format("{0} data not found.", rtsUnitType));
+
+        if (maxHitPointsOnStart)
+            AttributeHandler.GetAttribute(Attributes.HEALTH).SetValue(rtsUnitTypeData.maxHitPoints);
 
         UpdateFaction();
         SetSkin();
@@ -116,8 +121,8 @@ public class Unit : Actor, IFactioned
 
     //=========================================================================
     /// <summary>
-    /// Sets the unit type, fetches unitData, and sets maxGoalInteractRange to
-    /// unitData.attackRange.
+    /// Sets the unit type, fetches unitData, sets maxGoalInteractRange to
+    /// unitData.attackRange, and sets max hit points on AttributeHandler.
     /// </summary>
     /// <param name="unitType"></param>
     protected void SetUnitData(RTSUnitType unitType)
@@ -125,6 +130,7 @@ public class Unit : Actor, IFactioned
         rtsUnitType = unitType;
         m_rtsUnitTypeData = GameMaster.GetUnit(rtsUnitType);
         maxGoalInteractRange = rtsUnitTypeData.attackRange;
+        AttributeHandler.GetAttribute(Attributes.HEALTH).SetMax(rtsUnitTypeData.maxHitPoints);
     }
 
     public virtual bool IsCivilian() { return true; }
@@ -304,14 +310,15 @@ public class Unit : Actor, IFactioned
             projectile = Instantiate(rangedProjectile);
             projectile.transform.position = transform.position;
             projectile.transform.position += new Vector3(0, 0.09f, 0);
-            projectileTargetPos = projectileTarget.transform.position;
+            projectileTargetPos = targetDamageable.transform.position;
             projectileTargetPos += new Vector3(0, 0.09f, 0);
             
-            audioSource.PlayOneShot(GameMaster.GetAudio(clipName).GetClip());
+            if (clipName != "")
+                audioSource.PlayOneShot(GameMaster.GetAudio(clipName).GetClip());
 
-            if (projectileTarget)
+            if (targetDamageable)
             {
-                projectileTargetPos = projectileTarget.transform.position;
+                projectileTargetPos = targetDamageable.transform.position;
                 projectileTargetPos += new Vector3(0, 0.09f, 0);
             }
         }
@@ -330,6 +337,9 @@ public class Unit : Actor, IFactioned
 
         if(dist <= 0.1f)
         {
+            if (targetDamageable)
+                targetDamageable.Damage(rtsUnitTypeData.attackDamage, AttributeChangeCause.ATTACKED, AttributeHandler, DamageType.SLASHING);
+
             // This will destroy the arrow when it is within .1 units
             // of the target location. You can set this to whatever
             // distance you're comfortable with.
