@@ -5,10 +5,8 @@ using UnityEngine;
 public class AnimatorAudioPlayer : MonoBehaviour
 {   
     private AudioSource audioSource;
-
     private Unit unit;
-
-
+    
     // TODO: Change to events and have parent subscribe to them?
     void Start()
     {
@@ -25,11 +23,5 @@ public class AnimatorAudioPlayer : MonoBehaviour
     {
         if (audioSource)
             audioSource.PlayOneShot(GameMaster.GetAudio(clipName).GetClip());
-    }
-
-    public void LaunchProjectile()
-    {
-        if (unit)
-            unit.LaunchProjectile();
     }
 }

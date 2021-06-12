@@ -297,7 +297,7 @@ public class Unit : Actor, IFactioned
             LaunchProjectile();
     }
 
-    public virtual void LaunchProjectile()
+    public virtual void LaunchProjectile(string clipName = "")
     {
         if (!projectile)
         {
@@ -306,6 +306,8 @@ public class Unit : Actor, IFactioned
             projectile.transform.position += new Vector3(0, 0.09f, 0);
             projectileTargetPos = projectileTarget.transform.position;
             projectileTargetPos += new Vector3(0, 0.09f, 0);
+            
+            audioSource.PlayOneShot(GameMaster.GetAudio(clipName).GetClip());
 
             if (projectileTarget)
             {
@@ -339,6 +341,18 @@ public class Unit : Actor, IFactioned
             projectile.transform.Translate(Vector3.forward * (projectileSpeed * Time.deltaTime));
         }
     }
+
+    /// <summary>
+    /// Plays the audio clip passed in. Called by AnimatorEventForwarder during
+    /// animation events where contact takes place with weapons and implements.
+    /// </summary>
+    /// <param name="audioClipName">Swordfish.SoundElement to get the a clip from.</param>
+    public virtual void Strike(string audioClipName = "")
+    {
+        if (audioSource != null && audioClipName != "")
+            audioSource.PlayOneShot(GameMaster.GetAudio(audioClipName).GetClip());
+    }
+
     void OnValidate()
     {
         if (!GameMaster.Instance)
