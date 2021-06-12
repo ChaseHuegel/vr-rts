@@ -221,8 +221,7 @@ public class Soldier : Unit
         if (!wasThrownOrDropped)
             return;
 
-        // TODO: could just switch this to a cell lookup where
-        // TODO: they land.
+        // TODO: could just switch this to a cell lookup where they land.
         // Don't wait for a collision indefinitely.
         if (Time.time - detachFromHandTime >= 2.0f)
         {
