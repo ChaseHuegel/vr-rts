@@ -292,7 +292,11 @@ public class Actor : Body
     public void GotoForced(Vector3 vec, bool ignoreActors = true) { Goto((int)vec.x, (int)vec.z, ignoreActors); }
     public void GotoForced(int x, int y, bool ignoreActors = true)
     {
-        if (!isPathLocked && DistanceTo(x, y) > maxGoalInteractRange)
+        // ! Not sure if maxGoalInteractRange is needed here. Not sure if I added
+        // ! it when making the changes for ranged units or you (chase) added it.
+        // ! It does prevent going to a postion for ranged units if that position
+        // ! is not outside of their range though, and that's a problem.
+        if (!isPathLocked && DistanceTo(x, y) > 1)// maxGoalInteractRange)
             PathManager.RequestPath(this, x, y, ignoreActors);
     }
 

@@ -29,7 +29,7 @@ public class AnimatorEventForwarder : MonoBehaviour
             unit.Strike(audioClipName);
     }
 
-    // TODO: Change this to just use Strike function instead?
+    // TODO: Remove this, don't think this is called anymore by any animators.
     public void PlayAudio(string clipName = "")
     {
         if (audioSource != null && clipName != "")
