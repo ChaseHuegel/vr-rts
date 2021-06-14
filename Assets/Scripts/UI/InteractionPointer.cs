@@ -497,9 +497,15 @@ public class InteractionPointer : MonoBehaviour
 
 		if (isSettingRallyPoint)
 		{
-			spawnQueue.SetUnitRallyWaypoint(wayPointReticle.transform.position);            
-			PlayAudioClip(headAudioSource, setRallyPointSound.GetClip());
-			wayPointReticle.SetActive(false);
+			// TODO: Draw line to rally point.
+            spawnQueue.SetUnitRallyWaypoint(wayPointReticle.transform.position);
+            wayPointReticle.SetActive(false);
+            GameObject wp = wayPointReticle.transform.GetChild(0).gameObject;
+            GameObject gameObject = Instantiate<GameObject>(wp, wp.transform.position, wp.transform.rotation);
+            gameObject.transform.localScale = wp.transform.lossyScale;
+            gameObject.GetComponentInChildren<Animator>().Play("deploy");
+            Destroy(gameObject, 2.0f);
+            PlayAudioClip(headAudioSource, setRallyPointSound.GetClip());
 			spawnQueue = null;
 			isSettingRallyPoint = false;
 			pointerLineRenderer.enabled = false;
