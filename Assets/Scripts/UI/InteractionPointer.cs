@@ -90,9 +90,10 @@ public class InteractionPointer : MonoBehaviour
 	public GameObject wayPointReticle;
 	private Resource pointedAtResource;
 	private Vector3 rallyWaypointArcStartPosition;
+    private GameObject rallyPointObject;
 
-	// Cache value
-	private int maxUnitSelectionCount;
+    // Cache value
+    private int maxUnitSelectionCount;
 
     // Cache value
     private Faction faction;
@@ -207,6 +208,8 @@ public class InteractionPointer : MonoBehaviour
 			return;
 		}
 
+        rallyPointObject = wayPointReticle.transform.GetChild(0).gameObject;
+		
         ShowPointer();
 	}
 
@@ -500,12 +503,13 @@ public class InteractionPointer : MonoBehaviour
 			// TODO: Draw line to rally point.
             spawnQueue.SetUnitRallyWaypoint(wayPointReticle.transform.position);
             wayPointReticle.SetActive(false);
-            GameObject wp = wayPointReticle.transform.GetChild(0).gameObject;
-            GameObject gameObject = Instantiate<GameObject>(wp, wp.transform.position, wp.transform.rotation);
-            gameObject.transform.localScale = wp.transform.lossyScale;
+
+            GameObject gameObject = Instantiate<GameObject>(rallyPointObject, rallyPointObject.transform.position, rallyPointObject.transform.rotation);
+            gameObject.transform.localScale = rallyPointObject.transform.lossyScale;
             gameObject.GetComponentInChildren<Animator>().Play("deploy");
-            Destroy(gameObject, 2.0f);
-            PlayAudioClip(headAudioSource, setRallyPointSound.GetClip());
+			Destroy(gameObject, 2.0f);
+            
+			PlayAudioClip(headAudioSource, setRallyPointSound.GetClip());
 			spawnQueue = null;
 			isSettingRallyPoint = false;
 			pointerLineRenderer.enabled = false;

@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Flags]
-public enum ResourceGatheringType {
+public enum ResourceGatheringType 
+{
     None = 0,
     Grain = 1,
     Wood = 2,
