@@ -14,8 +14,6 @@ public class GoalTransportResource : PathfindingGoal
         if (!structure.IsSameFaction(actor)) 
             return false;
 
-        Debug.Log(structure.CanDropOff(type) + " " + type.ToString());
-        
         if (!structure.CanDropOff(type)) 
             return false;
 
