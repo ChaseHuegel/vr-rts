@@ -24,8 +24,8 @@ public class Actor : Body
     private byte currentGoalSearchDistance;
     protected int maxGoalInteractRange = 1;
 
-    protected Cell currentGoalTarget = null;
-    protected Cell previousGoalTarget = null;
+    protected Cell currentGoalCell = null;
+    protected Cell previousGoalCell = null;
     protected PathfindingGoal currentGoal = null;
     protected PathfindingGoal previousGoal = null;
 
@@ -62,26 +62,26 @@ public class Actor : Body
 #region immutable methods
 
     public bool IsIdle() { return idle; }
-    private void UpdateIdle()
+    private bool UpdateIdle()
     {
         //  Idle if not frozen and not moving, pathing, or has a target goal
-        idle = ( !frozen && !(IsMoving() || HasValidPath() || HasValidTarget()) );
+        return idle = ( !frozen && !(IsMoving() || HasValidPath() || HasValidTarget()) );
     }
 
     public bool IsMoving() { return moving; }
     public bool HasValidPath() { return (currentPath != null && currentPath.Count > 0); }
 
     public bool HasValidGoal() { return (currentGoal != null && currentGoal.active); }
-    public bool HasValidGoalTarget() { return currentGoalTarget != null; }
+    public bool HasValidGoalTarget() { return currentGoalCell != null; }
 
     public bool HasValidTarget()
     {
-        return (HasValidGoal() && HasValidGoalTarget() && PathfindingGoal.CheckGoal(this, currentGoalTarget, currentGoal));
+        return (HasValidGoal() && HasValidGoalTarget() && PathfindingGoal.CheckGoal(this, currentGoalCell, currentGoal));
     }
 
     public bool HasTargetChanged()
     {
-        return currentGoalTarget != previousGoalTarget;
+        return currentGoalCell != previousGoalCell;
     }
 
     public void Freeze() { frozen = true; RemoveFromGrid(); }
@@ -103,8 +103,10 @@ public class Actor : Body
 
     public void ResetGoal()
     {
+        previousGoal = null;
         currentGoal = null;
-        currentGoalTarget = null;
+        currentGoalCell = null;
+        previousGoalCell = null;
     }
 
     public void ResetPathingBrain()
@@ -244,11 +246,13 @@ public class Actor : Body
         if (isPathLocked) return false;
 
         if (!HasValidTarget())
-            currentGoalTarget = FindNearestGoal(usePriority, useBehavior);
+        {
+            currentGoalCell = FindNearestGoal(usePriority, useBehavior);
+        }
 
         if (HasValidTarget())
         {
-            GotoForced(currentGoalTarget.x, currentGoalTarget.y);
+            Goto(currentGoalCell.x, currentGoalCell.y);
             return true;
         }
 
@@ -264,10 +268,10 @@ public class Actor : Body
 
         WipeAI();
 
-        currentGoalTarget = cell;
+        currentGoalCell = cell;
         currentGoal = goal;
 
-        previousGoalTarget = currentGoalTarget;
+        previousGoalCell = currentGoalCell;
         previousGoal = currentGoal;
 
         if (PathfindingGoal.TryGoal(this, cell, goal))
@@ -285,6 +289,7 @@ public class Actor : Body
     }
 
     public void GotoForced(Direction dir, int distance, bool ignoreActors = true) { Goto(dir.toVector3() * distance, ignoreActors); }
+    public void GotoForced(Coord2D coord, bool ignoreActors = true) { Goto(coord.x, coord.y, ignoreActors); }
     public void GotoForced(Vector2 vec, bool ignoreActors = true) { Goto((int)vec.x, (int)vec.y, ignoreActors); }
     public void GotoForced(Vector3 vec, bool ignoreActors = true) { Goto((int)vec.x, (int)vec.z, ignoreActors); }
     public void GotoForced(int x, int y, bool ignoreActors = true)
@@ -319,34 +324,43 @@ public class Actor : Body
             if (previousGoal != currentGoal)
             {
                 PathfindingGoal.TriggerGoalChanged(this, previousGoal, currentGoal);
-                TryDiscoverGoal(previousGoal, previousGoalTarget);
+                TryDiscoverGoal(previousGoal, previousGoalCell);
             }
 
-            previousGoalTarget = currentGoalTarget;
+            previousGoalCell = currentGoalCell;
             previousGoal = currentGoal;
 
             //  Handle interacting with goals
-            if ( HasValidTarget() && (!moving || DistanceTo(currentGoalTarget) <= maxGoalInteractRange) )
+            if ( HasValidTarget() && (!moving || DistanceTo(currentGoalCell) <= maxGoalInteractRange) )
             {
-                //  Check if we have reached our target, or the path ahead matches our goal
-                if (DistanceTo(currentGoalTarget) <= maxGoalInteractRange || (HasValidPath() && PathfindingGoal.CheckGoal(this, currentPath[0], currentGoal)))
+                //  Check if we have reached our target
+                if (DistanceTo(currentGoalCell) <= maxGoalInteractRange)
                 {
                     //  Assume our currentGoal is a valid match since it was found successfully.
                     //  Forcibly trigger reached under that assumption
-                    PathfindingGoal.TriggerInteractGoal(this, currentGoalTarget, currentGoal);
+                    PathfindingGoal.TriggerInteractGoal(this, currentGoalCell, currentGoal);
 
-                    if (HasValidGoalTarget())
-                        LookAt(currentGoalTarget.x, currentGoalTarget.y);
-                    else if (HasValidPath())
-                        LookAt(currentPath[0].x, currentPath[0].y);
+                    LookAt(currentGoalCell.x, currentGoalCell.y);
+
+                    ResetPathingBrain();
+                    ResetPath();
+                }
+                // or the path ahead matches our goal
+                else if (HasValidPath() && PathfindingGoal.CheckGoal(this, currentPath[0], currentGoal))
+                {
+                    //  Assume our currentGoal is a valid match since it was found successfully.
+                    //  Forcibly trigger reached under that assumption
+                    PathfindingGoal.TriggerInteractGoal(this, currentPath[0], currentGoal);
+
+                    LookAt(currentPath[0].x, currentPath[0].y);
 
                     ResetPathingBrain();
                     ResetPath();
                 }
             }
 
-            UpdateIdle();
-            if (IsIdle()) WipeAI();
+            //  Wipe AI state if we are idling
+            if (UpdateIdle()) WipeAI();
 
             Tick();
         }
@@ -407,9 +421,12 @@ public class Actor : Body
                 {
                     //  Look in the direction we're going
                     LookAt(currentPath[0].x, currentPath[0].y);
-                    SetPositionUnsafe(currentPath[0].x, currentPath[0].y);
 
+                    SetPositionUnsafe(currentPath[0].x, currentPath[0].y);
                     currentPath.RemoveAt(0);
+
+                    //  Make certain the path is unlocked once the end is reached
+                    if (currentPath.Count <= 0) UnlockPath();
                 }
             }
             //  Unable to reach the next point, handle pathing logic on tick
@@ -425,7 +442,7 @@ public class Actor : Body
 
                         if (HasValidTarget())
                         {
-                            Coord2D coord = currentGoalTarget.GetFirstOccupant().GetNearbyCoord();
+                            Coord2D coord = currentGoalCell.GetFirstOccupant().GetNearbyCoord();
                             targetX = coord.x;
                             targetY = coord.y;
                         }
@@ -476,6 +493,26 @@ public class Actor : Body
             {
                 Gizmos.color = Color.cyan;
                 Gizmos.DrawSphere(World.ToTransformSpace(new Vector3(cell.x, 0, cell.y)), 0.25f * World.GetUnit());
+            }
+        }
+
+        if (previousGoalCell != null)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawSphere(World.ToTransformSpace(previousGoalCell.x, previousGoalCell.y), 0.25f * World.GetUnit());
+        }
+
+        if (currentGoalCell != null)
+        {
+            Gizmos.color = Color.magenta;
+            Gizmos.DrawSphere(World.ToTransformSpace(currentGoalCell.x, currentGoalCell.y), 0.25f * World.GetUnit());
+
+            if (currentGoalCell.GetFirstOccupant() != null)
+            {
+                Coord2D coord = currentGoalCell.GetFirstOccupant().GetDirectionalCoord(gridPosition);
+
+                Gizmos.color = Color.green;
+                Gizmos.DrawSphere(World.ToTransformSpace(coord.x, coord.y), 0.25f * World.GetUnit());
             }
         }
     }

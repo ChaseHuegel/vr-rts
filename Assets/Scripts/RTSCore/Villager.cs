@@ -8,7 +8,7 @@ using Valve.VR.InteractionSystem;
 
 [RequireComponent(typeof(Damageable))]
 public class Villager : Unit
-{   
+{
     [Header("Villager")]
     protected ResourceGatheringType currentResource;
     protected ResourceGatheringType previousResource;
@@ -31,7 +31,7 @@ public class Villager : Unit
     public GameObject hunterHandToolDisplayObject;
     protected GameObject currentCargoDisplayObject;
     protected GameObject currentHandToolDisplayObject;
-    public VillagerHoverMenu villagerHoverMenu;    
+    public VillagerHoverMenu villagerHoverMenu;
     protected PathfindingGoal currentGoalFound;
     protected PathfindingGoal previousGoalFound;
 
@@ -75,11 +75,11 @@ public class Villager : Unit
         goals.Add<GoalGatherStone>();
         goals.Add<GoalGatherGold>();
         goals.Add<GoalGotoLocation>();
-        
+
         SetUnitTask(rtsUnitType);
 
         if(faction.IsSameFaction(playerManager.factionId))
-            playerManager.AddToPopulation((Unit)this);        
+            playerManager.AddToPopulation((Unit)this);
     }
 
     public void HookIntoEvents()
@@ -113,7 +113,7 @@ public class Villager : Unit
     public override void OnDetachedFromHand(Hand hand)
     {
         base.OnDetachedFromHand(hand);
-        villagerHoverMenu.Hide();        
+        villagerHoverMenu.Hide();
     }
 
 #endregion
@@ -246,9 +246,9 @@ public class Villager : Unit
 
         Villager villager = (Villager)e.actor;
 
-        if (e.cell != previousGoalTarget)
+        if (e.cell != previousGoalCell)
         {
-            Resource resource = previousGoalTarget?.GetFirstOccupant<Resource>();
+            Resource resource = previousGoalCell?.GetFirstOccupant<Resource>();
             if (resource) resource.RemoveInteractor(this);
         }
 
@@ -408,9 +408,9 @@ public class Villager : Unit
 
         //  Transport type always matches what our current resource is
         if (transportGoal != null) transportGoal.type = currentResource;
-        
+
         GotoNearestGoalWithPriority();
-        
+
         switch (state)
         {
             case UnitState.ROAMING:
@@ -448,7 +448,7 @@ public class Villager : Unit
     {
         AudioSource.PlayClipAtPoint(GameMaster.GetAudio(clipName).GetClip(), transform.position, 0.75f);
     }
-    
+
     public override void SetUnitTask(RTSUnitType unitType)
     {
         base.SetUnitTask(unitType);

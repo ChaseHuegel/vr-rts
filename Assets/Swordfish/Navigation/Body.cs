@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Swordfish.Navigation
 {
@@ -72,9 +74,27 @@ public class Body : MonoBehaviour
         return World.Grid.at((int)pos.x, (int)pos.z);
     }
 
-    public Cell GetCellAtGrid()
+    public Cell GetCellAtGrid() => World.Grid.at(gridPosition.x, gridPosition.y);
+
+    public Cell GetCellDirectional(Coord2D from) => World.at(GetDirectionalCoord(from));
+
+    public Coord2D GetDirectionalCoord(Coord2D from)
     {
-        return World.Grid.at(gridPosition.x, gridPosition.y);
+        Vector2 dir = (from.toVector2() - gridPosition.toVector2()).normalized;
+        Vector2 offset = Vector2.zero;
+
+        float dimX = boundingDimensions.x;
+        float dimY = boundingDimensions.y;
+
+        offset.x = dimX * dir.x * 0.5f;
+        offset.y = dimY * dir.y * 0.5f;
+
+        if (dir.x < 0f) offset.x -= 0.5f;
+        if (dir.y < 0f) offset.y -= 0.5f;
+
+        Vector3 pos = World.ToTransformSpace(gridPosition.x + offset.x, 0f, gridPosition.y + offset.y);
+
+        return World.ToWorldCoord(pos);
     }
 
     public Coord2D GetNearbyCoord()
@@ -107,6 +127,7 @@ public class Body : MonoBehaviour
         return (boundingDimensions.x + boundingDimensions.y);
     }
 
+    public int DistanceTo(Body body) { return DistanceTo(body.gridPosition); }
     public int DistanceTo(Cell cell) { return DistanceTo(cell.x, cell.y); }
     public int DistanceTo(Coord2D coord) { return DistanceTo(coord.x, coord.y); }
     public int DistanceTo(int x, int y)

@@ -16,6 +16,7 @@ public class PathfindingGoal
         return false;
     }
 
+    public static bool CheckGoal(Actor actor, Body target, PathfindingGoal[] goals) => CheckGoal(actor, target.GetCellAtGrid(), goals);
     public static bool CheckGoal(Actor actor, Cell cell, PathfindingGoal[] goals)
     {
         foreach (PathfindingGoal goal in goals)
@@ -25,6 +26,7 @@ public class PathfindingGoal
         return false;
     }
 
+    public static bool CheckGoal(Actor actor, Body target, PathfindingGoal goal) => CheckGoal(actor, target.GetCellAtGrid(), goal);
     public static bool CheckGoal(Actor actor, Cell cell, PathfindingGoal goal)
     {
         if (goal != null && goal.active && goal.CheckGoal(cell, actor))
@@ -43,6 +45,7 @@ public class PathfindingGoal
     }
 
     //  Try a set of goals
+    public static bool TryGoal(Actor actor, Body target, PathfindingGoal[] goals) => TryGoal(actor, target.GetCellAtGrid(), goals);
     public static bool TryGoal(Actor actor, Cell cell, PathfindingGoal[] goals)
     {
         if (goals == null) return false;
@@ -55,6 +58,7 @@ public class PathfindingGoal
     }
 
     //  Try a single goal
+    public static bool TryGoal(Actor actor, Body target, PathfindingGoal goal) => TryGoal(actor, target.GetCellAtGrid(), goal);
     public static bool TryGoal(Actor actor, Cell cell, PathfindingGoal goal)
     {
         if (goal != null && CheckGoal(actor, cell, goal))
@@ -70,6 +74,7 @@ public class PathfindingGoal
         return false;
     }
 
+    public static bool TryInteractGoal(Actor actor, Body target, PathfindingGoal goal) => TryInteractGoal(actor, target, goal);
     public static bool TryInteractGoal(Actor actor, Cell cell, PathfindingGoal goal)
     {
         if (goal != null && goal.active && goal.CheckGoal(cell, actor))
@@ -85,6 +90,7 @@ public class PathfindingGoal
         return false;
     }
 
+    public static bool TryInteractGoal(Actor actor, Body target, PathfindingGoal[] goals) => TryInteractGoal(actor, target, goals);
     public static bool TryInteractGoal(Actor actor, Cell cell, PathfindingGoal[] goals)
     {
         if (goals == null) return false;
