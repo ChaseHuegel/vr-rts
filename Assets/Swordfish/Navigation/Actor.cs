@@ -23,6 +23,7 @@ public class Actor : Body
     private byte goalSearchGrowth;
     private byte currentGoalSearchDistance;
     protected int maxGoalInteractRange = 1;
+    protected int distanceToTarget { get; private set; }
 
     protected Cell currentGoalCell = null;
     protected Cell previousGoalCell = null;
@@ -333,6 +334,12 @@ public class Actor : Body
     //  Perform ticks at a regular interval. FixedUpdate is called 60x/s
     public void FixedUpdate()
     {
+        //  Update goal cell if we have a target body
+        if (currentGoalTarget != null)
+            currentGoalCell = currentGoalTarget.GetCellAtGrid();
+
+        distanceToTarget = currentGoalCell != null ? DistanceTo(currentGoalCell) : int.MaxValue;
+
         //  Behavior ticking below
         tickTimer++;
         if (tickTimer >= Constants.ACTOR_TICK_RATE)
@@ -349,14 +356,11 @@ public class Actor : Body
             previousGoalCell = currentGoalCell;
             previousGoal = currentGoal;
 
-            if (currentGoalTarget != null)
-                currentGoalCell = currentGoalTarget.GetCellAtGrid();
-
             //  Handle interacting with goals
-            if ( HasValidTarget() && (!moving || DistanceTo(currentGoalCell) <= maxGoalInteractRange) )
+            if ( HasValidTarget() && distanceToTarget <= maxGoalInteractRange )
             {
                 //  Check if we have reached our target
-                if (DistanceTo(currentGoalCell) <= maxGoalInteractRange)
+                if (distanceToTarget <= maxGoalInteractRange)
                 {
                     //  Assume our currentGoal is a valid match since it was found successfully.
                     //  Forcibly trigger reached under that assumption
@@ -422,8 +426,8 @@ public class Actor : Body
         if (IsPathLocked() && !HasValidPath())
             UnlockPath();
 
-        //  If we have a valid path, move along it
-        if (HasValidPath() && !(HasValidTarget() && DistanceTo(currentGoalCell) <= maxGoalInteractRange))
+        //  If we have a valid path, move along it if we do not have a target in range
+        if ( HasValidPath() && !(HasValidTarget() && distanceToTarget <= maxGoalInteractRange) )
         {
             // TODO: Add 'waypoints' for longer paths too big for the heap
 
