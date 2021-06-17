@@ -11,7 +11,7 @@ public class QueueUnitButton : MonoBehaviour
 
     [SerializeField]
     private bool locked;
-    protected BuildingSpawnQueue buildingSpawnQueue;
+    protected SpawnQueue buildingSpawnQueue;
     HoverButton hoverButton;
     void Start()
     {

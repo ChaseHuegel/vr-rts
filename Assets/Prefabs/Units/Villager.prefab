@@ -2867,7 +2867,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1069823527080248288}
   - component: {fileID: 1069823527071067454}
-  - component: {fileID: 611456164622961320}
+  - component: {fileID: 5489541573684788520}
   m_Layer: 9
   m_Name: TT_Peasant
   m_TagString: Untagged
@@ -2970,7 +2970,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &611456164622961320
+--- !u!114 &5489541573684788520
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2979,7 +2979,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1069823527080501524}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cba59d4511b9cd1418531dc6ba1ad65c, type: 3}
+  m_Script: {fileID: 11500000, guid: 3ecf569eaf4f58f43bb8f6733152f817, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1069823527080501564
@@ -18094,6 +18094,7 @@ MonoBehaviour:
   goalSearchDistance: 30
   faction: {fileID: 11400000, guid: effa210fcfc5796468bcaecb24cb5693, type: 2}
   rtsUnitType: 1
+  maxHitPointsOnStart: 1
   rangedProjectile: {fileID: 3740421758085118616, guid: 33ebc7103c3a4b64ca93d64149b5fa33,
     type: 3}
   projectileSpeed: 5
@@ -18101,10 +18102,6 @@ MonoBehaviour:
   skinnedMeshes:
   - {fileID: 1069823527066862350}
   state: 0
-  isHeld: 0
-  isDying: 0
-  wasThrownOrDropped: 0
-  audioSource: {fileID: 0}
   currentCargo: 0
   grainCargoDisplayObject: {fileID: 668154613715088764}
   woodCargoDisplayObject: {fileID: 2787404010531457095}
@@ -18117,11 +18114,7 @@ MonoBehaviour:
   builderHandToolDisplayObject: {fileID: 1069823527080516244}
   fishermanHandToolDisplayObject: {fileID: 8595858030966396929}
   hunterHandToolDisplayObject: {fileID: 1069823527080596950}
-  villagerHoverMenu: {fileID: 4773402040985910725}
-  x: 0
-  y: 0
-  GoLocationGoal: 0
-  GotoForce: 0
+  handCommandMenu: {fileID: 4773402040985910725}
 --- !u!114 &7274408666555167777
 MonoBehaviour:
   m_ObjectHideFlags: 0

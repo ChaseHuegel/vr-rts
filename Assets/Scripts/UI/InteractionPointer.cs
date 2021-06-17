@@ -69,7 +69,7 @@ public class InteractionPointer : MonoBehaviour
 	private TeleportArc teleportArc = null;
 	public bool visible = false;
 	private PointerInteractable pointedAtPointerInteractable;
-	private	BuildingSpawnQueue buildingSpawnQueue;
+	private	SpawnQueue spawnQueue;
 	private List<Unit> selectedUnits;
 	private Vector3 pointedAtPosition;
 	private Vector3 prevPointedAtPosition;
@@ -90,9 +90,10 @@ public class InteractionPointer : MonoBehaviour
 	public GameObject wayPointReticle;
 	private Resource pointedAtResource;
 	private Vector3 rallyWaypointArcStartPosition;
+    private GameObject rallyPointObject;
 
-	// Cache value
-	private int maxUnitSelectionCount;
+    // Cache value
+    private int maxUnitSelectionCount;
 
     // Cache value
     private Faction faction;
@@ -101,7 +102,7 @@ public class InteractionPointer : MonoBehaviour
 
     //=========================================================================
 	// Modes
-    private bool isInUnitSelectiodMode;
+    private bool isInUnitSelectionMode;
 	private bool isInBuildingPlacementMode;
     private bool isInWallPlacementMode;
     private bool isSettingRallyPoint;
@@ -168,7 +169,6 @@ public class InteractionPointer : MonoBehaviour
 		teleportArc.traceLayerMask = traceLayerMask;
 
 		// loopingAudioMaxVolume = loopingAudioSource.volume;
-
 		// float invalidReticleStartingScale = invalidReticleTransform.localScale.x;
 		// invalidReticleMinScale *= invalidReticleStartingScale;
 		// invalidReticleMaxScale *= invalidReticleStartingScale;
@@ -180,13 +180,10 @@ public class InteractionPointer : MonoBehaviour
 		HookIntoEvents();
 
         playerManager = PlayerManager.instance;
-
         headAudioSource.transform.SetParent(Player.instance.hmdTransform);
         headAudioSource.transform.localPosition = Vector3.zero;
-
         buildingPlacementAllowedSound = GameMaster.Instance.buildingPlacementAllowedSound;
         buildingPlacementDeniedSound = GameMaster.Instance.buildingPlacementDeniedSound;
-
         //interactableObjects = GameObject.FindObjectsOfType<PointerInteractable>();
         selectedUnits = new List<Unit>();
 
@@ -204,7 +201,6 @@ public class InteractionPointer : MonoBehaviour
 		}
 
 		player = Valve.VR.InteractionSystem.Player.instance;
-
 		if ( player == null )
 		{
 			Debug.LogError("<b>[SteamVR Interaction]</b> ObjectPlacementPointer: No Player instance found in map.", this);
@@ -212,6 +208,8 @@ public class InteractionPointer : MonoBehaviour
 			return;
 		}
 
+        rallyPointObject = wayPointReticle.transform.GetChild(0).gameObject;
+		
         ShowPointer();
 	}
 
@@ -272,7 +270,7 @@ public class InteractionPointer : MonoBehaviour
             {
                 if (pointerHand == hand)
                 {
-                    BuildingSpawnQueue buildingSpawnQueue = pointedAtPointerInteractable.GetComponentInChildren<BuildingSpawnQueue>();
+                    SpawnQueue buildingSpawnQueue = pointedAtPointerInteractable.GetComponentInChildren<SpawnQueue>();
                     if (buildingSpawnQueue && buildingSpawnQueue.QueueLastUnitQueued())
                         PlayAudioClip(headAudioSource, queueSuccessSound);
 					else
@@ -287,7 +285,7 @@ public class InteractionPointer : MonoBehaviour
 			{
 				if (pointerHand == hand)
 				{
-					BuildingSpawnQueue buildingSpawnQueue = pointedAtPointerInteractable.GetComponentInChildren<BuildingSpawnQueue>();
+					SpawnQueue buildingSpawnQueue = pointedAtPointerInteractable.GetComponentInChildren<SpawnQueue>();
                     if (buildingSpawnQueue)
                     {
                         buildingSpawnQueue.DequeueUnit();
@@ -298,17 +296,11 @@ public class InteractionPointer : MonoBehaviour
 
 			if (WasCancelButtonPressed(hand))
 			{
-				if (isInUnitSelectiodMode)
+				if (isInUnitSelectionMode)
                     EndUnitSelectionMode();
 				else if (isInBuildingPlacementMode)
                     EndBuildingPlacementMode();
             }
-
-			// 	if (isSettingRallyPoint)
-			// 	{
-            //         isSettingRallyPoint = false;
-            //     }
-			// }
 
 			if (WasSelectButtonPressed(hand))
                 newPointerHand = hand;
@@ -344,10 +336,6 @@ public class InteractionPointer : MonoBehaviour
 			if (uiInteractAction.GetStateDown(hand.handType))
 				return true;
 
-		// Make sure it's off.
-		if (wayPointReticle.activeSelf)
-			wayPointReticle.SetActive(false);
-
 		return false;
 	}
 
@@ -356,10 +344,6 @@ public class InteractionPointer : MonoBehaviour
 		if (CanInteract(hand))
 			if (uiInteractAction.GetStateUp(hand.handType))
 				return true;
-
-		// Make sure it's off.
-		if (wayPointReticle.activeSelf)
-			wayPointReticle.SetActive(false);
 
 		return false;
 	}
@@ -394,9 +378,9 @@ public class InteractionPointer : MonoBehaviour
         }
 		else if (pointedAtPointerInteractable != null)
 		{
-			buildingSpawnQueue = pointedAtPointerInteractable.GetComponentInChildren<BuildingSpawnQueue>();
+			spawnQueue = pointedAtPointerInteractable.GetComponentInChildren<SpawnQueue>();
 
-			if (buildingSpawnQueue && buildingSpawnQueue.enabled && !isSettingRallyPoint)
+			if (spawnQueue && spawnQueue.enabled && !isSettingRallyPoint)
 			{
 				rallyWaypointArcStartPosition = pointedAtPointerInteractable.transform.position;
 				isSettingRallyPoint = true;
@@ -405,11 +389,11 @@ public class InteractionPointer : MonoBehaviour
 			}
 
 			Unit hoveredUnit = pointedAtPointerInteractable.GetComponent<Unit>();
-			if (hoveredUnit && !isInUnitSelectiodMode &&
+			if (hoveredUnit && !isInUnitSelectionMode &&
 				hoveredUnit.IsSameFaction(factionId))
 			{
 				selectedUnits.Add(hoveredUnit);
-				isInUnitSelectiodMode = true;
+				isInUnitSelectionMode = true;
 				return;
 			}
 
@@ -516,116 +500,67 @@ public class InteractionPointer : MonoBehaviour
 
 		if (isSettingRallyPoint)
 		{
-			buildingSpawnQueue.SetUnitRallyWaypoint(wayPointReticle.transform.position);
-            PlayAudioClip(headAudioSource, setRallyPointSound.GetClip());
-			wayPointReticle.SetActive(false);
-			buildingSpawnQueue = null;
+			// TODO: Draw line to rally point.
+            spawnQueue.SetUnitRallyWaypoint(wayPointReticle.transform.position);
+            wayPointReticle.SetActive(false);
+
+            GameObject gameObject = Instantiate<GameObject>(rallyPointObject, rallyPointObject.transform.position, rallyPointObject.transform.rotation);
+            gameObject.transform.localScale = rallyPointObject.transform.lossyScale;
+            gameObject.GetComponentInChildren<Animator>().Play("deploy");
+			Destroy(gameObject, 2.0f);
+            
+			PlayAudioClip(headAudioSource, setRallyPointSound.GetClip());
+			spawnQueue = null;
 			isSettingRallyPoint = false;
 			pointerLineRenderer.enabled = false;
-			return;
+
+            return;
 		}
 
 		if (selectedUnits.Count > 0)
 		{
 			foreach (Unit unit in selectedUnits)
 			{
-				if (unit is Villager)
+				if (pointedAtPointerInteractable)
 				{
-                    Villager villager = unit.GetComponent<Villager>();
-
-                    if (pointedAtPointerInteractable)
-                    {
-                        Structure structure = pointedAtPointerInteractable.GetComponent<Structure>();
-						if (structure)
-                        {
-                            villager.SetUnitTask(RTSUnitType.Builder);
-                            villager.TrySetGoal(World.at(structure.gridPosition));
-                            continue;
-                        }
-
-                        Constructible constructible = pointedAtPointerInteractable.GetComponent<Constructible>();
-						if (constructible)
-						{
-                            villager.SetUnitTask(RTSUnitType.Builder);							
-                            villager.TrySetGoal(World.at(constructible.gridPosition));
-                            continue;
-                        }
-                        
-                        Resource resource = pointedAtPointerInteractable.GetComponent<Resource>();
-                        if (resource)
-                        {
-                            // Needed for fauna since fauna has an inactive resource component
-                            // that doesn't have a grid position to be fetched.
-                            Swordfish.Coord2D gridPosition = resource.gridPosition;
-
-                            switch (resource.type)
-                            {
-                                case ResourceGatheringType.Gold:
-                                    villager.SetUnitTask(RTSUnitType.GoldMiner);
-                                    break;
-
-                                case ResourceGatheringType.Grain:
-                                    villager.SetUnitTask(RTSUnitType.Farmer);
-                                    break;
-
-                                case ResourceGatheringType.Stone:
-                                    villager.SetUnitTask(RTSUnitType.StoneMiner);
-                                    break;
-
-                                case ResourceGatheringType.Wood:
-                                    villager.SetUnitTask(RTSUnitType.Lumberjack);
-                                    break;
-
-                                case ResourceGatheringType.Berries:
-                                    villager.SetUnitTask(RTSUnitType.Forager);
-                                    break;
-
-                                case ResourceGatheringType.Fish:
-                                    villager.SetUnitTask(RTSUnitType.Fisherman);
-                                    break;
-
-                                case ResourceGatheringType.Meat:
-                                    villager.SetUnitTask(RTSUnitType.Hunter);
-                                    gridPosition = resource.GetComponent<Fauna>().gridPosition;
-                                    break;
-                            }
-
-                            villager.TrySetGoal(World.at(resource.gridPosition));
-                            continue;
-                        }
-                    }
-					
-					villager.GotoPosition(pointedAtPosition);
-					continue;
-				}
-
-				// Military unit.
-				else if (unit is Soldier)
-				// if (!civilian)
-				{
-					if (pointedAtPointerInteractable)
+					Resource resource = pointedAtPointerInteractable.GetComponent<Resource>();
+					if (resource)
 					{
-						Unit pointedAtUnit = pointedAtPointerInteractable.GetComponent<Unit>();
-
-						// Not the same faction.
-						if (pointedAtUnit && !unit.IsSameFaction(factionId))
-						{
-                            // TODO: Force attack unit/set target
-                            // Attack unit
-                            unit.TrySetGoal(World.at(World.ToWorldCoord(pointedAtPosition)));
-							continue;
-						}
-						// Same faction, go to units position.
-						else if (pointedAtUnit)
-						{
-                            unit.GotoPosition(pointedAtUnit.transform.position);
-							continue;
-						}
+						unit.SetUnitTask(resource);
+						continue;
 					}
-					else
-                    	// Default go to position.
-                    	unit.GotoPosition(pointedAtPosition);
+
+					Unit pointedAtUnit = pointedAtPointerInteractable.GetComponent<Unit>();
+					if (pointedAtUnit)
+					{
+						unit.SetUnitTask(pointedAtUnit);
+						continue;
+					}
+					
+					Fauna fauna = pointedAtPointerInteractable.GetComponent<Fauna>();
+					if (fauna)
+					{
+						unit.SetUnitTask(fauna);
+						continue;
+					}
+
+					Structure structure = pointedAtPointerInteractable.GetComponent<Structure>();
+					if (structure)
+					{
+						unit.SetUnitTask(structure);
+						continue;
+					}
+
+					Constructible constructible = pointedAtPointerInteractable.GetComponent<Constructible>();
+					if (constructible)
+					{
+						unit.SetUnitTask(constructible);
+						continue;
+					}                                                
 				}
+					
+				unit.MoveToLocation(pointedAtPosition);
+				continue;
 			}
 
             // Cleanup
@@ -1014,7 +949,7 @@ public class InteractionPointer : MonoBehaviour
 
 	private void EndUnitSelectionMode()
 	{
-		isInUnitSelectiodMode = false;
+		isInUnitSelectionMode = false;
 		pointedAtResource = null;
 		selectedUnits.Clear();
 		foreach(LineRenderer lineRenderer in lineRenderers)
@@ -1087,7 +1022,7 @@ public class InteractionPointer : MonoBehaviour
 				pointerLineRenderer.enabled = true;
 
 		}
-		else if (isInUnitSelectiodMode && pointedAtPointerInteractable != null)
+		else if (isInUnitSelectionMode && pointedAtPointerInteractable != null)
 		{
 			Unit hoveredUnit = pointedAtPointerInteractable.GetComponent<Unit>();
 			if (hoveredUnit && !selectedUnits.Contains(hoveredUnit) &&
@@ -1128,9 +1063,7 @@ public class InteractionPointer : MonoBehaviour
 			HardSnapToGrid(destinationReticleTransform, placementBuildingData.boundingDimensionX, placementBuildingData.boundingDimensionY);            
 			if (wallPlacementPreviewStartObject)// && buildingPlacementPreviewObject)
             {
-				// ! Choose a method to use....
-                DrawWallPreview(); // AOE2 style, 45's don't work.
-				//DrawWallPreview2();  // No corners ala AOE2, 45's are buggy.
+                DrawWallPreview();
             }
 
             //DrawQuadraticBezierCurve(pointerLineRenderer, pointerStart, destinationReticleTransform.position);
@@ -1164,7 +1097,6 @@ public class InteractionPointer : MonoBehaviour
 			}
 		}
 	}
-
 
     //=========================================================================
 	// Walls

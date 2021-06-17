@@ -181,7 +181,7 @@ public class Actor : Body
 
                 if (discoveredGoals.TryGetValue(goal, out result)
                     && result != null
-                    && DistanceTo(result) < goalSearchDistance
+                    // && DistanceTo(result) < goalSearchDistance
                     && PathfindingGoal.TryGoal(this, result, goal))
                     {
                         searchDistance = goalSearchGrowth;
@@ -259,7 +259,7 @@ public class Actor : Body
         return false;
     }
 
-    public void TrySetGoal(Cell cell)
+    public bool TrySetGoal(Cell cell)
     {
         PathfindingGoal goal = PathfindingGoal.GetGoal(this, cell, GetGoals());
 
@@ -275,7 +275,12 @@ public class Actor : Body
         previousGoal = currentGoal;
 
         if (PathfindingGoal.TryGoal(this, cell, goal))
+        {
             GotoForced(cell.x, cell.y);
+            return true;
+        }
+
+        return false;
     }
 
     public void Goto(Direction dir, int distance, bool ignoreActors = true) { Goto(dir.toVector3() * distance, ignoreActors); }
@@ -294,7 +299,11 @@ public class Actor : Body
     public void GotoForced(Vector3 vec, bool ignoreActors = true) { Goto((int)vec.x, (int)vec.z, ignoreActors); }
     public void GotoForced(int x, int y, bool ignoreActors = true)
     {
-        if (!isPathLocked && DistanceTo(x, y) > maxGoalInteractRange)
+        // ! Not sure if maxGoalInteractRange is needed here. Not sure if I added
+        // ! it when making the changes for ranged units or you (chase) added it.
+        // ! It does prevent going to a postion for ranged units if that position
+        // ! is not outside of their range though, and that's a problem.
+        if (!isPathLocked && DistanceTo(x, y) > 1)// maxGoalInteractRange)
             PathManager.RequestPath(this, x, y, ignoreActors);
     }
 

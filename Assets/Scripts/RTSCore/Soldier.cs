@@ -21,16 +21,14 @@ public class Soldier : Unit
         base.Initialize();
         HookIntoEvents();
 
-        maxGoalInteractRange = rtsUnitTypeData.attackRange;
-
-        SetAIAttackGoals(huntVillagers, huntMilitary, huntBuildings);
+        SetAIAttackGoals(huntMilitary, huntVillagers, huntBuildings);        
 
         animator = gameObject.GetComponentInChildren<Animator>();
         if (!animator)
             Debug.Log("No animator component found.");
 
-        if(faction.IsSameFaction(playerManager.factionId))
-            playerManager.AddToPopulation((Unit)this);
+        // if(faction.IsSameFaction(playerManager.factionId))
+        //     playerManager.AddToPopulation((Unit)this);
 
     }
 
@@ -39,22 +37,99 @@ public class Soldier : Unit
         PathfindingGoal.OnGoalFoundEvent += OnGoalFound;
         PathfindingGoal.OnGoalInteractEvent += OnGoalInteract;
         PathfindingGoal.OnGoalChangeEvent += OnGoalChange;
-        AttributeHandler.OnDamageEvent += OnDamage;
+        AttributeHandler.OnDamageEvent += OnDamaged;
         Damageable.OnDeathEvent += OnDeath;
     }
 
-    public void SetAIAttackGoals(bool villagers, bool military, bool buildings)
-    {
-        if (villagers)
-            goals.Add<GoalHuntVillagers>();
 
+    public void CleanupEvents()
+    {
+        PathfindingGoal.OnGoalChangeEvent -= OnGoalChange;
+        PathfindingGoal.OnGoalFoundEvent -= OnGoalFound;
+        PathfindingGoal.OnGoalInteractEvent -= OnGoalInteract;
+        AttributeHandler.OnDamageEvent -= OnDamaged;
+        Damageable.OnDeathEvent -= OnDeath;
+    }
+
+    /// <summary>
+    /// Sets the soldiers task to the passed in structure location. If structure
+    /// is an enemy structure soldier is set attacks the
+    /// structure. If structure is friendly soldier moves to location.
+    /// </summary>
+    /// <param name="structure"></param>
+    public override void SetUnitTask(Structure structure)
+    {
+        if (IsSameFaction(structure.factionId))
+            MoveToLocation(structure.transform.position);
+        else
+        {
+            goals.Get<GoalHuntBuildings>().active = true;
+            TrySetGoal(World.at(structure.GetNearbyCoord()));
+        }    
+    }
+
+    /// <summary>
+    /// Sets the soldiers task to the passed in constructible location. If 
+    /// constructible is an enemy constructible soldier is set attacks the
+    /// constructible. If constructible is friendly soldier moves to location.
+    /// </summary>
+    /// <param name="constructible"></param>
+    public override void SetUnitTask(Constructible constructible)
+    {
+        if (IsSameFaction(constructible.factionId))
+            MoveToLocation(constructible.transform.position);
+        else
+        {
+            goals.Get<GoalHuntBuildings>().active = true;
+            TrySetGoal(World.at(constructible.GetNearbyCoord()));
+        }
+    }
+
+    /// <summary>
+    /// Sets the soldiers task to the passed in unit location.
+    /// </summary>
+    /// <param name="unit"></param>
+    public override void SetUnitTask(Unit unit)
+    {
+        if (IsSameFaction(unit))
+            MoveToLocation(unit.transform.position);
+        else
+        {
+            if (unit.IsCivilian())
+                goals.Get<GoalHuntVillagers>().active = true;
+            else
+                goals.Get<GoalHuntMilitary>().active = true;
+
+            TrySetGoal(unit.GetCellAtGrid());
+        }
+    }
+
+    /// <summary>
+    /// Sets the soldiers task to the passed in fauna and sets
+    /// the soldier to attack it.
+    /// </summary>
+    /// <param name="fauna"></param>
+    public override void SetUnitTask(Fauna fauna)
+    {
+        TrySetGoal(fauna.GetCellAtGrid());
+    }
+
+    public void SetAIAttackGoals(bool military, bool villagers,  bool buildings)
+    {
+        goals.Add<GoalHuntMilitary>().active = false;
+        goals.Add<GoalHuntVillagers>().active = false;
+        goals.Add<GoalHuntBuildings>().active = false;
+                
         if (military)
-            goals.Add<GoalHuntMilitary>();
+            goals.Get<GoalHuntMilitary>().active = true;
+
+        if (villagers)
+            goals.Get<GoalHuntVillagers>().active = true;
 
         if (buildings)
-            goals.Add<GoalHuntBuildings>();
+            goals.Get<GoalHuntBuildings>().active = true;
 
-        ResetAI();
+        //ResetAI();
     }
 
     bool StateChanged() { return state != previousState; }
@@ -103,9 +178,14 @@ public class Soldier : Unit
 
         previousState = state;
     }
-
-    public void OnDamage(object sender, Damageable.DamageEvent e)
+    
+    public void OnDamaged(object sender, Damageable.DamageEvent e)
     {
+        if (e.victim != AttributeHandler)
+            return;
+            
+        if (!currentGoalTarget.GetOccupant<Soldier>())
+            TrySetGoal(e.attacker.GetComponentInChildren<Body>().GetCellAtGrid());
     }
 
     public void OnDeath(object sender, Damageable.DeathEvent e)
@@ -141,8 +221,7 @@ public class Soldier : Unit
         if (!wasThrownOrDropped)
             return;
 
-        // TODO: could just switch this to a cell lookup where
-        // TODO: they land.
+        // TODO: could just switch this to a cell lookup where they land.
         // Don't wait for a collision indefinitely.
         if (Time.time - detachFromHandTime >= 2.0f)
         {
@@ -155,9 +234,7 @@ public class Soldier : Unit
         Unit unit = collider.gameObject.GetComponent<Unit>();
         if (unit)
         {
-            if (!IsSameFaction(unit))
-                TrySetGoal(unit.GetCellAtGrid());
-
+            SetUnitTask(unit);
             return;
         }
 
@@ -165,33 +242,30 @@ public class Soldier : Unit
         Fauna fauna = collider.gameObject.GetComponent<Fauna>();
         if (fauna)
         {
+            SetUnitTask(fauna);
             return;
         }
 
-        Structure building = collider.gameObject.GetComponentInParent<Structure>();
-        if (building)
+        Structure structure = collider.gameObject.GetComponentInParent<Structure>();
+        if (structure)
         {
-            if (!IsSameFaction(building.factionId))
-                TrySetGoal(building.GetCellAtGrid());
-
+            SetUnitTask(structure);
             return;
         }
 
         Constructible constructible = collider.gameObject.GetComponentInParent<Constructible>();
         if (constructible)
         {
-            if (!IsSameFaction(constructible.factionId))
-                TrySetGoal(constructible.GetCellAtGrid());
-            
+            SetUnitTask(constructible);
             return;
         }
     }
 
      // Used by animator to play sound effects
-    public void AnimatorPlayAudio(string clipName)
-    {
-        AudioSource.PlayClipAtPoint(GameMaster.GetAudio(clipName).GetClip(), transform.position, 0.75f);
-    }
+    // public void AnimatorPlayAudio(string clipName)
+    // {
+    //     AudioSource.PlayClipAtPoint(GameMaster.GetAudio(clipName).GetClip(), transform.position, 0.75f);
+    // }
 
 
     public void OnGoalFound(object sender, PathfindingGoal.GoalFoundEvent e)
@@ -209,8 +283,18 @@ public class Soldier : Unit
         if (e.actor != this || isDying)
             return;
 
+        targetDamageable = null;
+
         if (previousGoal is GoalHuntUnits || previousGoal is GoalHuntMilitary || previousGoal is GoalHuntVillagers)
             animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.IDLE);
+    }
+
+    public override void Strike(string audioClipName = "")
+    {
+        base.Strike(audioClipName);
+
+        if (targetDamageable)
+            targetDamageable.Damage(rtsUnitTypeData.attackDamage, AttributeChangeCause.ATTACKED, AttributeHandler, DamageType.SLASHING);
     }
 
     public void OnGoalInteract(object sender, PathfindingGoal.GoalInteractEvent e)
@@ -218,71 +302,95 @@ public class Soldier : Unit
         if (e.actor != this || isHeld)
             return;
 
-        if (e.goal is GoalHuntUnits || e.goal is GoalHuntMilitary || e.goal is GoalHuntVillagers)
+        //targetDamageable = null;
+
+        if (e.goal is GoalGotoLocation)
         {
-            Unit unit = e.cell.GetFirstOccupant<Unit>();
-            projectileTarget = unit.gameObject;
-            Damageable damageable = unit.GetComponent<Damageable>();
-            damageable.Damage(rtsUnitTypeData.attackDamage, AttributeChangeCause.ATTACKED, AttributeHandler, DamageType.SLASHING);
+            ActivateAllGoals();
+            e.goal.active = false;
+            targetDamageable = null;
+            return;
+        }
+
+        Unit unit = e.cell.GetFirstOccupant<Unit>();
+        if (unit)
+        {
+            targetDamageable = unit.AttributeHandler;
             SetAttackAnimationState();
             return;
         }
-        else if (e.goal is GoalHuntBuildings)
-        {
-            Damageable damageable;
-            Structure structure = e.cell.GetFirstOccupant<Structure>();
-            if (structure)
-            {
-                damageable = structure.GetComponent<Damageable>();
-                projectileTarget = structure.gameObject;
-            }
-            else
-                damageable = e.cell.GetFirstOccupant<Constructible>().GetComponent<Damageable>();
 
-            if (!damageable)
-                return;
-                
-            damageable.Damage(rtsUnitTypeData.attackDamage, AttributeChangeCause.ATTACKED, AttributeHandler, DamageType.SLASHING);
+        Structure structure = e.cell.GetFirstOccupant<Structure>();
+        if (structure)
+        {
+            targetDamageable = structure.AttributeHandler;
             SetAttackAnimationState();
             return;
         }
-        else if (e.goal is GoalSearchAndDestroy)
+
+        Constructible constructible = e.cell.GetFirstOccupant<Constructible>();
+        if (constructible)
         {
-            Unit unit = e.cell.GetFirstOccupant<Unit>();
-            if (unit)
-            {
-                projectileTarget = unit.gameObject;
-                Damageable damageable = unit.GetComponent<Damageable>();
-                damageable.Damage(rtsUnitTypeData.attackDamage, AttributeChangeCause.ATTACKED, AttributeHandler, DamageType.SLASHING);
-                SetAttackAnimationState();
-                return;
-            }
-
-            Structure structure = e.cell.GetFirstOccupant<Structure>();
-            if (structure)
-            {
-                projectileTarget = structure.gameObject;
-                Damageable damageable = structure.GetComponent<Damageable>();
-                damageable.Damage(rtsUnitTypeData.attackDamage, AttributeChangeCause.ATTACKED, AttributeHandler, DamageType.SLASHING);
-                SetAttackAnimationState();
-                return;
-            }
-
-            Constructible construction = e.cell.GetFirstOccupant<Constructible>();
-            if (construction)
-            {
-                projectileTarget = construction.gameObject;
-                Damageable damageable = construction.GetComponent<Damageable>();
-                damageable.Damage(rtsUnitTypeData.attackDamage, AttributeChangeCause.ATTACKED, AttributeHandler, DamageType.SLASHING);
-                SetAttackAnimationState();
-                return;
-            }
+            targetDamageable = constructible.AttributeHandler;
+            SetAttackAnimationState();
+            return;
         }
+
+        // // if (e.goal is GoalHuntUnits || e.goal is GoalHuntMilitary || e.goal is GoalHuntVillagers)
+        // // {
+        // //     Unit unit = e.cell.GetFirstOccupant<Unit>();
+        // //     targetDamageable = unit.AttributeHandler;
+
+        // //     // Damageable damageable = unit.GetComponent<Damageable>();
+        // //     // damageable.Damage(rtsUnitTypeData.attackDamage, AttributeChangeCause.ATTACKED, AttributeHandler, DamageType.SLASHING);
+        // //     SetAttackAnimationState();
+        // //     return;
+        // // }
+        // // else if (e.goal is GoalHuntBuildings)
+        // // {
+        // //     Structure structure = e.cell.GetFirstOccupant<Structure>();
+        // //     if (structure)
+        // //         targetDamageable = structure.AttributeHandler;
+        // //     else
+        // //         targetDamageable = e.cell.GetFirstOccupant<Constructible>().AttributeHandler;
+            
+        // //     return;
+        // // }
+        // // else if (e.goal is GoalSearchAndDestroy)
+        // // {
+        // //     Unit unit = e.cell.GetFirstOccupant<Unit>();
+        // //     if (unit)
+        // //     {
+        // //         targetDamageable = unit.AttributeHandler;
+        // //         return;
+        // //     }
+
+        // //     Structure structure = e.cell.GetFirstOccupant<Structure>();
+        // //     if (structure)
+        // //     {
+        // //         targetDamageable = structure.AttributeHandler;
+        // //         return;
+        // //     }
+
+        // //     Constructible construction = e.cell.GetFirstOccupant<Constructible>();
+        // //     if (construction)
+        // //     {
+        // //         targetDamageable = construction.AttributeHandler;
+        // //         return;
+        // //     }
+        // // }
+        // // else if (e.goal is GoalGotoLocation)
+        // // {
+        // //     ActivateAllGoals();
+        // //     e.goal.active = false;
+        // // }
 
         //  default cancel the interaction
         ResetGoal();
         e.Cancel();
     }
+
+    public override bool IsCivilian() { return false; }
 
     private void SetAttackAnimationState()
     {
@@ -292,13 +400,6 @@ public class Soldier : Unit
             animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.ATTACKING2);
     }
 
-    public void CleanupEvents()
-    {
-        PathfindingGoal.OnGoalChangeEvent -= OnGoalChange;
-        PathfindingGoal.OnGoalFoundEvent -= OnGoalFound;
-        PathfindingGoal.OnGoalInteractEvent -= OnGoalInteract;
-        Damageable.OnDeathEvent -= OnDeath;
-    }
 
     public void OnDestroy()
     {

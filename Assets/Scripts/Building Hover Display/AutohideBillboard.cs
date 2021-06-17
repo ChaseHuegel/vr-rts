@@ -24,13 +24,15 @@ public class AutohideBillboard : MonoBehaviour
     
     [Tooltip("Distance required from object to target before the autohide timer starts.")]
     public float autohideDistance = 2.0f;
+    public float stopRotatingAtDistance = 0.75f;
 
     [Tooltip("The speed used when rotating to face the target.")]
     
     public float rotationSpeed = 5.0f;
     private float radiusExitTime; 
     private bool autohideTimerStarted;
-    
+    public bool copyHmdRotation = true;
+
     void Awake()
     {
         if (!faceTarget) faceTarget = Player.instance.hmdTransform;
@@ -39,15 +41,32 @@ public class AutohideBillboard : MonoBehaviour
     void Start()
     {
         radiusExitTime = Time.time;
+        Quaternion rot = faceTarget.transform.rotation;
+        rot.z = rot.x = 0;
+        transform.rotation = rot;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (faceTarget)
+        if (!faceTarget)
+            return;
+
+        if (!copyHmdRotation)
         {
             float distance = Vector3.Distance(faceTarget.position, transform.position);
-             if (distance > 0.75f)
+            if (distance > stopRotatingAtDistance)
+            {
+                Vector3 t = (faceTarget.position - transform.position);
+                t.y = 0;
+                Quaternion rot = Quaternion.LookRotation(t);
+                transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime * rotationSpeed);
+            }
+        }
+        else 
+        {
+            float distance = Vector3.Distance(faceTarget.position, transform.position);
+            if (distance > stopRotatingAtDistance)
             {
                 //Vector3 t = (faceTarget.position - transform.position);
                 //t.y = 0;

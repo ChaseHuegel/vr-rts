@@ -50,12 +50,18 @@ public class MenuGen : MonoBehaviour
     // start position of queue progress bar.
     private Vector3 progressPosition;
     private Vector3 cancelButtonPosition;
+
+    [Header("Generated Settings")]
+    [SerializeField]
     private GameObject menuParentObject;
+    [SerializeField]
     private Transform buttonsParent;
+    [SerializeField]
     private HoverButton cancelButton;
     private int currentButtonRow = 0;
     private int currentButtonColumn = 0;
 
+    [SerializeField]
     private SpawnQueue spawnQueue;
 
     private bool IsCreatingUnitQueueMenu;
@@ -139,11 +145,11 @@ public class MenuGen : MonoBehaviour
             GenerateButtons(nextButtonPosition, buttonsParent);
         }
 
-        if (autoselect)
-        {
-            UnityEditor.Selection.activeGameObject = null;
-            UnityEditor.Selection.activeGameObject = menuParent.gameObject;
-        }
+        // if (autoselect)
+        // {
+        //     UnityEditor.Selection.activeGameObject = null;
+        //     UnityEditor.Selection.activeGameObject = menuParent.gameObject;
+        // }
     }
     
     [ExecuteInEditMode]
@@ -272,7 +278,7 @@ public class MenuGen : MonoBehaviour
         text.sortingOrder = 1;
         text.horizontalAlignment = TMPro.HorizontalAlignmentOptions.Center;
         text.verticalAlignment = TMPro.VerticalAlignmentOptions.Middle;
-        text.fontSize = 4.0f;
+        text.fontSize = 5.0f;
         text.font = progressFont;
         text.text = "100%";
 

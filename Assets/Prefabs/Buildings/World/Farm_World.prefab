@@ -16,7 +16,8 @@ GameObject:
   - component: {fileID: 6355609625548158117}
   - component: {fileID: 6611738123303705844}
   - component: {fileID: 5356693978240170431}
-  m_Layer: 10
+  - component: {fileID: 746213646}
+  m_Layer: 11
   m_Name: Farm_World
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -288,6 +289,19 @@ MonoBehaviour:
   meshes:
   - {fileID: 8987644490305071615}
   skinnedMeshes: []
+--- !u!65 &746213646
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 899507145775679583}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 6.497277, y: 6.497487, z: 1.9091488}
+  m_Center: {x: -0.058958262, y: 0.019219847, z: 0.96205395}
 --- !u!1 &3163886759887789236
 GameObject:
   m_ObjectHideFlags: 0
@@ -300,7 +314,7 @@ GameObject:
   - component: {fileID: 2758145166977882090}
   - component: {fileID: 1673469663532337749}
   - component: {fileID: 8383473994109820488}
-  m_Layer: 5
+  m_Layer: 11
   m_Name: NoPan
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -369,7 +383,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6627318184042256728}
   - component: {fileID: 6713802105907787624}
-  m_Layer: 10
+  m_Layer: 11
   m_Name: BuildingHoverDisplay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -409,7 +423,9 @@ MonoBehaviour:
   disableSelf: 1
   autohideDelay: 15
   autohideDistance: 2
+  stopRotatingAtDistance: 0.75
   rotationSpeed: 1
+  copyHmdRotation: 1
 --- !u!1 &6737790160878806227
 GameObject:
   m_ObjectHideFlags: 0
@@ -419,9 +435,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8285501199083394147}
-  - component: {fileID: 6561558892759414818}
   - component: {fileID: 873805699818353451}
-  m_Layer: 10
+  m_Layer: 11
   m_Name: Knock
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -442,19 +457,6 @@ Transform:
   m_Father: {fileID: 6245847907370464301}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &6561558892759414818
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6737790160878806227}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 21.58753, y: 20.710482, z: 3.9963171}
-  m_Center: {x: 3.3830113, y: -0.38621363, z: -16.49}
 --- !u!135 &873805699818353451
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -477,7 +479,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6380905950181759317}
-  m_Layer: 10
+  m_Layer: 11
   m_Name: GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -630,6 +632,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7839893256423566772, guid: 6fc6a47cc6cdeaf4f827c38d64ab7229,
         type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 7839893256423566772, guid: 6fc6a47cc6cdeaf4f827c38d64ab7229,
+        type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
@@ -654,6 +661,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6380905950181759317}
     m_Modifications:
+    - target: {fileID: 1009760025302794508, guid: b12682a659f5ea74f95ec202ac883979,
+        type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
     - target: {fileID: 2373722753323904995, guid: b12682a659f5ea74f95ec202ac883979,
         type: 3}
       propertyPath: m_Pivot.x
@@ -779,6 +791,11 @@ PrefabInstance:
       propertyPath: m_PresetInfoIsWorld
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3558442266571586194, guid: b12682a659f5ea74f95ec202ac883979,
+        type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
     - target: {fileID: 4696321577107034512, guid: b12682a659f5ea74f95ec202ac883979,
         type: 3}
       propertyPath: m_Name
@@ -786,8 +803,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4696321577107034512, guid: b12682a659f5ea74f95ec202ac883979,
         type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 4696321577107034512, guid: b12682a659f5ea74f95ec202ac883979,
+        type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6398815820477387259, guid: b12682a659f5ea74f95ec202ac883979,
+        type: 3}
+      propertyPath: m_Layer
+      value: 11
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b12682a659f5ea74f95ec202ac883979, type: 3}
@@ -822,7 +849,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 520e20395d1150a4c94174228bde0499, type: 3}
       propertyPath: m_Layer
-      value: 10
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 520e20395d1150a4c94174228bde0499, type: 3}
       propertyPath: m_IsActive

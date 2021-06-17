@@ -13,6 +13,7 @@ public class SpawnQueue : MonoBehaviour
     [Header("Unit Spawn Queue Settings")]
     public Transform unitSpawnPoint;
     public Transform unitRallyWaypoint;
+    private Cell unitRallyPointCell;
     public float unitRallyWaypointRadius;
 
     [Header("Generated Settings")]
@@ -49,7 +50,6 @@ public class SpawnQueue : MonoBehaviour
             if (structure)
             {
                 unitSpawnPoint = structure.transform;
-                unitRallyWaypoint = unitSpawnPoint;
                 Debug.Log("UnitSpawnPoint not set, using structure transform.", this);
             }
             else
@@ -57,6 +57,8 @@ public class SpawnQueue : MonoBehaviour
                 Debug.Log("UnitSpawnPoint not set and no structure found.", this);
             }
         }
+        
+        SetUnitRallyWaypoint(unitSpawnPoint.position);
 
         if (!(damageable = gameObject.GetComponentInParent<Damageable>()))
             Debug.Log("Missing damageable component in parent.", this);
@@ -172,13 +174,15 @@ public class SpawnQueue : MonoBehaviour
             Unit unit = unitGameObject.GetComponent<Unit>();
             unit.rtsUnitType = unitSpawnQueue.First.Value.unitType;
             unit.factionId = structure.factionId;
+            unit.Initialize();
+            unit.SyncPosition();
+            
+            unit.GotoRallyPoint(unitRallyPointCell);
 
-            // ! Dsabled, none of this works for rally points anymore.
-            //unit.SyncPosition();
-            //unit.GotoForced(World.ToWorldSpace(unitRallyWaypoint.position));
-            //unit.LockPath();
+            //unit.MoveToPosition(unitRallyWaypoint.position);
 
-            // Debug.Log("Spawned " + unit.rtsUnitType + ".");
+            // Coord2D pos = World.ToWorldCoord(unitRallyWaypoint.position);
+            // unit.TrySetGoal(World.at(pos));
         }
         else
             Debug.Log(string.Format("Spawn {0} failed. Missing prefabToSpawn.", unitSpawnQueue.First.Value.unitType));
@@ -223,7 +227,8 @@ public class SpawnQueue : MonoBehaviour
 
     public void SetUnitRallyWaypoint(Vector3 position)
     {
-        if (unitRallyWaypoint) unitRallyWaypoint.transform.position = position;
+        unitRallyWaypoint.position = position;
+        unitRallyPointCell = World.at(World.ToWorldCoord(unitRallyWaypoint.position));
     }
 
     public void SetCancelButton(HoverButton button)

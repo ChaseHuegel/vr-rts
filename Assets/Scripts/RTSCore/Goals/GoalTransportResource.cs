@@ -8,9 +8,15 @@ public class GoalTransportResource : PathfindingGoal
     {
         Structure structure = cell?.GetFirstOccupant<Structure>();
 
-        if (structure != null && structure.CanDropOff(type) && structure.IsSameFaction(actor))
-            return true;
+        if (structure == null)
+            return false;
 
-        return false;
+        if (!structure.IsSameFaction(actor)) 
+            return false;
+
+        if (!structure.CanDropOff(type)) 
+            return false;
+
+        return true;
     }
 }

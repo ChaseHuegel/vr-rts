@@ -22,8 +22,9 @@ public class Unit : Actor, IFactioned
 
     [Header("Unit")]
     public RTSUnitType rtsUnitType;
+    public bool maxHitPointsOnStart = true;
     public GameObject rangedProjectile;
-    protected GameObject projectileTarget;
+    protected Damageable targetDamageable;
     public float projectileSpeed = 5.0f;
     private GameObject projectile;
     private Vector3 projectileTargetPos;
@@ -33,22 +34,33 @@ public class Unit : Actor, IFactioned
     public SkinnedMeshRenderer[] skinnedMeshes;
 
     [Header("AI")]
-    public UnitState state;
-
-    public bool isHeld;
-    public bool isDying;
-    public bool wasThrownOrDropped;
+    [SerializeField]
+    protected UnitState state;
+    public bool isHeld { get; protected set; }
+    public bool isDying { get; protected set; }
+    public bool wasThrownOrDropped { get; protected set; }
     protected UnitState previousState;
 
     // Make this read only, we should only be able to change unit properties
     // through the database.
-    public UnitData rtsUnitTypeData { get { return m_rtsUnitTypeData; } }
+    public UnitData rtsUnitTypeData 
+    { 
+        get 
+        { 
+            if (!m_rtsUnitTypeData)
+                m_rtsUnitTypeData = GameMaster.GetUnit(rtsUnitType);
+                
+            return m_rtsUnitTypeData; 
+        } 
+    }
+
     protected UnitData m_rtsUnitTypeData;
 
-    public AudioSource audioSource;
+    protected AudioSource audioSource;
     protected Animator animator;
     protected PlayerManager playerManager;
     protected float detachFromHandTime;
+
 
     public void Awake()
     {
@@ -62,13 +74,19 @@ public class Unit : Actor, IFactioned
         base.Initialize();
         playerManager = PlayerManager.instance;
 
+        goals.Add<GoalGotoLocation>().active = false;
+
         animator = gameObject.GetComponentInChildren<Animator>();
         if (!animator)
             Debug.Log("No animator component found.");
 
+        SetUnitData(rtsUnitType);
         if (!m_rtsUnitTypeData)
-            m_rtsUnitTypeData = GameMaster.GetUnit(rtsUnitType);
-        
+            Debug.Log(string.Format("{0} data not found.", rtsUnitType));
+
+        if (maxHitPointsOnStart)
+            AttributeHandler.GetAttribute(Attributes.HEALTH).SetValue(rtsUnitTypeData.maxHitPoints);
+
         UpdateFaction();
         SetSkin();
     }
@@ -89,24 +107,33 @@ public class Unit : Actor, IFactioned
         }
     }
 
+    public virtual void SetUnitTask(RTSUnitType unitType, Cell taskLocation = null) {}
+
+    public virtual void SetUnitTask(Structure structure) {}
+
+    public virtual void SetUnitTask(Constructible constructible) {}
+
+    public virtual void SetUnitTask(Fauna fauna) {}
+
+    public virtual void SetUnitTask(Unit unit) {}
+
+    public virtual void SetUnitTask(Resource resource) {}
+
     //=========================================================================
     /// <summary>
     /// Sets the unit type, fetches unitData, sets maxGoalInteractRange to
-    /// unitData.attackRange, and resets the goal.
+    /// unitData.attackRange, and sets max hit points on AttributeHandler.
     /// </summary>
     /// <param name="unitType"></param>
-    public virtual void SetUnitTask(RTSUnitType unitType)
+    protected void SetUnitData(RTSUnitType unitType)
     {
         rtsUnitType = unitType;
         m_rtsUnitTypeData = GameMaster.GetUnit(rtsUnitType);
         maxGoalInteractRange = rtsUnitTypeData.attackRange;
-        ResetGoal();
+        AttributeHandler.GetAttribute(Attributes.HEALTH).SetMax(rtsUnitTypeData.maxHitPoints);
     }
 
-    public virtual bool IsCivilian()
-    {
-        return (int)rtsUnitTypeData.unitType < (int)RTSUnitType.Swordsman;
-    }
+    public virtual bool IsCivilian() { return true; }
 
     public bool IsDead()
     {
@@ -171,26 +198,98 @@ public class Unit : Actor, IFactioned
         }
     }
 
-    public void GotoPosition(Vector3 position)
-    {
-        DeactivateGoals();
-        //ResetAI();
+    /// <summary>
+    /// Brute force a unit to go to a position on the map optionally disabling all
+    /// active goals.
+    /// </summary>
+    /// <param name="position">Position to go to in transform space.</param>
+    /// <param name="deactivateGoals">Should all goals be deactivated? True/False</param>
+    public virtual void MoveToPosition(Vector3 position, bool deactivateGoals = false)
+    {        
+        if (deactivateGoals)
+            DeactivateAllGoals();
+        
+        ResetPath();
         Coord2D pos = World.ToWorldCoord(position);
-
-        // Debug.Log(gridPosition.x + " " + gridPosition.y +
-        //                         " ----- " + pos.x + " " + pos.y);
-
         GotoForced(pos.x, pos.y);
+        LockPath();
     }
 
-    public void ActivateGoals()
+    /// <summary>
+    /// Sends a unit to a target cell. If the cell is occupied, sends unit to a cell
+    /// near the target cell.
+    /// </summary>
+    /// <param name="cell"></param>
+    public virtual void GotoRallyPoint(Cell cell)
+    {
+        if (!cell.occupied)
+            GotoForced(cell.x, cell.y);
+        else
+        {
+            Coord2D nearbyPosition = cell.GetFirstOccupant().GetNearbyCoord();
+            GotoForced(nearbyPosition.x, nearbyPosition.y);
+
+            // ! The below code could result in rally points set to empty cells
+            // ! when set becoming occupied and changing the task of the unit.
+            // ! Probably undesirable, leaving code in for future use in the
+            // ! event we store rally points or have a method of determining the
+            // ! state of the rally point when it was set.
+            // Resource resource = cell.GetOccupant<Resource>();
+            // if (resource)
+            //     SetUnitTask(resource);
+
+            // Unit pointedAtUnit = cell.GetOccupant<Unit>();
+            // if (pointedAtUnit)
+            //     SetUnitTask(pointedAtUnit);
+
+            // Fauna fauna = cell.GetOccupant<Fauna>();
+            // if (fauna)
+            //     SetUnitTask(fauna);
+
+            // Structure structure = cell.GetOccupant<Structure>();
+            // if (structure)
+            //     SetUnitTask(structure);
+
+            // Constructible constructible = cell.GetOccupant<Constructible>();
+            // if (constructible)
+            //     SetUnitTask(constructible);                       
+        }
+
+        LockPath();
+    }
+
+    /// <summary>
+    /// Use GoalGotoLocation to send a unit to a position on the map optionally disabling all
+    /// active goals.
+    /// </summary>
+    /// <param name="position">Target position to go to in transform space.</param>
+    /// <param name="deactivateGoals">Should all goals be deactivated? True / False</param>
+    public virtual void MoveToLocation(Vector3 position, bool deactivateGoals = false)
+    {
+        if (deactivateGoals)
+            DeactivateAllGoals();
+
+        Coord2D pos = World.ToWorldCoord(position);
+
+        GoalGotoLocation goal = goals.Get<GoalGotoLocation>();
+        if (goal != null)
+        {
+            goal.active = true;
+            TrySetGoal(World.at(pos));
+        }
+        else
+            Debug.Log("GoalGotoLocation not found.");
+    }
+
+    public void ActivateAllGoals()
     {
         foreach (PathfindingGoal goal in GetGoals())
         {
             goal.active = true;
         }
     }
-    public void DeactivateGoals()
+
+    public void DeactivateAllGoals()
     {
         foreach(PathfindingGoal goal in GetGoals())
         {
@@ -204,19 +303,22 @@ public class Unit : Actor, IFactioned
             LaunchProjectile();
     }
 
-    public virtual void LaunchProjectile()
+    public virtual void LaunchProjectile(string clipName = "")
     {
         if (!projectile)
         {
             projectile = Instantiate(rangedProjectile);
             projectile.transform.position = transform.position;
             projectile.transform.position += new Vector3(0, 0.09f, 0);
-            projectileTargetPos = projectileTarget.transform.position;
+            projectileTargetPos = targetDamageable.transform.position;
             projectileTargetPos += new Vector3(0, 0.09f, 0);
+            
+            if (clipName != "")
+                audioSource.PlayOneShot(GameMaster.GetAudio(clipName).GetClip());
 
-            if (projectileTarget)
+            if (targetDamageable)
             {
-                projectileTargetPos = projectileTarget.transform.position;
+                projectileTargetPos = targetDamageable.transform.position;
                 projectileTargetPos += new Vector3(0, 0.09f, 0);
             }
         }
@@ -235,6 +337,9 @@ public class Unit : Actor, IFactioned
 
         if(dist <= 0.1f)
         {
+            if (targetDamageable)
+                targetDamageable.Damage(rtsUnitTypeData.attackDamage, AttributeChangeCause.ATTACKED, AttributeHandler, DamageType.SLASHING);
+
             // This will destroy the arrow when it is within .1 units
             // of the target location. You can set this to whatever
             // distance you're comfortable with.
@@ -246,6 +351,18 @@ public class Unit : Actor, IFactioned
             projectile.transform.Translate(Vector3.forward * (projectileSpeed * Time.deltaTime));
         }
     }
+
+    /// <summary>
+    /// Plays the audio clip passed in. Called by AnimatorEventForwarder during
+    /// animation events where contact takes place with weapons and implements.
+    /// </summary>
+    /// <param name="audioClipName">Swordfish.SoundElement to get the a clip from.</param>
+    public virtual void Strike(string audioClipName = "")
+    {
+        if (audioSource != null && audioClipName != "")
+            audioSource.PlayOneShot(GameMaster.GetAudio(audioClipName).GetClip());
+    }
+
     void OnValidate()
     {
         if (!GameMaster.Instance)
