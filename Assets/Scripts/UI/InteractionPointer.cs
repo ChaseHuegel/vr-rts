@@ -399,7 +399,7 @@ public class InteractionPointer : MonoBehaviour
 
 			//Debug.Log(string.Format("Unit: {0} interactable: {1}", selectedUnit, pointedAtPointerInteractable));
 		}
-		// Start unit selection mode.
+		// Start unit selection mode if no interactible object is pointed at.
 		else if (pointedAtPointerInteractable == null)
 		{
             isInUnitSelectionMode = true;
