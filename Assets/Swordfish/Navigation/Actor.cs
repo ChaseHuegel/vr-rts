@@ -26,11 +26,15 @@ public class Actor : Body
 
     protected Cell currentGoalCell = null;
     protected Cell previousGoalCell = null;
+
+    protected Body currentGoalTarget = null;
+    protected Body previousGoalTarget = null;
+
     protected PathfindingGoal currentGoal = null;
     protected PathfindingGoal previousGoal = null;
 
     //  Memory functionality
-    protected Dictionary<PathfindingGoal, Cell> discoveredGoals = new Dictionary<PathfindingGoal, Cell>();
+    protected Dictionary<PathfindingGoal, Body> discoveredGoals = new Dictionary<PathfindingGoal, Body>();
 
     private float movementInterpolation;
     private bool moving = false;
@@ -72,7 +76,7 @@ public class Actor : Body
     public bool HasValidPath() { return (currentPath != null && currentPath.Count > 0); }
 
     public bool HasValidGoal() { return (currentGoal != null && currentGoal.active); }
-    public bool HasValidGoalTarget() { return currentGoalCell != null; }
+    public bool HasValidGoalTarget() { return currentGoalTarget != null || currentGoalCell != null; }
 
     public bool HasValidTarget()
     {
@@ -107,6 +111,7 @@ public class Actor : Body
         currentGoal = null;
         currentGoalCell = null;
         previousGoalCell = null;
+        currentGoalTarget = null;
     }
 
     public void ResetPathingBrain()
@@ -152,19 +157,20 @@ public class Actor : Body
         }
     }
 
-    public void TryDiscoverGoal(PathfindingGoal goal, Cell cell)
+    public void TryDiscoverGoal(PathfindingGoal goal, Body body)
     {
-        if (goal == null || cell == null) return;
+        if (goal == null || body == null) return;
 
         if (discoveredGoals.ContainsKey(goal))
             discoveredGoals.Remove(goal);
 
-        discoveredGoals.Add(goal, cell);
+        discoveredGoals.Add(goal, body);
     }
 
     public Cell FindNearestGoalWithPriority(bool useBehavior = true) { return FindNearestGoal(true, useBehavior); }
     public Cell FindNearestGoal(bool usePriority = false, bool useBehavior = true)
     {
+        Body body = null;
         Cell result = null;
         Cell current = null;
 
@@ -179,15 +185,17 @@ public class Actor : Body
             {
                 currentGoal = goal;
 
-                if (discoveredGoals.TryGetValue(goal, out result)
-                    && result != null
-                    // && DistanceTo(result) < goalSearchDistance
-                    && PathfindingGoal.TryGoal(this, result, goal))
+                if (discoveredGoals.TryGetValue(goal, out body))
+                {
+                    result = body.GetCellAtGrid();
+
+                    if (result != null && DistanceTo(result) < goalSearchDistance && PathfindingGoal.TryGoal(this, result, goal))
                     {
                         searchDistance = goalSearchGrowth;
                         return result;
                     }
-            }
+                }
+                }
         }
 
         foreach (PathfindingGoal goal in GetGoals())
@@ -246,13 +254,16 @@ public class Actor : Body
         if (isPathLocked) return false;
 
         if (!HasValidTarget())
-        {
             currentGoalCell = FindNearestGoal(usePriority, useBehavior);
-        }
 
         if (HasValidTarget())
         {
-            Goto(currentGoalCell.x, currentGoalCell.y);
+            //  Only force a pathing attempt if the targetted cell has changed (i.e. target body is moving)
+            if (HasTargetChanged())
+                GotoForced(currentGoalCell.x, currentGoalCell.y);
+            else
+                Goto(currentGoalCell.x, currentGoalCell.y);
+
             return true;
         }
 
@@ -274,6 +285,8 @@ public class Actor : Body
         previousGoalCell = currentGoalCell;
         previousGoal = currentGoal;
 
+        currentGoalTarget = currentGoalCell != null ? currentGoalCell.GetFirstOccupant() : null;
+
         if (PathfindingGoal.TryGoal(this, cell, goal))
         {
             GotoForced(cell.x, cell.y);
@@ -289,7 +302,7 @@ public class Actor : Body
     public void Goto(Vector3 vec, bool ignoreActors = true) { Goto((int)vec.x, (int)vec.z, ignoreActors); }
     public void Goto(int x, int y, bool ignoreActors = true)
     {
-        if (!isPathLocked && !HasValidPath() && DistanceTo(x, y) > maxGoalInteractRange)
+        if (!isPathLocked && !HasValidPath() && DistanceTo(x, y) > 1)
             PathManager.RequestPath(this, x, y, ignoreActors);
     }
 
@@ -299,11 +312,7 @@ public class Actor : Body
     public void GotoForced(Vector3 vec, bool ignoreActors = true) { Goto((int)vec.x, (int)vec.z, ignoreActors); }
     public void GotoForced(int x, int y, bool ignoreActors = true)
     {
-        // ! Not sure if maxGoalInteractRange is needed here. Not sure if I added
-        // ! it when making the changes for ranged units or you (chase) added it.
-        // ! It does prevent going to a postion for ranged units if that position
-        // ! is not outside of their range though, and that's a problem.
-        if (!isPathLocked && DistanceTo(x, y) > 1)// maxGoalInteractRange)
+        if (!isPathLocked && DistanceTo(x, y) > 1)
             PathManager.RequestPath(this, x, y, ignoreActors);
     }
 
@@ -333,11 +342,15 @@ public class Actor : Body
             if (previousGoal != currentGoal)
             {
                 PathfindingGoal.TriggerGoalChanged(this, previousGoal, currentGoal);
-                TryDiscoverGoal(previousGoal, previousGoalCell);
+
+                TryDiscoverGoal(previousGoal, previousGoalCell?.GetFirstOccupant());
             }
 
             previousGoalCell = currentGoalCell;
             previousGoal = currentGoal;
+
+            if (currentGoalTarget != null)
+                currentGoalCell = currentGoalTarget.GetCellAtGrid();
 
             //  Handle interacting with goals
             if ( HasValidTarget() && (!moving || DistanceTo(currentGoalCell) <= maxGoalInteractRange) )
@@ -410,7 +423,7 @@ public class Actor : Body
             UnlockPath();
 
         //  If we have a valid path, move along it
-        if (HasValidPath())
+        if (HasValidPath() && !(HasValidTarget() && DistanceTo(currentGoalCell) <= maxGoalInteractRange))
         {
             // TODO: Add 'waypoints' for longer paths too big for the heap
 
