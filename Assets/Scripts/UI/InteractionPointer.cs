@@ -348,6 +348,10 @@ public class InteractionPointer : MonoBehaviour
 		return false;
 	}
 
+	/// <summary>
+	/// Starts intaraction with the button bound to InteractUI.
+	/// </summary>
+	/// <param name="hand">The hand that pressed the InteractUI button.</param>
     private void StartInteraction(Hand hand)
 	{
 		if (isInWallPlacementMode)
