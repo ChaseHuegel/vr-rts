@@ -15,13 +15,13 @@ public class Soldier : Unit
     public bool huntBuildings = true;
 
     //public VillagerHoverMenu villagerHoverMenu;
-    
+
     public override void Initialize()
     {
         base.Initialize();
         HookIntoEvents();
 
-        SetAIAttackGoals(huntMilitary, huntVillagers, huntBuildings);        
+        SetAIAttackGoals(huntMilitary, huntVillagers, huntBuildings);
 
         animator = gameObject.GetComponentInChildren<Animator>();
         if (!animator)
@@ -65,11 +65,11 @@ public class Soldier : Unit
         {
             goals.Get<GoalHuntBuildings>().active = true;
             TrySetGoal(World.at(structure.GetNearbyCoord()));
-        }    
+        }
     }
 
     /// <summary>
-    /// Sets the soldiers task to the passed in constructible location. If 
+    /// Sets the soldiers task to the passed in constructible location. If
     /// constructible is an enemy constructible soldier is set attacks the
     /// constructible. If constructible is friendly soldier moves to location.
     /// </summary>
@@ -119,7 +119,7 @@ public class Soldier : Unit
         goals.Add<GoalHuntMilitary>().active = false;
         goals.Add<GoalHuntVillagers>().active = false;
         goals.Add<GoalHuntBuildings>().active = false;
-                
+
         if (military)
             goals.Get<GoalHuntMilitary>().active = true;
 
@@ -178,13 +178,13 @@ public class Soldier : Unit
 
         previousState = state;
     }
-    
+
     public void OnDamaged(object sender, Damageable.DamageEvent e)
     {
         if (e.victim != AttributeHandler)
             return;
-            
-        if (!currentGoalTarget.GetOccupant<Soldier>())
+
+        if (!currentGoalCell.GetOccupant<Soldier>())
             TrySetGoal(e.attacker.GetComponentInChildren<Body>().GetCellAtGrid());
     }
 
@@ -353,7 +353,7 @@ public class Soldier : Unit
         // //         targetDamageable = structure.AttributeHandler;
         // //     else
         // //         targetDamageable = e.cell.GetFirstOccupant<Constructible>().AttributeHandler;
-            
+
         // //     return;
         // // }
         // // else if (e.goal is GoalSearchAndDestroy)

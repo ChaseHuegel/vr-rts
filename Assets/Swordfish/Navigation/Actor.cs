@@ -349,7 +349,9 @@ public class Actor : Body
                     //  Forcibly trigger reached under that assumption
                     PathfindingGoal.TriggerInteractGoal(this, currentGoalCell, currentGoal);
 
-                    LookAt(currentGoalCell.x, currentGoalCell.y);
+                    //  ! HasValidTarget checks the cell isn't null, so how is this resolving as null?
+                    if (currentGoalCell != null)
+                        LookAt(currentGoalCell.x, currentGoalCell.y);
 
                     ResetPathingBrain();
                     ResetPath();

@@ -447,7 +447,7 @@ public class Villager : Unit
     /// <param name="structure"></param>
     public override void SetUnitTask(Structure structure)
     {
-        SetUnitTask(RTSUnitType.Builder, World.at(structure.GetNearbyCoord()));
+        SetUnitTask(RTSUnitType.Builder, World.at(structure.GetDirectionalCoord(gridPosition)));
     }
 
     /// <summary>
@@ -457,7 +457,7 @@ public class Villager : Unit
     /// <param name="constructible"></param>
     public override void SetUnitTask(Constructible constructible)
     {
-        SetUnitTask(RTSUnitType.Builder, World.at(constructible.GetNearbyCoord()));
+        SetUnitTask(RTSUnitType.Builder, World.at(constructible.GetDirectionalCoord(gridPosition)));
     }
 
     /// <summary>
@@ -467,7 +467,7 @@ public class Villager : Unit
     /// <param name="fauna"></param>
     public override void SetUnitTask(Fauna fauna)
     {
-        SetUnitTask(RTSUnitType.Hunter, World.at(fauna.GetNearbyCoord()));
+        SetUnitTask(RTSUnitType.Hunter, World.at(fauna.GetDirectionalCoord(gridPosition)));
     }
 
     /// <summary>
