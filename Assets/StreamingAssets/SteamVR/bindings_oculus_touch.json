@@ -75,17 +75,12 @@
                   "east" : {
                      "output" : "/actions/default/in/snapturnright"
                   },
-                  "north" : {
-                     "output" : "/actions/default/in/teleport"
-                  },
                   "west" : {
                      "output" : "/actions/default/in/snapturnleft"
                   }
                },
                "mode" : "dpad",
                "parameters" : {
-                  "deadzone_pct" : "25",
-                  "overlap_pct" : "30",
                   "sub_mode" : "touch"
                },
                "path" : "/user/hand/left/input/joystick"
@@ -102,7 +97,7 @@
             {
                "inputs" : {
                   "click" : {
-                     "output" : "/actions/default/in/togglehandmenu"
+                     "output" : "/actions/default/in/select"
                   }
                },
                "mode" : "button",
@@ -140,9 +135,6 @@
                   "east" : {
                      "output" : "/actions/default/in/snapturnright"
                   },
-                  "north" : {
-                     "output" : "/actions/default/in/teleport"
-                  },
                   "west" : {
                      "output" : "/actions/default/in/snapturnleft"
                   }
@@ -174,7 +166,7 @@
             {
                "inputs" : {
                   "click" : {
-                     "output" : "/actions/default/in/togglehandmenu"
+                     "output" : "/actions/default/in/select"
                   }
                },
                "mode" : "button",
@@ -192,7 +184,7 @@
             {
                "inputs" : {
                   "click" : {
-                     "output" : "/actions/default/in/togglehandmenu"
+                     "output" : "/actions/default/in/select"
                   }
                },
                "mode" : "button",
@@ -206,6 +198,24 @@
                },
                "mode" : "button",
                "path" : "/user/hand/right/input/b"
+            },
+            {
+               "inputs" : {
+                  "click" : {
+                     "output" : "/actions/default/in/teleport"
+                  }
+               },
+               "mode" : "button",
+               "path" : "/user/hand/left/input/joystick"
+            },
+            {
+               "inputs" : {
+                  "click" : {
+                     "output" : "/actions/default/in/teleport"
+                  }
+               },
+               "mode" : "button",
+               "path" : "/user/hand/right/input/joystick"
             }
          ]
       },
