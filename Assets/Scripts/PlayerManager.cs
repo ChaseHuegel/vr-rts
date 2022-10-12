@@ -41,7 +41,8 @@ public class PlayerManager : MonoBehaviour
     public Transform lHandTrackingPoint;
     public GameObject autohideHandMenuObject;
     public WristDisplay WristDisplay;
-    private GripPan gripPan;
+    public WristDisplay FaceDisplay;
+    private GripPan gripPan; 
     private Hand buildMenuHand;
     private Hand selectionHand;
     public GameObject handBuildMenu;
@@ -53,7 +54,7 @@ public class PlayerManager : MonoBehaviour
     {
         get
         {
-            if ( _instance == null )
+            if ( _instance == null ) 
                 _instance = GameObject.FindObjectOfType<PlayerManager>();
 
             return _instance;
@@ -78,6 +79,11 @@ public class PlayerManager : MonoBehaviour
         WristDisplay?.SetGrainText(grainCollected.ToString());
         WristDisplay?.SetGoldText(goldCollected.ToString());
         WristDisplay?.SetStoneText(stoneCollected.ToString());
+
+        FaceDisplay?.SetWoodText(woodCollected.ToString());
+        FaceDisplay?.SetGrainText(grainCollected.ToString());
+        FaceDisplay?.SetGoldText(goldCollected.ToString());
+        FaceDisplay?.SetStoneText(stoneCollected.ToString());
 
         if (!autohideHandMenuObject)
             Debug.Log("autohideHandMenuObject not set.", this);
@@ -290,11 +296,13 @@ public class PlayerManager : MonoBehaviour
         {
             civilianPopulation += 1;
             WristDisplay?.SetCivilianPopulationText(civilianPopulation.ToString());
+            FaceDisplay?.SetCivilianPopulationText(civilianPopulation.ToString());
         }
         else
         {
             militaryPopulation += 1;
             WristDisplay?.SetMilitaryPopulationText(militaryPopulation.ToString());
+            FaceDisplay?.SetMilitaryPopulationText(militaryPopulation.ToString());
         }
         
         totalPopulation += unit.rtsUnitTypeData.populationCost;
@@ -310,11 +318,13 @@ public class PlayerManager : MonoBehaviour
         {
             civilianPopulation -= 1;
             WristDisplay.SetCivilianPopulationText(civilianPopulation.ToString());
+            FaceDisplay.SetCivilianPopulationText(civilianPopulation.ToString());
         }
         else
         {
             militaryPopulation -= 1;
             WristDisplay.SetMilitaryPopulationText(militaryPopulation.ToString());
+            FaceDisplay.SetMilitaryPopulationText(militaryPopulation.ToString());
         }
 
         totalPopulation -= unit.rtsUnitTypeData.populationCost;
@@ -341,6 +351,7 @@ public class PlayerManager : MonoBehaviour
     void UpdateWristDisplayPopulationLimit()
     {
         WristDisplay?.SetTotalPopulationText(totalPopulation.ToString() + "/" + populationLimit.ToString());
+        FaceDisplay?.SetTotalPopulationText(totalPopulation.ToString() + "/" + populationLimit.ToString());
     }
 
     void UpdateWristDisplayResourceText()
@@ -349,6 +360,11 @@ public class PlayerManager : MonoBehaviour
         WristDisplay?.SetGrainText(grainCollected.ToString());
         WristDisplay?.SetGoldText(goldCollected.ToString());
         WristDisplay?.SetStoneText(stoneCollected.ToString());
+
+        FaceDisplay?.SetWoodText(woodCollected.ToString());
+        FaceDisplay?.SetGrainText(grainCollected.ToString());
+        FaceDisplay?.SetGoldText(goldCollected.ToString());
+        FaceDisplay?.SetStoneText(stoneCollected.ToString());
     }
 
     public void AddResourceToStockpile(ResourceGatheringType type, int amount)
@@ -358,22 +374,26 @@ public class PlayerManager : MonoBehaviour
             case ResourceGatheringType.Wood:
                 woodCollected += amount;
                 WristDisplay?.SetWoodText(woodCollected.ToString());
+                FaceDisplay?.SetWoodText(woodCollected.ToString());
                 break;
 
             case ResourceGatheringType.Grain:
             case ResourceGatheringType.Berries:
                 grainCollected += amount;
                 WristDisplay?.SetGrainText(grainCollected.ToString());
+                FaceDisplay?.SetGrainText(grainCollected.ToString());
                 break;
 
             case ResourceGatheringType.Gold:
                 goldCollected += amount;
                 WristDisplay?.SetGoldText(goldCollected.ToString());
+                FaceDisplay?.SetGoldText(goldCollected.ToString());
                 break;
 
             case ResourceGatheringType.Stone:
                 stoneCollected += amount;
                 WristDisplay?.SetStoneText(stoneCollected.ToString());
+                FaceDisplay?.SetStoneText(stoneCollected.ToString());
                 break;
 
             default:
