@@ -178,7 +178,7 @@ public class InteractionPointer : MonoBehaviour
 	void Start()
 	{
 		HookIntoEvents();
-
+		
         playerManager = PlayerManager.instance;
         headAudioSource.transform.SetParent(Player.instance.hmdTransform);
         headAudioSource.transform.localPosition = Vector3.zero;
@@ -263,7 +263,7 @@ public class InteractionPointer : MonoBehaviour
                 StartInteraction(hand);
             }
 
-            if (WasQueueButtonPressed(hand))
+            /* if (WasQueueButtonPressed(hand))
 				newPointerHand = hand;
 
             if (WasQueueButtonReleased(hand) && pointedAtPointerInteractable)
@@ -292,22 +292,26 @@ public class InteractionPointer : MonoBehaviour
                         PlayAudioClip(headAudioSource, dequeueSound);
                     }
                 }
-			}
+			} */
 
 			if (WasCancelButtonPressed(hand))
 			{
 				if (isInUnitSelectionMode)
                     EndUnitSelectionMode();
 				else if (isInBuildingPlacementMode)
-                    EndBuildingPlacementMode();
+                    EndBuildingPlacementMode();				
             }
 
-			if (WasSelectButtonPressed(hand))
-                newPointerHand = hand;
-
             if (WasSelectButtonReleased(hand))
-				if (pointerHand == hand)
-				{}
+                if (pointerHand == hand)
+                {}
+
+			if (WasSelectButtonPressed(hand))  
+			{
+				BuildingHoverDisplay buildingHoverDisplay = pointedAtPointerInteractable.GetComponentInChildren<BuildingHoverDisplay>();
+				if (buildingHoverDisplay)
+					buildingHoverDisplay.Show();
+			}         
 
             if (isInBuildingPlacementMode)
 			{
