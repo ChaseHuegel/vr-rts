@@ -242,29 +242,65 @@ public class InteractionPointer : MonoBehaviour
 		Hand oldPointerHand = pointerHand;
 		Hand newPointerHand = null;
 
-		foreach (Hand hand in player.hands)
-		{
-			if (WasTeleportButtonReleased(hand))
-				if (pointerHand == hand) //This is the pointer hand
-					TryTeleportPlayer();
-
-			if (WasTeleportButtonPressed(hand))
+        foreach (Hand hand in player.hands)
+        {
+            if (WasTeleportButtonReleased(hand))
+            {
+                if (pointerHand == hand) //This is the pointer hand
+                    TryTeleportPlayer();
+            }
+            else if (WasTeleportButtonPressed(hand))
+            {
 				newPointerHand = hand;
-
-			//hand.uiInteractAction.GetStateDown(hand.handType)
-
-			if (WasInteractButtonReleased(hand))
-				if (pointerHand == hand)
-					ExecuteInteraction();
-
-            if (WasInteractButtonPressed(hand))
+			}    
+            else if (WasInteractButtonReleased(hand))
+            {
+                if (pointerHand == hand)
+                    ExecuteInteraction();
+            }
+            else if (WasInteractButtonPressed(hand))
             {
                 newPointerHand = hand;
                 StartInteraction(hand);
             }
+            else if (WasCancelButtonPressed(hand))
+            {
+                if (isInUnitSelectionMode)
+                    EndUnitSelectionMode();
+                else if (isInBuildingPlacementMode)
+                    EndBuildingPlacementMode();
+            }
+            else if (WasSelectButtonReleased(hand))
+            {
+                // if (pointerHand == hand)
+            }
+            else if (WasSelectButtonPressed(hand))
+            {
+                BuildingHoverDisplay buildingHoverDisplay = pointedAtPointerInteractable.GetComponentInChildren<BuildingHoverDisplay>();
+                if (buildingHoverDisplay)
+                    buildingHoverDisplay.Show();
+            }
+            else if (isInBuildingPlacementMode)
+            {
+                // TODO: Should gates snap to nearby walls without having to be exactly lined
+                // TODO: up with the wall?
+                float rotationIncrement = buildingPlacementRotationIncrement;
+                if (placementBuildingData.buildingType == RTSBuildingType.Wood_Wall_Gate ||
+                    placementBuildingData.buildingType == RTSBuildingType.Stone_Wall_Gate)
+                    rotationIncrement = 22.5f;
+
+                if (WasRotateClockwiseButtonPressed(hand))
+                    buildingPlacementPreviewObject.transform.Rotate(0.0f, 0.0f, rotationIncrement);
+
+                if (WasRotateCounterclockwiseButtonPressed(hand))
+                    buildingPlacementPreviewObject.transform.Rotate(0.0f, 0.0f, -rotationIncrement);
+
+                // TODO: Should probably be moved to update pointer.
+                HardSnapToGrid(destinationReticleTransform, placementBuildingData.boundingDimensionX, placementBuildingData.boundingDimensionY);
+            }
 
             /* if (WasQueueButtonPressed(hand))
-				newPointerHand = hand;
+                newPointerHand = hand;
 
             if (WasQueueButtonReleased(hand) && pointedAtPointerInteractable)
             {
@@ -273,66 +309,30 @@ public class InteractionPointer : MonoBehaviour
                     SpawnQueue buildingSpawnQueue = pointedAtPointerInteractable.GetComponentInChildren<SpawnQueue>();
                     if (buildingSpawnQueue && buildingSpawnQueue.QueueLastUnitQueued())
                         PlayAudioClip(headAudioSource, queueSuccessSound);
-					else
-						PlayAudioClip(headAudioSource, queueFailedSound);
+                    else
+                        PlayAudioClip(headAudioSource, queueFailedSound);
                 }
             }
 
             if (WasDequeueButtonPressed(hand))
-				newPointerHand = hand;
+                newPointerHand = hand;
 
-			if (WasDequeueButtonReleased(hand) && pointedAtPointerInteractable)
-			{
-				if (pointerHand == hand)
-				{
-					SpawnQueue buildingSpawnQueue = pointedAtPointerInteractable.GetComponentInChildren<SpawnQueue>();
+            if (WasDequeueButtonReleased(hand) && pointedAtPointerInteractable)
+            {
+                if (pointerHand == hand)
+                {
+                    SpawnQueue buildingSpawnQueue = pointedAtPointerInteractable.GetComponentInChildren<SpawnQueue>();
                     if (buildingSpawnQueue)
                     {
                         buildingSpawnQueue.DequeueUnit();
                         PlayAudioClip(headAudioSource, dequeueSound);
                     }
                 }
-			} */
+            } */
 
-			if (WasCancelButtonPressed(hand))
-			{
-				if (isInUnitSelectionMode)
-                    EndUnitSelectionMode();
-				else if (isInBuildingPlacementMode)
-                    EndBuildingPlacementMode();				
+            
             }
-
-            if (WasSelectButtonReleased(hand))
-                if (pointerHand == hand)
-                {}
-
-			if (WasSelectButtonPressed(hand))  
-			{
-				BuildingHoverDisplay buildingHoverDisplay = pointedAtPointerInteractable.GetComponentInChildren<BuildingHoverDisplay>();
-				if (buildingHoverDisplay)
-					buildingHoverDisplay.Show();
-			}         
-
-            if (isInBuildingPlacementMode)
-			{
-                // TODO: Should gates snap to nearby walls without having to be exactly lined
-                // TODO: up with the wall?
-                float rotationIncrement = buildingPlacementRotationIncrement;
-                if (placementBuildingData.buildingType == RTSBuildingType.Wood_Wall_Gate ||
-                	placementBuildingData.buildingType == RTSBuildingType.Stone_Wall_Gate)
-                    rotationIncrement = 22.5f;
-
-                if (WasRotateClockwiseButtonPressed(hand))
-					buildingPlacementPreviewObject.transform.Rotate(0.0f, 0.0f, rotationIncrement);
-
-				if (WasRotateCounterclockwiseButtonPressed(hand))
-					buildingPlacementPreviewObject.transform.Rotate(0.0f, 0.0f, -rotationIncrement);
-
-				// TODO: Should probably be moved to update pointer.
-				HardSnapToGrid(destinationReticleTransform, placementBuildingData.boundingDimensionX, placementBuildingData.boundingDimensionY);
-			}
-		}
-	}	
+        }	
 
 	private bool WasInteractButtonPressed(Hand hand)
 	{
