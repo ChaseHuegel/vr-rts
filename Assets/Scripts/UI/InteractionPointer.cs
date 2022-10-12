@@ -511,7 +511,7 @@ public class InteractionPointer : MonoBehaviour
 			SetSnapTurnEnabled(true, true);
 		}
 
-		if (isSettingRallyPoint)
+		else if (isSettingRallyPoint)
 		{
 			// TODO: Draw line to rally point.
             spawnQueue.SetUnitRallyWaypoint(wayPointReticle.transform.position);
@@ -530,7 +530,7 @@ public class InteractionPointer : MonoBehaviour
             return;
 		}
 
-		if (selectedUnits.Count > 0)
+		else if (selectedUnits.Count > 0)
 		{
 			foreach (Unit unit in selectedUnits)
 			{
@@ -580,7 +580,9 @@ public class InteractionPointer : MonoBehaviour
             EndUnitSelectionMode();
 			pointedAtResource = null;
 		}
-	}
+		else
+            isInUnitSelectionMode = false;
+    }
 
     private bool CellsOccupied(Vector3 position, int dimensionX, int dimensionY)
     {
