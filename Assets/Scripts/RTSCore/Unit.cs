@@ -146,7 +146,7 @@ public class Unit : Actor, IFactioned
         Freeze();
         wasThrownOrDropped = false;
 
-        animator.SetInteger("AnimationActorState", (int)ActorAnimationState.IDLE);
+        animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.IDLE);
 
         if(factionId == playerManager.factionId)
             audioSource.PlayOneShot(GameMaster.GetAudio("unit_pickup_friendly").GetClip(), 0.5f);

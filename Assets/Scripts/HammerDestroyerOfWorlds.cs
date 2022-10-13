@@ -47,7 +47,7 @@ public class HammerDestroyerOfWorlds : MonoBehaviour
         if (structure)
         {
             Vector3 pos = new Vector3(collider.transform.position.x, 0, collider.transform.position.z);
-            Destroy(structure.gameObject);
+            Destroy(structure);//structure.gameObject);
 
             // TODO: Shoot a ray down to find a ground position.
             GameObject spawned = GameObject.Instantiate(objectDestroyedEffect, pos, Quaternion.identity);
@@ -59,7 +59,7 @@ public class HammerDestroyerOfWorlds : MonoBehaviour
         if (constructible)
         {
             Vector3 pos = new Vector3(collider.transform.position.x, 0, collider.transform.position.z);
-            Destroy(constructible.gameObject);
+            Destroy(constructible);// constructible.gameObject);
 
             // TODO: Shoot a ray down to find a ground position.
             GameObject spawned = GameObject.Instantiate(objectDestroyedEffect, pos, Quaternion.identity);

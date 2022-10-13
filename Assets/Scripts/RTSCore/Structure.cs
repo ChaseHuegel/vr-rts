@@ -81,7 +81,7 @@ public class Structure : Obstacle, IFactioned
         boundingDimensions.x = buildingData.boundingDimensionX;
         boundingDimensions.y = buildingData.boundingDimensionY;
     }
-
+    
     protected void CreateBuildingDamageFX()
     {
         buildingDamagedFX = Instantiate(GameMaster.Instance.buildingDamagedFX, transform.position, Quaternion.identity, transform);
