@@ -244,7 +244,7 @@ public class InteractionPointer : MonoBehaviour
 
         foreach (Hand hand in player.hands)
         {
-            if (isInUnitSelectionMode = true  && hand.currentAttachedObject != null)
+            if (isInUnitSelectionMode == true && hand.currentAttachedObject != null)
             {
                 EndUnitSelectionMode();
                 return;
