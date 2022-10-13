@@ -408,6 +408,15 @@ public class InteractionPointer : MonoBehaviour
                 isInUnitSelectionMode = true;
                 return;
             }
+            
+            QueueUnitButton queueUnitButton = pointedAtPointerInteractable.GetComponentInChildren<QueueUnitButton>();
+            if (queueUnitButton)
+            {
+                spawnQueue = pointedAtPointerInteractable.GetComponentInParent<SpawnQueue>();
+                spawnQueue.QueueUnit(queueUnitButton.unitTypeToQueue);
+                pointedAtPointerInteractable.GetComponentInChildren<HoverButton>().onButtonDown.Invoke(hand);
+                return;
+            }
 
             //Debug.Log(string.Format("Unit: {0} interactable: {1}", selectedUnit, pointedAtPointerInteractable));
         }

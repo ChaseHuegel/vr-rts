@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4661079090709636106}
   - component: {fileID: 4191501034415334665}
+  - component: {fileID: 3390728039434537147}
   m_Layer: 0
   m_Name: _queue_Scout_Button
   m_TagString: Untagged
@@ -51,6 +52,21 @@ MonoBehaviour:
   buttonLockedObject: {fileID: 511682889863231528, guid: 58c674a4dec1ed94e8abe759dd10060d,
     type: 3}
   locked: 0
+--- !u!114 &3390728039434537147
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 26643268527444493}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 847aeadd287e865488f59b558e0b9caf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  highlightMaterial: {fileID: 0}
+  highlightOnHover: 1
+  hideHighlight: []
 --- !u!1 &258882578896919070
 GameObject:
   m_ObjectHideFlags: 0
