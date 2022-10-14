@@ -417,16 +417,14 @@ public class PlayerManager : MonoBehaviour
 
     public bool CanConstructBuilding(RTSBuildingType buildingType)
     {
-        bool ret = true;
-
         BuildingData buildingData = GameMaster.GetBuilding(buildingType);
-        if (goldCollected < buildingData.goldCost || woodCollected < buildingData.woodCost ||
-            grainCollected < buildingData.grainCost || stoneCollected < buildingData.stoneCost)
+        if (buildingData.goldCost > goldCollected || buildingData.woodCost > woodCollected ||
+            buildingData.grainCost > grainCollected || buildingData.stoneCost > stoneCollected)   
         {
             return false;
         }
 
-        return ret;
+        return true;
     }
     
     public bool CanQueueUnit(RTSUnitType unitType)

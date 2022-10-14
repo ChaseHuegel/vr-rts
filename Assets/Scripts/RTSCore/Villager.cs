@@ -854,6 +854,7 @@ public class Villager : Unit
         OnRepairEvent?.Invoke(null, e);
         if (e.cancel) return false;   //  return if the event has been cancelled by any subscriber
 
+        // TODO: Add check for resources required for repair
         structure.TryRepair(e.amount, this);
 
         if (!structure.NeedsRepairs())
