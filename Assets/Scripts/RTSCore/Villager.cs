@@ -380,15 +380,15 @@ public class Villager : Unit
 
         GotoNearestGoalWithPriority();
 
-        switch (state)
-        {
-            case UnitState.ROAMING:
-            case UnitState.GATHERING:
-            case UnitState.TRANSPORTING:
-            case UnitState.BUILDANDREPAIR:
-            case UnitState.IDLE:
-            break;
-        }
+        // switch (state)
+        // {
+        //     case UnitState.ROAMING:
+        //     case UnitState.GATHERING:
+        //     case UnitState.TRANSPORTING:
+        //     case UnitState.BUILDANDREPAIR:
+        //     case UnitState.IDLE:
+        //     break;
+        // }
 
         if (IsMoving() )
             animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.MOVING);
@@ -434,7 +434,27 @@ public class Villager : Unit
         animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.IDLE);
 
         if (taskLocation != null)
-            TrySetGoal(taskLocation);
+        {
+            TrySetGoal(taskLocation);   
+
+            // START: 
+            // Find a path to the task location and go to the task location. The goal is to 
+            // move/travel and should be their sole focus until they reach the task location.
+            // Perform the task until it's complete.
+            // Once complete:
+            //  If resource gathering
+            //      Find next resource node close to task target location.
+            //          If no resource node found 
+            //              Do nothing, idle at task target location.
+            //          if resource node found
+            //              Set task target location, task, go back to START
+            //          If Building/repairing
+            //              Look for more to repair/build within a small radius of task target location
+            //                  If something found to build/repair
+            //                      Set task target location, task, go back to START
+            //                  If nothing found to build/repair
+            //                      Do nothing, idle at task target location.
+        }
 
         ResetAI();
         PlayChangeTaskAudio();

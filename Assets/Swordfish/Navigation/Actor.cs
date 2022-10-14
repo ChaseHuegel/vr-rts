@@ -286,7 +286,7 @@ public class Actor : Body
         previousGoalCell = currentGoalCell;
         previousGoal = currentGoal;
 
-        currentGoalTarget = currentGoalCell != null ? currentGoalCell.GetFirstOccupant() : null;
+        currentGoalTarget = currentGoalCell != null ? currentGoalCell.GetFirstOccupant() : null;      
 
         if (PathfindingGoal.TryGoal(this, cell, goal))
         {
