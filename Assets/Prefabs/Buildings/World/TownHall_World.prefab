@@ -1601,6 +1601,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4784412507127012598}
   - component: {fileID: 1814678402144199055}
+  - component: {fileID: 8184847039038819141}
   m_Layer: 0
   m_Name: _queue_Farmer_Button
   m_TagString: Untagged
@@ -1642,6 +1643,21 @@ MonoBehaviour:
   buttonLockedObject: {fileID: 511682889863231528, guid: 58c674a4dec1ed94e8abe759dd10060d,
     type: 3}
   locked: 0
+--- !u!114 &8184847039038819141
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1828826559708885383}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 847aeadd287e865488f59b558e0b9caf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  highlightMaterial: {fileID: 0}
+  highlightOnHover: 1
+  hideHighlight: []
 --- !u!1 &1844966649560576623
 GameObject:
   m_ObjectHideFlags: 0
@@ -3698,6 +3714,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6119820649687736455}
   - component: {fileID: 6431696478362837610}
+  - component: {fileID: 2680316852960557036}
   m_Layer: 0
   m_Name: _queue_Drifter_Button
   m_TagString: Untagged
@@ -3739,6 +3756,21 @@ MonoBehaviour:
   buttonLockedObject: {fileID: 511682889863231528, guid: 58c674a4dec1ed94e8abe759dd10060d,
     type: 3}
   locked: 0
+--- !u!114 &2680316852960557036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3981447773262640481}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 847aeadd287e865488f59b558e0b9caf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  highlightMaterial: {fileID: 0}
+  highlightOnHover: 1
+  hideHighlight: []
 --- !u!1 &4132009056997961218
 GameObject:
   m_ObjectHideFlags: 0
@@ -5657,6 +5689,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3611871922015221977}
   - component: {fileID: 2297571015049730464}
+  - component: {fileID: 5178494925217376981}
   m_Layer: 0
   m_Name: _queue_Lumberjack_Button
   m_TagString: Untagged
@@ -5698,6 +5731,21 @@ MonoBehaviour:
   buttonLockedObject: {fileID: 511682889863231528, guid: 58c674a4dec1ed94e8abe759dd10060d,
     type: 3}
   locked: 0
+--- !u!114 &5178494925217376981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6382810212616165598}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 847aeadd287e865488f59b558e0b9caf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  highlightMaterial: {fileID: 0}
+  highlightOnHover: 1
+  hideHighlight: []
 --- !u!1 &6414715628787531155
 GameObject:
   m_ObjectHideFlags: 0
@@ -5789,6 +5837,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1487680331347547750}
   - component: {fileID: 6650374527714923908}
+  - component: {fileID: 7340862531151552215}
   m_Layer: 0
   m_Name: _queue_StoneMiner_Button
   m_TagString: Untagged
@@ -5830,6 +5879,21 @@ MonoBehaviour:
   buttonLockedObject: {fileID: 511682889863231528, guid: 58c674a4dec1ed94e8abe759dd10060d,
     type: 3}
   locked: 0
+--- !u!114 &7340862531151552215
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6477166231241914882}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 847aeadd287e865488f59b558e0b9caf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  highlightMaterial: {fileID: 0}
+  highlightOnHover: 1
+  hideHighlight: []
 --- !u!1 &6534295791156173915
 GameObject:
   m_ObjectHideFlags: 0
@@ -9114,15 +9178,15 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 4a8b820c98c7b4540bab4e4f3d70d7fb, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c5f43a47e4b64c14da6e0081f639fdd3, type: 3}
---- !u!4 &3284518357399790756 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 400000, guid: c5f43a47e4b64c14da6e0081f639fdd3,
-    type: 3}
-  m_PrefabInstance: {fileID: 3284518357400190500}
-  m_PrefabAsset: {fileID: 0}
 --- !u!23 &3284518357402216004 stripped
 MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 2300000, guid: c5f43a47e4b64c14da6e0081f639fdd3,
+    type: 3}
+  m_PrefabInstance: {fileID: 3284518357400190500}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &3284518357399790756 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 400000, guid: c5f43a47e4b64c14da6e0081f639fdd3,
     type: 3}
   m_PrefabInstance: {fileID: 3284518357400190500}
   m_PrefabAsset: {fileID: 0}

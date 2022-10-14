@@ -137,7 +137,7 @@ public class Fauna : Actor
         if (action >= moveActionChance)
         {                
             animator.SetInteger("FaunaActionState", (int)FaunaActions.Idle);
-            actionTime = Random.Range(0.05f, 0.2f);            
+            actionTime = Random.Range(1.0f, 3.0f);            
         }
         else 
         {
