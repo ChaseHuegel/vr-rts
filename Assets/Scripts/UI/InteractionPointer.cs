@@ -223,24 +223,12 @@ public class InteractionPointer : MonoBehaviour
         this.enabled = true;
     }
 
+    private bool isSelectingTeleportLocation;
+
     //=========================================================================
     void Update()
     {
-        // If something is attached to the hand that is preventing objectPlacement
-        if (allowTeleportWhileAttached && !allowTeleportWhileAttached.teleportAllowed)
-        {
-            //HidePointer();
-        }
-
-        //UpdatePointer();
-
-        // if ( visible )
         UpdatePointer();
-        // else
-        // 	ShowPointer();
-
-        Hand oldPointerHand = pointerHand;
-        Hand newPointerHand = null;
 
         foreach (Hand hand in player.hands)
         {
@@ -252,21 +240,24 @@ public class InteractionPointer : MonoBehaviour
 
             if (WasTeleportButtonReleased(hand))
             {
-                if (pointerHand == hand) //This is the pointer hand
+                // if (pointerHand == hand)
                     TryTeleportPlayer();
+                isSelectingTeleportLocation = false;
+                teleportArc.Hide();
+                // pointerHand = null;
             }
             else if (WasTeleportButtonPressed(hand))
             {
-                newPointerHand = hand;
+                // pointerHand = hand;
+                teleportArc.Show();
+                isSelectingTeleportLocation = true;
             }
             else if (WasInteractButtonReleased(hand))
             {
-                if (pointerHand == hand)
-                    ExecuteInteraction();
+                ExecuteInteraction();
             }
             else if (WasInteractButtonPressed(hand))
             {
-                newPointerHand = hand;
                 StartInteraction(hand);
             }
             else if (WasCancelButtonPressed(hand))
@@ -341,8 +332,7 @@ public class InteractionPointer : MonoBehaviour
     private bool WasInteractButtonPressed(Hand hand)
     {
         if (CanInteract(hand))
-            if (uiInteractAction.GetStateDown(hand.handType))
-                return true;
+            return uiInteractAction.GetStateDown(hand.handType);
 
         return false;
     }
@@ -350,8 +340,7 @@ public class InteractionPointer : MonoBehaviour
     private bool WasInteractButtonReleased(Hand hand)
     {
         if (CanInteract(hand))
-            if (uiInteractAction.GetStateUp(hand.handType))
-                return true;
+            return uiInteractAction.GetStateUp(hand.handType);
 
         return false;
     }
@@ -522,6 +511,8 @@ public class InteractionPointer : MonoBehaviour
             buildingPlacementPreviewObject = null;
 
             // Reenable snap turn since it's turned off for rotating building using sticks
+            // Should be unnecessary with different steam profiles for different action sets if we decide
+            // to go down that road. 
             SetSnapTurnEnabled(true, true);
         }
 
@@ -1013,6 +1004,9 @@ public class InteractionPointer : MonoBehaviour
 
         teleportArc.FindProjectileCollision(out hitInfo);
         //if ( teleportArc.DrawArc( out hitInfo ) )
+        if (isSelectingTeleportLocation)
+            teleportArc.DrawArc(out hitInfo);
+
         if (hitInfo.collider)
         {
             hitSomething = true;
@@ -1138,7 +1132,7 @@ public class InteractionPointer : MonoBehaviour
     /// <param name="e"></param>
     public void OnBuildingPlacementStarted(object sender, BuildMenuSlot.BuildingPlacementEvent e)
     {
-        // ! Want to eventually switch action maps based on activity.
+        // ! Want to eventually switch action maps based on activity?
         // SteamVR_Actions.construction.Activate();
 
         SetSnapTurnEnabled(false, false);
@@ -1208,82 +1202,76 @@ public class InteractionPointer : MonoBehaviour
 
     private bool WasTeleportButtonReleased(Hand hand)
     {
-        if (IsEligibleForTeleport(hand))
-        {
-            if (hand.noSteamVRFallbackCamera != null)
-                return Input.GetKeyUp(KeyCode.T);
-            else
-                return teleportAction.GetStateUp(hand.handType);
-        }
+        // if (IsEligibleForTeleport(hand))
+            return teleportAction.GetStateUp(hand.handType);
 
-        return false;
+        //return false;
     }
 
     public bool IsEligibleForTeleport(Hand hand)
     {
+        return teleportAction.GetStateDown(hand.handType);
+
         // TODO: Clean this up so it works for both hands. Ideally, just have different action
         // sets.
-        if (isInBuildingPlacementMode && hand.handType == SteamVR_Input_Sources.RightHand)
-            return false;
+        // if (isInBuildingPlacementMode && hand.handType == SteamVR_Input_Sources.RightHand)
+        //     return false;
 
-        if (hand == null)
-            return false;
+        // if (hand == null)
+        //     return false;
 
-        if (!hand.gameObject.activeInHierarchy)
-            return false;
+        // if (!hand.gameObject.activeInHierarchy)
+        //     return false;
 
-        if (hand.hoveringInteractable != null)
-            return false;
+        // if (hand.hoveringInteractable != null)
+        //     return false;
 
-        if (hand.noSteamVRFallbackCamera == null)
-        {
-            if (hand.isActive == false)
-                return false;
+        // if (hand.noSteamVRFallbackCamera == null)
+        // {
+        //     if (hand.isActive == false)
+        //         return false;
 
-            //Something is attached to the hand
-            if (hand.currentAttachedObject != null)
-            {
-                AllowTeleportWhileAttachedToHand allowTeleportWhileAttachedToHand = hand.currentAttachedObject.GetComponent<AllowTeleportWhileAttachedToHand>();
+        //     // Something is attached to the hand
+        //     if (hand.currentAttachedObject != null)
+        //     {
+        //         AllowTeleportWhileAttachedToHand allowTeleportWhileAttachedToHand = hand.currentAttachedObject.GetComponent<AllowTeleportWhileAttachedToHand>();
 
-                if (allowTeleportWhileAttachedToHand != null && allowTeleportWhileAttachedToHand.teleportAllowed == true)
-                    return true;
-                else
-                    return false;
-            }
-        }
+        //         if (allowTeleportWhileAttachedToHand != null && allowTeleportWhileAttachedToHand.teleportAllowed == true)
+        //             return true;
+        //         else
+        //             return false;
+        //     }
+        // }
 
-        return true;
+        //return true;
     }
 
     private bool WasTeleportButtonPressed(Hand hand)
     {
-        if (IsEligibleForTeleport(hand))
-        {
-            if (hand.noSteamVRFallbackCamera != null)
-                return Input.GetKeyDown(KeyCode.T);
-            else
-                return teleportAction.GetStateDown(hand.handType);
+        // if (IsEligibleForTeleport(hand))
+            return teleportAction.GetStateDown(hand.handType);
             //return hand.controller.GetPressDown( SteamVR_Controller.ButtonMask.Touchpad );
-        }
 
-        return false;
+       // return false;
     }
 
     private void TryTeleportPlayer()
     {
         if (!teleporting)
         {
-            // TODO: Change this code to use buildings as teleportmarkers and when
-            // teleporting to buildings the menu for them is possible displayed if
-            // it has a build/upgrade menu.
-
-            // if ( pointedAtTeleportMarker != null && pointedAtTeleportMarker.locked == false )
-            // {
-            //Pointing at an unlocked teleport marker
-            //teleportingToMarker = pointedAtTeleportMarker;
+            // TODO: Change this code to use buildings as teleport markers and when
+            // teleporting to buildings the menu for them is possibly displayed if
+            // it has a build/upgrade options.
 
             InitiateTeleportFade();
-            //CancelTeleportHint();
+
+            // if (pointedAtTeleportMarker != null && pointedAtTeleportMarker.locked == false)
+            // {
+            //     // Pointing at an unlocked teleport marker
+            //     teleportingToMarker = pointedAtTeleportMarker;
+
+            //     InitiateTeleportFade();
+            //     CancelTeleportHint();
             // }
         }
     }
@@ -1329,6 +1317,8 @@ public class InteractionPointer : MonoBehaviour
         // {
         // 	teleportingToMarker.TeleportPlayer( pointedAtPosition );
         // }
+
+        isSelectingTeleportLocation = false;
     }
 
     public void DrawQuadraticBezierCurve(LineRenderer lineRenderer, Vector3 start, Vector3 end)
