@@ -107,17 +107,17 @@ public class Unit : Actor, IFactioned
         }
     }
 
-    public virtual void SetUnitTask(RTSUnitType unitType, Cell taskLocation = null) {}
+    public virtual void AssignUnitTaskAndLocation(RTSUnitType unitType, Cell taskLocation = null) {}
 
-    public virtual void SetUnitTask(Structure structure) {}
+    public virtual void AssignUnitToStructureTask(Structure structure) {}
 
-    public virtual void SetUnitTask(Constructible constructible) {}
+    public virtual void AssignUnitToConstructibleTask(Constructible constructible) {}
 
-    public virtual void SetUnitTask(Fauna fauna) {}
+    public virtual void AssignUnitToFaunaTask(Fauna fauna) {}
 
-    public virtual void SetUnitTask(Unit unit) {}
+    public virtual void AssignUnitToUnitTask(Unit unit) {}
 
-    public virtual void SetUnitTask(Resource resource) {}
+    public virtual void AssignUnitToResourceTask(Resource resource) {}
 
     //=========================================================================
     /// <summary>

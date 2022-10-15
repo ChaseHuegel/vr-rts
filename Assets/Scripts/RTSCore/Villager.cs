@@ -160,28 +160,28 @@ public class Villager : Unit
         Resource resource = collider.gameObject.GetComponent<Resource>();
         if (resource)
         {
-            SetUnitTask(resource);
+            AssignUnitToResourceTask(resource);
             return;
         }
 
         Fauna fauna = collider.gameObject.GetComponent<Fauna>();
         if (fauna)
         {
-            SetUnitTask(fauna);
+            AssignUnitToFaunaTask(fauna);
             return;
         }
 
         Structure structure = collider.gameObject.GetComponentInParent<Structure>();
         if (structure)
         {
-            SetUnitTask(structure);
+            AssignUnitToStructureTask(structure);
             return;
         }
 
         Constructible constructible = collider.gameObject.GetComponentInParent<Constructible>();
         if (constructible)
         {
-            SetUnitTask(constructible);
+            AssignUnitToConstructibleTask(constructible);
             return;
         }
     }
@@ -380,16 +380,6 @@ public class Villager : Unit
 
         GotoNearestGoalWithPriority();
 
-        // switch (state)
-        // {
-        //     case UnitState.ROAMING:
-        //     case UnitState.GATHERING:
-        //     case UnitState.TRANSPORTING:
-        //     case UnitState.BUILDANDREPAIR:
-        //     case UnitState.IDLE:
-        //     break;
-        // }
-
         if (IsMoving() )
             animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.MOVING);
         else if (IsIdle())
@@ -427,7 +417,7 @@ public class Villager : Unit
     /// </summary>
     /// <param name="unitType">The units new job/task.</param>
     /// <param name="taskLocation">The transform space location of the task.</param>
-    public override void SetUnitTask(RTSUnitType unitType, Cell taskLocation = null)
+    public override void AssignUnitTaskAndLocation(RTSUnitType unitType, Cell taskLocation = null)
     {
         ChangeVillagerType(unitType);
 
@@ -465,9 +455,9 @@ public class Villager : Unit
     /// structure location.
     /// </summary>
     /// <param name="structure"></param>
-    public override void SetUnitTask(Structure structure)
+    public override void AssignUnitToStructureTask(Structure structure)
     {
-        SetUnitTask(RTSUnitType.Builder, World.at(structure.GetDirectionalCoord(gridPosition)));
+        AssignUnitTaskAndLocation(RTSUnitType.Builder, World.at(structure.GetDirectionalCoord(gridPosition)));
     }
 
     /// <summary>
@@ -475,9 +465,9 @@ public class Villager : Unit
     /// constructible location.
     /// </summary>
     /// <param name="constructible"></param>
-    public override void SetUnitTask(Constructible constructible)
+    public override void AssignUnitToConstructibleTask(Constructible constructible)
     {
-        SetUnitTask(RTSUnitType.Builder, World.at(constructible.GetDirectionalCoord(gridPosition)));
+        AssignUnitTaskAndLocation(RTSUnitType.Builder, World.at(constructible.GetDirectionalCoord(gridPosition)));
     }
 
     /// <summary>
@@ -485,9 +475,9 @@ public class Villager : Unit
     /// fauna location.
     /// </summary>
     /// <param name="fauna"></param>
-    public override void SetUnitTask(Fauna fauna)
+    public override void AssignUnitToFaunaTask(Fauna fauna)
     {
-        SetUnitTask(RTSUnitType.Hunter, World.at(fauna.GetDirectionalCoord(gridPosition)));
+        AssignUnitTaskAndLocation(RTSUnitType.Hunter, World.at(fauna.GetDirectionalCoord(gridPosition)));
     }
 
     /// <summary>
@@ -495,7 +485,7 @@ public class Villager : Unit
     /// location.
     /// </summary>
     /// <param name="resource"></param>
-    public override void SetUnitTask(Resource resource)
+    public override void AssignUnitToResourceTask(Resource resource)
     {
         switch (resource.type)
         {
@@ -528,7 +518,7 @@ public class Villager : Unit
                 break;
         }
 
-        SetUnitTask(rtsUnitTypeData.unitType, World.at(resource.GetNearbyCoord()));
+        AssignUnitTaskAndLocation(rtsUnitTypeData.unitType, World.at(resource.GetNearbyCoord()));
     }
 
     /// <summary>

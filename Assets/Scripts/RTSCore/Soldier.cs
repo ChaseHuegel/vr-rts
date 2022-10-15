@@ -57,7 +57,7 @@ public class Soldier : Unit
     /// structure. If structure is friendly soldier moves to location.
     /// </summary>
     /// <param name="structure"></param>
-    public override void SetUnitTask(Structure structure)
+    public override void AssignUnitToStructureTask(Structure structure)
     {
         if (IsSameFaction(structure.factionId))
             MoveToLocation(structure.transform.position);
@@ -74,7 +74,7 @@ public class Soldier : Unit
     /// constructible. If constructible is friendly soldier moves to location.
     /// </summary>
     /// <param name="constructible"></param>
-    public override void SetUnitTask(Constructible constructible)
+    public override void AssignUnitToConstructibleTask(Constructible constructible)
     {
         if (IsSameFaction(constructible.factionId))
             MoveToLocation(constructible.transform.position);
@@ -89,7 +89,7 @@ public class Soldier : Unit
     /// Sets the soldiers task to the passed in unit location.
     /// </summary>
     /// <param name="unit"></param>
-    public override void SetUnitTask(Unit unit)
+    public override void AssignUnitToUnitTask(Unit unit)
     {
         if (IsSameFaction(unit))
             MoveToLocation(unit.transform.position);
@@ -109,7 +109,7 @@ public class Soldier : Unit
     /// the soldier to attack it.
     /// </summary>
     /// <param name="fauna"></param>
-    public override void SetUnitTask(Fauna fauna)
+    public override void AssignUnitToFaunaTask(Fauna fauna)
     {
         TrySetGoal(fauna.GetCellAtGrid());
     }
@@ -234,7 +234,7 @@ public class Soldier : Unit
         Unit unit = collider.gameObject.GetComponent<Unit>();
         if (unit)
         {
-            SetUnitTask(unit);
+            AssignUnitToUnitTask(unit);
             return;
         }
 
@@ -242,21 +242,21 @@ public class Soldier : Unit
         Fauna fauna = collider.gameObject.GetComponent<Fauna>();
         if (fauna)
         {
-            SetUnitTask(fauna);
+            AssignUnitToFaunaTask(fauna);
             return;
         }
 
         Structure structure = collider.gameObject.GetComponentInParent<Structure>();
         if (structure)
         {
-            SetUnitTask(structure);
+            AssignUnitToStructureTask(structure);
             return;
         }
 
         Constructible constructible = collider.gameObject.GetComponentInParent<Constructible>();
         if (constructible)
         {
-            SetUnitTask(constructible);
+            AssignUnitToConstructibleTask(constructible);
             return;
         }
     }

@@ -542,37 +542,37 @@ public class InteractionPointer : MonoBehaviour
                 if (pointedAtPointerInteractable)
                 {
                     Resource resource = pointedAtPointerInteractable.GetComponent<Resource>();
-                    if (resource)
+                    if (resource) // 
                     {
-                        unit.SetUnitTask(resource);
+                        unit.AssignUnitToResourceTask(resource);
                         continue;
                     }
 
                     Unit pointedAtUnit = pointedAtPointerInteractable.GetComponent<Unit>();
                     if (pointedAtUnit)
                     {
-                        unit.SetUnitTask(pointedAtUnit);
+                        unit.AssignUnitToUnitTask(pointedAtUnit);
                         continue;
                     }
 
                     Fauna fauna = pointedAtPointerInteractable.GetComponent<Fauna>();
                     if (fauna)
                     {
-                        unit.SetUnitTask(fauna);
+                        unit.AssignUnitToFaunaTask(fauna);
                         continue;
                     }
 
                     Structure structure = pointedAtPointerInteractable.GetComponent<Structure>();
                     if (structure)
                     {
-                        unit.SetUnitTask(structure);
+                        unit.AssignUnitToStructureTask(structure);
                         continue;
                     }
 
                     Constructible constructible = pointedAtPointerInteractable.GetComponent<Constructible>();
                     if (constructible)
                     {
-                        unit.SetUnitTask(constructible);
+                        unit.AssignUnitToConstructibleTask(constructible);
                         continue;
                     }
                 }
