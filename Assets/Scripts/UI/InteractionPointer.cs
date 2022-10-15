@@ -60,7 +60,7 @@ public class InteractionPointer : MonoBehaviour
     public Material buildingPlacementInvalidMat;
     private Material buildingPlacementCachedMat;
     private LineRenderer pointerLineRenderer;
-    private LineRenderer[] lineRenderers;
+    private LineRenderer[] unitSelectionLineRenderers;
     private GameObject pointerObject;
     private Transform pointerStartTransform;
     public float teleportFadeTime = 0.1f;
@@ -193,11 +193,11 @@ public class InteractionPointer : MonoBehaviour
         factionId = playerManager.factionId;
 
         // Setup LineRenderers for unit selection
-        lineRenderers = new LineRenderer[maxUnitSelectionCount];
+        unitSelectionLineRenderers = new LineRenderer[maxUnitSelectionCount];
         for (int i = 0; i < maxUnitSelectionCount; i++)
         {
-            lineRenderers[i] = Instantiate(pointerLineRenderer, this.transform);
-            lineRenderers[i].enabled = false;
+            unitSelectionLineRenderers[i] = Instantiate(pointerLineRenderer, this.transform);
+            unitSelectionLineRenderers[i].enabled = false;
         }
 
         player = Valve.VR.InteractionSystem.Player.instance;
@@ -972,7 +972,7 @@ public class InteractionPointer : MonoBehaviour
         isInUnitSelectionMode = false;
         pointedAtResource = null;
         selectedUnits.Clear();
-        foreach (LineRenderer lineRenderer in lineRenderers)
+        foreach (LineRenderer lineRenderer in unitSelectionLineRenderers)
         {
             lineRenderer.enabled = false;
         }
@@ -1003,7 +1003,6 @@ public class InteractionPointer : MonoBehaviour
         teleportArc.SetArcData(pointerStart, arcVelocity, true, pointerAtBadAngle);
 
         teleportArc.FindProjectileCollision(out hitInfo);
-        //if ( teleportArc.DrawArc( out hitInfo ) )
         if (isSelectingTeleportLocation)
             teleportArc.DrawArc(out hitInfo);
 
@@ -1102,19 +1101,19 @@ public class InteractionPointer : MonoBehaviour
             int i = 0;
             foreach (Unit unit in selectedUnits)
             {
-                LineRenderer lineRenderer = lineRenderers[i];
+                LineRenderer lineRenderer = unitSelectionLineRenderers[i];
 
                 if (!unit)
                 {
                     selectedUnits.Remove(unit);
-                    if (lineRenderers[i].enabled)
-                        lineRenderers[i].enabled = false;
+                    if (unitSelectionLineRenderers[i].enabled)
+                        unitSelectionLineRenderers[i].enabled = false;
                 }
                 else
                 {
-                    DrawQuadraticBezierCurve(lineRenderers[i], unit.transform.position, pointedAtPosition);
-                    if (!lineRenderers[i].enabled)
-                        lineRenderers[i].enabled = true;
+                    DrawQuadraticBezierCurve(unitSelectionLineRenderers[i], unit.transform.position, pointedAtPosition);
+                    if (!unitSelectionLineRenderers[i].enabled)
+                        unitSelectionLineRenderers[i].enabled = true;
                 }
                 i++;
             }
