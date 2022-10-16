@@ -74,8 +74,6 @@ public class Unit : Actor, IFactioned
         base.Initialize();
         playerManager = PlayerManager.instance;
 
-        //goals.Add<GoalGotoLocation>().active = false;
-
         animator = gameObject.GetComponentInChildren<Animator>();
         if (!animator)
             Debug.Log("No animator component found.");
@@ -199,23 +197,6 @@ public class Unit : Actor, IFactioned
     }
 
     /// <summary>
-    /// Brute force a unit to go to a position on the map optionally disabling all
-    /// active goals.
-    /// </summary>
-    /// <param name="position">Position to go to in transform space.</param>
-    /// <param name="deactivateGoals">Should all goals be deactivated? True/False</param>
-    public virtual void MoveToPosition(Vector3 position, bool deactivateGoals = false)
-    {        
-        if (deactivateGoals)
-            DeactivateAllGoals();
-        
-        ResetPath();
-        Coord2D pos = World.ToWorldCoord(position);
-        GotoForced(pos.x, pos.y);
-        LockPath();
-    }
-
-    /// <summary>
     /// Sends a unit to a target cell. If the cell is occupied, sends unit to a cell
     /// near the target cell.
     /// </summary>
@@ -265,27 +246,23 @@ public class Unit : Actor, IFactioned
     /// <param name="position">Target position to go to in transform space.</param>
     /// <param name="deactivateGoals">Should all goals be deactivated? True / False</param>
     public virtual void MoveToLocation(Vector3 position, bool deactivateGoals = false)
-    {
-        // currentGoalCell = World.at(World.ToWorldCoord(position));
-        // PathfindingGoal gotoGoal = goals.Get<GoalGotoLocation>();
-        // if (gotoGoal == null)
-        //     goals.Add<GoalGotoLocation>();
-
-        // currentGoal = goals.Get<GoalGotoLocation>();
+    {        
+        currentGoal = goals.Push<GoalGotoLocation>();
+        currentGoal.gridLocation = World.at(World.ToWorldCoord(position));
         
         // if (deactivateGoals)
         //     DeactivateAllGoals();
 
-        Coord2D pos = World.ToWorldCoord(position);
+        // Coord2D pos = World.ToWorldCoord(position);
 
-        GoalGotoLocation goal = goals.Get<GoalGotoLocation>();
-        if (goal != null)
-        {
-            goal.active = true;
-            TrySetGoal(World.at(pos));
-        }
-        else
-            Debug.Log("GoalGotoLocation not found.");
+        // PathfindingGoal goal = goals.Peek();
+        // if (goal != null)
+        // {
+        //     goal.active = true;
+        //     TrySetGoal(goal.gridLocation);
+        // }
+        // else
+        //     Debug.Log("GoalGotoLocation not found.");
     }
 
     public void ActivateAllGoals()

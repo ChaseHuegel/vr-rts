@@ -5,7 +5,9 @@ namespace Swordfish.Navigation
 [Serializable]
 public class PathfindingGoal
 {
-    public static bool IsGoal(Cell cell, PathfindingGoal[] goals)
+        public Cell gridLocation;
+
+        public static bool IsGoal(Cell cell, PathfindingGoal[] goals)
     {
         if (goals == null) return false;
 
@@ -105,7 +107,7 @@ public class PathfindingGoal
     //  Trigger a reached event forcefully without checking if its a valid match
     public static bool TriggerInteractGoal(Actor actor, Cell cell, PathfindingGoal goal)
     {
-        UnityEngine.Debug.Log("Triggering " + goal.ToString());
+        UnityEngine.Debug.LogFormat("Triggering {0}", goal.ToString());
 
         if (goal != null)// && goal.active)
         {
