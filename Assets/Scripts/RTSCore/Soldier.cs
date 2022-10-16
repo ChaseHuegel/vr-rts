@@ -59,13 +59,13 @@ public class Soldier : Unit
     /// <param name="structure"></param>
     public override void AssignUnitToStructureTask(Structure structure)
     {
-        if (IsSameFaction(structure.factionId))
-            MoveToLocation(structure.transform.position);
-        else
-        {
-            goals.Get<GoalHuntBuildings>().active = true;
-            TrySetGoal(World.at(structure.GetNearbyCoord()));
-        }
+        // if (IsSameFaction(structure.factionId))
+        //     MoveToLocation(structure.transform.position);
+        // else
+        // {
+        //     goals.Get<GoalHuntBuildings>().active = true;
+        //     TrySetGoal(World.at(structure.GetNearbyCoord()));
+        // }
     }
 
     /// <summary>
@@ -76,13 +76,13 @@ public class Soldier : Unit
     /// <param name="constructible"></param>
     public override void AssignUnitToConstructibleTask(Constructible constructible)
     {
-        if (IsSameFaction(constructible.factionId))
-            MoveToLocation(constructible.transform.position);
-        else
-        {
-            goals.Get<GoalHuntBuildings>().active = true;
-            TrySetGoal(World.at(constructible.GetNearbyCoord()));
-        }
+        // if (IsSameFaction(constructible.factionId))
+        //     MoveToLocation(constructible.transform.position);
+        // else
+        // {
+        //     goals.Get<GoalHuntBuildings>().active = true;
+        //     TrySetGoal(World.at(constructible.GetNearbyCoord()));
+        // }
     }
 
     /// <summary>
@@ -91,17 +91,17 @@ public class Soldier : Unit
     /// <param name="unit"></param>
     public override void AssignUnitToUnitTask(Unit unit)
     {
-        if (IsSameFaction(unit))
-            MoveToLocation(unit.transform.position);
-        else
-        {
-            if (unit.IsCivilian())
-                goals.Get<GoalHuntVillagers>().active = true;
-            else
-                goals.Get<GoalHuntMilitary>().active = true;
+        // if (IsSameFaction(unit))
+        //     MoveToLocation(unit.transform.position);
+        // else
+        // {
+        //     if (unit.IsCivilian())
+        //         goals.Get<GoalHuntVillagers>().active = true;
+        //     else
+        //         goals.Get<GoalHuntMilitary>().active = true;
 
-            TrySetGoal(unit.GetCellAtGrid());
-        }
+        //     TrySetGoal(unit.GetCellAtGrid());
+        // }
     }
 
     /// <summary>
@@ -116,18 +116,18 @@ public class Soldier : Unit
 
     public void SetAIAttackGoals(bool military, bool villagers,  bool buildings)
     {
-        goals.Add<GoalHuntMilitary>().active = false;
-        goals.Add<GoalHuntVillagers>().active = false;
-        goals.Add<GoalHuntBuildings>().active = false;
+        // goals.Add<GoalHuntMilitary>().active = false;
+        // goals.Add<GoalHuntVillagers>().active = false;
+        // goals.Add<GoalHuntBuildings>().active = false;
 
-        if (military)
-            goals.Get<GoalHuntMilitary>().active = true;
+        // if (military)
+        //     goals.Get<GoalHuntMilitary>().active = true;
 
-        if (villagers)
-            goals.Get<GoalHuntVillagers>().active = true;
+        // if (villagers)
+        //     goals.Get<GoalHuntVillagers>().active = true;
 
-        if (buildings)
-            goals.Get<GoalHuntBuildings>().active = true;
+        // if (buildings)
+        //     goals.Get<GoalHuntBuildings>().active = true;
 
         //ResetAI();
     }
@@ -184,7 +184,7 @@ public class Soldier : Unit
         if (e.victim != AttributeHandler)
             return;
 
-        if (!currentGoalCell.GetOccupant<Soldier>())
+        if (!currentGoal.gridLocation.GetOccupant<Soldier>())
             TrySetGoal(e.attacker.GetComponentInChildren<Body>().GetCellAtGrid());
     }
 

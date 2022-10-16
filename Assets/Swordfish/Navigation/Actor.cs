@@ -77,16 +77,16 @@ public class Actor : Body
     public bool HasValidPath() { return (currentPath != null && currentPath.Count > 0); }
 
     public bool HasValidGoal() { return (currentGoal != null && currentGoal.active); }
-    public bool HasValidGoalTarget() { return currentGoalTarget != null || currentGoalCell != null; }
+    public bool HasValidGoalTarget() { return currentGoalTarget != null || currentGoal.gridLocation != null; }
 
     public bool HasValidTarget()
     {
-        return (HasValidGoal() && HasValidGoalTarget() && PathfindingGoal.CheckGoal(this, currentGoalCell, currentGoal));
+        return (HasValidGoal() && HasValidGoalTarget() && PathfindingGoal.CheckGoal(this, currentGoal.gridLocation, currentGoal));
     }
 
     public bool HasTargetChanged()
     {
-        return currentGoalCell != previousGoalCell;
+        return currentGoal.gridLocation != previousGoalCell;
     }
 
     public void Freeze() { frozen = true; RemoveFromGrid(); }
@@ -110,7 +110,7 @@ public class Actor : Body
     {
         previousGoal = null;
         currentGoal = null;
-        currentGoalCell = null;
+        //currentGoalCell = null;
         previousGoalCell = null;
         currentGoalTarget = null;
     }
@@ -169,6 +169,7 @@ public class Actor : Body
     }
 
     public Cell FindNearestGoalWithPriority(bool useBehavior = true) { return FindNearestGoal(true, useBehavior); }
+
     public Cell FindNearestGoal(bool usePriority = false, bool useBehavior = true)
     {
         Body body = null;
@@ -179,67 +180,70 @@ public class Actor : Body
         int nearestDistance = int.MaxValue;
         int searchDistance = useBehavior ? currentGoalSearchDistance : goalSearchGrowth;
 
-        //  If using priority, try checking our memorized goals first
-        if (useBehavior && usePriority && discoveredGoals.Count > 0)
-        {
-            foreach (PathfindingGoal goal in GetGoals())
+            //  If using priority, try checking our memorized goals first
+            // if (useBehavior && usePriority && discoveredGoals.Count > 0)
+            // {
+            //     foreach (PathfindingGoal goal in GetGoals())
+            //     {
+            //         currentGoal = goal;
+
+            //         if (discoveredGoals.TryGetValue(goal, out body))
+            //         {
+            //             result = body.GetCellAtGrid();
+
+            //             if (result != null && DistanceTo(result) < goalSearchDistance && PathfindingGoal.TryGoal(this, result, goal))
+            //             {
+            //                 searchDistance = goalSearchGrowth;
+            //                 return result;
+            //             }
+            //         }
+            //         }
+            // }
+
+            // foreach (PathfindingGoal goal in GetGoals())
+            // {
+            if (goals.Count() > 0)
             {
-                currentGoal = goal;
+                currentGoal = goals.Peek();
 
-                if (discoveredGoals.TryGetValue(goal, out body))
+                //  TODO: There is a cleaner way to do this
+
+                //  Radiate out layer by layer around the actor without searching previous layers
+                for (int radius = 1; radius < searchDistance; radius++)
                 {
-                    result = body.GetCellAtGrid();
-
-                    if (result != null && DistanceTo(result) < goalSearchDistance && PathfindingGoal.TryGoal(this, result, goal))
+                    //  Search the top/bottom rows
+                    for (int x = -radius; x < radius; x++)
                     {
-                        searchDistance = goalSearchGrowth;
-                        return result;
+                        TryGoalAtHelper(x, radius, currentGoal, ref current, ref result, ref currentDistance, ref nearestDistance);
+                        if (result == null) TryGoalAtHelper(x, -radius, currentGoal, ref current, ref result, ref currentDistance, ref nearestDistance);
+
+                        //  Return the first match if goals are being tested in order of priority
+                        if (usePriority && result != null)
+                        {
+                            searchDistance = goalSearchGrowth;  //  Reset search distance
+                            return result;
+                        }
                     }
-                }
-                }
-        }
 
-        foreach (PathfindingGoal goal in GetGoals())
-        {
-            currentGoal = goal;
-
-            //  TODO: There is a cleaner way to do this
-
-            //  Radiate out layer by layer around the actor without searching previous layers
-            for (int radius = 1; radius < searchDistance; radius++)
-            {
-                //  Search the top/bottom rows
-                for (int x = -radius; x < radius; x++)
-                {
-                    TryGoalAtHelper(x, radius, goal, ref current, ref result, ref currentDistance, ref nearestDistance);
-                    if (result == null) TryGoalAtHelper(x, -radius, goal, ref current, ref result, ref currentDistance, ref nearestDistance);
-
-                    //  Return the first match if goals are being tested in order of priority
-                    if (usePriority && result != null)
+                    //  Search the side columns
+                    for (int y = -radius; y < radius; y++)
                     {
-                        searchDistance = goalSearchGrowth;  //  Reset search distance
-                        return result;
-                    }
-                }
+                        TryGoalAtHelper(radius, y, currentGoal, ref current, ref result, ref currentDistance, ref nearestDistance);
+                        if (result == null) TryGoalAtHelper(-radius, y, currentGoal, ref current, ref result, ref currentDistance, ref nearestDistance);
 
-                //  Search the side columns
-                for (int y = -radius; y < radius; y++)
-                {
-                    TryGoalAtHelper(radius, y, goal, ref current, ref result, ref currentDistance, ref nearestDistance);
-                    if (result == null) TryGoalAtHelper(-radius, y, goal, ref current, ref result, ref currentDistance, ref nearestDistance);
-
-                    //  Return the first match if goals are being tested in order of priority
-                    if (usePriority && result != null)
-                    {
-                        searchDistance = goalSearchGrowth;  //  Reset search distance
-                        return result;
+                        //  Return the first match if goals are being tested in order of priority
+                        if (usePriority && result != null)
+                        {
+                            searchDistance = goalSearchGrowth;  //  Reset search distance
+                            return result;
+                        }
                     }
                 }
             }
-        }
+            // }
 
-        //  No matching goal found
-        if (useBehavior && result == null)
+            //  No matching goal found
+            if (useBehavior && result == null)
             WipeAI();
 
         //  Expand the search
@@ -251,11 +255,14 @@ public class Actor : Body
     
     public bool GotoNearestGoalWithPriority(bool useBehavior = true) { return GotoNearestGoal(true, useBehavior); }
     public bool GotoNearestGoal(bool usePriority = false, bool useBehavior = true)
-    {                
+    {               
+        if (goals.Count() <= 0)
+                return false;
+
         if (currentGoal is GoalGotoLocation)
         {
             //Debug.LogFormat("GotoNearestGoal: GoalGotoLocation: {0} {1} - {2}", currentGoalCell.x, currentGoalCell.y, goals.entries.Length);
-            GotoForced(currentGoalCell.x, currentGoalCell.y);
+            GotoForced(currentGoal.gridLocation.x, currentGoal.gridLocation.y);
             return true;
         }
 
@@ -268,9 +275,9 @@ public class Actor : Body
         {
             //  Only force a pathing attempt if the targetted cell has changed (i.e. target body is moving)
             if (HasTargetChanged())
-                GotoForced(currentGoalCell.x, currentGoalCell.y);
+                GotoForced(currentGoal.gridLocation.x, currentGoal.gridLocation.y);
             else
-                Goto(currentGoalCell.x, currentGoalCell.y);
+                Goto(currentGoal.gridLocation.x, currentGoal.gridLocation.y);
 
             return true;
         }
@@ -287,13 +294,13 @@ public class Actor : Body
 
         WipeAI();
 
-        currentGoalCell = cell;
+        //currentGoalCell = cell;
         currentGoal = goal;
 
-        previousGoalCell = currentGoalCell;
+        previousGoalCell = currentGoal.gridLocation;
         previousGoal = currentGoal;
 
-        currentGoalTarget = currentGoalCell != null ? currentGoalCell.GetFirstOccupant() : null;      
+        currentGoalTarget = currentGoal.gridLocation != null ? currentGoal.gridLocation.GetFirstOccupant() : null;      
 
         if (PathfindingGoal.TryGoal(this, cell, goal))
         {
@@ -341,11 +348,20 @@ public class Actor : Body
     //  Perform ticks at a regular interval. FixedUpdate is called 60x/s
     public void FixedUpdate()
     {
+        // if (goals.Count() <= 0)
+        //         return;
+
         //  Update goal cell if we have a target body
         if (currentGoalTarget != null)
-            currentGoalCell = currentGoalTarget.GetCellAtGrid();
+            currentGoal.gridLocation = currentGoalTarget.GetCellAtGrid();
 
-        distanceToTarget = currentGoalCell != null ? DistanceTo(currentGoalCell) : int.MaxValue;
+        if (currentGoal != null)
+        {
+            distanceToTarget = currentGoal.gridLocation != null ? DistanceTo(currentGoal.gridLocation) : int.MaxValue;
+            
+            if (currentGoalTarget != null)
+                currentGoal.gridLocation = currentGoalTarget.GetCellAtGrid();
+        }
 
         //  Behavior ticking below
         tickTimer++;
@@ -356,26 +372,29 @@ public class Actor : Body
             if (previousGoal != currentGoal)
             {
                 PathfindingGoal.TriggerGoalChanged(this, previousGoal, currentGoal);
-
                 //TryDiscoverGoal(previousGoal, previousGoalCell?.GetFirstOccupant());
             }
 
-            previousGoalCell = currentGoalCell;
             previousGoal = currentGoal;
 
+            if (currentGoal != null)
+            {
+                previousGoalCell = currentGoal.gridLocation;
+            }
+
             //  Handle interacting with goals
-            if ( HasValidTarget() && distanceToTarget <= maxGoalInteractRange )
+            if (HasValidTarget() && distanceToTarget <= maxGoalInteractRange)
             {
                 //  Check if we have reached our target
                 if (distanceToTarget <= maxGoalInteractRange)
                 {
                     //  Assume our currentGoal is a valid match since it was found successfully.
                     //  Forcibly trigger reached under that assumption
-                    PathfindingGoal.TriggerInteractGoal(this, currentGoalCell, currentGoal);
-                    
+                    PathfindingGoal.TriggerInteractGoal(this, currentGoal.gridLocation, currentGoal);
+
                     //  ! HasValidTarget checks the cell isn't null, so how is this resolving as null?
-                    if (currentGoalCell != null)
-                        LookAt(currentGoalCell.x, currentGoalCell.y);
+                    if (currentGoal != null)
+                        LookAt(currentGoal.gridLocation.x, currentGoal.gridLocation.y);
 
                     ResetPathingBrain();
                     ResetPath();
@@ -476,7 +495,7 @@ public class Actor : Body
 
                         if (HasValidTarget())
                         {
-                            Coord2D coord = currentGoalCell.GetFirstOccupant().GetNearbyCoord();
+                            Coord2D coord = currentGoal.gridLocation.GetFirstOccupant().GetNearbyCoord();
                             targetX = coord.x;
                             targetY = coord.y;
                         }
@@ -536,14 +555,14 @@ public class Actor : Body
             Gizmos.DrawSphere(World.ToTransformSpace(previousGoalCell.x, previousGoalCell.y), 0.25f * World.GetUnit());
         }
 
-        if (currentGoalCell != null)
+        if (currentGoal.gridLocation != null)
         {
             Gizmos.color = Color.magenta;
-            Gizmos.DrawSphere(World.ToTransformSpace(currentGoalCell.x, currentGoalCell.y), 0.25f * World.GetUnit());
+            Gizmos.DrawSphere(World.ToTransformSpace(currentGoal.gridLocation.x, currentGoal.gridLocation.y), 0.25f * World.GetUnit());
 
-            if (currentGoalCell.GetFirstOccupant() != null)
+            if (currentGoal.gridLocation.GetFirstOccupant() != null)
             {
-                Coord2D coord = currentGoalCell.GetFirstOccupant().GetDirectionalCoord(gridPosition);
+                Coord2D coord = currentGoal.gridLocation.GetFirstOccupant().GetDirectionalCoord(gridPosition);
 
                 Gizmos.color = Color.green;
                 Gizmos.DrawSphere(World.ToTransformSpace(coord.x, coord.y), 0.25f * World.GetUnit());
