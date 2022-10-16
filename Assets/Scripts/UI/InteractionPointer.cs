@@ -576,11 +576,15 @@ public class InteractionPointer : MonoBehaviour
                         continue;
                     }
                 }
+                // else
+                // {                  
+                //     unit.MoveToLocation(pointedAtPosition);
+                // }
 
                 unit.MoveToLocation(pointedAtPosition);
                 continue;
             }
-
+            
             // Cleanup
             EndUnitSelectionMode();
             pointedAtResource = null;

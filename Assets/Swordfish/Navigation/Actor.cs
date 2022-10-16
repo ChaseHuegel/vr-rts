@@ -140,7 +140,7 @@ public class Actor : Body
     }
 
     //  Shouldn't be used outside of core actor logic
-    private void WipeAI()
+    protected void WipeAI()
     {
         ResetAI();
         ResetMemory();
@@ -248,14 +248,21 @@ public class Actor : Body
 
         return result;
     }
-
+    
     public bool GotoNearestGoalWithPriority(bool useBehavior = true) { return GotoNearestGoal(true, useBehavior); }
     public bool GotoNearestGoal(bool usePriority = false, bool useBehavior = true)
-    {
+    {                
+        if (currentGoal is GoalGotoLocation)
+        {
+            //Debug.LogFormat("GotoNearestGoal: GoalGotoLocation: {0} {1} - {2}", currentGoalCell.x, currentGoalCell.y, goals.entries.Length);
+            GotoForced(currentGoalCell.x, currentGoalCell.y);
+            return true;
+        }
+
         if (isPathLocked) return false;
 
-        if (!HasValidTarget())
-            currentGoalCell = FindNearestGoal(usePriority, useBehavior);
+        // if (!HasValidTarget())
+        //     currentGoalCell = FindNearestGoal(usePriority, useBehavior);
 
         if (HasValidTarget())
         {
@@ -350,7 +357,7 @@ public class Actor : Body
             {
                 PathfindingGoal.TriggerGoalChanged(this, previousGoal, currentGoal);
 
-                TryDiscoverGoal(previousGoal, previousGoalCell?.GetFirstOccupant());
+                //TryDiscoverGoal(previousGoal, previousGoalCell?.GetFirstOccupant());
             }
 
             previousGoalCell = currentGoalCell;
@@ -365,7 +372,7 @@ public class Actor : Body
                     //  Assume our currentGoal is a valid match since it was found successfully.
                     //  Forcibly trigger reached under that assumption
                     PathfindingGoal.TriggerInteractGoal(this, currentGoalCell, currentGoal);
-
+                    
                     //  ! HasValidTarget checks the cell isn't null, so how is this resolving as null?
                     if (currentGoalCell != null)
                         LookAt(currentGoalCell.x, currentGoalCell.y);
@@ -379,7 +386,6 @@ public class Actor : Body
                     //  Assume our currentGoal is a valid match since it was found successfully.
                     //  Forcibly trigger reached under that assumption
                     PathfindingGoal.TriggerInteractGoal(this, currentPath[0], currentGoal);
-
                     LookAt(currentPath[0].x, currentPath[0].y);
 
                     ResetPathingBrain();

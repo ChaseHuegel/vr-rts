@@ -105,7 +105,9 @@ public class PathfindingGoal
     //  Trigger a reached event forcefully without checking if its a valid match
     public static bool TriggerInteractGoal(Actor actor, Cell cell, PathfindingGoal goal)
     {
-        if (goal != null && goal.active)
+        UnityEngine.Debug.Log("Triggering " + goal.ToString());
+
+        if (goal != null)// && goal.active)
         {
             //  Trigger interact event
             GoalInteractEvent e = new GoalInteractEvent{ actor = actor, goal = goal, cell = cell };

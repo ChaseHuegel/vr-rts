@@ -74,7 +74,7 @@ public class Unit : Actor, IFactioned
         base.Initialize();
         playerManager = PlayerManager.instance;
 
-        goals.Add<GoalGotoLocation>().active = false;
+        //goals.Add<GoalGotoLocation>().active = false;
 
         animator = gameObject.GetComponentInChildren<Animator>();
         if (!animator)
@@ -266,8 +266,15 @@ public class Unit : Actor, IFactioned
     /// <param name="deactivateGoals">Should all goals be deactivated? True / False</param>
     public virtual void MoveToLocation(Vector3 position, bool deactivateGoals = false)
     {
-        if (deactivateGoals)
-            DeactivateAllGoals();
+        // currentGoalCell = World.at(World.ToWorldCoord(position));
+        // PathfindingGoal gotoGoal = goals.Get<GoalGotoLocation>();
+        // if (gotoGoal == null)
+        //     goals.Add<GoalGotoLocation>();
+
+        // currentGoal = goals.Get<GoalGotoLocation>();
+        
+        // if (deactivateGoals)
+        //     DeactivateAllGoals();
 
         Coord2D pos = World.ToWorldCoord(position);
 
