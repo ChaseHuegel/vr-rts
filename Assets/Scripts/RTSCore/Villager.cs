@@ -432,6 +432,7 @@ public class Villager : Unit
             //TrySetGoal(taskLocation);
             
             goals.Clear();
+            currentGoal = null;
             currentCargo = 0.0f;
 
             // Push task type to stack as overall goal.
@@ -693,8 +694,11 @@ public class Villager : Unit
         if (goals.Count() > 0)
             goals.Pop();
 
-        currentGoal = goals.Peek();
+        if (goals.Count() > 0)
+            currentGoal = goals.Peek();
+
         currentCargo -= e.amount;
+        DisplayCargo(false);
 
         //  Send an indicator
         GameMaster.SendFloatingIndicator(structure.transform.position, $"+{(int)e.amount} {currentResource.ToString()}", Color.green);

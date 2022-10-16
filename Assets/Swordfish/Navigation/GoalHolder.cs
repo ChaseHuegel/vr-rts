@@ -54,6 +54,9 @@ namespace Swordfish.Navigation
 
         public PathfindingGoal Peek()
         {
+            if (goals.Count <= 0)
+                return null;
+
             return goals.Peek();
         }
 

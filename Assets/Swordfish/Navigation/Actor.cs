@@ -268,8 +268,8 @@ public class Actor : Body
 
         if (isPathLocked) return false;
 
-        // if (!HasValidTarget())
-        //     currentGoalCell = FindNearestGoal(usePriority, useBehavior);
+        if (!HasValidTarget())
+            currentGoalCell = FindNearestGoal(usePriority, useBehavior);
 
         if (HasValidTarget())
         {
