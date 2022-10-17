@@ -1,9 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using Swordfish;
 using Swordfish.Navigation;
+using UnityEngine;
 using Valve.VR.InteractionSystem;
 
 [RequireComponent(typeof(Damageable))]
@@ -17,7 +17,7 @@ public class Villager : Unit
     [SerializeField]
     protected float currentCargo = 0;
 
-    [Header ("Visuals")]
+    [Header("Visuals")]
     public GameObject grainCargoDisplayObject;
     public GameObject woodCargoDisplayObject;
     public GameObject stoneCargoDisplayObject;
@@ -74,7 +74,7 @@ public class Villager : Unit
         AttributeHandler.OnDamageEvent -= OnDamaged;
     }
 
-#region Hand Events
+    #region Hand Events
 
     public override void OnHandHoverBegin(Hand hand)
     {
@@ -100,9 +100,9 @@ public class Villager : Unit
         handCommandMenu.Hide();
     }
 
-#endregion
+    #endregion
 
-#region Event Handlers
+    #region Event Handlers
 
     public void OnDamaged(object sender, Damageable.DamageEvent e)
     {
@@ -335,7 +335,7 @@ public class Villager : Unit
         Constructible construction = e.cell.GetOccupant<Constructible>();
         Fauna fauna = e.cell.GetOccupant<Fauna>();
 
-        if  (e.goal is GoalHuntFauna && TryHunt(fauna) ||
+        if (e.goal is GoalHuntFauna && TryHunt(fauna) ||
             e.goal is GoalGatherBerries && TryGather(resource) ||
             e.goal is GoalGatherFish && TryGather(resource) ||
             e.goal is GoalGatherGold && TryGather(resource) ||
@@ -343,7 +343,7 @@ public class Villager : Unit
             e.goal is GoalGatherMeat && TryGather(resource) ||
             e.goal is GoalGatherStone && TryGather(resource) ||
             e.goal is GoalGatherWood && TryGather(resource) ||
-            e.goal is GoalTransportResource && TryDropoff(structure) ||         
+            e.goal is GoalTransportResource && TryDropoff(structure) ||
             e.goal is GoalBuildRepair && (TryRepair(structure) || TryBuild(construction)))
         {
             //Debug.LogFormat("OnGoalInteract: {0}: {1}/{2} - {3}", e.goal.ToString(), currentCargo, rtsUnitTypeData.maxCargo, goals.entries.Length);
@@ -354,12 +354,12 @@ public class Villager : Unit
             // Pop goal off stack
             if (goals.Count() > 0)
                 goals.Pop();
-        
+
             if (goals.Count() > 0)
                 currentGoal = goals.Peek();
 
             currentGoal.gridLocation = FindNearestGoal(false, false);
-            
+
             // Debug.LogFormat("OnGoalInteract: {0}: {1}/{2} - {3}", currentGoal, currentCargo, rtsUnitTypeData.maxCargo, goals.entries.Length);
             return;
         }
@@ -386,7 +386,7 @@ public class Villager : Unit
         //currentGoal = goals.Peek();
         GotoNearestGoalWithPriority();
 
-        if (IsMoving() )
+        if (IsMoving())
             animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.MOVING);
         else if (IsIdle())
             animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.IDLE);
@@ -410,7 +410,7 @@ public class Villager : Unit
         return state != previousState;
     }
 
-     // Used by animator to play sound effects
+    // Used by animator to play sound effects
     public void AnimatorPlayAudio(string clipName)
     {
         AudioSource.PlayClipAtPoint(GameMaster.GetAudio(clipName).GetClip(), transform.position, 0.75f);
@@ -430,7 +430,7 @@ public class Villager : Unit
         if (taskLocation != null)
         {
             //TrySetGoal(taskLocation);
-            
+
             goals.Clear();
             currentGoal = null;
             currentCargo = 0.0f;
@@ -439,31 +439,31 @@ public class Villager : Unit
             if (unitType == RTSUnitType.StoneMiner)
                 goals.Push<GoalGatherStone>().gridLocation = taskLocation;
 
-            else if (unitType == RTSUnitType.Builder)    
-                goals.Push<GoalBuildRepair>().gridLocation = taskLocation; 
+            else if (unitType == RTSUnitType.Builder)
+                goals.Push<GoalBuildRepair>().gridLocation = taskLocation;
 
             else if (unitType == RTSUnitType.Farmer)
-                goals.Push<GoalGatherGrain>().gridLocation = taskLocation; 
+                goals.Push<GoalGatherGrain>().gridLocation = taskLocation;
 
-            else if (unitType == RTSUnitType.Forager) 
-                goals.Push<GoalGatherBerries>().gridLocation = taskLocation; 
+            else if (unitType == RTSUnitType.Forager)
+                goals.Push<GoalGatherBerries>().gridLocation = taskLocation;
 
-            else if (unitType == RTSUnitType.Fisherman) 
-                goals.Push<GoalGatherFish>().gridLocation = taskLocation; 
+            else if (unitType == RTSUnitType.Fisherman)
+                goals.Push<GoalGatherFish>().gridLocation = taskLocation;
 
-            else if (unitType == RTSUnitType.Hunter) 
-                goals.Push<GoalGatherMeat>().gridLocation = taskLocation; 
+            else if (unitType == RTSUnitType.Hunter)
+                goals.Push<GoalGatherMeat>().gridLocation = taskLocation;
 
             else if (unitType == RTSUnitType.Lumberjack)
-                goals.Push<GoalGatherWood>().gridLocation = taskLocation; 
+                goals.Push<GoalGatherWood>().gridLocation = taskLocation;
 
-            else if (unitType == RTSUnitType.GoldMiner) 
+            else if (unitType == RTSUnitType.GoldMiner)
                 goals.Push<GoalGatherGold>().gridLocation = taskLocation;
 
             GoalGotoLocation gotoGoal = goals.Push<GoalGotoLocation>();
             gotoGoal.gridLocation = taskLocation;
-            currentGoal = gotoGoal; 
-            
+            currentGoal = gotoGoal;
+
             //Debug.LogFormat("AssignUnitTaskAndLocation: {0} {1}", currentGoal, currentGoalCell.ToString());
         }
 
@@ -638,7 +638,7 @@ public class Villager : Unit
             return;
         }
         // else if (goal is GoalGatherBerries || goal is GoalGatherMeat)
-            // Equip nothing.
+        // Equip nothing.
     }
 
     private void DisplayCargo(bool visible)
@@ -685,7 +685,7 @@ public class Villager : Unit
         //     return false;
 
         //  Trigger a dropoff event
-        DropoffEvent e = new DropoffEvent{ villager = this, structure = structure, resourceType = currentResource, amount = currentCargo };
+        DropoffEvent e = new DropoffEvent { villager = this, structure = structure, resourceType = currentResource, amount = currentCargo };
         OnDropoffEvent?.Invoke(null, e);
         if (e.cancel) return false;   //  return if the event has been cancelled by any subscriber
 
@@ -744,7 +744,7 @@ public class Villager : Unit
                 break;
         }
 
-        rate = rate / (60/Constants.ACTOR_TICK_RATE);
+        rate = rate / (60 / Constants.ACTOR_TICK_RATE);
 
         return rate;
     }
@@ -764,19 +764,19 @@ public class Villager : Unit
         //  Convert per second to per tick and clamp to how much cargo space we have
         float amount = GetWorkRate(resource.type);
         amount = Mathf.Clamp(rtsUnitTypeData.maxCargo - currentCargo, 0, amount);
-        amount = resource.GetRemoveAmount(amount);
+        amount = resource.GetRemoveAmount((int)amount);
 
         //  Trigger a gather event
-        GatherEvent e = new GatherEvent{ villager = this, resource = resource, resourceType = currentResource, amount = amount };
+        GatherEvent e = new GatherEvent { villager = this, resource = resource, resourceType = currentResource, amount = amount };
         OnGatherEvent?.Invoke(null, e);
         if (e.cancel) return false;   //  return if the event has been cancelled by any subscriber
 
         //  Remove from the resource and add to cargo
-        amount = resource.TryRemove(e.amount);
+        amount = resource.TryRemove((int)e.amount);
         currentCargo += amount;
 
         // Animation
-        switch(resource.type)
+        switch (resource.type)
         {
             case ResourceGatheringType.Grain:
                 animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.FARMING);
@@ -823,10 +823,10 @@ public class Villager : Unit
             return false;
 
         //  Convert per second to per tick
-        float amount = (rtsUnitTypeData.repairRate / (60/Constants.ACTOR_TICK_RATE));
+        float amount = (rtsUnitTypeData.repairRate / (60 / Constants.ACTOR_TICK_RATE));
 
         //  Trigger a repair event
-        RepairEvent e = new RepairEvent{ villager = this, structure = structure, amount = amount };
+        RepairEvent e = new RepairEvent { villager = this, structure = structure, amount = amount };
         OnRepairEvent?.Invoke(null, e);
         if (e.cancel) return false;   //  return if the event has been cancelled by any subscriber
 
@@ -847,10 +847,10 @@ public class Villager : Unit
             return false;
 
         //  Convert per second to per tick
-        float amount = (rtsUnitTypeData.buildRate / (60/Constants.ACTOR_TICK_RATE));
+        float amount = (rtsUnitTypeData.buildRate / (60 / Constants.ACTOR_TICK_RATE));
 
         //  Trigger a build event
-        BuildEvent e = new BuildEvent{ villager = this, constructible = construction, amount = amount };
+        BuildEvent e = new BuildEvent { villager = this, constructible = construction, amount = amount };
         OnBuildEvent?.Invoke(null, e);
         if (e.cancel) return false;   //  return if the event has been cancelled by any subscriber
 

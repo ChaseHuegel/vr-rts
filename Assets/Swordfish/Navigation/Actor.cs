@@ -7,7 +7,7 @@ namespace Swordfish.Navigation
 {
 
 [RequireComponent(typeof(Damageable))]
-public class Actor : Body
+public class Actor : Body, IActor
 {
     protected GoalHolder goals = new GoalHolder();
     public PathfindingGoal[] GetGoals() { return goals.entries; }
@@ -41,7 +41,7 @@ public class Actor : Body
     private bool moving = false;
     private bool idle = false;
 
-    public List<Cell> currentPath = null;
+    public List<Cell> currentPath { get; set; } = null;
     private byte pathWaitTries = 0;
     private byte pathRepathTries = 0;
     private bool frozen = false;

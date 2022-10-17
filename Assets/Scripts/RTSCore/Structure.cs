@@ -6,6 +6,8 @@ using UnityEngine;
 [RequireComponent(typeof(Damageable))]
 public class Structure : Obstacle, IFactioned
 {
+    public readonly static List<Structure> AllStructures = new();
+
     private Faction faction;
     public BuildingData buildingData;
 
@@ -39,6 +41,8 @@ public class Structure : Obstacle, IFactioned
     public override void Initialize()
     {
         base.Initialize();
+
+        AllStructures.Add(this);
 
         playerManager = PlayerManager.instance;
 
@@ -74,6 +78,12 @@ public class Structure : Obstacle, IFactioned
             RefreshVisuals();
     }
 
+    public override void OnDestroy()
+    {
+        base.OnDestroy();
+        AllStructures.Remove(this);
+    }
+
     public override void FetchBoundingDimensions()
     {
         base.FetchBoundingDimensions();
@@ -81,7 +91,7 @@ public class Structure : Obstacle, IFactioned
         boundingDimensions.x = buildingData.boundingDimensionX;
         boundingDimensions.y = buildingData.boundingDimensionY;
     }
-    
+
     protected void CreateBuildingDamageFX()
     {
         buildingDamagedFX = Instantiate(GameMaster.Instance.buildingDamagedFX, transform.position, Quaternion.identity, transform);
