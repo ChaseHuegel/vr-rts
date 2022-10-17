@@ -203,7 +203,7 @@ public class InteractionPointer : MonoBehaviour
         player = Valve.VR.InteractionSystem.Player.instance;
         if (player == null)
         {
-            Debug.LogError("<b>[SteamVR Interaction]</b> ObjectPlacementPointer: No Player instance found in map.", this);
+            Debug.LogError("<b>[SteamVR Interaction]</b> InteractionPointer: No Player instance found in map.", this);
             Destroy(this.gameObject);
             return;
         }
@@ -1213,7 +1213,10 @@ public class InteractionPointer : MonoBehaviour
 
     public bool IsEligibleForTeleport(Hand hand)
     {
-        return teleportAction.GetStateDown(hand.handType);
+        // if (player.rigSteamVR.transform.localScale.x > 2.0f)
+        //     return false;
+
+        return true;
 
         // TODO: Clean this up so it works for both hands. Ideally, just have different action
         // sets.
@@ -1251,11 +1254,11 @@ public class InteractionPointer : MonoBehaviour
 
     private bool WasTeleportButtonPressed(Hand hand)
     {
-        // if (IsEligibleForTeleport(hand))
+         if (IsEligibleForTeleport(hand))
             return teleportAction.GetStateDown(hand.handType);
             //return hand.controller.GetPressDown( SteamVR_Controller.ButtonMask.Touchpad );
 
-       // return false;
+        return false;
     }
 
     private void TryTeleportPlayer()
@@ -1300,6 +1303,7 @@ public class InteractionPointer : MonoBehaviour
 
         Invoke("TeleportPlayer", currentFadeTime);
     }
+
     private void TeleportPlayer()
     {
         teleporting = false;
