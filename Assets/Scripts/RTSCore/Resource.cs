@@ -1,12 +1,12 @@
-using UnityEngine;
+using System.Collections.Generic;
 using Swordfish;
 using Swordfish.Navigation;
-using System.Collections.Generic;
+using UnityEngine;
 
 public class Resource : Obstacle
 {
     public ResourceGatheringType type = ResourceGatheringType.None;
-    public float amount = 1000;
+    public int amount = 1000;
 
     public int maxInteractors = 0;
     //public int interactors = 0;
@@ -21,7 +21,7 @@ public class Resource : Obstacle
     //     boundingDimensions.x = buildingData.boundingDimensionX;
     //     boundingDimensions.y = buildingData.boundingDimensionY;
     // }
-    
+
     // ! Can probably remove this if the new functionality works out.
     public bool IsBusy()//Unit unit = null)
     {
@@ -61,20 +61,20 @@ public class Resource : Obstacle
         interactors.Remove(actor);
     }
 
-    public float GetRemoveAmount(float count)
+    public int GetRemoveAmount(int count)
     {
-        float value = amount - count;
-        float overflow = value < 0 ? Mathf.Abs(value) : 0;
+        int value = amount - count;
+        int overflow = value < 0 ? Mathf.Abs(value) : 0;
 
         return count - overflow;
     }
 
     //  Removes count and returns how much was removed
-    public float TryRemove(float count)
+    public int TryRemove(int count)
     {
         amount -= count;
 
-        float overflow = amount < 0 ? Mathf.Abs(amount) : 0;
+        int overflow = amount < 0 ? Mathf.Abs(amount) : 0;
 
         if (amount <= 0)
         {

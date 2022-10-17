@@ -607,10 +607,16 @@ public class InteractionPointer : MonoBehaviour
             {
                 if (pointedAtPointerInteractable)
                 {
-                    if (pointedAtPointerInteractable.TryGetComponent(out Resource resource))
+                    if (pointedAtPointerInteractable.TryGetComponent(out Resource resource) && resource.enabled)
                     {
                         actor.Target = resource;
                         actor.Order = UnitOrder.Collect;
+                        continue;
+                    }
+                    else if (pointedAtPointerInteractable.TryGetComponent(out Structure structure) && structure.enabled)
+                    {
+                        actor.Target = structure;
+                        actor.Order = UnitOrder.DropOff;
                         continue;
                     }
                 }

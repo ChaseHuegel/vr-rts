@@ -1,9 +1,9 @@
 using Swordfish.Library.BehaviorTrees;
 using Swordfish.Navigation;
 
-public class HasDestination : BehaviorGate<ActorV2>
+public class IfHasDestination : BehaviorGate<ActorV2>
 {
-    public HasDestination(BehaviorNode child) : base(child)
+    public IfHasDestination(BehaviorNode child) : base(child)
     {
     }
 
