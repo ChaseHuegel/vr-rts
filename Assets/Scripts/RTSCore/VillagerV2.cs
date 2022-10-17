@@ -136,7 +136,7 @@ public class VillagerV2 : ActorV2
 
                 //  Wander out of boredom
                 new BehaviorSequence(
-                    new BehaviorDelay(2f,
+                    new BehaviorDelay(5f,
                         new RandomizeDestination(5)
                     )
                 )
