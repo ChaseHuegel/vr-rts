@@ -22,15 +22,17 @@ public class VillagerV2 : ActorV2
 
         BehaviorTree = new BehaviorTree<ActorV2>(
             new BehaviorSelector(
+
                 new OrderIsGoTo(
                     new BehaviorSelector(
-                        new IfHasDestination(
-                            new BehaviorSequence(
-                                new GoToDestination(),
-                                new ResetDestination(),
-                                new ResetOrder()
-                            )
+                        //  Attempt to go to
+                        new BehaviorSequence(
+                            new HasDestination(),
+                            new GoToDestination(),
+                            new ResetDestination(),
+                            new ResetOrder()
                         ),
+                        //  Else order is complete
                         new BehaviorSequence(
                             new ResetDestination(),
                             new ResetOrder()
@@ -40,10 +42,13 @@ public class VillagerV2 : ActorV2
 
                 new OrderIsCollect(
                     new BehaviorSelector(
+                        //  Attempt to drop off if cargo is full
                         new BehaviorSequence(
                             new IsCargoFull(),
                             new BehaviorSelector(
+                                //  Try the current target
                                 new CanDropOffAtTarget(),
+                                //  Or get the nearest dropoff
                                 new TargetNearestDropOff()
                             ),
                             new GoToTarget(),
@@ -51,18 +56,29 @@ public class VillagerV2 : ActorV2
                             new DropOffCargo(),
                             new TargetPrevious()
                         ),
-                        new IfHasTarget(
-                            new BehaviorSequence(
-                                new BehaviorInverter(
-                                    new IsCargoFull()
-                                ),
-                                new GoToTarget(),
+                        //  Else attempt to collect resources
+                        new BehaviorSequence(
+                            new BehaviorSelector(
+                                //  Try the current target
                                 new CanCollectTarget(),
-                                new BehaviorDelay(1f,
+                                //  Or find the nearest matching resource
+                                new TargetNearestCargoResource()
+                            ),
+                            //  Navigate to the resource
+                            new GoToTarget(),
+                            //  Collect the resource
+                            new BehaviorDelay(1f,
+                                new BehaviorSequence(
+                                    //  If cargo isn't full
+                                    new BehaviorInverter(
+                                        new IsCargoFull()
+                                    ),
+                                    new CanCollectTarget(),
                                     new CollectCargo()
                                 )
                             )
                         ),
+                        //  Else order is complete
                         new BehaviorSequence(
                             new ResetTarget(),
                             new ResetOrder()
@@ -72,19 +88,56 @@ public class VillagerV2 : ActorV2
 
                 new OrderIsDropOff(
                     new BehaviorSelector(
-                        new IfHasTarget(
-                            new BehaviorSequence(
-                                new GoToTarget(),
-                                new CanDropOffAtTarget(),
-                                new DropOffCargo(),
-                                new ResetTarget(),
-                                new ResetOrder()
-                            )
+                        //  Attempt to drop off at the target
+                        new BehaviorSequence(
+                            new HasTarget(),
+                            new GoToTarget(),
+                            new CanDropOffAtTarget(),
+                            new DropOffCargo(),
+                            new ResetTarget(),
+                            new ResetOrder()
                         ),
+                        //  Else order is complete
                         new BehaviorSequence(
                             new ResetTarget(),
                             new ResetOrder()
                         )
+                    )
+                ),
+
+                //  Try to drop off cargo if full
+                new BehaviorSequence(
+                    new IsCargoFull(),
+                    new BehaviorSelector(
+                        new CanDropOffAtTarget(),
+                        new TargetNearestDropOff()
+                    ),
+                    new GoToTarget(),
+                    new CanDropOffAtTarget(),
+                    new DropOffCargo(),
+                    new TargetPrevious()
+                ),
+
+                //  Try to navigate to our current destination
+                new IfHasDestination(
+                    new BehaviorSequence(
+                        new GoToDestination(),
+                        new ResetDestination()
+                    )
+                ),
+
+                //  Try to navigate to our current target
+                new IfHasTarget(
+                    new BehaviorSequence(
+                        new GoToTarget(),
+                        new ResetTarget()
+                    )
+                ),
+
+                //  Wander out of boredom
+                new BehaviorSequence(
+                    new BehaviorDelay(2f,
+                        new RandomizeDestination(5)
                     )
                 )
             )
