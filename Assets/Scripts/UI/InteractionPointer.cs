@@ -1,11 +1,11 @@
 ﻿
-using System.Collections.Generic;
+using UnityEngine;
+using Valve.VR.InteractionSystem;
+using Valve.VR;
 using Swordfish;
 using Swordfish.Audio;
 using Swordfish.Navigation;
-using UnityEngine;
-using Valve.VR;
-using Valve.VR.InteractionSystem;
+using System.Collections.Generic;
 public class InteractionPointer : MonoBehaviour
 {
     //=========================================================================
@@ -71,7 +71,6 @@ public class InteractionPointer : MonoBehaviour
     private PointerInteractable pointedAtPointerInteractable;
     private SpawnQueue spawnQueue;
     private List<Unit> selectedUnits;
-    private List<ActorV2> selectedActorV2;
     private Vector3 pointedAtPosition;
     private Vector3 prevPointedAtPosition;
     private float pointerShowStartTime = 0.0f;
@@ -187,7 +186,6 @@ public class InteractionPointer : MonoBehaviour
         buildingPlacementDeniedSound = GameMaster.Instance.buildingPlacementDeniedSound;
         //interactableObjects = GameObject.FindObjectsOfType<PointerInteractable>();
         selectedUnits = new List<Unit>();
-        selectedActorV2 = new List<ActorV2>();
 
         // Cache some values, going to need them a lot and don't need to keep
         // bothering the GameMaster/PlayerManager for them.
@@ -205,7 +203,7 @@ public class InteractionPointer : MonoBehaviour
         player = Valve.VR.InteractionSystem.Player.instance;
         if (player == null)
         {
-            Debug.LogError("<b>[SteamVR Interaction]</b> ObjectPlacementPointer: No Player instance found in map.", this);
+            Debug.LogError("<b>[SteamVR Interaction]</b> InteractionPointer: No Player instance found in map.", this);
             Destroy(this.gameObject);
             return;
         }
@@ -243,7 +241,7 @@ public class InteractionPointer : MonoBehaviour
             if (WasTeleportButtonReleased(hand))
             {
                 // if (pointerHand == hand)
-                TryTeleportPlayer();
+                    TryTeleportPlayer();
                 isSelectingTeleportLocation = false;
                 teleportArc.Hide();
                 // pointerHand = null;
@@ -391,15 +389,6 @@ public class InteractionPointer : MonoBehaviour
                 return;
             }
 
-            ActorV2 hoveredActor = pointedAtPointerInteractable.GetComponent<ActorV2>();
-            if (hoveredActor && !isInUnitSelectionMode &&
-                hoveredActor.IsSameFaction(factionId))
-            {
-                selectedActorV2.Add(hoveredActor);
-                isInUnitSelectionMode = true;
-                return;
-            }
-
             Unit hoveredUnit = pointedAtPointerInteractable.GetComponent<Unit>();
             if (hoveredUnit && !isInUnitSelectionMode &&
                 hoveredUnit.IsSameFaction(factionId))
@@ -408,7 +397,7 @@ public class InteractionPointer : MonoBehaviour
                 isInUnitSelectionMode = true;
                 return;
             }
-
+            
             QueueUnitButton queueUnitButton = pointedAtPointerInteractable.GetComponentInChildren<QueueUnitButton>();
             if (queueUnitButton)
             {
@@ -595,36 +584,7 @@ public class InteractionPointer : MonoBehaviour
                 unit.MoveToLocation(pointedAtPosition);
                 continue;
             }
-
-            // Cleanup
-            EndUnitSelectionMode();
-            pointedAtResource = null;
-        }
-
-        else if (selectedActorV2.Count > 0)
-        {
-            foreach (ActorV2 actor in selectedActorV2)
-            {
-                if (pointedAtPointerInteractable)
-                {
-                    if (pointedAtPointerInteractable.TryGetComponent(out Resource resource) && resource.enabled)
-                    {
-                        actor.Target = resource;
-                        actor.Order = UnitOrder.Collect;
-                        continue;
-                    }
-                    else if (pointedAtPointerInteractable.TryGetComponent(out Structure structure) && structure.enabled)
-                    {
-                        actor.Target = structure;
-                        actor.Order = UnitOrder.DropOff;
-                        continue;
-                    }
-                }
-
-                actor.Destination = World.at(World.ToWorldCoord(pointedAtPosition));
-                actor.Order = UnitOrder.GoTo;
-            }
-
+            
             // Cleanup
             EndUnitSelectionMode();
             pointedAtResource = null;
@@ -1016,7 +976,6 @@ public class InteractionPointer : MonoBehaviour
         isInUnitSelectionMode = false;
         pointedAtResource = null;
         selectedUnits.Clear();
-        selectedActorV2.Clear();
         foreach (LineRenderer lineRenderer in unitSelectionLineRenderers)
         {
             lineRenderer.enabled = false;
@@ -1097,13 +1056,6 @@ public class InteractionPointer : MonoBehaviour
             {
                 selectedUnits.Add(hoveredUnit);
             }
-
-            ActorV2 hoveredActor = pointedAtPointerInteractable.GetComponent<ActorV2>();
-            if (hoveredActor && !selectedActorV2.Contains(hoveredActor) &&
-                factionId == hoveredActor.factionId)
-            {
-                selectedActorV2.Add(hoveredActor);
-            }
         }
         else if (isInBuildingPlacementMode)
         {
@@ -1164,29 +1116,6 @@ public class InteractionPointer : MonoBehaviour
                 else
                 {
                     DrawQuadraticBezierCurve(unitSelectionLineRenderers[i], unit.transform.position, pointedAtPosition);
-                    if (!unitSelectionLineRenderers[i].enabled)
-                        unitSelectionLineRenderers[i].enabled = true;
-                }
-                i++;
-            }
-        }
-
-        if (selectedActorV2.Count > 0)
-        {
-            int i = 0;
-            foreach (ActorV2 actor in selectedActorV2)
-            {
-                LineRenderer lineRenderer = unitSelectionLineRenderers[i];
-
-                if (!actor)
-                {
-                    selectedActorV2.Remove(actor);
-                    if (unitSelectionLineRenderers[i].enabled)
-                        unitSelectionLineRenderers[i].enabled = false;
-                }
-                else
-                {
-                    DrawQuadraticBezierCurve(unitSelectionLineRenderers[i], actor.transform.position, pointedAtPosition);
                     if (!unitSelectionLineRenderers[i].enabled)
                         unitSelectionLineRenderers[i].enabled = true;
                 }
@@ -1277,14 +1206,17 @@ public class InteractionPointer : MonoBehaviour
     private bool WasTeleportButtonReleased(Hand hand)
     {
         // if (IsEligibleForTeleport(hand))
-        return teleportAction.GetStateUp(hand.handType);
+            return teleportAction.GetStateUp(hand.handType);
 
         //return false;
     }
 
     public bool IsEligibleForTeleport(Hand hand)
     {
-        return teleportAction.GetStateDown(hand.handType);
+        // if (player.rigSteamVR.transform.localScale.x > 2.0f)
+        //     return false;
+
+        return true;
 
         // TODO: Clean this up so it works for both hands. Ideally, just have different action
         // sets.
@@ -1322,11 +1254,11 @@ public class InteractionPointer : MonoBehaviour
 
     private bool WasTeleportButtonPressed(Hand hand)
     {
-        // if (IsEligibleForTeleport(hand))
-        return teleportAction.GetStateDown(hand.handType);
-        //return hand.controller.GetPressDown( SteamVR_Controller.ButtonMask.Touchpad );
+         if (IsEligibleForTeleport(hand))
+            return teleportAction.GetStateDown(hand.handType);
+            //return hand.controller.GetPressDown( SteamVR_Controller.ButtonMask.Touchpad );
 
-        // return false;
+        return false;
     }
 
     private void TryTeleportPlayer()
@@ -1371,6 +1303,7 @@ public class InteractionPointer : MonoBehaviour
 
         Invoke("TeleportPlayer", currentFadeTime);
     }
+
     private void TeleportPlayer()
     {
         teleporting = false;

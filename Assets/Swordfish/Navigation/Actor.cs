@@ -153,8 +153,8 @@ public class Actor : Body, IActor
 
         if (currentDistance < nearestDistance && PathfindingGoal.TryGoal(this, current, goal))
         {
-            nearestDistance = currentDistance;
-            result = current;
+            nearestDistance = currentDistance;;;;
+                result = current;
         }
     }
 
@@ -172,7 +172,7 @@ public class Actor : Body, IActor
 
     public Cell FindNearestGoal(bool usePriority = false, bool useBehavior = true)
     {
-        Body body = null;
+        //oBody body = null;
         Cell result = null;
         Cell current = null;
 
