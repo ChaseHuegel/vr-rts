@@ -138,22 +138,22 @@ public class GripPan : MonoBehaviour
             // Debug.LogFormat("p= {0} : newScale= {1} ", p, newScale);
 
         }
-        // else if (isPanning)
-        // {
-        //     movementVector = panStartPosition - panHandTransform.position;
-        //     Vector3 adjustedMovementVector = movementVector * panMovementRate;
-        //     Player.instance.transform.position += adjustedMovementVector;
-        //     panStartPosition = panHandTransform.position;
-        //     glideTimePassed += Time.deltaTime;
-        // }
-        // else if (isGliding)
-        // {
-        //     magnitude -= momentumDrag * Time.deltaTime;
-        //     if (magnitude < 0) magnitude = 0;
+        else if (isPanning)
+        {
+            movementVector = panStartPosition - panHandTransform.position;
+            Vector3 adjustedMovementVector = movementVector * panMovementRate;
+            Player.instance.transform.position += adjustedMovementVector;
+            panStartPosition = panHandTransform.position;
+            glideTimePassed += Time.deltaTime;
+        }
+        else if (isGliding)
+        {
+            magnitude -= momentumDrag * Time.deltaTime;
+            if (magnitude < 0) magnitude = 0;
 
-        //     Player.instance.transform.position += glidingVector * magnitude * Time.deltaTime;
-        //     //transform.position = Vector3.Lerp(transform.position, transform.position + glidingVector * magnitude, Time.deltaTime);
-        // }
+            Player.instance.transform.position += glidingVector * magnitude * Time.deltaTime;
+            //transform.position = Vector3.Lerp(transform.position, transform.position + glidingVector * magnitude, Time.deltaTime);
+        }
 
 
         //  Don't let player go below the 'floor'
@@ -166,38 +166,38 @@ public class GripPan : MonoBehaviour
         isScaling = false;
         isRightGripPressed = false;
 
-        // if (isPanning && currentHand == fromSource)
-        // {
-        //     isPanning = false;
-        //     grabOffPosition = panHandTransform.position;
+        if (isPanning && currentHand == fromSource)
+        {
+            isPanning = false;
+            grabOffPosition = panHandTransform.position;
 
-        //     if (useMomentum)
-        //     {
-        //         isGliding = true;
+            if (useMomentum)
+            {
+                isGliding = true;
 
-        //         glidingVector = grabOffPosition - grabPosition;
-        //         magnitude = (glidingVector.magnitude / glideTimePassed) * momentumStrength;
-        //         glidingVector.Normalize();
-        //     }
-        // }
+                glidingVector = grabOffPosition - grabPosition;
+                magnitude = (glidingVector.magnitude / glideTimePassed) * momentumStrength;
+                glidingVector.Normalize();
+            }
+        }
     }
 
     public void OnRightGripPressed(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
         isRightGripPressed = true;
-        // if (isRightHandPanEnabled && !isLeftGripPressed)
-        // {
-        //     if (player.rightHand.hoveringInteractable == null)
-        //     {
-        //         panHandTransform = player.rightHand.transform;
-        //         panStartPosition = panHandTransform.transform.position;
-        //         isPanning = true;
-        //         currentHand = fromSource;
-        //     }
-        //     isGliding = false;
-        //     grabPosition = panHandTransform.position;
-        //     glideTimePassed = 0.0f;
-        // } 
+        if (isRightHandPanEnabled && !isLeftGripPressed)
+        {
+            if (player.rightHand.hoveringInteractable == null)
+            {
+                panHandTransform = player.rightHand.transform;
+                panStartPosition = panHandTransform.transform.position;
+                isPanning = true;
+                currentHand = fromSource;
+            }
+            isGliding = false;
+            grabPosition = panHandTransform.position;
+            glideTimePassed = 0.0f;
+        } 
     }
 
     public void OnLeftGripReleased(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
@@ -205,40 +205,40 @@ public class GripPan : MonoBehaviour
         isLeftGripPressed = false;
         isScaling = false;
 
-        // if (isPanning && currentHand == fromSource)
-        // {
-        //     isPanning = false;
-        //     grabOffPosition = panHandTransform.position;
+        if (isPanning && currentHand == fromSource)
+        {
+            isPanning = false;
+            grabOffPosition = panHandTransform.position;
 
-        //     if (useMomentum)
-        //     {
-        //         isGliding = true;
+            if (useMomentum)
+            {
+                isGliding = true;
 
-        //         glidingVector = grabOffPosition - grabPosition;
-        //         magnitude = (glidingVector.magnitude / glideTimePassed) * momentumStrength;
-        //         glidingVector.Normalize();
-        //     }
-        // }
+                glidingVector = grabOffPosition - grabPosition;
+                magnitude = (glidingVector.magnitude / glideTimePassed) * momentumStrength;
+                glidingVector.Normalize();
+            }
+        }
     }
 
     public void OnLeftGripPressed(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
         isLeftGripPressed = true;
 
-        // if (isLeftHandPanEnabled && !isRightGripPressed)
-        // {
-        //     if (player.leftHand.hoveringInteractable == null)
-        //     {
-        //         panHandTransform = player.leftHand.transform;
-        //         panStartPosition = panHandTransform.transform.position;
-        //         isPanning = true;
-        //         currentHand = fromSource;
-        //     }
+        if (isLeftHandPanEnabled && !isRightGripPressed)
+        {
+            if (player.leftHand.hoveringInteractable == null)
+            {
+                panHandTransform = player.leftHand.transform;
+                panStartPosition = panHandTransform.transform.position;
+                isPanning = true;
+                currentHand = fromSource;
+            }
 
-        //     isGliding = false;
-        //     grabPosition = panHandTransform.position;
-        //     glideTimePassed = 0.0f;
-        // }
+            isGliding = false;
+            grabPosition = panHandTransform.position;
+            glideTimePassed = 0.0f;
+        }
     }
 
     public static float map(float source, float sourceMin, float sourceMax, float targetMin, float targetMax)
