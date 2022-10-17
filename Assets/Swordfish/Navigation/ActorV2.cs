@@ -12,6 +12,8 @@ namespace Swordfish.Navigation
         protected abstract BehaviorTree<ActorV2> BehaviorTree { get; set; }
 
         public UnitOrder Order;
+
+        public Cell LastDestination;
         public Cell Destination
         {
             get => destination;
@@ -21,10 +23,19 @@ namespace Swordfish.Navigation
                 destination = value;
             }
         }
-
-        public Cell LastDestination;
-        public Body Target;
         private Cell destination;
+
+        public Body LastTarget;
+        public Body Target
+        {
+            get => target;
+            set
+            {
+                LastTarget = target;
+                target = value;
+            }
+        }
+        private Body target;
 
         private Damageable damageable;
         public Damageable AttributeHandler { get { return damageable; } }
@@ -32,7 +43,7 @@ namespace Swordfish.Navigation
         [Header("Actor")]
         public float movementSpeed = 1f;
 
-        protected int maxGoalInteractRange = 1;
+        public int InteractReach = 1;
 
         private float movementInterpolation;
         private bool moving = false;
@@ -70,6 +81,7 @@ namespace Swordfish.Navigation
         public bool IsMoving() { return moving; }
         public bool HasValidPath() { return currentPath != null && currentPath.Count > 0; }
         public bool HasDestinationChanged() => Destination != LastDestination;
+        public bool HasTargetChanged() => Target != LastTarget;
 
         public void Freeze() { frozen = true; RemoveFromGrid(); }
         public void Unfreeze() { frozen = false; UpdatePosition(); }

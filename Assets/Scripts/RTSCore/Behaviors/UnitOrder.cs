@@ -1,5 +1,6 @@
 public enum UnitOrder
 {
     None,
-    GoTo
+    GoTo,
+    Collect,
 }

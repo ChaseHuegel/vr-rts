@@ -605,6 +605,16 @@ public class InteractionPointer : MonoBehaviour
         {
             foreach (ActorV2 actor in selectedActorV2)
             {
+                if (pointedAtPointerInteractable)
+                {
+                    if (pointedAtPointerInteractable.TryGetComponent(out Resource resource))
+                    {
+                        actor.Target = resource;
+                        actor.Order = UnitOrder.Collect;
+                        continue;
+                    }
+                }
+
                 actor.Destination = World.at(World.ToWorldCoord(pointedAtPosition));
                 actor.Order = UnitOrder.GoTo;
             }

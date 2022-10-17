@@ -7,6 +7,9 @@ public class GoToDestination : BehaviorNode<ActorV2>
     {
         if (!target.HasValidPath() || target.HasDestinationChanged())
         {
+            if (target.DistanceTo(target.Destination) <= 1)
+                return BehaviorState.SUCCESS;
+
             PathManager.RequestPath(target, target.Destination.x, target.Destination.y, true);
             return BehaviorState.RUNNING;
         }
