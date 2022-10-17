@@ -85,11 +85,8 @@ namespace Swordfish.Navigation
             float dimX = boundingDimensions.x;
             float dimY = boundingDimensions.y;
 
-            offset.x = dimX * dir.x * 0.5f;
-            offset.y = dimY * dir.y * 0.5f;
-
-            if (dir.x < 0f) offset.x -= 0.5f;
-            if (dir.y < 0f) offset.y -= 0.5f;
+            offset.x = (float)Math.Round(dimX * dir.x * 0.5f - 0.5f, MidpointRounding.AwayFromZero);
+            offset.y = (float)Math.Round(dimY * dir.y * 0.5f - 0.5f, MidpointRounding.AwayFromZero);
 
             Vector3 pos = World.ToTransformSpace(gridPosition.x + offset.x, 0f, gridPosition.y + offset.y);
 
