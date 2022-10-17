@@ -40,8 +40,22 @@ public class VillagerV2 : ActorV2
 
                 new OrderIsCollect(
                     new BehaviorSelector(
+                        new BehaviorSequence(
+                            new IsCargoFull(),
+                            new BehaviorSelector(
+                                new CanDropOffAtTarget(),
+                                new TargetNearestDropOff()
+                            ),
+                            new GoToTarget(),
+                            new CanDropOffAtTarget(),
+                            new DropOffCargo(),
+                            new TargetPrevious()
+                        ),
                         new IfHasTarget(
                             new BehaviorSequence(
+                                new BehaviorInverter(
+                                    new IsCargoFull()
+                                ),
                                 new GoToTarget(),
                                 new CanCollectTarget(),
                                 new BehaviorDelay(1f,

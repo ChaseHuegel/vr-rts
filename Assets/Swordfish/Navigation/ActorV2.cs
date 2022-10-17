@@ -35,7 +35,7 @@ namespace Swordfish.Navigation
                 target = value;
             }
         }
-        private Body target;
+        [SerializeField] private Body target;
 
         private Damageable damageable;
         public Damageable AttributeHandler { get { return damageable; } }
