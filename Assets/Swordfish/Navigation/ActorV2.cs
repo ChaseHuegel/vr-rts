@@ -187,13 +187,12 @@ namespace Swordfish.Navigation
                     pathWaitTries = 0;
                     pathRepathTries = 0;
 
-                    //  Look in the direction we're going
-                    if (pathTimer == 0)
-                        LookAt(currentPath[0].x, currentPath[0].y);
-
                     //  Only move if we finished interpolating
                     if (finishedInterpolating)
                     {
+                        //  Look in the direction we're going
+                        LookAt(currentPath[0].x, currentPath[0].y);
+
                         SetPositionUnsafe(currentPath[0].x, currentPath[0].y);
                         currentPath.RemoveAt(0);
 

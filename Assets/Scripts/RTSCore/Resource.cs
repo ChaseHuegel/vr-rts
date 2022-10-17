@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Swordfish;
 using Swordfish.Navigation;
@@ -5,12 +6,26 @@ using UnityEngine;
 
 public class Resource : Obstacle
 {
+    public readonly static List<Resource> AllResources = new();
+
     public ResourceGatheringType type = ResourceGatheringType.None;
     public int amount = 1000;
 
     public int maxInteractors = 0;
     //public int interactors = 0;
     public List<Actor> interactors;
+
+    public override void Initialize()
+    {
+        base.Initialize();
+        AllResources.Add(this);
+    }
+
+    public override void OnDestroy()
+    {
+        base.OnDestroy();
+        AllResources.Remove(this);
+    }
 
     // ! No info in database aboun resource bounding dimensions, has to be 
     // ! set in the prefab.
