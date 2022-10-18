@@ -80,22 +80,18 @@ namespace Swordfish.Navigation
         public Coord2D GetDirectionalCoord(Coord2D from)
         {
             Vector2 dir = (from.toVector2() - gridPosition.toVector2()).normalized;
-            Vector2 offset = Vector2.zero;
 
-            float dimX = boundingDimensions.x;
-            float dimY = boundingDimensions.y;
+            Coord2D offset = new(
+                (int)Math.Round(boundingDimensions.x * dir.x * 0.5f + 0.5f, MidpointRounding.AwayFromZero),
+                (int)Math.Round(boundingDimensions.y * dir.y * 0.5f + 0.5f, MidpointRounding.AwayFromZero)
+            );
 
-            offset.x = (float)Math.Round(dimX * dir.x * 0.5f - 0.5f, MidpointRounding.AwayFromZero);
-            offset.y = (float)Math.Round(dimY * dir.y * 0.5f - 0.5f, MidpointRounding.AwayFromZero);
-
-            Vector3 pos = World.ToTransformSpace(gridPosition.x + offset.x, 0f, gridPosition.y + offset.y);
-
-            return World.ToWorldCoord(pos);
+            return gridPosition + offset;
         }
 
         public Coord2D GetNearbyCoord()
         {
-            Coord2D target = new Coord2D(gridPosition.x, gridPosition.y);
+            Coord2D target = new(gridPosition.x, gridPosition.y);
             int paddingX = Random.Range(1, (int)(boundingDimensions.x * 0.5f) + 2);
             int paddingY = Random.Range(1, (int)(boundingDimensions.y * 0.5f) + 2);
 

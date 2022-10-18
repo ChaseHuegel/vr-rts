@@ -12,13 +12,9 @@ public class VillagerV2 : ActorV2
     public int Cargo = 0;
     public ResourceGatheringType CargoType = ResourceGatheringType.None;
 
-    public Animator Animator;
-
     public override void Initialize()
     {
         base.Initialize();
-
-        Animator = gameObject.GetComponentInChildren<Animator>();
 
         BehaviorTree = new BehaviorTree<ActorV2>(
             new BehaviorSelector(
@@ -52,7 +48,7 @@ public class VillagerV2 : ActorV2
                                 new TargetNearestDropOff()
                             ),
                             new GoToTarget(),
-                            new BehaviorWait(1f),
+                            new LookAtTarget(),
                             new CanDropOffAtTarget(),
                             new DropOffCargo(),
                             new TargetPrevious()
@@ -68,17 +64,19 @@ public class VillagerV2 : ActorV2
                             //  Navigate to the resource
                             new GoToTarget(),
                             //  Collect the resource
-                            new BehaviorDelay(1.5f,
+                            new BehaviorSelector(
                                 new BehaviorSequence(
                                     //  If cargo isn't full
                                     new BehaviorInverter(
                                         new IsCargoFull()
                                     ),
                                     new CanCollectTarget(),
-                                    new CollectCargo()
+                                    new SetStateToGathering(),
+                                    new BehaviorDelay(1.5f,
+                                        new CollectCargo()
+                                    )
                                 )
-                            ),
-                            new BehaviorWait(1f)
+                            )
                         ),
                         //  Else order is complete
                         new BehaviorSequence(
@@ -94,7 +92,6 @@ public class VillagerV2 : ActorV2
                         new BehaviorSequence(
                             new HasTarget(),
                             new GoToTarget(),
-                            new BehaviorWait(1f),
                             new CanDropOffAtTarget(),
                             new DropOffCargo(),
                             new ResetTarget(),
@@ -122,7 +119,9 @@ public class VillagerV2 : ActorV2
                         new GoToTarget(),
                         new ResetTarget()
                     )
-                )
+                ),
+
+                new SetUnitState(ActorAnimationState.IDLE)
             )
         );
     }

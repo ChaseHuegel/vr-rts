@@ -45738,6 +45738,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1843620919}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1843620922 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2427505585192002652, guid: 55dd0dc1e230b594297d5ecf8c36cb0f,
+    type: 3}
+  m_PrefabInstance: {fileID: 1843620919}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab54d6d5140767340bdbc6beb759bea3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1845749108
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -82932,14 +82944,15 @@ MonoBehaviour:
     x: 0
     y: 0
   factionId: 0
-  Order: 0
+  Order: 2
+  LastState: 0
+  state: 0
   LastTarget: {fileID: 0}
-  target: {fileID: 0}
+  target: {fileID: 1843620922}
   movementSpeed: 0.3
   InteractReach: 1
   Cargo: 0
   CargoType: 0
-  Animator: {fileID: 0}
 --- !u!114 &9060389751553019713
 MonoBehaviour:
   m_ObjectHideFlags: 0
