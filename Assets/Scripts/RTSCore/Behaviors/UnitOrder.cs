@@ -4,4 +4,6 @@ public enum UnitOrder
     GoTo,
     Collect,
     DropOff,
+    Attack,
+    Hunt,
 }

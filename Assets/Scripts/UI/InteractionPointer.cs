@@ -243,7 +243,7 @@ public class InteractionPointer : MonoBehaviour
             if (WasTeleportButtonReleased(hand))
             {
                 // if (pointerHand == hand)
-                    TryTeleportPlayer();
+                TryTeleportPlayer();
                 isSelectingTeleportLocation = false;
                 teleportArc.Hide();
                 // pointerHand = null;
@@ -408,7 +408,7 @@ public class InteractionPointer : MonoBehaviour
                 isInUnitSelectionMode = true;
                 return;
             }
-            
+
             QueueUnitButton queueUnitButton = pointedAtPointerInteractable.GetComponentInChildren<QueueUnitButton>();
             if (queueUnitButton)
             {
@@ -595,7 +595,7 @@ public class InteractionPointer : MonoBehaviour
                 unit.MoveToLocation(pointedAtPosition);
                 continue;
             }
-            
+
             // Cleanup
             EndUnitSelectionMode();
             pointedAtResource = null;
@@ -617,6 +617,12 @@ public class InteractionPointer : MonoBehaviour
                     {
                         actor.Target = structure;
                         actor.Order = UnitOrder.DropOff;
+                        continue;
+                    }
+                    else if (pointedAtPointerInteractable.TryGetComponent(out Fauna fauna) && fauna.enabled)
+                    {
+                        actor.Target = fauna;
+                        actor.Order = UnitOrder.Hunt;
                         continue;
                     }
                 }
@@ -1277,7 +1283,7 @@ public class InteractionPointer : MonoBehaviour
     private bool WasTeleportButtonReleased(Hand hand)
     {
         // if (IsEligibleForTeleport(hand))
-            return teleportAction.GetStateUp(hand.handType);
+        return teleportAction.GetStateUp(hand.handType);
 
         //return false;
     }
@@ -1325,9 +1331,9 @@ public class InteractionPointer : MonoBehaviour
 
     private bool WasTeleportButtonPressed(Hand hand)
     {
-         if (IsEligibleForTeleport(hand))
+        if (IsEligibleForTeleport(hand))
             return teleportAction.GetStateDown(hand.handType);
-            //return hand.controller.GetPressDown( SteamVR_Controller.ButtonMask.Touchpad );
+        //return hand.controller.GetPressDown( SteamVR_Controller.ButtonMask.Touchpad );
 
         return false;
     }

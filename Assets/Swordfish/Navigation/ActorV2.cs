@@ -160,10 +160,6 @@ namespace Swordfish.Navigation
 
             if (HasStateChanged())
                 Animator.SetInteger("ActorAnimationState", (int)State);
-
-            LastState = State;
-            LastDestination = Destination;
-            LastTarget = Target;
         }
 
         private void ProcessPathing()

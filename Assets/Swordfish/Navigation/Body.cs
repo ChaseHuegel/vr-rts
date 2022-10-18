@@ -34,7 +34,7 @@ namespace Swordfish.Navigation
             Initialize();
         }
 
-        private void OnDestroy()
+        protected virtual void OnDestroy()
         {
             if (Application.isPlaying && gameObject.scene.isLoaded)
                 RemoveFromGrid();
