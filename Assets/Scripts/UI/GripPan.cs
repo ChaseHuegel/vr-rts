@@ -7,12 +7,23 @@ using Valve.VR.InteractionSystem;
 
 public class GripPan : MonoBehaviour
 {
-    // Transform to scale to change size of player
-    public Transform scalingTransform;
+    [Header("Grip Scaling")]
+
+    [Tooltip("Transform to scale to change size of player.")]
+    public Transform targetTransform;
+
+    [Tooltip("Minimum world scale of transform.")]
+    public float minScale = 0.20f; // 
+
+    [Tooltip("Maximum world scale of transform.")]
+    public float maxScale = 5.0f; // 
+
+    [Tooltip("Sensitivity and inversion of movement required.")]
+    public float scalingSensitivity = 10.0f; // 
+
+    [Header("Grip Panning")]
     public SteamVR_Action_Boolean GripOnOff;
-
     public float floorHeight = 0f;
-
     public float panMovementRate = 3.0f;
     public bool useMomentum = true;
     public float momentumStrength = 1.0f;
@@ -50,7 +61,7 @@ public class GripPan : MonoBehaviour
     void Start()
     {
         player = Valve.VR.InteractionSystem.Player.instance;
-        startScale = scalingTransform.localScale.x;
+        startScale = targetTransform.localScale.x;
 
         if (player == null)
         {
@@ -98,7 +109,7 @@ public class GripPan : MonoBehaviour
             if (!isScaling)
             {
                 initialHandDistance = Vector3.Distance(player.rightHand.transform.localPosition, player.leftHand.transform.localPosition);
-                startScale = scalingTransform.localScale.x;
+                startScale = targetTransform.localScale.x;
                 isScaling = true;
                 isPanning = false;
                 Debug.Log("Scaling Start");
@@ -114,18 +125,14 @@ public class GripPan : MonoBehaviour
             }
 
             isGliding = false;
-            
-            float minScale = 0.20f; // Minimum world scale of transform
-            float maxScale = 5.0f; // Maximum world scale of transform
-            float scaleMultiplier = -10.0f; // Sensitivity and inversion of movement required.
 
             float currentHandDistance = Vector3.Distance(player.leftHand.transform.localPosition, player.rightHand.transform.localPosition);
             float distanceDelta = (currentHandDistance - initialHandDistance);
-            distanceDelta *= scaleMultiplier; 
+            distanceDelta *= -scalingSensitivity; 
             float newScale = startScale + (distanceDelta);            
             float clampedNewScale = Mathf.Clamp(newScale, minScale, maxScale);
             //clampedNewScale = Remap(clampedNewScale, minScale, maxScale, maxScale, minScale);
-            scalingTransform.localScale = new Vector3(clampedNewScale, clampedNewScale, clampedNewScale);
+            targetTransform.localScale = new Vector3(clampedNewScale, clampedNewScale, clampedNewScale);
 
             Debug.LogFormat("initHandDist= {0} : curHandDist= {1} : distDelta= {2} : startScale= {3} : clampNewScale= {4}", initialHandDistance, currentHandDistance, distanceDelta, startScale, clampedNewScale);
 
