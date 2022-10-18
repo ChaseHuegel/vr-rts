@@ -50,6 +50,8 @@ public class GripPan : MonoBehaviour
     void Start()
     {
         player = Valve.VR.InteractionSystem.Player.instance;
+        startScale = scalingTransform.localScale.x;
+        
         if (player == null)
         {
             Debug.LogError("<b>[SteamVR Interaction]</b> GripPan: No Player instance found in map.", this);
@@ -96,9 +98,9 @@ public class GripPan : MonoBehaviour
             if (!isScaling)
             {
                 initialHandDistance = Vector3.Distance(player.rightHand.transform.position, player.leftHand.transform.position);
+                startScale = scalingTransform.localScale.x;
                 isScaling = true;
-                isPanning = false;
-                startScale = scalingTransform.localScale.x;                            
+                isPanning = false;                                           
             }
         }
 
@@ -111,40 +113,19 @@ public class GripPan : MonoBehaviour
             }
 
             isGliding = false;
-
-            // Minimum world scale of transform
-            float minScale = 1.0f;
-
-            // Maximum world scale of transform
-            float maxScale = 5.0f;
-
-            // Minimum distance between hands that scaling is mapped to. Hands closer
-            // than this value will not scale the world.
-            float minHandDistance = 0.20f;
-
-            // Maximum distance between hands that scaling is mapped to. Hands further
-            // apart than this value will not scale the world.
-            float maxHandDistance = 3.0f;
-
-            float currentHandDistance = Vector3.Distance(player.leftHand.transform.position, player.rightHand.transform.position);
-
-            // We don't need to update beneath a certain threshold - basically a dead zone when scaling.
-            //if (currentHandDistance - initialHandDistance < 0.001f) return;
-
-            float clampedScale = Mathf.Clamp(currentHandDistance, minHandDistance, maxHandDistance);
-            float mappedScale = map(clampedScale, minHandDistance, maxHandDistance, minScale, maxScale);
             
-            scalingTransform.localScale = new Vector3(mappedScale, mappedScale, mappedScale);
+            float minScale = 0.20f; // Minimum world scale of transform
+            float maxScale = 5.0f; // Maximum world scale of transform
 
-            Debug.LogFormat("curDist= {0} : clampScale= {1} : mappedScale= {2} : startScale= {3}", currentHandDistance, clampedScale, mappedScale, startScale);
+            float currentHandDistance = Vector3.Distance(player.leftHand.transform.position, player.rightHand.transform.position);            
+            float distanceDelta = (currentHandDistance - initialHandDistance);
+            float newScale = startScale - (distanceDelta * -1.0f); // invert hand movement direction in relation to scaling
+            float clampedNewScale = Mathf.Clamp(newScale, minScale, maxScale);                       
+            scalingTransform.localScale = new Vector3(clampedNewScale, clampedNewScale, clampedNewScale);
 
-            // float p = (currentHandDistance / initialHandDistance);
-            // float newScale = p * scale;
+            //Debug.LogFormat("initHandDist= {0} : curHandDist= {1} : distDelta= {2} : startScale= {3} : clampNewScale= {4}", initialHandDistance, currentHandDistance, distanceDelta, startScale, clampedNewScale);
 
-            // scalingTransform.localScale = new Vector3(newScale, newScale, newScale);
-            // Debug.LogFormat("p= {0} : newScale= {1} ", p, newScale);
-
-            panStartPosition = panHandTransform.position;
+            //panStartPosition = panHandTransform.position;
 
         }
         else if (isPanning)
@@ -250,12 +231,7 @@ public class GripPan : MonoBehaviour
             grabPosition = panHandTransform.position;
             glideTimePassed = 0.0f;
         }
-    }
-
-    public static float map(float source, float sourceMin, float sourceMax, float targetMin, float targetMax)
-    {
-        return targetMin + (source - sourceMin) * (targetMax - targetMin) / (sourceMax - sourceMin);
-    }
+    }    
 }
 
     // if (RightHand.hoveringInteractable == null && LeftHand.hoveringInteractable == null)
