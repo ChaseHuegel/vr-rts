@@ -97,14 +97,21 @@ public class GripPan : MonoBehaviour
             {
                 initialHandDistance = Vector3.Distance(player.rightHand.transform.position, player.leftHand.transform.position);
                 isScaling = true;
+                isPanning = false;
                 startScale = scalingTransform.localScale.x;                            
             }
         }
 
         if (isScaling)
         {
+            if (!isRightGripPressed && !isLeftGripPressed)
+            {
+                isScaling = false;
+                return;
+            }
+
             isGliding = false;
-            
+
             // Minimum world scale of transform
             float minScale = 1.0f;
 
@@ -130,12 +137,14 @@ public class GripPan : MonoBehaviour
             scalingTransform.localScale = new Vector3(mappedScale, mappedScale, mappedScale);
 
             Debug.LogFormat("curDist= {0} : clampScale= {1} : mappedScale= {2} : startScale= {3}", currentHandDistance, clampedScale, mappedScale, startScale);
-            
+
             // float p = (currentHandDistance / initialHandDistance);
             // float newScale = p * scale;
-           
+
             // scalingTransform.localScale = new Vector3(newScale, newScale, newScale);
             // Debug.LogFormat("p= {0} : newScale= {1} ", p, newScale);
+
+            panStartPosition = panHandTransform.position;
 
         }
         else if (isPanning)
@@ -161,10 +170,11 @@ public class GripPan : MonoBehaviour
         //     Player.instance.transform.position = new Vector3(Player.instance.transform.position.x, floorHeight, Player.instance.transform.position.z);
     }
 
+
     public void OnRightGripReleased(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
-    {
-        isScaling = false;
+    {    
         isRightGripPressed = false;
+        if (isScaling) return;
 
         if (isPanning && currentHand == fromSource)
         {
@@ -185,6 +195,7 @@ public class GripPan : MonoBehaviour
     public void OnRightGripPressed(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
         isRightGripPressed = true;
+
         if (isRightHandPanEnabled && !isLeftGripPressed)
         {
             if (player.rightHand.hoveringInteractable == null)
@@ -203,7 +214,7 @@ public class GripPan : MonoBehaviour
     public void OnLeftGripReleased(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
         isLeftGripPressed = false;
-        isScaling = false;
+        if (isScaling) return;
 
         if (isPanning && currentHand == fromSource)
         {
