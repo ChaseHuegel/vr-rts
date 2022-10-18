@@ -51,7 +51,7 @@ public class GripPan : MonoBehaviour
     {
         player = Valve.VR.InteractionSystem.Player.instance;
         startScale = scalingTransform.localScale.x;
-        
+
         if (player == null)
         {
             Debug.LogError("<b>[SteamVR Interaction]</b> GripPan: No Player instance found in map.", this);
@@ -119,7 +119,7 @@ public class GripPan : MonoBehaviour
 
             float currentHandDistance = Vector3.Distance(player.leftHand.transform.position, player.rightHand.transform.position);            
             float distanceDelta = (currentHandDistance - initialHandDistance);
-            float newScale = startScale - (distanceDelta * -1.0f); // invert hand movement direction in relation to scaling
+            float newScale = startScale + (distanceDelta * -1.0f); // invert hand movement direction in relation to scaling
             float clampedNewScale = Mathf.Clamp(newScale, minScale, maxScale);                       
             scalingTransform.localScale = new Vector3(clampedNewScale, clampedNewScale, clampedNewScale);
 
