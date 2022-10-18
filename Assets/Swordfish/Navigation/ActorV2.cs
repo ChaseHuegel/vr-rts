@@ -295,7 +295,7 @@ namespace Swordfish.Navigation
                 behaviorTreeScrollPosition = GUI.BeginScrollView(
                     new Rect(0, 100, 400, Display.main.renderingHeight - 100),
                     behaviorTreeScrollPosition,
-                    new Rect(0, 0, 600, 3000),
+                    new Rect(0, 0, 600, 6000),
                     true,
                     true
                 );
