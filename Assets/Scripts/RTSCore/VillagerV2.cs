@@ -12,13 +12,9 @@ public class VillagerV2 : ActorV2
     public int Cargo = 0;
     public ResourceGatheringType CargoType = ResourceGatheringType.None;
 
-    public Animator Animator;
-
     public override void Initialize()
     {
         base.Initialize();
-
-        Animator = gameObject.GetComponentInChildren<Animator>();
 
         BehaviorTree = new BehaviorTree<ActorV2>(
             new BehaviorSelector(
@@ -52,7 +48,7 @@ public class VillagerV2 : ActorV2
                                 new TargetNearestDropOff()
                             ),
                             new GoToTarget(),
-                            new BehaviorWait(1f),
+                            new LookAtTarget(),
                             new CanDropOffAtTarget(),
                             new DropOffCargo(),
                             new TargetPrevious()
@@ -68,17 +64,17 @@ public class VillagerV2 : ActorV2
                             //  Navigate to the resource
                             new GoToTarget(),
                             //  Collect the resource
-                            new BehaviorDelay(1.5f,
-                                new BehaviorSequence(
-                                    //  If cargo isn't full
-                                    new BehaviorInverter(
-                                        new IsCargoFull()
-                                    ),
-                                    new CanCollectTarget(),
+                            new BehaviorSequence(
+                                //  If cargo isn't full
+                                new BehaviorInverter(
+                                    new IsCargoFull()
+                                ),
+                                new CanCollectTarget(),
+                                new SetStateToGathering(),
+                                new BehaviorDelay(1.5f,
                                     new CollectCargo()
                                 )
-                            ),
-                            new BehaviorWait(1f)
+                            )
                         ),
                         //  Else order is complete
                         new BehaviorSequence(
@@ -94,9 +90,90 @@ public class VillagerV2 : ActorV2
                         new BehaviorSequence(
                             new HasTarget(),
                             new GoToTarget(),
-                            new BehaviorWait(1f),
                             new CanDropOffAtTarget(),
                             new DropOffCargo(),
+                            new ResetTarget(),
+                            new ResetOrder()
+                        ),
+                        //  Else order is complete
+                        new BehaviorSequence(
+                            new ResetTarget(),
+                            new ResetOrder()
+                        )
+                    )
+                ),
+
+                new OrderIsHunt(
+                    new BehaviorSelector(
+                        //  Attempt to drop off if cargo is full
+                        new BehaviorSequence(
+                            new IsCargoFull(),
+                            new BehaviorSelector(
+                                //  Try the current target
+                                new CanDropOffAtTarget(),
+                                //  Or get the nearest dropoff
+                                new TargetNearestDropOff()
+                            ),
+                            new GoToTarget(),
+                            new LookAtTarget(),
+                            new CanDropOffAtTarget(),
+                            new DropOffCargo(),
+                            new TargetPrevious()
+                        ),
+                        //  Else attempt to hunt a target
+                        new BehaviorSequence(
+                            new BehaviorSelector(
+                                //  Try the current target
+                                new HasTarget(),
+                                //  Or find the nearest matching resource
+                                new TargetNearestFauna()
+                            ),
+                            //  Navigate to the target
+                            new GoToTarget(),
+                            new BehaviorSelector(
+                                //  Try to collect the target
+                                new BehaviorSequence(
+                                    //  If cargo isn't full
+                                    new BehaviorInverter(
+                                        new IsCargoFull()
+                                    ),
+                                    new CanCollectTarget(),
+                                    new SetStateToGathering(),
+                                    new BehaviorDelay(1.5f,
+                                        new CollectCargo()
+                                    )
+                                ),
+                                //  Else try to attack the target
+                                new BehaviorSelector(
+                                    new BehaviorSequence(
+                                        new SetUnitState(ActorAnimationState.HUNTING),
+                                        new BehaviorDelay(1.5f,
+                                            new AttackTarget()
+                                        ),
+                                        new SetCargoType(ResourceGatheringType.Meat),
+                                        new TargetNearestCargoResource()
+                                    )
+                                )
+                            )
+                        ),
+                        //  Else order is complete
+                        new BehaviorSequence(
+                            new ResetTarget(),
+                            new ResetOrder()
+                        )
+                    )
+                ),
+
+                new OrderIsAttack(
+                    new BehaviorSelector(
+                        //  Attempt to chase and attack the target
+                        new BehaviorSequence(
+                            new HasTarget(),
+                            new GoToTarget(),
+                            new SetUnitState(ActorAnimationState.HUNTING),
+                            new BehaviorDelay(1.5f,
+                                new AttackTarget()
+                            ),
                             new ResetTarget(),
                             new ResetOrder()
                         ),
@@ -122,7 +199,9 @@ public class VillagerV2 : ActorV2
                         new GoToTarget(),
                         new ResetTarget()
                     )
-                )
+                ),
+
+                new SetUnitState(ActorAnimationState.IDLE)
             )
         );
     }

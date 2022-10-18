@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using Swordfish.Navigation;
+using UnityEngine;
 
 public class Fauna : Actor
-{    
+{
+    public readonly static List<Fauna> AllFauna = new();
+
     public float runSpeed;
 
     [Tooltip("The radius that the actor will operate in centered on their starting spawn location.")]
@@ -21,11 +23,11 @@ public class Fauna : Actor
 
     [HideInInspector]
     [SerializeField]
-        public float eatActionChance = 0.3f;
+    public float eatActionChance = 0.3f;
     [HideInInspector]
     [SerializeField]
     public float lookAroundActionChance = 0.6f;
-    
+
 
     public GameObject liveFaunaObject;
     public GameObject deadFaunaObject;
@@ -36,17 +38,24 @@ public class Fauna : Actor
     bool isRunnng;
     float newDecisionTimer;
     float actionTime;
-    
+
     Resource resource;
     Fauna fauna;
-    
+
     public override void Initialize()
     {
         base.Initialize();
+        AllFauna.Add(this);
         startPosition = transform.position;
         normalMovementSpeed = movementSpeed;
         animator = GetComponentInChildren<Animator>();
         resource = GetComponent<Resource>();
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+        AllFauna.Remove(this);
     }
 
     enum FaunaActions
@@ -60,19 +69,19 @@ public class Fauna : Actor
     {
         base.Tick();
 
-        if (isDead)
+        if (isDead || IsDead())
             return;
 
         if (newDecisionTimer > actionTime && !IsMoving())
         {
-            
+
             isRunnng = false;
 
-            MakeNewDecision();            
+            MakeNewDecision();
 
             newDecisionTimer = 0.0f;
-            
-        }                
+
+        }
 
         if (IsMoving())
         {
@@ -99,7 +108,7 @@ public class Fauna : Actor
                 // transform.localScale *= scale;
                 animator.SetTrigger("Eat");
             }
-            else if (idleAction < lookAroundActionChance)    
+            else if (idleAction < lookAroundActionChance)
                 animator.SetTrigger("LookAround");
             else
                 animator.SetInteger("FaunaActionState", (int)FaunaActions.Idle);
@@ -110,7 +119,7 @@ public class Fauna : Actor
 
     // float meatAmount= 50.0f;
     // float eatRate = 0.01f;
-    
+
     private bool isDead;
     public bool IsDead()
     {
@@ -135,14 +144,14 @@ public class Fauna : Actor
 
         // Non-movement action
         if (action >= moveActionChance)
-        {                
+        {
             animator.SetInteger("FaunaActionState", (int)FaunaActions.Idle);
-            actionTime = Random.Range(1.0f, 3.0f);            
+            actionTime = Random.Range(1.0f, 3.0f);
         }
-        else 
+        else
         {
             float moveAction = Random.Range(0.0f, 1.0f);
-            if (moveAction <= runActionChance)            
+            if (moveAction <= runActionChance)
                 RunAction();
             else
                 WalkAction();
@@ -159,7 +168,7 @@ public class Fauna : Actor
     {
         GotoRandomPositionInRadius(actionRadius);
         actionTime = 0;
-        isRunnng = true;        
+        isRunnng = true;
     }
 
     void GotoRandomPositionInRadius(float radius)
@@ -175,9 +184,9 @@ public class Fauna : Actor
         // if (Time.time > 0)
         //     startPosition = transform.position;
 
-    #if UNITY_EDITOR
+#if UNITY_EDITOR
         UnityEditor.Handles.color = Color.red;
         UnityEditor.Handles.DrawWireDisc(startPosition, Vector3.up, 1);
-    #endif
+#endif
     }
 }

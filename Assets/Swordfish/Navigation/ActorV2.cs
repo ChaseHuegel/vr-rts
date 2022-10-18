@@ -13,6 +13,21 @@ namespace Swordfish.Navigation
 
         public UnitOrder Order;
 
+        public ActorAnimationState LastState;
+        public ActorAnimationState State
+        {
+            get => state;
+            set
+            {
+                if (State == value)
+                    return;
+
+                LastState = state;
+                state = value;
+            }
+        }
+        [SerializeField] private ActorAnimationState state;
+
         public Cell LastDestination;
         public Cell Destination
         {
@@ -37,6 +52,7 @@ namespace Swordfish.Navigation
         }
         [SerializeField] private Body target;
 
+        private Animator Animator;
         private Damageable damageable;
         public Damageable AttributeHandler { get { return damageable; } }
 
@@ -60,8 +76,8 @@ namespace Swordfish.Navigation
         {
             base.Initialize();
 
-            if (!(damageable = GetComponent<Damageable>()))
-                Debug.Log("Damageable component not found.");
+            Animator = GetComponentInChildren<Animator>();
+            damageable = GetComponent<Damageable>();
 
             movementInterpolation = 1f - (Constants.ACTOR_PATH_RATE / 60f);
         }
@@ -82,6 +98,7 @@ namespace Swordfish.Navigation
         public bool HasValidPath() { return currentPath != null && currentPath.Count > 0; }
         public bool HasDestinationChanged() => Destination != LastDestination;
         public bool HasTargetChanged() => Target != LastTarget;
+        public bool HasStateChanged() => State != LastState;
 
         public void Freeze() { frozen = true; RemoveFromGrid(); }
         public void Unfreeze() { frozen = false; UpdatePosition(); }
@@ -137,11 +154,17 @@ namespace Swordfish.Navigation
 
         public void FixedUpdate()
         {
-            if (BehaviorTree != null)
-                BehaviorTree.Tick(this, Time.fixedDeltaTime);
+            ProcessPathing();
 
-            //  Pathfinding and interpolation below
-            //  Don't pathfind while frozen
+            BehaviorTree?.Tick(this, Time.fixedDeltaTime);
+
+            if (HasStateChanged())
+                Animator.SetInteger("ActorAnimationState", (int)State);
+        }
+
+        private void ProcessPathing()
+        {
+            //  Don't path while frozen
             if (frozen) return;
 
             Vector3 gridTransformPos = World.ToTransformSpace(gridPosition.x, transform.position.y, gridPosition.y);
@@ -152,6 +175,7 @@ namespace Swordfish.Navigation
             if (Util.DistanceUnsquared(transform.position, gridTransformPos) > 0.001f)
             {
                 moving = true;
+                State = ActorAnimationState.MOVING;
 
                 transform.position = Vector3.MoveTowards
                 (
@@ -160,13 +184,16 @@ namespace Swordfish.Navigation
                     Time.fixedDeltaTime * movementInterpolation * movementSpeed
                 );
 
-                if (World.ToWorldCoord(transform.position) != gridPosition)
-                    finishedInterpolating = false;
+                finishedInterpolating = false;
             }
 
             pathTimer++;
             if (pathTimer >= Constants.ACTOR_PATH_RATE)
                 pathTimer = 0;  //  Ticked
+
+            //  Ensure we're facing our target
+            if (pathTimer == 0 && finishedInterpolating && Target != null && !HasValidPath())
+                LookAt(Target.gridPosition.x, Target.gridPosition.y);
 
             //  Make certain pathing is unlocked as soon as the path is no longer valid
             if (IsPathLocked() && !HasValidPath() || HasDestinationChanged())
@@ -266,31 +293,59 @@ namespace Swordfish.Navigation
             if (BehaviorTree != null)
             {
                 behaviorTreeScrollPosition = GUI.BeginScrollView(
-                    new Rect(0, 0, 500, Display.main.renderingHeight),
+                    new Rect(0, 100, 400, Display.main.renderingHeight - 100),
                     behaviorTreeScrollPosition,
-                    new Rect(0, 0, 500, 500),
+                    new Rect(0, 0, 600, 6000),
                     true,
                     true
                 );
 
-                DrawBehaviorTreeRecursively(BehaviorTree.Root, 0, 0);
+                DrawBehaviorTreeRecursively(BehaviorTree.Root);
                 GUI.EndScrollView();
             }
         }
 
-        private void DrawBehaviorTreeRecursively(BehaviorNode node, int depth, int level)
+        private void DrawBehaviorTreeRecursively(BehaviorNode node)
+        {
+            int levels = 0;
+            for (int i = 0; i < node.Children.Count; i++)
+                levels += 1 + DrawBehaviorTreeBranch(node.Children[i], 0, levels);
+        }
+
+        private int DrawBehaviorTreeBranch(BehaviorNode node, int depth, int level)
         {
             const int width = 200;
             const int height = 30;
             const int indentation = 20;
             const int spacing = height + 4;
 
+            Color color = Color.white;
+            switch (node)
+            {
+                case IBehaviorAction _:
+                    color = Color.cyan;
+                    break;
+                case IBehaviorCompositor _:
+                    color = Color.magenta;
+                    break;
+                case IBehaviorCondition _:
+                    color = Color.yellow;
+                    break;
+                case IBehaviorDecorator _:
+                    color = Color.red;
+                    break;
+            }
+
+            GUI.color = color;
             GUI.Box(new Rect(indentation * depth, spacing * level, width, height), node.GetType().Name);
 
+            int levels = 0;
             for (int i = 0; i < node.Children.Count; i++)
             {
-                DrawBehaviorTreeRecursively(node.Children[i], depth + 1, level + i + 1);
+                levels += DrawBehaviorTreeBranch(node.Children[i], depth + 1, levels + level + i + 1);
             }
+
+            return node.Children.Count + levels;
         }
     }
 

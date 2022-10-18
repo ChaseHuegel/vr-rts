@@ -10,7 +10,6 @@ public class GoToTarget : BehaviorNode<ActorV2>
 
         if (target.DistanceTo(position) <= target.InteractReach)
         {
-            target.ResetPath();
             return BehaviorState.SUCCESS;
         }
 
