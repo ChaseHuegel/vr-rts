@@ -14265,6 +14265,12 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 356711441}
   m_Mesh: {fileID: 4300926, guid: 02ded044b8e0963439276550f50be6f9, type: 3}
+--- !u!1 &357902796 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3933512670699416115, guid: 0e20e52b3d933304889227afb2893690,
+    type: 3}
+  m_PrefabInstance: {fileID: 4603657073447195606}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &358006600
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -67761,7 +67767,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1691660181}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1545835070
 GameObject:
@@ -121486,6 +121492,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3933512670699416115, guid: 0e20e52b3d933304889227afb2893690,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4602947332147455103, guid: 0e20e52b3d933304889227afb2893690,
         type: 3}
       propertyPath: m_IsActive
@@ -121524,6 +121535,16 @@ PrefabInstance:
     - target: {fileID: 4603657073377276737, guid: 0e20e52b3d933304889227afb2893690,
         type: 3}
       propertyPath: addRigidBody
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4603657073450519542, guid: 0e20e52b3d933304889227afb2893690,
+        type: 3}
+      propertyPath: m_Name
+      value: PalmMenu
+      objectReference: {fileID: 0}
+    - target: {fileID: 4603657073450519542, guid: 0e20e52b3d933304889227afb2893690,
+        type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4603657074501646247, guid: 0e20e52b3d933304889227afb2893690,
@@ -121643,6 +121664,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4603657074826361739, guid: 0e20e52b3d933304889227afb2893690,
         type: 3}
+      propertyPath: handBuildMenu
+      value: 
+      objectReference: {fileID: 357902796}
+    - target: {fileID: 4603657074826361739, guid: 0e20e52b3d933304889227afb2893690,
+        type: 3}
       propertyPath: woodCollected
       value: 200
       objectReference: {fileID: 0}
@@ -121690,6 +121716,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_PresetInfoIsWorld
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6046797744382650793, guid: 0e20e52b3d933304889227afb2893690,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0e20e52b3d933304889227afb2893690, type: 3}

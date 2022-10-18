@@ -97,10 +97,11 @@ public class GripPan : MonoBehaviour
         {
             if (!isScaling)
             {
-                initialHandDistance = Vector3.Distance(player.rightHand.transform.position, player.leftHand.transform.position);
+                initialHandDistance = Vector3.Distance(player.rightHand.transform.localPosition, player.leftHand.transform.localPosition);
                 startScale = scalingTransform.localScale.x;
                 isScaling = true;
-                isPanning = false;                                           
+                isPanning = false;
+                Debug.Log("Scaling Start");
             }
         }
 
@@ -116,14 +117,17 @@ public class GripPan : MonoBehaviour
             
             float minScale = 0.20f; // Minimum world scale of transform
             float maxScale = 5.0f; // Maximum world scale of transform
+            float scaleMultiplier = -10.0f; // Sensitivity and inversion of movement required.
 
-            float currentHandDistance = Vector3.Distance(player.leftHand.transform.position, player.rightHand.transform.position);            
+            float currentHandDistance = Vector3.Distance(player.leftHand.transform.localPosition, player.rightHand.transform.localPosition);
             float distanceDelta = (currentHandDistance - initialHandDistance);
-            float newScale = startScale + (distanceDelta * -1.0f); // invert hand movement direction in relation to scaling
-            float clampedNewScale = Mathf.Clamp(newScale, minScale, maxScale);                       
+            distanceDelta *= scaleMultiplier; 
+            float newScale = startScale + (distanceDelta);            
+            float clampedNewScale = Mathf.Clamp(newScale, minScale, maxScale);
+            //clampedNewScale = Remap(clampedNewScale, minScale, maxScale, maxScale, minScale);
             scalingTransform.localScale = new Vector3(clampedNewScale, clampedNewScale, clampedNewScale);
 
-            //Debug.LogFormat("initHandDist= {0} : curHandDist= {1} : distDelta= {2} : startScale= {3} : clampNewScale= {4}", initialHandDistance, currentHandDistance, distanceDelta, startScale, clampedNewScale);
+            Debug.LogFormat("initHandDist= {0} : curHandDist= {1} : distDelta= {2} : startScale= {3} : clampNewScale= {4}", initialHandDistance, currentHandDistance, distanceDelta, startScale, clampedNewScale);
 
             //panStartPosition = panHandTransform.position;
 
@@ -231,7 +235,22 @@ public class GripPan : MonoBehaviour
             grabPosition = panHandTransform.position;
             glideTimePassed = 0.0f;
         }
-    }    
+    }
+
+    public static float Remap(float from, float fromMin, float fromMax, float toMin, float toMax)
+    {
+        var fromAbs = from - fromMin;
+        var fromMaxAbs = fromMax - fromMin;
+
+        var normal = fromAbs / fromMaxAbs;
+
+        var toMaxAbs = toMax - toMin;
+        var toAbs = toMaxAbs * normal;
+
+        var to = toAbs + toMin;
+
+        return to;
+    }
 }
 
     // if (RightHand.hoveringInteractable == null && LeftHand.hoveringInteractable == null)
