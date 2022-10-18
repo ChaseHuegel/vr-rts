@@ -52,6 +52,7 @@ public class VillagerV2 : ActorV2
                                 new TargetNearestDropOff()
                             ),
                             new GoToTarget(),
+                            new BehaviorWait(1f),
                             new CanDropOffAtTarget(),
                             new DropOffCargo(),
                             new TargetPrevious()
@@ -67,7 +68,7 @@ public class VillagerV2 : ActorV2
                             //  Navigate to the resource
                             new GoToTarget(),
                             //  Collect the resource
-                            new BehaviorDelay(1f,
+                            new BehaviorDelay(1.5f,
                                 new BehaviorSequence(
                                     //  If cargo isn't full
                                     new BehaviorInverter(
@@ -76,7 +77,8 @@ public class VillagerV2 : ActorV2
                                     new CanCollectTarget(),
                                     new CollectCargo()
                                 )
-                            )
+                            ),
+                            new BehaviorWait(1f)
                         ),
                         //  Else order is complete
                         new BehaviorSequence(
@@ -92,6 +94,7 @@ public class VillagerV2 : ActorV2
                         new BehaviorSequence(
                             new HasTarget(),
                             new GoToTarget(),
+                            new BehaviorWait(1f),
                             new CanDropOffAtTarget(),
                             new DropOffCargo(),
                             new ResetTarget(),
@@ -103,19 +106,6 @@ public class VillagerV2 : ActorV2
                             new ResetOrder()
                         )
                     )
-                ),
-
-                //  Try to drop off cargo if full
-                new BehaviorSequence(
-                    new IsCargoFull(),
-                    new BehaviorSelector(
-                        new CanDropOffAtTarget(),
-                        new TargetNearestDropOff()
-                    ),
-                    new GoToTarget(),
-                    new CanDropOffAtTarget(),
-                    new DropOffCargo(),
-                    new TargetPrevious()
                 ),
 
                 //  Try to navigate to our current destination
@@ -131,13 +121,6 @@ public class VillagerV2 : ActorV2
                     new BehaviorSequence(
                         new GoToTarget(),
                         new ResetTarget()
-                    )
-                ),
-
-                //  Wander out of boredom
-                new BehaviorSequence(
-                    new BehaviorDelay(5f,
-                        new RandomizeDestination(5)
                     )
                 )
             )
