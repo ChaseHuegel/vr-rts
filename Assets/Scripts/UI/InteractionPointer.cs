@@ -630,6 +630,12 @@ public class InteractionPointer : MonoBehaviour
                         actor.Order = UnitOrder.Hunt;
                         continue;
                     }
+                    else if (pointedAtPointerInteractable.TryGetComponent(out Constructible constructible) && constructible.enabled)
+                    {
+                        actor.Target = constructible;
+                        actor.Order = UnitOrder.Repair;
+                        continue;
+                    }
                 }
 
                 actor.Destination = World.at(World.ToWorldCoord(pointedAtPosition));
