@@ -19,7 +19,7 @@ public class VillagerV2 : ActorV2
         BehaviorTree = new BehaviorTree<ActorV2>(
             new BehaviorSelector(
 
-                new OrderIsGoTo(
+                new OrderIs(UnitOrder.GoTo,
                     new BehaviorSelector(
                         //  Attempt to go to
                         new BehaviorSequence(
@@ -36,7 +36,7 @@ public class VillagerV2 : ActorV2
                     )
                 ),
 
-                new OrderIsCollect(
+                new OrderIs(UnitOrder.Collect,
                     new BehaviorSelector(
                         //  Attempt to drop off if cargo is full
                         new BehaviorSequence(
@@ -84,7 +84,7 @@ public class VillagerV2 : ActorV2
                     )
                 ),
 
-                new OrderIsDropOff(
+                new OrderIs(UnitOrder.DropOff,
                     new BehaviorSelector(
                         //  Attempt to drop off at the target
                         new BehaviorSequence(
@@ -103,7 +103,7 @@ public class VillagerV2 : ActorV2
                     )
                 ),
 
-                new OrderIsHunt(
+                new OrderIs(UnitOrder.Hunt,
                     new BehaviorSelector(
                         //  Attempt to drop off if cargo is full
                         new BehaviorSequence(
@@ -164,7 +164,7 @@ public class VillagerV2 : ActorV2
                     )
                 ),
 
-                new OrderIsAttack(
+                new OrderIs(UnitOrder.Attack,
                     new BehaviorSelector(
                         //  Attempt to chase and attack the target
                         new BehaviorSequence(
@@ -173,6 +173,27 @@ public class VillagerV2 : ActorV2
                             new SetUnitState(ActorAnimationState.HUNTING),
                             new BehaviorDelay(1.5f,
                                 new AttackTarget()
+                            ),
+                            new ResetTarget(),
+                            new ResetOrder()
+                        ),
+                        //  Else order is complete
+                        new BehaviorSequence(
+                            new ResetTarget(),
+                            new ResetOrder()
+                        )
+                    )
+                ),
+
+                new OrderIs(UnitOrder.Repair,
+                    new BehaviorSelector(
+                        //  Attempt to repair the target
+                        new BehaviorSequence(
+                            new HasTarget(),
+                            new GoToTarget(),
+                            new SetUnitState(ActorAnimationState.BUILDANDREPAIR),
+                            new BehaviorDelay(1.5f,
+                                new HealTarget()
                             ),
                             new ResetTarget(),
                             new ResetOrder()

@@ -6,86 +6,88 @@ using UnityEngine;
 namespace Swordfish
 {
 
-public enum Attributes
-{
-    HEALTH
-}
-
-public static class AttributesExtensions
-{
-    public static Attribute Create(this Attributes attribute, float value = 1.0f, float max = 0.0f)
+    public enum Attributes
     {
-        return new Attribute(attribute, value, max);
+        HEALTH
     }
 
-    public static Attribute CreateDefault(this Attributes attribute)
+    public static class AttributesExtensions
     {
-        switch (attribute)
+        public static Attribute Create(this Attributes attribute, float value = 1.0f, float max = 0.0f)
         {
-            case Attributes.HEALTH: return new Attribute(attribute, 1, 100);
-
-            default: return new Attribute(attribute, 1.0f, 0.0f);
-        }
-    }
-}
-
-[Serializable]
-public class Attribute
-{
-    [SerializeField] protected Attributes attribute;
-    [SerializeField] protected float value = 1.0f;
-    [SerializeField] protected float max = 1.0f;
-
-    public Attribute(Attributes attribute, float value = 1.0f, float max = 0.0f)
-    {
-        this.attribute = attribute;
-        this.value = value;
-        if (max <= 0) max = int.MaxValue;   //  NOTE: max of 0 or less is considered uncapped
-        this.max = max;
-    }
-
-    public Attributes   GetAttribute()  { return attribute; }
-    public float        GetValue()      { return value; }
-    public float        GetMax()        { return max; }
-    public float        GetPercent()    { return value / max; }
-
-    public Attribute SetValue(float value)          { this.value = Mathf.Clamp(value, 0, max); return this; }
-    public Attribute SetValueUnsafe(float value)    { this.value = value; return this; }
-
-    public Attribute Modify(float amount)           { this.value = Mathf.Clamp(this.value + amount, 0, max); return this; }
-    public Attribute ModifyUnsafe(float amount)     { this.value += amount; return this; }
-
-    public float GetModified(float amount)           { return Mathf.Clamp(this.value + amount, 0, max); }
-    public float GetModifiedPercent(float amount)    { return (value + amount) / max; }
-
-    public Attribute Max() { value = max; return this; }
-    public Attribute Zero() { value = 0; return this; }
-
-    public Attribute SetMax(float max)  { this.max = max; return this; }
-    public Attribute SetMaxScaled(float max)
-    {
-        this.value *= max / this.max;
-        SetMax(max);
-        return this;
-    }
-
-    //  Operations
-    public override bool Equals(System.Object obj)
-    {
-        Attribute atr = obj as Attribute;
-
-        if (atr == null)
-        {
-            return false;
+            return new Attribute(attribute, value, max);
         }
 
-        return this.attribute.Equals(atr.attribute);
+        public static Attribute CreateDefault(this Attributes attribute)
+        {
+            switch (attribute)
+            {
+                case Attributes.HEALTH: return new Attribute(attribute, 1, 100);
+
+                default: return new Attribute(attribute, 1.0f, 0.0f);
+            }
+        }
     }
 
-    public override int GetHashCode()
+    [Serializable]
+    public class Attribute
     {
-        return value.GetHashCode() ^ max.GetHashCode() ^ attribute.GetHashCode();
+        [SerializeField] protected Attributes attribute;
+        [SerializeField] protected float value = 1.0f;
+        [SerializeField] protected float max = 1.0f;
+
+        public Attribute(Attributes attribute, float value = 1.0f, float max = 0.0f)
+        {
+            this.attribute = attribute;
+            this.value = value;
+            if (max <= 0) max = int.MaxValue;   //  NOTE: max of 0 or less is considered uncapped
+            this.max = max;
+        }
+
+        public Attributes GetAttribute() { return attribute; }
+        public float GetValue() { return value; }
+        public float GetMax() { return max; }
+        public float GetPercent() { return value / max; }
+
+        public bool IsMax() => value == max;
+
+        public Attribute SetValue(float value) { this.value = Mathf.Clamp(value, 0, max); return this; }
+        public Attribute SetValueUnsafe(float value) { this.value = value; return this; }
+
+        public Attribute Modify(float amount) { this.value = Mathf.Clamp(this.value + amount, 0, max); return this; }
+        public Attribute ModifyUnsafe(float amount) { this.value += amount; return this; }
+
+        public float GetModified(float amount) { return Mathf.Clamp(this.value + amount, 0, max); }
+        public float GetModifiedPercent(float amount) { return (value + amount) / max; }
+
+        public Attribute Max() { value = max; return this; }
+        public Attribute Zero() { value = 0; return this; }
+
+        public Attribute SetMax(float max) { this.max = max; return this; }
+        public Attribute SetMaxScaled(float max)
+        {
+            this.value *= max / this.max;
+            SetMax(max);
+            return this;
+        }
+
+        //  Operations
+        public override bool Equals(System.Object obj)
+        {
+            Attribute atr = obj as Attribute;
+
+            if (atr == null)
+            {
+                return false;
+            }
+
+            return this.attribute.Equals(atr.attribute);
+        }
+
+        public override int GetHashCode()
+        {
+            return value.GetHashCode() ^ max.GetHashCode() ^ attribute.GetHashCode();
+        }
     }
-}
 
 }

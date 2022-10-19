@@ -6,4 +6,5 @@ public enum UnitOrder
     DropOff,
     Attack,
     Hunt,
+    Repair,
 }

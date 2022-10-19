@@ -616,7 +616,12 @@ public class InteractionPointer : MonoBehaviour
                     else if (pointedAtPointerInteractable.TryGetComponent(out Structure structure) && structure.enabled)
                     {
                         actor.Target = structure;
-                        actor.Order = UnitOrder.DropOff;
+
+                        if (structure.AttributeHandler.GetAttribute(Attributes.HEALTH).IsMax())
+                            actor.Order = UnitOrder.DropOff;
+                        else
+                            actor.Order = UnitOrder.Repair;
+
                         continue;
                     }
                     else if (pointedAtPointerInteractable.TryGetComponent(out Fauna fauna) && fauna.enabled)
