@@ -26,7 +26,6 @@ namespace Swordfish.Navigation
         bool IsPathLocked();
         void LockPath();
         void LookAt(float x, float y);
-        void OnDrawGizmosSelected();
         void ResetPath();
         void ToggleFreeze();
         void Unfreeze();

@@ -271,6 +271,7 @@ namespace Swordfish.Navigation
             }
         }
 
+#if UNITY_EDITOR
         public virtual void OnDrawGizmosSelected()
         {
             if (Application.isEditor != true) return;
@@ -288,7 +289,7 @@ namespace Swordfish.Navigation
         private Vector2 behaviorTreeScrollPosition = Vector2.zero;
         public virtual void OnGUI()
         {
-            if (Application.isEditor != true || !Selection.gameObjects.Contains(gameObject)) return;
+            if (!Selection.gameObjects.Contains(gameObject)) return;
 
             if (BehaviorTree != null)
             {
@@ -347,6 +348,6 @@ namespace Swordfish.Navigation
 
             return node.Children.Count + levels;
         }
+#endif
     }
-
 }
