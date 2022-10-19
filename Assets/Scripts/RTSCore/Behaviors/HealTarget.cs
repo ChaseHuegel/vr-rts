@@ -12,7 +12,7 @@ public class HealTarget : BehaviorNode<ActorV2>
         if (victim.GetAttribute(Attributes.HEALTH).IsMax())
             return BehaviorState.SUCCESS;
 
-        victim.Heal(5, AttributeChangeCause.HEALED);
+        victim.Heal(5, AttributeChangeCause.HEALED, target.AttributeHandler);
         return BehaviorState.RUNNING;
     }
 }
