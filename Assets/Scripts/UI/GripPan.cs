@@ -61,8 +61,6 @@ public class GripPan : MonoBehaviour
     void Start()
     {
         player = Valve.VR.InteractionSystem.Player.instance;
-        startScale = targetTransform.localScale.x;
-
         if (player == null)
         {
             Debug.LogError("<b>[SteamVR Interaction]</b> GripPan: No Player instance found in map.", this);
@@ -112,7 +110,7 @@ public class GripPan : MonoBehaviour
                 startScale = targetTransform.localScale.x;
                 isScaling = true;
                 isPanning = false;
-                Debug.Log("Scaling Start");
+                //Debug.Log("Scaling Start");
             }
         }
 
@@ -131,13 +129,9 @@ public class GripPan : MonoBehaviour
             distanceDelta *= -scalingSensitivity; 
             float newScale = startScale + (distanceDelta);            
             float clampedNewScale = Mathf.Clamp(newScale, minScale, maxScale);
-            //clampedNewScale = Remap(clampedNewScale, minScale, maxScale, maxScale, minScale);
             targetTransform.localScale = new Vector3(clampedNewScale, clampedNewScale, clampedNewScale);
 
-            Debug.LogFormat("initHandDist= {0} : curHandDist= {1} : distDelta= {2} : startScale= {3} : clampNewScale= {4}", initialHandDistance, currentHandDistance, distanceDelta, startScale, clampedNewScale);
-
-            //panStartPosition = panHandTransform.position;
-
+            //Debug.LogFormat("initHandDist= {0} : curHandDist= {1} : distDelta= {2} : startScale= {3} : clampNewScale= {4}", initialHandDistance, currentHandDistance, distanceDelta, startScale, clampedNewScale);
         }
         else if (isPanning)
         {
@@ -153,7 +147,6 @@ public class GripPan : MonoBehaviour
             if (magnitude < 0) magnitude = 0;
 
             Player.instance.transform.position += glidingVector * magnitude * Time.deltaTime;
-            //transform.position = Vector3.Lerp(transform.position, transform.position + glidingVector * magnitude, Time.deltaTime);
         }
 
 
@@ -242,21 +235,6 @@ public class GripPan : MonoBehaviour
             grabPosition = panHandTransform.position;
             glideTimePassed = 0.0f;
         }
-    }
-
-    public static float Remap(float from, float fromMin, float fromMax, float toMin, float toMax)
-    {
-        var fromAbs = from - fromMin;
-        var fromMaxAbs = fromMax - fromMin;
-
-        var normal = fromAbs / fromMaxAbs;
-
-        var toMaxAbs = toMax - toMin;
-        var toAbs = toMaxAbs * normal;
-
-        var to = toAbs + toMin;
-
-        return to;
     }
 }
 
