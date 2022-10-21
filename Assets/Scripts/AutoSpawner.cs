@@ -1,12 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using MLAPI;
 using Swordfish;
 using Swordfish.Audio;
-using UnityEditor;
-using Valve.VR.InteractionSystem;
 using Swordfish.Navigation;
-using MLAPI;
+using UnityEditor;
+using UnityEngine;
+using Valve.VR.InteractionSystem;
 
 public class AutoSpawner : MonoBehaviour
 {
@@ -31,7 +31,7 @@ public class AutoSpawner : MonoBehaviour
     private byte currentWaveSpawnIncrementInterval;
     private int currentWave;
 
-    [Header("Unit")]    
+    [Header("Unit")]
     public byte factionID;
     public Transform unitSpawnPoint;
     public float unitSpawnPointRadius;
@@ -80,7 +80,7 @@ public class AutoSpawner : MonoBehaviour
                 for (byte i = 0; i < countToSpawn; i++)
                 {
                     SpawnUnit(unitSpawnList[currentSpawnListIndex]);
-                    
+
                     if (randomize)
                         currentSpawnListIndex = Random.Range(0, unitSpawnList.Length);
                     else
@@ -88,7 +88,7 @@ public class AutoSpawner : MonoBehaviour
                         currentSpawnListIndex++;
                         if (currentSpawnListIndex >= unitSpawnList.Length)
                             currentSpawnListIndex = 0;
-                    }                
+                    }
                 }
 
                 currentWave++;
@@ -120,20 +120,20 @@ public class AutoSpawner : MonoBehaviour
             Vector3 randomPos = (Vector3)Random.insideUnitSphere * unitSpawnPointRadius;
             Vector3 position = unitSpawnPoint.transform.position + randomPos;
             position.y = unitSpawnPoint.transform.position.y;
-            
+
             GameObject unitGameObject = Instantiate(unitData.prefab, position, Quaternion.identity);
-            
+
             if (NetworkManager.Singleton.IsServer)
             {
                 unitGameObject.GetComponent<NetworkObject>().Spawn();
             }
-            
+
             Unit unit = unitGameObject.GetComponent<Unit>();
             unit.rtsUnitType = unitData.unitType;
-            unit.factionId = factionID;
-            unit.SyncPosition();
+            unit.FactionID = factionID;
+            unit.SyncToTransform();
 
-            randomPos = (Vector3)Random.insideUnitSphere * unitSpawnPointRadius; 
+            randomPos = (Vector3)Random.insideUnitSphere * unitSpawnPointRadius;
             position = unitRallyWaypoint.transform.position + randomPos;
 
             unit.GotoForced(World.ToWorldSpace(position));
@@ -142,6 +142,6 @@ public class AutoSpawner : MonoBehaviour
             // Debug.Log("Spawned " + unit.rtsUnitType + ".");
         }
         else
-            Debug.Log (string.Format("Spawn {0} failed. Missing prefabToSpawn.", unitData.unitType));
+            Debug.Log(string.Format("Spawn {0} failed. Missing prefabToSpawn.", unitData.unitType));
     }
 }

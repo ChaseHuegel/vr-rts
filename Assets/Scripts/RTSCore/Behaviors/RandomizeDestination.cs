@@ -15,7 +15,7 @@ public class RandomizeDestination : BehaviorNode<VillagerV2>
 
     public override BehaviorState Evaluate(VillagerV2 target, float delta)
     {
-        Coord2D randomPos = target.gridPosition + new Coord2D(
+        Coord2D randomPos = target.GetPosition() + new Coord2D(
                 MathS.Random.Next(MaxRange * 2) - MaxRange,
                 MathS.Random.Next(MaxRange * 2) - MaxRange
             );
@@ -23,7 +23,7 @@ public class RandomizeDestination : BehaviorNode<VillagerV2>
         Cell cell = World.at(randomPos);
 
         if (cell.occupied)
-            cell = World.at(cell.occupants[0].GetDirectionalCoord(target.gridPosition));
+            cell = World.at(cell.occupants[0].GetNearestPositionFrom(target.GetPosition()));
 
         if (cell != null)
         {

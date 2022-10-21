@@ -454,7 +454,7 @@ public class InteractionPointer : MonoBehaviour
                 int currentIndex = wallPreviewSections.IndexOf(go);
                 currentIndex++;
                 GameObject nextObject = null;
-                Swordfish.Coord2D nextSegmentPosition = null;
+                Coord2D nextSegmentPosition = new(0, 0);
 
                 if (currentIndex < wallPreviewSections.Count - 1)
                 {
@@ -1110,14 +1110,14 @@ public class InteractionPointer : MonoBehaviour
         {
             Unit hoveredUnit = pointedAtPointerInteractable.GetComponent<Unit>();
             if (hoveredUnit && !selectedUnits.Contains(hoveredUnit) &&
-                factionId == hoveredUnit.factionId)
+                factionId == hoveredUnit.FactionID)
             {
                 selectedUnits.Add(hoveredUnit);
             }
 
             ActorV2 hoveredActor = pointedAtPointerInteractable.GetComponent<ActorV2>();
             if (hoveredActor && !selectedActorV2.Contains(hoveredActor) &&
-                factionId == hoveredActor.factionId)
+                factionId == hoveredActor.FactionID)
             {
                 selectedActorV2.Add(hoveredActor);
             }

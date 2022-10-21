@@ -15,13 +15,13 @@ public class FactionedResourceSkinner : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        factionId = GetComponent<Resource>().factionId;
-        SetSkin();        
+        factionId = GetComponent<Resource>().FactionID;
+        SetSkin();
     }
 
     void OnValidate()
     {
-        GetComponent<Resource>().factionId = factionId;
+        GetComponent<Resource>().FactionID = factionId;
         SetSkin();
     }
 
@@ -33,10 +33,10 @@ public class FactionedResourceSkinner : MonoBehaviour
 
         if (faction.skin.buildingMaterial)
         {
-            foreach(MeshRenderer mesh in meshes)
+            foreach (MeshRenderer mesh in meshes)
                 mesh.sharedMaterial = faction.skin.buildingMaterial;
 
-            foreach(SkinnedMeshRenderer skinnedMesh in skinnedMeshes)
+            foreach (SkinnedMeshRenderer skinnedMesh in skinnedMeshes)
                 skinnedMesh.sharedMaterial = faction.skin.buildingMaterial;
         }
     }

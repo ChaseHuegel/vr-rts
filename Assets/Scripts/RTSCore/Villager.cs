@@ -112,8 +112,8 @@ public class Villager : Unit
         if (!IsMoving())
         {
             //DeactivateAllGoals();
-            GotoForced(UnityEngine.Random.Range(-5, 5) + gridPosition.x,
-               UnityEngine.Random.Range(-5, 5) + gridPosition.y);
+            GotoForced(UnityEngine.Random.Range(-5, 5) + GridPosition.x,
+               UnityEngine.Random.Range(-5, 5) + GridPosition.y);
             LockPath();
         }
     }
@@ -371,12 +371,12 @@ public class Villager : Unit
 
     #endregion
 
-    public override void Tick()
+    public override void Tick(float deltaTime)
     {
         if (isHeld || isDying)
             return;
 
-        base.Tick();
+        base.Tick(deltaTime);
 
         // Transport type always matches what our current resource is
         // ! Should be able to move this somewhere so that it's not called
@@ -478,7 +478,7 @@ public class Villager : Unit
     /// <param name="structure"></param>
     public override void AssignUnitToStructureTask(Structure structure)
     {
-        AssignUnitTaskAndLocation(RTSUnitType.Builder, World.at(structure.GetDirectionalCoord(gridPosition)));
+        AssignUnitTaskAndLocation(RTSUnitType.Builder, World.at(structure.GetNearestPositionFrom(GridPosition)));
     }
 
     /// <summary>
@@ -488,7 +488,7 @@ public class Villager : Unit
     /// <param name="constructible"></param>
     public override void AssignUnitToConstructibleTask(Constructible constructible)
     {
-        AssignUnitTaskAndLocation(RTSUnitType.Builder, World.at(constructible.GetDirectionalCoord(gridPosition)));
+        AssignUnitTaskAndLocation(RTSUnitType.Builder, World.at(constructible.GetNearestPositionFrom(GridPosition)));
     }
 
     /// <summary>
@@ -498,7 +498,7 @@ public class Villager : Unit
     /// <param name="fauna"></param>
     public override void AssignUnitToFaunaTask(Fauna fauna)
     {
-        AssignUnitTaskAndLocation(RTSUnitType.Hunter, World.at(fauna.GetDirectionalCoord(gridPosition)));
+        AssignUnitTaskAndLocation(RTSUnitType.Hunter, World.at(fauna.GetNearestPositionFrom(GridPosition)));
     }
 
     /// <summary>
@@ -539,7 +539,7 @@ public class Villager : Unit
                 break;
         }
 
-        AssignUnitTaskAndLocation(rtsUnitTypeData.unitType, World.at(resource.GetNearbyCoord()));
+        AssignUnitTaskAndLocation(rtsUnitTypeData.unitType, World.at(resource.GetRandomAdjacentPosition()));
     }
 
     public void PlayChangeTaskAudio()
@@ -744,7 +744,7 @@ public class Villager : Unit
                 break;
         }
 
-        rate = rate / (60 / Constants.ACTOR_TICK_RATE);
+        rate = rate / (60 / Constants.TICK_RATE);
 
         return rate;
     }
@@ -810,7 +810,7 @@ public class Villager : Unit
             return false;
 
         targetDamageable = fauna.AttributeHandler;
-        float amount = (rtsUnitTypeData.huntingDamage / (60 / Constants.ACTOR_TICK_RATE));
+        float amount = (rtsUnitTypeData.huntingDamage / (60 / Constants.TICK_RATE));
         fauna.AttributeHandler.Damage(amount, AttributeChangeCause.ATTACKED, AttributeHandler, DamageType.PIERCING);
         animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.HUNTING);
 
@@ -823,7 +823,7 @@ public class Villager : Unit
             return false;
 
         //  Convert per second to per tick
-        float amount = (rtsUnitTypeData.repairRate / (60 / Constants.ACTOR_TICK_RATE));
+        float amount = (rtsUnitTypeData.repairRate / (60 / Constants.TICK_RATE));
 
         //  Trigger a repair event
         RepairEvent e = new RepairEvent { villager = this, structure = structure, amount = amount };
@@ -847,7 +847,7 @@ public class Villager : Unit
             return false;
 
         //  Convert per second to per tick
-        float amount = (rtsUnitTypeData.buildRate / (60 / Constants.ACTOR_TICK_RATE));
+        float amount = (rtsUnitTypeData.buildRate / (60 / Constants.TICK_RATE));
 
         //  Trigger a build event
         BuildEvent e = new BuildEvent { villager = this, constructible = construction, amount = amount };

@@ -28,7 +28,7 @@ public class Structure : Obstacle, IFactioned
     private PlayerManager playerManager;
     public Faction GetFaction() { return faction; }
 
-    public void UpdateFaction() { faction = GameMaster.Factions?.Find(x => x.Id == factionId); }
+    public void UpdateFaction() { faction = GameMaster.Factions?.Find(x => x.Id == FactionID); }
 
     public bool NeedsRepairs() { return damageable.GetHealthPercent() < 1f; }
 
@@ -88,8 +88,8 @@ public class Structure : Obstacle, IFactioned
     {
         base.FetchBoundingDimensions();
 
-        boundingDimensions.x = buildingData.boundingDimensionX;
-        boundingDimensions.y = buildingData.boundingDimensionY;
+        BoundingDimensions.x = buildingData.boundingDimensionX;
+        BoundingDimensions.y = buildingData.boundingDimensionY;
     }
 
     protected void CreateBuildingDamageFX()

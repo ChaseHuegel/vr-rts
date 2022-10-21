@@ -11,7 +11,7 @@ public class TargetNearestFauna : BehaviorNode<ActorV2>
         {
             Fauna fauna = Fauna.AllFauna[i];
 
-            int distance = target.DistanceTo(fauna);
+            int distance = target.GetDistanceTo(fauna.GetPosition().x, fauna.GetPosition().y);
             if (distance < shortestDistance)
             {
                 shortestDistance = distance;

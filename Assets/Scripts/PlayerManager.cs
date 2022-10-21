@@ -1,11 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using Valve.VR;
-using Valve.VR.InteractionSystem;
-using UnityEngine.UI;
+using System.Threading.Tasks;
 using Swordfish;
 using Swordfish.Navigation;
+using UnityEngine;
+using UnityEngine.UI;
+using Valve.VR;
+using Valve.VR.InteractionSystem;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -24,7 +26,7 @@ public class PlayerManager : MonoBehaviour
 
     [Header("UI")]
     public SteamVR_Action_Boolean handMenuToggle;
-      
+
     [Header("Hammer")]
     public bool hammerOnLeft = true;
     public bool hammerOnRight = false;
@@ -33,7 +35,7 @@ public class PlayerManager : MonoBehaviour
 
     [Header("Autohide Hand Menu")]
     [Tooltip("Switch between clipboard build menu or palm build menu.")]
-    public bool autoHideHandMenuEnabled;    
+    public bool autoHideHandMenuEnabled;
     public float handMenuTrackingSensitivity = 0.5f;
     public Transform rHandAttachmentPoint;
     public Transform rHandTrackingPoint;
@@ -42,7 +44,7 @@ public class PlayerManager : MonoBehaviour
     public GameObject autohideHandMenuObject;
     public WristDisplay WristDisplay;
     public WristDisplay FaceDisplay;
-    private GripPan gripPan; 
+    private GripPan gripPan;
     private Hand buildMenuHand;
     private Hand selectionHand;
     public GameObject handBuildMenu;
@@ -54,7 +56,7 @@ public class PlayerManager : MonoBehaviour
     {
         get
         {
-            if ( _instance == null ) 
+            if (_instance == null)
                 _instance = GameObject.FindObjectOfType<PlayerManager>();
 
             return _instance;
@@ -120,16 +122,36 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
+    private float TickTimer = 0f;
+    protected void LateUpdate()
+    {
+        TickTimer += Time.deltaTime;
+        if (TickTimer >= Constants.TICK_RATE_DELTA)
+        {
+            Parallel.ForEach(ActorV2.AllActors, TickActorBehaviorTree);
+
+            for (int i = 0; i < ActorV2.AllActors.Count; i++)
+                ActorV2.AllActors[i].Tick(Constants.TICK_RATE_DELTA);
+
+            TickTimer -= Constants.TICK_RATE_DELTA;
+        }
+    }
+
+    private void TickActorBehaviorTree(ActorV2 actor, ParallelLoopState state, long index)
+    {
+        actor.BehaviorTree?.Tick(actor, Constants.TICK_RATE_DELTA);
+    }
+
     public void OnVillagerDropoff(object sender, Villager.DropoffEvent e)
     {
-        if (e.villager.factionId == factionId)
+        if (e.villager.FactionID == factionId)
             AddResourceToStockpile(e.resourceType, (int)e.amount);
     }
 
     public void OnVillagerRepair(object sender, Villager.RepairEvent e)
     {
         // ? Is this needed?
-        if (e.villager.factionId == factionId)
+        if (e.villager.FactionID == factionId)
         {
             DeductResourcesFromStockpile(0, 0, 1, 0);
         }
@@ -153,11 +175,11 @@ public class PlayerManager : MonoBehaviour
 
     public bool IsSameFaction(Body body)
     {
-        return this.factionId == body.factionId;
+        return this.factionId == body.FactionID;
     }
 
     public void OnSpawnEvent(object sender, Damageable.SpawnEvent e)
-    {        
+    {
         Unit unit = e.entity.GetComponentInChildren<Unit>();
         if (unit && IsSameFaction(unit))
         {
@@ -202,7 +224,7 @@ public class PlayerManager : MonoBehaviour
             {
                 rightHand.DetachObject(handBuildMenu);
                 handBuildMenu.SetActive(false);
-                SetRightHandInteraction(true);                
+                SetRightHandInteraction(true);
             }
             // Menu must be attached to left hand, disable interaction in the right hand,
             // attach it to the right hand, enable interacition in the left hand.
@@ -220,7 +242,7 @@ public class PlayerManager : MonoBehaviour
             // attach build menu to right hand,
             SetRightHandInteraction(false);
             handBuildMenu.SetActive(true);
-            rightHand.AttachObject(handBuildMenu, GrabTypes.Scripted);            
+            rightHand.AttachObject(handBuildMenu, GrabTypes.Scripted);
         }
 
     }
@@ -228,7 +250,7 @@ public class PlayerManager : MonoBehaviour
     public void OnHandToggleMenuLeftDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
         buildMenu.RefreshSlots();
-        
+
         // Don't use both methods to display the menu at the same time.
         if (autoHideHandMenuEnabled) return;
 
@@ -241,7 +263,7 @@ public class PlayerManager : MonoBehaviour
             {
                 leftHand.DetachObject(handBuildMenu);
                 handBuildMenu.SetActive(false);
-                SetLeftHandInteraction(true);                
+                SetLeftHandInteraction(true);
             }
             // Menu must be attached to right hand, disable interaction in the left hand,
             // attach it to the left hand, enable interacition in the right hand.
@@ -259,7 +281,7 @@ public class PlayerManager : MonoBehaviour
             // attach build menu to left hand,
             SetLeftHandInteraction(false);
             handBuildMenu.SetActive(true);
-            leftHand.AttachObject(handBuildMenu, GrabTypes.Scripted);            
+            leftHand.AttachObject(handBuildMenu, GrabTypes.Scripted);
         }
 
     }
@@ -283,7 +305,7 @@ public class PlayerManager : MonoBehaviour
     }
 
     public void EnableGripPanning(Hand hand)
-    { 
+    {
         gripPan.EnablePanning(hand);
         InteractionPointer.instance.EnableInteraction();
         //InteractionPointer.instance.enabled = true;
@@ -304,7 +326,7 @@ public class PlayerManager : MonoBehaviour
             WristDisplay?.SetMilitaryPopulationText(militaryPopulation.ToString());
             FaceDisplay?.SetMilitaryPopulationText(militaryPopulation.ToString());
         }
-        
+
         totalPopulation += unit.rtsUnitTypeData.populationCost;
         queueCount -= unit.rtsUnitTypeData.populationCost;
         if (queueCount < 0) queueCount = 0;
@@ -419,14 +441,14 @@ public class PlayerManager : MonoBehaviour
     {
         BuildingData buildingData = GameMaster.GetBuilding(buildingType);
         if (buildingData.goldCost > goldCollected || buildingData.woodCost > woodCollected ||
-            buildingData.grainCost > grainCollected || buildingData.stoneCost > stoneCollected)   
+            buildingData.grainCost > grainCollected || buildingData.stoneCost > stoneCollected)
         {
             return false;
         }
 
         return true;
     }
-    
+
     public bool CanQueueUnit(RTSUnitType unitType)
     {
         UnitData unitData = GameMaster.GetUnit(unitType);
@@ -460,7 +482,7 @@ public class PlayerManager : MonoBehaviour
         UpdateWristDisplayResourceText();
     }
     public void OnDestroy()
-    {        
+    {
         CleanupEvents();
     }
 }

@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using Swordfish;
 using Swordfish.Navigation;
+using UnityEngine;
 
 [RequireComponent(typeof(Damageable))]
 public class Constructible : Obstacle, IFactioned
@@ -12,7 +12,7 @@ public class Constructible : Obstacle, IFactioned
 
     private Faction faction;
     public Faction GetFaction() { return faction; }
-    public void UpdateFaction() { faction = GameMaster.Factions.Find(x => x.Id == factionId); }
+    public void UpdateFaction() { faction = GameMaster.Factions.Find(x => x.Id == FactionID); }
 
     public bool DestroyOnBuilt = true;
     public bool ClearExistingWalls;
@@ -48,29 +48,29 @@ public class Constructible : Obstacle, IFactioned
             // Stretch if diagonal gate
             if (buildingData.buildingType == RTSBuildingType.Wood_Wall_Gate ||
                 buildingData.buildingType == RTSBuildingType.Stone_Wall_Gate)
-            {                    
+            {
                 float angle = Mathf.Round(transform.eulerAngles.y);
                 if (angle == 45.0f || angle == 135.0f || angle == 225.0f || angle == 315.0f)
                     transform.localScale += new Vector3(0.0f, 0.01199419f, 0.0f);
             }
 
             RemoveExistingWalls();
-            
+
             BakeToGrid();
         }
     }
 
     private void RemoveExistingWalls()
     {
-        Cell thisCell = GetCellAtGrid();
+        Cell thisCell = GetCell();
         Cell[] neighbors = thisCell.neighbors().ToArray();
 
         for (int i = 0; i < neighbors.Length; ++i)
         {
             WallSegment wallSegment = neighbors[i].GetFirstOccupant<Structure>()?.GetComponent<WallSegment>();
-            
+
             if (wallSegment)
-                Destroy(wallSegment.gameObject);            
+                Destroy(wallSegment.gameObject);
         }
 
         WallSegment thisWallSegment = thisCell.GetFirstOccupant<Structure>()?.GetComponent<WallSegment>();
@@ -83,8 +83,8 @@ public class Constructible : Obstacle, IFactioned
     {
         base.FetchBoundingDimensions();
 
-        boundingDimensions.x = buildingData.boundingDimensionX;
-        boundingDimensions.y = buildingData.boundingDimensionY;
+        BoundingDimensions.x = buildingData.boundingDimensionX;
+        BoundingDimensions.y = buildingData.boundingDimensionY;
     }
 
     public bool IsBuilt()
@@ -102,10 +102,10 @@ public class Constructible : Obstacle, IFactioned
     }
 
     private void UpdateStage()
-    {        
-        float progress = AttributeHandler.GetAttributePercent(Attributes.HEALTH);   
+    {
+        float progress = AttributeHandler.GetAttributePercent(Attributes.HEALTH);
         int progressStage = 0;// = (int)(progress / (1f / ConstructionStages.Length));
-        
+
         if (progress >= 0.45f)
             progressStage = 1;
         else if (progress >= 0.95f)
@@ -135,7 +135,7 @@ public class Constructible : Obstacle, IFactioned
             //  Try placing a prefab
             if (OnBuiltPrefab != null)
             {
-                Instantiate(OnBuiltPrefab, transform.position, transform.rotation);                
+                Instantiate(OnBuiltPrefab, transform.position, transform.rotation);
                 AudioSource.PlayClipAtPoint(buildingData.constructionCompletedAudio?.GetClip(), transform.position);
             }
 

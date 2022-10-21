@@ -1,9 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using Swordfish;
 using Swordfish.Navigation;
+using UnityEngine;
 using Valve.VR.InteractionSystem;
 
 [RequireComponent(typeof(Damageable))]
@@ -111,10 +111,10 @@ public class Soldier : Unit
     /// <param name="fauna"></param>
     public override void AssignUnitToFaunaTask(Fauna fauna)
     {
-        TrySetGoal(fauna.GetCellAtGrid());
+        TrySetGoal(fauna.GetCell());
     }
 
-    public void SetAIAttackGoals(bool military, bool villagers,  bool buildings)
+    public void SetAIAttackGoals(bool military, bool villagers, bool buildings)
     {
         // goals.Add<GoalHuntMilitary>().active = false;
         // goals.Add<GoalHuntVillagers>().active = false;
@@ -156,16 +156,16 @@ public class Soldier : Unit
         base.OnDetachedFromHand(hand);
     }
 
-    public override void Tick()
+    public override void Tick(float deltaTime)
     {
         if (isHeld || isDying)
             return;
 
-        base.Tick();
+        base.Tick(deltaTime);
 
         GotoNearestGoalWithPriority();
 
-        if (IsMoving() )
+        if (IsMoving())
             animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.MOVING);
         else if (IsIdle())
             animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.IDLE);
@@ -185,7 +185,7 @@ public class Soldier : Unit
             return;
 
         if (!currentGoal.gridLocation.GetOccupant<Soldier>())
-            TrySetGoal(e.attacker.GetComponentInChildren<Body>().GetCellAtGrid());
+            TrySetGoal(e.attacker.GetComponentInChildren<Body>().GetCell());
     }
 
     public void OnDeath(object sender, Damageable.DeathEvent e)
@@ -261,7 +261,7 @@ public class Soldier : Unit
         }
     }
 
-     // Used by animator to play sound effects
+    // Used by animator to play sound effects
     // public void AnimatorPlayAudio(string clipName)
     // {
     //     AudioSource.PlayClipAtPoint(GameMaster.GetAudio(clipName).GetClip(), transform.position, 0.75f);

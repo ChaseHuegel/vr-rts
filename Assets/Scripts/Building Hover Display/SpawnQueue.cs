@@ -1,12 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using Swordfish;
 using Swordfish.Audio;
-using UnityEditor;
-using Valve.VR.InteractionSystem;
 using Swordfish.Navigation;
+using UnityEditor;
+using UnityEngine;
 using UnityEngine.UI;
+using Valve.VR.InteractionSystem;
 
 public class SpawnQueue : MonoBehaviour
 {
@@ -34,7 +34,7 @@ public class SpawnQueue : MonoBehaviour
     // Cached references
     private Structure structure;
     private Damageable damageable;
-    protected AudioSource audioSource;    
+    protected AudioSource audioSource;
     private PlayerManager playerManager;
 
     //=========================================================================
@@ -57,7 +57,7 @@ public class SpawnQueue : MonoBehaviour
                 Debug.Log("UnitSpawnPoint not set and no structure found.", this);
             }
         }
-        
+
         SetUnitRallyWaypoint(unitSpawnPoint.position);
 
         if (!(damageable = gameObject.GetComponentInParent<Damageable>()))
@@ -69,7 +69,7 @@ public class SpawnQueue : MonoBehaviour
         if (!(audioSource = gameObject.GetComponentInParent<AudioSource>()))
             Debug.Log("Missing audiosource component in parent.", this);
 
-        HookIntoEvents();        
+        HookIntoEvents();
 
         QueueUnitButton firstButton = GetComponentInChildren<QueueUnitButton>(true);
         if (firstButton)
@@ -81,7 +81,7 @@ public class SpawnQueue : MonoBehaviour
     public void OnButtonDown(Hand hand)
     {
         audioSource.PlayOneShot(onButtonDownAudio);
-        
+
         QueueUnitButton queueUnitButton = hand.hoveringInteractable.GetComponentInParent<QueueUnitButton>();
         if (queueUnitButton)
             QueueUnit(queueUnitButton.unitTypeToQueue);
@@ -173,10 +173,10 @@ public class SpawnQueue : MonoBehaviour
             GameObject unitGameObject = Instantiate(unitSpawnQueue.First.Value.prefab, unitSpawnPoint.transform.position, Quaternion.identity);
             Unit unit = unitGameObject.GetComponent<Unit>();
             unit.rtsUnitType = unitSpawnQueue.First.Value.unitType;
-            unit.factionId = structure.factionId;
+            unit.FactionID = structure.FactionID;
             unit.Initialize();
-            unit.SyncPosition();
-            
+            unit.SyncToTransform();
+
             unit.GotoRallyPoint(unitRallyPointCell);
 
             //unit.MoveToPosition(unitRallyWaypoint.position);

@@ -13,7 +13,7 @@ public class TargetNearestCargoResource : BehaviorNode<VillagerV2>
             if (resource.type != target.CargoType)
                 continue;
 
-            int distance = target.DistanceTo(resource);
+            int distance = target.GetDistanceTo(resource.GetPosition().x, resource.GetPosition().y);
             if (distance < shortestDistance)
             {
                 shortestDistance = distance;

@@ -1,13 +1,15 @@
 using Swordfish.Library.BehaviorTrees;
 using Swordfish.Navigation;
-using UnityEngine;
 
 public class VillagerV2 : ActorV2
 {
     //  ! This is a test class don't try to actually use it.
-    protected override BehaviorTree<ActorV2> BehaviorTree { get; set; }
+    public override BehaviorTree<ActorV2> BehaviorTree { get; protected set; }
 
     public bool IsCargoFull => Cargo >= 10;
+
+    public override float Speed { get; protected set; } = 0.3f;
+    public override int Reach { get; protected set; } = 1;
 
     public int Cargo = 0;
     public ResourceGatheringType CargoType = ResourceGatheringType.None;
@@ -70,6 +72,7 @@ public class VillagerV2 : ActorV2
                                     new IsCargoFull()
                                 ),
                                 new CanCollectTarget(),
+                                new SetCargoTypeFromTarget(),
                                 new SetStateToGathering(),
                                 new BehaviorDelay(1.5f,
                                     new CollectCargo()
@@ -138,6 +141,7 @@ public class VillagerV2 : ActorV2
                                         new IsCargoFull()
                                     ),
                                     new CanCollectTarget(),
+                                    new SetCargoTypeFromTarget(),
                                     new SetStateToGathering(),
                                     new BehaviorDelay(1.5f,
                                         new CollectCargo()

@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using Swordfish.Navigation;
+using UnityEngine;
 
 [RequireComponent(typeof(SphereCollider))]
 public class Tower : Structure
@@ -18,8 +18,8 @@ public class Tower : Structure
     public Transform projectileOrigin;
     protected Unit currentTarget;
     protected float attackTimer;
-    private SphereCollider attackRangeCollider;    
-    protected GameObject projectileTarget;    
+    private SphereCollider attackRangeCollider;
+    protected GameObject projectileTarget;
     private GameObject projectile;
     private Vector3 projectileTargetPos;
 
@@ -39,7 +39,7 @@ public class Tower : Structure
             LaunchProjectile();
 
         if (!currentTarget)// || targetCount <= 0)
-           return;
+            return;
 
         if (attackTimer >= attackSpeed)
         {
@@ -69,11 +69,11 @@ public class Tower : Structure
     void TryAcquireNewTarget()
     {
         Collider[] targets = Physics.OverlapSphere(transform.position, attackRangeCollider.radius);
-      
-        foreach(Collider collider in targets)
+
+        foreach (Collider collider in targets)
         {
             Unit unit = collider.GetComponentInParent<Unit>();
-            if (unit && !unit.IsSameFaction(factionId) && !unit.IsDead())
+            if (unit && !unit.IsSameFaction(FactionID) && !unit.IsDead())
             {
                 currentTarget = unit;
                 break;
@@ -90,7 +90,7 @@ public class Tower : Structure
         Unit unit = other.GetComponent<Unit>();
         if (unit)
         {
-            if (!unit.IsSameFaction(factionId))
+            if (!unit.IsSameFaction(FactionID))
             {
                 if (!currentTarget || currentTarget.IsDead())
                     currentTarget = unit;
@@ -103,10 +103,10 @@ public class Tower : Structure
         Unit unit = other.GetComponent<Unit>();
         if (unit)
         {
-            if (!unit.IsSameFaction(factionId))
+            if (!unit.IsSameFaction(FactionID))
             {
                 if (currentTarget == unit || currentTarget.IsDead())
-                    currentTarget = null;                    
+                    currentTarget = null;
 
                 if (currentTarget == null)
                     TryAcquireNewTarget();

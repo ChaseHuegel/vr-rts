@@ -65,9 +65,9 @@ public class Fauna : Actor
         Run = 2,
     }
 
-    public override void Tick()
+    public override void Tick(float deltaTime)
     {
-        base.Tick();
+        base.Tick(deltaTime);
 
         if (isDead || IsDead())
             return;

@@ -13,7 +13,7 @@ public class TargetNearestDropOff : BehaviorNode<VillagerV2>
             if (!structure.CanDropOff(target.CargoType))
                 continue;
 
-            int distance = target.DistanceTo(structure);
+            int distance = target.GetDistanceTo(structure.GetPosition().x, structure.GetPosition().y);
             if (distance < shortestDistance)
             {
                 shortestDistance = distance;

@@ -1,10 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using Swordfish.Navigation;
 using UnityEditor;
+using UnityEngine;
 
- [ExecuteInEditMode]
+[ExecuteInEditMode]
 public class MapTools : MonoBehaviour
 {
     public bool autosnapOn;
@@ -17,7 +17,7 @@ public class MapTools : MonoBehaviour
         foreach (GameObject go in Selection.gameObjects)
         {
             Body body = go.GetComponent<Body>();
-            if (body) body.UpdateTransform();
+            if (body) body.SyncToGrid();
         }
     }
 
@@ -28,7 +28,7 @@ public class MapTools : MonoBehaviour
             foreach (GameObject go in Selection.gameObjects)
             {
                 Body body = go.GetComponent<Body>();
-                if (body) body.UpdateTransform();
+                if (body) body.SyncToGrid();
             }
         }
     }

@@ -1,11 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using Swordfish;
 using Swordfish.Audio;
-using UnityEditor;
-using Valve.VR.InteractionSystem;
 using Swordfish.Navigation;
+using UnityEditor;
+using UnityEngine;
+using Valve.VR.InteractionSystem;
 
 public class BuildingSpawnQueue : MonoBehaviour
 {
@@ -15,7 +15,7 @@ public class BuildingSpawnQueue : MonoBehaviour
     public int numberOfQueueSlots = 12;
     public List<RTSUnitType> unitQueueButtons;
 
-    [Header( "Unit Stuff" )]
+    [Header("Unit Stuff")]
     public Transform unitSpawnPoint;
     public Transform unitRallyWaypoint;
 
@@ -26,9 +26,9 @@ public class BuildingSpawnQueue : MonoBehaviour
     protected LinkedList<UnitData> unitSpawnQueue = new LinkedList<UnitData>();
 
     public TMPro.TMP_Text queueProgressText;
-    public UnityEngine.UI.Image queueProgressImage;    
+    public UnityEngine.UI.Image queueProgressImage;
     public UnityEngine.UI.Image[] QueueSlotImage;
-    
+
     public GameObject resourceCostPrefab;
     private Structure structure;
     private Damageable damageable;
@@ -44,7 +44,7 @@ public class BuildingSpawnQueue : MonoBehaviour
     private PlayerManager playerManager;
 
     void Start()
-    {       
+    {
         playerManager = PlayerManager.instance;
 
         if (!unitSpawnPoint)
@@ -60,8 +60,8 @@ public class BuildingSpawnQueue : MonoBehaviour
             {
                 Debug.Log("UnitSpawnPoint not set and no structure found.", this);
             }
-            
-            
+
+
         }
 
         if (!(damageable = gameObject.GetComponentInParent<Damageable>()))
@@ -77,7 +77,7 @@ public class BuildingSpawnQueue : MonoBehaviour
         if (hoverButtons.Length <= 0)
             Debug.Log("No HoverButton components found in children.");
         else
-            foreach(HoverButton hButton in hoverButtons)
+            foreach (HoverButton hButton in hoverButtons)
             {
                 hButton.onButtonDown.AddListener(OnButtonDown);
                 hButton.onButtonUp.AddListener(OnButtonUp);
@@ -91,7 +91,7 @@ public class BuildingSpawnQueue : MonoBehaviour
 
         QueueUnitButton firstButton = GetComponentInChildren<QueueUnitButton>(true);
         if (firstButton)
-            lastUnitQueued = firstButton.unitTypeToQueue;        
+            lastUnitQueued = firstButton.unitTypeToQueue;
     }
 
     public void SetUnitRallyWaypoint(Vector3 position)
@@ -121,7 +121,7 @@ public class BuildingSpawnQueue : MonoBehaviour
         // TODO: Reenable this later
         // if (damageable.GetAttributePercent(Attributes.HEALTH) < 1.0f)
         //     return;
-        
+
         if (unitSpawnQueue.Count >= structure.buildingData.maxUnitQueueSize)
             return false;
 
@@ -132,9 +132,9 @@ public class BuildingSpawnQueue : MonoBehaviour
         UnitData unitData = GameMaster.GetUnit(unitTypeToQueue);
         playerManager.DeductUnitQueueCostFromStockpile(unitData);
         unitSpawnQueue.AddLast(unitData);
-        
+
         // Debug.Log("Queued " + unitData.unitType);
-        
+
         return true;
     }
 
@@ -198,18 +198,18 @@ public class BuildingSpawnQueue : MonoBehaviour
             GameObject unitGameObject = Instantiate(unitSpawnQueue.First.Value.prefab, unitSpawnPoint.transform.position, Quaternion.identity);
             Unit unit = unitGameObject.GetComponent<Unit>();
             unit.rtsUnitType = unitSpawnQueue.First.Value.unitType;
-            unit.factionId = structure.factionId;
-            
-            unit.SyncPosition();
+            unit.FactionID = structure.FactionID;
+
+            unit.SyncToTransform();
             unit.MoveToLocation(unitRallyWaypoint.position);
         }
         else
-            Debug.Log (string.Format("Spawn {0} failed. Missing prefabToSpawn.", unitSpawnQueue.First.Value.unitType));
+            Debug.Log(string.Format("Spawn {0} failed. Missing prefabToSpawn.", unitSpawnQueue.First.Value.unitType));
     }
 
     private void RefreshQueueImages()
     {
-        foreach(UnityEngine.UI.Image image in QueueSlotImage)
+        foreach (UnityEngine.UI.Image image in QueueSlotImage)
         {
             // Clearing override sprite reenables the original
             image.overrideSprite = null;
@@ -219,7 +219,7 @@ public class BuildingSpawnQueue : MonoBehaviour
         foreach (UnitData unitData in unitSpawnQueue)
         {
             // TODO: clamping is a bandaid fix
-            QueueSlotImage[Mathf.Clamp(i, 0, QueueSlotImage.Length-1)].overrideSprite = unitData.queueImage;
+            QueueSlotImage[Mathf.Clamp(i, 0, QueueSlotImage.Length - 1)].overrideSprite = unitData.queueImage;
             i++;
         }
     }
@@ -242,7 +242,7 @@ public class BuildingSpawnQueue : MonoBehaviour
     {
         // Orientation not used currently.
 
-        foreach(RTSUnitType unitType in unitQueueButtons)
+        foreach (RTSUnitType unitType in unitQueueButtons)
         {
             UnitData typeData = GameMaster.GetUnit(unitType);
 
@@ -250,7 +250,7 @@ public class BuildingSpawnQueue : MonoBehaviour
             GameObject buildingHoverButton = new GameObject("BuildingHoverButton", typeof(QueueUnitButton));
             buildingHoverButton.transform.parent = this.transform.GetChild(0).transform;
             buildingHoverButton.transform.localPosition = startPosition;
-            buildingHoverButton.name = string.Format("Queue_{0}_Button",unitType.ToString());
+            buildingHoverButton.name = string.Format("Queue_{0}_Button", unitType.ToString());
             buildingHoverButton.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
 
             QueueUnitButton queueUnitButton = buildingHoverButton.GetComponent<QueueUnitButton>();
@@ -261,7 +261,7 @@ public class BuildingSpawnQueue : MonoBehaviour
             GameObject buttonBase = GameObject.CreatePrimitive(PrimitiveType.Cube);
             buttonBase.name = "Base";
             buttonBase.transform.parent = buildingHoverButton.transform;
-            buttonBase.transform.localScale = new Vector3(0.309937507f,0.312250197f,0.0399999991f);
+            buttonBase.transform.localScale = new Vector3(0.309937507f, 0.312250197f, 0.0399999991f);
             buttonBase.transform.localPosition = new Vector3(0.0f, 0.0f, -0.016f);
             buttonBase.transform.GetComponent<MeshRenderer>().sharedMaterial = buttonBaseMaterial;
 
@@ -281,7 +281,7 @@ public class BuildingSpawnQueue : MonoBehaviour
             GameObject face = new GameObject("Face", typeof(Interactable), typeof(HoverButton), typeof(AudioSource));
             face.transform.parent = buildingHoverButton.transform;
             face.transform.localPosition = Vector3.zero;
-            face.transform.localScale = new Vector3(0.259453088f,0.259453088f,0.0487500019f);
+            face.transform.localScale = new Vector3(0.259453088f, 0.259453088f, 0.0487500019f);
             HoverButton hoverButton = face.GetComponent<HoverButton>();
             hoverButton.localMoveDistance = new Vector3(0, 0, -0.3f);
             face.GetComponent<Interactable>().highlightOnHover = false;

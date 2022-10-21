@@ -1,6 +1,6 @@
-using UnityEngine;
 using Swordfish;
 using Swordfish.Navigation;
+using UnityEngine;
 using Valve.VR.InteractionSystem;
 
 public enum UnitState
@@ -14,11 +14,11 @@ public enum UnitState
 }
 
 public class Unit : Actor, IFactioned
-{    
+{
     [SerializeField]
     protected Faction faction;
     public Faction GetFaction() { return faction; }
-    public void UpdateFaction() { faction = GameMaster.Factions?.Find(x => x.Id == factionId); }
+    public void UpdateFaction() { faction = GameMaster.Factions?.Find(x => x.Id == FactionID); }
 
     [Header("Unit")]
     public RTSUnitType rtsUnitType;
@@ -28,7 +28,7 @@ public class Unit : Actor, IFactioned
     public float projectileSpeed = 5.0f;
     private GameObject projectile;
     private Vector3 projectileTargetPos;
-    
+
     [Header("Skin Settings")]
     public MeshRenderer[] meshes;
     public SkinnedMeshRenderer[] skinnedMeshes;
@@ -43,15 +43,15 @@ public class Unit : Actor, IFactioned
 
     // Make this read only, we should only be able to change unit properties
     // through the database.
-    public UnitData rtsUnitTypeData 
-    { 
-        get 
-        { 
+    public UnitData rtsUnitTypeData
+    {
+        get
+        {
             if (!m_rtsUnitTypeData)
                 m_rtsUnitTypeData = GameMaster.GetUnit(rtsUnitType);
-                
-            return m_rtsUnitTypeData; 
-        } 
+
+            return m_rtsUnitTypeData;
+        }
     }
 
     protected UnitData m_rtsUnitTypeData;
@@ -105,17 +105,17 @@ public class Unit : Actor, IFactioned
         }
     }
 
-    public virtual void AssignUnitTaskAndLocation(RTSUnitType unitType, Cell taskLocation = null) {}
+    public virtual void AssignUnitTaskAndLocation(RTSUnitType unitType, Cell taskLocation = null) { }
 
-    public virtual void AssignUnitToStructureTask(Structure structure) {}
+    public virtual void AssignUnitToStructureTask(Structure structure) { }
 
-    public virtual void AssignUnitToConstructibleTask(Constructible constructible) {}
+    public virtual void AssignUnitToConstructibleTask(Constructible constructible) { }
 
-    public virtual void AssignUnitToFaunaTask(Fauna fauna) {}
+    public virtual void AssignUnitToFaunaTask(Fauna fauna) { }
 
-    public virtual void AssignUnitToUnitTask(Unit unit) {}
+    public virtual void AssignUnitToUnitTask(Unit unit) { }
 
-    public virtual void AssignUnitToResourceTask(Resource resource) {}
+    public virtual void AssignUnitToResourceTask(Resource resource) { }
 
     //=========================================================================
     /// <summary>
@@ -146,7 +146,7 @@ public class Unit : Actor, IFactioned
 
         animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.IDLE);
 
-        if(factionId == playerManager.factionId)
+        if (FactionID == playerManager.factionId)
             audioSource.PlayOneShot(GameMaster.GetAudio("unit_pickup_friendly").GetClip(), 0.5f);
         else
             audioSource.PlayOneShot(GameMaster.GetAudio("unit_pickup_enemy").GetClip(), 0.5f);
@@ -156,7 +156,7 @@ public class Unit : Actor, IFactioned
     public virtual void OnDetachedFromHand(Hand hand)
     {
         isHeld = false;
-        wasThrownOrDropped = true;        
+        wasThrownOrDropped = true;
         // Unfreeze();
         detachFromHandTime = Time.time;
     }
@@ -182,14 +182,14 @@ public class Unit : Actor, IFactioned
             if (collision.relativeVelocity.magnitude > 4.0f)
             {
                 ContactPoint contact = collision.contacts[0];
-                float damage = Vector3.Dot( contact.normal, collision.relativeVelocity) * damageMultiplier;
+                float damage = Vector3.Dot(contact.normal, collision.relativeVelocity) * damageMultiplier;
                 AttributeHandler.Damage(damage, AttributeChangeCause.NATURAL, null, DamageType.BLUDGEONING);
 
                 audioSource.PlayOneShot(GameMaster.GetAudio("unit_damaged").GetClip(), 0.25f);
                 transform.rotation = Quaternion.identity;
                 wasThrownOrDropped = false;
 
-                Unfreeze();                
+                Unfreeze();
                 // Debug.Log(string.Format("Magnitude: {0} Damage: {1} Health: {2}", collision.relativeVelocity.magnitude,
                 //             damage, AttributeHandler.GetAttributePercent(Attributes.HEALTH).ToString()));
             }
@@ -207,7 +207,7 @@ public class Unit : Actor, IFactioned
             GotoForced(cell.x, cell.y);
         else
         {
-            Coord2D nearbyPosition = cell.GetFirstOccupant().GetNearbyCoord();
+            Coord2D nearbyPosition = cell.GetFirstOccupant().GetRandomAdjacentPosition();
             GotoForced(nearbyPosition.x, nearbyPosition.y);
 
             // ! The below code could result in rally points set to empty cells
@@ -246,10 +246,10 @@ public class Unit : Actor, IFactioned
     /// <param name="position">Target position to go to in transform space.</param>
     /// <param name="deactivateGoals">Should all goals be deactivated? True / False</param>
     public virtual void MoveToLocation(Vector3 position, bool deactivateGoals = false)
-    {        
+    {
         currentGoal = goals.Push<GoalGotoLocation>();
         currentGoal.gridLocation = World.at(World.ToWorldCoord(position));
-        
+
         // if (deactivateGoals)
         //     DeactivateAllGoals();
 
@@ -275,7 +275,7 @@ public class Unit : Actor, IFactioned
 
     public void DeactivateAllGoals()
     {
-        foreach(PathfindingGoal goal in GetGoals())
+        foreach (PathfindingGoal goal in GetGoals())
         {
             goal.active = false;
         }
@@ -296,7 +296,7 @@ public class Unit : Actor, IFactioned
             projectile.transform.position += new Vector3(0, 0.09f, 0);
             projectileTargetPos = targetDamageable.transform.position;
             projectileTargetPos += new Vector3(0, 0.09f, 0);
-            
+
             if (clipName != "")
                 audioSource.PlayOneShot(GameMaster.GetAudio(clipName).GetClip());
 
@@ -319,7 +319,7 @@ public class Unit : Actor, IFactioned
         //Get the distance from the arrow to the target
         float dist = Vector3.Distance(projectile.transform.position, projectileTargetPos);
 
-        if(dist <= 0.1f)
+        if (dist <= 0.1f)
         {
             if (targetDamageable)
                 targetDamageable.Damage(rtsUnitTypeData.attackDamage, AttributeChangeCause.ATTACKED, AttributeHandler, DamageType.SLASHING);
