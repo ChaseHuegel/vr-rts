@@ -12,7 +12,7 @@ public class AttackTarget : BehaviorNode<ActorV2>
         if (victim.Attributes.ValueOf(AttributeConstants.HEALTH) == 0)
             return BehaviorState.SUCCESS;
 
-        victim.Damage(5, AttributeChangeCause.ATTACKED, target.AttributeHandler, DamageType.NONE);
+        victim.Damage(5, AttributeChangeCause.ATTACKED, target.Damageable, DamageType.NONE);
         return BehaviorState.RUNNING;
     }
 }

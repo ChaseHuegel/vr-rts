@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Swordfish.Library.BehaviorTrees;
+using Swordfish.Library.Collections;
 using Swordfish.Library.Types;
 using UnityEditor;
 using UnityEngine;
@@ -62,7 +63,8 @@ namespace Swordfish.Navigation
         public abstract int Reach { get; protected set; }
 
         public Animator Animator { get; private set; }
-        public Damageable AttributeHandler { get; private set; }
+        public Damageable Damageable { get; private set; }
+        public ValueFieldCollection Attributes => Damageable.Attributes;
 
         public bool StateChangedRecently { get; private set; }
         public bool DestinationChangedRecently { get; private set; }
@@ -89,7 +91,7 @@ namespace Swordfish.Navigation
             AllActors.Add(this);
 
             Animator = GetComponentInChildren<Animator>();
-            AttributeHandler = GetComponent<Damageable>();
+            Damageable = GetComponent<Damageable>();
 
             FrozenBinding.Changed += OnFrozenChanged;
             StateBinding.Changed += OnStateChanged;
