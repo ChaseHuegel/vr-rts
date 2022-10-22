@@ -1,10 +1,9 @@
-using System;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace Swordfish.Navigation
 {
-    public abstract class Body : MonoBehaviour, IBody
+    public abstract class Body : Damageable, IBody
     {
         public byte FactionID;
 
@@ -20,7 +19,7 @@ namespace Swordfish.Navigation
         public virtual void Initialize() { }
         public virtual void Tick(float deltaTime) { }
 
-        protected void Start()
+        protected override void Start()
         {
             SyncToTransform();
             Initialize();

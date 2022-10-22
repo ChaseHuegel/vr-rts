@@ -150,7 +150,7 @@ public class VillagerV2 : ActorV2
                                 //  Else try to attack the target
                                 new BehaviorSelector(
                                     new BehaviorSequence(
-                                        new SetUnitState(ActorAnimationState.HUNTING),
+                                        new SetActorState(ActorAnimationState.HUNTING),
                                         new BehaviorDelay(1.5f,
                                             new AttackTarget()
                                         ),
@@ -174,7 +174,7 @@ public class VillagerV2 : ActorV2
                         new BehaviorSequence(
                             new HasTarget(),
                             new GoToTarget(),
-                            new SetUnitState(ActorAnimationState.HUNTING),
+                            new SetActorState(ActorAnimationState.HUNTING),
                             new BehaviorDelay(1.5f,
                                 new AttackTarget()
                             ),
@@ -195,7 +195,7 @@ public class VillagerV2 : ActorV2
                         new BehaviorSequence(
                             new HasTarget(),
                             new GoToTarget(),
-                            new SetUnitState(ActorAnimationState.BUILDANDREPAIR),
+                            new SetActorState(ActorAnimationState.BUILDANDREPAIR),
                             new BehaviorDelay(1.5f,
                                 new HealTarget()
                             ),
@@ -226,7 +226,7 @@ public class VillagerV2 : ActorV2
                     )
                 ),
 
-                new SetUnitState(ActorAnimationState.IDLE)
+                new SetActorState(ActorAnimationState.IDLE)
             )
         );
     }

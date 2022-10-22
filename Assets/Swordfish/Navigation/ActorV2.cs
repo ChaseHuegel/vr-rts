@@ -9,7 +9,6 @@ using UnityEngine;
 
 namespace Swordfish.Navigation
 {
-    [RequireComponent(typeof(Damageable))]
     public abstract class ActorV2 : Body, IActor
     {
         private const float InterpolationStrength = 1f - (Constants.ACTOR_PATH_RATE / 60f);
@@ -62,10 +61,6 @@ namespace Swordfish.Navigation
         public abstract float Speed { get; protected set; }
         public abstract int Reach { get; protected set; }
 
-        public Animator Animator { get; private set; }
-        public Damageable Damageable { get; private set; }
-        public ValueFieldCollection Attributes => Damageable.Attributes;
-
         public bool StateChangedRecently { get; private set; }
         public bool DestinationChangedRecently { get; private set; }
         public bool TargetChangedRecently { get; private set; }
@@ -82,6 +77,8 @@ namespace Swordfish.Navigation
         public DataBinding<bool> IsMovingBinding { get; private set; } = new();
         public DataBinding<bool> FrozenBinding { get; set; } = new();
 
+        protected Animator Animator { get; private set; }
+
         private byte PathWaitAttempts = 0;
         private byte RepathAttempts = 0;
 
@@ -91,7 +88,6 @@ namespace Swordfish.Navigation
             AllActors.Add(this);
 
             Animator = GetComponentInChildren<Animator>();
-            Damageable = GetComponent<Damageable>();
 
             FrozenBinding.Changed += OnFrozenChanged;
             StateBinding.Changed += OnStateChanged;

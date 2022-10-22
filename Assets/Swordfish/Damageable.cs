@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using Swordfish.Library.Collections;
 using UnityEngine;
 
@@ -22,7 +20,7 @@ namespace Swordfish
         public class HealthRegainEvent : Event
         {
             public AttributeChangeCause cause;
-            public Damageable entity;
+            public Damageable target;
             public Damageable healer;
             public float amount;
             public float health;
@@ -31,7 +29,7 @@ namespace Swordfish
         public static event EventHandler<SpawnEvent> OnSpawnEvent;
         public class SpawnEvent : Event
         {
-            public Damageable entity;
+            public Damageable target;
         }
 
         public static event EventHandler<DeathEvent> OnDeathEvent;
@@ -56,16 +54,13 @@ namespace Swordfish
         [SerializeField]
         protected DamageType[] Immunities = new DamageType[0];
 
-        public virtual void Awake()
+        protected virtual void Start()
         {
             Attributes.GetOrAdd(AttributeConstants.HEALTH, 100f, 100f);
-        }
 
-        public virtual void Start()
-        {
             SpawnEvent e = new()
             {
-                entity = this
+                target = this
             };
             OnSpawnEvent?.Invoke(this, e);
 
@@ -75,7 +70,6 @@ namespace Swordfish
         }
 
         public bool IsAlive() => Attributes.ValueOf(AttributeConstants.HEALTH) > 0;
-
         public float GetHealth() => Attributes.ValueOf(AttributeConstants.HEALTH);
         public float GetMaxHealth() => Attributes.MaxValueOf(AttributeConstants.HEALTH);
         public float GetHealthPercent() => Attributes.CalculatePercentOf(AttributeConstants.HEALTH);
@@ -129,8 +123,10 @@ namespace Swordfish
                 }
             }
 
-            //  If the damage is enough to kill, invoke a death event
-            if (Attributes.Get(AttributeConstants.HEALTH).PeekRemove(e.damage) == 0)
+            Attributes.Get(AttributeConstants.HEALTH).Remove(e.damage);
+
+            //  If the damage was enough to kill, invoke a death event
+            if (Attributes.ValueOf(AttributeConstants.HEALTH) == 0)
             {
                 DeathEvent e2 = new()
                 {
@@ -143,9 +139,9 @@ namespace Swordfish
                 //  return if the event has been cancelled by any subscriber
                 if (e2.cancel)
                     return;
-            }
 
-            Attributes.Get(AttributeConstants.HEALTH).Remove(e.damage);
+                Destroy(gameObject);
+            }
         }
 
         public void Heal(float amount, AttributeChangeCause cause = AttributeChangeCause.FORCED, Damageable healer = null)
@@ -157,7 +153,7 @@ namespace Swordfish
             HealthRegainEvent e = new()
             {
                 cause = cause,
-                entity = this,
+                target = this,
                 healer = healer,
                 amount = amount,
                 health = Attributes.Get(AttributeConstants.HEALTH).PeekAdd(amount)
