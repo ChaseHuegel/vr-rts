@@ -9,7 +9,7 @@ public class AttackTarget : BehaviorNode<ActorV2>
         if (!target.Target.TryGetComponent(out Damageable victim))
             return BehaviorState.FAILED;
 
-        if (victim.GetAttributePercent(Attributes.HEALTH) == 0)
+        if (victim.Attributes.ValueOf(AttributeConstants.HEALTH) == 0)
             return BehaviorState.SUCCESS;
 
         victim.Damage(5, AttributeChangeCause.ATTACKED, target.AttributeHandler, DamageType.NONE);

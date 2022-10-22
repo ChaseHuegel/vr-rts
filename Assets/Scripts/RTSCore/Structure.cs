@@ -61,7 +61,7 @@ public class Structure : Obstacle, IFactioned
             Debug.Log("No damageable component on structure!");
 
         // Set max health based on building database hit point value.
-        damageable.GetAttribute(Attributes.HEALTH).SetMax(buildingData.hitPoints);
+        damageable.Attributes.Get(AttributeConstants.HEALTH).MaxValue = buildingData.hitPoints;
         damageable.OnDamageEvent += OnDamage;
 
         if (!GameMaster.Instance.buildingDamagedFX)
@@ -74,7 +74,7 @@ public class Structure : Obstacle, IFactioned
         // building damage FX particle systems on buildings that don't need them yet.
         // We can generate them at startup later on to gain real time performance
         // if needed.
-        if (damageable.GetAttributePercent(Attributes.HEALTH) < 1.0f)
+        if (!damageable.Attributes.Get(AttributeConstants.HEALTH).IsMax())
             RefreshVisuals();
     }
 
@@ -132,11 +132,11 @@ public class Structure : Obstacle, IFactioned
     {
         RefreshVisuals();
 
-        if (AttributeHandler.GetAttributePercent(Attributes.HEALTH) <= 0.0f)
+        if (AttributeHandler.Attributes.ValueOf(AttributeConstants.HEALTH) == 0f)
         {
             AudioSource.PlayClipAtPoint(GameMaster.GetAudio("building_collapsed").GetClip(), transform.position, 0.5f);
             UnbakeFromGrid();
-            Destroy(this.gameObject);
+            Destroy(gameObject);
         }
     }
 
@@ -151,7 +151,7 @@ public class Structure : Obstacle, IFactioned
         if (!buildingDamagedFX)
             CreateBuildingDamageFX();
 
-        float healthPercent = damageable.GetAttributePercent(Attributes.HEALTH);
+        float healthPercent = damageable.Attributes.CalculatePercentOf(AttributeConstants.HEALTH);
         if (healthPercent >= 1.0f)
         {
             if (buildingDamagedFX.activeSelf) buildingDamagedFX.SetActive(false);
@@ -169,7 +169,7 @@ public class Structure : Obstacle, IFactioned
         modifier = (1.0f - healthPercent) * 0.75f;
         psMain.startSize = new ParticleSystem.MinMaxCurve(0.0f + modifier, 0.5f + modifier);
 
-        if (damageable.GetAttributePercent(Attributes.HEALTH) <= 0.35f)
+        if (healthPercent <= 0.35f)
         {
             if (!audioSource.isPlaying)
             {
@@ -201,7 +201,8 @@ public class Structure : Obstacle, IFactioned
     {
         return buildingData.dropoffTypes.HasFlag(type);
     }
-    void OnValidate()
+
+    protected void OnValidate()
     {
         if (!GameMaster.Instance)
             return;
