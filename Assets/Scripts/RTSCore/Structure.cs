@@ -15,7 +15,6 @@ public class Structure : Obstacle, IFactioned
     public MeshRenderer[] meshes;
     public SkinnedMeshRenderer[] skinnedMeshes;
 
-
     private Damageable damageable;
     public Damageable AttributeHandler { get { return damageable; } }
     private AudioSource audioSource;
@@ -26,11 +25,11 @@ public class Structure : Obstacle, IFactioned
     private GameObject flamesParticleSystem;
     private GameObject sparksParticleSystem;
     private PlayerManager playerManager;
-    public Faction GetFaction() { return faction; }
+    public Faction GetFaction() => faction;
 
-    public void UpdateFaction() { faction = GameMaster.Factions?.Find(x => x.Id == FactionID); }
+    public void UpdateFaction() => faction = GameMaster.Factions?.Find(x => x.Id == FactionID);
 
-    public bool NeedsRepairs() { return damageable.GetHealthPercent() < 1f; }
+    public bool NeedsRepairs() => !damageable.Attributes.Get(AttributeConstants.HEALTH).IsMax();
 
     public void Awake()
     {
@@ -66,9 +65,6 @@ public class Structure : Obstacle, IFactioned
 
         if (!GameMaster.Instance.buildingDamagedFX)
             Debug.Log("buildingDamagedFX not set in GameMaster.", this);
-
-        // if (buildingData.populationSupported > 0)
-        //     playerManager.IncreasePopulationLimit(buildingData.populationSupported);        
 
         // Only refresh visuals if hit points are not full so we don't generate
         // building damage FX particle systems on buildings that don't need them yet.
@@ -152,9 +148,11 @@ public class Structure : Obstacle, IFactioned
             CreateBuildingDamageFX();
 
         float healthPercent = damageable.Attributes.CalculatePercentOf(AttributeConstants.HEALTH);
-        if (healthPercent >= 1.0f)
+        if (healthPercent == 1f)
         {
-            if (buildingDamagedFX.activeSelf) buildingDamagedFX.SetActive(false);
+            if (buildingDamagedFX.activeSelf)
+                buildingDamagedFX.SetActive(false);
+
             return;
         }
 

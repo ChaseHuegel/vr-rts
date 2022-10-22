@@ -9,7 +9,7 @@ public class HealTarget : BehaviorNode<ActorV2>
         if (!target.Target.TryGetComponent(out Damageable victim))
             return BehaviorState.FAILED;
 
-        if (victim.GetAttribute(Attributes.HEALTH).IsMax())
+        if (victim.Attributes.Get(AttributeConstants.HEALTH).IsMax())
             return BehaviorState.SUCCESS;
 
         victim.Heal(5, AttributeChangeCause.HEALED, target.AttributeHandler);

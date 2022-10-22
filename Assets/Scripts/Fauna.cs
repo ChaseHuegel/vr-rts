@@ -50,6 +50,8 @@ public class Fauna : Actor
         normalMovementSpeed = movementSpeed;
         animator = GetComponentInChildren<Animator>();
         resource = GetComponent<Resource>();
+
+        AttributeHandler.Attributes.Get(AttributeConstants.HEALTH).MaxValue = 25;
     }
 
     protected override void OnDestroy()
@@ -123,7 +125,7 @@ public class Fauna : Actor
     private bool isDead;
     public bool IsDead()
     {
-        if (AttributeHandler.GetAttributePercent(Swordfish.Attributes.HEALTH) <= 0.0f)
+        if (!AttributeHandler.IsAlive())
         {
             isDead = true;
             resource.enabled = true;

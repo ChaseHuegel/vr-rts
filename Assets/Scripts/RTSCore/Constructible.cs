@@ -32,7 +32,7 @@ public class Constructible : Obstacle, IFactioned
             Debug.Log("No damageable component on constructible!");
 
         // damageable.GetAttribute(Attributes.HEALTH).SetValue(0);
-        damageable.GetAttribute(Attributes.HEALTH).SetMax(buildingData.hitPoints);
+        damageable.Attributes.Get(AttributeConstants.HEALTH).MaxValue = buildingData.hitPoints;
         damageable.OnHealthRegainEvent += OnBuild;
 
         if (!(audioSource = GetComponent<AudioSource>()))
@@ -89,7 +89,7 @@ public class Constructible : Obstacle, IFactioned
 
     public bool IsBuilt()
     {
-        return AttributeHandler.GetAttributePercent(Attributes.HEALTH) >= 1.0f;
+        return AttributeHandler.Attributes.Get(AttributeConstants.HEALTH).IsMax();
     }
 
     private void ResetStages()
@@ -103,7 +103,7 @@ public class Constructible : Obstacle, IFactioned
 
     private void UpdateStage()
     {
-        float progress = AttributeHandler.GetAttributePercent(Attributes.HEALTH);
+        float progress = AttributeHandler.Attributes.ValueOf(AttributeConstants.HEALTH);
         int progressStage = 0;// = (int)(progress / (1f / ConstructionStages.Length));
 
         if (progress >= 0.45f)

@@ -617,7 +617,7 @@ public class InteractionPointer : MonoBehaviour
                     {
                         actor.Target = structure;
 
-                        if (structure.AttributeHandler.GetAttribute(Attributes.HEALTH).IsMax())
+                        if (structure.AttributeHandler.Attributes.Get(AttributeConstants.HEALTH).IsMax())
                             actor.Order = UnitOrder.DropOff;
                         else
                             actor.Order = UnitOrder.Repair;

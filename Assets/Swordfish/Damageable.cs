@@ -58,7 +58,7 @@ namespace Swordfish
 
         public virtual void Awake()
         {
-            Attributes.GetOrAdd(AttributeConstants.HEALTH, 0f, 100f);
+            Attributes.GetOrAdd(AttributeConstants.HEALTH, 100f, 100f);
         }
 
         public virtual void Start()

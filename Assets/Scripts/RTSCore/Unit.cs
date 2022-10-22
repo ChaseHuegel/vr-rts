@@ -83,7 +83,7 @@ public class Unit : Actor, IFactioned
             Debug.Log(string.Format("{0} data not found.", rtsUnitType));
 
         if (maxHitPointsOnStart)
-            AttributeHandler.GetAttribute(Attributes.HEALTH).SetValue(rtsUnitTypeData.maxHitPoints);
+            AttributeHandler.Attributes.Get(AttributeConstants.HEALTH).Value = rtsUnitTypeData.maxHitPoints;
 
         UpdateFaction();
         SetSkin();
@@ -128,14 +128,14 @@ public class Unit : Actor, IFactioned
         rtsUnitType = unitType;
         m_rtsUnitTypeData = GameMaster.GetUnit(rtsUnitType);
         maxGoalInteractRange = rtsUnitTypeData.attackRange;
-        AttributeHandler.GetAttribute(Attributes.HEALTH).SetMax(rtsUnitTypeData.maxHitPoints);
+        AttributeHandler.Attributes.Get(AttributeConstants.HEALTH).MaxValue = rtsUnitTypeData.maxHitPoints;
     }
 
     public virtual bool IsCivilian() { return true; }
 
     public bool IsDead()
     {
-        return AttributeHandler.GetAttributePercent(Attributes.HEALTH) <= 0.0f;
+        return AttributeHandler.Attributes.ValueOf(AttributeConstants.HEALTH) == 0f;
     }
 
     public virtual void OnAttachedToHand(Hand hand)
