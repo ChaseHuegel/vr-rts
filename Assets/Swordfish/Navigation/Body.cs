@@ -18,17 +18,23 @@ namespace Swordfish.Navigation
 
         public virtual void Initialize() { }
         public virtual void Tick(float deltaTime) { }
+        protected virtual void AttachListeners() { }
+        protected virtual void CleanupListeners() { }
 
         protected override void Start()
         {
             SyncToTransform();
             Initialize();
+            AttachListeners();
         }
 
         protected virtual void OnDestroy()
         {
             if (Application.isPlaying && gameObject.scene.isLoaded)
+            {
+                CleanupListeners();
                 RemoveFromGrid();
+            }
         }
 
         /// <summary>

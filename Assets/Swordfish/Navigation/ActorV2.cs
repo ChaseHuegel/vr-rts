@@ -9,6 +9,7 @@ using UnityEngine;
 
 namespace Swordfish.Navigation
 {
+    [RequireComponent(typeof(AudioSource))]
     public abstract class ActorV2 : Body, IActor
     {
         private const float InterpolationStrength = 1f - (Constants.ACTOR_PATH_RATE / 60f);
@@ -45,26 +46,28 @@ namespace Swordfish.Navigation
             set => TargetBinding.Set(value);
         }
 
-        public bool IsMoving
-        {
-            get => IsMovingBinding.Get();
-            set => IsMovingBinding.Set(value);
-        }
-
         public bool Frozen
         {
             get => FrozenBinding.Get();
             set => FrozenBinding.Set(value);
         }
 
+        public bool IsMoving
+        {
+            get => IsMovingBinding.Get();
+            private set => IsMovingBinding.Set(value);
+        }
+
         public abstract BehaviorTree<ActorV2> BehaviorTree { get; protected set; }
         public abstract float Speed { get; protected set; }
         public abstract int Reach { get; protected set; }
 
+        public bool OrderChangedRecently { get; private set; }
         public bool StateChangedRecently { get; private set; }
         public bool DestinationChangedRecently { get; private set; }
         public bool TargetChangedRecently { get; private set; }
 
+        public UnitOrder LastOrder { get; private set; }
         public ActorAnimationState LastState { get; private set; }
         public Cell LastDestination { get; private set; }
         public Body LastTarget { get; private set; }
@@ -77,33 +80,83 @@ namespace Swordfish.Navigation
         public DataBinding<bool> IsMovingBinding { get; private set; } = new();
         public DataBinding<bool> FrozenBinding { get; set; } = new();
 
-        protected Animator Animator { get; private set; }
+        protected AudioSource AudioSource { get; private set; }
 
-        private byte PathWaitAttempts = 0;
-        private byte RepathAttempts = 0;
+        [Header("Tool Objects")]
+        [SerializeField]
+        private Transform FarmingToolObject;
+
+        [SerializeField]
+        private Transform MiningToolObject;
+
+        [SerializeField]
+        private Transform LumberjackToolObject;
+
+        [SerializeField]
+        private Transform BuilderToolObject;
+
+        [SerializeField]
+        private Transform ForagingToolObject;
+
+        [SerializeField]
+        private Transform FishingToolObject;
+
+        [SerializeField]
+        private Transform HuntingToolObject;
+
+        [SerializeField]
+        private Transform AttackToolObject;
+
+        private Transform CurrentToolObject;
+        private Animator Animator;
+        private byte PathWaitAttempts;
+        private byte RepathAttempts;
 
         public override void Initialize()
         {
             base.Initialize();
             AllActors.Add(this);
 
+            AudioSource = GetComponent<AudioSource>();
             Animator = GetComponentInChildren<Animator>();
-
-            FrozenBinding.Changed += OnFrozenChanged;
-            StateBinding.Changed += OnStateChanged;
-            DestinationBinding.Changed += OnDestinationChanged;
-            TargetBinding.Changed += OnTargetChanged;
         }
 
         protected override void OnDestroy()
         {
             base.OnDestroy();
             AllActors.Remove(this);
+        }
 
+        protected override void InitializeAttributes()
+        {
+            base.InitializeAttributes();
+            Attributes.TryAdd(AttributeConstants.SPEED, 0.3f, 0.3f);
+            Attributes.TryAdd(AttributeConstants.REACH, 1f);
+        }
+
+        protected virtual void AnimatorPlayAudio(string clipName)
+        {
+            AudioSource.PlayClipAtPoint(GameMaster.GetAudio(clipName).GetClip(), transform.position);
+        }
+
+        protected override void AttachListeners()
+        {
+            base.AttachListeners();
+            FrozenBinding.Changed += OnFrozenChanged;
+            StateBinding.Changed += OnStateChanged;
+            DestinationBinding.Changed += OnDestinationChanged;
+            TargetBinding.Changed += OnTargetChanged;
+            OrderBinding.Changed += OnOrderChanged;
+        }
+
+        protected override void CleanupListeners()
+        {
+            base.CleanupListeners();
             FrozenBinding.Changed -= OnFrozenChanged;
             StateBinding.Changed -= OnStateChanged;
             DestinationBinding.Changed -= OnDestinationChanged;
             TargetBinding.Changed -= OnTargetChanged;
+            OrderBinding.Changed -= OnOrderChanged;
         }
 
         protected virtual void Update()
@@ -115,11 +168,15 @@ namespace Swordfish.Navigation
         public override void Tick(float deltaTime)
         {
             if (StateChangedRecently)
-                Animator.SetInteger("ActorAnimationState", (int)State);
+            {
+                Animator?.SetInteger("ActorAnimationState", (int)State);
+                UpdateCurrentToolObject();
+            }
 
             StateChangedRecently = false;
             DestinationChangedRecently = false;
             TargetChangedRecently = false;
+            OrderChangedRecently = false;
         }
 
         public override void SyncToTransform()
@@ -151,7 +208,7 @@ namespace Swordfish.Navigation
             transform.rotation = rotation;
         }
 
-        private void OnFrozenChanged(object sender, DataChangedEventArgs<bool> e)
+        protected virtual void OnFrozenChanged(object sender, DataChangedEventArgs<bool> e)
         {
             if (e.NewValue == true)
                 RemoveFromGrid();
@@ -159,22 +216,66 @@ namespace Swordfish.Navigation
                 SyncToTransform();
         }
 
-        private void OnStateChanged(object sender, DataChangedEventArgs<ActorAnimationState> e)
+        protected virtual void OnStateChanged(object sender, DataChangedEventArgs<ActorAnimationState> e)
         {
             StateChangedRecently = true;
             LastState = e.OldValue;
         }
 
-        private void OnDestinationChanged(object sender, DataChangedEventArgs<Cell> e)
+        protected virtual void OnDestinationChanged(object sender, DataChangedEventArgs<Cell> e)
         {
             DestinationChangedRecently = true;
             LastDestination = e.OldValue;
         }
 
-        private void OnTargetChanged(object sender, DataChangedEventArgs<Body> e)
+        protected virtual void OnTargetChanged(object sender, DataChangedEventArgs<Body> e)
         {
             TargetChangedRecently = true;
             LastTarget = e.OldValue;
+        }
+
+        protected virtual void OnOrderChanged(object sender, DataChangedEventArgs<UnitOrder> e)
+        {
+            OrderChangedRecently = true;
+            LastOrder = e.OldValue;
+        }
+
+        private void UpdateCurrentToolObject()
+        {
+            CurrentToolObject?.gameObject.SetActive(false);
+            switch (State)
+            {
+                case ActorAnimationState.FARMING:
+                    CurrentToolObject = FarmingToolObject;
+                    break;
+                case ActorAnimationState.MINING:
+                    CurrentToolObject = MiningToolObject;
+                    break;
+                case ActorAnimationState.LUMBERJACKING:
+                    CurrentToolObject = LumberjackToolObject;
+                    break;
+                case ActorAnimationState.BUILDANDREPAIR:
+                    CurrentToolObject = BuilderToolObject;
+                    break;
+                case ActorAnimationState.FORAGING:
+                    CurrentToolObject = ForagingToolObject;
+                    break;
+                case ActorAnimationState.FISHING:
+                    CurrentToolObject = FishingToolObject;
+                    break;
+                case ActorAnimationState.HUNTING:
+                    CurrentToolObject = HuntingToolObject;
+                    break;
+                case ActorAnimationState.ATTACKING:
+                case ActorAnimationState.ATTACKING2:
+                    CurrentToolObject = AttackToolObject;
+                    break;
+
+                default:
+                    CurrentToolObject = null;
+                    return;
+            }
+            CurrentToolObject?.gameObject.SetActive(true);
         }
 
         private bool CanPathAhead()

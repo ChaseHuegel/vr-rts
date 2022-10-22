@@ -247,8 +247,8 @@ public class Unit : Actor, IFactioned
     /// <param name="deactivateGoals">Should all goals be deactivated? True / False</param>
     public virtual void MoveToLocation(Vector3 position, bool deactivateGoals = false)
     {
-        currentGoal = goals.Push<GoalGotoLocation>();
-        currentGoal.gridLocation = World.at(World.ToWorldCoord(position));
+        // currentGoal = goals.Push<GoalGotoLocation>();
+        // currentGoal.gridLocation = World.at(World.ToWorldCoord(position));
 
         // if (deactivateGoals)
         //     DeactivateAllGoals();

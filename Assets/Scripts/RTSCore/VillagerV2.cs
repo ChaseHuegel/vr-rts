@@ -1,18 +1,40 @@
 using Swordfish.Library.BehaviorTrees;
+using Swordfish.Library.Types;
 using Swordfish.Navigation;
+using UnityEngine;
 
 public class VillagerV2 : ActorV2
 {
     //  ! This is a test class don't try to actually use it.
     public override BehaviorTree<ActorV2> BehaviorTree { get; protected set; }
 
-    public bool IsCargoFull => Cargo >= 10;
+    public bool IsCargoFull => Attributes.Get(AttributeConstants.CARGO).IsMax();
 
     public override float Speed { get; protected set; } = 0.3f;
     public override int Reach { get; protected set; } = 1;
 
-    public int Cargo = 0;
-    public ResourceGatheringType CargoType = ResourceGatheringType.None;
+    public ResourceGatheringType CargoType
+    {
+        get => CargoTypeBinding.Get();
+        set => CargoTypeBinding.Set(value);
+    }
+
+    public DataBinding<ResourceGatheringType> CargoTypeBinding { get; private set; } = new();
+
+    [Header("Cargo Objects")]
+    [SerializeField]
+    private Transform FoodCargoObject;
+
+    [SerializeField]
+    private Transform WoodCargoObject;
+
+    [SerializeField]
+    private Transform StoneCargoObject;
+
+    [SerializeField]
+    private Transform GoldCargoObject;
+
+    private Transform CurrentCargoObject;
 
     public override void Initialize()
     {
@@ -229,5 +251,80 @@ public class VillagerV2 : ActorV2
                 new SetActorState(ActorAnimationState.IDLE)
             )
         );
+    }
+
+    protected override void InitializeAttributes()
+    {
+        base.InitializeAttributes();
+        Attributes.TryAdd(AttributeConstants.CARGO, 0f, 10f);
+    }
+
+    protected override void AttachListeners()
+    {
+        base.AttachListeners();
+        Attributes.Get(AttributeConstants.CARGO).ValueBinding.Changed += OnCargoChanged;
+    }
+
+    protected override void CleanupListeners()
+    {
+        base.CleanupListeners();
+        Attributes.Get(AttributeConstants.CARGO).ValueBinding.Changed -= OnCargoChanged;
+    }
+
+    protected override void OnOrderChanged(object target, DataChangedEventArgs<UnitOrder> e)
+    {
+        base.OnOrderChanged(target, e);
+        AudioSource.PlayOneShot(GameMaster.GetAudio("unit_command_response").GetClip());
+    }
+
+    protected override void OnDeath(DeathEvent e)
+    {
+        base.OnDeath(e);
+
+        Frozen = true;
+        CurrentPath = null;
+        Order = UnitOrder.None;
+        Destination = null;
+        Target = null;
+
+        State = Random.Range(1, 100) < 50 ? ActorAnimationState.DYING : ActorAnimationState.DYING2;
+        AudioSource.PlayOneShot(GameMaster.GetAudio("unit_death").GetClip());
+        Destroy(gameObject, GameMaster.Instance.unitCorpseDecayTime);
+    }
+
+    protected virtual void OnCargoChanged(object sender, DataChangedEventArgs<float> e)
+    {
+        bool isCargoFull = e.NewValue == Attributes.MaxValueOf(AttributeConstants.CARGO);
+
+        if (isCargoFull || e.NewValue == 0f)
+            UpdateCurrentCargoObject(isCargoFull);
+    }
+
+    private void UpdateCurrentCargoObject(bool visible)
+    {
+        CurrentCargoObject?.gameObject.SetActive(false);
+        switch (CargoType)
+        {
+            case ResourceGatheringType.Grain:
+            case ResourceGatheringType.Berries:
+            case ResourceGatheringType.Fish:
+            case ResourceGatheringType.Meat:
+                CurrentCargoObject = FoodCargoObject;
+                break;
+            case ResourceGatheringType.Wood:
+                CurrentCargoObject = WoodCargoObject;
+                break;
+            case ResourceGatheringType.Stone:
+                CurrentCargoObject = StoneCargoObject;
+                break;
+            case ResourceGatheringType.Gold:
+                CurrentCargoObject = GoldCargoObject;
+                break;
+
+            default:
+                CurrentCargoObject = null;
+                return;
+        }
+        CurrentCargoObject?.gameObject.SetActive(visible);
     }
 }

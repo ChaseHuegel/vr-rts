@@ -5,9 +5,11 @@ public class DropOffCargo : BehaviorAction<VillagerV2>
 {
     public override void Run(VillagerV2 villager, float delta)
     {
-        GameMaster.SendFloatingIndicator(villager.Target.transform.position, $"+{villager.Cargo} {villager.CargoType}", Color.green);
+        var cargo = villager.Attributes.Get(AttributeConstants.CARGO);
 
-        PlayerManager.instance.AddResourceToStockpile(villager.CargoType, villager.Cargo);
-        villager.Cargo = 0;
+        GameMaster.SendFloatingIndicator(villager.Target.transform.position, $"+{(int)cargo.Value} {villager.CargoType}", Color.green);
+
+        PlayerManager.instance.AddResourceToStockpile(villager.CargoType, (int)cargo.Value);
+        cargo.Value = 0;
     }
 }

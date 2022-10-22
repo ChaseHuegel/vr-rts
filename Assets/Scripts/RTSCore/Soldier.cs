@@ -285,8 +285,8 @@ public class Soldier : Unit
 
         targetDamageable = null;
 
-        if (previousGoal is GoalHuntUnits || previousGoal is GoalHuntMilitary || previousGoal is GoalHuntVillagers)
-            animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.IDLE);
+        // if (previousGoal is GoalHuntUnits || previousGoal is GoalHuntMilitary || previousGoal is GoalHuntVillagers)
+        //     animator.SetInteger("ActorAnimationState", (int)ActorAnimationState.IDLE);
     }
 
     public override void Strike(string audioClipName = "")
@@ -304,13 +304,13 @@ public class Soldier : Unit
 
         //targetDamageable = null;
 
-        if (e.goal is GoalGotoLocation)
-        {
-            ActivateAllGoals();
-            e.goal.active = false;
-            targetDamageable = null;
-            return;
-        }
+        // if (e.goal is GoalGotoLocation)
+        // {
+        //     ActivateAllGoals();
+        //     e.goal.active = false;
+        //     targetDamageable = null;
+        //     return;
+        // }
 
         Unit unit = e.cell.GetFirstOccupant<Unit>();
         if (unit)

@@ -54,10 +54,12 @@ namespace Swordfish
         [SerializeField]
         protected DamageType[] Immunities = new DamageType[0];
 
+        protected virtual void OnDamaged(DamageEvent e) { }
+        protected virtual void OnHealthRegain(HealthRegainEvent e) { }
+        protected virtual void OnDeath(DeathEvent e) { }
+
         protected virtual void Start()
         {
-            Attributes.GetOrAdd(AttributeConstants.HEALTH, 100f, 100f);
-
             SpawnEvent e = new()
             {
                 target = this
@@ -67,6 +69,13 @@ namespace Swordfish
             //  destroy this object if the event has been cancelled
             if (e.cancel)
                 Destroy(gameObject);
+
+            InitializeAttributes();
+        }
+
+        protected virtual void InitializeAttributes()
+        {
+            Attributes.TryAdd(AttributeConstants.HEALTH, 100f, 100f);
         }
 
         public bool IsAlive() => Attributes.ValueOf(AttributeConstants.HEALTH) > 0;
@@ -123,6 +132,7 @@ namespace Swordfish
                 }
             }
 
+            OnDamaged(e);
             Attributes.Get(AttributeConstants.HEALTH).Remove(e.damage);
 
             //  If the damage was enough to kill, invoke a death event
@@ -140,7 +150,7 @@ namespace Swordfish
                 if (e2.cancel)
                     return;
 
-                Destroy(gameObject);
+                OnDeath(e2);
             }
         }
 
@@ -164,6 +174,7 @@ namespace Swordfish
             if (e.cancel)
                 return;
 
+            OnHealthRegain(e);
             Attributes.Get(AttributeConstants.HEALTH).Add(e.amount);
         }
     }

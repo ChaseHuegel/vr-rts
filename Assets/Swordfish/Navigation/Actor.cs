@@ -259,12 +259,12 @@ namespace Swordfish.Navigation
             if (goals.Count() <= 0)
                 return false;
 
-            if (currentGoal is GoalGotoLocation)
-            {
-                //Debug.LogFormat("GotoNearestGoal: GoalGotoLocation: {0} {1} - {2}", currentGoalCell.x, currentGoalCell.y, goals.entries.Length);
-                GotoForced(currentGoal.gridLocation.x, currentGoal.gridLocation.y);
-                return true;
-            }
+            // if (currentGoal is GoalGotoLocation)
+            // {
+            //     //Debug.LogFormat("GotoNearestGoal: GoalGotoLocation: {0} {1} - {2}", currentGoalCell.x, currentGoalCell.y, goals.entries.Length);
+            //     GotoForced(currentGoal.gridLocation.x, currentGoal.gridLocation.y);
+            //     return true;
+            // }
 
             if (isPathLocked) return false;
 

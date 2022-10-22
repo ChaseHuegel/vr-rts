@@ -142,21 +142,6 @@ public class PlayerManager : MonoBehaviour
         actor.BehaviorTree?.Tick(actor, Constants.TICK_RATE_DELTA);
     }
 
-    public void OnVillagerDropoff(object sender, Villager.DropoffEvent e)
-    {
-        if (e.villager.FactionID == factionId)
-            AddResourceToStockpile(e.resourceType, (int)e.amount);
-    }
-
-    public void OnVillagerRepair(object sender, Villager.RepairEvent e)
-    {
-        // ? Is this needed?
-        if (e.villager.FactionID == factionId)
-        {
-            DeductResourcesFromStockpile(0, 0, 1, 0);
-        }
-    }
-
     public void HookIntoEvents()
     {
         Damageable.OnDeathEvent += OnDeathEvent;
