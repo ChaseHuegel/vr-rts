@@ -159,51 +159,48 @@ public class PlayerManager : MonoBehaviour
 
     public void HookIntoEvents()
     {
-        Villager.OnDropoffEvent += OnVillagerDropoff;
-        Villager.OnRepairEvent += OnVillagerRepair;
         Damageable.OnDeathEvent += OnDeathEvent;
         Damageable.OnSpawnEvent += OnSpawnEvent;
     }
 
     public void CleanupEvents()
     {
-        Villager.OnDropoffEvent -= OnVillagerDropoff;
-        Villager.OnRepairEvent -= OnVillagerRepair;
         Damageable.OnDeathEvent -= OnDeathEvent;
         Damageable.OnSpawnEvent -= OnSpawnEvent;
     }
 
-    public bool IsSameFaction(Body body)
-    {
-        return this.factionId == body.FactionID;
-    }
-
     public void OnSpawnEvent(object sender, Damageable.SpawnEvent e)
     {
-        Unit unit = e.entity.GetComponentInChildren<Unit>();
-        if (unit && IsSameFaction(unit))
+        Body body = e.entity.GetComponentInChildren<Body>();
+        if (body?.FactionID == factionId)
         {
-            AddToPopulation(unit);
-            return;
+            switch (body)
+            {
+                case Structure structure:
+                    IncreasePopulationLimit(structure.buildingData.populationSupported);
+                    break;
+                case Unit unit:
+                    AddToPopulation(unit);
+                    break;
+            }
         }
-
-        Structure structure = e.entity.GetComponentInChildren<Structure>();
-        if (structure && IsSameFaction(structure))
-            IncreasePopulationLimit(structure.buildingData.populationSupported);
     }
 
     public void OnDeathEvent(object sender, Damageable.DeathEvent e)
     {
-        Unit unit = e.victim.GetComponentInChildren<Unit>();
-        if (unit && IsSameFaction(unit))
+        Body body = e.victim.GetComponentInChildren<Body>();
+        if (body?.FactionID == factionId)
         {
-            RemoveFromPopulation(unit);
-            return;
+            switch (body)
+            {
+                case Structure structure:
+                    DecreasePopulationLimit(structure.buildingData.populationSupported);
+                    break;
+                case Unit unit:
+                    RemoveFromPopulation(unit);
+                    break;
+            }
         }
-
-        Structure structure = e.victim.GetComponentInChildren<Structure>();
-        if (structure && IsSameFaction(structure))
-            DecreasePopulationLimit(structure.buildingData.populationSupported);
     }
 
     protected bool IsClipboardPalmMenuVisible;

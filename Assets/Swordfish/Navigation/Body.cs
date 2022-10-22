@@ -6,8 +6,6 @@ namespace Swordfish.Navigation
 {
     public abstract class Body : MonoBehaviour, IBody
     {
-        [Header("Body")]
-
         public byte FactionID;
 
         [SerializeField]

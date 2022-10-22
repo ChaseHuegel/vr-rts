@@ -179,6 +179,16 @@ namespace Swordfish.Navigation
             LastTarget = e.OldValue;
         }
 
+        private bool CanPathAhead()
+        {
+            if (!HasValidPath())
+                return false;
+
+            //  We can pass thru actors if the path ahead is clear and we are going beyond the next position.
+            bool canPassThruActors = CurrentPath.Count > 2 && !World.at(CurrentPath[1].x, CurrentPath[1].y).IsBlocked();
+            return CanSetPosition(CurrentPath[0].x, CurrentPath[0].y, canPassThruActors);
+        }
+
         private void ProcessMovement(float deltaTime)
         {
             Vector3 gridToWorldSpace = World.ToTransformSpace(GridPosition.x, transform.position.y, GridPosition.y);
@@ -202,16 +212,6 @@ namespace Swordfish.Navigation
 
                 ProcessPathing();
             }
-        }
-
-        private bool CanPathAhead()
-        {
-            if (!HasValidPath())
-                return false;
-
-            //  We can pass thru actors if the path ahead is clear and we are going beyond the next position.
-            bool canPassThruActors = CurrentPath.Count > 2 && !World.at(CurrentPath[1].x, CurrentPath[1].y).IsBlocked();
-            return CanSetPosition(CurrentPath[0].x, CurrentPath[0].y, canPassThruActors);
         }
 
         private void ProcessPathing()
