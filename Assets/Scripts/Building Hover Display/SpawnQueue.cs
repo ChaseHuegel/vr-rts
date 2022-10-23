@@ -103,7 +103,7 @@ public class SpawnQueue : MonoBehaviour
         if (unitSpawnQueue.Count >= structure.buildingData.maxUnitQueueSize)
             return false;
 
-        if (structure.Faction.IsSameFaction(playerManager.faction) &&
+        if (structure.Faction?.IsSameFaction(playerManager.faction) ?? false &&
             !playerManager.CanQueueUnit(unitTypeToQueue))
             return false;
 

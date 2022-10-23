@@ -18,46 +18,46 @@ public class VillagerV2 : UnitV2
 
     [Header("Tool Objects")]
     [SerializeField]
-    private Transform FarmingToolObject;
+    private Transform FarmingToolObject = null;
 
     [SerializeField]
-    private Transform MiningToolObject;
+    private Transform MiningToolObject = null;
 
     [SerializeField]
-    private Transform LumberjackToolObject;
+    private Transform LumberjackToolObject = null;
 
     [SerializeField]
-    private Transform BuilderToolObject;
+    private Transform BuilderToolObject = null;
 
     [SerializeField]
-    private Transform ForagingToolObject;
+    private Transform ForagingToolObject = null;
 
     [SerializeField]
-    private Transform FishingToolObject;
+    private Transform FishingToolObject = null;
 
     [SerializeField]
-    private Transform HuntingToolObject;
+    private Transform HuntingToolObject = null;
 
     [SerializeField]
-    private Transform AttackToolObject;
+    private Transform AttackToolObject = null;
 
-    private Transform CurrentToolObject;
+    private Transform CurrentToolObject = null;
 
 
     [Header("Cargo Objects")]
     [SerializeField]
-    private Transform FoodCargoObject;
+    private Transform FoodCargoObject = null;
 
     [SerializeField]
-    private Transform WoodCargoObject;
+    private Transform WoodCargoObject = null;
 
     [SerializeField]
-    private Transform StoneCargoObject;
+    private Transform StoneCargoObject = null;
 
     [SerializeField]
-    private Transform GoldCargoObject;
+    private Transform GoldCargoObject = null;
 
-    private Transform CurrentCargoObject;
+    private Transform CurrentCargoObject = null;
 
     public bool IsCargoFull() => Attributes.Get(AttributeConstants.CARGO).IsMax();
 

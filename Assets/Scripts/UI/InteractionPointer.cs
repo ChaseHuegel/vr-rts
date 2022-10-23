@@ -1,5 +1,6 @@
 ﻿
 using System.Collections.Generic;
+using System.Linq;
 using Swordfish;
 using Swordfish.Audio;
 using Swordfish.Navigation;
@@ -190,7 +191,7 @@ public class InteractionPointer : MonoBehaviour
         // Cache some values, going to need them a lot and don't need to keep
         // bothering the GameMaster/PlayerManager for them.
         maxUnitSelectionCount = GameMaster.Instance.maximumUnitSelectionCount;
-        factionId = playerManager.factionId;
+        faction = playerManager.faction;
 
         // Setup LineRenderers for unit selection
         unitSelectionLineRenderers = new LineRenderer[maxUnitSelectionCount];
@@ -391,7 +392,7 @@ public class InteractionPointer : MonoBehaviour
 
             ActorV2 hoveredActor = pointedAtPointerInteractable.GetComponent<ActorV2>();
             if (hoveredActor && !isInUnitSelectionMode &&
-                hoveredActor.Faction.IsSameFaction(faction))
+                (hoveredActor.Faction?.IsSameFaction(faction) ?? false))
             {
                 selectedActors.Add(hoveredActor);
                 isInUnitSelectionMode = true;
@@ -538,7 +539,8 @@ public class InteractionPointer : MonoBehaviour
         {
             foreach (ActorV2 actor in selectedActors)
             {
-                if (pointedAtPointerInteractable && pointedAtPointerInteractable.TryGetComponent(out Body body) && body.enabled)
+                Body body = pointedAtPointerInteractable.GetComponents<Body>().FirstOrDefault(x => x.enabled);
+                if (pointedAtPointerInteractable && body)
                 {
                     actor.OrderToTarget(body);
                 }
@@ -1018,7 +1020,7 @@ public class InteractionPointer : MonoBehaviour
         {
             ActorV2 hoveredActor = pointedAtPointerInteractable.GetComponent<ActorV2>();
             if (hoveredActor && !selectedActors.Contains(hoveredActor) &&
-                hoveredActor.Faction.IsSameFaction(faction))
+                (hoveredActor.Faction?.IsSameFaction(faction) ?? false))
             {
                 selectedActors.Add(hoveredActor);
             }

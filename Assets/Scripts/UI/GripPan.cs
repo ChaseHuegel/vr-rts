@@ -53,7 +53,7 @@ public class GripPan : MonoBehaviour
     private Player player = null;
     private bool isRightGripPressed;
     private bool isLeftGripPressed;
-    
+
     private float startScale = 1.0f;
     private float initialHandDistance;
 
@@ -69,7 +69,7 @@ public class GripPan : MonoBehaviour
         }
 
         isPanEnabled = true;
-        
+
         GripOnOff.AddOnStateDownListener(OnRightGripPressed, SteamVR_Input_Sources.RightHand);
         GripOnOff.AddOnStateUpListener(OnRightGripReleased, SteamVR_Input_Sources.RightHand);
         GripOnOff.AddOnStateDownListener(OnLeftGripPressed, SteamVR_Input_Sources.LeftHand);
@@ -83,7 +83,7 @@ public class GripPan : MonoBehaviour
             isRightHandPanEnabled = false;
         else
             isLeftHandPanEnabled = false;
-        
+
         // isRightHandPanEnabled = hand == RightHand;
         // isLeftHandPanEnabled = hand == LeftHand;
     }
@@ -97,7 +97,7 @@ public class GripPan : MonoBehaviour
 
         // isRightHandPanEnabled = hand != RightHand;
         // isLeftHandPanEnabled = hand != LeftHand;
-    }  
+    }
 
     // Update is called once per frame
     void Update()
@@ -126,8 +126,8 @@ public class GripPan : MonoBehaviour
 
             float currentHandDistance = Vector3.Distance(player.leftHand.transform.localPosition, player.rightHand.transform.localPosition);
             float distanceDelta = (currentHandDistance - initialHandDistance);
-            distanceDelta *= -scalingSensitivity; 
-            float newScale = startScale + (distanceDelta);            
+            distanceDelta *= -scalingSensitivity;
+            float newScale = startScale + (distanceDelta);
             float clampedNewScale = Mathf.Clamp(newScale, minScale, maxScale);
             targetTransform.localScale = new Vector3(clampedNewScale, clampedNewScale, clampedNewScale);
 
@@ -157,7 +157,7 @@ public class GripPan : MonoBehaviour
 
 
     public void OnRightGripReleased(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
-    {    
+    {
         isRightGripPressed = false;
         if (isScaling) return;
 
@@ -193,7 +193,7 @@ public class GripPan : MonoBehaviour
             isGliding = false;
             grabPosition = panHandTransform.position;
             glideTimePassed = 0.0f;
-        } 
+        }
     }
 
     public void OnLeftGripReleased(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
@@ -238,16 +238,16 @@ public class GripPan : MonoBehaviour
     }
 }
 
-    // if (RightHand.hoveringInteractable == null && LeftHand.hoveringInteractable == null)
-    // {
-    //     if (fromSource == SteamVR_Input_Sources.RightHand)
-    //         panHand = RightHand.transform;
-    //     else if (fromSource == SteamVR_Input_Sources.LeftHand)
-    //         panHand = LeftHand.transform;
+// if (RightHand.hoveringInteractable == null && LeftHand.hoveringInteractable == null)
+// {
+//     if (fromSource == SteamVR_Input_Sources.RightHand)
+//         panHand = RightHand.transform;
+//     else if (fromSource == SteamVR_Input_Sources.LeftHand)
+//         panHand = LeftHand.transform;
 
-    //     panStart = panHand.transform.position;
-    //     isPanning = true;
+//     panStart = panHand.transform.position;
+//     isPanning = true;
 
-    //     if (fromSource != currentHand)
-    //         currentHand = fromSource;
-    // }
+//     if (fromSource != currentHand)
+//         currentHand = fromSource;
+// }

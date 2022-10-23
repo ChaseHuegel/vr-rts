@@ -9,7 +9,7 @@ public class CollectCargo : BehaviorNode<VillagerV2>
 
         if (villager.Target is Resource resource)
         {
-            villager.Attributes.Get(AttributeConstants.CARGO).Add(resource.TryRemove(1));
+            villager.Attributes.Get(AttributeConstants.CARGO).Value += resource.TryRemove(1);
             return BehaviorState.RUNNING;
         }
 
