@@ -5,11 +5,11 @@ using UnityEngine;
 public class AnimatorEventForwarder : MonoBehaviour
 {
     private AudioSource audioSource;
-    private Unit unit;
+    private UnitV2 unit;
 
     void Start()
     {
-        unit = GetComponentInParent<Unit>();
+        unit = GetComponentInParent<UnitV2>();
 
         if (!(audioSource = GetComponentInParent<AudioSource>()))
         {
