@@ -21,43 +21,40 @@ public class VillagerV2 : UnitV2
     private Transform FarmingToolObject = null;
 
     [SerializeField]
-    private Transform MiningToolObject = null;
+    private Transform MiningToolObject;
 
     [SerializeField]
-    private Transform LumberjackToolObject = null;
+    private Transform LumberjackToolObject;
 
     [SerializeField]
-    private Transform BuilderToolObject = null;
+    private Transform BuilderToolObject;
 
     [SerializeField]
-    private Transform ForagingToolObject = null;
+    private Transform FishingToolObject;
 
     [SerializeField]
-    private Transform FishingToolObject = null;
+    private Transform HuntingToolObject;
 
     [SerializeField]
-    private Transform HuntingToolObject = null;
+    private Transform AttackToolObject;
 
-    [SerializeField]
-    private Transform AttackToolObject = null;
-
-    private Transform CurrentToolObject = null;
+    private Transform CurrentToolObject;
 
 
     [Header("Cargo Objects")]
     [SerializeField]
-    private Transform FoodCargoObject = null;
+    private Transform FoodCargoObject;
 
     [SerializeField]
-    private Transform WoodCargoObject = null;
+    private Transform WoodCargoObject;
 
     [SerializeField]
-    private Transform StoneCargoObject = null;
+    private Transform StoneCargoObject;
 
     [SerializeField]
-    private Transform GoldCargoObject = null;
+    private Transform GoldCargoObject;
 
-    private Transform CurrentCargoObject = null;
+    private Transform CurrentCargoObject;
 
     public bool IsCargoFull() => Attributes.Get(AttributeConstants.CARGO).IsMax();
 
@@ -146,9 +143,6 @@ public class VillagerV2 : UnitV2
                 break;
             case ActorAnimationState.BUILDANDREPAIR:
                 CurrentToolObject = BuilderToolObject;
-                break;
-            case ActorAnimationState.FORAGING:
-                CurrentToolObject = ForagingToolObject;
                 break;
             case ActorAnimationState.FISHING:
                 CurrentToolObject = FishingToolObject;
