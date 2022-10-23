@@ -8,13 +8,13 @@ public class FactionSettings : MonoBehaviour
     private Skin skin;
     public MeshRenderer[] meshesToChange;
     public SkinnedMeshRenderer[] skinnedMeshesToChange;
-    
+
     private bool isUnit;
 
     // Start is called before the first frame update
     void Start()
-    {   
-        Unit unit = GetComponent<Unit>();
+    {
+        UnitV2 unit = GetComponent<UnitV2>();
         if (unit)
         {
             isUnit = true;
@@ -30,7 +30,7 @@ public class FactionSettings : MonoBehaviour
         //         factionId = GetComponent<FactionSettings>().factionId;
         //     }
         // }
-        
+
         SetSkin();
     }
 
@@ -44,7 +44,7 @@ public class FactionSettings : MonoBehaviour
     {
         // if (!GameMaster.Instance)
         //     return;
-            
+
         // Material mat = null;
         // if (isUnit)
         //     mat = GameMaster.Instance.factions[factionId].unitMaterial;
@@ -55,7 +55,7 @@ public class FactionSettings : MonoBehaviour
         // {
         //     foreach(MeshRenderer mesh in meshesToChange)
         //         mesh.sharedMaterial = mat;
-            
+
         //     foreach(SkinnedMeshRenderer skinnedMesh in skinnedMeshesToChange)
         //         skinnedMesh.sharedMaterial = mat;
         // }

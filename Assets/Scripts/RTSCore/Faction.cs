@@ -6,7 +6,7 @@ public class Faction : ScriptableObject
 {
     public byte Id;
     public Skin skin;
-    
+
     // TODO: Color should be pulled from the skin settings?
     public Color color = Color.blue;
     private BitMask mask;
@@ -25,19 +25,14 @@ public class Faction : ScriptableObject
     {
         return Bit.Compare(mask, faction.mask, faction.Id);
     }
-    
-    // public bool IsSameFaction(Actor actor)
-    // {
-    //     return this.factionId == actor.factionId;
-    // }
 
     public bool IsSameFaction(byte factionId)
     {
-        return this.Id == factionId;
+        return Id == factionId;
     }
-}
 
-public interface IFactioned
-{
-    Faction GetFaction();
+    public bool IsSameFaction(Faction faction)
+    {
+        return Id == faction.Id;
+    }
 }

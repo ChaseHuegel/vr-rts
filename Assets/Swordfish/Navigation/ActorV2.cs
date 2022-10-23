@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using Swordfish.Library.BehaviorTrees;
-using Swordfish.Library.Collections;
 using Swordfish.Library.Types;
 using UnityEditor;
 using UnityEngine;
+using Valve.VR.InteractionSystem;
 
 namespace Swordfish.Navigation
 {
@@ -52,15 +52,25 @@ namespace Swordfish.Navigation
             set => FrozenBinding.Set(value);
         }
 
+        public bool Falling
+        {
+            get => FallingBinding.Get();
+            set => FallingBinding.Set(value);
+        }
+
+        public bool Held
+        {
+            get => HeldBinding.Get();
+            set => HeldBinding.Set(value);
+        }
+
         public bool IsMoving
         {
             get => IsMovingBinding.Get();
             private set => IsMovingBinding.Set(value);
         }
 
-        public abstract BehaviorTree<ActorV2> BehaviorTree { get; protected set; }
-        public abstract float Speed { get; protected set; }
-        public abstract int Reach { get; protected set; }
+        public BehaviorTree<ActorV2> BehaviorTree { get; private set; }
 
         public bool OrderChangedRecently { get; private set; }
         public bool StateChangedRecently { get; private set; }
@@ -77,40 +87,22 @@ namespace Swordfish.Navigation
         public DataBinding<ActorAnimationState> StateBinding { get; private set; } = new();
         public DataBinding<Cell> DestinationBinding { get; private set; } = new();
         public DataBinding<Body> TargetBinding { get; private set; } = new();
-        public DataBinding<bool> IsMovingBinding { get; private set; } = new();
         public DataBinding<bool> FrozenBinding { get; set; } = new();
+        public DataBinding<bool> FallingBinding { get; private set; } = new();
+        public DataBinding<bool> HeldBinding { get; private set; } = new();
+        public DataBinding<bool> IsMovingBinding { get; private set; } = new();
 
         protected AudioSource AudioSource { get; private set; }
+        protected Animator Animator { get; private set; }
 
-        [Header("Tool Objects")]
-        [SerializeField]
-        private Transform FarmingToolObject;
-
-        [SerializeField]
-        private Transform MiningToolObject;
-
-        [SerializeField]
-        private Transform LumberjackToolObject;
-
-        [SerializeField]
-        private Transform BuilderToolObject;
-
-        [SerializeField]
-        private Transform ForagingToolObject;
-
-        [SerializeField]
-        private Transform FishingToolObject;
-
-        [SerializeField]
-        private Transform HuntingToolObject;
-
-        [SerializeField]
-        private Transform AttackToolObject;
-
-        private Transform CurrentToolObject;
-        private Animator Animator;
         private byte PathWaitAttempts;
         private byte RepathAttempts;
+
+        public abstract void OrderToTarget(Body body);
+
+        protected abstract BehaviorTree<ActorV2> BehaviorTreeFactory();
+
+        protected virtual void OnFallingOntoBody(Body body) { }
 
         public override void Initialize()
         {
@@ -119,6 +111,8 @@ namespace Swordfish.Navigation
 
             AudioSource = GetComponent<AudioSource>();
             Animator = GetComponentInChildren<Animator>();
+
+            BehaviorTree = BehaviorTreeFactory();
         }
 
         protected override void OnDestroy()
@@ -130,8 +124,8 @@ namespace Swordfish.Navigation
         protected override void InitializeAttributes()
         {
             base.InitializeAttributes();
-            Attributes.TryAdd(AttributeConstants.SPEED, 0.3f, 0.3f);
-            Attributes.TryAdd(AttributeConstants.REACH, 1f);
+            Attributes.AddOrUpdate(AttributeConstants.SPEED, 0.3f, 0.3f);
+            Attributes.AddOrUpdate(AttributeConstants.REACH, 1f);
         }
 
         protected virtual void AnimatorPlayAudio(string clipName)
@@ -147,6 +141,7 @@ namespace Swordfish.Navigation
             DestinationBinding.Changed += OnDestinationChanged;
             TargetBinding.Changed += OnTargetChanged;
             OrderBinding.Changed += OnOrderChanged;
+            FallingBinding.Changed += OnFallingChanged;
         }
 
         protected override void CleanupListeners()
@@ -157,6 +152,7 @@ namespace Swordfish.Navigation
             DestinationBinding.Changed -= OnDestinationChanged;
             TargetBinding.Changed -= OnTargetChanged;
             OrderBinding.Changed -= OnOrderChanged;
+            FallingBinding.Changed -= OnFallingChanged;
         }
 
         protected virtual void Update()
@@ -165,13 +161,50 @@ namespace Swordfish.Navigation
                 ProcessMovement(Time.deltaTime);
         }
 
+        protected virtual void OnTriggerEnter(Collider collider)
+        {
+            if (Falling)
+            {
+                Falling = false;
+                Frozen = false;
+
+                if (collider.TryGetComponent(out Body body))
+                    OnFallingOntoBody(body);
+            }
+        }
+
+        protected virtual void OnCollisionEnter(Collision collision)
+        {
+            if (Falling)
+            {
+                Falling = false;
+                Frozen = false;
+
+                if (collision.relativeVelocity.magnitude > 4.0f)
+                {
+                    ContactPoint contact = collision.contacts[0];
+                    float fallDamage = Vector3.Dot(contact.normal, collision.relativeVelocity) * 10f;
+                    Damage(fallDamage, AttributeChangeCause.NATURAL, null, DamageType.BLUDGEONING);
+
+                    AudioSource.PlayOneShot(GameMaster.GetAudio("unit_damaged").GetClip());
+                }
+            }
+        }
+
+        public virtual void OnAttachedToHand(Hand hand)
+        {
+            Held = true;
+        }
+
+        public virtual void OnDetachedFromHand(Hand hand)
+        {
+            Held = false;
+        }
+
         public override void Tick(float deltaTime)
         {
             if (StateChangedRecently)
-            {
-                Animator?.SetInteger("ActorAnimationState", (int)State);
-                UpdateCurrentToolObject();
-            }
+                OnStateUpdate();
 
             StateChangedRecently = false;
             DestinationChangedRecently = false;
@@ -208,6 +241,11 @@ namespace Swordfish.Navigation
             transform.rotation = rotation;
         }
 
+        protected virtual void OnStateUpdate()
+        {
+            Animator?.SetInteger("ActorAnimationState", (int)State);
+        }
+
         protected virtual void OnFrozenChanged(object sender, DataChangedEventArgs<bool> e)
         {
             if (e.NewValue == true)
@@ -240,42 +278,29 @@ namespace Swordfish.Navigation
             LastOrder = e.OldValue;
         }
 
-        private void UpdateCurrentToolObject()
+        protected virtual void OnFallingChanged(object sender, DataChangedEventArgs<bool> e)
         {
-            CurrentToolObject?.gameObject.SetActive(false);
-            switch (State)
-            {
-                case ActorAnimationState.FARMING:
-                    CurrentToolObject = FarmingToolObject;
-                    break;
-                case ActorAnimationState.MINING:
-                    CurrentToolObject = MiningToolObject;
-                    break;
-                case ActorAnimationState.LUMBERJACKING:
-                    CurrentToolObject = LumberjackToolObject;
-                    break;
-                case ActorAnimationState.BUILDANDREPAIR:
-                    CurrentToolObject = BuilderToolObject;
-                    break;
-                case ActorAnimationState.FORAGING:
-                    CurrentToolObject = ForagingToolObject;
-                    break;
-                case ActorAnimationState.FISHING:
-                    CurrentToolObject = FishingToolObject;
-                    break;
-                case ActorAnimationState.HUNTING:
-                    CurrentToolObject = HuntingToolObject;
-                    break;
-                case ActorAnimationState.ATTACKING:
-                case ActorAnimationState.ATTACKING2:
-                    CurrentToolObject = AttackToolObject;
-                    break;
+            if (e.NewValue == false)
+                transform.rotation = Quaternion.identity;
+        }
 
-                default:
-                    CurrentToolObject = null;
-                    return;
+        protected virtual void OnHeldChanged(object sender, DataChangedEventArgs<bool> e)
+        {
+            Falling = !e.NewValue;
+
+            if (e.NewValue == true)
+            {
+                Frozen = true;
+                State = ActorAnimationState.IDLE;
             }
-            CurrentToolObject?.gameObject.SetActive(true);
+        }
+
+        public void OrderGoTo(Coord2D coord) => OrderGoTo(World.at(coord));
+
+        public void OrderGoTo(Cell cell)
+        {
+            Destination = cell;
+            Order = UnitOrder.GoTo;
         }
 
         private bool CanPathAhead()
@@ -301,7 +326,7 @@ namespace Swordfish.Navigation
                 transform.position = Vector3.MoveTowards(
                         transform.position,
                         gridToWorldSpace,
-                        deltaTime * InterpolationStrength * Speed
+                        deltaTime * InterpolationStrength * Attributes.ValueOf(AttributeConstants.SPEED)
                     );
             }
             else

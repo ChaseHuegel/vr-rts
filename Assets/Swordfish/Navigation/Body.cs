@@ -3,10 +3,11 @@ using Random = UnityEngine.Random;
 
 namespace Swordfish.Navigation
 {
-    public abstract class Body : Damageable, IBody
+    public abstract class Body : Damageable
     {
-        public byte FactionID;
+        public Faction Faction;
 
+        [Header("Body Settings")]
         [SerializeField]
         protected Vector2 BoundingDimensions = Vector2.one;
 
@@ -15,6 +16,9 @@ namespace Swordfish.Navigation
 
         [SerializeField]
         protected Coord2D GridPosition = new(0, 0);
+
+        [Header("Skin Settings")]
+        protected Renderer[] SkinRendererTargets = new Renderer[0];
 
         public virtual void Initialize() { }
         public virtual void Tick(float deltaTime) { }
@@ -27,6 +31,7 @@ namespace Swordfish.Navigation
             SyncToTransform();
             Initialize();
             AttachListeners();
+            UpdateSkin();
         }
 
         protected virtual void OnDestroy()
@@ -36,6 +41,14 @@ namespace Swordfish.Navigation
                 CleanupListeners();
                 RemoveFromGrid();
             }
+        }
+
+        protected virtual void OnValidate()
+        {
+            if (!GameMaster.Instance)
+                return;
+
+            UpdateSkin();
         }
 
         /// <summary>
@@ -60,26 +73,6 @@ namespace Swordfish.Navigation
         public Vector2 GetBoundingOrigin()
         {
             return BoundingOrigin;
-        }
-
-        /// <summary>
-        ///     Check whether this <see cref="Body"/>'s faction is the same as another.
-        /// </summary>
-        /// <param name="other">The other body to check against.</param>
-        /// <returns>True if the factions match; otherwise false.</returns>
-        public bool IsSameFaction(Body other)
-        {
-            return FactionID == other.FactionID;
-        }
-
-        /// <summary>
-        ///     Check whether this <see cref="Body"/>'s faction is the same as another.
-        /// </summary>
-        /// <param name="factionId">The other faction ID to check against.</param>
-        /// <returns>True if the factions match; otherwise false.</returns>
-        public bool IsSameFaction(byte factionId)
-        {
-            return FactionID == factionId;
         }
 
         /// <summary>
@@ -296,6 +289,15 @@ namespace Swordfish.Navigation
                     modPos.z = transform.position.z + World.GetUnit() * -0.5f;
 
                 transform.position = modPos;
+            }
+        }
+
+        private void UpdateSkin()
+        {
+            if (Faction?.skin?.unitMaterial)
+            {
+                foreach (var renderer in SkinRendererTargets)
+                    renderer.sharedMaterial = Faction.skin.unitMaterial;
             }
         }
     }

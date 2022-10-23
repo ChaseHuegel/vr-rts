@@ -58,6 +58,11 @@ namespace Swordfish
         protected virtual void OnHealthRegain(HealthRegainEvent e) { }
         protected virtual void OnDeath(DeathEvent e) { }
 
+        public Damageable()
+        {
+            InitializeAttributes();
+        }
+
         protected virtual void Start()
         {
             SpawnEvent e = new()
@@ -69,13 +74,11 @@ namespace Swordfish
             //  destroy this object if the event has been cancelled
             if (e.cancel)
                 Destroy(gameObject);
-
-            InitializeAttributes();
         }
 
         protected virtual void InitializeAttributes()
         {
-            Attributes.TryAdd(AttributeConstants.HEALTH, 100f, 100f);
+            Attributes.TryAdd(AttributeConstants.HEALTH, 20f, 20f);
         }
 
         public bool IsAlive() => Attributes.ValueOf(AttributeConstants.HEALTH) > 0;

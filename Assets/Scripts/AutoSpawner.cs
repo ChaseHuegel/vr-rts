@@ -117,31 +117,27 @@ public class AutoSpawner : MonoBehaviour
 
         if (unitData.prefab)
         {
-            Vector3 randomPos = (Vector3)Random.insideUnitSphere * unitSpawnPointRadius;
+            Vector3 randomPos = Random.insideUnitSphere * unitSpawnPointRadius;
             Vector3 position = unitSpawnPoint.transform.position + randomPos;
             position.y = unitSpawnPoint.transform.position.y;
 
             GameObject unitGameObject = Instantiate(unitData.prefab, position, Quaternion.identity);
 
             if (NetworkManager.Singleton.IsServer)
-            {
                 unitGameObject.GetComponent<NetworkObject>().Spawn();
-            }
 
-            Unit unit = unitGameObject.GetComponent<Unit>();
-            unit.rtsUnitType = unitData.unitType;
-            unit.FactionID = factionID;
-            unit.SyncToTransform();
+            UnitV2 unit = unitGameObject.GetComponent<UnitV2>();
+            unit.Faction = GameMaster.Factions.Find(x => x.Id == factionID);
+            unit.SetUnitType(unitData.unitType);
 
-            randomPos = (Vector3)Random.insideUnitSphere * unitSpawnPointRadius;
+            randomPos = Random.insideUnitSphere * unitSpawnPointRadius;
             position = unitRallyWaypoint.transform.position + randomPos;
 
-            unit.GotoForced(World.ToWorldSpace(position));
-            unit.LockPath();
-
-            // Debug.Log("Spawned " + unit.rtsUnitType + ".");
+            unit.Destination = World.at(World.ToWorldCoord(position));
         }
         else
+        {
             Debug.Log(string.Format("Spawn {0} failed. Missing prefabToSpawn.", unitData.unitType));
+        }
     }
 }

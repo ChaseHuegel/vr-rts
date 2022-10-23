@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Swordfish.Navigation
 {
-    public interface IActor : IBody
+    public interface IActor
     {
         List<Cell> CurrentPath { get; set; }
 

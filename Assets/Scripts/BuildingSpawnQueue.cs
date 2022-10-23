@@ -125,7 +125,7 @@ public class BuildingSpawnQueue : MonoBehaviour
         if (unitSpawnQueue.Count >= structure.buildingData.maxUnitQueueSize)
             return false;
 
-        if (structure.IsSameFaction(playerManager.factionId) &&
+        if (structure.Faction.IsSameFaction(playerManager.faction) &&
             !playerManager.CanQueueUnit(unitTypeToQueue))
             return false;
 
@@ -196,12 +196,11 @@ public class BuildingSpawnQueue : MonoBehaviour
         if (unitSpawnQueue.First.Value.prefab)
         {
             GameObject unitGameObject = Instantiate(unitSpawnQueue.First.Value.prefab, unitSpawnPoint.transform.position, Quaternion.identity);
-            Unit unit = unitGameObject.GetComponent<Unit>();
-            unit.rtsUnitType = unitSpawnQueue.First.Value.unitType;
-            unit.FactionID = structure.FactionID;
+            UnitV2 unit = unitGameObject.GetComponent<UnitV2>();
+            unit.Faction = structure.Faction;
+            unit.SetUnitType(unitSpawnQueue.First.Value.unitType);
 
-            unit.SyncToTransform();
-            unit.MoveToLocation(unitRallyWaypoint.position);
+            unit.Destination = World.at(World.ToWorldCoord(unitRallyWaypoint.position));
         }
         else
             Debug.Log(string.Format("Spawn {0} failed. Missing prefabToSpawn.", unitSpawnQueue.First.Value.unitType));

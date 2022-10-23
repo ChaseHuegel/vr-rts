@@ -16,7 +16,7 @@ public class Tower : Structure
     public GameObject rangedProjectile;
     public float projectileSpeed = 5.0f;
     public Transform projectileOrigin;
-    protected Unit currentTarget;
+    protected UnitV2 currentTarget;
     protected float attackTimer;
     private SphereCollider attackRangeCollider;
     protected GameObject projectileTarget;
@@ -53,12 +53,12 @@ public class Tower : Structure
 
     void Attack()
     {
-        if (!currentTarget || currentTarget.IsDead())
+        if (!currentTarget || !currentTarget.IsAlive())
             TryAcquireNewTarget();
 
         if (currentTarget)
         {
-            currentTarget.AttributeHandler.Damage(attackDamage, Swordfish.AttributeChangeCause.ATTACKED, AttributeHandler, Swordfish.DamageType.PIERCING);
+            currentTarget.Damage(attackDamage, Swordfish.AttributeChangeCause.ATTACKED, AttributeHandler, Swordfish.DamageType.PIERCING);
             projectileTarget = currentTarget.gameObject;
             LaunchProjectile();
         }
@@ -72,27 +72,27 @@ public class Tower : Structure
 
         foreach (Collider collider in targets)
         {
-            Unit unit = collider.GetComponentInParent<Unit>();
-            if (unit && !unit.IsSameFaction(FactionID) && !unit.IsDead())
+            UnitV2 unit = collider.GetComponentInParent<UnitV2>();
+            if (unit && !unit.Faction.IsSameFaction(Faction) && unit.IsAlive())
             {
                 currentTarget = unit;
                 break;
             }
         }
 
-        if (currentTarget && currentTarget.IsDead())
+        if (currentTarget && !currentTarget.IsAlive())
             currentTarget = null;
 
     }
 
     void OnTriggerEnter(Collider other)
     {
-        Unit unit = other.GetComponent<Unit>();
+        UnitV2 unit = other.GetComponent<UnitV2>();
         if (unit)
         {
-            if (!unit.IsSameFaction(FactionID))
+            if (!unit.Faction.IsSameFaction(Faction))
             {
-                if (!currentTarget || currentTarget.IsDead())
+                if (!currentTarget || !currentTarget.IsAlive())
                     currentTarget = unit;
             }
         }
@@ -100,12 +100,12 @@ public class Tower : Structure
 
     void OnTriggerExit(Collider other)
     {
-        Unit unit = other.GetComponent<Unit>();
+        UnitV2 unit = other.GetComponent<UnitV2>();
         if (unit)
         {
-            if (!unit.IsSameFaction(FactionID))
+            if (!unit.Faction.IsSameFaction(Faction))
             {
-                if (currentTarget == unit || currentTarget.IsDead())
+                if (currentTarget == unit || !currentTarget.IsAlive())
                     currentTarget = null;
 
                 if (currentTarget == null)

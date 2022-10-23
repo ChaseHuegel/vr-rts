@@ -1,10 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
+using Swordfish.Library.BehaviorTrees;
 using Swordfish.Navigation;
 using UnityEngine;
 
-public class Fauna : Actor
+public class Fauna : ActorV2
 {
+    enum FaunaActions
+    {
+        IDLE = 0,
+        WALK = 1,
+        RUN = 2,
+    }
+
     public readonly static List<Fauna> AllFauna = new();
 
     public float runSpeed;
@@ -32,7 +40,6 @@ public class Fauna : Actor
     public GameObject liveFaunaObject;
     public GameObject deadFaunaObject;
     private Vector3 startPosition;
-    private Animator animator;
     private float normalMovementSpeed;
 
     bool isRunnng;
@@ -40,18 +47,23 @@ public class Fauna : Actor
     float actionTime;
 
     Resource resource;
-    Fauna fauna;
+
+    public override void OrderToTarget(Body body)
+    {
+        Target = body;
+    }
+
+    protected override BehaviorTree<ActorV2> BehaviorTreeFactory()
+    {
+        return FaunaBehaviorTree.Get();
+    }
 
     public override void Initialize()
     {
         base.Initialize();
         AllFauna.Add(this);
         startPosition = transform.position;
-        normalMovementSpeed = movementSpeed;
-        animator = GetComponentInChildren<Animator>();
         resource = GetComponent<Resource>();
-
-        AttributeHandler.Attributes.Get(AttributeConstants.HEALTH).MaxValue = 25;
     }
 
     protected override void OnDestroy()
@@ -60,11 +72,11 @@ public class Fauna : Actor
         AllFauna.Remove(this);
     }
 
-    enum FaunaActions
+    protected override void InitializeAttributes()
     {
-        Idle = 0,
-        Walk = 1,
-        Run = 2,
+        base.InitializeAttributes();
+        Attributes.AddOrUpdate(AttributeConstants.HEALTH, 25f, 25f);
+        normalMovementSpeed = Attributes.ValueOf(AttributeConstants.SPEED);
     }
 
     public override void Tick(float deltaTime)
@@ -74,28 +86,24 @@ public class Fauna : Actor
         if (isDead || IsDead())
             return;
 
-        if (newDecisionTimer > actionTime && !IsMoving())
+        if (newDecisionTimer > actionTime && !IsMoving)
         {
-
             isRunnng = false;
-
             MakeNewDecision();
-
             newDecisionTimer = 0.0f;
-
         }
 
-        if (IsMoving())
+        if (IsMoving)
         {
             if (isRunnng)
             {
-                animator.SetInteger("FaunaActionState", (int)FaunaActions.Run);
-                movementSpeed = runSpeed;
+                Attributes.Get(AttributeConstants.SPEED).Value = runSpeed;
+                Animator.SetInteger("FaunaActionState", (int)FaunaActions.RUN);
             }
             else
             {
-                movementSpeed = normalMovementSpeed;
-                animator.SetInteger("FaunaActionState", (int)FaunaActions.Walk);
+                Attributes.Get(AttributeConstants.SPEED).Value = normalMovementSpeed;
+                Animator.SetInteger("FaunaActionState", (int)FaunaActions.WALK);
             }
         }
         // Idle action
@@ -104,37 +112,27 @@ public class Fauna : Actor
             float idleAction = Random.Range(0.0f, 1.0f);
 
             if (idleAction < eatActionChance)
-            {
-                // meatAmount += eatRate * Time.deltaTime;
-                // float scale = meatAmount * 0.02f;
-                // transform.localScale *= scale;
-                animator.SetTrigger("Eat");
-            }
+                Animator.SetTrigger("Eat");
             else if (idleAction < lookAroundActionChance)
-                animator.SetTrigger("LookAround");
+                Animator.SetTrigger("LookAround");
             else
-                animator.SetInteger("FaunaActionState", (int)FaunaActions.Idle);
+                Animator.SetInteger("FaunaActionState", (int)FaunaActions.IDLE);
         }
 
         newDecisionTimer += Time.deltaTime;
     }
 
-    // float meatAmount= 50.0f;
-    // float eatRate = 0.01f;
-
     private bool isDead;
     public bool IsDead()
     {
-        if (!AttributeHandler.IsAlive())
+        if (!IsAlive())
         {
             isDead = true;
             resource.enabled = true;
-            AttributeHandler.enabled = false;
-            Freeze();
-            ResetAI();
+            Frozen = true;
             liveFaunaObject.SetActive(false);
             deadFaunaObject.SetActive(true);
-            animator.enabled = false;
+            Animator.enabled = false;
         }
 
         return isDead;
@@ -147,7 +145,7 @@ public class Fauna : Actor
         // Non-movement action
         if (action >= moveActionChance)
         {
-            animator.SetInteger("FaunaActionState", (int)FaunaActions.Idle);
+            Animator.SetInteger("FaunaActionState", (int)FaunaActions.IDLE);
             actionTime = Random.Range(1.0f, 3.0f);
         }
         else
@@ -175,18 +173,14 @@ public class Fauna : Actor
 
     void GotoRandomPositionInRadius(float radius)
     {
-        Vector3 randomPos = startPosition + ((Vector3)Random.insideUnitSphere * radius);
-
-        Goto(World.ToWorldSpace(randomPos));
+        Vector3 randomPos = startPosition + (Random.insideUnitSphere * radius);
+        OrderGoTo(World.ToWorldCoord(randomPos));
     }
 
-    public override void OnDrawGizmosSelected()
+#if UNITY_EDITOR
+    protected override void OnDrawGizmosSelected()
     {
         base.OnDrawGizmosSelected();
-        // if (Time.time > 0)
-        //     startPosition = transform.position;
-
-#if UNITY_EDITOR
         UnityEditor.Handles.color = Color.red;
         UnityEditor.Handles.DrawWireDisc(startPosition, Vector3.up, 1);
 #endif

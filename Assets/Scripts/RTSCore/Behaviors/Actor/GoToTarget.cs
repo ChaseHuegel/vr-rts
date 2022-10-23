@@ -10,7 +10,7 @@ public class GoToTarget : BehaviorNode<ActorV2>
     {
         Coord2D position = actor.Target.GetNearestPositionFrom(actor.GetPosition());
 
-        if (actor.GetDistanceTo(position.x, position.y) <= actor.Reach)
+        if (actor.GetDistanceTo(position.x, position.y) <= actor.Attributes.ValueOf(AttributeConstants.REACH))
         {
             actor.ResetPath();
             return BehaviorState.SUCCESS;

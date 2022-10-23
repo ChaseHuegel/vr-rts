@@ -13,17 +13,17 @@ public class HammerDestroyerOfWorlds : MonoBehaviour
     public GameObject objectDestroyedEffect;
     public GameObject unitDestroyedEffect;
     private Vector3 sheathLocalScale;
-    public  Vector3 wieldLocalScale;
+    public Vector3 wieldLocalScale;
     protected bool isWielding;
     void Start()
     {
         audioSource = gameObject.GetComponent<AudioSource>();
         sheathLocalScale = transform.localScale;
     }
-    
+
     public void Wield()
     {
-        gameObject.transform.localScale = wieldLocalScale;  
+        gameObject.transform.localScale = wieldLocalScale;
         isWielding = true;
     }
 
@@ -33,17 +33,17 @@ public class HammerDestroyerOfWorlds : MonoBehaviour
         //gameObject.SetActive(false);
         gameObject.GetComponent<Rigidbody>().isKinematic = true;
         gameObject.transform.localPosition = Vector3.zero;
-        gameObject.transform.localRotation = Quaternion.identity; 
+        gameObject.transform.localRotation = Quaternion.identity;
         gameObject.transform.localScale = sheathLocalScale;
         isWielding = false;
     }
 
     void OnTriggerEnter(Collider collider)
-    {    
+    {
         if (!isWielding)
             return;
 
-        Structure structure = collider.gameObject.GetComponentInParent<Structure>();        
+        Structure structure = collider.gameObject.GetComponentInParent<Structure>();
         if (structure)
         {
             Vector3 pos = new Vector3(collider.transform.position.x, 0, collider.transform.position.z);
@@ -51,7 +51,7 @@ public class HammerDestroyerOfWorlds : MonoBehaviour
 
             // TODO: Shoot a ray down to find a ground position.
             GameObject spawned = GameObject.Instantiate(objectDestroyedEffect, pos, Quaternion.identity);
-            AudioSource.PlayClipAtPoint( destroyedObjectAudio, pos);
+            AudioSource.PlayClipAtPoint(destroyedObjectAudio, pos);
             return;
         }
 
@@ -63,11 +63,11 @@ public class HammerDestroyerOfWorlds : MonoBehaviour
 
             // TODO: Shoot a ray down to find a ground position.
             GameObject spawned = GameObject.Instantiate(objectDestroyedEffect, pos, Quaternion.identity);
-            AudioSource.PlayClipAtPoint( destroyedObjectAudio, pos);
+            AudioSource.PlayClipAtPoint(destroyedObjectAudio, pos);
             return;
         }
-        
-        if (collider.gameObject.GetComponent<Unit>())
+
+        if (collider.gameObject.GetComponent<UnitV2>())
         {
             GameObject spawned = GameObject.Instantiate(unitDestroyedEffect);
             spawned.transform.position = collider.transform.position;

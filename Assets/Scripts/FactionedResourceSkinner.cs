@@ -15,19 +15,19 @@ public class FactionedResourceSkinner : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        factionId = GetComponent<Resource>().FactionID;
+        factionId = GetComponent<Resource>().Faction.Id;
         SetSkin();
     }
 
     void OnValidate()
     {
-        GetComponent<Resource>().FactionID = factionId;
+        GetComponent<Resource>().Faction = GameMaster.Factions?.Find(x => x.Id == factionId);
         SetSkin();
     }
 
     private void SetSkin()
     {
-        Faction faction = GameMaster.Factions?.Find(x => x.Id == factionId); ;
+        Faction faction = GameMaster.Factions?.Find(x => x.Id == factionId);
 
         if (!faction) return;
 

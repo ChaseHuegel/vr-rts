@@ -5,38 +5,22 @@ using Swordfish.Navigation;
 using UnityEngine;
 
 [RequireComponent(typeof(Damageable))]
-public class Constructible : Obstacle, IFactioned
+public class Constructible : Obstacle
 {
-    private Damageable damageable;
-    public Damageable AttributeHandler { get { return damageable; } }
-
-    private Faction faction;
-    public Faction GetFaction() { return faction; }
-    public void UpdateFaction() { faction = GameMaster.Factions.Find(x => x.Id == FactionID); }
-
     public bool DestroyOnBuilt = true;
     public bool ClearExistingWalls;
     public BuildingData buildingData;
     public GameObject OnBuiltPrefab;
     public GameObject[] ConstructionStages;
     private int currentStage;
-    private AudioSource audioSource;
 
 
     public override void Initialize()
     {
         base.Initialize();
-        UpdateFaction();
 
-        if (!(damageable = GetComponent<Damageable>()))
-            Debug.Log("No damageable component on constructible!");
-
-        // damageable.GetAttribute(Attributes.HEALTH).SetValue(0);
-        damageable.Attributes.Get(AttributeConstants.HEALTH).MaxValue = buildingData.hitPoints;
-        damageable.OnHealthRegainEvent += OnBuild;
-
-        if (!(audioSource = GetComponent<AudioSource>()))
-            Debug.Log("Audiosource component missing.", this);
+        Attributes.Get(AttributeConstants.HEALTH).MaxValue = buildingData.hitPoints;
+        OnHealthRegainEvent += OnBuild;
 
         ResetStages();
 
@@ -89,7 +73,7 @@ public class Constructible : Obstacle, IFactioned
 
     public bool IsBuilt()
     {
-        return AttributeHandler.Attributes.Get(AttributeConstants.HEALTH).IsMax();
+        return Attributes.Get(AttributeConstants.HEALTH).IsMax();
     }
 
     private void ResetStages()
@@ -103,7 +87,7 @@ public class Constructible : Obstacle, IFactioned
 
     private void UpdateStage()
     {
-        float progress = AttributeHandler.Attributes.ValueOf(AttributeConstants.HEALTH);
+        float progress = Attributes.ValueOf(AttributeConstants.HEALTH);
         int progressStage = 0;// = (int)(progress / (1f / ConstructionStages.Length));
 
         if (progress >= 0.45f)
@@ -120,9 +104,9 @@ public class Constructible : Obstacle, IFactioned
         }
     }
 
-    public void TryBuild(float count, Actor builder = null)
+    public void TryBuild(float count, ActorV2 builder = null)
     {
-        AttributeHandler.Heal(count, AttributeChangeCause.HEALED, builder.AttributeHandler);
+        Heal(count, AttributeChangeCause.HEALED, builder);
     }
 
     public void OnBuild(object sender, Damageable.HealthRegainEvent e)
@@ -130,7 +114,7 @@ public class Constructible : Obstacle, IFactioned
         if (e.cause != AttributeChangeCause.HEALED)
             return;
 
-        if (e.health >= AttributeHandler.GetMaxHealth())
+        if (e.health >= GetMaxHealth())
         {
             //  Try placing a prefab
             if (OnBuiltPrefab != null)
@@ -142,7 +126,7 @@ public class Constructible : Obstacle, IFactioned
             if (DestroyOnBuilt)
             {
                 UnbakeFromGrid();
-                Destroy(this.gameObject);
+                Destroy(gameObject);
             }
         }
         else

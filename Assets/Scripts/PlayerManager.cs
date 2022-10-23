@@ -157,14 +157,14 @@ public class PlayerManager : MonoBehaviour
     public void OnSpawnEvent(object sender, Damageable.SpawnEvent e)
     {
         Body body = e.target.GetComponent<Body>();
-        if (body?.FactionID == factionId)
+        if (body != null && body.Faction.IsSameFaction(faction))
         {
             switch (body)
             {
                 case Structure structure:
                     IncreasePopulationLimit(structure.buildingData.populationSupported);
                     break;
-                case Unit unit:
+                case UnitV2 unit:
                     AddToPopulation(unit);
                     break;
             }
@@ -174,14 +174,14 @@ public class PlayerManager : MonoBehaviour
     public void OnDeathEvent(object sender, Damageable.DeathEvent e)
     {
         Body body = e.victim.GetComponent<Body>();
-        if (body?.FactionID == factionId)
+        if (body != null && body.Faction.IsSameFaction(faction))
         {
             switch (body)
             {
                 case Structure structure:
                     DecreasePopulationLimit(structure.buildingData.populationSupported);
                     break;
-                case Unit unit:
+                case UnitV2 unit:
                     RemoveFromPopulation(unit);
                     break;
             }
@@ -293,10 +293,10 @@ public class PlayerManager : MonoBehaviour
         //InteractionPointer.instance.enabled = true;
     }
 
-    public void AddToPopulation(Unit unit)
+    public void AddToPopulation(UnitV2 unit)
     {
         // Determine if the unit should be added to civilian or military population
-        if (unit.IsCivilian())
+        if (unit.IsCivilian)
         {
             civilianPopulation += 1;
             WristDisplay?.SetCivilianPopulationText(civilianPopulation.ToString());
@@ -309,16 +309,16 @@ public class PlayerManager : MonoBehaviour
             FaceDisplay?.SetMilitaryPopulationText(militaryPopulation.ToString());
         }
 
-        totalPopulation += unit.rtsUnitTypeData.populationCost;
-        queueCount -= unit.rtsUnitTypeData.populationCost;
+        totalPopulation += unit.UnitData.populationCost;
+        queueCount -= unit.UnitData.populationCost;
         if (queueCount < 0) queueCount = 0;
         UpdateWristDisplayPopulationLimit();
     }
 
-    public void RemoveFromPopulation(Unit unit)
+    public void RemoveFromPopulation(UnitV2 unit)
     {
         // Determine if the unit should be removed from civilian or military population
-        if (unit.IsCivilian())
+        if (unit.IsCivilian)
         {
             civilianPopulation -= 1;
             WristDisplay.SetCivilianPopulationText(civilianPopulation.ToString());
@@ -331,7 +331,7 @@ public class PlayerManager : MonoBehaviour
             FaceDisplay.SetMilitaryPopulationText(militaryPopulation.ToString());
         }
 
-        totalPopulation -= unit.rtsUnitTypeData.populationCost;
+        totalPopulation -= unit.UnitData.populationCost;
         UpdateWristDisplayPopulationLimit();
     }
 

@@ -4,11 +4,10 @@ using Swordfish.Navigation;
 using UnityEngine;
 
 [RequireComponent(typeof(Damageable))]
-public class Structure : Obstacle, IFactioned
+public class Structure : Obstacle
 {
     public readonly static List<Structure> AllStructures = new();
 
-    private Faction faction;
     public BuildingData buildingData;
 
     [Header("Skin Settings")]
@@ -25,9 +24,6 @@ public class Structure : Obstacle, IFactioned
     private GameObject flamesParticleSystem;
     private GameObject sparksParticleSystem;
     private PlayerManager playerManager;
-    public Faction GetFaction() => faction;
-
-    public void UpdateFaction() => faction = GameMaster.Factions?.Find(x => x.Id == FactionID);
 
     public bool NeedsRepairs() => !damageable.Attributes.Get(AttributeConstants.HEALTH).IsMax();
 
@@ -52,9 +48,6 @@ public class Structure : Obstacle, IFactioned
 
         if (!buildingData)
             Debug.Log("BuildingData not set.");
-
-        UpdateFaction();
-        SetSkin();
 
         if (!(damageable = GetComponent<Damageable>()))
             Debug.Log("No damageable component on structure!");
@@ -110,20 +103,6 @@ public class Structure : Obstacle, IFactioned
         }
     }
 
-    private void SetSkin()
-    {
-        if (!faction) return;
-
-        if (faction.skin?.buildingMaterial)
-        {
-            foreach (MeshRenderer mesh in meshes)
-                mesh.sharedMaterial = faction.skin.buildingMaterial;
-
-            foreach (SkinnedMeshRenderer skinnedMesh in skinnedMeshes)
-                skinnedMesh.sharedMaterial = faction.skin.buildingMaterial;
-        }
-    }
-
     void OnDamage(object sender, Damageable.DamageEvent e)
     {
         RefreshVisuals();
@@ -136,9 +115,9 @@ public class Structure : Obstacle, IFactioned
         }
     }
 
-    public void TryRepair(float count, Actor repairer = null)
+    public void TryRepair(float count, ActorV2 repairer = null)
     {
-        AttributeHandler.Heal(count, AttributeChangeCause.HEALED, repairer.AttributeHandler);
+        AttributeHandler.Heal(count, AttributeChangeCause.HEALED, repairer);
         RefreshVisuals();
     }
 
@@ -198,14 +177,5 @@ public class Structure : Obstacle, IFactioned
     public bool CanDropOff(ResourceGatheringType type)
     {
         return buildingData.dropoffTypes.HasFlag(type);
-    }
-
-    protected void OnValidate()
-    {
-        if (!GameMaster.Instance)
-            return;
-
-        UpdateFaction();
-        SetSkin();
     }
 }
