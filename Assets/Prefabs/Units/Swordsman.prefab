@@ -461,14 +461,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8753ff4a5012a141b16468281698adb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attributes:
-  - attribute: 0
-    value: 100
-    max: 100
-  invulnerable: 0
-  weaknesses: 
-  resistances: 
-  immunities: 
+  Invulnerable: 0
+  Weaknesses: 
+  Resistances: 
+  Immunities: 
 --- !u!114 &8408527075323145128
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -481,6 +477,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 799a4068a4d7010468792c05a1b767af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Invulnerable: 0
+  Weaknesses: 
+  Resistances: 
+  Immunities: 
   FactionID: 0
   BoundingDimensions: {x: 1, y: 1}
   BoundingOrigin: {x: 0, y: 0}

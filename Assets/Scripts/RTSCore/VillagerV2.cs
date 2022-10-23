@@ -274,7 +274,9 @@ public class VillagerV2 : ActorV2
     protected override void OnOrderChanged(object target, DataChangedEventArgs<UnitOrder> e)
     {
         base.OnOrderChanged(target, e);
-        AudioSource.PlayOneShot(GameMaster.GetAudio("unit_command_response").GetClip());
+
+        if (e.NewValue != UnitOrder.None)
+            AudioSource.PlayOneShot(GameMaster.GetAudio("unit_command_response").GetClip());
     }
 
     protected override void OnDeath(DeathEvent e)

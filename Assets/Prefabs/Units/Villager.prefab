@@ -18500,6 +18500,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4098bebca8786e40bb27495aa77b779, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Invulnerable: 0
+  Weaknesses: 
+  Resistances: 
+  Immunities: 
   FactionID: 0
   BoundingDimensions: {x: 1, y: 1}
   BoundingOrigin: {x: 0, y: 0}
@@ -18519,19 +18523,6 @@ MonoBehaviour:
   skinnedMeshes:
   - {fileID: 1069823527066862350}
   state: 0
-  currentCargo: 0
-  grainCargoDisplayObject: {fileID: 668154613715088764}
-  woodCargoDisplayObject: {fileID: 2787404010531457095}
-  stoneCargoDisplayObject: {fileID: 7579505042717709888}
-  goldCargoDisplayObject: {fileID: 488074046402754232}
-  grainHandToolDisplayObject: {fileID: 8538520805121100735}
-  woodHandToolDisplayObject: {fileID: 1069823527080595998}
-  stoneHandToolDisplayObject: {fileID: 1069823527080554358}
-  goldHandToolDisplayObject: {fileID: 1069823527080554358}
-  builderHandToolDisplayObject: {fileID: 1069823527080516244}
-  fishermanHandToolDisplayObject: {fileID: 8595858030966396929}
-  hunterHandToolDisplayObject: {fileID: 1069823527080596950}
-  handCommandMenu: {fileID: 4773402040985910725}
 --- !u!114 &7274408666555167777
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18544,14 +18535,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8753ff4a5012a141b16468281698adb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attributes:
-  - attribute: 0
-    value: 100
-    max: 100
-  invulnerable: 0
-  weaknesses: 
-  resistances: 
-  immunities: 
+  Invulnerable: 0
+  Weaknesses: 
+  Resistances: 
+  Immunities: 
 --- !u!114 &-1329946777064387085
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21048,12 +21035,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dab7d8b766cfb6845b9c1a4996ca443e, type: 3}
---- !u!1 &8595858030966396929 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8845780998919766365, guid: dab7d8b766cfb6845b9c1a4996ca443e,
-    type: 3}
-  m_PrefabInstance: {fileID: 975057517983013212}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8595858030966817825 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8845780998919871869, guid: dab7d8b766cfb6845b9c1a4996ca443e,
@@ -21280,12 +21261,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 6026395805048038961}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &8538520805121100735 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2728306578926890382, guid: 58cd754c3dde1f944a2d86bd93a982bb,
-    type: 3}
-  m_PrefabInstance: {fileID: 6026395805048038961}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7218227113230193112
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21428,12 +21403,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 7578179733292456660}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &7579505042717709888 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1361181076786324, guid: c8d383ffed2795545b7e1408527a526e,
-    type: 3}
-  m_PrefabInstance: {fileID: 7578179733292456660}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7776093102588229796
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21508,12 +21477,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4878236bd739f42478f80158d834ee17, type: 3}
---- !u!1 &488074046402754232 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7867726669003263516, guid: 4878236bd739f42478f80158d834ee17,
-    type: 3}
-  m_PrefabInstance: {fileID: 7776093102588229796}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &490818741521247120 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7864840147137237812, guid: 4878236bd739f42478f80158d834ee17,

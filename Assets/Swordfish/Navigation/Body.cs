@@ -23,6 +23,7 @@ namespace Swordfish.Navigation
 
         protected override void Start()
         {
+            base.Start();
             SyncToTransform();
             Initialize();
             AttachListeners();
