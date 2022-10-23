@@ -6,7 +6,7 @@ using Valve.VR.InteractionSystem;
 [RequireComponent(typeof(Interactable))]
 public class UnitCommandHoverSphere : MonoBehaviour
 {
-    Villager villager;
+    VillagerV2 villager;
     private Interactable interactable;
     public VillagerHoverMenu menu;
     public RTSUnitType rtsUnitJob;
@@ -14,7 +14,7 @@ public class UnitCommandHoverSphere : MonoBehaviour
     void Awake()
     {
         interactable = this.GetComponent<Interactable>();
-        villager = GetComponentInParent<Villager>();
+        villager = GetComponentInParent<VillagerV2>();
     }
 
     //-------------------------------------------------
