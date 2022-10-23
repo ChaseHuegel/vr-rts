@@ -539,7 +539,7 @@ public class InteractionPointer : MonoBehaviour
         {
             foreach (ActorV2 actor in selectedActors)
             {
-                Body body = pointedAtPointerInteractable.GetComponents<Body>().FirstOrDefault(x => x.enabled);
+                Body body = pointedAtPointerInteractable?.GetComponents<Body>().FirstOrDefault(x => x.enabled);
                 if (pointedAtPointerInteractable && body)
                 {
                     actor.OrderToTarget(body);
