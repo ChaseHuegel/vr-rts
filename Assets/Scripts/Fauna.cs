@@ -76,6 +76,7 @@ public class Fauna : ActorV2
     {
         base.InitializeAttributes();
         Attributes.AddOrUpdate(AttributeConstants.HEALTH, 25f, 25f);
+        Attributes.AddOrUpdate(AttributeConstants.SPEED, 0.2f);
         normalMovementSpeed = Attributes.ValueOf(AttributeConstants.SPEED);
     }
 
