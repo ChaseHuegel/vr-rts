@@ -99,12 +99,12 @@ public class Fauna : ActorV2
             if (isRunnng)
             {
                 Attributes.Get(AttributeConstants.SPEED).Value = runSpeed;
-                Animator.SetInteger("FaunaActionState", (int)FaunaActions.RUN);
+                Animator.SetInteger("ActorAnimationState", (int)FaunaActions.RUN);
             }
             else
             {
                 Attributes.Get(AttributeConstants.SPEED).Value = normalMovementSpeed;
-                Animator.SetInteger("FaunaActionState", (int)FaunaActions.WALK);
+                Animator.SetInteger("ActorAnimationState", (int)FaunaActions.WALK);
             }
         }
         // Idle action
@@ -117,7 +117,7 @@ public class Fauna : ActorV2
             else if (idleAction < lookAroundActionChance)
                 Animator.SetTrigger("LookAround");
             else
-                Animator.SetInteger("FaunaActionState", (int)FaunaActions.IDLE);
+                Animator.SetInteger("ActorAnimationState", (int)FaunaActions.IDLE);
         }
 
         newDecisionTimer += Time.deltaTime;
@@ -146,7 +146,7 @@ public class Fauna : ActorV2
         // Non-movement action
         if (action >= moveActionChance)
         {
-            Animator.SetInteger("FaunaActionState", (int)FaunaActions.IDLE);
+            Animator.SetInteger("ActorAnimationState", (int)FaunaActions.IDLE);
             actionTime = Random.Range(1.0f, 3.0f);
         }
         else

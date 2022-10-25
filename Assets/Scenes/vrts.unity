@@ -56685,6 +56685,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 627572135, guid: 0e20e52b3d933304889227afb2893690, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1699222286, guid: 0e20e52b3d933304889227afb2893690, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1885705314, guid: 0e20e52b3d933304889227afb2893690, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3933512670699416115, guid: 0e20e52b3d933304889227afb2893690,
         type: 3}
       propertyPath: m_IsActive
@@ -56842,8 +56854,13 @@ PrefabInstance:
       objectReference: {fileID: 543281276}
     - target: {fileID: 4603657074826361737, guid: 0e20e52b3d933304889227afb2893690,
         type: 3}
-      propertyPath: m_Enabled
+      propertyPath: isInGaze
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4603657074826361737, guid: 0e20e52b3d933304889227afb2893690,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4603657074826361739, guid: 0e20e52b3d933304889227afb2893690,
         type: 3}
@@ -56894,7 +56911,7 @@ PrefabInstance:
     - target: {fileID: 4603657074826361739, guid: 0e20e52b3d933304889227afb2893690,
         type: 3}
       propertyPath: autoHideHandMenuEnabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4603657074826361782, guid: 0e20e52b3d933304889227afb2893690,
         type: 3}

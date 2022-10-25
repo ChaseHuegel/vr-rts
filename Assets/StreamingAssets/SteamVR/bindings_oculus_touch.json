@@ -78,6 +78,9 @@
                   "north" : {
                      "output" : "/actions/default/in/teleport"
                   },
+                  "south" : {
+                     "output" : "/actions/default/in/togglehandmenu"
+                  },
                   "west" : {
                      "output" : "/actions/default/in/snapturnleft"
                   }
@@ -140,6 +143,9 @@
                   },
                   "north" : {
                      "output" : "/actions/default/in/teleport"
+                  },
+                  "south" : {
+                     "output" : "/actions/default/in/togglehandmenu"
                   },
                   "west" : {
                      "output" : "/actions/default/in/snapturnleft"
@@ -210,9 +216,6 @@
                   "east" : {
                      "output" : "/actions/default/in/rotatebuildingclockwise"
                   },
-                  "north" : {
-                     "output" : "/actions/default/in/teleport"
-                  },
                   "west" : {
                      "output" : "/actions/default/in/rotatebuildingcounterclockwise"
                   }
@@ -227,9 +230,6 @@
                "inputs" : {
                   "east" : {
                      "output" : "/actions/default/in/rotatebuildingclockwise"
-                  },
-                  "north" : {
-                     "output" : "/actions/default/in/teleport"
                   },
                   "west" : {
                      "output" : "/actions/default/in/rotatebuildingcounterclockwise"
