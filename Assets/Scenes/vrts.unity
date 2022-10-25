@@ -2719,7 +2719,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 792a4bad9e08b8e41bfbd3f0b8aac1ab, type: 2}
+      objectReference: {fileID: 2100000, guid: 98a7fdcb4ebb44344b4afe0424d44b82, type: 2}
     - target: {fileID: 1069823527325677058, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
       propertyPath: m_Name
@@ -2797,8 +2797,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8052413789592210992, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
+      propertyPath: Faction
+      value: 
+      objectReference: {fileID: 11400000, guid: 8bc1d4a30d578944cb3853e5531e68e4,
+        type: 2}
+    - target: {fileID: 8052413789592210992, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
       propertyPath: faction
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8052413789592210992, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: UnitType
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8052413789592210992, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
@@ -2989,9 +3000,7 @@ MonoBehaviour:
   Faction: {fileID: 11400000, guid: 8bc1d4a30d578944cb3853e5531e68e4, type: 2}
   BoundingDimensions: {x: 1, y: 1}
   BoundingOrigin: {x: 0, y: 0}
-  GridPosition:
-    x: 0
-    y: 0
+  SkinRendererTargets: []
   bakeOnStart: 1
   allowPathThru: 0
   type: 1
@@ -4861,9 +4870,7 @@ MonoBehaviour:
   Faction: {fileID: 0}
   BoundingDimensions: {x: 1, y: 1}
   BoundingOrigin: {x: 0, y: 0}
-  GridPosition:
-    x: 0
-    y: 0
+  SkinRendererTargets: []
   bakeOnStart: 1
   allowPathThru: 0
   buildingData: {fileID: 11400000, guid: 963461a3aaf76f0458420eb41fae093d, type: 2}
@@ -29805,8 +29812,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8052413789592210992, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
+      propertyPath: Faction
+      value: 
+      objectReference: {fileID: 11400000, guid: 8bc1d4a30d578944cb3853e5531e68e4,
+        type: 2}
+    - target: {fileID: 8052413789592210992, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
       propertyPath: faction
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8052413789592210992, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: UnitType
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8052413789592210992, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
@@ -46068,8 +46086,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8052413789592210992, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
+      propertyPath: Faction
+      value: 
+      objectReference: {fileID: 11400000, guid: 8bc1d4a30d578944cb3853e5531e68e4,
+        type: 2}
+    - target: {fileID: 8052413789592210992, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
       propertyPath: faction
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8052413789592210992, guid: 2e26cba339b071948830d584eca2edda,
+        type: 3}
+      propertyPath: UnitType
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8052413789592210992, guid: 2e26cba339b071948830d584eca2edda,
         type: 3}
@@ -55175,9 +55204,7 @@ MonoBehaviour:
   Faction: {fileID: 0}
   BoundingDimensions: {x: 1, y: 1}
   BoundingOrigin: {x: 0, y: 0}
-  GridPosition:
-    x: 0
-    y: 0
+  SkinRendererTargets: []
   bakeOnStart: 1
   allowPathThru: 0
   buildingData: {fileID: 11400000, guid: ffca4340b49b17e4e93030ba6c0d567e, type: 2}
@@ -60431,9 +60458,7 @@ MonoBehaviour:
   Faction: {fileID: 0}
   BoundingDimensions: {x: 6, y: 6}
   BoundingOrigin: {x: 0, y: 0}
-  GridPosition:
-    x: 0
-    y: 0
+  SkinRendererTargets: []
   bakeOnStart: 1
   allowPathThru: 0
   buildingData: {fileID: 11400000, guid: acd2012d81514a643bd75779f8900a24, type: 2}

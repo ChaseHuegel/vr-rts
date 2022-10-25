@@ -14,11 +14,11 @@ namespace Swordfish.Navigation
         [SerializeField]
         protected Vector2 BoundingOrigin = Vector2.zero;
 
-        [SerializeField]
-        protected Coord2D GridPosition = new(0, 0);
-
         [Header("Skin Settings")]
+        [SerializeField]
         protected Renderer[] SkinRendererTargets = new Renderer[0];
+
+        protected Coord2D GridPosition = new(0, 0);
 
         public virtual void Initialize() { }
         public virtual void Tick(float deltaTime) { }

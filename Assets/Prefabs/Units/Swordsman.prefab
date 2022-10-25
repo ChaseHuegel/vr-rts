@@ -129,8 +129,6 @@ GameObject:
   - component: {fileID: 3788158446921318754}
   - component: {fileID: 4263789905043577419}
   - component: {fileID: 1171748269997364152}
-  - component: {fileID: 8903573299592951069}
-  - component: {fileID: 8408527075323145128}
   - component: {fileID: 782091929014317462}
   - component: {fileID: -8950132925645451015}
   - component: {fileID: -8452315851360116358}
@@ -449,59 +447,6 @@ MonoBehaviour:
   previewPoseSelection: 0
   blendingBehaviours: []
   scale: 1
---- !u!114 &8903573299592951069
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1271416209190090558}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8753ff4a5012a141b16468281698adb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Invulnerable: 0
-  Weaknesses: 
-  Resistances: 
-  Immunities: 
---- !u!114 &8408527075323145128
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1271416209190090558}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 799a4068a4d7010468792c05a1b767af, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Invulnerable: 0
-  Weaknesses: 
-  Resistances: 
-  Immunities: 
-  FactionID: 0
-  BoundingDimensions: {x: 1, y: 1}
-  BoundingOrigin: {x: 0, y: 0}
-  GridPosition:
-    x: 0
-    y: 0
-  doMicroSearching: 1
-  movementSpeed: 0.3
-  goalSearchDistance: 30
-  faction: {fileID: 11400000, guid: effa210fcfc5796468bcaecb24cb5693, type: 2}
-  rtsUnitType: 10
-  maxHitPointsOnStart: 1
-  rangedProjectile: {fileID: 0}
-  projectileSpeed: 5
-  meshes: []
-  skinnedMeshes:
-  - {fileID: 3628467702706474427}
-  state: 0
-  huntVillagers: 1
-  huntMilitary: 1
-  huntBuildings: 1
 --- !u!114 &782091929014317462
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1683,12 +1628,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ecf569eaf4f58f43bb8f6733152f817, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!137 &3628467702706474427 stripped
-SkinnedMeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 13734496, guid: bcc60fdbd3a37b44cbc0cb99db483477,
-    type: 3}
-  m_PrefabInstance: {fileID: 3628467702695043035}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4855929928232358262
 PrefabInstance:
   m_ObjectHideFlags: 0
