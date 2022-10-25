@@ -1,27 +1,30 @@
 using Swordfish.Library.BehaviorTrees;
 using Swordfish.Navigation;
 
-public class TargetNearestFauna : BehaviorNode<ActorV2>
+public class TargetNearestEnemy : BehaviorNode<ActorV2>
 {
     public override BehaviorState Evaluate(ActorV2 actor, float delta)
     {
-        Fauna nearestFauna = null;
+        Body nearestEnemy = null;
         int shortestDistance = int.MaxValue;
-        for (int i = 0; i < Fauna.AllFauna.Count; i++)
+        for (int i = 0; i < Body.AllBodies.Count; i++)
         {
-            Fauna fauna = Fauna.AllFauna[i];
+            Body body = Body.AllBodies[i];
 
-            int distance = actor.GetDistanceTo(fauna.GetPosition().x, fauna.GetPosition().y);
+            if (body.Faction == null || body.Faction.IsAllied(actor.Faction))
+                continue;
+
+            int distance = actor.GetDistanceTo(body.GetPosition().x, body.GetPosition().y);
             if (distance < shortestDistance && distance < actor.Attributes.ValueOf(AttributeConstants.SENSE_RADIUS))
             {
                 shortestDistance = distance;
-                nearestFauna = fauna;
+                nearestEnemy = body;
             }
         }
 
-        if (nearestFauna != null)
+        if (nearestEnemy != null)
         {
-            actor.Target = nearestFauna;
+            actor.Target = nearestEnemy;
             return BehaviorState.SUCCESS;
         }
 

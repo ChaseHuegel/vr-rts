@@ -23,7 +23,8 @@ public class Faction : ScriptableObject
 
     public bool IsAllied(Faction faction)
     {
-        return Bit.Compare(mask, faction.mask, faction.Id);
+        //  TODO the mask isn't being used currently
+        return IsSameFaction(faction);//Bit.Compare(mask, faction.mask, faction.Id);
     }
 
     public bool IsSameFaction(byte factionId)

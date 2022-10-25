@@ -55,7 +55,8 @@ public abstract class UnitV2 : ActorV2
         Destination = null;
         Target = null;
 
-        State = Random.Range(1, 100) < 50 ? ActorAnimationState.DYING : ActorAnimationState.DYING2;
+        ActorAnimationState deathState = Random.Range(1, 100) < 50 ? ActorAnimationState.DYING : ActorAnimationState.DYING2;
+        Animator?.SetInteger("ActorAnimationState", (int)deathState);
         AudioSource.PlayOneShot(GameMaster.GetAudio("unit_death").GetClip());
         Destroy(gameObject, GameMaster.Instance.unitCorpseDecayTime);
     }

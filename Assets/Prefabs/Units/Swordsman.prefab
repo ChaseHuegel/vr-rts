@@ -132,6 +132,7 @@ GameObject:
   - component: {fileID: 782091929014317462}
   - component: {fileID: -8950132925645451015}
   - component: {fileID: -8452315851360116358}
+  - component: {fileID: 5039482260217309001}
   m_Layer: 9
   m_Name: Swordsman
   m_TagString: Untagged
@@ -527,6 +528,28 @@ MonoBehaviour:
   highlightMaterial: {fileID: 0}
   highlightOnHover: 1
   hideHighlight: []
+--- !u!114 &5039482260217309001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1271416209190090558}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ea605a211130524eba36ba6e2cb43a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Invulnerable: 0
+  Weaknesses: 
+  Resistances: 
+  Immunities: 
+  Faction: {fileID: 0}
+  BoundingDimensions: {x: 1, y: 1}
+  BoundingOrigin: {x: 0, y: 0}
+  SkinRendererTargets:
+  - {fileID: 3628467702706474427}
+  UnitType: 10
 --- !u!1 &1887885430571263553
 GameObject:
   m_ObjectHideFlags: 0
@@ -1628,6 +1651,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ecf569eaf4f58f43bb8f6733152f817, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!137 &3628467702706474427 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 13734496, guid: bcc60fdbd3a37b44cbc0cb99db483477,
+    type: 3}
+  m_PrefabInstance: {fileID: 3628467702695043035}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4855929928232358262
 PrefabInstance:
   m_ObjectHideFlags: 0

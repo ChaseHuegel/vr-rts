@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -5,6 +6,8 @@ namespace Swordfish.Navigation
 {
     public abstract class Body : Damageable
     {
+        public static List<Body> AllBodies { get; } = new List<Body>();
+
         public Faction Faction;
 
         [Header("Body Settings")]
@@ -20,10 +23,15 @@ namespace Swordfish.Navigation
 
         protected Coord2D GridPosition = new(0, 0);
 
-        public virtual void Initialize() { }
-        public virtual void Tick(float deltaTime) { }
+        public virtual void Initialize()
+        {
+            AllBodies.Add(this);
+        }
+
         protected virtual void AttachListeners() { }
         protected virtual void CleanupListeners() { }
+
+        public virtual void Tick(float deltaTime) { }
 
         protected override void Start()
         {
@@ -36,6 +44,8 @@ namespace Swordfish.Navigation
 
         protected virtual void OnDestroy()
         {
+            AllBodies.Remove(this);
+
             if (Application.isPlaying && gameObject.scene.isLoaded)
             {
                 CleanupListeners();

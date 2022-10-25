@@ -128,13 +128,17 @@ public class PlayerManager : MonoBehaviour
         TickTimer += Time.deltaTime;
         if (TickTimer >= Constants.TICK_RATE_DELTA)
         {
-            //  TODO need to ensure we aren't accessing anything in Unity from events that the trees may trigger
-            // ! Parallel.ForEach(ActorV2.AllActors, TickActorBehaviorTree);
+            //  TODO need to ensure we aren't accessing anything
+            //  in Unity from events that the BTs trigger so we can use Parallel.
+            // Parallel.ForEach(ActorV2.AllActors, TickActorBehaviorTree);
 
             for (int i = 0; i < ActorV2.AllActors.Count; i++)
             {
-                var actor = ActorV2.AllActors[i];
-                TickActorBehaviorTree(actor, null, i);
+                ActorV2 actor = ActorV2.AllActors[i];
+
+                if (actor.IsAlive())
+                    TickActorBehaviorTree(actor, null, i);
+
                 actor.Tick(Constants.TICK_RATE_DELTA);
             }
 

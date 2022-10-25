@@ -67,8 +67,11 @@ public class HammerDestroyerOfWorlds : MonoBehaviour
             return;
         }
 
-        if (collider.gameObject.GetComponent<UnitV2>())
+        UnitV2 unit = collider.gameObject.GetComponent<UnitV2>();
+        if (unit)
         {
+            Destroy(unit.gameObject);
+
             GameObject spawned = GameObject.Instantiate(unitDestroyedEffect);
             spawned.transform.position = collider.transform.position;
             audioSource.PlayOneShot(unitHitAudio);

@@ -122,6 +122,7 @@ namespace Swordfish.Navigation
             base.InitializeAttributes();
             Attributes.AddOrUpdate(AttributeConstants.SPEED, 0.3f, 0.3f);
             Attributes.AddOrUpdate(AttributeConstants.REACH, 1f);
+            Attributes.AddOrUpdate(AttributeConstants.SENSE_RADIUS, 20f);
         }
 
         protected override void AttachListeners()

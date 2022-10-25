@@ -4,7 +4,6 @@ using Swordfish;
 using Swordfish.Navigation;
 using UnityEngine;
 
-[RequireComponent(typeof(Damageable))]
 public class Constructible : Obstacle
 {
     public bool DestroyOnBuilt = true;
@@ -13,7 +12,6 @@ public class Constructible : Obstacle
     public GameObject OnBuiltPrefab;
     public GameObject[] ConstructionStages;
     private int currentStage;
-
 
     public override void Initialize()
     {
@@ -87,7 +85,7 @@ public class Constructible : Obstacle
 
     private void UpdateStage()
     {
-        float progress = Attributes.ValueOf(AttributeConstants.HEALTH);
+        float progress = Attributes.CalculatePercentOf(AttributeConstants.HEALTH);
         int progressStage = 0;// = (int)(progress / (1f / ConstructionStages.Length));
 
         if (progress >= 0.45f)
@@ -104,22 +102,18 @@ public class Constructible : Obstacle
         }
     }
 
-    public void TryBuild(float count, ActorV2 builder = null)
+    public void OnBuild(object sender, HealthRegainEvent e)
     {
-        Heal(count, AttributeChangeCause.HEALED, builder);
-    }
-
-    public void OnBuild(object sender, Damageable.HealthRegainEvent e)
-    {
-        if (e.cause != AttributeChangeCause.HEALED)
-            return;
-
-        if (e.health >= GetMaxHealth())
+        Debug.Log(Attributes.ValueOf(AttributeConstants.HEALTH) + "/" + Attributes.MaxValueOf(AttributeConstants.HEALTH));
+        if (Attributes.Get(AttributeConstants.HEALTH).PeekAdd(e.amount) == GetMaxHealth())
         {
             //  Try placing a prefab
             if (OnBuiltPrefab != null)
             {
                 Instantiate(OnBuiltPrefab, transform.position, transform.rotation);
+                Structure structure = OnBuiltPrefab.GetComponent<Structure>();
+                structure.Faction = Faction;
+
                 AudioSource.PlayClipAtPoint(buildingData.constructionCompletedAudio?.GetClip(), transform.position);
             }
 
