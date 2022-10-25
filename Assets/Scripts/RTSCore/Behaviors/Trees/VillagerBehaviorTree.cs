@@ -161,7 +161,7 @@ public static class VillagerBehaviorTree
                         new BehaviorSequence(
                             new HasTarget(),
                             new GoToTarget(),
-                            new SetActorState(ActorAnimationState.HUNTING),
+                            new SetActorState(ActorAnimationState.ATTACKING),
                             new BehaviorDelay(1.5f,
                                 new AttackTarget()
                             ),

@@ -98,11 +98,7 @@ namespace Swordfish.Navigation
         private byte PathWaitAttempts;
         private byte RepathAttempts;
 
-        public abstract void OrderToTarget(Body body);
-
         protected abstract BehaviorTree<ActorV2> BehaviorTreeFactory();
-
-        protected virtual void OnFallingOntoBody(Body body) { }
 
         public override void Initialize()
         {
@@ -126,11 +122,6 @@ namespace Swordfish.Navigation
             base.InitializeAttributes();
             Attributes.AddOrUpdate(AttributeConstants.SPEED, 0.3f, 0.3f);
             Attributes.AddOrUpdate(AttributeConstants.REACH, 1f);
-        }
-
-        protected virtual void AnimatorPlayAudio(string clipName)
-        {
-            AudioSource.PlayClipAtPoint(GameMaster.GetAudio(clipName).GetClip(), transform.position);
         }
 
         protected override void AttachListeners()
@@ -159,6 +150,50 @@ namespace Swordfish.Navigation
         {
             if (!Frozen)
                 ProcessMovement(Time.deltaTime);
+        }
+
+        public override void Tick(float deltaTime)
+        {
+            if (StateChangedRecently)
+                OnStateUpdate();
+
+            StateChangedRecently = false;
+            DestinationChangedRecently = false;
+            TargetChangedRecently = false;
+            OrderChangedRecently = false;
+        }
+
+        public abstract void OrderToTarget(Body body);
+
+        public void OrderGoTo(Coord2D coord) => OrderGoTo(World.at(coord));
+
+        public void OrderGoTo(Cell cell)
+        {
+            Destination = cell;
+            Order = UnitOrder.GoTo;
+        }
+
+        public void ResetPath()
+        {
+            CurrentPath = null;
+            PathWaitAttempts = 0;
+            RepathAttempts = 0;
+        }
+
+        public bool HasValidPath()
+        {
+            return CurrentPath != null && CurrentPath.Count > 0;
+        }
+
+        public void LookAt(float x, float y)
+        {
+            Vector3 temp = World.ToTransformSpace(new Vector3(x, 0, y));
+
+            Vector3 lookPos = temp - transform.position;
+            lookPos.y = 0;
+
+            Quaternion rotation = Quaternion.LookRotation(lookPos);
+            transform.rotation = rotation;
         }
 
         protected virtual void OnTriggerEnter(Collider collider)
@@ -191,54 +226,29 @@ namespace Swordfish.Navigation
             }
         }
 
-        public virtual void OnAttachedToHand(Hand hand)
+        protected virtual void OnAttachedToHand(Hand hand)
         {
             Held = true;
         }
 
-        public virtual void OnDetachedFromHand(Hand hand)
+        protected virtual void OnDetachedFromHand(Hand hand)
         {
             Held = false;
         }
 
-        public override void Tick(float deltaTime)
+        protected virtual void AnimatorPlayAudio(string clipName)
         {
-            if (StateChangedRecently)
-                OnStateUpdate();
-
-            StateChangedRecently = false;
-            DestinationChangedRecently = false;
-            TargetChangedRecently = false;
-            OrderChangedRecently = false;
+            AudioSource.PlayClipAtPoint(GameMaster.GetAudio(clipName).GetClip(), transform.position);
         }
 
-        public override void SyncToTransform()
+        protected override void SyncToTransform()
         {
             base.SyncToTransform();
             ResetPath();
         }
 
-        public void ResetPath()
+        protected virtual void OnFallingOntoBody(Body body)
         {
-            CurrentPath = null;
-            PathWaitAttempts = 0;
-            RepathAttempts = 0;
-        }
-
-        public bool HasValidPath()
-        {
-            return CurrentPath != null && CurrentPath.Count > 0;
-        }
-
-        public void LookAt(float x, float y)
-        {
-            Vector3 temp = World.ToTransformSpace(new Vector3(x, 0, y));
-
-            Vector3 lookPos = temp - transform.position;
-            lookPos.y = 0;
-
-            Quaternion rotation = Quaternion.LookRotation(lookPos);
-            transform.rotation = rotation;
         }
 
         protected virtual void OnStateUpdate()
@@ -293,14 +303,6 @@ namespace Swordfish.Navigation
                 Frozen = true;
                 State = ActorAnimationState.IDLE;
             }
-        }
-
-        public void OrderGoTo(Coord2D coord) => OrderGoTo(World.at(coord));
-
-        public void OrderGoTo(Cell cell)
-        {
-            Destination = cell;
-            Order = UnitOrder.GoTo;
         }
 
         private bool CanPathAhead()

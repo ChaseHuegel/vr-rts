@@ -1,4 +1,3 @@
-using Swordfish;
 using Swordfish.Library.BehaviorTrees;
 using Swordfish.Library.Types;
 using Swordfish.Navigation;
@@ -35,9 +34,6 @@ public class VillagerV2 : UnitV2
     [SerializeField]
     private Transform HuntingToolObject;
 
-    [SerializeField]
-    private Transform AttackToolObject;
-
     private Transform CurrentToolObject;
 
 
@@ -57,6 +53,29 @@ public class VillagerV2 : UnitV2
     private Transform CurrentCargoObject;
 
     public bool IsCargoFull() => Attributes.Get(AttributeConstants.CARGO).IsMax();
+
+    protected override BehaviorTree<ActorV2> BehaviorTreeFactory()
+    {
+        return VillagerBehaviorTree.Get();
+    }
+
+    protected override void InitializeAttributes()
+    {
+        base.InitializeAttributes();
+        Attributes.AddOrUpdate(AttributeConstants.CARGO, 0f, 10f);
+    }
+
+    protected override void AttachListeners()
+    {
+        base.AttachListeners();
+        Attributes.Get(AttributeConstants.CARGO).ValueBinding.Changed += OnCargoChanged;
+    }
+
+    protected override void CleanupListeners()
+    {
+        base.CleanupListeners();
+        Attributes.Get(AttributeConstants.CARGO).ValueBinding.Changed -= OnCargoChanged;
+    }
 
     public override void OrderToTarget(Body body)
     {
@@ -85,33 +104,19 @@ public class VillagerV2 : UnitV2
                     Order = UnitOrder.Repair;
                 break;
 
+            case UnitV2 unit:
+                Target = unit;
+                if (unit.Faction != null && unit.Faction.IsAllied(Faction))
+                    Order = UnitOrder.None;
+                else
+                    Order = UnitOrder.Attack;
+                break;
+
             default:
-                base.OrderToTarget(body);
+                Target = body;
+                Order = UnitOrder.None;
                 break;
         }
-    }
-
-    protected override BehaviorTree<ActorV2> BehaviorTreeFactory()
-    {
-        return VillagerBehaviorTree.Get();
-    }
-
-    protected override void InitializeAttributes()
-    {
-        base.InitializeAttributes();
-        Attributes.AddOrUpdate(AttributeConstants.CARGO, 0f, 10f);
-    }
-
-    protected override void AttachListeners()
-    {
-        base.AttachListeners();
-        Attributes.Get(AttributeConstants.CARGO).ValueBinding.Changed += OnCargoChanged;
-    }
-
-    protected override void CleanupListeners()
-    {
-        base.CleanupListeners();
-        Attributes.Get(AttributeConstants.CARGO).ValueBinding.Changed -= OnCargoChanged;
     }
 
     protected virtual void OnCargoChanged(object sender, DataChangedEventArgs<float> e)
@@ -150,11 +155,6 @@ public class VillagerV2 : UnitV2
             case ActorAnimationState.HUNTING:
                 CurrentToolObject = HuntingToolObject;
                 break;
-            case ActorAnimationState.ATTACKING:
-            case ActorAnimationState.ATTACKING2:
-                CurrentToolObject = AttackToolObject;
-                break;
-
             default:
                 CurrentToolObject = null;
                 return;

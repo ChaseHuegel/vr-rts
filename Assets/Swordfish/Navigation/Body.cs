@@ -254,7 +254,7 @@ namespace Swordfish.Navigation
         /// <summary>
         ///     Updates the grid position to match the transform.
         /// </summary>
-        public virtual void SyncToTransform()
+        protected virtual void SyncToTransform()
         {
             Coord2D worldPos = World.ToWorldCoord(transform.position);
 

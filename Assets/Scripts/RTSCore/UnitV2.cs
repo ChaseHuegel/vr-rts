@@ -13,18 +13,6 @@ public abstract class UnitV2 : ActorV2
     [SerializeField]
     private RTSUnitType UnitType;
 
-    public void SetUnitType(RTSUnitType unitType)
-    {
-        UnitType = unitType;
-        m_UnitData = GameMaster.GetUnit(UnitType);
-        OnLoadUnitData(m_UnitData);
-    }
-
-    public override void OrderToTarget(Body body)
-    {
-        Target = body;
-    }
-
     protected override void Start()
     {
         base.Start();
@@ -35,6 +23,13 @@ public abstract class UnitV2 : ActorV2
     {
         base.InitializeAttributes();
         Attributes.AddOrUpdate(AttributeConstants.DAMAGE, 1f);
+    }
+
+    public void SetUnitType(RTSUnitType unitType)
+    {
+        UnitType = unitType;
+        m_UnitData = GameMaster.GetUnit(UnitType);
+        OnLoadUnitData(m_UnitData);
     }
 
     protected virtual void OnLoadUnitData(UnitData data)
