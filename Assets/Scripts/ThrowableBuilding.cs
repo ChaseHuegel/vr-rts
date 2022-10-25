@@ -1,10 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using Valve.VR.InteractionSystem;
+using MLAPI;
 using Swordfish.Audio;
 using Swordfish.Navigation;
-using MLAPI;
+using UnityEngine;
+using Valve.VR.InteractionSystem;
 
 public class ThrowableBuilding : Throwable
 {
@@ -13,11 +13,11 @@ public class ThrowableBuilding : Throwable
     public BuildingData rtsBuildingTypeData;
     private void OnCollisionEnter(Collision collision)
     {
-        bool hitPointValid = !LayerMatchTest( disallowedLayersMask, collision.gameObject );        
+        bool hitPointValid = !LayerMatchTest(disallowedLayersMask, collision.gameObject);
         bool cellsOccupied = false;
         Vector3 groundPosition = Vector3.zero;
 
-        if ( hitPointValid )
+        if (hitPointValid)
         {
             ContactPoint contact = collision.contacts[0];
 
@@ -26,7 +26,7 @@ public class ThrowableBuilding : Throwable
             //Debug.DrawRay(ray.origin, ray.direction, Color.cyan, 5, true);
             groundPosition = contact.point;
             cellsOccupied = CellsOccupied(groundPosition, rtsBuildingTypeData.boundingDimensionX, rtsBuildingTypeData.boundingDimensionY);
-        }      
+        }
 
         if (hitPointValid && !cellsOccupied)
         {
@@ -35,13 +35,17 @@ public class ThrowableBuilding : Throwable
             spawned.transform.rotation = rtsBuildingTypeData.worldPrefab.transform.rotation;
             spawned.transform.Rotate(0f, 0f, Random.Range(0, 4) * 90);
 
+            //  Thrown buildings are the local player's faction
+            Constructible constructible = spawned.GetComponent<Constructible>();
+            constructible.Faction = PlayerManager.instance.faction;
+
             InteractionPointer.instance.PlayBuildingPlacementAllowedAudio();
 
             // Remove resources only when valid placement.
             PlayerManager.instance.DeductResourcesFromStockpile(rtsBuildingTypeData.goldCost,
                                                 rtsBuildingTypeData.grainCost,
                                                 rtsBuildingTypeData.woodCost,
-                                                rtsBuildingTypeData.stoneCost);            
+                                                rtsBuildingTypeData.stoneCost);
         }
         else
         {
@@ -65,7 +69,7 @@ public class ThrowableBuilding : Throwable
 
         for (int x = startX; x < endX; x++)
         {
-            for (int y = startY; y < endY; y++ )
+            for (int y = startY; y < endY; y++)
             {
                 Cell curCell = World.at(x, y);
                 if (curCell.occupied)
@@ -82,6 +86,6 @@ public class ThrowableBuilding : Throwable
 
     private static bool LayerMatchTest(LayerMask layerMask, GameObject obj)
     {
-        return ( ( 1 << obj.layer ) & layerMask ) != 0;
+        return ((1 << obj.layer) & layerMask) != 0;
     }
 }

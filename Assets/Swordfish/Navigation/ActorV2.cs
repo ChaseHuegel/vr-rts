@@ -1,295 +1,464 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Swordfish.Library.BehaviorTrees;
+using Swordfish.Library.Types;
 using UnityEditor;
 using UnityEngine;
+using Valve.VR.InteractionSystem;
 
 namespace Swordfish.Navigation
 {
-    [RequireComponent(typeof(Damageable))]
+    [RequireComponent(typeof(AudioSource))]
     public abstract class ActorV2 : Body, IActor
     {
-        protected abstract BehaviorTree<ActorV2> BehaviorTree { get; set; }
+        private const float InterpolationStrength = 1f - (Constants.ACTOR_PATH_RATE / 60f);
 
-        public UnitOrder Order;
+        public static List<ActorV2> AllActors { get; } = new List<ActorV2>();
 
-        public ActorAnimationState LastState;
+        public List<Cell> CurrentPath
+        {
+            get => CurrentPathBinding.Get();
+            set => CurrentPathBinding.Set(value);
+        }
+
+        public UnitOrder Order
+        {
+            get => OrderBinding.Get();
+            set => OrderBinding.Set(value);
+        }
+
         public ActorAnimationState State
         {
-            get => state;
-            set
-            {
-                if (State == value)
-                    return;
-
-                LastState = state;
-                state = value;
-            }
+            get => StateBinding.Get();
+            set => StateBinding.Set(value);
         }
-        [SerializeField] private ActorAnimationState state;
 
-        public Cell LastDestination;
         public Cell Destination
         {
-            get => destination;
-            set
-            {
-                LastDestination = destination;
-                destination = value;
-            }
+            get => DestinationBinding.Get();
+            set => DestinationBinding.Set(value);
         }
-        private Cell destination;
 
-        public Body LastTarget;
         public Body Target
         {
-            get => target;
-            set
-            {
-                LastTarget = target;
-                target = value;
-            }
+            get => TargetBinding.Get();
+            set => TargetBinding.Set(value);
         }
-        [SerializeField] private Body target;
 
-        private Animator Animator;
-        private Damageable damageable;
-        public Damageable AttributeHandler { get { return damageable; } }
+        public bool Frozen
+        {
+            get => FrozenBinding.Get();
+            set => FrozenBinding.Set(value);
+        }
 
-        [Header("Actor")]
-        public float movementSpeed = 1f;
+        public bool Falling
+        {
+            get => FallingBinding.Get();
+            set => FallingBinding.Set(value);
+        }
 
-        public int InteractReach = 1;
+        public bool Held
+        {
+            get => HeldBinding.Get();
+            set => HeldBinding.Set(value);
+        }
 
-        private float movementInterpolation;
-        private bool moving = false;
-        private bool idle = false;
+        public bool IsMoving
+        {
+            get => IsMovingBinding.Get();
+            private set => IsMovingBinding.Set(value);
+        }
 
-        public List<Cell> currentPath { get; set; } = null;
-        private bool frozen = false;
-        private bool isPathLocked = false;
-        private byte pathWaitTries = 0;
-        private byte pathRepathTries = 0;
-        private byte pathTimer = 0;
+        public BehaviorTree<ActorV2> BehaviorTree { get; private set; }
+
+        public bool OrderChangedRecently { get; private set; }
+        public bool StateChangedRecently { get; private set; }
+        public bool DestinationChangedRecently { get; private set; }
+        public bool TargetChangedRecently { get; private set; }
+
+        public UnitOrder LastOrder { get; private set; }
+        public ActorAnimationState LastState { get; private set; }
+        public Cell LastDestination { get; private set; }
+        public Body LastTarget { get; private set; }
+
+        public DataBinding<List<Cell>> CurrentPathBinding { get; private set; } = new();
+        public DataBinding<UnitOrder> OrderBinding { get; private set; } = new();
+        public DataBinding<ActorAnimationState> StateBinding { get; private set; } = new();
+        public DataBinding<Cell> DestinationBinding { get; private set; } = new();
+        public DataBinding<Body> TargetBinding { get; private set; } = new();
+        public DataBinding<bool> FrozenBinding { get; set; } = new();
+        public DataBinding<bool> FallingBinding { get; private set; } = new();
+        public DataBinding<bool> HeldBinding { get; private set; } = new();
+        public DataBinding<bool> IsMovingBinding { get; private set; } = new();
+
+        protected AudioSource AudioSource { get; private set; }
+        protected Animator Animator { get; private set; }
+
+        private byte PathWaitAttempts;
+        private byte RepathAttempts;
+
+        protected abstract BehaviorTree<ActorV2> BehaviorTreeFactory();
 
         public override void Initialize()
         {
             base.Initialize();
+            AllActors.Add(this);
 
+            AudioSource = GetComponent<AudioSource>();
             Animator = GetComponentInChildren<Animator>();
-            damageable = GetComponent<Damageable>();
 
-            movementInterpolation = 1f - (Constants.ACTOR_PATH_RATE / 60f);
+            BehaviorTree = BehaviorTreeFactory();
         }
 
-        public bool IsIdle() { return idle; }
-        private bool UpdateIdle()
+        protected override void OnDestroy()
         {
-            //  Idle if not frozen and not moving, pathing, or has a target goal
-            return idle = !frozen && !(IsMoving() || HasValidPath() || HasValidTarget());
+            base.OnDestroy();
+            AllActors.Remove(this);
         }
 
-        private bool HasValidTarget()
+        protected override void InitializeAttributes()
         {
-            return false;
+            base.InitializeAttributes();
+            Attributes.AddOrUpdate(AttributeConstants.SPEED, 0.3f, 0.3f);
+            Attributes.AddOrUpdate(AttributeConstants.REACH, 1f);
+            Attributes.AddOrUpdate(AttributeConstants.SENSE_RADIUS, 20f);
         }
 
-        public bool IsMoving() { return moving; }
-        public bool HasValidPath() { return currentPath != null && currentPath.Count > 0; }
-        public bool HasDestinationChanged() => Destination != LastDestination;
-        public bool HasTargetChanged() => Target != LastTarget;
-        public bool HasStateChanged() => State != LastState;
-
-        public void Freeze() { frozen = true; RemoveFromGrid(); }
-        public void Unfreeze() { frozen = false; UpdatePosition(); }
-        public void ToggleFreeze()
+        protected override void AttachListeners()
         {
-            if (frozen = !frozen == false) UpdatePosition();
+            base.AttachListeners();
+            FrozenBinding.Changed += OnFrozenChanged;
+            StateBinding.Changed += OnStateChanged;
+            DestinationBinding.Changed += OnDestinationChanged;
+            TargetBinding.Changed += OnTargetChanged;
+            OrderBinding.Changed += OnOrderChanged;
+            FallingBinding.Changed += OnFallingChanged;
         }
 
-        public bool IsPathLocked() { return isPathLocked; }
-        public void LockPath() { isPathLocked = true; }
-        public void UnlockPath() { isPathLocked = false; }
-
-        public void UpdatePosition()
+        protected override void CleanupListeners()
         {
-            SyncPosition();
-            ResetPath();
+            base.CleanupListeners();
+            FrozenBinding.Changed -= OnFrozenChanged;
+            StateBinding.Changed -= OnStateChanged;
+            DestinationBinding.Changed -= OnDestinationChanged;
+            TargetBinding.Changed -= OnTargetChanged;
+            OrderBinding.Changed -= OnOrderChanged;
+            FallingBinding.Changed -= OnFallingChanged;
+        }
+
+        protected virtual void Update()
+        {
+            if (!Frozen)
+                ProcessMovement(Time.deltaTime);
+        }
+
+        public override void Tick(float deltaTime)
+        {
+            if (StateChangedRecently)
+                OnStateUpdate();
+
+            StateChangedRecently = false;
+            DestinationChangedRecently = false;
+            TargetChangedRecently = false;
+            OrderChangedRecently = false;
+        }
+
+        public abstract void IssueTargetedOrder(Body body);
+
+        public void IssueGoToOrder(Coord2D coord) => IssueGoToOrder(World.at(coord));
+
+        public void IssueGoToOrder(Cell cell)
+        {
+            Destination = cell;
+            Order = UnitOrder.GoTo;
+        }
+
+        public void IssueSmartOrder(Cell cell)
+        {
+            Body body = cell.GetFirstOccupant();
+            if (body)
+                IssueTargetedOrder(body);
+            else
+                IssueGoToOrder(cell);
         }
 
         public void ResetPath()
         {
-            currentPath = null;
+            CurrentPath = null;
+            PathWaitAttempts = 0;
+            RepathAttempts = 0;
         }
 
-        public void Goto(Direction dir, int distance, bool ignoreActors = true) { Goto(dir.toVector3() * distance, ignoreActors); }
-        public void Goto(Coord2D coord, bool ignoreActors = true) { Goto(coord.x, coord.y, ignoreActors); }
-        public void Goto(Vector2 vec, bool ignoreActors = true) { Goto((int)vec.x, (int)vec.y, ignoreActors); }
-        public void Goto(Vector3 vec, bool ignoreActors = true) { Goto((int)vec.x, (int)vec.z, ignoreActors); }
-        public void Goto(int x, int y, bool ignoreActors = true)
+        public bool HasValidPath()
         {
-            if (!isPathLocked && !HasValidPath() && DistanceTo(x, y) > 1)
-                PathManager.RequestPath(this, x, y, ignoreActors);
-        }
-
-        public void GotoForced(Direction dir, int distance, bool ignoreActors = true) { Goto(dir.toVector3() * distance, ignoreActors); }
-        public void GotoForced(Coord2D coord, bool ignoreActors = true) { Goto(coord.x, coord.y, ignoreActors); }
-        public void GotoForced(Vector2 vec, bool ignoreActors = true) { Goto((int)vec.x, (int)vec.y, ignoreActors); }
-        public void GotoForced(Vector3 vec, bool ignoreActors = true) { Goto((int)vec.x, (int)vec.z, ignoreActors); }
-        public void GotoForced(int x, int y, bool ignoreActors = true)
-        {
-            if (!isPathLocked && DistanceTo(x, y) > 1)
-                PathManager.RequestPath(this, x, y, ignoreActors);
+            return CurrentPath != null && CurrentPath.Count > 0;
         }
 
         public void LookAt(float x, float y)
         {
             Vector3 temp = World.ToTransformSpace(new Vector3(x, 0, y));
 
-            var lookPos = temp - transform.position;
+            Vector3 lookPos = temp - transform.position;
             lookPos.y = 0;
-            var rotation = Quaternion.LookRotation(lookPos);
+
+            Quaternion rotation = Quaternion.LookRotation(lookPos);
             transform.rotation = rotation;
         }
 
-        public void FixedUpdate()
+        protected virtual void OnTriggerEnter(Collider collider)
         {
-            ProcessPathing();
+            if (Falling)
+            {
+                Falling = false;
+                Frozen = false;
 
-            BehaviorTree?.Tick(this, Time.fixedDeltaTime);
+                if (collider.TryGetComponent(out Body body))
+                    OnFallingOntoBody(body);
+            }
+        }
 
-            if (HasStateChanged())
-                Animator.SetInteger("ActorAnimationState", (int)State);
+        protected virtual void OnCollisionEnter(Collision collision)
+        {
+            if (Falling)
+            {
+                Falling = false;
+                Frozen = false;
+
+                if (collision.relativeVelocity.magnitude > 4.0f)
+                {
+                    ContactPoint contact = collision.contacts[0];
+                    float fallDamage = Vector3.Dot(contact.normal, collision.relativeVelocity) * 10f;
+                    Damage(fallDamage, AttributeChangeCause.NATURAL, null, DamageType.BLUDGEONING);
+
+                    AudioSource.PlayOneShot(GameMaster.GetAudio("unit_damaged").GetClip());
+                }
+            }
+        }
+
+        protected virtual void OnAttachedToHand(Hand hand)
+        {
+            Held = true;
+        }
+
+        protected virtual void OnDetachedFromHand(Hand hand)
+        {
+            Held = false;
+        }
+
+        protected virtual void AnimatorPlayAudio(string clipName)
+        {
+            AudioSource.PlayClipAtPoint(GameMaster.GetAudio(clipName).GetClip(), transform.position);
+        }
+
+        protected override void SyncToTransform()
+        {
+            base.SyncToTransform();
+            ResetPath();
+        }
+
+        protected virtual void OnFallingOntoBody(Body body)
+        {
+        }
+
+        protected virtual void OnStateUpdate()
+        {
+            Animator?.SetInteger("ActorAnimationState", (int)State);
+        }
+
+        protected virtual void OnFrozenChanged(object sender, DataChangedEventArgs<bool> e)
+        {
+            if (e.NewValue == true)
+                RemoveFromGrid();
+            else
+                SyncToTransform();
+        }
+
+        protected virtual void OnStateChanged(object sender, DataChangedEventArgs<ActorAnimationState> e)
+        {
+            StateChangedRecently = true;
+            LastState = e.OldValue;
+        }
+
+        protected virtual void OnDestinationChanged(object sender, DataChangedEventArgs<Cell> e)
+        {
+            DestinationChangedRecently = true;
+            LastDestination = e.OldValue;
+        }
+
+        protected virtual void OnTargetChanged(object sender, DataChangedEventArgs<Body> e)
+        {
+            TargetChangedRecently = true;
+            LastTarget = e.OldValue;
+        }
+
+        protected virtual void OnOrderChanged(object sender, DataChangedEventArgs<UnitOrder> e)
+        {
+            OrderChangedRecently = true;
+            LastOrder = e.OldValue;
+        }
+
+        protected virtual void OnFallingChanged(object sender, DataChangedEventArgs<bool> e)
+        {
+            if (e.NewValue == false)
+                transform.rotation = Quaternion.identity;
+        }
+
+        protected virtual void OnHeldChanged(object sender, DataChangedEventArgs<bool> e)
+        {
+            Falling = !e.NewValue;
+
+            if (e.NewValue == true)
+            {
+                Frozen = true;
+                State = ActorAnimationState.IDLE;
+            }
+        }
+
+        private bool CanPathAhead()
+        {
+            if (!HasValidPath())
+                return false;
+
+            //  We can pass thru actors if the path ahead is clear and we are going beyond the next position.
+            bool canPassThruActors = CurrentPath.Count > 2 && !World.at(CurrentPath[1].x, CurrentPath[1].y).IsBlocked();
+            return CanSetPosition(CurrentPath[0].x, CurrentPath[0].y, canPassThruActors);
+        }
+
+        private void ProcessMovement(float deltaTime)
+        {
+            Vector3 gridToWorldSpace = World.ToTransformSpace(GridPosition.x, transform.position.y, GridPosition.y);
+
+            IsMoving = Util.DistanceUnsquared(transform.position, gridToWorldSpace) > 0.001f;
+
+            if (IsMoving)
+            {
+                State = ActorAnimationState.MOVING;
+
+                transform.position = Vector3.MoveTowards(
+                        transform.position,
+                        gridToWorldSpace,
+                        deltaTime * InterpolationStrength * Attributes.ValueOf(AttributeConstants.SPEED)
+                    );
+            }
+            else
+            {
+                if (State == ActorAnimationState.MOVING && !CanPathAhead())
+                    State = ActorAnimationState.IDLE;
+
+                ProcessPathing();
+            }
         }
 
         private void ProcessPathing()
         {
-            //  Don't path while frozen
-            if (frozen) return;
+            //  Ensure we're facing our target if we aren't moving
+            if (!IsMoving && Target != null && !HasValidPath())
+                LookAt(Target.GetPosition().x, Target.GetPosition().y);
 
-            Vector3 gridTransformPos = World.ToTransformSpace(gridPosition.x, transform.position.y, gridPosition.y);
-
-            //  Interpolate movement if the transform hasn't reached our world space grid pos
-            moving = false;
-            bool finishedInterpolating = true;
-            if (Util.DistanceUnsquared(transform.position, gridTransformPos) > 0.001f)
-            {
-                moving = true;
-                State = ActorAnimationState.MOVING;
-
-                transform.position = Vector3.MoveTowards
-                (
-                    transform.position,
-                    gridTransformPos,
-                    Time.fixedDeltaTime * movementInterpolation * movementSpeed
-                );
-
-                finishedInterpolating = false;
-            }
-
-            pathTimer++;
-            if (pathTimer >= Constants.ACTOR_PATH_RATE)
-                pathTimer = 0;  //  Ticked
-
-            //  Ensure we're facing our target
-            if (pathTimer == 0 && finishedInterpolating && Target != null && !HasValidPath())
-                LookAt(Target.gridPosition.x, Target.gridPosition.y);
-
-            //  Make certain pathing is unlocked as soon as the path is no longer valid
-            if (IsPathLocked() && !HasValidPath() || HasDestinationChanged())
-                UnlockPath();
-
-            //  If we have a valid path, move along it
+            //  If we have a valid path, move along it.
             if (HasValidPath())
             {
                 // TODO: Add 'waypoints' for longer paths too big for the heap
 
-                //  We can pass thru actors if the path ahead is clear and we are going beyond the next spot
-                bool canPassThruActors = currentPath.Count > 2 && !World.at(currentPath[1].x, currentPath[1].y).IsBlocked();
-
                 //  Attempt to move to the next point
-                if (CanSetPosition(currentPath[0].x, currentPath[0].y, canPassThruActors))
+                if (CanPathAhead())
                 {
-                    //  If the path is clear, reset pathing logic
-                    pathWaitTries = 0;
-                    pathRepathTries = 0;
+                    //  Reset pathing logic
+                    PathWaitAttempts = 0;
+                    RepathAttempts = 0;
 
-                    //  Only move if we finished interpolating
-                    if (finishedInterpolating)
+                    //  Only process the move if we finished interpolating
+                    if (!IsMoving)
                     {
                         //  Look in the direction we're going
-                        LookAt(currentPath[0].x, currentPath[0].y);
+                        LookAt(CurrentPath[0].x, CurrentPath[0].y);
 
-                        SetPositionUnsafe(currentPath[0].x, currentPath[0].y);
-                        currentPath.RemoveAt(0);
-
-                        //  Make certain the path is unlocked once the end is reached
-                        if (currentPath.Count == 0)
-                            UnlockPath();
+                        SetPosition(CurrentPath[0].x, CurrentPath[0].y);
+                        CurrentPath.RemoveAt(0);
                     }
                 }
                 //  Unable to reach the next point, handle pathing logic on tick
-                else if (pathTimer == 0)
+                else
                 {
                     // Wait some time to see if path clears
-                    if (pathWaitTries > Constants.PATH_WAIT_TRIES)
+                    if (PathWaitAttempts > Constants.PATH_WAIT_TRIES)
                     {
                         //  Path hasn't cleared, try repathing to a point near the current node or occupant of node
-                        if (pathRepathTries < Constants.PATH_REPATH_TRIES)
+                        if (RepathAttempts < Constants.PATH_REPATH_TRIES)
                         {
                             int targetX, targetY;
 
-                            if (HasValidTarget())
+                            if (Target != null)
                             {
-                                Coord2D coord = Destination.GetFirstOccupant().GetNearbyCoord();
+                                Coord2D coord = Target.GetRandomAdjacentPosition();
                                 targetX = coord.x;
                                 targetY = coord.y;
                             }
                             else
                             {
-                                targetX = currentPath[^1].x + Random.Range(-1, 1);
-                                targetY = currentPath[^1].y + Random.Range(-1, 1);
+                                targetX = CurrentPath[^1].x + UnityEngine.Random.Range(-1, 1);
+                                targetY = CurrentPath[^1].y + UnityEngine.Random.Range(-1, 1);
                             }
 
                             //  false, dont ignore actors. Stuck and may need to path around them
-                            GotoForced(targetX, targetY, false);
+                            PathManager.RequestPath(this, targetX, targetY, false);
                         }
                         //  Unable to repath
                         else
                         {
                             //  Reset pathing
                             ResetPath();
-                            pathWaitTries = 0;
-                            pathRepathTries = 0;
+                            Destination = null;
+                            Target = null;
                         }
 
-                        pathRepathTries++;
+                        RepathAttempts++;
                     }
 
-                    pathWaitTries++;
+                    PathWaitAttempts++;
                 }
             }
         }
 
 #if UNITY_EDITOR
-        public virtual void OnDrawGizmosSelected()
+        protected virtual void OnDrawGizmosSelected()
         {
-            if (Application.isEditor != true) return;
-
-            if (currentPath != null)
+            if (CurrentPath != null)
             {
-                foreach (Cell cell in currentPath)
+                foreach (Cell cell in CurrentPath)
                 {
                     Gizmos.color = Color.cyan;
                     Gizmos.DrawSphere(World.ToTransformSpace(new Vector3(cell.x, 0, cell.y)), 0.25f * World.GetUnit());
                 }
             }
+
+            if (LastTarget != null)
+            {
+                Gizmos.color = Color.red;
+                Gizmos.DrawSphere(World.ToTransformSpace(LastTarget.GetPosition()), 0.25f * World.GetUnit());
+            }
+
+            if (Target != null)
+            {
+                Gizmos.color = Color.magenta;
+                Gizmos.DrawSphere(World.ToTransformSpace(Target.GetPosition()), 0.25f * World.GetUnit());
+
+                if (Target.GetCell().GetFirstOccupant() != null)
+                {
+                    Coord2D coord = Target.GetCell().GetFirstOccupant().GetNearestPositionFrom(GridPosition);
+
+                    Gizmos.color = Color.green;
+                    Gizmos.DrawSphere(World.ToTransformSpace(coord.x, coord.y), 0.25f * World.GetUnit());
+                }
+            }
         }
 
         private Vector2 behaviorTreeScrollPosition = Vector2.zero;
-        public virtual void OnGUI()
+        protected virtual void OnGUI()
         {
-            if (!Selection.gameObjects.Contains(gameObject)) return;
+            if (!Selection.gameObjects.Contains(gameObject))
+                return;
 
             if (BehaviorTree != null)
             {

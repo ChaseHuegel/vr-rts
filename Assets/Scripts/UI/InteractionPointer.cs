@@ -1,5 +1,6 @@
 ﻿
 using System.Collections.Generic;
+using System.Linq;
 using Swordfish;
 using Swordfish.Audio;
 using Swordfish.Navigation;
@@ -70,8 +71,7 @@ public class InteractionPointer : MonoBehaviour
     public bool visible = false;
     private PointerInteractable pointedAtPointerInteractable;
     private SpawnQueue spawnQueue;
-    private List<Unit> selectedUnits;
-    private List<ActorV2> selectedActorV2;
+    private List<ActorV2> selectedActors;
     private Vector3 pointedAtPosition;
     private Vector3 prevPointedAtPosition;
     private float pointerShowStartTime = 0.0f;
@@ -186,13 +186,12 @@ public class InteractionPointer : MonoBehaviour
         buildingPlacementAllowedSound = GameMaster.Instance.buildingPlacementAllowedSound;
         buildingPlacementDeniedSound = GameMaster.Instance.buildingPlacementDeniedSound;
         //interactableObjects = GameObject.FindObjectsOfType<PointerInteractable>();
-        selectedUnits = new List<Unit>();
-        selectedActorV2 = new List<ActorV2>();
+        selectedActors = new List<ActorV2>();
 
         // Cache some values, going to need them a lot and don't need to keep
         // bothering the GameMaster/PlayerManager for them.
         maxUnitSelectionCount = GameMaster.Instance.maximumUnitSelectionCount;
-        factionId = playerManager.factionId;
+        faction = playerManager.faction;
 
         // Setup LineRenderers for unit selection
         unitSelectionLineRenderers = new LineRenderer[maxUnitSelectionCount];
@@ -393,18 +392,9 @@ public class InteractionPointer : MonoBehaviour
 
             ActorV2 hoveredActor = pointedAtPointerInteractable.GetComponent<ActorV2>();
             if (hoveredActor && !isInUnitSelectionMode &&
-                hoveredActor.IsSameFaction(factionId))
+                (hoveredActor.Faction?.IsSameFaction(faction) ?? false))
             {
-                selectedActorV2.Add(hoveredActor);
-                isInUnitSelectionMode = true;
-                return;
-            }
-
-            Unit hoveredUnit = pointedAtPointerInteractable.GetComponent<Unit>();
-            if (hoveredUnit && !isInUnitSelectionMode &&
-                hoveredUnit.IsSameFaction(factionId))
-            {
-                selectedUnits.Add(hoveredUnit);
+                selectedActors.Add(hoveredActor);
                 isInUnitSelectionMode = true;
                 return;
             }
@@ -454,7 +444,7 @@ public class InteractionPointer : MonoBehaviour
                 int currentIndex = wallPreviewSections.IndexOf(go);
                 currentIndex++;
                 GameObject nextObject = null;
-                Swordfish.Coord2D nextSegmentPosition = null;
+                Coord2D nextSegmentPosition = new(0, 0);
 
                 if (currentIndex < wallPreviewSections.Count - 1)
                 {
@@ -545,101 +535,15 @@ public class InteractionPointer : MonoBehaviour
 
             return;
         }
-
-        else if (selectedUnits.Count > 0)
+        else if (selectedActors.Count > 0)
         {
-            foreach (Unit unit in selectedUnits)
+            foreach (ActorV2 actor in selectedActors)
             {
-                if (pointedAtPointerInteractable)
-                {
-                    Resource resource = pointedAtPointerInteractable.GetComponent<Resource>();
-                    if (resource) // 
-                    {
-                        unit.AssignUnitToResourceTask(resource);
-                        continue;
-                    }
-
-                    Unit pointedAtUnit = pointedAtPointerInteractable.GetComponent<Unit>();
-                    if (pointedAtUnit)
-                    {
-                        unit.AssignUnitToUnitTask(pointedAtUnit);
-                        continue;
-                    }
-
-                    Fauna fauna = pointedAtPointerInteractable.GetComponent<Fauna>();
-                    if (fauna)
-                    {
-                        unit.AssignUnitToFaunaTask(fauna);
-                        continue;
-                    }
-
-                    Structure structure = pointedAtPointerInteractable.GetComponent<Structure>();
-                    if (structure)
-                    {
-                        unit.AssignUnitToStructureTask(structure);
-                        continue;
-                    }
-
-                    Constructible constructible = pointedAtPointerInteractable.GetComponent<Constructible>();
-                    if (constructible)
-                    {
-                        unit.AssignUnitToConstructibleTask(constructible);
-                        continue;
-                    }
-                }
-                // else
-                // {                  
-                //     unit.MoveToLocation(pointedAtPosition);
-                // }
-
-                unit.MoveToLocation(pointedAtPosition);
-                continue;
-            }
-
-            // Cleanup
-            EndUnitSelectionMode();
-            pointedAtResource = null;
-        }
-
-        else if (selectedActorV2.Count > 0)
-        {
-            foreach (ActorV2 actor in selectedActorV2)
-            {
-                if (pointedAtPointerInteractable)
-                {
-                    if (pointedAtPointerInteractable.TryGetComponent(out Resource resource) && resource.enabled)
-                    {
-                        actor.Target = resource;
-                        actor.Order = UnitOrder.Collect;
-                        continue;
-                    }
-                    else if (pointedAtPointerInteractable.TryGetComponent(out Structure structure) && structure.enabled)
-                    {
-                        actor.Target = structure;
-
-                        if (structure.AttributeHandler.GetAttribute(Attributes.HEALTH).IsMax())
-                            actor.Order = UnitOrder.DropOff;
-                        else
-                            actor.Order = UnitOrder.Repair;
-
-                        continue;
-                    }
-                    else if (pointedAtPointerInteractable.TryGetComponent(out Fauna fauna) && fauna.enabled)
-                    {
-                        actor.Target = fauna;
-                        actor.Order = UnitOrder.Hunt;
-                        continue;
-                    }
-                    else if (pointedAtPointerInteractable.TryGetComponent(out Constructible constructible) && constructible.enabled)
-                    {
-                        actor.Target = constructible;
-                        actor.Order = UnitOrder.Repair;
-                        continue;
-                    }
-                }
-
-                actor.Destination = World.at(World.ToWorldCoord(pointedAtPosition));
-                actor.Order = UnitOrder.GoTo;
+                Body body = pointedAtPointerInteractable?.GetComponents<Body>().FirstOrDefault(x => x.enabled);
+                if (pointedAtPointerInteractable && body)
+                    actor.IssueTargetedOrder(body);
+                else
+                    actor.IssueGoToOrder(World.ToWorldCoord(pointedAtPosition));
             }
 
             // Cleanup
@@ -647,7 +551,9 @@ public class InteractionPointer : MonoBehaviour
             pointedAtResource = null;
         }
         else
+        {
             isInUnitSelectionMode = false;
+        }
     }
 
     private bool CellsOccupied(Vector3 position, int dimensionX, int dimensionY)
@@ -1032,8 +938,7 @@ public class InteractionPointer : MonoBehaviour
     {
         isInUnitSelectionMode = false;
         pointedAtResource = null;
-        selectedUnits.Clear();
-        selectedActorV2.Clear();
+        selectedActors.Clear();
         foreach (LineRenderer lineRenderer in unitSelectionLineRenderers)
         {
             lineRenderer.enabled = false;
@@ -1073,7 +978,7 @@ public class InteractionPointer : MonoBehaviour
             hitSomething = true;
             hitPointValid = LayerMatchTest(allowedPlacementLayers, hitInfo.collider.gameObject);
 
-            if (selectedUnits.Count > 0)
+            if (selectedActors.Count > 0)
                 pointedAtResource = hitInfo.collider.GetComponentInParent<Resource>();
 
             hitPointerInteractable = hitInfo.collider.GetComponent<PointerInteractable>();
@@ -1108,18 +1013,11 @@ public class InteractionPointer : MonoBehaviour
         }
         else if (isInUnitSelectionMode && pointedAtPointerInteractable != null)
         {
-            Unit hoveredUnit = pointedAtPointerInteractable.GetComponent<Unit>();
-            if (hoveredUnit && !selectedUnits.Contains(hoveredUnit) &&
-                factionId == hoveredUnit.factionId)
-            {
-                selectedUnits.Add(hoveredUnit);
-            }
-
             ActorV2 hoveredActor = pointedAtPointerInteractable.GetComponent<ActorV2>();
-            if (hoveredActor && !selectedActorV2.Contains(hoveredActor) &&
-                factionId == hoveredActor.factionId)
+            if (hoveredActor && !selectedActors.Contains(hoveredActor) &&
+                (hoveredActor.Faction?.IsSameFaction(faction) ?? false))
             {
-                selectedActorV2.Add(hoveredActor);
+                selectedActors.Add(hoveredActor);
             }
         }
         else if (isInBuildingPlacementMode)
@@ -1165,39 +1063,16 @@ public class InteractionPointer : MonoBehaviour
             if (pointerLineRenderer.enabled == true)
             pointerLineRenderer.enabled = false;
 
-        if (selectedUnits.Count > 0)
+        if (selectedActors.Count > 0)
         {
             int i = 0;
-            foreach (Unit unit in selectedUnits)
-            {
-                LineRenderer lineRenderer = unitSelectionLineRenderers[i];
-
-                if (!unit)
-                {
-                    selectedUnits.Remove(unit);
-                    if (unitSelectionLineRenderers[i].enabled)
-                        unitSelectionLineRenderers[i].enabled = false;
-                }
-                else
-                {
-                    DrawQuadraticBezierCurve(unitSelectionLineRenderers[i], unit.transform.position, pointedAtPosition);
-                    if (!unitSelectionLineRenderers[i].enabled)
-                        unitSelectionLineRenderers[i].enabled = true;
-                }
-                i++;
-            }
-        }
-
-        if (selectedActorV2.Count > 0)
-        {
-            int i = 0;
-            foreach (ActorV2 actor in selectedActorV2)
+            foreach (ActorV2 actor in selectedActors)
             {
                 LineRenderer lineRenderer = unitSelectionLineRenderers[i];
 
                 if (!actor)
                 {
-                    selectedActorV2.Remove(actor);
+                    selectedActors.Remove(actor);
                     if (unitSelectionLineRenderers[i].enabled)
                         unitSelectionLineRenderers[i].enabled = false;
                 }

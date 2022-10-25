@@ -59,8 +59,8 @@ namespace Swordfish.Navigation
             pathingQueue.TryDequeue(out currentRequest);
             if (currentRequest == null) return;
 
-            currentRequest.actor.currentPath = Path.Find(
-                currentRequest.actor.GetCellAtGrid(),
+            currentRequest.actor.CurrentPath = Path.Find(
+                currentRequest.actor.GetCell(),
                 World.at(currentRequest.target.x, currentRequest.target.y),
                 currentRequest.ignoreActors
                 );

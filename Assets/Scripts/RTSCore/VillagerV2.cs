@@ -1,229 +1,234 @@
 using Swordfish.Library.BehaviorTrees;
+using Swordfish.Library.Types;
 using Swordfish.Navigation;
 using UnityEngine;
 
-public class VillagerV2 : ActorV2
+public class VillagerV2 : UnitV2
 {
-    //  ! This is a test class don't try to actually use it.
-    protected override BehaviorTree<ActorV2> BehaviorTree { get; set; }
+    public override bool IsCivilian => true;
 
-    public bool IsCargoFull => Cargo >= 10;
-
-    public int Cargo = 0;
-    public ResourceGatheringType CargoType = ResourceGatheringType.None;
-
-    public override void Initialize()
+    public ResourceGatheringType CargoType
     {
-        base.Initialize();
+        get => CargoTypeBinding.Get();
+        set => CargoTypeBinding.Set(value);
+    }
 
-        BehaviorTree = new BehaviorTree<ActorV2>(
-            new BehaviorSelector(
+    public DataBinding<ResourceGatheringType> CargoTypeBinding { get; private set; } = new();
 
-                new OrderIs(UnitOrder.GoTo,
-                    new BehaviorSelector(
-                        //  Attempt to go to
-                        new BehaviorSequence(
-                            new HasDestination(),
-                            new GoToDestination(),
-                            new ResetDestination(),
-                            new ResetOrder()
-                        ),
-                        //  Else order is complete
-                        new BehaviorSequence(
-                            new ResetDestination(),
-                            new ResetOrder()
-                        )
-                    )
-                ),
+    [Header("Tool Objects")]
+    [SerializeField]
+    private Transform FarmingToolObject = null;
 
-                new OrderIs(UnitOrder.Collect,
-                    new BehaviorSelector(
-                        //  Attempt to drop off if cargo is full
-                        new BehaviorSequence(
-                            new IsCargoFull(),
-                            new BehaviorSelector(
-                                //  Try the current target
-                                new CanDropOffAtTarget(),
-                                //  Or get the nearest dropoff
-                                new TargetNearestDropOff()
-                            ),
-                            new GoToTarget(),
-                            new LookAtTarget(),
-                            new CanDropOffAtTarget(),
-                            new DropOffCargo(),
-                            new TargetPrevious()
-                        ),
-                        //  Else attempt to collect resources
-                        new BehaviorSequence(
-                            new BehaviorSelector(
-                                //  Try the current target
-                                new CanCollectTarget(),
-                                //  Or find the nearest matching resource
-                                new TargetNearestCargoResource()
-                            ),
-                            //  Navigate to the resource
-                            new GoToTarget(),
-                            //  Collect the resource
-                            new BehaviorSequence(
-                                //  If cargo isn't full
-                                new BehaviorInverter(
-                                    new IsCargoFull()
-                                ),
-                                new CanCollectTarget(),
-                                new SetStateToGathering(),
-                                new BehaviorDelay(1.5f,
-                                    new CollectCargo()
-                                )
-                            )
-                        ),
-                        //  Else order is complete
-                        new BehaviorSequence(
-                            new ResetTarget(),
-                            new ResetOrder()
-                        )
-                    )
-                ),
+    [SerializeField]
+    private Transform MiningToolObject;
 
-                new OrderIs(UnitOrder.DropOff,
-                    new BehaviorSelector(
-                        //  Attempt to drop off at the target
-                        new BehaviorSequence(
-                            new HasTarget(),
-                            new GoToTarget(),
-                            new CanDropOffAtTarget(),
-                            new DropOffCargo(),
-                            new ResetTarget(),
-                            new ResetOrder()
-                        ),
-                        //  Else order is complete
-                        new BehaviorSequence(
-                            new ResetTarget(),
-                            new ResetOrder()
-                        )
-                    )
-                ),
+    [SerializeField]
+    private Transform LumberjackToolObject;
 
-                new OrderIs(UnitOrder.Hunt,
-                    new BehaviorSelector(
-                        //  Attempt to drop off if cargo is full
-                        new BehaviorSequence(
-                            new IsCargoFull(),
-                            new BehaviorSelector(
-                                //  Try the current target
-                                new CanDropOffAtTarget(),
-                                //  Or get the nearest dropoff
-                                new TargetNearestDropOff()
-                            ),
-                            new GoToTarget(),
-                            new LookAtTarget(),
-                            new CanDropOffAtTarget(),
-                            new DropOffCargo(),
-                            new TargetPrevious()
-                        ),
-                        //  Else attempt to hunt a target
-                        new BehaviorSequence(
-                            new BehaviorSelector(
-                                //  Try the current target
-                                new HasTarget(),
-                                //  Or find the nearest matching resource
-                                new TargetNearestFauna()
-                            ),
-                            //  Navigate to the target
-                            new GoToTarget(),
-                            new BehaviorSelector(
-                                //  Try to collect the target
-                                new BehaviorSequence(
-                                    //  If cargo isn't full
-                                    new BehaviorInverter(
-                                        new IsCargoFull()
-                                    ),
-                                    new CanCollectTarget(),
-                                    new SetStateToGathering(),
-                                    new BehaviorDelay(1.5f,
-                                        new CollectCargo()
-                                    )
-                                ),
-                                //  Else try to attack the target
-                                new BehaviorSelector(
-                                    new BehaviorSequence(
-                                        new SetUnitState(ActorAnimationState.HUNTING),
-                                        new BehaviorDelay(1.5f,
-                                            new AttackTarget()
-                                        ),
-                                        new SetCargoType(ResourceGatheringType.Meat),
-                                        new TargetNearestCargoResource()
-                                    )
-                                )
-                            )
-                        ),
-                        //  Else order is complete
-                        new BehaviorSequence(
-                            new ResetTarget(),
-                            new ResetOrder()
-                        )
-                    )
-                ),
+    [SerializeField]
+    private Transform BuilderToolObject;
 
-                new OrderIs(UnitOrder.Attack,
-                    new BehaviorSelector(
-                        //  Attempt to chase and attack the target
-                        new BehaviorSequence(
-                            new HasTarget(),
-                            new GoToTarget(),
-                            new SetUnitState(ActorAnimationState.HUNTING),
-                            new BehaviorDelay(1.5f,
-                                new AttackTarget()
-                            ),
-                            new ResetTarget(),
-                            new ResetOrder()
-                        ),
-                        //  Else order is complete
-                        new BehaviorSequence(
-                            new ResetTarget(),
-                            new ResetOrder()
-                        )
-                    )
-                ),
+    [SerializeField]
+    private Transform FishingToolObject;
 
-                new OrderIs(UnitOrder.Repair,
-                    new BehaviorSelector(
-                        //  Attempt to repair the target
-                        new BehaviorSequence(
-                            new HasTarget(),
-                            new GoToTarget(),
-                            new SetUnitState(ActorAnimationState.BUILDANDREPAIR),
-                            new BehaviorDelay(1.5f,
-                                new HealTarget()
-                            ),
-                            new ResetTarget(),
-                            new ResetOrder()
-                        ),
-                        //  Else order is complete
-                        new BehaviorSequence(
-                            new ResetTarget(),
-                            new ResetOrder()
-                        )
-                    )
-                ),
+    [SerializeField]
+    private Transform HuntingToolObject;
 
-                //  Try to navigate to our current destination
-                new IfHasDestination(
-                    new BehaviorSequence(
-                        new GoToDestination(),
-                        new ResetDestination()
-                    )
-                ),
+    [SerializeField]
+    private Transform HuntingBackObject;
 
-                //  Try to navigate to our current target
-                new IfHasTarget(
-                    new BehaviorSequence(
-                        new GoToTarget(),
-                        new ResetTarget()
-                    )
-                ),
+    private Transform CurrentToolObject;
 
-                new SetUnitState(ActorAnimationState.IDLE)
-            )
-        );
+
+    [Header("Cargo Objects")]
+    [SerializeField]
+    private Transform FoodCargoObject;
+
+    [SerializeField]
+    private Transform WoodCargoObject;
+
+    [SerializeField]
+    private Transform StoneCargoObject;
+
+    [SerializeField]
+    private Transform GoldCargoObject;
+
+    private Transform CurrentCargoObject;
+
+    public bool IsCargoFull() => Attributes.Get(AttributeConstants.CARGO).IsMax();
+
+    protected override BehaviorTree<ActorV2> BehaviorTreeFactory()
+    {
+        return VillagerBehaviorTree.Get();
+    }
+
+    protected override void InitializeAttributes()
+    {
+        base.InitializeAttributes();
+        Attributes.AddOrUpdate(AttributeConstants.CARGO, 0f, 10f);
+    }
+
+    protected override void AttachListeners()
+    {
+        base.AttachListeners();
+        Attributes.Get(AttributeConstants.CARGO).ValueBinding.Changed += OnCargoChanged;
+    }
+
+    protected override void CleanupListeners()
+    {
+        base.CleanupListeners();
+        Attributes.Get(AttributeConstants.CARGO).ValueBinding.Changed -= OnCargoChanged;
+    }
+
+    public override void IssueTargetedOrder(Body body)
+    {
+        switch (body)
+        {
+            case Resource resource:
+                Target = resource;
+                Order = UnitOrder.Collect;
+                break;
+
+            case Fauna fauna:
+                Target = fauna;
+                Order = UnitOrder.Hunt;
+                break;
+
+            case Constructible constructible:
+                Target = constructible;
+                Order = UnitOrder.Repair;
+                break;
+
+            case Structure structure:
+                Target = structure;
+                if (structure.Attributes.Get(AttributeConstants.HEALTH).IsMax())
+                    Order = UnitOrder.DropOff;
+                else
+                    Order = UnitOrder.Repair;
+                break;
+
+            case UnitV2 unit:
+                Target = unit;
+                if (unit.Faction != null && unit.Faction.IsAllied(Faction))
+                    Order = UnitOrder.None;
+                else
+                    Order = UnitOrder.Attack;
+                break;
+
+            default:
+                Target = body;
+                Order = UnitOrder.None;
+                break;
+        }
+    }
+
+    public override void SetUnitType(RTSUnitType unitType)
+    {
+        base.SetUnitType(unitType);
+
+        switch (unitType)
+        {
+            case RTSUnitType.Hunter:
+                Order = UnitOrder.Hunt;
+                break;
+            case RTSUnitType.Lumberjack:
+                OrderToCollect(ResourceGatheringType.Wood);
+                break;
+            case RTSUnitType.GoldMiner:
+                OrderToCollect(ResourceGatheringType.Gold);
+                break;
+            case RTSUnitType.StoneMiner:
+                OrderToCollect(ResourceGatheringType.Stone);
+                break;
+            case RTSUnitType.Farmer:
+                OrderToCollect(ResourceGatheringType.Grain);
+                break;
+            case RTSUnitType.Forager:
+                OrderToCollect(ResourceGatheringType.Berries);
+                break;
+            case RTSUnitType.Fisherman:
+                OrderToCollect(ResourceGatheringType.Fish);
+                break;
+        }
+    }
+
+    public virtual void OrderToCollect(ResourceGatheringType resourceType, Body target = null)
+    {
+        Target = target;
+        Order = UnitOrder.Collect;
+        CargoType = resourceType;
+    }
+
+    protected virtual void OnCargoChanged(object sender, DataChangedEventArgs<float> e)
+    {
+        bool isCargoFull = e.NewValue == Attributes.MaxValueOf(AttributeConstants.CARGO);
+        if (isCargoFull || e.NewValue == 0f)
+            UpdateCurrentCargoObject(isCargoFull);
+    }
+
+    protected override void OnStateUpdate()
+    {
+        base.OnStateUpdate();
+        UpdateCurrentToolObject();
+    }
+
+    private void UpdateCurrentToolObject()
+    {
+        CurrentToolObject?.gameObject.SetActive(false);
+        switch (State)
+        {
+            case ActorAnimationState.FARMING:
+                CurrentToolObject = FarmingToolObject;
+                break;
+            case ActorAnimationState.MINING:
+                CurrentToolObject = MiningToolObject;
+                break;
+            case ActorAnimationState.LUMBERJACKING:
+                CurrentToolObject = LumberjackToolObject;
+                break;
+            case ActorAnimationState.BUILDANDREPAIR:
+                CurrentToolObject = BuilderToolObject;
+                break;
+            case ActorAnimationState.FISHING:
+                CurrentToolObject = FishingToolObject;
+                break;
+            case ActorAnimationState.HUNTING:
+                CurrentToolObject = HuntingToolObject;
+                break;
+            default:
+                CurrentToolObject = null;
+                return;
+        }
+        CurrentToolObject?.gameObject.SetActive(true);
+
+        HuntingBackObject.gameObject.SetActive(HuntingToolObject.gameObject.activeSelf);
+    }
+
+    private void UpdateCurrentCargoObject(bool visible)
+    {
+        CurrentCargoObject?.gameObject.SetActive(false);
+        switch (CargoType)
+        {
+            case ResourceGatheringType.Grain:
+            case ResourceGatheringType.Berries:
+            case ResourceGatheringType.Fish:
+            case ResourceGatheringType.Meat:
+                CurrentCargoObject = FoodCargoObject;
+                break;
+            case ResourceGatheringType.Wood:
+                CurrentCargoObject = WoodCargoObject;
+                break;
+            case ResourceGatheringType.Stone:
+                CurrentCargoObject = StoneCargoObject;
+                break;
+            case ResourceGatheringType.Gold:
+                CurrentCargoObject = GoldCargoObject;
+                break;
+
+            default:
+                CurrentCargoObject = null;
+                return;
+        }
+        CurrentCargoObject?.gameObject.SetActive(visible);
     }
 }

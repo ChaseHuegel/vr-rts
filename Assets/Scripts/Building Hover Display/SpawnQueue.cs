@@ -1,12 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using Swordfish;
 using Swordfish.Audio;
-using UnityEditor;
-using Valve.VR.InteractionSystem;
 using Swordfish.Navigation;
+using UnityEditor;
+using UnityEngine;
 using UnityEngine.UI;
+using Valve.VR.InteractionSystem;
 
 public class SpawnQueue : MonoBehaviour
 {
@@ -34,7 +34,7 @@ public class SpawnQueue : MonoBehaviour
     // Cached references
     private Structure structure;
     private Damageable damageable;
-    protected AudioSource audioSource;    
+    protected AudioSource audioSource;
     private PlayerManager playerManager;
 
     //=========================================================================
@@ -57,7 +57,7 @@ public class SpawnQueue : MonoBehaviour
                 Debug.Log("UnitSpawnPoint not set and no structure found.", this);
             }
         }
-        
+
         SetUnitRallyWaypoint(unitSpawnPoint.position);
 
         if (!(damageable = gameObject.GetComponentInParent<Damageable>()))
@@ -69,7 +69,7 @@ public class SpawnQueue : MonoBehaviour
         if (!(audioSource = gameObject.GetComponentInParent<AudioSource>()))
             Debug.Log("Missing audiosource component in parent.", this);
 
-        HookIntoEvents();        
+        HookIntoEvents();
 
         QueueUnitButton firstButton = GetComponentInChildren<QueueUnitButton>(true);
         if (firstButton)
@@ -81,7 +81,7 @@ public class SpawnQueue : MonoBehaviour
     public void OnButtonDown(Hand hand)
     {
         audioSource.PlayOneShot(onButtonDownAudio);
-        
+
         QueueUnitButton queueUnitButton = hand.hoveringInteractable.GetComponentInParent<QueueUnitButton>();
         if (queueUnitButton)
             QueueUnit(queueUnitButton.unitTypeToQueue);
@@ -96,22 +96,15 @@ public class SpawnQueue : MonoBehaviour
 
     public bool QueueUnit(RTSUnitType unitTypeToQueue)
     {
-        // TODO: Reenable this later
-        // if (damageable.GetAttributePercent(Attributes.HEALTH) < 1.0f)
-        //     return;
-
         if (unitSpawnQueue.Count >= structure.buildingData.maxUnitQueueSize)
             return false;
 
-        if (structure.IsSameFaction(playerManager.factionId) &&
-            !playerManager.CanQueueUnit(unitTypeToQueue))
+        if (!structure.Faction.IsSameFaction(playerManager.faction) || !playerManager.CanQueueUnit(unitTypeToQueue))
             return false;
 
         UnitData unitData = GameMaster.GetUnit(unitTypeToQueue);
         playerManager.DeductUnitQueueCostFromStockpile(unitData);
         unitSpawnQueue.AddLast(unitData);
-
-        // Debug.Log("Queued " + unitData.unitType);
         return true;
     }
 
@@ -171,18 +164,10 @@ public class SpawnQueue : MonoBehaviour
         if (unitSpawnQueue.First.Value.prefab)
         {
             GameObject unitGameObject = Instantiate(unitSpawnQueue.First.Value.prefab, unitSpawnPoint.transform.position, Quaternion.identity);
-            Unit unit = unitGameObject.GetComponent<Unit>();
-            unit.rtsUnitType = unitSpawnQueue.First.Value.unitType;
-            unit.factionId = structure.factionId;
-            unit.Initialize();
-            unit.SyncPosition();
-            
-            unit.GotoRallyPoint(unitRallyPointCell);
-
-            //unit.MoveToPosition(unitRallyWaypoint.position);
-
-            // Coord2D pos = World.ToWorldCoord(unitRallyWaypoint.position);
-            // unit.TrySetGoal(World.at(pos));
+            UnitV2 unit = unitGameObject.GetComponent<UnitV2>();
+            unit.Faction = structure.Faction;
+            unit.SetUnitType(unitSpawnQueue.First.Value.unitType);
+            unit.IssueSmartOrder(unitRallyPointCell);
         }
         else
             Debug.Log(string.Format("Spawn {0} failed. Missing prefabToSpawn.", unitSpawnQueue.First.Value.unitType));

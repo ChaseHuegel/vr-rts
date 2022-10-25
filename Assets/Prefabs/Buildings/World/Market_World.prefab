@@ -368,12 +368,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6494f394dde4732498f2aecf5968b6e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boundingDimensions: {x: 5, y: 5}
-  boundingOrigin: {x: 0, y: 0}
-  gridPosition:
+  Invulnerable: 0
+  Weaknesses: 
+  Resistances: 
+  Immunities: 
+  FactionID: 0
+  BoundingDimensions: {x: 5, y: 5}
+  BoundingOrigin: {x: 0, y: 0}
+  GridPosition:
     x: 0
     y: 0
-  factionId: 0
   bakeOnStart: 1
   allowPathThru: 0
   buildingData: {fileID: 11400000, guid: 4c0c10e33da9bd64093b4ceb61696417, type: 2}
@@ -392,14 +396,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8753ff4a5012a141b16468281698adb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attributes:
-  - attribute: 0
-    value: 2100
-    max: 2100
-  invulnerable: 0
-  weaknesses: 
-  resistances: 
-  immunities: 
+  Invulnerable: 0
+  Weaknesses: 
+  Resistances: 
+  Immunities: 
 --- !u!114 &9177625082486897630
 MonoBehaviour:
   m_ObjectHideFlags: 0

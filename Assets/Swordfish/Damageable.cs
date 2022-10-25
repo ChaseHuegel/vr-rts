@@ -1,160 +1,185 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+using Swordfish.Library.Collections;
 using UnityEngine;
 
 namespace Swordfish
 {
-
-public class Damageable : Attributable
-{
-    #region Events
-
-    public event EventHandler<DamageEvent> OnDamageEvent;
-    public class DamageEvent : Event
+    public class Damageable : MonoBehaviour
     {
-        public AttributeChangeCause cause;
-        public Damageable victim;
-        public Damageable attacker;
-        public DamageType type;
-        public float damage;
-    }
-
-    public event EventHandler<HealthRegainEvent> OnHealthRegainEvent;
-    public class HealthRegainEvent : Event
-    {
-        public AttributeChangeCause cause;
-        public Damageable entity;
-        public Damageable healer;
-        public float amount;
-        public float health;
-    }
-
-    public static event EventHandler<SpawnEvent> OnSpawnEvent;
-    public class SpawnEvent : Event
-    {
-        public Damageable entity;
-    }
-
-    public static event EventHandler<DeathEvent> OnDeathEvent;
-    public class DeathEvent : Event
-    {
-        public AttributeChangeCause cause;
-        public Damageable victim;
-        public Damageable attacker;
-    }
-    #endregion
-
-    [Header("Damageable")]
-    [SerializeField] protected bool invulnerable = false;
-    [SerializeField] protected DamageType[] weaknesses = new DamageType[0];
-    [SerializeField] protected DamageType[] resistances = new DamageType[0];
-    [SerializeField] protected DamageType[] immunities = new DamageType[0];
-
-    public virtual void Awake()
-    {
-        if (HasAttribute(Attributes.HEALTH) == false) AddAttribute(Attributes.HEALTH);
-    }
-
-    public virtual void Start()
-    {
-        SpawnEvent e = new SpawnEvent{ entity = this };
-        OnSpawnEvent?.Invoke(this, e);
-        if (e.cancel) Destroy(this.gameObject);   //  destroy this object if the event has been cancelled
-    }
-
-    #region Functions
-
-    public bool isDead() { return GetAttributeValue(Attributes.HEALTH) == 0; }
-    public bool isAlive() { return GetAttributeValue(Attributes.HEALTH) > 0; }
-
-    public float GetHealth() { return GetAttributeValue(Attributes.HEALTH); }
-    public float GetMaxHealth() { return GetAttributeMax(Attributes.HEALTH); }
-    public float GetHealthPercent() { return GetAttributePercent(Attributes.HEALTH); }
-
-    public void Damage(float damage, AttributeChangeCause cause = AttributeChangeCause.FORCED, Damageable attacker = null, DamageType type = DamageType.NONE)
-    {
-        //  Invoke a damage event
-        DamageEvent e = new DamageEvent{ cause = cause, victim = this, attacker = attacker, type = type, damage = damage };
-        OnDamageEvent?.Invoke(this, e);
-        if (e.cancel) return;   //  return if the event has been cancelled by any subscriber
-
-        bool hadImmunity = false;
-        bool hadWeakness = false;
-        bool hadResistance = false;
-
-        //  Check for immunity
-        for (int i = 0; i < immunities.Length; i++)
+        public event EventHandler<DamageEvent> OnDamageEvent;
+        public class DamageEvent : Event
         {
-            if (e.type == immunities[i])
-            {
-                e.damage = 0;
-                hadImmunity = true;
-                break;
-            }
+            public AttributeChangeCause cause;
+            public Damageable victim;
+            public Damageable attacker;
+            public DamageType type;
+            public float damage;
         }
 
-        //  Modify any damage by any weaknesses or resistances
-        if (e.damage > 0 && e.type != DamageType.NONE)
+        public event EventHandler<HealthRegainEvent> OnHealthRegainEvent;
+        public class HealthRegainEvent : Event
         {
-            for (int i = 0; i < weaknesses.Length; i++)
+            public AttributeChangeCause cause;
+            public Damageable target;
+            public Damageable healer;
+            public float amount;
+            public float health;
+        }
+
+        public static event EventHandler<SpawnEvent> OnSpawnEvent;
+        public class SpawnEvent : Event
+        {
+            public Damageable target;
+        }
+
+        public static event EventHandler<DeathEvent> OnDeathEvent;
+        public class DeathEvent : Event
+        {
+            public AttributeChangeCause cause;
+            public Damageable victim;
+            public Damageable attacker;
+        }
+
+        public ValueFieldCollection Attributes { get; set; } = new();
+
+        [SerializeField]
+        protected bool Invulnerable = false;
+
+        [SerializeField]
+        protected DamageType[] Weaknesses = new DamageType[0];
+
+        [SerializeField]
+        protected DamageType[] Resistances = new DamageType[0];
+
+        [SerializeField]
+        protected DamageType[] Immunities = new DamageType[0];
+
+        protected virtual void OnDamaged(DamageEvent e) { }
+        protected virtual void OnHealthRegain(HealthRegainEvent e) { }
+        protected virtual void OnDeath(DeathEvent e) { }
+
+        public Damageable()
+        {
+            InitializeAttributes();
+        }
+
+        protected virtual void Start()
+        {
+            SpawnEvent e = new()
             {
-                if (e.type == weaknesses[i])
+                target = this
+            };
+            OnSpawnEvent?.Invoke(this, e);
+
+            //  destroy this object if the event has been cancelled
+            if (e.cancel)
+                Destroy(gameObject);
+        }
+
+        protected virtual void InitializeAttributes()
+        {
+            Attributes.TryAdd(AttributeConstants.HEALTH, 20f, 20f);
+        }
+
+        public bool IsAlive() => Attributes.ValueOf(AttributeConstants.HEALTH) > 0;
+        public float GetHealth() => Attributes.ValueOf(AttributeConstants.HEALTH);
+        public float GetMaxHealth() => Attributes.MaxValueOf(AttributeConstants.HEALTH);
+        public float GetHealthPercent() => Attributes.CalculatePercentOf(AttributeConstants.HEALTH);
+
+        public void Damage(float damage, AttributeChangeCause cause = AttributeChangeCause.FORCED, Damageable attacker = null, DamageType type = DamageType.NONE)
+        {
+            //  Invoke a damage event
+            DamageEvent e = new()
+            {
+                cause = cause,
+                victim = this,
+                attacker = attacker,
+                type = type,
+                damage = damage
+            };
+            OnDamageEvent?.Invoke(this, e);
+
+            //  return if the event has been cancelled by any subscriber
+            if (e.cancel)
+                return;
+
+            //  Check for immunity
+            for (int i = 0; i < Immunities.Length; i++)
+            {
+                if (e.type == Immunities[i])
                 {
-                    e.damage *= 2;
-                    hadWeakness = true;
+                    e.damage = 0;
                     break;
                 }
             }
 
-            for (int i = 0; i < resistances.Length; i++)
+            //  Modify any damage by any weaknesses or resistances
+            if (e.damage > 0 && e.type != DamageType.NONE)
             {
-                if (e.type == resistances[i])
+                for (int i = 0; i < Weaknesses.Length; i++)
                 {
-                    e.damage /= 2;
-                    hadResistance = true;
-                    break;
+                    if (e.type == Weaknesses[i])
+                    {
+                        e.damage *= 2;
+                        break;
+                    }
                 }
+
+                for (int i = 0; i < Resistances.Length; i++)
+                {
+                    if (e.type == Resistances[i])
+                    {
+                        e.damage /= 2;
+                        break;
+                    }
+                }
+            }
+
+            OnDamaged(e);
+            Attributes.Get(AttributeConstants.HEALTH).Remove(e.damage);
+
+            //  If the damage was enough to kill, invoke a death event
+            if (Attributes.ValueOf(AttributeConstants.HEALTH) == 0)
+            {
+                DeathEvent e2 = new()
+                {
+                    cause = cause,
+                    victim = this,
+                    attacker = attacker
+                };
+                OnDeathEvent?.Invoke(this, e2);
+
+                //  return if the event has been cancelled by any subscriber
+                if (e2.cancel)
+                    return;
+
+                OnDeath(e2);
             }
         }
 
-        //  If the damage is enough to kill, invoke a death event
-        if (GetAttributeValue(Attributes.HEALTH) - e.damage <= 0)
+        public void Heal(float amount, AttributeChangeCause cause = AttributeChangeCause.FORCED, Damageable healer = null)
         {
-            DeathEvent e2 = new DeathEvent{ cause = cause, victim = this, attacker = attacker };
-            OnDeathEvent?.Invoke(this, e2);
-            if (e2.cancel) return;   //  return if the event has been cancelled by any subscriber
+            if (Attributes.CalculatePercentOf(AttributeConstants.HEALTH) == 1.0f)
+                return;
+
+            //  Invoke a health regain event
+            HealthRegainEvent e = new()
+            {
+                cause = cause,
+                target = this,
+                healer = healer,
+                amount = amount,
+                health = Attributes.Get(AttributeConstants.HEALTH).PeekAdd(amount)
+            };
+            OnHealthRegainEvent?.Invoke(this, e);
+
+            //  return if the event has been cancelled by any subscriber
+            if (e.cancel)
+                return;
+
+            OnHealthRegain(e);
+            Attributes.Get(AttributeConstants.HEALTH).Add(e.amount);
         }
-
-        //  Update health
-        GetAttribute(Attributes.HEALTH).Modify(-e.damage);
-
-        //  Send indicator
-        // Color indicatorColor = Color.gray * Color.gray;
-        // if (hadImmunity) indicatorColor = Color.red;
-        // if (hadWeakness) indicatorColor = Color.white;
-        // if (hadResistance) indicatorColor = Color.yellow;
-
-        // if (hitPoint == null) UIMaster.SendFloatingIndicator(this.transform.position + this.transform.rotation * center, e.damage.ToString("#.0"), indicatorColor);
-        // else UIMaster.SendFloatingIndicator(hitPoint, e.damage.ToString("0.0"), indicatorColor);
     }
-
-    public void Heal(float amount, AttributeChangeCause cause = AttributeChangeCause.FORCED, Damageable healer = null)
-    {
-        if (GetAttribute(Attributes.HEALTH).GetPercent() >= 1.0f) return;
-
-        //  Invoke a heal event
-        HealthRegainEvent e = new HealthRegainEvent{ cause = cause, entity = this, healer = healer, amount = amount, health = GetAttribute(Attributes.HEALTH).GetModified(amount) };
-        OnHealthRegainEvent?.Invoke(this, e);
-        if (e.cancel) return;   //  return if the event has been cancelled by any subscriber
-
-        //  Update health
-        GetAttribute(Attributes.HEALTH).Modify(e.amount);
-
-        //  Send indicator
-        // UIMaster.SendFloatingIndicator(this.transform.position + this.transform.rotation * center, e.amount.ToString("#.0"), Color.green);
-    }
-    #endregion
-}
 
 }

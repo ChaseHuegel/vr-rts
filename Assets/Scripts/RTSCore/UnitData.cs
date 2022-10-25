@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using Swordfish.Audio;
+using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Unit", menuName = "RTS/Units/Unit Data")]
 public class UnitData : ScriptableObject
@@ -30,6 +30,5 @@ public class UnitData : ScriptableObject
     public float huntingDamage;
     public int attackRange;
     public float attackDamage;
-    
     public float armor;
 }

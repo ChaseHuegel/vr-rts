@@ -1,8 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using Swordfish.Navigation;
-using Valve.VR.InteractionSystem;
 
 public class WallGate : MonoBehaviour
 {
@@ -10,7 +6,6 @@ public class WallGate : MonoBehaviour
 
     private PlayerManager playerManager;
     private Structure structure;
-    private Faction faction;
     private Animator animator;
 
     [InspectorButton("ToggleDoors")]
@@ -18,12 +13,10 @@ public class WallGate : MonoBehaviour
 
     bool isOpen = false;
 
-    // Start is called before the first frame update
     void Start()
     {
         playerManager = PlayerManager.instance;
         structure = GetComponentInParent<Structure>();
-        faction = structure.GetFaction();
         animator = GetComponentInChildren<Animator>();
 
         // TODO: Switch to rotated/fixed prefab?
@@ -35,45 +28,35 @@ public class WallGate : MonoBehaviour
 
     void OnTriggerEnter(Collider collider)
     {
-        // Hand hand = collider.GetComponentInParent<Hand>();
-        // if (hand)
-        // {
-        //     ToggleDoors();
-        //     return;
-        // }
-        
-        // if (openConditions.HasFlag(OpenCondition.None))
-        //     return;
-
-        Unit unit = collider.gameObject.GetComponentInParent<Unit>();
+        UnitV2 unit = collider.gameObject.GetComponentInParent<UnitV2>();
         if (unit)
         {
             // Friendly
-            if (unit.IsSameFaction(playerManager.factionId) && openConditions.HasFlag(OpenCondition.Friendly))
+            if (!unit.Faction.IsSameFaction(playerManager.faction) && openConditions.HasFlag(OpenCondition.Friendly))
             {
                 OpenDoors();
                 return;
             }
 
             // Enemy
-            if (!unit.IsSameFaction(playerManager.factionId) && openConditions.HasFlag(OpenCondition.Enemy))
+            if (!unit.Faction.IsAllied(playerManager.faction) && openConditions.HasFlag(OpenCondition.Enemy))
             {
                 OpenDoors();
                 return;
             }
 
-            // Ally
-            // if (faction.IsAllied(unit.GetFaction()) && openConditions.HasFlag(OpenCondition.Ally))
-            // {
-            //     OpenDoors();
-            //     return;
-            // }
+            //  Allied
+            if (unit.Faction.IsAllied(playerManager.faction) && openConditions.HasFlag(OpenCondition.Ally))
+            {
+                OpenDoors();
+                return;
+            }
         }
     }
 
     void OnTriggerExit(Collider collider)
     {
-        Unit unit = collider.gameObject.GetComponentInParent<Unit>();
+        UnitV2 unit = collider.gameObject.GetComponentInParent<UnitV2>();
         if (unit && isOpen)
             CloseDoors();
     }

@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using Swordfish;
 using UnityEngine;
 using UnityEngine.UI;
-using Swordfish;
 
 public class HealthBar : MonoBehaviour
 {
@@ -46,7 +46,7 @@ public class HealthBar : MonoBehaviour
         {
             damageable.OnDamageEvent += OnDamage;
             damageable.OnHealthRegainEvent += OnHealthRegainEvent;
-            SetFilledAmount(damageable.GetAttributePercent(Attributes.HEALTH));
+            SetFilledAmount(damageable.Attributes.ValueOf(AttributeConstants.HEALTH));
         }
         else
         {
@@ -95,7 +95,7 @@ public class HealthBar : MonoBehaviour
             Hide();
         else if (amount < autoshowAt)
             Show();
-        
+
         if (amount <= 0.0f)
             ForceHide();
     }
@@ -140,14 +140,14 @@ public class HealthBar : MonoBehaviour
     }
 
     public void Show()
-    {        
+    {
         if (showBarBackground)
             healthBarBackgroundImage.gameObject.SetActive(true);
         if (showBarForeground)
             healthBarForegroundImage.gameObject.SetActive(true);
         if (showText)
-            healthBarStatusText.gameObject.SetActive(true);       
+            healthBarStatusText.gameObject.SetActive(true);
 
-        isVisible = true;     
+        isVisible = true;
     }
 }

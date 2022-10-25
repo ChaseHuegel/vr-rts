@@ -4,17 +4,15 @@ using Swordfish.Navigation;
 using UnityEngine;
 
 [RequireComponent(typeof(Damageable))]
-public class Structure : Obstacle, IFactioned
+public class Structure : Obstacle
 {
     public readonly static List<Structure> AllStructures = new();
 
-    private Faction faction;
     public BuildingData buildingData;
 
     [Header("Skin Settings")]
     public MeshRenderer[] meshes;
     public SkinnedMeshRenderer[] skinnedMeshes;
-
 
     private Damageable damageable;
     public Damageable AttributeHandler { get { return damageable; } }
@@ -26,11 +24,8 @@ public class Structure : Obstacle, IFactioned
     private GameObject flamesParticleSystem;
     private GameObject sparksParticleSystem;
     private PlayerManager playerManager;
-    public Faction GetFaction() { return faction; }
 
-    public void UpdateFaction() { faction = GameMaster.Factions?.Find(x => x.Id == factionId); }
-
-    public bool NeedsRepairs() { return damageable.GetHealthPercent() < 1f; }
+    public bool NeedsRepairs() => !damageable.Attributes.Get(AttributeConstants.HEALTH).IsMax();
 
     public void Awake()
     {
@@ -54,27 +49,21 @@ public class Structure : Obstacle, IFactioned
         if (!buildingData)
             Debug.Log("BuildingData not set.");
 
-        UpdateFaction();
-        SetSkin();
-
         if (!(damageable = GetComponent<Damageable>()))
             Debug.Log("No damageable component on structure!");
 
         // Set max health based on building database hit point value.
-        damageable.GetAttribute(Attributes.HEALTH).SetMax(buildingData.hitPoints);
+        damageable.Attributes.Get(AttributeConstants.HEALTH).MaxValue = buildingData.hitPoints;
         damageable.OnDamageEvent += OnDamage;
 
         if (!GameMaster.Instance.buildingDamagedFX)
             Debug.Log("buildingDamagedFX not set in GameMaster.", this);
 
-        // if (buildingData.populationSupported > 0)
-        //     playerManager.IncreasePopulationLimit(buildingData.populationSupported);        
-
         // Only refresh visuals if hit points are not full so we don't generate
         // building damage FX particle systems on buildings that don't need them yet.
         // We can generate them at startup later on to gain real time performance
         // if needed.
-        if (damageable.GetAttributePercent(Attributes.HEALTH) < 1.0f)
+        if (!damageable.Attributes.Get(AttributeConstants.HEALTH).IsMax())
             RefreshVisuals();
     }
 
@@ -88,8 +77,8 @@ public class Structure : Obstacle, IFactioned
     {
         base.FetchBoundingDimensions();
 
-        boundingDimensions.x = buildingData.boundingDimensionX;
-        boundingDimensions.y = buildingData.boundingDimensionY;
+        BoundingDimensions.x = buildingData.boundingDimensionX;
+        BoundingDimensions.y = buildingData.boundingDimensionY;
     }
 
     protected void CreateBuildingDamageFX()
@@ -114,35 +103,21 @@ public class Structure : Obstacle, IFactioned
         }
     }
 
-    private void SetSkin()
-    {
-        if (!faction) return;
-
-        if (faction.skin?.buildingMaterial)
-        {
-            foreach (MeshRenderer mesh in meshes)
-                mesh.sharedMaterial = faction.skin.buildingMaterial;
-
-            foreach (SkinnedMeshRenderer skinnedMesh in skinnedMeshes)
-                skinnedMesh.sharedMaterial = faction.skin.buildingMaterial;
-        }
-    }
-
     void OnDamage(object sender, Damageable.DamageEvent e)
     {
         RefreshVisuals();
 
-        if (AttributeHandler.GetAttributePercent(Attributes.HEALTH) <= 0.0f)
+        if (AttributeHandler.Attributes.ValueOf(AttributeConstants.HEALTH) == 0f)
         {
             AudioSource.PlayClipAtPoint(GameMaster.GetAudio("building_collapsed").GetClip(), transform.position, 0.5f);
             UnbakeFromGrid();
-            Destroy(this.gameObject);
+            Destroy(gameObject);
         }
     }
 
-    public void TryRepair(float count, Actor repairer = null)
+    public void TryRepair(float count, ActorV2 repairer = null)
     {
-        AttributeHandler.Heal(count, AttributeChangeCause.HEALED, repairer.AttributeHandler);
+        AttributeHandler.Heal(count, AttributeChangeCause.HEALED, repairer);
         RefreshVisuals();
     }
 
@@ -151,10 +126,12 @@ public class Structure : Obstacle, IFactioned
         if (!buildingDamagedFX)
             CreateBuildingDamageFX();
 
-        float healthPercent = damageable.GetAttributePercent(Attributes.HEALTH);
-        if (healthPercent >= 1.0f)
+        float healthPercent = damageable.Attributes.CalculatePercentOf(AttributeConstants.HEALTH);
+        if (healthPercent == 1f)
         {
-            if (buildingDamagedFX.activeSelf) buildingDamagedFX.SetActive(false);
+            if (buildingDamagedFX.activeSelf)
+                buildingDamagedFX.SetActive(false);
+
             return;
         }
 
@@ -169,7 +146,7 @@ public class Structure : Obstacle, IFactioned
         modifier = (1.0f - healthPercent) * 0.75f;
         psMain.startSize = new ParticleSystem.MinMaxCurve(0.0f + modifier, 0.5f + modifier);
 
-        if (damageable.GetAttributePercent(Attributes.HEALTH) <= 0.35f)
+        if (healthPercent <= 0.35f)
         {
             if (!audioSource.isPlaying)
             {
@@ -200,13 +177,5 @@ public class Structure : Obstacle, IFactioned
     public bool CanDropOff(ResourceGatheringType type)
     {
         return buildingData.dropoffTypes.HasFlag(type);
-    }
-    void OnValidate()
-    {
-        if (!GameMaster.Instance)
-            return;
-
-        UpdateFaction();
-        SetSkin();
     }
 }
