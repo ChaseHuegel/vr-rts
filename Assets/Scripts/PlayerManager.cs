@@ -183,7 +183,7 @@ public class PlayerManager : MonoBehaviour
     public void OnDeathEvent(object sender, Damageable.DeathEvent e)
     {
         Body body = e.victim.GetComponent<Body>();
-        if (body != null && body.Faction.IsSameFaction(faction))
+        if (body != null && body.Faction != null && body.Faction.IsSameFaction(faction))
         {
             switch (body)
             {
