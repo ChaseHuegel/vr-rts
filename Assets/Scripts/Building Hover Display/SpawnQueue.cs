@@ -167,7 +167,7 @@ public class SpawnQueue : MonoBehaviour
             UnitV2 unit = unitGameObject.GetComponent<UnitV2>();
             unit.Faction = structure.Faction;
             unit.SetUnitType(unitSpawnQueue.First.Value.unitType);
-            unit.OrderGoTo(unitRallyPointCell);
+            unit.IssueSmartOrder(unitRallyPointCell);
         }
         else
             Debug.Log(string.Format("Spawn {0} failed. Missing prefabToSpawn.", unitSpawnQueue.First.Value.unitType));

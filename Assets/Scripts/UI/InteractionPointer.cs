@@ -541,9 +541,9 @@ public class InteractionPointer : MonoBehaviour
             {
                 Body body = pointedAtPointerInteractable?.GetComponents<Body>().FirstOrDefault(x => x.enabled);
                 if (pointedAtPointerInteractable && body)
-                    actor.OrderToTarget(body);
+                    actor.IssueTargetedOrder(body);
                 else
-                    actor.OrderGoTo(World.ToWorldCoord(pointedAtPosition));
+                    actor.IssueGoToOrder(World.ToWorldCoord(pointedAtPosition));
             }
 
             // Cleanup

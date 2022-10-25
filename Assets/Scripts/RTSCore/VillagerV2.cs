@@ -80,7 +80,7 @@ public class VillagerV2 : UnitV2
         Attributes.Get(AttributeConstants.CARGO).ValueBinding.Changed -= OnCargoChanged;
     }
 
-    public override void OrderToTarget(Body body)
+    public override void IssueTargetedOrder(Body body)
     {
         switch (body)
         {
@@ -120,6 +120,43 @@ public class VillagerV2 : UnitV2
                 Order = UnitOrder.None;
                 break;
         }
+    }
+
+    public override void SetUnitType(RTSUnitType unitType)
+    {
+        base.SetUnitType(unitType);
+
+        switch (unitType)
+        {
+            case RTSUnitType.Hunter:
+                Order = UnitOrder.Hunt;
+                break;
+            case RTSUnitType.Lumberjack:
+                OrderToCollect(ResourceGatheringType.Wood);
+                break;
+            case RTSUnitType.GoldMiner:
+                OrderToCollect(ResourceGatheringType.Gold);
+                break;
+            case RTSUnitType.StoneMiner:
+                OrderToCollect(ResourceGatheringType.Stone);
+                break;
+            case RTSUnitType.Farmer:
+                OrderToCollect(ResourceGatheringType.Grain);
+                break;
+            case RTSUnitType.Forager:
+                OrderToCollect(ResourceGatheringType.Berries);
+                break;
+            case RTSUnitType.Fisherman:
+                OrderToCollect(ResourceGatheringType.Fish);
+                break;
+        }
+    }
+
+    public virtual void OrderToCollect(ResourceGatheringType resourceType, Body target = null)
+    {
+        Target = target;
+        Order = UnitOrder.Collect;
+        CargoType = resourceType;
     }
 
     protected virtual void OnCargoChanged(object sender, DataChangedEventArgs<float> e)

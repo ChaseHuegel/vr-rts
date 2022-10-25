@@ -25,7 +25,7 @@ public abstract class UnitV2 : ActorV2
         Attributes.AddOrUpdate(AttributeConstants.DAMAGE, 1f);
     }
 
-    public void SetUnitType(RTSUnitType unitType)
+    public virtual void SetUnitType(RTSUnitType unitType)
     {
         UnitType = unitType;
         m_UnitData = GameMaster.GetUnit(UnitType);
@@ -42,7 +42,7 @@ public abstract class UnitV2 : ActorV2
     protected override void OnFallingOntoBody(Body body)
     {
         base.OnFallingOntoBody(body);
-        OrderToTarget(body);
+        IssueTargetedOrder(body);
     }
 
     protected override void OnDeath(DeathEvent e)

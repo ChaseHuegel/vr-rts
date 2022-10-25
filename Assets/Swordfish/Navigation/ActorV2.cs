@@ -163,14 +163,23 @@ namespace Swordfish.Navigation
             OrderChangedRecently = false;
         }
 
-        public abstract void OrderToTarget(Body body);
+        public abstract void IssueTargetedOrder(Body body);
 
-        public void OrderGoTo(Coord2D coord) => OrderGoTo(World.at(coord));
+        public void IssueGoToOrder(Coord2D coord) => IssueGoToOrder(World.at(coord));
 
-        public void OrderGoTo(Cell cell)
+        public void IssueGoToOrder(Cell cell)
         {
             Destination = cell;
             Order = UnitOrder.GoTo;
+        }
+
+        public void IssueSmartOrder(Cell cell)
+        {
+            Body body = cell.GetFirstOccupant();
+            if (body)
+                IssueTargetedOrder(body);
+            else
+                IssueGoToOrder(cell);
         }
 
         public void ResetPath()

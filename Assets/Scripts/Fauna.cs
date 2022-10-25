@@ -48,7 +48,7 @@ public class Fauna : ActorV2
 
     Resource resource;
 
-    public override void OrderToTarget(Body body)
+    public override void IssueTargetedOrder(Body body)
     {
         Target = body;
     }
@@ -175,7 +175,7 @@ public class Fauna : ActorV2
     void GotoRandomPositionInRadius(float radius)
     {
         Vector3 randomPos = startPosition + (Random.insideUnitSphere * radius);
-        OrderGoTo(World.ToWorldCoord(randomPos));
+        IssueGoToOrder(World.ToWorldCoord(randomPos));
     }
 
 #if UNITY_EDITOR
