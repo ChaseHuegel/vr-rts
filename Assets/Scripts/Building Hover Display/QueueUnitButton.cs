@@ -5,7 +5,7 @@ using UnityEngine.Events;
 using Valve.VR.InteractionSystem;
 
 public class QueueUnitButton : MonoBehaviour
-{    
+{
     public RTSUnitType unitTypeToQueue;
     public GameObject buttonLockedObject;
 

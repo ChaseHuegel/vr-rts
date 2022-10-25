@@ -96,22 +96,15 @@ public class SpawnQueue : MonoBehaviour
 
     public bool QueueUnit(RTSUnitType unitTypeToQueue)
     {
-        // TODO: Reenable this later
-        // if (damageable.GetAttributePercent(Attributes.HEALTH) < 1.0f)
-        //     return;
-
         if (unitSpawnQueue.Count >= structure.buildingData.maxUnitQueueSize)
             return false;
 
-        if (structure.Faction?.IsSameFaction(playerManager.faction) ?? false &&
-            !playerManager.CanQueueUnit(unitTypeToQueue))
+        if (!structure.Faction.IsSameFaction(playerManager.faction) || !playerManager.CanQueueUnit(unitTypeToQueue))
             return false;
 
         UnitData unitData = GameMaster.GetUnit(unitTypeToQueue);
         playerManager.DeductUnitQueueCostFromStockpile(unitData);
         unitSpawnQueue.AddLast(unitData);
-
-        // Debug.Log("Queued " + unitData.unitType);
         return true;
     }
 
@@ -174,8 +167,7 @@ public class SpawnQueue : MonoBehaviour
             UnitV2 unit = unitGameObject.GetComponent<UnitV2>();
             unit.Faction = structure.Faction;
             unit.SetUnitType(unitSpawnQueue.First.Value.unitType);
-
-            unit.Destination = unitRallyPointCell;
+            unit.OrderGoTo(unitRallyPointCell);
         }
         else
             Debug.Log(string.Format("Spawn {0} failed. Missing prefabToSpawn.", unitSpawnQueue.First.Value.unitType));

@@ -18169,7 +18169,6 @@ GameObject:
   - component: {fileID: -6606716014632887433}
   - component: {fileID: 1098559784769540740}
   - component: {fileID: 8052413789592210992}
-  - component: {fileID: 7274408666555167777}
   - component: {fileID: -1329946777064387085}
   - component: {fileID: 5755199475747933654}
   - component: {fileID: -2474016075810003584}
@@ -18497,48 +18496,31 @@ MonoBehaviour:
   m_GameObject: {fileID: 1069823527325677058}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a4098bebca8786e40bb27495aa77b779, type: 3}
+  m_Script: {fileID: 11500000, guid: a1ccf38bf1324eb4cacc387c1d7f7fcb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Invulnerable: 0
   Weaknesses: 
   Resistances: 
   Immunities: 
-  FactionID: 0
+  Faction: {fileID: 0}
   BoundingDimensions: {x: 1, y: 1}
   BoundingOrigin: {x: 0, y: 0}
   GridPosition:
     x: 0
     y: 0
-  doMicroSearching: 0
-  movementSpeed: 0.3
-  goalSearchDistance: 30
-  faction: {fileID: 11400000, guid: effa210fcfc5796468bcaecb24cb5693, type: 2}
-  rtsUnitType: 1
-  maxHitPointsOnStart: 1
-  rangedProjectile: {fileID: 3740421758085118616, guid: 33ebc7103c3a4b64ca93d64149b5fa33,
-    type: 3}
-  projectileSpeed: 5
-  meshes: []
-  skinnedMeshes:
-  - {fileID: 1069823527066862350}
-  state: 0
---- !u!114 &7274408666555167777
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1069823527325677058}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8753ff4a5012a141b16468281698adb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Invulnerable: 0
-  Weaknesses: 
-  Resistances: 
-  Immunities: 
+  UnitType: 0
+  FarmingToolObject: {fileID: 8538520805120743327}
+  MiningToolObject: {fileID: 1069823527080284612}
+  LumberjackToolObject: {fileID: 1069823527080267036}
+  BuilderToolObject: {fileID: 1069823527080239604}
+  FishingToolObject: {fileID: 8595858030966817825}
+  HuntingToolObject: {fileID: 1069823527080279074}
+  HuntingBackObject: {fileID: 1069823527080227162}
+  FoodCargoObject: {fileID: 668154613714725212}
+  WoodCargoObject: {fileID: 2787404010531689575}
+  StoneCargoObject: {fileID: 7576618510196837224}
+  GoldCargoObject: {fileID: 490818741521247120}
 --- !u!114 &-1329946777064387085
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -34,6 +34,9 @@ public class VillagerV2 : UnitV2
     [SerializeField]
     private Transform HuntingToolObject;
 
+    [SerializeField]
+    private Transform HuntingBackObject;
+
     private Transform CurrentToolObject;
 
 
@@ -160,6 +163,8 @@ public class VillagerV2 : UnitV2
                 return;
         }
         CurrentToolObject?.gameObject.SetActive(true);
+
+        HuntingBackObject.gameObject.SetActive(HuntingToolObject.gameObject.activeSelf);
     }
 
     private void UpdateCurrentCargoObject(bool visible)
