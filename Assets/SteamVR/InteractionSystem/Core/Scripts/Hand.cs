@@ -464,7 +464,8 @@ namespace Valve.VR.InteractionSystem
             if (attachedObject.HasAttachFlag(AttachmentFlags.ParentToHand))
             {
                 //Parent the object to the hand
-                objectToAttach.transform.parent = this.transform;
+                objectToAttach.transform.SetParent(this.transform, true);
+                //objectToAttach.transform.parent = this.transform;
                 attachedObject.isParentedToHand = true;
             }
             else
@@ -635,7 +636,8 @@ namespace Valve.VR.InteractionSystem
 
                     if (attachedObjects[index].attachedObject != null)
                     {
-                        attachedObjects[index].attachedObject.transform.parent = parentTransform;
+                        attachedObjects[index].attachedObject.transform.SetParent(parentTransform, true);
+                        //attachedObjects[index].attachedObject.transform.parent = parentTransform;
                     }
                 }
 

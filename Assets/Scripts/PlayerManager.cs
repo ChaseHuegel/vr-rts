@@ -214,6 +214,12 @@ public class PlayerManager : MonoBehaviour
             if (rightHand.currentAttachedObject == handBuildMenu)
             {
                 rightHand.DetachObject(handBuildMenu);
+                
+                // TODO: This should be taken care of by DetachObject -> OnDetachedFromHand event 
+                // but OnDetachedFromHand has no reciever (Interactable) for some reason.
+                if (rightHand.skeleton != null)
+                    rightHand.skeleton.BlendToSkeleton(0.2f);
+
                 handBuildMenu.SetActive(false);
                 SetRightHandInteraction(true);
             }
@@ -221,6 +227,11 @@ public class PlayerManager : MonoBehaviour
             // attach it to the right hand, enable interacition in the left hand.
             else
             {
+                // TODO: This should be taken care of by DetachObject -> OnDetachedFromHand event 
+                // but OnDetachedFromHand has no reciever (Interactable) for some reason.
+                if (leftHand.skeleton != null)
+                    leftHand.skeleton.BlendToSkeleton(0.2f);
+
                 SetRightHandInteraction(false);
                 rightHand.AttachObject(handBuildMenu, GrabTypes.Scripted);
                 SetLeftHandInteraction(true);
@@ -253,6 +264,12 @@ public class PlayerManager : MonoBehaviour
             if (leftHand.currentAttachedObject == handBuildMenu)
             {
                 leftHand.DetachObject(handBuildMenu);
+
+                // TODO: This should be taken care of by DetachObject -> OnDetachedFromHand event 
+                // but OnDetachedFromHand has no reciever (Interactable) for some reason.
+                if (leftHand.skeleton != null)
+                    leftHand.skeleton.BlendToSkeleton(0.2f);
+
                 handBuildMenu.SetActive(false);
                 SetLeftHandInteraction(true);
             }
@@ -260,6 +277,11 @@ public class PlayerManager : MonoBehaviour
             // attach it to the left hand, enable interacition in the right hand.
             else
             {
+                // TODO: This should be taken care of by DetachObject -> OnDetachedFromHand event 
+                // but OnDetachedFromHand has no reciever (Interactable) for some reason.
+                if (rightHand.skeleton != null)
+                    rightHand.skeleton.BlendToSkeleton(0.2f);
+
                 SetLeftHandInteraction(false);
                 leftHand.AttachObject(handBuildMenu, GrabTypes.Scripted);
                 SetRightHandInteraction(true);
