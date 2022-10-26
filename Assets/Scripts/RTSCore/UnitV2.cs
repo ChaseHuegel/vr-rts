@@ -67,8 +67,7 @@ public abstract class UnitV2 : ActorV2
 
         if (e.NewValue == true)
         {
-            //  TODO this should check if it's a friendly unit
-            if (Faction.Id == 0)
+            if (Faction != null && Faction.IsSameFaction(PlayerManager.instance.faction))
                 AudioSource.PlayOneShot(GameMaster.GetAudio("unit_pickup_friendly").GetClip(), 0.5f);
             else
                 AudioSource.PlayOneShot(GameMaster.GetAudio("unit_pickup_enemy").GetClip(), 0.5f);
