@@ -41813,6 +41813,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1377426199}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &1377968970 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4603657074501814239, guid: 0e20e52b3d933304889227afb2893690,
+    type: 3}
+  m_PrefabInstance: {fileID: 4603657073447195606}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1377999025
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -70197,12 +70203,17 @@ PrefabInstance:
         type: 3}
       propertyPath: targetTransform
       value: 
-      objectReference: {fileID: 543281276}
+      objectReference: {fileID: 1377968970}
     - target: {fileID: 4603657074826361736, guid: 0e20e52b3d933304889227afb2893690,
         type: 3}
       propertyPath: scalingTransform
       value: 
       objectReference: {fileID: 543281276}
+    - target: {fileID: 4603657074826361736, guid: 0e20e52b3d933304889227afb2893690,
+        type: 3}
+      propertyPath: scalingSensitivity
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 4603657074826361737, guid: 0e20e52b3d933304889227afb2893690,
         type: 3}
       propertyPath: isInGaze

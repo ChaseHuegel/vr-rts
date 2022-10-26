@@ -56,6 +56,7 @@ public class GripPan : MonoBehaviour
 
     private float startScale = 1.0f;
     private float initialHandDistance;
+    private Vector3 initialPosition;
 
     // Start is called before the first frame update
     void Start()
@@ -107,6 +108,11 @@ public class GripPan : MonoBehaviour
             if (!isScaling)
             {
                 initialHandDistance = Vector3.Distance(player.rightHand.transform.localPosition, player.leftHand.transform.localPosition);
+
+                Vector3 midPoint = (player.rightHand.transform.position + player.leftHand.transform.position) * 0.5f;
+                //Vector3 midPoint = Vector3.Lerp(player.rightHand.transform.position, player.leftHand.transform.position, 0.5f);
+                
+                initialPosition = midPoint;
                 startScale = targetTransform.localScale.x;
                 isScaling = true;
                 isPanning = false;
@@ -121,7 +127,7 @@ public class GripPan : MonoBehaviour
                 isScaling = false;
                 return;
             }
-
+            
             isGliding = false;
 
             float currentHandDistance = Vector3.Distance(player.leftHand.transform.localPosition, player.rightHand.transform.localPosition);
@@ -130,8 +136,12 @@ public class GripPan : MonoBehaviour
             float newScale = startScale + (distanceDelta);
             float clampedNewScale = Mathf.Clamp(newScale, minScale, maxScale);
             targetTransform.localScale = new Vector3(clampedNewScale, clampedNewScale, clampedNewScale);
+            
+            // This method induces sickness...
+            //ScaleAround(targetTransform.gameObject, initialPosition, new Vector3(clampedNewScale, clampedNewScale, clampedNewScale));
 
             //Debug.LogFormat("initHandDist= {0} : curHandDist= {1} : distDelta= {2} : startScale= {3} : clampNewScale= {4}", initialHandDistance, currentHandDistance, distanceDelta, startScale, clampedNewScale);
+
         }
         else if (isPanning)
         {
@@ -235,6 +245,55 @@ public class GripPan : MonoBehaviour
             grabPosition = panHandTransform.position;
             glideTimePassed = 0.0f;
         }
+    }
+
+    /// <summary>
+    /// Scales the target around an arbitrary point by scaleFactor.
+    /// This is relative scaling, meaning using  scale Factor of Vector3.one
+    /// will not change anything and new Vector3(0.5f,0.5f,0.5f) will reduce
+    /// the object size by half.
+    /// The pivot is assumed to be the position in the space of the target.
+    /// Scaling is applied to localScale of target.
+    /// </summary>
+    /// <param name="target">The object to scale.</param>
+    /// <param name="pivot">The point to scale around in space of target.</param>
+    /// <param name="scaleFactor">The factor with which the current localScale of the target will be multiplied with.</param>
+    public static void ScaleAroundRelative(GameObject target, Vector3 pivot, Vector3 scaleFactor)
+    {
+        // pivot
+        var pivotDelta = target.transform.localPosition - pivot;
+        pivotDelta.Scale(scaleFactor);
+        target.transform.localPosition = pivot + pivotDelta;
+
+        // scale
+        var finalScale = target.transform.localScale;
+        finalScale.Scale(scaleFactor);
+        target.transform.localScale = finalScale;
+    }
+
+    /// <summary>
+    /// Scales the target around an arbitrary pivot.
+    /// This is absolute scaling, meaning using for example a scale factor of
+    /// Vector3.one will set the localScale of target to x=1, y=1 and z=1.
+    /// The pivot is assumed to be the position in the space of the target.
+    /// Scaling is applied to localScale of target.
+    /// </summary>
+    /// <param name="target">The object to scale.</param>
+    /// <param name="pivot">The point to scale around in the space of target.</param>
+    /// <param name="scaleFactor">The new localScale the target object will have after scaling.</param>
+    public static void ScaleAround(GameObject target, Vector3 pivot, Vector3 newScale)
+    {
+        // pivot
+        Vector3 pivotDelta = target.transform.localPosition - pivot; // diff from object pivot to desired pivot/origin
+        Vector3 scaleFactor = new Vector3(
+            newScale.x / target.transform.localScale.x,
+            newScale.y / target.transform.localScale.y,
+            newScale.z / target.transform.localScale.z);
+        pivotDelta.Scale(scaleFactor);
+        target.transform.localPosition = pivot + pivotDelta * 1.0f;
+
+        //scale
+        target.transform.localScale = newScale;
     }
 }
 
