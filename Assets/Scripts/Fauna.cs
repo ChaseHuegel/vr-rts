@@ -184,6 +184,8 @@ public class Fauna : ActorV2
         base.OnDrawGizmosSelected();
         UnityEditor.Handles.color = Color.red;
         UnityEditor.Handles.DrawWireDisc(startPosition, Vector3.up, 1);
-#endif
+
     }
+#endif
+
 }
