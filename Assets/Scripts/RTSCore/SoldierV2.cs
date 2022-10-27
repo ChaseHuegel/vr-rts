@@ -7,7 +7,7 @@ public class SoldierV2 : UnitV2
 
     protected override BehaviorTree<ActorV2> BehaviorTreeFactory()
     {
-        return SoldierBehaviorTree.Get();
+        return SoldierBehaviorTree.Value;
     }
 
     protected override void InitializeAttributes()
@@ -42,5 +42,12 @@ public class SoldierV2 : UnitV2
                 Order = UnitOrder.GoTo;
                 break;
         }
+    }
+
+    protected override void OnDamaged(DamageEvent e)
+    {
+        base.OnDamaged(e);
+        if (Target == null && e.attacker is Body attacker)
+            IssueTargetedOrder(attacker);
     }
 }

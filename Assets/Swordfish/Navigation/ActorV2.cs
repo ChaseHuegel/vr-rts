@@ -76,6 +76,7 @@ namespace Swordfish.Navigation
         public bool StateChangedRecently { get; private set; }
         public bool DestinationChangedRecently { get; private set; }
         public bool TargetChangedRecently { get; private set; }
+        public bool PositionChangedRecently { get; private set; }
 
         public UnitOrder LastOrder { get; private set; }
         public ActorAnimationState LastState { get; private set; }
@@ -162,6 +163,7 @@ namespace Swordfish.Navigation
             DestinationChangedRecently = false;
             TargetChangedRecently = false;
             OrderChangedRecently = false;
+            PositionChangedRecently = false;
         }
 
         public abstract void IssueTargetedOrder(Body body);
@@ -376,6 +378,8 @@ namespace Swordfish.Navigation
 
                         SetPosition(CurrentPath[0].x, CurrentPath[0].y);
                         CurrentPath.RemoveAt(0);
+
+                        PositionChangedRecently = true;
                     }
                 }
                 //  Unable to reach the next point, handle pathing logic on tick
