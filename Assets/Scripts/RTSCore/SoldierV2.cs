@@ -7,7 +7,7 @@ public class SoldierV2 : UnitV2
 
     protected override BehaviorTree<ActorV2> BehaviorTreeFactory()
     {
-        return SoldierBehaviorTree.Get();
+        return SoldierBehaviorTree.Value;
     }
 
     protected override void InitializeAttributes()

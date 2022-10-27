@@ -74,7 +74,7 @@ public class VillagerV2 : UnitV2
 
     protected override BehaviorTree<ActorV2> BehaviorTreeFactory()
     {
-        return VillagerBehaviorTree.Get();
+        return VillagerBehaviorTree.Value;
     }
 
     protected override void InitializeAttributes()
