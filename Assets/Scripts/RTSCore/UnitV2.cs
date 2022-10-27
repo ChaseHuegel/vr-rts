@@ -1,3 +1,4 @@
+using Swordfish;
 using Swordfish.Library.Types;
 using Swordfish.Navigation;
 using UnityEngine;
@@ -9,9 +10,19 @@ public abstract class UnitV2 : ActorV2
     public UnitData UnitData => m_UnitData ??= GameMaster.GetUnit(UnitType);
     private UnitData m_UnitData;
 
+    public bool Attacking
+    {
+        get => AttackingBinding.Get();
+        set => AttackingBinding.Set(value);
+    }
+
+    public DataBinding<bool> AttackingBinding { get; private set; } = new();
+
     [Header("Unit Settings")]
     [SerializeField]
     private RTSUnitType UnitType;
+
+    private float AttackTimer;
 
     protected override void Start()
     {
@@ -19,10 +30,18 @@ public abstract class UnitV2 : ActorV2
         SetUnitType(UnitType);
     }
 
+    protected override void Update()
+    {
+        base.Update();
+        if (!Frozen)
+            ProcessAttackRoutine(Time.deltaTime);
+    }
+
     protected override void InitializeAttributes()
     {
         base.InitializeAttributes();
         Attributes.AddOrUpdate(AttributeConstants.DAMAGE, 1f);
+        Attributes.AddOrUpdate(AttributeConstants.ATTACK_SPEED, 1.25f);
     }
 
     public virtual void SetUnitType(RTSUnitType unitType)
@@ -80,6 +99,40 @@ public abstract class UnitV2 : ActorV2
 
         if (e.NewValue != UnitOrder.None)
             AudioSource.PlayOneShot(GameMaster.GetAudio("unit_command_response").GetClip());
+    }
+
+    protected virtual void ProcessAttackRoutine(float deltaTime)
+    {
+        if (!Attacking)
+        {
+            if (State == ActorAnimationState.ATTACKING)
+                State = ActorAnimationState.IDLE;
+
+            return;
+        }
+
+        State = ActorAnimationState.ATTACKING;
+
+        AttackTimer += deltaTime;
+        if (AttackTimer >= Attributes.ValueOf(AttributeConstants.ATTACK_SPEED))
+        {
+            AttackTimer = 0f;
+
+            if (Target.IsAlive() && GetDistanceTo(Target.GetPosition().x, Target.GetPosition().y) <= Attributes.ValueOf(AttributeConstants.REACH))
+            {
+                Attack(Target);
+            }
+            else
+            {
+                Attacking = false;
+            }
+        }
+    }
+
+    private void Attack(Damageable victim)
+    {
+        //  TODO this is where we want to handle weapons, damage types, etc.
+        victim.Damage(Attributes.ValueOf(AttributeConstants.DAMAGE), AttributeChangeCause.ATTACKED, this, DamageType.NONE);
     }
 
 }

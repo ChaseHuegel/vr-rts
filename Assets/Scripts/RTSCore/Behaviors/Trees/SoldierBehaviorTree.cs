@@ -31,10 +31,7 @@ public static class SoldierBehaviorTree
                         new BehaviorSequence(
                             new HasTarget(),
                             new GoToTarget(),
-                            new SetActorState(ActorAnimationState.ATTACKING),
-                            new BehaviorDelay(1.5f,
-                                new AttackTarget()
-                            ),
+                            new AttackTarget(),
                             new ResetTarget(),
                             new ResetOrder()
                         ),
@@ -50,10 +47,7 @@ public static class SoldierBehaviorTree
                 new BehaviorSequence(
                     new TargetNearestEnemy(),
                     new GoToTarget(),
-                    new SetActorState(ActorAnimationState.ATTACKING),
-                    new BehaviorDelay(1.5f,
-                        new AttackTarget()
-                    ),
+                    new AttackTarget(),
                     new ResetTarget()
                 ),
 

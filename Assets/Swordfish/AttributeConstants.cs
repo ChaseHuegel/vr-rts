@@ -7,4 +7,5 @@ public static class AttributeConstants
     public const string DAMAGE = "dmg";
     public const string ARMOR = "armr";
     public const string SENSE_RADIUS = "sensor";
+    public const string ATTACK_SPEED = "atkspd";
 }
