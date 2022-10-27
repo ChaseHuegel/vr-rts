@@ -95,6 +95,7 @@ public class VillagerV2 : UnitV2
     {
         base.AttachListeners();
         Attributes.Get(AttributeConstants.CARGO).ValueBinding.Changed += OnCargoChanged;
+        //  TODO add a listener on CargoType change to update COLLECT_RATE appropriately
     }
 
     protected override void CleanupListeners()
