@@ -43,4 +43,11 @@ public class SoldierV2 : UnitV2
                 break;
         }
     }
+
+    protected override void OnDamaged(DamageEvent e)
+    {
+        base.OnDamaged(e);
+        if (Target == null && e.attacker is Body attacker)
+            IssueTargetedOrder(attacker);
+    }
 }
