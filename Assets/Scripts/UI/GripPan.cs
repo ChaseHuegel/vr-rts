@@ -146,19 +146,18 @@ public class GripPan : MonoBehaviour
         else if (isPanning)
         {
             movementVector = panStartPosition - panHandTransform.position;
-            Vector3 adjustedMovementVector = movementVector * panMovementRate;
-            Player.instance.transform.position += adjustedMovementVector;
+            Player.instance.transform.position += movementVector * panMovementRate / targetTransform.localScale.x;
             panStartPosition = panHandTransform.position;
             glideTimePassed += Time.deltaTime;
         }
         else if (isGliding)
-        {
+        {            
             magnitude -= momentumDrag * Time.deltaTime;
+
             if (magnitude < 0) magnitude = 0;
 
             Player.instance.transform.position += glidingVector * magnitude * Time.deltaTime;
         }
-
 
         //  Don't let player go below the 'floor'
         // if (Player.instance.transform.position.y < floorHeight)
@@ -178,10 +177,9 @@ public class GripPan : MonoBehaviour
 
             if (useMomentum)
             {
-                isGliding = true;
-
                 glidingVector = grabOffPosition - grabPosition;
                 magnitude = (glidingVector.magnitude / glideTimePassed) * momentumStrength;
+                isGliding = true;
                 glidingVector.Normalize();
             }
         }
@@ -218,10 +216,9 @@ public class GripPan : MonoBehaviour
 
             if (useMomentum)
             {
-                isGliding = true;
-
                 glidingVector = grabOffPosition - grabPosition;
                 magnitude = (glidingVector.magnitude / glideTimePassed) * momentumStrength;
+                isGliding = true;
                 glidingVector.Normalize();
             }
         }

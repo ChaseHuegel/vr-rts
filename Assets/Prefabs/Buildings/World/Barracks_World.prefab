@@ -487,7 +487,7 @@ GameObject:
   - component: {fileID: 6670299629662765397}
   - component: {fileID: 8126774028542077378}
   m_Layer: 0
-  m_Name: _queue_Swordsman_Button
+  m_Name: _queue_Clubman_Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -524,7 +524,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b95670a1ef2552845ae00dd1b3cf9a59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitTypeToQueue: 10
+  unitTypeToQueue: 13
   buttonLockedObject: {fileID: 511682889863231528, guid: 58c674a4dec1ed94e8abe759dd10060d,
     type: 3}
   locked: 0
@@ -1789,7 +1789,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 1958c5af7bf6ede4482cfb242b8baaa5, type: 2}
+  - {fileID: 2100000, guid: cc5257e4ac3c4b44b92457a45eccb539, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1996,12 +1996,10 @@ MonoBehaviour:
   Weaknesses: 
   Resistances: 
   Immunities: 
-  FactionID: 0
+  Faction: {fileID: 0}
   BoundingDimensions: {x: 5, y: 5}
   BoundingOrigin: {x: 0, y: 0}
-  GridPosition:
-    x: 0
-    y: 0
+  SkinRendererTargets: []
   bakeOnStart: 1
   allowPathThru: 0
   buildingData: {fileID: 11400000, guid: 963461a3aaf76f0458420eb41fae093d, type: 2}
@@ -2909,7 +2907,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4115592436940896659
 Transform:
   m_ObjectHideFlags: 0
@@ -3546,7 +3544,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 10
+  m_text: 0
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 79459efec17a4d00a321bdcc27bbc385, type: 2}
@@ -3965,7 +3963,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 10
+  m_text: 0
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 79459efec17a4d00a321bdcc27bbc385, type: 2}
