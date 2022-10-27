@@ -51,7 +51,7 @@ namespace Valve.VR.InteractionSystem
         //-------------------------------------------------
         protected virtual void HandHoverUpdate( Hand hand )
 		{
-			if ( hand.uiInteractAction != null && hand.uiInteractAction.GetStateDown(hand.handType) )
+			if ( hand.uiInteractAction != null && hand.uiInteractAction.GetAxis(hand.handType) > 0.10f)
 			{
 				InputModule.instance.Submit( gameObject );
 				ControllerButtonHints.HideButtonHint( hand, hand.uiInteractAction);

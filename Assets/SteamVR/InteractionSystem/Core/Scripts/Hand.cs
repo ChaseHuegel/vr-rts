@@ -51,7 +51,7 @@ namespace Valve.VR.InteractionSystem
 
         public SteamVR_Action_Vibration hapticAction = SteamVR_Input.GetAction<SteamVR_Action_Vibration>("Haptic");
 
-        public SteamVR_Action_Boolean uiInteractAction = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("InteractUI");
+        public SteamVR_Action_Single uiInteractAction = SteamVR_Input.GetAction<SteamVR_Action_Single>("InteractUI");
 
         public bool useHoverSphere = true;
         public Transform hoverSphereTransform;

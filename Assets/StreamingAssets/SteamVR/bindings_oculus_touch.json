@@ -37,10 +37,13 @@
             {
                "inputs" : {
                   "click" : {
+                     "output" : "/actions/default/in/grabpinch"
+                  },
+                  "pull" : {
                      "output" : "/actions/default/in/interactui"
                   }
                },
-               "mode" : "button",
+               "mode" : "trigger",
                "path" : "/user/hand/left/input/trigger"
             },
             {
@@ -55,20 +58,6 @@
                   "click_deactivate_threshold" : "0.7"
                },
                "path" : "/user/hand/left/input/grip"
-            },
-            {
-               "inputs" : {
-                  "click" : {
-                     "output" : "/actions/default/in/grabpinch"
-                  }
-               },
-               "mode" : "button",
-               "parameters" : {
-                  "click_activate_threshold" : "0.8",
-                  "click_deactivate_threshold" : "0.7",
-                  "force_input" : "value"
-               },
-               "path" : "/user/hand/left/input/trigger"
             },
             {
                "inputs" : {
@@ -160,19 +149,13 @@
             {
                "inputs" : {
                   "click" : {
+                     "output" : "/actions/default/in/grabpinch"
+                  },
+                  "pull" : {
                      "output" : "/actions/default/in/interactui"
                   }
                },
-               "mode" : "button",
-               "path" : "/user/hand/right/input/trigger"
-            },
-            {
-               "inputs" : {
-                  "click" : {
-                     "output" : "/actions/default/in/grabpinch"
-                  }
-               },
-               "mode" : "button",
+               "mode" : "trigger",
                "path" : "/user/hand/right/input/trigger"
             },
             {

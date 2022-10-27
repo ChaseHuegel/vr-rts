@@ -11,7 +11,7 @@ public class InteractionPointer : MonoBehaviour
 {
     //=========================================================================
     [Header("Actions")]
-    public SteamVR_Action_Boolean uiInteractAction = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("InteractUI");
+    public SteamVR_Action_Single uiInteractAction = SteamVR_Input.GetAction<SteamVR_Action_Single>("InteractUI");
     public SteamVR_Action_Boolean selectAction = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("Select");
     public SteamVR_Action_Boolean cancelAction = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("Cancel");
     public SteamVR_Action_Boolean queueAction = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("Queue");
@@ -229,7 +229,7 @@ public class InteractionPointer : MonoBehaviour
     //=========================================================================
     void Update()
     {
-        UpdatePointer();
+        UpdatePointer();        
 
         foreach (Hand hand in player.hands)
         {
@@ -255,10 +255,10 @@ public class InteractionPointer : MonoBehaviour
             }
             else if (WasInteractButtonReleased(hand))
             {
-                ExecuteInteraction();
+                    ExecuteInteraction();
             }
             else if (WasInteractButtonPressed(hand))
-            {
+            {                
                 StartInteraction(hand);
             }
             else if (WasCancelButtonPressed(hand))
@@ -332,16 +332,28 @@ public class InteractionPointer : MonoBehaviour
 
     private bool WasInteractButtonPressed(Hand hand)
     {
-        if (CanInteract(hand))
-            return uiInteractAction.GetStateDown(hand.handType);
+        if (CanInteract(hand) && pointerHand == null)
+        {
+            if (uiInteractAction.GetAxis(hand.handType) > 0)
+            {
+                pointerHand = hand;
+                return true;
+            }
+        }
 
         return false;
     }
 
     private bool WasInteractButtonReleased(Hand hand)
     {
-        if (CanInteract(hand))
-            return uiInteractAction.GetStateUp(hand.handType);
+        if (CanInteract(hand) && pointerHand != null && pointerHand == hand)
+        {
+            if (uiInteractAction.GetAxis(hand.handType) <= 0)
+            {
+                pointerHand = null;
+                return true;
+            }
+        }
 
         return false;
     }
@@ -1013,11 +1025,15 @@ public class InteractionPointer : MonoBehaviour
         }
         else if (isInUnitSelectionMode && pointedAtPointerInteractable != null)
         {
-            ActorV2 hoveredActor = pointedAtPointerInteractable.GetComponent<ActorV2>();
-            if (hoveredActor && !selectedActors.Contains(hoveredActor) &&
-                (hoveredActor.Faction?.IsSameFaction(faction) ?? false))
+            // Only add units to selection if trigger is pressed in more than 60%
+            if (uiInteractAction.GetAxis(pointerHand.handType) > 0.6f || selectedActors.Count <= 0)
             {
-                selectedActors.Add(hoveredActor);
+                ActorV2 hoveredActor = pointedAtPointerInteractable.GetComponent<ActorV2>();
+                if (hoveredActor && !selectedActors.Contains(hoveredActor) &&
+                    (hoveredActor.Faction?.IsSameFaction(faction) ?? false))
+                {
+                    selectedActors.Add(hoveredActor);
+                }
             }
         }
         else if (isInBuildingPlacementMode)
