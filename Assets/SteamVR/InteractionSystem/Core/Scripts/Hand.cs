@@ -55,6 +55,7 @@ namespace Valve.VR.InteractionSystem
 
         public bool useHoverSphere = true;
         public Transform hoverSphereTransform;
+        public Transform panTransform;
         public float hoverSphereRadius = 0.05f;
         public LayerMask hoverLayerMask = -1;
         public float hoverUpdateInterval = 0.1f;

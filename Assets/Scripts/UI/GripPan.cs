@@ -26,15 +26,15 @@ public class GripPan : MonoBehaviour
     public float floorHeight = 0f;
     public float panMovementRate = 3.0f;
     public bool useMomentum = true;
-    public float momentumStrength = 1.0f;
+    public float momentumStrength = 3.0f;
     public float momentumDrag = 5.0f;
 
     bool isPanning;
     bool isGliding;
     bool isScaling;
 
-    Vector3 panStartPosition;
-    Transform panHandTransform;
+    Vector3 initialGripPosition;
+    Transform currentGripTransform;
     SteamVR_Input_Sources currentHand;
 
     private Vector3 movementVector;
@@ -53,15 +53,16 @@ public class GripPan : MonoBehaviour
     private Player player = null;
     private bool isRightGripPressed;
     private bool isLeftGripPressed;
-
+    
     private float startScale = 1.0f;
     private float initialHandDistance;
-    private Vector3 initialPosition;
 
     // Start is called before the first frame update
     void Start()
     {
         player = Valve.VR.InteractionSystem.Player.instance;
+        startScale = targetTransform.localScale.x;
+
         if (player == null)
         {
             Debug.LogError("<b>[SteamVR Interaction]</b> GripPan: No Player instance found in map.", this);
@@ -70,7 +71,7 @@ public class GripPan : MonoBehaviour
         }
 
         isPanEnabled = true;
-
+        
         GripOnOff.AddOnStateDownListener(OnRightGripPressed, SteamVR_Input_Sources.RightHand);
         GripOnOff.AddOnStateUpListener(OnRightGripReleased, SteamVR_Input_Sources.RightHand);
         GripOnOff.AddOnStateDownListener(OnLeftGripPressed, SteamVR_Input_Sources.LeftHand);
@@ -84,7 +85,7 @@ public class GripPan : MonoBehaviour
             isRightHandPanEnabled = false;
         else
             isLeftHandPanEnabled = false;
-
+        
         // isRightHandPanEnabled = hand == RightHand;
         // isLeftHandPanEnabled = hand == LeftHand;
     }
@@ -98,7 +99,7 @@ public class GripPan : MonoBehaviour
 
         // isRightHandPanEnabled = hand != RightHand;
         // isLeftHandPanEnabled = hand != LeftHand;
-    }
+    }  
 
     // Update is called once per frame
     void Update()
@@ -107,16 +108,14 @@ public class GripPan : MonoBehaviour
         {
             if (!isScaling)
             {
-                initialHandDistance = Vector3.Distance(player.rightHand.transform.localPosition, player.leftHand.transform.localPosition);
-
-                Vector3 midPoint = (player.rightHand.transform.position + player.leftHand.transform.position) * 0.5f;
-                //Vector3 midPoint = Vector3.Lerp(player.rightHand.transform.position, player.leftHand.transform.position, 0.5f);
-                
-                initialPosition = midPoint;
+                Vector3 right = player.rightHand.transform.localPosition;                
+                Vector3 left = player.leftHand.transform.localPosition;
+                right.z = right.y = left.z = left.y = 0;
+                initialHandDistance = Vector3.Distance(right, left);
                 startScale = targetTransform.localScale.x;
                 isScaling = true;
                 isPanning = false;
-                //Debug.Log("Scaling Start");
+                Debug.Log("Scaling Start");
             }
         }
 
@@ -127,38 +126,42 @@ public class GripPan : MonoBehaviour
                 isScaling = false;
                 return;
             }
-            
+
             isGliding = false;
 
-            float currentHandDistance = Vector3.Distance(player.leftHand.transform.localPosition, player.rightHand.transform.localPosition);
-            float distanceDelta = (currentHandDistance - initialHandDistance);
-            distanceDelta *= -scalingSensitivity;
-            float newScale = startScale + (distanceDelta);
-            float clampedNewScale = Mathf.Clamp(newScale, minScale, maxScale);
-            targetTransform.localScale = new Vector3(clampedNewScale, clampedNewScale, clampedNewScale);
-            
-            // This method induces sickness...
-            //ScaleAround(targetTransform.gameObject, initialPosition, new Vector3(clampedNewScale, clampedNewScale, clampedNewScale));
+            Vector3 right = player.rightHand.transform.localPosition;
+            Vector3 left = player.leftHand.transform.localPosition;
+            right.z = right.y = left.z = left.y = 0;
 
-            //Debug.LogFormat("initHandDist= {0} : curHandDist= {1} : distDelta= {2} : startScale= {3} : clampNewScale= {4}", initialHandDistance, currentHandDistance, distanceDelta, startScale, clampedNewScale);
+            float currentHandDistance = Vector3.Distance(right, left);
+            float distanceDelta = (currentHandDistance - initialHandDistance);
+            distanceDelta *= -scalingSensitivity; 
+            float newScale = startScale + (distanceDelta);            
+            float clampedNewScale = Mathf.Clamp(newScale, minScale, maxScale);
+            //clampedNewScale = Remap(clampedNewScale, minScale, maxScale, maxScale, minScale);
+            targetTransform.localScale = new Vector3(clampedNewScale, clampedNewScale, clampedNewScale);
+
+            Debug.LogFormat("initHandDist= {0} : curHandDist= {1} : distDelta= {2} : startScale= {3} : clampNewScale= {4}", initialHandDistance, currentHandDistance, distanceDelta, startScale, clampedNewScale);
+
+            //panStartPosition = panHandTransform.position;
 
         }
         else if (isPanning)
         {
-            movementVector = panStartPosition - panHandTransform.position;
-            Player.instance.transform.position += movementVector * panMovementRate / targetTransform.localScale.x;
-            panStartPosition = panHandTransform.position;
+            movementVector = initialGripPosition - currentGripTransform.position;
+            Vector3 adjustedMovementVector = movementVector * panMovementRate;
+            Player.instance.transform.position += adjustedMovementVector;
+            initialGripPosition = currentGripTransform.position;
             glideTimePassed += Time.deltaTime;
         }
         else if (isGliding)
-        {            
+        {
             magnitude -= momentumDrag * Time.deltaTime;
-
             if (magnitude < 0) magnitude = 0;
 
             Player.instance.transform.position += glidingVector * magnitude * Time.deltaTime;
+            //transform.position = Vector3.Lerp(transform.position, transform.position + glidingVector * magnitude, Time.deltaTime);
         }
-
         //  Don't let player go below the 'floor'
         // if (Player.instance.transform.position.y < floorHeight)
         //     Player.instance.transform.position = new Vector3(Player.instance.transform.position.x, floorHeight, Player.instance.transform.position.z);
@@ -166,20 +169,20 @@ public class GripPan : MonoBehaviour
 
 
     public void OnRightGripReleased(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
-    {
+    {    
         isRightGripPressed = false;
         if (isScaling) return;
 
         if (isPanning && currentHand == fromSource)
         {
             isPanning = false;
-            grabOffPosition = panHandTransform.position;
+            grabOffPosition = currentGripTransform.position;
 
             if (useMomentum)
             {
+                isGliding = true;
                 glidingVector = grabOffPosition - grabPosition;
                 magnitude = (glidingVector.magnitude / glideTimePassed) * momentumStrength;
-                isGliding = true;
                 glidingVector.Normalize();
             }
         }
@@ -193,15 +196,15 @@ public class GripPan : MonoBehaviour
         {
             if (player.rightHand.hoveringInteractable == null)
             {
-                panHandTransform = player.rightHand.transform;
-                panStartPosition = panHandTransform.transform.position;
+                currentGripTransform = player.rightHand.panTransform;
+                initialGripPosition = currentGripTransform.transform.position;
                 isPanning = true;
                 currentHand = fromSource;
             }
             isGliding = false;
-            grabPosition = panHandTransform.position;
+            grabPosition = currentGripTransform.position;
             glideTimePassed = 0.0f;
-        }
+        } 
     }
 
     public void OnLeftGripReleased(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
@@ -212,13 +215,14 @@ public class GripPan : MonoBehaviour
         if (isPanning && currentHand == fromSource)
         {
             isPanning = false;
-            grabOffPosition = panHandTransform.position;
+            grabOffPosition = currentGripTransform.position;
 
             if (useMomentum)
             {
+                isGliding = true;
+
                 glidingVector = grabOffPosition - grabPosition;
                 magnitude = (glidingVector.magnitude / glideTimePassed) * momentumStrength;
-                isGliding = true;
                 glidingVector.Normalize();
             }
         }
@@ -232,78 +236,44 @@ public class GripPan : MonoBehaviour
         {
             if (player.leftHand.hoveringInteractable == null)
             {
-                panHandTransform = player.leftHand.transform;
-                panStartPosition = panHandTransform.transform.position;
+                currentGripTransform = player.leftHand.panTransform;
+                initialGripPosition = currentGripTransform.transform.position;
                 isPanning = true;
                 currentHand = fromSource;
             }
 
             isGliding = false;
-            grabPosition = panHandTransform.position;
+            grabPosition = currentGripTransform.position;
             glideTimePassed = 0.0f;
         }
     }
 
-    /// <summary>
-    /// Scales the target around an arbitrary point by scaleFactor.
-    /// This is relative scaling, meaning using  scale Factor of Vector3.one
-    /// will not change anything and new Vector3(0.5f,0.5f,0.5f) will reduce
-    /// the object size by half.
-    /// The pivot is assumed to be the position in the space of the target.
-    /// Scaling is applied to localScale of target.
-    /// </summary>
-    /// <param name="target">The object to scale.</param>
-    /// <param name="pivot">The point to scale around in space of target.</param>
-    /// <param name="scaleFactor">The factor with which the current localScale of the target will be multiplied with.</param>
-    public static void ScaleAroundRelative(GameObject target, Vector3 pivot, Vector3 scaleFactor)
+    public static float Remap(float from, float fromMin, float fromMax, float toMin, float toMax)
     {
-        // pivot
-        var pivotDelta = target.transform.localPosition - pivot;
-        pivotDelta.Scale(scaleFactor);
-        target.transform.localPosition = pivot + pivotDelta;
+        var fromAbs = from - fromMin;
+        var fromMaxAbs = fromMax - fromMin;
 
-        // scale
-        var finalScale = target.transform.localScale;
-        finalScale.Scale(scaleFactor);
-        target.transform.localScale = finalScale;
-    }
+        var normal = fromAbs / fromMaxAbs;
 
-    /// <summary>
-    /// Scales the target around an arbitrary pivot.
-    /// This is absolute scaling, meaning using for example a scale factor of
-    /// Vector3.one will set the localScale of target to x=1, y=1 and z=1.
-    /// The pivot is assumed to be the position in the space of the target.
-    /// Scaling is applied to localScale of target.
-    /// </summary>
-    /// <param name="target">The object to scale.</param>
-    /// <param name="pivot">The point to scale around in the space of target.</param>
-    /// <param name="scaleFactor">The new localScale the target object will have after scaling.</param>
-    public static void ScaleAround(GameObject target, Vector3 pivot, Vector3 newScale)
-    {
-        // pivot
-        Vector3 pivotDelta = target.transform.localPosition - pivot; // diff from object pivot to desired pivot/origin
-        Vector3 scaleFactor = new Vector3(
-            newScale.x / target.transform.localScale.x,
-            newScale.y / target.transform.localScale.y,
-            newScale.z / target.transform.localScale.z);
-        pivotDelta.Scale(scaleFactor);
-        target.transform.localPosition = pivot + pivotDelta * 1.0f;
+        var toMaxAbs = toMax - toMin;
+        var toAbs = toMaxAbs * normal;
 
-        //scale
-        target.transform.localScale = newScale;
+        var to = toAbs + toMin;
+
+        return to;
     }
 }
 
-// if (RightHand.hoveringInteractable == null && LeftHand.hoveringInteractable == null)
-// {
-//     if (fromSource == SteamVR_Input_Sources.RightHand)
-//         panHand = RightHand.transform;
-//     else if (fromSource == SteamVR_Input_Sources.LeftHand)
-//         panHand = LeftHand.transform;
+    // if (RightHand.hoveringInteractable == null && LeftHand.hoveringInteractable == null)
+    // {
+    //     if (fromSource == SteamVR_Input_Sources.RightHand)
+    //         panHand = RightHand.transform;
+    //     else if (fromSource == SteamVR_Input_Sources.LeftHand)
+    //         panHand = LeftHand.transform;
 
-//     panStart = panHand.transform.position;
-//     isPanning = true;
+    //     panStart = panHand.transform.position;
+    //     isPanning = true;
 
-//     if (fromSource != currentHand)
-//         currentHand = fromSource;
-// }
+    //     if (fromSource != currentHand)
+    //         currentHand = fromSource;
+    // }

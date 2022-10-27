@@ -11671,6 +11671,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 402894953}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &405277262 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5307192397046128094, guid: 0e20e52b3d933304889227afb2893690,
+    type: 3}
+  m_PrefabInstance: {fileID: 4603657073447195606}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &405734122
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -24323,6 +24329,11 @@ Transform:
   - {fileID: 350211208}
   - {fileID: 209103276}
   - {fileID: 711698170}
+  - {fileID: 232072273}
+  - {fileID: 1944939551}
+  - {fileID: 123988922}
+  - {fileID: 126688072}
+  - {fileID: 1652787364}
   m_Father: {fileID: 0}
   m_RootOrder: 22
   m_LocalEulerAnglesHint: {x: 0, y: -180, z: 0}
@@ -29381,6 +29392,7 @@ MonoBehaviour:
     needsReinit: 0
   useHoverSphere: 1
   hoverSphereTransform: {fileID: 937048296}
+  panTransform: {fileID: 0}
   hoverSphereRadius: 1
   hoverLayerMask:
     serializedVersion: 2
@@ -32101,6 +32113,12 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 529303400958546870, guid: fc77aef3c1c1b734db5a298d548488c0,
     type: 3}
   m_PrefabInstance: {fileID: 1030706878}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1035468260 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3370916600781494621, guid: 0e20e52b3d933304889227afb2893690,
+    type: 3}
+  m_PrefabInstance: {fileID: 4603657073447195606}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1037122726
 PrefabInstance:
@@ -46773,37 +46791,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1541258818}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1544698199
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1544698200}
-  m_Layer: 26
-  m_Name: HoverPoint_01
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1544698200
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1544698199}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.051999986, y: -0.015699983, z: -0.11630082}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1691660181}
-  m_RootOrder: 8
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1546549692
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -51665,12 +51652,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4200354398699698127, guid: cc260bc243eef0f4d90075d382e22638,
     type: 3}
   m_PrefabInstance: {fileID: 1691448742}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &1691660181 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4603657074501785457, guid: 0e20e52b3d933304889227afb2893690,
-    type: 3}
-  m_PrefabInstance: {fileID: 4603657073447195606}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1692662346
 PrefabInstance:
@@ -70583,6 +70564,11 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 3370916600781494621, guid: 0e20e52b3d933304889227afb2893690,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 3901503994314816799, guid: 0e20e52b3d933304889227afb2893690,
         type: 3}
       propertyPath: m_RootOrder
@@ -70725,6 +70711,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4603657074508654021, guid: 0e20e52b3d933304889227afb2893690,
         type: 3}
+      propertyPath: panTransform
+      value: 
+      objectReference: {fileID: 1035468260}
+    - target: {fileID: 4603657074508654021, guid: 0e20e52b3d933304889227afb2893690,
+        type: 3}
       propertyPath: hoverSphereTransform
       value: 
       objectReference: {fileID: 542353296}
@@ -70733,6 +70724,11 @@ PrefabInstance:
       propertyPath: hoverLayerMask.m_Bits
       value: 266039
       objectReference: {fileID: 0}
+    - target: {fileID: 4603657074508703067, guid: 0e20e52b3d933304889227afb2893690,
+        type: 3}
+      propertyPath: panTransform
+      value: 
+      objectReference: {fileID: 405277262}
     - target: {fileID: 4603657074508703067, guid: 0e20e52b3d933304889227afb2893690,
         type: 3}
       propertyPath: hoverLayerMask.m_Bits
@@ -70745,8 +70741,28 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4603657074826361736, guid: 0e20e52b3d933304889227afb2893690,
         type: 3}
+      propertyPath: LeftHand
+      value: 
+      objectReference: {fileID: 4603657073447195607}
+    - target: {fileID: 4603657074826361736, guid: 0e20e52b3d933304889227afb2893690,
+        type: 3}
+      propertyPath: handLeft
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4603657074826361736, guid: 0e20e52b3d933304889227afb2893690,
+        type: 3}
       propertyPath: minScale
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4603657074826361736, guid: 0e20e52b3d933304889227afb2893690,
+        type: 3}
+      propertyPath: RightHand
+      value: 
+      objectReference: {fileID: 1128724109}
+    - target: {fileID: 4603657074826361736, guid: 0e20e52b3d933304889227afb2893690,
+        type: 3}
+      propertyPath: handRight
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4603657074826361736, guid: 0e20e52b3d933304889227afb2893690,
         type: 3}
@@ -70911,6 +70927,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0e20e52b3d933304889227afb2893690, type: 3}
+--- !u!114 &4603657073447195607 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4603657074508654021, guid: 0e20e52b3d933304889227afb2893690,
+    type: 3}
+  m_PrefabInstance: {fileID: 4603657073447195606}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29e3e4511966ba94d8ba0b98c6c62f82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &4603657073447195608 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5795123720537680829, guid: 0e20e52b3d933304889227afb2893690,
