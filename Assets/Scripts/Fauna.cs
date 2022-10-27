@@ -131,9 +131,10 @@ public class Fauna : ActorV2
             isDead = true;
             resource.enabled = true;
             Frozen = true;
-            liveFaunaObject.SetActive(false);
             deadFaunaObject.SetActive(true);
             Animator.enabled = false;
+            Destroy(liveFaunaObject);
+            Destroy(this);
         }
 
         return isDead;

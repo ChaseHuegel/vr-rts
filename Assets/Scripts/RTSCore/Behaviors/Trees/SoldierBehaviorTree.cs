@@ -30,7 +30,8 @@ public static class SoldierBehaviorTree
                         //  Attempt to chase and attack the target
                         new BehaviorSequence(
                             new HasTarget(),
-                            new GoToTarget(),
+                            new PursueTarget(),
+                            new SetActorState(ActorAnimationState.ATTACKING),
                             new AttackTarget(),
                             new ResetTarget(),
                             new ResetOrder()
@@ -45,18 +46,14 @@ public static class SoldierBehaviorTree
 
                 //  Attempt to attack nearby enemies
                 new BehaviorSequence(
-                    new TargetNearestEnemy(),
-                    new GoToTarget(),
+                    new BehaviorSelector(
+                        new HasTarget(),
+                        new TargetNearestEnemy()
+                    ),
+                    new PursueTarget(),
+                    new SetActorState(ActorAnimationState.ATTACKING),
                     new AttackTarget(),
                     new ResetTarget()
-                ),
-
-                //  Try to navigate to our current target
-                new IfHasTarget(
-                    new BehaviorSequence(
-                        new GoToTarget(),
-                        new ResetTarget()
-                    )
                 ),
 
                 //  Try to navigate to our current destination

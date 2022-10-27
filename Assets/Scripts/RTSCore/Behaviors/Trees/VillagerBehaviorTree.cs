@@ -61,9 +61,7 @@ public static class VillagerBehaviorTree
                                 new CanCollectTarget(),
                                 new SetCargoTypeFromTarget(),
                                 new SetStateToGathering(),
-                                new BehaviorDelay(1.5f,
-                                    new CollectCargo()
-                                )
+                                new CollectCargo()
                             )
                         ),
                         //  Else order is complete
@@ -105,47 +103,47 @@ public static class VillagerBehaviorTree
                                 new TargetNearestDropOff()
                             ),
                             new GoToTarget(),
-                            new LookAtTarget(),
                             new CanDropOffAtTarget(),
                             new DropOffCargo(),
                             new TargetPrevious()
+                        ),
+                        //  Else attempt to harvest a target
+                        new BehaviorSequence(
+                            new BehaviorSelector(
+                                //  Try the current target
+                                new CanCollectTarget(),
+                                //  Or find the nearest carcass if we don't have a target
+                                new BehaviorSequence(
+                                    new BehaviorInverter(
+                                        new HasTarget()
+                                    ),
+                                    new TargetNearestResource(ResourceGatheringType.Meat)
+                                )
+                            ),
+                            //  Navigate to the target
+                            new GoToTarget(),
+                            //  Try to collect the target
+                            new BehaviorInverter(
+                                new IsCargoFull()
+                            ),
+                            new CanCollectTarget(),
+                            new SetCargoTypeFromTarget(),
+                            new SetStateToGathering(),
+                            new CollectCargo()
                         ),
                         //  Else attempt to hunt a target
                         new BehaviorSequence(
                             new BehaviorSelector(
                                 //  Try the current target
                                 new HasTarget(),
-                                //  Or find the nearest matching resource
+                                //  Or find the nearest fauna
                                 new TargetNearestFauna()
                             ),
                             //  Navigate to the target
-                            new GoToTarget(),
-                            new BehaviorSelector(
-                                //  Try to collect the target
-                                new BehaviorSequence(
-                                    //  If cargo isn't full
-                                    new BehaviorInverter(
-                                        new IsCargoFull()
-                                    ),
-                                    new CanCollectTarget(),
-                                    new SetCargoTypeFromTarget(),
-                                    new SetStateToGathering(),
-                                    new BehaviorDelay(1.5f,
-                                        new CollectCargo()
-                                    )
-                                ),
-                                //  Else try to attack the target
-                                new BehaviorSelector(
-                                    new BehaviorSequence(
-                                        new SetActorState(ActorAnimationState.HUNTING),
-                                        new BehaviorDelay(1.5f,
-                                            new AttackTarget()
-                                        ),
-                                        new SetCargoType(ResourceGatheringType.Meat),
-                                        new TargetNearestCargoResource()
-                                    )
-                                )
-                            )
+                            new PursueTarget(),
+                            //  Try to attack the target
+                            new SetActorState(ActorAnimationState.HUNTING),
+                            new AttackTarget()
                         ),
                         //  Else order is complete
                         new BehaviorSequence(
@@ -160,11 +158,9 @@ public static class VillagerBehaviorTree
                         //  Attempt to chase and attack the target
                         new BehaviorSequence(
                             new HasTarget(),
-                            new GoToTarget(),
-                            new SetActorState(ActorAnimationState.ATTACKING),
-                            new BehaviorDelay(1.5f,
-                                new AttackTarget()
-                            ),
+                            new PursueTarget(),
+                            new SetActorState(ActorAnimationState.HUNTING),
+                            new AttackTarget(),
                             new ResetTarget(),
                             new ResetOrder()
                         ),
@@ -183,9 +179,7 @@ public static class VillagerBehaviorTree
                             new HasTarget(),
                             new GoToTarget(),
                             new SetActorState(ActorAnimationState.BUILDANDREPAIR),
-                            new BehaviorDelay(1.5f,
-                                new HealTarget()
-                            ),
+                            new HealTarget(),
                             new ResetTarget(),
                             new ResetOrder()
                         ),

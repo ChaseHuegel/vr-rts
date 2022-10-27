@@ -4,8 +4,8 @@ public class AttackTarget : BehaviorNode<UnitV2>
 {
     public override BehaviorState Evaluate(UnitV2 unit, float delta)
     {
-        unit.Attacking = unit.Target.IsAlive();
+        unit.AttackingTarget = unit.Target.IsAlive();
 
-        return unit.Attacking ? BehaviorState.RUNNING : BehaviorState.SUCCESS;
+        return unit.AttackingTarget ? BehaviorState.RUNNING : BehaviorState.SUCCESS;
     }
 }

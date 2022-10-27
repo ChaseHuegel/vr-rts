@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
 using Swordfish;
 using Swordfish.Library.BehaviorTrees;
 using Swordfish.Navigation;
@@ -16,7 +14,7 @@ public class GoToTarget : BehaviorNode<ActorV2>
             return BehaviorState.SUCCESS;
         }
 
-        if (!actor.HasValidPath() || actor.TargetChangedRecently)
+        if (!actor.HasValidPath() || actor.TargetChangedRecently || (actor.Target is ActorV2 target && target.IsMoving))
         {
             PathManager.RequestPath(actor, position.x, position.y, true);
             return BehaviorState.RUNNING;

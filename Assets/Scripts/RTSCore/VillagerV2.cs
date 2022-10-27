@@ -13,7 +13,14 @@ public class VillagerV2 : UnitV2
         set => CargoTypeBinding.Set(value);
     }
 
+    public bool CollectingTarget
+    {
+        get => CollectingTargetBinding.Get();
+        set => CollectingTargetBinding.Set(value);
+    }
+
     public DataBinding<ResourceGatheringType> CargoTypeBinding { get; private set; } = new();
+    public DataBinding<bool> CollectingTargetBinding { get; private set; } = new();
 
     [Header("Tool Objects")]
     [SerializeField]
@@ -54,8 +61,16 @@ public class VillagerV2 : UnitV2
     private Transform GoldCargoObject;
 
     private Transform CurrentCargoObject;
+    private float CollectTimer;
 
     public bool IsCargoFull() => Attributes.Get(AttributeConstants.CARGO).IsMax();
+
+    protected override void Update()
+    {
+        base.Update();
+        if (!Frozen)
+            ProcessCollectRoutine(Time.deltaTime);
+    }
 
     protected override BehaviorTree<ActorV2> BehaviorTreeFactory()
     {
@@ -66,6 +81,14 @@ public class VillagerV2 : UnitV2
     {
         base.InitializeAttributes();
         Attributes.AddOrUpdate(AttributeConstants.CARGO, 0f, 10f);
+        Attributes.AddOrUpdate(AttributeConstants.COLLECT_RATE, 1f);
+    }
+
+    protected override void OnLoadUnitData(UnitData data)
+    {
+        base.OnLoadUnitData(data);
+        Attributes.Get(AttributeConstants.COLLECT_RATE).Value = data.lumberjackingRate;
+        Attributes.Get(AttributeConstants.HEAL_RATE).MaxValue = data.buildRate;
     }
 
     protected override void AttachListeners()
@@ -230,5 +253,31 @@ public class VillagerV2 : UnitV2
                 return;
         }
         CurrentCargoObject?.gameObject.SetActive(visible);
+    }
+
+    protected virtual void ProcessCollectRoutine(float deltaTime)
+    {
+        if (!CollectingTarget)
+            return;
+
+        CollectTimer += deltaTime;
+        if (CollectTimer >= 1f)
+        {
+            CollectTimer = 0f;
+
+            if (Target is Resource resource && !IsMoving)
+            {
+                CollectResource(resource);
+            }
+            else
+            {
+                CollectingTarget = false;
+            }
+        }
+    }
+
+    private void CollectResource(Resource resource)
+    {
+        Attributes.Get(AttributeConstants.CARGO).Value += resource.TryRemove(Attributes.ValueOf(AttributeConstants.COLLECT_RATE));
     }
 }
