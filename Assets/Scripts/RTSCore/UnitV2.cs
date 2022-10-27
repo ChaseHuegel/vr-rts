@@ -118,7 +118,7 @@ public abstract class UnitV2 : ActorV2
         {
             AttackTimer = 0f;
 
-            if (Target.IsAlive() && GetDistanceTo(Target.GetPosition().x, Target.GetPosition().y) <= Attributes.ValueOf(AttributeConstants.REACH))
+            if (Target != null && Target.IsAlive() && GetDistanceTo(Target.GetPosition().x, Target.GetPosition().y) <= Attributes.ValueOf(AttributeConstants.REACH))
             {
                 Attack(Target);
             }
