@@ -28,6 +28,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4440964997498632956}
   m_RootOrder: 1
@@ -51,6 +52,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -109,6 +111,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -1, z: -0, w: 0.0000029504295}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4138289209226926959}
   m_RootOrder: 1
@@ -184,6 +187,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -1, z: -0, w: 0.0000029504295}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4138289209226926959}
   m_RootOrder: 0
@@ -258,6 +262,7 @@ Transform:
   m_LocalRotation: {x: -0.000050872244, y: 0.70710635, z: 0.7071073, w: 0.000202917}
   m_LocalPosition: {x: 0, y: -0, z: 10.79}
   m_LocalScale: {x: 7, y: 7, z: 7}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3044789684785096249}
   m_Father: {fileID: 4440964997498632956}
@@ -281,7 +286,9 @@ MonoBehaviour:
   disableSelf: 1
   autohideDelay: 15
   autohideDistance: 2
+  stopRotatingAtDistance: 0.75
   rotationSpeed: 1
+  copyHmdRotation: 1
 --- !u!1 &3215282534837223176
 GameObject:
   m_ObjectHideFlags: 0
@@ -309,6 +316,7 @@ Transform:
     w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 659574835144116738}
   - {fileID: 4138289209226926959}
@@ -343,6 +351,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4440964997498632956}
   m_RootOrder: 2
@@ -366,6 +375,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -407,7 +417,6 @@ GameObject:
   - component: {fileID: 4440964997498632956}
   - component: {fileID: 120939237930005652}
   - component: {fileID: 3678583650769546615}
-  - component: {fileID: 6422504516511171259}
   - component: {fileID: 2695484424084565123}
   - component: {fileID: 470687543468946390}
   - component: {fileID: 4440964997498988253}
@@ -429,6 +438,7 @@ Transform:
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: -12.3125, y: -0.0009999275, z: -11.6875}
   m_LocalScale: {x: 0.09, y: 0.09, z: 0.09}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5382195409188694150}
   - {fileID: 328942695855615513}
@@ -548,26 +558,6 @@ MonoBehaviour:
   highlightMaterial: {fileID: 0}
   highlightOnHover: 1
   hideHighlight: []
---- !u!114 &6422504516511171259
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4440964997498988252}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8753ff4a5012a141b16468281698adb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  attributes:
-  - attribute: 0
-    value: 0
-    max: 500
-  invulnerable: 0
-  weaknesses: 
-  resistances: 
-  immunities: 
 --- !u!114 &2695484424084565123
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -656,12 +646,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbe24ab2fb7303741b59f236fc26e5ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boundingDimensions: {x: 5, y: 5}
-  boundingOrigin: {x: 0, y: 0}
-  gridPosition:
-    x: 61
-    y: 66
-  factionId: 0
+  Invulnerable: 0
+  Weaknesses: 
+  Resistances: 
+  Immunities: 
+  Faction: {fileID: 0}
+  BoundingDimensions: {x: 1, y: 1}
+  BoundingOrigin: {x: 0, y: 0}
+  SkinRendererTargets: []
   bakeOnStart: 1
   allowPathThru: 0
   DestroyOnBuilt: 1
@@ -715,6 +707,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -1, z: -0, w: 0.0000029504295}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.010196623, y: 0.010196623, z: 0.010196623}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4138289209226926959}
   m_RootOrder: 2
@@ -809,6 +802,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4440964997498632956}
   m_RootOrder: 0
@@ -832,6 +826,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -893,6 +888,7 @@ RectTransform:
     w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -0}
   m_LocalScale: {x: 0.45171985, y: 0.45172003, z: 0.45171988}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3311581656813650487}
   - {fileID: 8958073720428764235}
@@ -1014,6 +1010,7 @@ RectTransform:
   m_LocalRotation: {x: 0.00000019072827, y: 1, z: -0.00000022664932, w: 0.000040017203}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.07333878, y: 0.07333878, z: 0.07333876}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3044789684785096249}
   m_RootOrder: 0
@@ -1034,6 +1031,7 @@ MeshRenderer:
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -1150,9 +1148,9 @@ MonoBehaviour:
   m_margin: {x: 0, y: 1.4491819, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
-  m_renderer: {fileID: 8825243655977334518}
-  m_maskType: 0
   _SortingLayer: 0
   _SortingLayerID: 0
   _SortingOrder: 0
+  m_hasFontAssetChanged: 0
+  m_renderer: {fileID: 8825243655977334518}
+  m_maskType: 0
