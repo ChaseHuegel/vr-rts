@@ -3,7 +3,6 @@ using Swordfish;
 using Swordfish.Navigation;
 using UnityEngine;
 
-[RequireComponent(typeof(Damageable))]
 public class Structure : Obstacle
 {
     public readonly static List<Structure> AllStructures = new();

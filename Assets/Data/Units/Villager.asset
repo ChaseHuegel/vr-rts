@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ce9a7238ce7b06042b83fb4085bbbdf3, type: 3}
-  m_Name: Farmer
+  m_Name: Villager
   m_EditorClassIdentifier: 
-  unitType: 6
+  unitType: 1
   queueTime: 25
   prefab: {fileID: 1069823527325677058, guid: 2e26cba339b071948830d584eca2edda, type: 3}
-  queueImage: {fileID: 21300000, guid: 7fbd68fd31505de43a0e860632fc4b80, type: 3}
-  worldButtonMaterial: {fileID: 2100000, guid: 840264addfc6dc441937cec1937e5510, type: 2}
+  queueImage: {fileID: 21300000, guid: d6cfc259855e42345a79400096181a14, type: 3}
+  worldButtonMaterial: {fileID: 2100000, guid: 1b7dd2050037e0941a910cf89859e468, type: 2}
   buildRate: 10
   foragingRate: 0.5
   repairRate: 5
@@ -31,9 +31,9 @@ MonoBehaviour:
   stoneCost: 0
   foodCost: 50
   woodCost: 0
-  maxHitPoints: 100
+  maxHitPoints: 50
   maxCargo: 10
   huntingDamage: 1
-  attackRange: 1
-  attackDamage: 0
+  attackRange: 3
+  attackDamage: 1
   armor: 0
