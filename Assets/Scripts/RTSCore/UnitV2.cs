@@ -151,7 +151,7 @@ public abstract class UnitV2 : ActorV2
         {
             HealTimer = 0f;
 
-            if (Target != null && Target.IsAlive() && !Target.Attributes.Get(AttributeConstants.HEALTH).IsMax() && !IsMoving)
+            if (Target != null && !Target.Attributes.Get(AttributeConstants.HEALTH).IsMax() && !IsMoving)
             {
                 Heal(Target);
             }

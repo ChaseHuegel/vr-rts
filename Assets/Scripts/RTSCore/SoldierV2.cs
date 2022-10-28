@@ -20,16 +20,16 @@ public class SoldierV2 : UnitV2
     {
         switch (body)
         {
-            case ActorV2 actor:
-                Target = actor;
+            case ActorV2 _:
+                Target = body;
                 if (body.Faction == null || !body.Faction.IsAllied(Faction))
                     Order = UnitOrder.Attack;
                 else
                     Order = UnitOrder.Follow;
                 break;
 
-            case Structure structure:
-            case Constructible constructible:
+            case Structure _:
+            case Constructible _:
                 Target = body;
                 if (body.Faction == null || !body.Faction.IsAllied(Faction))
                     Order = UnitOrder.Attack;
