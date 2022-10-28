@@ -51,19 +51,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab54d6d5140767340bdbc6beb759bea3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FactionID: 0
+  Invulnerable: 0
+  Weaknesses: 
+  Resistances: 
+  Immunities: 
+  Faction: {fileID: 0}
   BoundingDimensions: {x: 3, y: 3}
   BoundingOrigin: {x: 0, y: 0}
-  GridPosition:
-    x: 0
-    y: 0
-  Ticker: 0
+  SkinRendererTargets: []
   bakeOnStart: 1
   allowPathThru: 0
   type: 8
   amount: 1000
-  maxInteractors: 0
-  interactors: []
 --- !u!135 &6354225555274246660
 SphereCollider:
   m_ObjectHideFlags: 0

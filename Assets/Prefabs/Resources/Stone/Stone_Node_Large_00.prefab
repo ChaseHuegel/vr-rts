@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 5159221434457056221}
   - component: {fileID: 3242159438290096864}
   - component: {fileID: -1832274208755310593}
-  - component: {fileID: 8755161024538603408}
+  - component: {fileID: 8085791480531434196}
   m_Layer: 11
-  m_Name: Gold_Node_Large_Variant_01
+  m_Name: Stone_Node_Large_00
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -31,7 +31,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 4382689197004793097}
+  - {fileID: 1086653946759494125}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 179.972, z: 0}
@@ -57,7 +57,7 @@ MonoBehaviour:
   SkinRendererTargets: []
   bakeOnStart: 1
   allowPathThru: 0
-  type: 8
+  type: 4
   amount: 1000
 --- !u!135 &-1832274208755310593
 SphereCollider:
@@ -70,9 +70,9 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 1.51
-  m_Center: {x: -0, y: -0.42, z: 0}
---- !u!114 &8755161024538603408
+  m_Radius: 1.48
+  m_Center: {x: -0, y: -0.32, z: 0}
+--- !u!114 &8085791480531434196
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -87,7 +87,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 0}
   highlightOnHover: 1
   hideHighlight: []
---- !u!1001 &4276389843700073186
+--- !u!1001 &620981612965617158
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -149,6 +149,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 41b0776ac2a9fe044a6bfa128b2a0bfd,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 5488c218fc681b748a54e10cdf1b2f8c, type: 2}
     - target: {fileID: 919132149155446097, guid: 41b0776ac2a9fe044a6bfa128b2a0bfd,
         type: 3}
       propertyPath: m_Name
@@ -156,9 +161,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 41b0776ac2a9fe044a6bfa128b2a0bfd, type: 3}
---- !u!4 &4382689197004793097 stripped
+--- !u!4 &1086653946759494125 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 41b0776ac2a9fe044a6bfa128b2a0bfd,
     type: 3}
-  m_PrefabInstance: {fileID: 4276389843700073186}
+  m_PrefabInstance: {fileID: 620981612965617158}
   m_PrefabAsset: {fileID: 0}
