@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b95670a1ef2552845ae00dd1b3cf9a59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitTypeToQueue: 12
+  unitTypeToQueue: 4
   buttonLockedObject: {fileID: 511682889863231528, guid: 58c674a4dec1ed94e8abe759dd10060d,
     type: 3}
   locked: 0
@@ -2764,12 +2764,10 @@ MonoBehaviour:
   Weaknesses: 
   Resistances: 
   Immunities: 
-  FactionID: 0
+  Faction: {fileID: 0}
   BoundingDimensions: {x: 5, y: 5}
   BoundingOrigin: {x: 0, y: 0}
-  GridPosition:
-    x: 0
-    y: 0
+  SkinRendererTargets: []
   bakeOnStart: 1
   allowPathThru: 0
   buildingData: {fileID: 11400000, guid: ffca4340b49b17e4e93030ba6c0d567e, type: 2}
