@@ -12,12 +12,11 @@ using Valve.VR.InteractionSystem;
 public class PlayerManager : MonoBehaviour
 {
     [Header("Stats/Resources")]
-    public byte factionId = 0;
     public Faction faction;
     public int woodCollected;
     public int goldCollected;
     public int stoneCollected;
-    public int grainCollected;
+    public int foodCollected;
     public int civilianPopulation;
     public int militaryPopulation;
     public int totalPopulation;
@@ -78,12 +77,12 @@ public class PlayerManager : MonoBehaviour
         leftHand = Player.instance.leftHand;
 
         WristDisplay?.SetWoodText(woodCollected.ToString());
-        WristDisplay?.SetGrainText(grainCollected.ToString());
+        WristDisplay?.SetGrainText(foodCollected.ToString());
         WristDisplay?.SetGoldText(goldCollected.ToString());
         WristDisplay?.SetStoneText(stoneCollected.ToString());
 
         FaceDisplay?.SetWoodText(woodCollected.ToString());
-        FaceDisplay?.SetGrainText(grainCollected.ToString());
+        FaceDisplay?.SetGrainText(foodCollected.ToString());
         FaceDisplay?.SetGoldText(goldCollected.ToString());
         FaceDisplay?.SetStoneText(stoneCollected.ToString());
 
@@ -216,7 +215,7 @@ public class PlayerManager : MonoBehaviour
             if (rightHand.currentAttachedObject == handBuildMenu)
             {
                 rightHand.DetachObject(handBuildMenu);
-                
+
                 // TODO: This should be taken care of by DetachObject -> OnDetachedFromHand event 
                 // but OnDetachedFromHand has no reciever (Interactable) for some reason.
                 if (rightHand.skeleton != null)
@@ -394,12 +393,12 @@ public class PlayerManager : MonoBehaviour
     void UpdateWristDisplayResourceText()
     {
         WristDisplay?.SetWoodText(woodCollected.ToString());
-        WristDisplay?.SetGrainText(grainCollected.ToString());
+        WristDisplay?.SetGrainText(foodCollected.ToString());
         WristDisplay?.SetGoldText(goldCollected.ToString());
         WristDisplay?.SetStoneText(stoneCollected.ToString());
 
         FaceDisplay?.SetWoodText(woodCollected.ToString());
-        FaceDisplay?.SetGrainText(grainCollected.ToString());
+        FaceDisplay?.SetGrainText(foodCollected.ToString());
         FaceDisplay?.SetGoldText(goldCollected.ToString());
         FaceDisplay?.SetStoneText(stoneCollected.ToString());
     }
@@ -414,11 +413,13 @@ public class PlayerManager : MonoBehaviour
                 FaceDisplay?.SetWoodText(woodCollected.ToString());
                 break;
 
+            case ResourceGatheringType.Meat:
+            case ResourceGatheringType.Fish:
             case ResourceGatheringType.Grain:
             case ResourceGatheringType.Berries:
-                grainCollected += amount;
-                WristDisplay?.SetGrainText(grainCollected.ToString());
-                FaceDisplay?.SetGrainText(grainCollected.ToString());
+                foodCollected += amount;
+                WristDisplay?.SetGrainText(foodCollected.ToString());
+                FaceDisplay?.SetGrainText(foodCollected.ToString());
                 break;
 
             case ResourceGatheringType.Gold:
@@ -443,7 +444,7 @@ public class PlayerManager : MonoBehaviour
     public void DeductResourcesFromStockpile(int gold, int grain, int wood, int stone)
     {
         goldCollected -= gold;
-        grainCollected -= grain;
+        foodCollected -= grain;
         woodCollected -= wood;
         stoneCollected -= stone;
 
@@ -456,7 +457,7 @@ public class PlayerManager : MonoBehaviour
     {
         BuildingData buildingData = GameMaster.GetBuilding(buildingType);
         if (buildingData.goldCost > goldCollected || buildingData.woodCost > woodCollected ||
-            buildingData.grainCost > grainCollected || buildingData.stoneCost > stoneCollected)
+            buildingData.grainCost > foodCollected || buildingData.stoneCost > stoneCollected)
         {
             return false;
         }
@@ -468,7 +469,7 @@ public class PlayerManager : MonoBehaviour
     {
         UnitData unitData = GameMaster.GetUnit(unitType);
         if (goldCollected < unitData.goldCost || woodCollected < unitData.woodCost ||
-            grainCollected < unitData.foodCost || stoneCollected < unitData.stoneCost)
+            foodCollected < unitData.foodCost || stoneCollected < unitData.stoneCost)
         {
             return false;
         }
@@ -490,7 +491,7 @@ public class PlayerManager : MonoBehaviour
     public void DeductUnitQueueCostFromStockpile(UnitData unitType)
     {
         woodCollected -= unitType.woodCost;
-        grainCollected -= unitType.foodCost;
+        foodCollected -= unitType.foodCost;
         goldCollected -= unitType.goldCost;
         stoneCollected -= unitType.stoneCost;
 

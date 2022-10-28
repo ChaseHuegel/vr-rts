@@ -57396,6 +57396,11 @@ PrefabInstance:
       objectReference: {fileID: 8642418644101245030}
     - target: {fileID: 4603657074826361739, guid: 0e20e52b3d933304889227afb2893690,
         type: 3}
+      propertyPath: foodCollected
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 4603657074826361739, guid: 0e20e52b3d933304889227afb2893690,
+        type: 3}
       propertyPath: goldCollected
       value: 0
       objectReference: {fileID: 0}
@@ -59889,7 +59894,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7320763368686224338}
   m_Layer: 0
-  m_Name: Grain
+  m_Name: Food
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
