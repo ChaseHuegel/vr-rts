@@ -229,7 +229,7 @@ public class InteractionPointer : MonoBehaviour
     //=========================================================================
     void Update()
     {
-        UpdatePointer();        
+        UpdatePointer();
 
         foreach (Hand hand in player.hands)
         {
@@ -255,10 +255,10 @@ public class InteractionPointer : MonoBehaviour
             }
             else if (WasInteractButtonReleased(hand))
             {
-                    ExecuteInteraction();
+                ExecuteInteraction();
             }
             else if (WasInteractButtonPressed(hand))
-            {                
+            {
                 StartInteraction(hand);
             }
             else if (WasCancelButtonPressed(hand))
@@ -1026,7 +1026,7 @@ public class InteractionPointer : MonoBehaviour
         else if (isInUnitSelectionMode && pointedAtPointerInteractable != null)
         {
             // Only add units to selection if trigger is pressed in more than 60%
-            if (uiInteractAction.GetAxis(pointerHand.handType) > 0.6f || selectedActors.Count <= 0)
+            if (selectedActors.Count <= maxUnitSelectionCount && uiInteractAction.GetAxis(pointerHand.handType) > 0.6f)
             {
                 ActorV2 hoveredActor = pointedAtPointerInteractable.GetComponent<ActorV2>();
                 if (hoveredActor && !selectedActors.Contains(hoveredActor) &&
