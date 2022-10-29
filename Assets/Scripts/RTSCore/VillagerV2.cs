@@ -133,7 +133,7 @@ public class VillagerV2 : UnitV2
 
             case UnitV2 unit:
                 Target = unit;
-                if (unit.Faction != null && unit.Faction.IsAllied(Faction))
+                if (unit.Faction.IsAllied(Faction))
                     Order = UnitOrder.None;
                 else
                     Order = UnitOrder.Attack;
