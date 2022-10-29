@@ -24,20 +24,18 @@ public class Faction : ScriptableObject
     {
         Bit.Clear(ref mask.bits, faction.Id);
     }
+}
 
-    public bool IsAllied(Faction faction)
+public static class FactionExtensions
+{
+    public static bool IsAllied(this Faction faction, Faction other)
     {
         //  TODO the mask isn't being used currently
-        return IsSameFaction(faction);//Bit.Compare(mask, faction.mask, faction.Id);
+        return IsSameFaction(faction, other);//Bit.Compare(mask, faction.mask, faction.Id);
     }
 
-    public bool IsSameFaction(byte factionId)
+    public static bool IsSameFaction(this Faction faction, Faction other)
     {
-        return Id == factionId;
-    }
-
-    public bool IsSameFaction(Faction faction)
-    {
-        return Id == faction.Id;
+        return faction?.Id == other?.Id;
     }
 }
