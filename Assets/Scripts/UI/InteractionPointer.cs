@@ -274,9 +274,14 @@ public class InteractionPointer : MonoBehaviour
             }
             else if (WasSelectButtonPressed(hand))
             {
+                // TODO: Remove this once new panel is done.
                 BuildingHoverDisplay buildingHoverDisplay = pointedAtPointerInteractable.GetComponentInChildren<BuildingHoverDisplay>();
                 if (buildingHoverDisplay)
                     buildingHoverDisplay.Show();
+
+                BuildingInteractionPanel buildingInteractionPanel = pointedAtPointerInteractable.GetComponentInChildren<BuildingInteractionPanel>();
+                if (buildingInteractionPanel)
+                    buildingInteractionPanel.Show();
             }
             else if (isInBuildingPlacementMode)
             {
