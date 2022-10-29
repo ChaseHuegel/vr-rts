@@ -38,6 +38,6 @@ public class Faction : ScriptableObject
 
     public bool IsSameFaction(Faction faction)
     {
-        return Id == faction.Id;
+        return Id == faction?.Id;
     }
 }
