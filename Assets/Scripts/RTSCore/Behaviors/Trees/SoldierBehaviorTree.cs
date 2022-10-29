@@ -46,8 +46,9 @@ public static class SoldierBehaviorTree
             //  Attempt to attack nearby enemies
             new BehaviorSequence(
                 new BehaviorSelector(
-                    new HasTarget(),
-                    new TargetIsEnemy(),
+                    new IfHasTarget(
+                        new TargetIsEnemy()
+                    ),
                     new TargetNearestEnemy()
                 ),
                 new PursueTarget(),
