@@ -27,6 +27,7 @@ public static class SoldierBehaviorTree
                 new BehaviorSelector(
                     //  Attempt to chase and attack the target
                     new BehaviorSequence(
+                        new HasTarget(),
                         new TargetIsEnemy(),
                         new PursueTarget(),
                         new SetActorState(ActorAnimationState.ATTACKING),
@@ -45,6 +46,7 @@ public static class SoldierBehaviorTree
             //  Attempt to attack nearby enemies
             new BehaviorSequence(
                 new BehaviorSelector(
+                    new HasTarget(),
                     new TargetIsEnemy(),
                     new TargetNearestEnemy()
                 ),
