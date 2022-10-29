@@ -22,7 +22,7 @@ public class SoldierV2 : UnitV2
         {
             case ActorV2 _:
                 Target = body;
-                if (body.Faction == null || !body.Faction.IsAllied(Faction))
+                if (!body.Faction.IsAllied(Faction))
                     Order = UnitOrder.Attack;
                 else
                     Order = UnitOrder.Follow;
@@ -31,7 +31,7 @@ public class SoldierV2 : UnitV2
             case Structure _:
             case Constructible _:
                 Target = body;
-                if (body.Faction == null || !body.Faction.IsAllied(Faction))
+                if (!body.Faction.IsAllied(Faction))
                     Order = UnitOrder.Attack;
                 else
                     Order = UnitOrder.GoTo;

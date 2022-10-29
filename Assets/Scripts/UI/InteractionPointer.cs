@@ -403,8 +403,7 @@ public class InteractionPointer : MonoBehaviour
             }
 
             ActorV2 hoveredActor = pointedAtPointerInteractable.GetComponent<ActorV2>();
-            if (hoveredActor && !isInUnitSelectionMode &&
-                (hoveredActor.Faction?.IsSameFaction(faction) ?? false))
+            if (hoveredActor && !isInUnitSelectionMode && hoveredActor.Faction.IsSameFaction(faction))
             {
                 selectedActors.Add(hoveredActor);
                 isInUnitSelectionMode = true;
@@ -1029,8 +1028,7 @@ public class InteractionPointer : MonoBehaviour
             if (selectedActors.Count <= maxUnitSelectionCount && uiInteractAction.GetAxis(pointerHand.handType) > 0.6f)
             {
                 ActorV2 hoveredActor = pointedAtPointerInteractable.GetComponent<ActorV2>();
-                if (hoveredActor && !selectedActors.Contains(hoveredActor) &&
-                    (hoveredActor.Faction?.IsSameFaction(faction) ?? false))
+                if (hoveredActor && !selectedActors.Contains(hoveredActor) && hoveredActor.Faction.IsSameFaction(faction))
                 {
                     selectedActors.Add(hoveredActor);
                 }
