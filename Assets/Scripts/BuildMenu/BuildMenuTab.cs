@@ -6,16 +6,6 @@ using UnityEditor;
 using Valve.VR.InteractionSystem;
 
 [Serializable]
-public struct BuildMenuHoverButton
-{
-    public GameObject visualModel;
-    public int grainCost;
-    public int woodCost;
-    public int goldCost;
-    public int stoneCost;
-}
-
-[Serializable]
 public class BuildMenuTab : MonoBehaviour
 {
     public GameObject resourceCostPrefab;
