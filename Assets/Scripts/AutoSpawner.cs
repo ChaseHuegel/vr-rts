@@ -115,7 +115,7 @@ public class AutoSpawner : MonoBehaviour
     {
         UnitData unitData = GameMaster.GetUnit(unitType);
 
-        if (unitData.prefab)
+        if (unitData?.prefab)
         {
             Vector3 randomPos = Random.insideUnitSphere * unitSpawnPointRadius;
             Vector3 position = unitSpawnPoint.transform.position + randomPos;
