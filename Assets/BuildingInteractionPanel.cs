@@ -4,11 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using Valve.VR.InteractionSystem;
+using Swordfish;
 
 [RequireComponent(typeof(PointerInteractable), typeof(BoxCollider))]
 public class BuildingInteractionPanel : MonoBehaviour
 {
     [Header("Panel Behaviour")]
+    public float panelVerticalOffset = 1.0f;
     public bool startHidden = true;
 
     [Tooltip("Autohide events are fired at the requisite time to notify listeners for external control of hiding.")]
@@ -37,19 +39,19 @@ public class BuildingInteractionPanel : MonoBehaviour
     public bool copyHmdRotation = true;
     public GameObject[] objectsToAutohide;
 
-    [Header("Title")]
+    [Header("Title Settings")]
     public string title = "No Title Set";
     public bool enableTitleDislpay = true;
     public float titleDisplayVerticalOffset = -0.5f;
     public Color titleColor = Color.white;
 
-    [Header("Health Bar")]
+    [Header("Health Bar Settings")]
     public bool enableHealthBarDisplay = true;
-    // [Range(0, 1.0f)]
-    // public float healthBarAutoShowAt = 0.98f;
+    [Range(0, 1.0f)]
+    public float healthBarAutoShowAt = 0.98f;
 
-    // [Range(0, 1.0f)]
-    // public float healthBarAutoHideAt = 1.0f;
+    [Range(0, 1.0f)]
+    public float healthBarAutoHideAt = 1.0f;
     public bool showBarBackground = true;
     public bool showHealthText = true;
     public float healthBarVerticalOffset = 0.5f;
@@ -61,36 +63,41 @@ public class BuildingInteractionPanel : MonoBehaviour
     public Color healthBarForegroundColor = Color.red;
     public Color healthBarTextColor = Color.white;
 
-    [Header("Menu Options")]
-    public bool enableMenuDisplay;
-    public float menuVerticalOffset;
+    [Header("Queue Menu Settings")]
+    public bool enableQueueMenu;
+    public float QueueMenuVerticalOffset;
 
-    [Header("Menu Queue Progress Bar")]
+    [Header("Queue Menu Progress Bar Settings")]
     public Sprite progressImage;
     public Color progressColor;
     public TMPro.TMP_FontAsset progressFont;
 
-    [Header("Menu Queue Buttons")]
+    [Header("Queue Menu Button Settings")]
     public Material buttonBaseMaterial;
     public Material cancelButtonMaterial;
+    public AudioClip onButtonDownAudio;
+    public AudioClip onButtonUpAudio;
     public List<RTSUnitType> queueUnitButtons;
 
     private float buttonSize = 0.25f;
     private float spaceBetweenButtons = 0.025f;
     private int maxButtonColumns = 5;
 
-    [Header("Menu Queue Slots")]
+    [Header("Queue Menu Queue Slot Settings")]
     public byte numberOfQueueSlots = 12;
     public Sprite emptyQueueSlotSprite;
+
+
     private float queueSlotSize = 1.0f;
     private float spaceBetweenQueueSlots = 0.025f;
     private UnityEngine.UI.Image[] queueSlotImages;
     private Vector3 nextButtonPosition;
 
-    private GameObject childPanelObject;
+    private GameObject interactionPanelObject;
     private GameObject titleGameObject;
     private GameObject healthBarGameObject;
     private GameObject menuGameObject;
+    private GameObject buttonsGameObject;
     private Image healthBarBackgroundImage;
     private Image healthBarForegroundImage;
     private TextMeshPro healthBarText;
@@ -99,6 +106,10 @@ public class BuildingInteractionPanel : MonoBehaviour
     private Transform faceTarget;
     private Vector3 progressPosition;
     private Vector3 cancelButtonPosition;
+    private SpawnQueue spawnQueue;
+    private Damageable damageable;
+    public GameObject cancelButtonGameObject;
+
 
     void Awake()
     {
@@ -108,15 +119,7 @@ public class BuildingInteractionPanel : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        childPanelObject = new GameObject("_panel_object");
-        childPanelObject.transform.SetParent(this.gameObject.transform, false);
-
-        radiusExitTime = Time.time;
-        Quaternion rot = faceTarget.transform.rotation;
-        rot.z = rot.x = 0;
-        childPanelObject.transform.rotation = rot;
-
-        childPanelObject.SetActive(!startHidden);
+        InitializeInteractionPanel();
 
         if (enableTitleDislpay)
             InitializeTitleDisplay();
@@ -124,22 +127,35 @@ public class BuildingInteractionPanel : MonoBehaviour
         if (enableHealthBarDisplay)
             InitializeHealthBarDisplay();
 
-        if (enableMenuDisplay)
+        if (enableQueueMenu)
+        {
+            //spawnQueue = this.gameObject.AddComponent<SpawnQueue>();
+            spawnQueue = this.gameObject.GetComponent<SpawnQueue>();
+            if (!spawnQueue)
+                Debug.LogWarning("Missing SpawnQueue component in parent.", this);
+
             InitializeMenuDisplay();
 
-        //SetHealthBarFilledAmount(1.0f);
-        // if (damageable)
-        // {
-        //     damageable.OnDamageEvent += OnDamage;
-        //     damageable.OnHealthRegainEvent += OnHealthRegainEvent;
-        //     SetFilledAmount(damageable.Attributes.ValueOf(AttributeConstants.HEALTH));
-        // }
-        // else
-        // {
-        //     Debug.Log("Damageable component not found in parent.", this);
-        // }
+            spawnQueue.SetButtonsParentObject(buttonsGameObject);            
+            spawnQueue.SetButtonDownAudio(onButtonDownAudio);
+            spawnQueue.SetButtonUpAudio(onButtonUpAudio);
+            spawnQueue.SetCancelButton(cancelButtonGameObject.GetComponentInChildren<HoverButton>(true));
+            spawnQueue.Initialize();
+        }        
+    }
 
+    private void InitializeInteractionPanel()
+    {
+        interactionPanelObject = new GameObject("_interaction_panel");
+        interactionPanelObject.transform.SetParent(this.gameObject.transform, false);
+        interactionPanelObject.transform.localPosition = new Vector3(0.0f, panelVerticalOffset, 0.0f);
 
+        radiusExitTime = Time.time;
+        Quaternion rot = faceTarget.transform.rotation;
+        rot.z = rot.x = 0;
+        interactionPanelObject.transform.rotation = rot;
+
+        interactionPanelObject.SetActive(!startHidden);
     }
 
     // Update is called once per frame
@@ -156,7 +172,7 @@ public class BuildingInteractionPanel : MonoBehaviour
                 Vector3 t = (faceTarget.position - transform.position);
                 t.y = 0;
                 Quaternion rot = Quaternion.LookRotation(t);
-                childPanelObject.transform.rotation = Quaternion.Slerp(childPanelObject.transform.rotation, rot, Time.deltaTime * rotationSpeed);
+                interactionPanelObject.transform.rotation = Quaternion.Slerp(interactionPanelObject.transform.rotation, rot, Time.deltaTime * rotationSpeed);
             }
         }
         else
@@ -169,9 +185,8 @@ public class BuildingInteractionPanel : MonoBehaviour
                 //Quaternion rot = Quaternion.LookRotation(t);
                 Quaternion rot = faceTarget.transform.rotation;// Quaternion.LookRotation(t);
                 rot.z = rot.x = 0;
-                childPanelObject.transform.rotation = Quaternion.Slerp(childPanelObject.transform.rotation, rot, Time.deltaTime * rotationSpeed);
+                interactionPanelObject.transform.rotation = Quaternion.Slerp(interactionPanelObject.transform.rotation, rot, Time.deltaTime * rotationSpeed);
             }
-
         }
 
         if (autohideTimerStarted)
@@ -182,7 +197,7 @@ public class BuildingInteractionPanel : MonoBehaviour
                     onAutoHide();
 
                 if (disableSelf)
-                    childPanelObject.SetActive(false);
+                    interactionPanelObject.SetActive(false);
 
                 autohideTimerStarted = false;
             }
@@ -202,7 +217,7 @@ public class BuildingInteractionPanel : MonoBehaviour
     {
         titleGameObject = new GameObject("_title");
         titleGameObject.transform.position = new Vector3(0.0f, titleDisplayVerticalOffset, 0.0f);
-        titleGameObject.transform.SetParent(childPanelObject.transform, false);
+        titleGameObject.transform.SetParent(interactionPanelObject.transform, false);
 
         TextMeshPro titleText = titleGameObject.AddComponent<TextMeshPro>();
         titleText.SetText(title);
@@ -214,16 +229,16 @@ public class BuildingInteractionPanel : MonoBehaviour
         titleText.raycastTarget = false;
     }
 
+
     private void InitializeHealthBarDisplay()
     {
         healthBarGameObject = new GameObject("_health_bar");
         healthBarGameObject.transform.position = new Vector3(0.0f, healthBarVerticalOffset, 0.0f);
-        healthBarGameObject.transform.SetParent(childPanelObject.transform, false);
+        healthBarGameObject.transform.SetParent(interactionPanelObject.transform, false);
 
         if (showBarBackground)
         {
             GameObject healthBarBackroundGameObject = new GameObject("_health_bar_background");
-            healthBarBackroundGameObject.transform.position = new Vector3(0.0f, 0.0f, 0.0f);
             healthBarBackroundGameObject.transform.SetParent(healthBarGameObject.transform, false);
             healthBarBackroundGameObject.AddComponent<Canvas>().sortingOrder = 0;
 
@@ -234,8 +249,8 @@ public class BuildingInteractionPanel : MonoBehaviour
         }
 
         GameObject healthBarForegroundGameObject = new GameObject("_health_bar_foreground");
-        healthBarForegroundGameObject.transform.position = new Vector3(0.0f, 0.0f, 0.0f);
         healthBarForegroundGameObject.transform.SetParent(healthBarGameObject.transform, false);
+        
         healthBarForegroundGameObject.AddComponent<Canvas>().sortingOrder = 1;
 
         healthBarForegroundImage = healthBarForegroundGameObject.AddComponent<Image>();
@@ -250,7 +265,6 @@ public class BuildingInteractionPanel : MonoBehaviour
         if (showHealthText)
         {
             GameObject healthBarTextObject = new GameObject("_health_bar_text");
-            healthBarTextObject.transform.position = new Vector3(0.0f, 0.0f, 0.0f);
             healthBarTextObject.transform.SetParent(healthBarGameObject.transform, false);
             healthBarTextObject.AddComponent<Canvas>();
 
@@ -264,38 +278,37 @@ public class BuildingInteractionPanel : MonoBehaviour
             healthBarText.sortingOrder = 2;
             healthBarText.color = healthBarTextColor;            
         }
+
+        damageable = GetComponentInParent<Damageable>();
+
+        if (damageable)
+        {
+            damageable.OnDamageEvent += OnDamage;
+            damageable.OnHealthRegainEvent += OnHealthRegainEvent;
+            SetHealthBarFilledAmount(damageable.Attributes.ValueOf(AttributeConstants.HEALTH));
+        }
+        else
+            Debug.Log("Damageable component not found in parent.", this);
     }
 
     private void InitializeMenuDisplay()
     {
         menuGameObject = new GameObject("_menu");
-        menuGameObject.transform.position = new Vector3(0.0f, menuVerticalOffset, 0.0f);
-        menuGameObject.transform.SetParent(childPanelObject.transform, false);
-
-        // if (!spawnQueue)
-        //     if (!(spawnQueue = gameObject.GetComponentInParent<SpawnQueue>()))
-        //         Debug.Log("Missing SpawnQueue component in parent.", this);
-
-        // spawnQueue.SetMenuParentObject(menuParent.gameObject);
-        // spawnQueue.SetSpawnQueueSlotCount(numberOfQueueSlots);
-        // spawnQueue.SetButtonDownAudio(onButtonDownAudio);
-        // spawnQueue.SetButtonUpAudio(onButtonUpAudio);
-
+        menuGameObject.transform.position = new Vector3(0.0f, QueueMenuVerticalOffset, 0.0f);
+        menuGameObject.transform.SetParent(interactionPanelObject.transform, false);
+        
         InitializeQueueUnitButtons();
 
-        GameObject queueSlotsGameObject = new GameObject("_queueSlots");
-        queueSlotsGameObject.transform.position = new Vector3(0.0f, 0.0f, 0.0f);
+        GameObject queueSlotsGameObject = new GameObject("_queue_slots");
         queueSlotsGameObject.transform.SetParent(menuGameObject.transform, false);
         InitializeQueueSlots(queueSlotsGameObject.transform, 7, spaceBetweenQueueSlots);
         
         GameObject progressGameObject = new GameObject("_progress");
-        progressGameObject.transform.position = new Vector3(0.0f, 0.0f, 0.0f);
         progressGameObject.transform.SetParent(menuGameObject.transform, false);
         Vector2 size = new Vector2(queueSlotSize * 2.0f + spaceBetweenQueueSlots, queueSlotSize);
         InitializeProgressBar(progressPosition, size, 0.03f, progressGameObject.transform);
-
-        GameObject cancelButtonGameObject = new GameObject("_cancel");
-        cancelButtonGameObject.transform.position = new Vector3(0.0f, 0.0f, 0.0f);
+        
+        cancelButtonGameObject = new GameObject("_cancel");
         cancelButtonGameObject.transform.SetParent(menuGameObject.transform, false);
         cancelButtonGameObject.transform.localPosition = cancelButtonPosition;
         cancelButtonGameObject.transform.localScale = new Vector3(buttonSize, buttonSize, buttonSize);
@@ -304,9 +317,9 @@ public class BuildingInteractionPanel : MonoBehaviour
 
     private void InitializeQueueUnitButtons()
     {
-        GameObject buttonsGameObject = new GameObject("_buttons");        
-        buttonsGameObject.transform.SetParent(menuGameObject.transform, false);
-
+        buttonsGameObject = new GameObject("_buttons");        
+        buttonsGameObject.transform.SetParent(menuGameObject.transform, false);        
+        
         Vector3 startPosition = Vector3.zero;
         float buttonsTotalWidth = ((buttonSize + spaceBetweenButtons) * maxButtonColumns);
         int totalRows = Mathf.CeilToInt((float)queueUnitButtons.Count / (float)maxButtonColumns);
@@ -343,7 +356,7 @@ public class BuildingInteractionPanel : MonoBehaviour
 
     public void Show()
     {
-        childPanelObject.SetActive(true);
+        interactionPanelObject.SetActive(true);
 
         foreach (GameObject go in objectsToAutohide)
             go.SetActive(true);
@@ -351,7 +364,7 @@ public class BuildingInteractionPanel : MonoBehaviour
 
     public void Hide()
     {
-        childPanelObject.SetActive(false);
+        interactionPanelObject.SetActive(false);
 
         foreach (GameObject go in objectsToAutohide)
             go.SetActive(false);
@@ -365,13 +378,13 @@ public class BuildingInteractionPanel : MonoBehaviour
         if (showHealthText)
             healthBarText.text = (((int)(amount * 100)).ToString()) + "%";
 
-        // if (amount >= autohideAt)
-        //     Hide();
-        // else if (amount < autoshowAt)
-        //     Show();
+        if (amount >= healthBarAutoHideAt)
+            healthBarGameObject.SetActive(false);
+        else if (amount < healthBarAutoShowAt)
+            healthBarGameObject.SetActive(true);
 
-        // if (amount <= 0.0f)
-        //     ForceHide();
+        if (amount <= 0.0f)
+            healthBarGameObject.SetActive(false);;
     }
 
     private GameObject GenerateQueueButton(RTSUnitType unitType, Vector3 position, Transform parent)
@@ -382,8 +395,9 @@ public class BuildingInteractionPanel : MonoBehaviour
         GameObject button = new GameObject("_button", typeof(QueueUnitButton));
         button.transform.SetParent(parent, false);
         button.transform.localPosition = position;
-        button.name = string.Format("_queue_{0}_Button", unitType.ToString());
+        button.name = string.Format("_queue_{0}_button", unitType.ToString());
         button.transform.localScale = new Vector3(buttonSize, buttonSize, buttonSize);
+        //button.AddComponent<PointerInteractable>();
 
         QueueUnitButton queueUnitButton = button.GetComponent<QueueUnitButton>();
         queueUnitButton.unitTypeToQueue = unitType;
@@ -429,7 +443,7 @@ public class BuildingInteractionPanel : MonoBehaviour
         // MovingPart (child of Face)
         GameObject buttonMovingPart = GameObject.CreatePrimitive(PrimitiveType.Cube);
         buttonMovingPart.AddComponent<UVCubeMap>();
-        buttonMovingPart.name = "_movingPart";
+        buttonMovingPart.name = "_moving_part";
         buttonMovingPart.transform.SetParent(face.transform, false);
         buttonMovingPart.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
         buttonMovingPart.transform.localPosition = Vector3.zero;
@@ -437,6 +451,8 @@ public class BuildingInteractionPanel : MonoBehaviour
 
         hoverButton.movingPart = buttonMovingPart.transform;
         button.transform.localRotation = Quaternion.identity;
+
+        Destroy(buttonBase.GetComponent<BoxCollider>());
 
         return button;
     }
@@ -490,7 +506,7 @@ public class BuildingInteractionPanel : MonoBehaviour
 
     private Image GenerateQueueSlot(Vector3 position, Transform parent)
     {
-        GameObject imageObject = new GameObject("_queueSlotImage");
+        GameObject imageObject = new GameObject("_queue_slot_image");
         imageObject.AddComponent<Canvas>();
         Image image = imageObject.AddComponent<Image>();
         image.transform.SetParent(parent, false);
@@ -503,7 +519,7 @@ public class BuildingInteractionPanel : MonoBehaviour
 
     private void InitializeProgressBar(Vector3 position, Vector2 size, float verticalPadding, Transform parent)
     {
-        GameObject imageObject = new GameObject("_progressImage");
+        GameObject imageObject = new GameObject("_progress_image");
         imageObject.AddComponent<Canvas>();
         Image image = imageObject.AddComponent<Image>();
         image.transform.SetParent(parent, false);
@@ -517,7 +533,7 @@ public class BuildingInteractionPanel : MonoBehaviour
         image.fillMethod = Image.FillMethod.Horizontal;
         image.fillOrigin = (int)Image.OriginHorizontal.Right;
 
-        GameObject textObject = new GameObject("_progressText");
+        GameObject textObject = new GameObject("_progress_text");
         TMPro.TextMeshPro text = textObject.AddComponent<TMPro.TextMeshPro>();
         textObject.transform.SetParent(parent, false);
         text.rectTransform.sizeDelta = size;
@@ -529,8 +545,11 @@ public class BuildingInteractionPanel : MonoBehaviour
         text.font = progressFont;
         text.text = "100%";
 
-        // spawnQueue.SetProgressText(text);
-        // spawnQueue.SetProgressImage(image);
+        if (enableQueueMenu)
+        {
+            spawnQueue.SetProgressText(text);
+            spawnQueue.SetProgressImage(image);
+        }
     }
 
     private void InitializeCancelButton(Transform parent)
@@ -552,9 +571,6 @@ public class BuildingInteractionPanel : MonoBehaviour
         hoverButton.localMoveDistance = new Vector3(0, 0, 0.3f);
         face.GetComponent<Interactable>().highlightOnHover = false;
 
-        //spawnQueue.SetCancelButton(hoverButton);
-        //cancelButton = hoverButton;
-
         // MovingPart (child of Face)
         GameObject buttonMovingPart = GameObject.CreatePrimitive(PrimitiveType.Cube);
         buttonMovingPart.AddComponent<UVCubeMap>();
@@ -567,10 +583,20 @@ public class BuildingInteractionPanel : MonoBehaviour
         hoverButton.movingPart = buttonMovingPart.transform;
         //button.transform.localRotation = Quaternion.identity;
 
-        // if (Time.time <= 0)
-        //     Destroy(buttonBase.GetComponent<BoxCollider>());
-        // else
-        //     DestroyImmediate(buttonBase.GetComponent<BoxCollider>());
+        Destroy(buttonBase.GetComponent<BoxCollider>());
+    }
+
+    public void OnHealthRegainEvent(object sender, Damageable.HealthRegainEvent e)
+    {
+        SetHealthBarFilledAmount(e.health / damageable.GetMaxHealth());
+    }
+
+    public void OnDamage(object sender, Damageable.DamageEvent e)
+    {
+        SetHealthBarFilledAmount((damageable.GetHealth() - e.damage) / damageable.GetMaxHealth());
+
+        if (healthBarBackgroundImage.fillAmount <= 0.0f)
+            healthBarGameObject.SetActive(false);
     }
 
     public delegate void OnAutohide();
