@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83de0f1aeab7d0948960ff8b05244c74, type: 3}
+  m_Name: DefaultTechTree
+  m_EditorClassIdentifier: 
+  tree:
+  - tech: {fileID: 11400000, guid: 5af8899ffb946cc48978290dc293072f, type: 2}
+    requirements: []
+    researchCost: 0
+    researchInvested: 0
+    UIposition: {x: 933, y: 388}
+  - tech: {fileID: 11400000, guid: babf77ad321b62e40a5b0328f56f2f63, type: 2}
+    requirements:
+    - {fileID: 11400000, guid: 37b4cc24118ce4740b8a422a0961aed2, type: 2}
+    researchCost: 0
+    researchInvested: 0
+    UIposition: {x: 981, y: 62}
+  - tech: {fileID: 11400000, guid: 2aaa01dfaac7b1b44b02a52f7112eb2c, type: 2}
+    requirements:
+    - {fileID: 11400000, guid: 5af8899ffb946cc48978290dc293072f, type: 2}
+    - {fileID: 11400000, guid: babf77ad321b62e40a5b0328f56f2f63, type: 2}
+    researchCost: 0
+    researchInvested: 0
+    UIposition: {x: 1210, y: 249}
+  - tech: {fileID: 11400000, guid: 37b4cc24118ce4740b8a422a0961aed2, type: 2}
+    requirements: []
+    researchCost: 0
+    researchInvested: 0
+    UIposition: {x: 776, y: 230}
