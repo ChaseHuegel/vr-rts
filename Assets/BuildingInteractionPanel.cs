@@ -130,12 +130,12 @@ public class BuildingInteractionPanel : MonoBehaviour
         if (enableQueueMenu)
         {
             spawnQueue = this.gameObject.AddComponent<SpawnQueue>();
-            //spawnQueue = this.gameObject.GetComponent<SpawnQueue>();
             if (!spawnQueue)
-                Debug.LogWarning("Missing SpawnQueue component in parent.", this);
+                Debug.LogWarning("Missing SpawnQueue component.", this);
 
             InitializeMenuDisplay();
 
+            // TODO: Should this stuff be moved to this class?
             spawnQueue.SetButtonsParentObject(buttonsGameObject);            
             spawnQueue.SetButtonDownAudio(onButtonDownAudio);
             spawnQueue.SetButtonUpAudio(onButtonUpAudio);

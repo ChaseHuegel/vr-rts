@@ -70,7 +70,7 @@ public class PointerInteractable : MonoBehaviour
 
     protected virtual bool ShouldIgnore(GameObject check)
     {
-        for (int ignoreIndex = 0; ignoreIndex < hideHighlight.Length; ignoreIndex++)
+        for (int ignoreIndex = 0; ignoreIndex < hideHighlight?.Length; ignoreIndex++)
         {
             if (check == hideHighlight[ignoreIndex])
                 return true;

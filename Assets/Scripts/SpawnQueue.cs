@@ -10,30 +10,29 @@ using Valve.VR.InteractionSystem;
 
 public class SpawnQueue : MonoBehaviour
 {
-    [Header("Unit Spawn Queue Settings")]
+    [Header("Unit Spawn Queue Settings")]    
+    public float unitRallyWaypointRadius;
+
     private Transform unitSpawnPoint;
     private Transform unitRallyWaypoint;
     private Cell unitRallyPointCell;
-    public float unitRallyWaypointRadius;
-
-    [Header("Generated Settings")]
-    public AudioClip onButtonDownAudio;
-    public AudioClip onButtonUpAudio;
-    public Image[] queueSlotImages;
-    public TMPro.TMP_Text progressText;
-    public Image progressImage;
-    public GameObject buttonsParent;
-    public HoverButton cancelButton;
+    private AudioClip onButtonDownAudio;
+    private AudioClip onButtonUpAudio;
+    private Image[] queueSlotImages;
+    private TMPro.TMP_Text progressText;
+    private Image progressImage;
+    private GameObject buttonsParent;
+    private HoverButton cancelButton;
 
     //=========================================================================
-    protected float timeElapsed = 0.0f;
-    protected LinkedList<UnitData> unitSpawnQueue = new LinkedList<UnitData>();
+    private float timeElapsed = 0.0f;
+    private LinkedList<UnitData> unitSpawnQueue = new LinkedList<UnitData>();
 
     //=========================================================================
     // Cached references
     private Structure structure;
     private Damageable damageable;
-    protected AudioSource audioSource;
+    private AudioSource audioSource;
     private PlayerManager playerManager;
 
     //=========================================================================
