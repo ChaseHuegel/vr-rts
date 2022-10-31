@@ -442,6 +442,14 @@ public class InteractionPointer : MonoBehaviour
                 return;
             }
 
+            // TODO: This should be used for queueing as well...
+            HoverButton hoverButton = pointedAtPointerInteractable.GetComponentInChildren<HoverButton>();
+            if (hoverButton)
+            {                
+                hoverButton.onButtonDown.Invoke(hand);
+                return;
+            }
+
             //Debug.Log(string.Format("Unit: {0} interactable: {1}", selectedUnit, pointedAtPointerInteractable));
         }
         // Start unit selection mode if no interactible object is pointed at.

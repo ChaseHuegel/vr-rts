@@ -92,7 +92,11 @@ public class SpawnQueue : MonoBehaviour
 
     public void OnButtonUp(Hand hand) { audioSource.PlayOneShot(onButtonUpAudio); }
 
-    public void OnCancelButtonDown(Hand hand) { DequeueUnit(); }
+    public void OnCancelButtonDown(Hand hand)
+    {
+        audioSource.PlayOneShot(onButtonDownAudio);
+        DequeueUnit(); 
+    }
 
     public bool QueueLastUnitQueued() { return QueueUnit(lastUnitQueued); }
 
@@ -151,16 +155,14 @@ public class SpawnQueue : MonoBehaviour
             unitSpawnQueue.RemoveLast();
             progressImage.fillAmount = 0;
             progressImage.enabled = false;
-            progressText.enabled = false;
-
-            ResetLastQueueImage();
-            //RefreshQueueImages();
+            progressText.enabled = false;            
         }
         else
         {
             playerManager.RemoveFromQueueCount(unitSpawnQueue.Last.Value.populationCost);
             unitSpawnQueue.RemoveLast();
         }
+        RefreshQueueImages();
     }
 
 

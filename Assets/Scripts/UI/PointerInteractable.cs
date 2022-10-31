@@ -8,7 +8,8 @@ public class PointerInteractable : MonoBehaviour
     public bool highlightOnHover = true;
     protected GameObject highlightHolder;
     [Tooltip("An array of child gameObjects to not render a highlight for. Things like transparent parts, vfx, etc.")]
-    public GameObject[] hideHighlight;
+    //public GameObject[] hideHighlight;
+    public List<GameObject> hideHighlight;
     protected MeshRenderer[] highlightRenderers;
     protected MeshRenderer[] existingRenderers;
     protected SkinnedMeshRenderer[] highlightSkinnedRenderers;
@@ -31,12 +32,27 @@ public class PointerInteractable : MonoBehaviour
     }
 
     protected virtual void Update()
-    {
-        
+    {        
         UpdateHighlightRenderers();
     
         if (isPointedAt == false && highlightHolder != null)
             Destroy(highlightHolder);
+    }
+
+    public void AddChildrenToHideHighlight(GameObject target)
+    {
+        SkinnedMeshRenderer[] skinnedMeshRenderers = target.GetComponentsInChildren<SkinnedMeshRenderer>();
+        foreach (SkinnedMeshRenderer skinnedMesh in skinnedMeshRenderers)
+            AddToHideHighlight(skinnedMesh.gameObject);
+
+        MeshRenderer[] meshRenderers = target.GetComponentsInChildren<MeshRenderer>();
+        foreach (MeshRenderer mesh in meshRenderers)
+            AddToHideHighlight(mesh.gameObject);
+    }
+
+    public void AddToHideHighlight(GameObject gameObject)
+    {
+        hideHighlight.Add(gameObject);
     }
 
     public void Highlight( bool highlight )
@@ -70,7 +86,7 @@ public class PointerInteractable : MonoBehaviour
 
     protected virtual bool ShouldIgnore(GameObject check)
     {
-        for (int ignoreIndex = 0; ignoreIndex < hideHighlight?.Length; ignoreIndex++)
+        for (int ignoreIndex = 0; ignoreIndex < hideHighlight?.Count; ignoreIndex++)
         {
             if (check == hideHighlight[ignoreIndex])
                 return true;

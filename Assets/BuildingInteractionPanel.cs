@@ -40,8 +40,9 @@ public class BuildingInteractionPanel : MonoBehaviour
     public GameObject[] objectsToAutohide;
 
     [Header("Title Settings")]
-    public string title = "No Title Set";
-    public bool enableTitleDislpay = true;
+    [Tooltip("Leave empty to use title from structure component.")]
+    public string title;
+    public bool enableTitleDisplay = true;
     public float titleDisplayVerticalOffset = -0.5f;
     public Color titleColor = Color.white;
 
@@ -120,8 +121,11 @@ public class BuildingInteractionPanel : MonoBehaviour
     void Start()
     {
         InitializeInteractionPanel();
+        
+        if (title == "")
+            title = this.gameObject.GetComponent<Structure>().buildingData.buildingTitle;
 
-        if (enableTitleDislpay)
+        if (enableTitleDisplay)
             InitializeTitleDisplay();
 
         if (enableHealthBarDisplay)
@@ -143,14 +147,17 @@ public class BuildingInteractionPanel : MonoBehaviour
             spawnQueue.SetUnitSpawnPointTransform(unitSpawnPoint);
             spawnQueue.SetUnitRallyPointTransform(unitRallyWaypoint);
             spawnQueue.Initialize();
+
+            this.gameObject.GetComponent<PointerInteractable>().AddChildrenToHideHighlight(interactionPanelObject);
+
         }        
     }
 
     private void InitializeInteractionPanel()
-    {
+    {        
         interactionPanelObject = new GameObject("_interaction_panel");
         interactionPanelObject.transform.SetParent(this.gameObject.transform, false);
-        interactionPanelObject.transform.localPosition = panelPositionOffset;
+        interactionPanelObject.transform.localPosition = panelPositionOffset;                
 
         radiusExitTime = Time.time;
         Quaternion rot = faceTarget.transform.rotation;
@@ -230,7 +237,6 @@ public class BuildingInteractionPanel : MonoBehaviour
         titleText.color = titleColor;
         titleText.raycastTarget = false;
     }
-
 
     private void InitializeHealthBarDisplay()
     {
@@ -314,6 +320,7 @@ public class BuildingInteractionPanel : MonoBehaviour
         cancelButtonGameObject.transform.SetParent(menuGameObject.transform, false);
         cancelButtonGameObject.transform.localPosition = cancelButtonPosition;
         cancelButtonGameObject.transform.localScale = new Vector3(buttonSize, buttonSize, buttonSize);
+        cancelButtonGameObject.AddComponent<PointerInteractable>();
         InitializeCancelButton(cancelButtonGameObject.transform);
     }
 
@@ -378,10 +385,10 @@ public class BuildingInteractionPanel : MonoBehaviour
         if (showHealthText)
             healthBarText.text = (((int)(amount * 100)).ToString()) + "%";
 
-        if (amount >= healthBarAutoHideAt)
-            healthBarGameObject.SetActive(false);
-        else if (amount < healthBarAutoShowAt)
-            healthBarGameObject.SetActive(true);
+        // if (amount >= healthBarAutoHideAt)
+        //     healthBarGameObject.SetActive(false);
+        // else if (amount < healthBarAutoShowAt)
+        //     healthBarGameObject.SetActive(true);
 
         if (amount <= 0.0f)
             healthBarGameObject.SetActive(false);;
@@ -556,7 +563,7 @@ public class BuildingInteractionPanel : MonoBehaviour
         buttonBase.transform.SetParent(parent, false);
         buttonBase.transform.localScale = new Vector3(1.0f, 1.0f, 0.15f);
         buttonBase.transform.localPosition = Vector3.zero;
-        buttonBase.transform.GetComponent<MeshRenderer>().sharedMaterial = buttonBaseMaterial;
+        buttonBase.transform.GetComponent<MeshRenderer>().sharedMaterial = buttonBaseMaterial;        
 
         // Face (child of parent)
         GameObject face = new GameObject("_face", typeof(Interactable), typeof(HoverButton));
@@ -566,6 +573,7 @@ public class BuildingInteractionPanel : MonoBehaviour
         HoverButton hoverButton = face.GetComponent<HoverButton>();
         hoverButton.localMoveDistance = new Vector3(0, 0, 0.3f);
         face.GetComponent<Interactable>().highlightOnHover = false;
+
 
         // MovingPart (child of Face)
         GameObject buttonMovingPart = GameObject.CreatePrimitive(PrimitiveType.Cube);
