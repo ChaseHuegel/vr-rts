@@ -10,7 +10,7 @@ using Swordfish;
 public class BuildingInteractionPanel : MonoBehaviour
 {
     [Header("Panel Behaviour")]
-    public float panelVerticalOffset = 1.0f;
+    public Vector3 panelPositionOffset = new Vector3(0.0f, 1.0f, 0.0f);
     public bool startHidden = true;
 
     [Tooltip("Autohide events are fired at the requisite time to notify listeners for external control of hiding.")]
@@ -66,6 +66,8 @@ public class BuildingInteractionPanel : MonoBehaviour
     [Header("Queue Menu Settings")]
     public bool enableQueueMenu;
     public float QueueMenuVerticalOffset;
+    public Transform unitSpawnPoint;
+    public Transform unitRallyWaypoint;
 
     [Header("Queue Menu Progress Bar Settings")]
     public Sprite progressImage;
@@ -127,8 +129,8 @@ public class BuildingInteractionPanel : MonoBehaviour
 
         if (enableQueueMenu)
         {
-            //spawnQueue = this.gameObject.AddComponent<SpawnQueue>();
-            spawnQueue = this.gameObject.GetComponent<SpawnQueue>();
+            spawnQueue = this.gameObject.AddComponent<SpawnQueue>();
+            //spawnQueue = this.gameObject.GetComponent<SpawnQueue>();
             if (!spawnQueue)
                 Debug.LogWarning("Missing SpawnQueue component in parent.", this);
 
@@ -138,6 +140,8 @@ public class BuildingInteractionPanel : MonoBehaviour
             spawnQueue.SetButtonDownAudio(onButtonDownAudio);
             spawnQueue.SetButtonUpAudio(onButtonUpAudio);
             spawnQueue.SetCancelButton(cancelButtonGameObject.GetComponentInChildren<HoverButton>(true));
+            spawnQueue.SetUnitSpawnPointTransform(unitSpawnPoint);
+            spawnQueue.SetUnitRallyPointTransform(unitRallyWaypoint);
             spawnQueue.Initialize();
         }        
     }
@@ -146,7 +150,7 @@ public class BuildingInteractionPanel : MonoBehaviour
     {
         interactionPanelObject = new GameObject("_interaction_panel");
         interactionPanelObject.transform.SetParent(this.gameObject.transform, false);
-        interactionPanelObject.transform.localPosition = new Vector3(0.0f, panelVerticalOffset, 0.0f);
+        interactionPanelObject.transform.localPosition = panelPositionOffset;
 
         radiusExitTime = Time.time;
         Quaternion rot = faceTarget.transform.rotation;
@@ -324,12 +328,10 @@ public class BuildingInteractionPanel : MonoBehaviour
         //float buttonsTotalHeight = ((buttonSize + spaceBetweenButtons) * totalRows);
 
         startPosition.x = buttonsTotalWidth * -0.5f + (buttonSize * 0.5f + spaceBetweenButtons * 0.5f);
-
         startPosition.y = (buttonSize + spaceBetweenButtons) * 0.5f;
         startPosition.y += (buttonSize + spaceBetweenButtons) * (totalRows - 1);
 
         titleGameObject.transform.localPosition = new Vector3 (0.0f, startPosition.y + (buttonSize * 0.85f), 0.0f);
-
         Vector3 nextButtonPosition = startPosition;
 
         int currentButtonColumn = 0;
@@ -395,7 +397,7 @@ public class BuildingInteractionPanel : MonoBehaviour
         button.transform.localPosition = position;
         button.name = string.Format("_queue_{0}_button", unitType.ToString());
         button.transform.localScale = new Vector3(buttonSize, buttonSize, buttonSize);
-        //button.AddComponent<PointerInteractable>();
+        button.AddComponent<PointerInteractable>();
 
         QueueUnitButton queueUnitButton = button.GetComponent<QueueUnitButton>();
         queueUnitButton.unitTypeToQueue = unitType;
@@ -465,13 +467,8 @@ public class BuildingInteractionPanel : MonoBehaviour
         float buttonsTotalWidth = ((buttonSize + spaceBetweenButtons) * maxButtonColumns);
         queueSlotSize = (buttonsTotalWidth - padding) / maxColumns - padding;
 
-        //queueSlotSize = 0.8214286f; // Original size
-
         Vector3 startPosition = Vector3.zero;
-        // startPosition.x = (menuTotalWidth * 0.5f) - (padding * 0.5f);
-        // startPosition.x += (queueSlotSize + padding) * -0.5f;
         startPosition.x = buttonsTotalWidth * -0.5f + (queueSlotSize * 0.5f + padding);// * 0.5f);
-
         startPosition.y = (queueSlotSize + padding) * -0.5f;
 
         cancelButtonPosition = startPosition;
@@ -479,11 +476,12 @@ public class BuildingInteractionPanel : MonoBehaviour
         cancelButtonPosition.y -= queueSlotSize * 0.5f;
 
         Vector3 nextButtonPosition = startPosition;
+        spawnQueue.SetSpawnQueueSlotCount(numberOfQueueSlots);
 
         for (int i = numberOfQueueSlots - 1; i >= 0; i--)
         {
             queueSlotImages[i] = GenerateQueueSlot(nextButtonPosition, parent);
-            //spawnQueue.SetQueueSlotImage(queueSlotImages[i], (byte)i);
+            spawnQueue.SetQueueSlotImage(queueSlotImages[i], (byte)i);
 
             currentQueueSlotColumn++;
             if (currentQueueSlotColumn >= maxColumns)
@@ -529,7 +527,7 @@ public class BuildingInteractionPanel : MonoBehaviour
         image.color = progressColor;
         image.type = Image.Type.Filled;
         image.fillMethod = Image.FillMethod.Horizontal;
-        image.fillOrigin = (int)Image.OriginHorizontal.Right;
+        image.fillOrigin = (int)Image.OriginHorizontal.Left;
 
         GameObject textObject = new GameObject("_progress_text");
         TMPro.TextMeshPro text = textObject.AddComponent<TMPro.TextMeshPro>();
@@ -579,7 +577,6 @@ public class BuildingInteractionPanel : MonoBehaviour
         buttonMovingPart.transform.GetComponent<MeshRenderer>().sharedMaterial = cancelButtonMaterial;
 
         hoverButton.movingPart = buttonMovingPart.transform;
-        //button.transform.localRotation = Quaternion.identity;
 
         Destroy(buttonBase.GetComponent<BoxCollider>());
     }

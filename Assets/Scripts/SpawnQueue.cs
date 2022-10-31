@@ -11,8 +11,8 @@ using Valve.VR.InteractionSystem;
 public class SpawnQueue : MonoBehaviour
 {
     [Header("Unit Spawn Queue Settings")]
-    public Transform unitSpawnPoint;
-    public Transform unitRallyWaypoint;
+    private Transform unitSpawnPoint;
+    private Transform unitRallyWaypoint;
     private Cell unitRallyPointCell;
     public float unitRallyWaypointRadius;
 
@@ -23,7 +23,6 @@ public class SpawnQueue : MonoBehaviour
     public TMPro.TMP_Text progressText;
     public Image progressImage;
     public GameObject buttonsParent;
-    public GameObject menuParentObject;
     public HoverButton cancelButton;
 
     //=========================================================================
@@ -43,7 +42,7 @@ public class SpawnQueue : MonoBehaviour
     void Start()
     {
         playerManager = PlayerManager.instance;
-        Initialize();
+        //Initialize();
     }
 
     public void Initialize()
@@ -62,7 +61,7 @@ public class SpawnQueue : MonoBehaviour
             }
         }
 
-        //SetUnitRallyWaypoint(unitSpawnPoint.position);
+        SetUnitRallyPointPosition(unitSpawnPoint.position);
 
         if (!(damageable = gameObject.GetComponentInParent<Damageable>()))
             Debug.Log("Missing damageable component in parent.", this);
@@ -109,6 +108,7 @@ public class SpawnQueue : MonoBehaviour
         UnitData unitData = GameMaster.GetUnit(unitTypeToQueue);
         playerManager.DeductUnitQueueCostFromStockpile(unitData);
         unitSpawnQueue.AddLast(unitData);
+        RefreshQueueImages();
         return true;
     }
 
@@ -129,14 +129,13 @@ public class SpawnQueue : MonoBehaviour
                 progressImage.fillAmount = 0;
                 progressImage.enabled = false;
                 progressText.enabled = false;
+                RefreshQueueImages();              
             }
             else
             {
                 progressImage.enabled = true;
                 progressText.enabled = true;
-            }
-
-            RefreshQueueImages();
+            }            
         }
         else
             timeElapsed = 0.0f;
@@ -154,7 +153,9 @@ public class SpawnQueue : MonoBehaviour
             progressImage.fillAmount = 0;
             progressImage.enabled = false;
             progressText.enabled = false;
-            RefreshQueueImages();
+
+            ResetLastQueueImage();
+            //RefreshQueueImages();
         }
         else
         {
@@ -162,6 +163,7 @@ public class SpawnQueue : MonoBehaviour
             unitSpawnQueue.RemoveLast();
         }
     }
+
 
     private void SpawnUnit()
     {
@@ -175,6 +177,11 @@ public class SpawnQueue : MonoBehaviour
         }
         else
             Debug.Log(string.Format("Spawn {0} failed. Missing prefabToSpawn.", unitSpawnQueue.First.Value.unitType));
+    }
+
+    private void ResetLastQueueImage()
+    {
+        queueSlotImages[queueSlotImages.Length].overrideSprite = null;
     }
 
     private void RefreshQueueImages()
@@ -214,7 +221,18 @@ public class SpawnQueue : MonoBehaviour
         if (image && index >= 0) queueSlotImages[index] = image;
     }
 
-    public void SetUnitRallyWaypoint(Vector3 position)
+    public void SetUnitSpawnPointTransform(Transform target)
+    {
+        unitSpawnPoint = target;
+    }
+
+    public void SetUnitRallyPointTransform(Transform target)
+    {
+        unitRallyWaypoint = target;
+        unitRallyPointCell = World.at(World.ToWorldCoord(unitRallyWaypoint.position));
+    }
+
+    public void SetUnitRallyPointPosition(Vector3 position)
     {
         unitRallyWaypoint.position = position;
         unitRallyPointCell = World.at(World.ToWorldCoord(unitRallyWaypoint.position));
@@ -223,11 +241,6 @@ public class SpawnQueue : MonoBehaviour
     public void SetCancelButton(HoverButton button)
     {
         if (button) cancelButton = button;
-    }
-
-    public void SetMenuParentObject(GameObject gameObject)
-    {
-        if (gameObject) menuParentObject = gameObject;
     }
 
     public void SetButtonsParentObject(GameObject gameObject)
@@ -276,12 +289,17 @@ public class SpawnQueue : MonoBehaviour
                 }
         }
         else
-            Debug.LogWarning("buttonsParent not found.", this);
+            Debug.LogWarning("HookIntoEvents: buttonsParent not found.", this);
 
         if (cancelButton)
+        {
+            if (cancelButton.onButtonDown == null)
+                cancelButton.onButtonDown = new HandEvent();
+
             cancelButton.onButtonDown.AddListener(OnCancelButtonDown);
+        }
         else
-            Debug.LogWarning("cancelButton not found.", this);
+            Debug.LogWarning("HookIntoEvents: cancelButton not found.", this);
     }
 
     private void CleanupEvents()
@@ -297,12 +315,12 @@ public class SpawnQueue : MonoBehaviour
                 }
         }
         else
-            Debug.Log("buttonsParent not found.", this);
+            Debug.LogWarning("CleanupEvents: buttonsParent not found.", this);
 
         if (cancelButton)
             cancelButton.onButtonDown.RemoveListener(OnCancelButtonDown);
         else
-            Debug.Log("cancelButton not found.", this);
+            Debug.LogWarning("CleanupEvents: cancelButton not found.", this);
     }
 
     void OnDestroy()

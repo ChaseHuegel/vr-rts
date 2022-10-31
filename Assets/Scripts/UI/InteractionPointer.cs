@@ -554,7 +554,7 @@ public class InteractionPointer : MonoBehaviour
         else if (isSettingRallyPoint)
         {
             // TODO: Draw line to rally point.
-            spawnQueue.SetUnitRallyWaypoint(wayPointReticle.transform.position);
+            spawnQueue.SetUnitRallyPointPosition(wayPointReticle.transform.position);
             wayPointReticle.SetActive(false);
 
             GameObject gameObject = Instantiate<GameObject>(rallyPointObject, rallyPointObject.transform.position, rallyPointObject.transform.rotation);
