@@ -87,7 +87,6 @@ public class BuildingInteractionPanel : MonoBehaviour
     public byte numberOfQueueSlots = 12;
     public Sprite emptyQueueSlotSprite;
 
-
     private float queueSlotSize = 1.0f;
     private float spaceBetweenQueueSlots = 0.025f;
     private UnityEngine.UI.Image[] queueSlotImages;
@@ -109,7 +108,6 @@ public class BuildingInteractionPanel : MonoBehaviour
     private SpawnQueue spawnQueue;
     private Damageable damageable;
     public GameObject cancelButtonGameObject;
-
 
     void Awake()
     {

@@ -16,10 +16,11 @@ public class InteractionPointer : MonoBehaviour
     public SteamVR_Action_Boolean cancelAction = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("Cancel");
     public SteamVR_Action_Boolean queueAction = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("Queue");
     public SteamVR_Action_Boolean dequeueAction = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("Dequeue");
-    public SteamVR_Action_Boolean rotateBuildingClockwise = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("RotateBuildingClockwise");
-    public SteamVR_Action_Boolean rotateBuildingCounterclockwise = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("RotateBuildingCounterclockwise");
+    public SteamVR_Action_Boolean rotateBuildingClockwiseAction = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("RotateBuildingClockwise");
+    public SteamVR_Action_Boolean rotateBuildingCounterclockwiseAction = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("RotateBuildingCounterclockwise");
     public SteamVR_Action_Boolean teleportAction = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("Teleport");
-
+    public SteamVR_Action_Boolean grabGripAction = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("GrabGrip");
+    
     //=========================================================================
     public GameObject pointerAttachmentPoint;
     public LayerMask traceLayerMask;
@@ -301,7 +302,7 @@ public class InteractionPointer : MonoBehaviour
                 // TODO: Should probably be moved to update pointer.
                 HardSnapToGrid(destinationReticleTransform, placementBuildingData.boundingDimensionX, placementBuildingData.boundingDimensionY);
             }
-
+            
             /* if (WasQueueButtonPressed(hand))
                 newPointerHand = hand;
 
@@ -359,6 +360,23 @@ public class InteractionPointer : MonoBehaviour
                 return true;
             }
         }
+
+        return false;
+    }
+
+
+    private bool WasGrabGripPressed(Hand hand)
+    {
+        if (CanInteract(hand))
+            return grabGripAction.GetStateDown(hand.handType);
+
+        return false;
+    }
+
+    private bool WasGrabGripReleased(Hand hand)
+    {
+        if (CanInteract(hand))
+            return grabGripAction.GetStateUp(hand.handType);
 
         return false;
     }
@@ -1406,12 +1424,12 @@ public class InteractionPointer : MonoBehaviour
 
     private bool WasRotateClockwiseButtonPressed(Hand hand)
     {
-        return rotateBuildingClockwise.GetStateDown(hand.handType);
+        return rotateBuildingClockwiseAction.GetStateDown(hand.handType);
     }
 
     private bool WasRotateCounterclockwiseButtonPressed(Hand hand)
     {
-        return rotateBuildingCounterclockwise.GetStateDown(hand.handType);
+        return rotateBuildingCounterclockwiseAction.GetStateDown(hand.handType);
     }
 
     private bool WasSelectButtonPressed(Hand hand)

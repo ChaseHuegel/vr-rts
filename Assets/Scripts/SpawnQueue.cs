@@ -43,7 +43,11 @@ public class SpawnQueue : MonoBehaviour
     void Start()
     {
         playerManager = PlayerManager.instance;
+        Initialize();
+    }
 
+    public void Initialize()
+    {
         if (!unitSpawnPoint)
         {
             Structure structure = GetComponentInParent<Structure>();
@@ -58,7 +62,7 @@ public class SpawnQueue : MonoBehaviour
             }
         }
 
-        SetUnitRallyWaypoint(unitSpawnPoint.position);
+        //SetUnitRallyWaypoint(unitSpawnPoint.position);
 
         if (!(damageable = gameObject.GetComponentInParent<Damageable>()))
             Debug.Log("Missing damageable component in parent.", this);
@@ -261,17 +265,23 @@ public class SpawnQueue : MonoBehaviour
             if (hoverButtons.Length > 0)
                 foreach (HoverButton hButton in hoverButtons)
                 {
+                    if (hButton.onButtonDown == null)
+                        hButton.onButtonDown = new HandEvent();
+
+                    if (hButton.onButtonUp == null)
+                        hButton.onButtonUp = new HandEvent();
+                        
                     hButton.onButtonDown.AddListener(OnButtonDown);
                     hButton.onButtonUp.AddListener(OnButtonUp);
                 }
         }
         else
-            Debug.Log("buttonsParent not found.", this);
+            Debug.LogWarning("buttonsParent not found.", this);
 
         if (cancelButton)
             cancelButton.onButtonDown.AddListener(OnCancelButtonDown);
         else
-            Debug.Log("cancelButton not found.", this);
+            Debug.LogWarning("cancelButton not found.", this);
     }
 
     private void CleanupEvents()

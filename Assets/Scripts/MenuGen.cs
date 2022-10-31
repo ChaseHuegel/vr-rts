@@ -92,8 +92,8 @@ public class MenuGen : MonoBehaviour
                 if (!(spawnQueue = gameObject.GetComponentInParent<SpawnQueue>()))
                     Debug.Log("Missing SpawnQueue component in parent.", this);
 
-            spawnQueue.SetMenuParentObject(menuParent.gameObject);
-            spawnQueue.SetSpawnQueueSlotCount(numberOfQueueSlots);
+            // spawnQueue.SetMenuParentObject(menuParent.gameObject);
+            // spawnQueue.SetSpawnQueueSlotCount(numberOfQueueSlots);
             spawnQueue.SetButtonDownAudio(onButtonDownAudio);
             spawnQueue.SetButtonUpAudio(onButtonUpAudio);
 
@@ -234,7 +234,7 @@ public class MenuGen : MonoBehaviour
         for (int i = numberOfQueueSlots - 1; i >= 0; i--)
         {                       
             queueSlotImages[i] = GenerateQueueSlot(slotPosition, parent);
-            spawnQueue.SetQueueSlotImage(queueSlotImages[i], (byte)i);
+            //spawnQueue.SetQueueSlotImage(queueSlotImages[i], (byte)i);
 
             currentQueueSlotColumn++;
             if (currentQueueSlotColumn >= maxColumns)
