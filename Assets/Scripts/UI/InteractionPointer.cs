@@ -283,7 +283,7 @@ public class InteractionPointer : MonoBehaviour
                 BuildingInteractionPanel buildingInteractionPanel = pointedAtPointerInteractable.GetComponentInChildren<BuildingInteractionPanel>();
                 if (buildingInteractionPanel)
                     buildingInteractionPanel.Show();
-            }
+            }            
             else if (isInBuildingPlacementMode)
             {
                 // TODO: Should gates snap to nearby walls without having to be exactly lined

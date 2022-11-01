@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1988163684968463313}
   - component: {fileID: 3549530147233843076}
   m_Layer: 5
-  m_Name: stone
+  m_Name: text_stone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -267,7 +267,7 @@ GameObject:
   - component: {fileID: 3302128900622758530}
   - component: {fileID: 156643143436976789}
   m_Layer: 5
-  m_Name: grain
+  m_Name: text_grain
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -457,7 +457,7 @@ Transform:
   m_Children:
   - {fileID: 567464227910886647}
   - {fileID: 8052373798363535025}
-  m_Father: {fileID: 2522268916167783192}
+  m_Father: {fileID: 2665985629047850875}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 90}
 --- !u!1 &2986300081047798831
@@ -490,7 +490,7 @@ Transform:
   m_Children:
   - {fileID: 8584976392164384575}
   - {fileID: 526544635637495881}
-  m_Father: {fileID: 2522268916167783192}
+  m_Father: {fileID: 2665985629047850875}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 90}
 --- !u!1 &3614445337197541248
@@ -689,7 +689,7 @@ Transform:
   m_Children:
   - {fileID: 4083160465088611522}
   - {fileID: 8796751763579804705}
-  m_Father: {fileID: 2522268916167783192}
+  m_Father: {fileID: 2665985629047850875}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 90}
 --- !u!1 &5019407674604353292
@@ -704,7 +704,7 @@ GameObject:
   - component: {fileID: 8130409832173021678}
   - component: {fileID: 838511863448840016}
   m_Layer: 5
-  m_Name: wood
+  m_Name: text_wood
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -876,7 +876,7 @@ GameObject:
   - component: {fileID: 701395915620587472}
   - component: {fileID: 8087245053194122730}
   m_Layer: 5
-  m_Name: gold
+  m_Name: text_gold
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1066,7 +1066,7 @@ Transform:
   m_Children:
   - {fileID: 3614445337197833120}
   - {fileID: 6202160603581044838}
-  m_Father: {fileID: 2522268916167783192}
+  m_Father: {fileID: 2665985629047850875}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 90}
 --- !u!1 &8028878907510991247
@@ -1077,7 +1077,7 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2522268916167783192}
+  - component: {fileID: 2665985629047850875}
   - component: {fileID: 6511132423570431909}
   m_Layer: 5
   m_Name: ResourceCosts
@@ -1086,15 +1086,15 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!224 &2522268916167783192
-RectTransform:
+--- !u!4 &2665985629047850875
+Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8028878907510991247}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0.0743, y: -0.002, z: 0}
   m_LocalScale: {x: 0.0015646343, y: 0.0015646343, z: 0.0015646343}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1105,11 +1105,6 @@ RectTransform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.0743, y: -0.002}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &6511132423570431909
 MonoBehaviour:
   m_ObjectHideFlags: 0
