@@ -51,6 +51,7 @@ public class PlayerManager : MonoBehaviour
     private Hand rightHand;
     private Hand leftHand;
     private static PlayerManager _instance;
+
     public static PlayerManager instance
     {
         get
