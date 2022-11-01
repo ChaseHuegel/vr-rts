@@ -158,6 +158,16 @@ public class BuildMenuSlot : MonoBehaviour
         }                  
     }
 
+    private void ScaleUp()
+    {
+        transform.localScale = new Vector3(1.25f, 1.25f, 1.25f);
+    }
+    
+    private void ResetScale()
+    {
+        transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+    }
+
     private void OnHandHoverBegin( Hand hand )
     {
         ThrowableBuilding currentAttachedThrowableBuilding = GetAttachedThrowableBuilding( hand );
@@ -171,6 +181,8 @@ public class BuildMenuSlot : MonoBehaviour
                     TakeBackItem( hand );
             }
         }
+
+        ScaleUp();
 
         // We don't require trigger press for pickup. Spawn and attach object.
         if (!requireGrabActionToTake)
@@ -257,6 +269,7 @@ public class BuildMenuSlot : MonoBehaviour
         }
 
         justPickedUpItem = false;
+        ResetScale();
     }
 
     private ThrowableBuilding GetAttachedThrowableBuilding( Hand hand )
