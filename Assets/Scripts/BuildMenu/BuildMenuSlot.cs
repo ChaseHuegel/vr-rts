@@ -34,8 +34,10 @@ public class BuildMenuSlot : MonoBehaviour
     public bool justPickedUpItem = false;
     public static Material disabledMat;
     public static Material enabledMat;
-    SphereCollider grabCollider;    
-    
+    SphereCollider grabCollider;
+
+    private Vector3 previewObjectOriginalScale;
+
     MeshRenderer[] meshRenderers;
     SkinnedMeshRenderer[] skinnedMeshRenderers;
     void Awake()
@@ -46,7 +48,8 @@ public class BuildMenuSlot : MonoBehaviour
         if (!(grabCollider = GetComponent<SphereCollider>()))
             Debug.Log("grabCollider missing.");    
 
-        CreatePreviewObject();        
+        CreatePreviewObject();
+        previewObjectOriginalScale = previewObject.transform.localScale;
     }
 
     public void SlotEnabled(bool enabled = true)
@@ -136,11 +139,14 @@ public class BuildMenuSlot : MonoBehaviour
 
         foreach ( GameObject child in allChildren )
         {
-            if ( Time.time > 0  && !child.GetComponent<BuildMenuResouceCost>())
+            if (Time.time > 0)
             {
-                GameObject.Destroy( child.gameObject );
+                if (!child.GetComponent<BuildMenuResouceCost>() && !child.GetComponent<TMPro.TextMeshPro>())
+                {
+                    GameObject.Destroy(child.gameObject);
+                }
             }
-            else if (!child.GetComponent<BuildMenuResouceCost>())
+            else if (!child.GetComponent<BuildMenuResouceCost>() && !child.GetComponent<TMPro.TextMeshPro>())
             {
                 GameObject.DestroyImmediate( child.gameObject );
             }
@@ -160,12 +166,12 @@ public class BuildMenuSlot : MonoBehaviour
 
     private void ScaleUp()
     {
-        transform.localScale = new Vector3(1.25f, 1.25f, 1.25f);
+        previewObject.transform.localScale = previewObjectOriginalScale * 1.25f;
     }
     
     private void ResetScale()
     {
-        transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+        previewObject.transform.localScale = previewObjectOriginalScale;
     }
 
     private void OnHandHoverBegin( Hand hand )

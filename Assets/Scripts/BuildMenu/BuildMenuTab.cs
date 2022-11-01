@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 using UnityEditor;
 using Valve.VR.InteractionSystem;
+using TMPro;
 
 [Serializable]
 public class BuildMenuTab : MonoBehaviour
@@ -15,6 +16,7 @@ public class BuildMenuTab : MonoBehaviour
     public GameObject resourceCostPrefab;
     public Material slotEnabledMaterial;
     public Material slotDisabledMaterial;
+    public TMPro.TMP_FontAsset titleFont;
     public RTSBuildingType[] Buttons;    
 
     void Awake()
@@ -62,15 +64,18 @@ public class BuildMenuTab : MonoBehaviour
                 // Add components needed
                 BuildMenuSlot buildMenuSlot = slotObject.AddComponent<BuildMenuSlot>();
                 SphereCollider sphereCollider = slotObject.AddComponent<SphereCollider>();
-                sphereCollider.radius = 40.0f;
+                sphereCollider.radius = 0.045f;
+                sphereCollider.center.Set(0.0f, 0.02f, 0.0f);
 
                 // Instantiate the resource cost gameobject
                 GameObject resourceCost = Instantiate(resourceCostPrefab, Vector3.zero, Quaternion.identity, slotObject.transform);
-                resourceCost.transform.localPosition = new Vector3(38.0f, 3.0f, 0f);
+                resourceCost.transform.localPosition = new Vector3(0.0743f, -0.002f, 0.0f);
                 resourceCost.transform.localRotation = Quaternion.identity;
 
                 // Fetch and set the building type data from the database
                 buildMenuSlot.rtsTypeData = GameMaster.GetBuilding(rtsBuildingType);
+
+                CreateSlotTitle(buildMenuSlot);
                 
                 // Popluate the resource cost prefab text objects
                 BuildMenuResouceCost cost = resourceCost.GetComponent<BuildMenuResouceCost>();
@@ -96,6 +101,25 @@ public class BuildMenuTab : MonoBehaviour
             slotPositionY = -1 * row * verticalButtonSpacing + origin.y;
             i++;
         }
+    }
+
+    private void CreateSlotTitle(BuildMenuSlot slot)
+    {
+
+        GameObject titleGameObject = new GameObject("_title");
+        titleGameObject.transform.position = new Vector3(0.0513f, -0.0042f, 0.0f);
+        titleGameObject.transform.SetParent(slot.transform, false);
+        titleGameObject.transform.Rotate(90, 0, 90);
+
+        TextMeshPro titleText = titleGameObject.AddComponent<TextMeshPro>();
+        titleText.SetText(slot.rtsTypeData.buildingTitle);
+        titleText.fontStyle = FontStyles.Bold;
+        titleText.fontSize = 0.10f;
+        titleText.font = titleFont;
+        titleText.horizontalAlignment = HorizontalAlignmentOptions.Center;
+        titleText.verticalAlignment = VerticalAlignmentOptions.Middle;
+        titleText.color = Color.white;
+        titleText.raycastTarget = false;
     }
 
     void DestroyChildren()
