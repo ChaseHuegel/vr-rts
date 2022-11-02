@@ -10,6 +10,7 @@ public class Faction : ScriptableObject
 
     public byte Id;
     public Skin skin;
+    public TechTree techTree;
 
     // TODO: Color should be pulled from the skin settings?
     public Color color = Color.blue;

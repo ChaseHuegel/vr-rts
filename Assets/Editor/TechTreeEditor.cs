@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(Techtree))]
+[CustomEditor(typeof(TechTree))]
 public class TechTreeEditor : Editor
 {
     // positioning
@@ -29,7 +29,7 @@ public class TechTreeEditor : Editor
 
     public override void OnInspectorGUI()
     {
-        Techtree targetTree = (Techtree)target; // get the associated Techtree
+        TechTree targetTree = (TechTree)target; // get the associated Techtree
         
         // Mouse events
         Event currentEvent = Event.current;

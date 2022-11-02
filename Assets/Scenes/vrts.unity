@@ -11960,7 +11960,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: ee90f878377271b4fbbf915249f24476, type: 2}
+      objectReference: {fileID: 2100000, guid: 792a4bad9e08b8e41bfbd3f0b8aac1ab, type: 2}
     - target: {fileID: 919132149155446097, guid: d36db2189a21d8f4080c5a7e0c673c4c,
         type: 3}
       propertyPath: m_Name
@@ -11971,6 +11971,12 @@ PrefabInstance:
 --- !u!4 &334200104 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: d36db2189a21d8f4080c5a7e0c673c4c,
+    type: 3}
+  m_PrefabInstance: {fileID: 334200103}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &334200105 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: d36db2189a21d8f4080c5a7e0c673c4c,
     type: 3}
   m_PrefabInstance: {fileID: 334200103}
   m_PrefabAsset: {fileID: 0}
@@ -28760,6 +28766,12 @@ MonoBehaviour:
   buildingData: {fileID: 0}
   meshes: []
   skinnedMeshes: []
+--- !u!23 &851117905 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: 0c6124c12087fcb499595f211b51261d,
+    type: 3}
+  m_PrefabInstance: {fileID: 851117901}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &854121601
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -34479,6 +34491,37 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1018222162}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1023255752
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1023255753}
+  m_Layer: 0
+  m_Name: GameObject_01
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1023255753
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1023255752}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -25.891048, y: -44.100357, z: 36.880985}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 21
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1024332453
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -69193,7 +69236,7 @@ MonoBehaviour:
   BoundingDimensions: {x: 1, y: 1}
   BoundingOrigin: {x: 0, y: 0}
   SkinRendererTargets:
-  - {fileID: 0}
+  - {fileID: 334200105}
   UnitType: 1
   FarmingToolObject: {fileID: 0}
   MiningToolObject: {fileID: 0}
@@ -70795,6 +70838,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 771802060}
     m_Modifications:
+    - target: {fileID: 3825157330076733857, guid: d9203dc29d0cce64e938cdda7bc71e90,
+        type: 3}
+      propertyPath: queueButtons.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3825157330076733857, guid: d9203dc29d0cce64e938cdda7bc71e90,
+        type: 3}
+      propertyPath: queueButtons.Array.data[0]
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3825157330076733857, guid: d9203dc29d0cce64e938cdda7bc71e90,
+        type: 3}
+      propertyPath: queueTechButtons.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3825157330076733857, guid: d9203dc29d0cce64e938cdda7bc71e90,
+        type: 3}
+      propertyPath: queueTechButtons.Array.data[0]
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 6467865168113617609, guid: d9203dc29d0cce64e938cdda7bc71e90,
         type: 3}
       propertyPath: m_Name
@@ -72367,7 +72430,7 @@ MonoBehaviour:
   BoundingDimensions: {x: 1, y: 1}
   BoundingOrigin: {x: 0, y: 0}
   SkinRendererTargets:
-  - {fileID: 0}
+  - {fileID: 851117905}
   UnitType: 1
   FarmingToolObject: {fileID: 0}
   MiningToolObject: {fileID: 0}

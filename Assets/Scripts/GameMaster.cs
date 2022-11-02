@@ -21,6 +21,15 @@ public class GameMaster : Singleton<GameMaster>
     public static BuildingData GetBuilding(RTSBuildingType type) { return Instance.buildingDatabase.Get(type); }
     public static BuildingData GetBuilding(string name) { return Instance.buildingDatabase.Get(name); }
 
+    public TechDatabase techDatabase;
+    public static TechDatabase GetTechDatabase() { return Instance.techDatabase; }
+    public static TechData GetUnit(RTSTechType type)
+    {
+        return Instance.techDatabase.Get(type);
+    }
+
+    public static TechData GetTech(string name) { return Instance.techDatabase.Get(name); }
+
     public UnitDatabase unitDatabase;
     public static UnitDatabase GetUnitDatabase() { return Instance.unitDatabase; }
     public static UnitData GetUnit(RTSUnitType type)
@@ -33,7 +42,7 @@ public class GameMaster : Singleton<GameMaster>
     [Header("Factions")]
     public List<Faction> factions;
     public static List<Faction> Factions { get { return Instance.factions;} }
-
+    
     [Header("Prefabs")]
     public GameObject floatingIndicatorPrefab;
 

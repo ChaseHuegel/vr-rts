@@ -4,7 +4,7 @@ using Swordfish.Audio;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Unit", menuName = "RTS/Units/Unit Data")]
-public class UnitData : ScriptableObject
+public class UnitData : TechData
 {
     public RTSUnitType unitType;
     public float queueTime;

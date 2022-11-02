@@ -19,10 +19,11 @@ public class TechNode
         this.researchInvested = 0;
         this.UIposition = position;
     }
+
 }
 
-[CreateAssetMenu(menuName = "Core/new Techtree")]
-public class Techtree : ScriptableObject
+[CreateAssetMenu(menuName = "RTS/New Tech Tree")]
+public class TechTree : ScriptableObject
 {
     public List<TechNode> tree;
 

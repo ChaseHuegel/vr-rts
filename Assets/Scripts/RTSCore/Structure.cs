@@ -38,7 +38,10 @@ public class Structure : Obstacle
 
         AllStructures.Add(this);
 
+        // TODO: Will need checks here for multiplayer
         playerManager = PlayerManager.instance;
+
+        
 
         // Setup some defaults that tend to get switched in the editor.
         IgnorePanning ignorePanning = GetComponentInChildren<IgnorePanning>();

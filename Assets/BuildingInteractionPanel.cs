@@ -80,7 +80,8 @@ public class BuildingInteractionPanel : MonoBehaviour
     public Material cancelButtonMaterial;
     public AudioClip onButtonDownAudio;
     public AudioClip onButtonUpAudio;
-    public List<RTSUnitType> queueUnitButtons;
+    public List<RTSUnitType> queueButtons;
+    public List<RTSTechType> queueTechButtons;
 
     private float buttonSize = 0.25f;
     private float spaceBetweenButtons = 0.025f;
@@ -89,7 +90,7 @@ public class BuildingInteractionPanel : MonoBehaviour
     [Header("Queue Menu Queue Slot Settings")]
     public byte numberOfQueueSlots = 12;
     public Sprite emptyQueueSlotSprite;
-
+    
     private float queueSlotSize = 1.0f;
     private float spaceBetweenQueueSlots = 0.025f;
     private UnityEngine.UI.Image[] queueSlotImages;
@@ -149,7 +150,6 @@ public class BuildingInteractionPanel : MonoBehaviour
             spawnQueue.Initialize();
 
             this.gameObject.GetComponent<PointerInteractable>().AddChildrenToHideHighlight(interactionPanelObject);
-
         }        
     }
 
@@ -305,7 +305,7 @@ public class BuildingInteractionPanel : MonoBehaviour
         menuGameObject.transform.position = new Vector3(0.0f, QueueMenuVerticalOffset, 0.0f);
         menuGameObject.transform.SetParent(interactionPanelObject.transform, false);
         
-        InitializeQueueUnitButtons();
+        InitializeQueueButtons();
 
         GameObject queueSlotsGameObject = new GameObject("_queue_slots");
         queueSlotsGameObject.transform.SetParent(menuGameObject.transform, false);
@@ -324,14 +324,14 @@ public class BuildingInteractionPanel : MonoBehaviour
         InitializeCancelButton(cancelButtonGameObject.transform);
     }
 
-    private void InitializeQueueUnitButtons()
+    private void InitializeQueueButtons()
     {
         buttonsGameObject = new GameObject("_buttons");        
         buttonsGameObject.transform.SetParent(menuGameObject.transform, false);        
         
         Vector3 startPosition = Vector3.zero;
         float buttonsTotalWidth = ((buttonSize + spaceBetweenButtons) * maxButtonColumns);
-        int totalRows = Mathf.CeilToInt((float)queueUnitButtons.Count / (float)maxButtonColumns);
+        int totalRows = Mathf.CeilToInt((float)queueButtons.Count / (float)maxButtonColumns);
         //float buttonsTotalHeight = ((buttonSize + spaceBetweenButtons) * totalRows);
 
         startPosition.x = buttonsTotalWidth * -0.5f + (buttonSize * 0.5f + spaceBetweenButtons * 0.5f);
@@ -344,12 +344,12 @@ public class BuildingInteractionPanel : MonoBehaviour
         int currentButtonColumn = 0;
         int currentButtonRow = 0;
 
-        foreach (RTSUnitType unitType in queueUnitButtons)
+        foreach (RTSUnitType unitType in queueButtons)
         {
             if (unitType == RTSUnitType.None)
                 continue;
 
-            GenerateQueueButton(unitType, nextButtonPosition, buttonsGameObject.transform);
+            GenerateQueueUnitButton(unitType, nextButtonPosition, buttonsGameObject.transform);
             currentButtonColumn++;
             if (currentButtonColumn >= maxButtonColumns)
             {
@@ -393,8 +393,8 @@ public class BuildingInteractionPanel : MonoBehaviour
         if (amount <= 0.0f)
             healthBarGameObject.SetActive(false);;
     }
-
-    private GameObject GenerateQueueButton(RTSUnitType unitType, Vector3 position, Transform parent)
+    
+    private GameObject GenerateQueueUnitButton(RTSUnitType unitType, Vector3 position, Transform parent)
     {
         UnitData typeData = GameMaster.GetUnit(unitType);
 
