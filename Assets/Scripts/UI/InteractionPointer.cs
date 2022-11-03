@@ -93,6 +93,7 @@ public class InteractionPointer : MonoBehaviour
     private Resource pointedAtResource;
     private Vector3 rallyWaypointArcStartPosition;
     private GameObject rallyPointObject;
+    private float triggerAddToSelectionThreshold = 0.75f;
 
     // Cache value
     private int maxUnitSelectionCount;
@@ -1056,7 +1057,7 @@ public class InteractionPointer : MonoBehaviour
         else if (isInUnitSelectionMode && pointedAtPointerInteractable != null)
         {
             // Only add units to selection if trigger is pressed in more than 60%
-            if (selectedActors.Count <= maxUnitSelectionCount && uiInteractAction.GetAxis(pointerHand.handType) > 0.6f)
+            if (selectedActors.Count <= maxUnitSelectionCount && uiInteractAction.GetAxis(pointerHand.handType) > triggerAddToSelectionThreshold)
             {
                 ActorV2 hoveredActor = pointedAtPointerInteractable.GetComponent<ActorV2>();
                 if (hoveredActor && !selectedActors.Contains(hoveredActor) && hoveredActor.Faction.IsSameFaction(faction))
