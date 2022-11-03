@@ -4,11 +4,13 @@ using System;
 public enum RTSUnitType
 {
     None,
-    Villager,
+    Villager,    
     Swordsman,
     OrcGrunt,
     Scout,
     Clubman,
+    FishingBoat,
+    TradeBoat,
 }
 
 [Serializable]
