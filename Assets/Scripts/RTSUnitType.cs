@@ -16,10 +16,16 @@ public enum RTSTechType
 {
     // Stone Age
     None,
+    TownHall,
+    Barracks,
+    Dock,
+    Granary,
+    StoragePit,
     Villager,
     Clubman,
     FishingBoat,
     TradeBoat,
+    ToolAgeResearch,
 
     // Tool Age
     Bowman,
@@ -30,6 +36,7 @@ public enum RTSTechType
     ScoutShip,
     SmallWallResearch,
     SmallWall,
+    CivilCenter,
     WatchTowerResearch,
     WatchTower,
     InfantryCavalryAttack1Research,

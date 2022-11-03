@@ -12,16 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c98206bdc9ffd5547bf4552bd13d2c59, type: 3}
   m_Name: Blacksmith
   m_EditorClassIdentifier: 
-  buildingType: 15
-  buildingTitle: Blacksmith
-  dropoffTypes: 0
+  title: Blacksmith
+  description: 
+  queueResearchTime: 25
+  worldPrefab: {fileID: 3210571205559245670, guid: f5ca26ca64a15b1428e249b9ebf62171,
+    type: 3}
+  worldButtonMaterial: {fileID: 0}
+  worldQueueImage: {fileID: 0}
+  populationCost: 0
   goldCost: 0
   stoneCost: 0
-  grainCost: 0
+  foodCost: 0
   woodCost: 150
+  buildingType: 15
+  dropoffTypes: 0
   populationSupported: 0
   maxUnitQueueSize: 0
-  hitPoints: 1800
+  maximumHitPoints: 400
   garrisonCapacity: 0
   armor: 3
   menuPreviewPrefab: {fileID: 973837093136562799, guid: c14407928d1c2e3449a488bf039bcde1,
@@ -34,8 +41,9 @@ MonoBehaviour:
     type: 3}
   constructablePrefab: {fileID: 5275766485864662824, guid: 041d7b192105c7949a4bc280103b8436,
     type: 3}
-  worldPrefab: {fileID: 3210571205559245670, guid: f5ca26ca64a15b1428e249b9ebf62171,
-    type: 3}
+  diagonalWorldPrefab: {fileID: 0}
+  diagonalWorldPreviewPrefab: {fileID: 0}
+  diagonalConstructablePrefab: {fileID: 0}
   boundingDimensionX: 5
   boundingDimensionY: 5
   allowedUnitsToSpawn: 

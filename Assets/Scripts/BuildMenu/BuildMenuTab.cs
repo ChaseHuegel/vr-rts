@@ -81,7 +81,7 @@ public class BuildMenuTab : MonoBehaviour
                 BuildMenuResouceCost cost = resourceCost.GetComponent<BuildMenuResouceCost>();
                 cost.woodText.text = buildMenuSlot.rtsTypeData.woodCost.ToString();
                 cost.goldText.text = buildMenuSlot.rtsTypeData.goldCost.ToString();
-                cost.grainText.text = buildMenuSlot.rtsTypeData.grainCost.ToString();
+                cost.grainText.text = buildMenuSlot.rtsTypeData.foodCost.ToString();
                 cost.stoneText.text = buildMenuSlot.rtsTypeData.stoneCost.ToString();
 
                 // Create/Instatiate preview objects for slots
@@ -112,7 +112,7 @@ public class BuildMenuTab : MonoBehaviour
         titleGameObject.transform.Rotate(90, 0, 90);
 
         TextMeshPro titleText = titleGameObject.AddComponent<TextMeshPro>();
-        titleText.SetText(slot.rtsTypeData.buildingTitle);
+        titleText.SetText(slot.rtsTypeData.title);
         titleText.fontStyle = FontStyles.Bold;
         titleText.fontSize = 0.10f;
         titleText.font = titleFont;

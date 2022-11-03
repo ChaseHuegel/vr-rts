@@ -55,7 +55,7 @@ public class Structure : Obstacle
             Debug.Log("No damageable component on structure!");
 
         // Set max health based on building database hit point value.
-        damageable.Attributes.Get(AttributeConstants.HEALTH).MaxValue = buildingData.hitPoints;
+        damageable.Attributes.Get(AttributeConstants.HEALTH).MaxValue = buildingData.maximumHitPoints;
         damageable.OnDamageEvent += OnDamage;
 
         if (!GameMaster.Instance.buildingDamagedFX)

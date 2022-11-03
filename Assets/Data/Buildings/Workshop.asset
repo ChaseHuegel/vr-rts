@@ -12,16 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c98206bdc9ffd5547bf4552bd13d2c59, type: 3}
   m_Name: Workshop
   m_EditorClassIdentifier: 
-  buildingType: 135
-  buildingTitle: 
-  dropoffTypes: 0
+  title: Workshop
+  description: 
+  queueResearchTime: 25
+  worldPrefab: {fileID: 1458269125602283479, guid: fd5f8b25d208514489bdb776ec01e163,
+    type: 3}
+  worldButtonMaterial: {fileID: 0}
+  worldQueueImage: {fileID: 0}
+  populationCost: 0
   goldCost: 0
   stoneCost: 0
-  grainCost: 0
+  foodCost: 0
   woodCost: 200
+  buildingType: 135
+  dropoffTypes: 0
   populationSupported: 0
   maxUnitQueueSize: 12
-  hitPoints: 1800
+  maximumHitPoints: 400
   garrisonCapacity: 10
   armor: 3
   menuPreviewPrefab: {fileID: 4230833229501011958, guid: 0533af0d221ca8d47b68735e219dad38,
@@ -34,8 +41,9 @@ MonoBehaviour:
     type: 3}
   constructablePrefab: {fileID: 3675947635265083829, guid: 2f6763788b1cbe24faef4cb340cc1d1e,
     type: 3}
-  worldPrefab: {fileID: 1458269125602283479, guid: fd5f8b25d208514489bdb776ec01e163,
-    type: 3}
+  diagonalWorldPrefab: {fileID: 0}
+  diagonalWorldPreviewPrefab: {fileID: 0}
+  diagonalConstructablePrefab: {fileID: 0}
   boundingDimensionX: 5
   boundingDimensionY: 5
   allowedUnitsToSpawn: 

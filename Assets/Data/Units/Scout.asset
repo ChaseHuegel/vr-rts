@@ -12,11 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce9a7238ce7b06042b83fb4085bbbdf3, type: 3}
   m_Name: Scout
   m_EditorClassIdentifier: 
-  unitType: 4
-  queueTime: 45
-  prefab: {fileID: 1271416209190090558, guid: e9ee513f3e1c58848bed57b959eaebc8, type: 3}
-  queueImage: {fileID: 21300000, guid: c2417937c0c90fd43b5af4234beb81d7, type: 3}
+  title: Scout
+  description: 
+  queueResearchTime: 45
+  worldPrefab: {fileID: 1271416209190090558, guid: e9ee513f3e1c58848bed57b959eaebc8,
+    type: 3}
   worldButtonMaterial: {fileID: 2100000, guid: 1ccb369349e79524ca9e50dfd2895cf8, type: 2}
+  worldQueueImage: {fileID: 21300000, guid: c2417937c0c90fd43b5af4234beb81d7, type: 3}
+  populationCost: 1
+  goldCost: 0
+  stoneCost: 0
+  foodCost: 50
+  woodCost: 10
+  unitType: 4
   buildRate: 0
   foragingRate: 0
   repairRate: 0
@@ -26,12 +34,7 @@ MonoBehaviour:
   huntingRate: 0
   lumberjackingRate: 0
   fishingRate: 0
-  populationCost: 1
-  goldCost: 0
-  stoneCost: 0
-  foodCost: 50
-  woodCost: 10
-  maxHitPoints: 125
+  maximumHitPoints: 80
   maxCargo: 0
   huntingDamage: 0
   attackRange: 10

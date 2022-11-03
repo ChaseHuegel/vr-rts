@@ -115,13 +115,13 @@ public class AutoSpawner : MonoBehaviour
     {
         UnitData unitData = GameMaster.GetUnit(unitType);
 
-        if (unitData?.prefab)
+        if (unitData?.worldPrefab)
         {
             Vector3 randomPos = Random.insideUnitSphere * unitSpawnPointRadius;
             Vector3 position = unitSpawnPoint.transform.position + randomPos;
             position.y = unitSpawnPoint.transform.position.y;
 
-            GameObject unitGameObject = Instantiate(unitData.prefab, position, Quaternion.identity);
+            GameObject unitGameObject = Instantiate(unitData.worldPrefab, position, Quaternion.identity);
 
             if (NetworkManager.Singleton.IsServer)
                 unitGameObject.GetComponent<NetworkObject>().Spawn();

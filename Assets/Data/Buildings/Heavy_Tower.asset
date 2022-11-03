@@ -12,16 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c98206bdc9ffd5547bf4552bd13d2c59, type: 3}
   m_Name: Heavy_Tower
   m_EditorClassIdentifier: 
-  buildingType: 70
-  buildingTitle: Heavy Tower
-  dropoffTypes: 0
+  title: Heavy Tower
+  description: 
+  queueResearchTime: 25
+  worldPrefab: {fileID: 4461782608968496317, guid: 0f6cf1dea89c458448747d0a2bf9545d,
+    type: 3}
+  worldButtonMaterial: {fileID: 0}
+  worldQueueImage: {fileID: 0}
+  populationCost: 0
   goldCost: 0
   stoneCost: 125
-  grainCost: 0
+  foodCost: 0
   woodCost: 50
+  buildingType: 70
+  dropoffTypes: 0
   populationSupported: 0
   maxUnitQueueSize: 0
-  hitPoints: 1500
+  maximumHitPoints: 400
   garrisonCapacity: 5
   armor: 2
   menuPreviewPrefab: {fileID: 4606109990488784652, guid: efd5f4c537b7fe641bfab4b84451dab9,
@@ -34,8 +41,9 @@ MonoBehaviour:
     type: 3}
   constructablePrefab: {fileID: 5655454500698574061, guid: ad54800afda3bf040852b0f8c1bd5590,
     type: 3}
-  worldPrefab: {fileID: 4461782608968496317, guid: 0f6cf1dea89c458448747d0a2bf9545d,
-    type: 3}
+  diagonalWorldPrefab: {fileID: 0}
+  diagonalWorldPreviewPrefab: {fileID: 0}
+  diagonalConstructablePrefab: {fileID: 0}
   boundingDimensionX: 2
   boundingDimensionY: 2
   allowedUnitsToSpawn: 

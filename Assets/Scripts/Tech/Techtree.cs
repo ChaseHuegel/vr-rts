@@ -5,50 +5,50 @@ using UnityEngine;
 [System.Serializable]
 public class TechNode
 {
-    public Tech tech;
-    public List<Tech> requirements;
-    public int researchCost;
-    public int researchInvested;
+    public TechBase tech;
+    public bool unlocked;
+    public List<TechBase> techRequirements;    
+    public bool researched;    
     public Vector2 UIposition;
 
-    public TechNode(Tech tech, List<Tech> reqs, int cost, Vector2 position)
+    public TechNode(TechBase tech, List<TechBase> reqs, Vector2 position, bool unlocked = false, bool researched = false )
     {
         this.tech = tech;
-        this.requirements = reqs;
-        this.researchCost = cost;
-        this.researchInvested = 0;
+        this.techRequirements = reqs;
+        this.researched = researched;
+        this.unlocked = unlocked;
         this.UIposition = position;
     }
 
 }
 
-[CreateAssetMenu(menuName = "RTS/New Tech Tree")]
+[CreateAssetMenu(menuName = "RTS/Tech/New Tech Tree")]
 public class TechTree : ScriptableObject
 {
     public List<TechNode> tree;
 
-    public bool AddNode(Tech tech, Vector2 UIpos)
+    public bool AddNode(TechBase tech, Vector2 UIpos)
     {
         int tIdx = FindTechIndex(tech);
         if (tIdx == -1)
         {
-            tree.Add(new TechNode(tech, new List<Tech>(), 0, UIpos));
+            tree.Add(new TechNode(tech, new List<TechBase>(), UIpos));
             return true;
         }
         else
             return false;
     }
 
-    public void DeleteNode(Tech tech)
+    public void DeleteNode(TechBase tech)
     {
         tree.RemoveAt(FindTechIndex(tech));
         foreach(TechNode tn in tree)
         {
-            if (tn.requirements.Contains(tech)) tn.requirements.Remove(tech);
+            if (tn.techRequirements.Contains(tech)) tn.techRequirements.Remove(tech);
         }
     }
 
-    public int FindTechIndex(Tech tech)
+    public int FindTechIndex(TechBase tech)
     {
         for (int i = 0; i < tree.Count; i++)
         {
@@ -61,7 +61,7 @@ public class TechTree : ScriptableObject
 
     public bool DoesLeadsToInCascade(int query, int subject)
     {
-        foreach (Tech t in tree[query].requirements)
+        foreach (TechBase t in tree[query].techRequirements)
         {
             if (t == tree[subject].tech)
                 return true;
@@ -80,10 +80,10 @@ public class TechTree : ScriptableObject
         return !(DoesLeadsToInCascade(incomingNodeIdx, outgoingNodeIdx) || DoesLeadsToInCascade(outgoingNodeIdx, incomingNodeIdx));
     }
 
-    public HashSet<Tech> GetAllPastRequirements(int nodeIdx, bool includeSelfRequirements = true)
+    public HashSet<TechBase> GetAllPastRequirements(int nodeIdx, bool includeSelfRequirements = true)
     {
-        HashSet<Tech> allRequirements = (includeSelfRequirements) ? new HashSet<Tech>(tree[nodeIdx].requirements) : new HashSet<Tech>();
-        foreach (Tech t in tree[nodeIdx].requirements)
+        HashSet<TechBase> allRequirements = (includeSelfRequirements) ? new HashSet<TechBase>(tree[nodeIdx].techRequirements) : new HashSet<TechBase>();
+        foreach (TechBase t in tree[nodeIdx].techRequirements)
         {
             allRequirements.UnionWith(GetAllPastRequirements(FindTechIndex(t)));
         }
@@ -92,11 +92,11 @@ public class TechTree : ScriptableObject
 
     public void CorrectRequirementCascades(int idx)
     {
-        HashSet<Tech> allConnectedThroughChildren = GetAllPastRequirements(idx, false);
-        foreach (Tech t in allConnectedThroughChildren)
+        HashSet<TechBase> allConnectedThroughChildren = GetAllPastRequirements(idx, false);
+        foreach (TechBase t in allConnectedThroughChildren)
         {
-            if (tree[idx].requirements.Contains(t))
-                tree[idx].requirements.Remove(t);
+            if (tree[idx].techRequirements.Contains(t))
+                tree[idx].techRequirements.Remove(t);
         }
     }
 }

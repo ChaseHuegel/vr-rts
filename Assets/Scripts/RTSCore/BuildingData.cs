@@ -4,26 +4,25 @@ using UnityEngine;
 using Swordfish.Audio;
 
 [CreateAssetMenu(fileName = "New Building", menuName = "RTS/Buildings/Building Data")]
-public class BuildingData : ScriptableObject
+public class BuildingData : TechBase
 {
-    public RTSBuildingType buildingType;
-    public string buildingTitle;
+    [Header("Building Settings")]
+    public RTSBuildingType buildingType;    
     public ResourceGatheringType dropoffTypes;
-    public int goldCost;
-    public int stoneCost;
-    public int grainCost;
-    public int woodCost;    
+
+    [Header("Stats")]
     public int populationSupported;
     public int maxUnitQueueSize;
-    public int hitPoints;
+    public int maximumHitPoints;
     public int garrisonCapacity;
     public int armor;
+
+    [Header("Additional Visuals")]
     public GameObject menuPreviewPrefab;
     public GameObject fadedPreviewPrefab;
     public GameObject worldPreviewPrefab;
     public GameObject throwablePrefab;
     public GameObject constructablePrefab;
-    public GameObject worldPrefab;
     
     [Header("Wall Specific Prefabs")]
     public GameObject diagonalWorldPrefab;

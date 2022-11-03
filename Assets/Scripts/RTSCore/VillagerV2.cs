@@ -168,7 +168,10 @@ public class VillagerV2 : UnitV2
 
     private void UpdateCurrentToolObject()
     {
+        if (CurrentToolObject == null) return;
+
         CurrentToolObject?.gameObject.SetActive(false);
+        
         switch (State)
         {
             case ActorAnimationState.FARMING:
@@ -200,6 +203,8 @@ public class VillagerV2 : UnitV2
 
     private void UpdateCurrentCargoObject(bool visible)
     {
+        if (CurrentCargoObject == null) return;
+        
         CurrentCargoObject?.gameObject.SetActive(false);
         switch (CargoType)
         {

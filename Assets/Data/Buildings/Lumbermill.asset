@@ -12,16 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c98206bdc9ffd5547bf4552bd13d2c59, type: 3}
   m_Name: Lumbermill
   m_EditorClassIdentifier: 
-  buildingType: 50
-  buildingTitle: Lumbermill
-  dropoffTypes: 2
+  title: Lumbermill
+  description: 
+  queueResearchTime: 25
+  worldPrefab: {fileID: 4010404002518432691, guid: b21d78fc293e6cd469fd99d8ad86baf6,
+    type: 3}
+  worldButtonMaterial: {fileID: 0}
+  worldQueueImage: {fileID: 0}
+  populationCost: 0
   goldCost: 0
   stoneCost: 0
-  grainCost: 0
+  foodCost: 0
   woodCost: 100
+  buildingType: 50
+  dropoffTypes: 2
   populationSupported: 0
   maxUnitQueueSize: 0
-  hitPoints: 600
+  maximumHitPoints: 400
   garrisonCapacity: 0
   armor: 3
   menuPreviewPrefab: {fileID: 4151463967089826984, guid: ee1e8b510081c2b409f24c7dd42ae794,
@@ -34,8 +41,9 @@ MonoBehaviour:
     type: 3}
   constructablePrefab: {fileID: 3751477644729445648, guid: 9c43d138d2d1597488470adae66a97e1,
     type: 3}
-  worldPrefab: {fileID: 4010404002518432691, guid: b21d78fc293e6cd469fd99d8ad86baf6,
-    type: 3}
+  diagonalWorldPrefab: {fileID: 0}
+  diagonalWorldPreviewPrefab: {fileID: 0}
+  diagonalConstructablePrefab: {fileID: 0}
   boundingDimensionX: 5
   boundingDimensionY: 5
   allowedUnitsToSpawn: 

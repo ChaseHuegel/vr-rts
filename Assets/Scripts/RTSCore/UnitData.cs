@@ -4,13 +4,12 @@ using Swordfish.Audio;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Unit", menuName = "RTS/Units/Unit Data")]
-public class UnitData : TechData
+public class UnitData : TechBase
 {
+    [Header("Unit Settings")]
     public RTSUnitType unitType;
-    public float queueTime;
-    public GameObject prefab;
-    public Sprite queueImage;
-    public Material worldButtonMaterial;
+
+    [Header("Work Rates")]  
     public float buildRate;
     public float foragingRate;
     public float repairRate;
@@ -20,12 +19,9 @@ public class UnitData : TechData
     public float huntingRate;
     public float lumberjackingRate;
     public float fishingRate;
-    public int populationCost;
-    public int goldCost;
-    public int stoneCost;
-    public int foodCost;
-    public int woodCost;
-    public int maxHitPoints;
+
+    [Header("Stats")]
+    public int maximumHitPoints;
     public int maxCargo;
     public float huntingDamage;
     public int attackRange;

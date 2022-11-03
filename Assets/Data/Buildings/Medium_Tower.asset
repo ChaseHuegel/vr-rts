@@ -12,16 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c98206bdc9ffd5547bf4552bd13d2c59, type: 3}
   m_Name: Medium_Tower
   m_EditorClassIdentifier: 
-  buildingType: 80
-  buildingTitle: Medium Tower
-  dropoffTypes: 0
+  title: Medium Tower
+  description: 
+  queueResearchTime: 25
+  worldPrefab: {fileID: 8905833925575283104, guid: 185e34e9862201948b1dd9dcadae9aa8,
+    type: 3}
+  worldButtonMaterial: {fileID: 0}
+  worldQueueImage: {fileID: 0}
+  populationCost: 0
   goldCost: 0
   stoneCost: 125
-  grainCost: 0
+  foodCost: 0
   woodCost: 50
+  buildingType: 80
+  dropoffTypes: 0
   populationSupported: 0
   maxUnitQueueSize: 0
-  hitPoints: 1020
+  maximumHitPoints: 400
   garrisonCapacity: 5
   armor: 1
   menuPreviewPrefab: {fileID: 4025662162652270195, guid: 2edafdcfd113435418cf1538e27ec7b1,
@@ -34,8 +41,9 @@ MonoBehaviour:
     type: 3}
   constructablePrefab: {fileID: 4269768954843084711, guid: 93efd0891275b2e4d90558c8815ed7b2,
     type: 3}
-  worldPrefab: {fileID: 8905833925575283104, guid: 185e34e9862201948b1dd9dcadae9aa8,
-    type: 3}
+  diagonalWorldPrefab: {fileID: 0}
+  diagonalWorldPreviewPrefab: {fileID: 0}
+  diagonalConstructablePrefab: {fileID: 0}
   boundingDimensionX: 2
   boundingDimensionY: 2
   allowedUnitsToSpawn: 

@@ -219,7 +219,7 @@ public class MenuBuilding : Throwable
 
             BuildingData buildingData = GameMaster.GetBuilding(buildMenuSlot.rtsTypeData.buildingType);
 
-            PlayerManager.instance.DeductResourcesFromStockpile(buildingData.goldCost, buildingData.grainCost,
+            PlayerManager.instance.DeductResourcesFromStockpile(buildingData.goldCost, buildingData.foodCost,
                                                buildingData.woodCost, buildingData.stoneCost);
 
 

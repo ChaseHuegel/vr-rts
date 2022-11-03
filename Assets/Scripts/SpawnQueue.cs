@@ -105,10 +105,14 @@ public class SpawnQueue : MonoBehaviour
         if (unitSpawnQueue.Count >= structure.buildingData.maxUnitQueueSize)
             return false;
 
-        if (!structure.Faction.IsSameFaction(playerManager.faction) || !playerManager.CanQueueUnit(unitTypeToQueue))
+        if (!structure.Faction.IsSameFaction(playerManager.faction))
             return false;
 
         UnitData unitData = GameMaster.GetUnit(unitTypeToQueue);
+
+        if (!playerManager.CanQueueUnit(unitData))
+            return false;
+
         playerManager.DeductUnitQueueCostFromStockpile(unitData);
         unitSpawnQueue.AddLast(unitData);
         RefreshQueueImages();
@@ -120,11 +124,11 @@ public class SpawnQueue : MonoBehaviour
         if (unitSpawnQueue.Count > 0)
         {
             timeElapsed += Time.deltaTime;
-            progressImage.fillAmount = (timeElapsed / unitSpawnQueue.First.Value.queueTime);
+            progressImage.fillAmount = (timeElapsed / unitSpawnQueue.First.Value.queueResearchTime);
             float progressPercent = UnityEngine.Mathf.Round(progressImage.fillAmount * 100);
             progressText.text = progressPercent.ToString() + "%";
 
-            if (timeElapsed >= unitSpawnQueue.First.Value.queueTime)
+            if (timeElapsed >= unitSpawnQueue.First.Value.queueResearchTime)
             {
                 SpawnUnit();
                 timeElapsed = 0.0f;
@@ -168,9 +172,9 @@ public class SpawnQueue : MonoBehaviour
 
     private void SpawnUnit()
     {
-        if (unitSpawnQueue.First.Value.prefab)
+        if (unitSpawnQueue.First.Value.worldPrefab)
         {
-            GameObject unitGameObject = Instantiate(unitSpawnQueue.First.Value.prefab, unitSpawnPoint.transform.position, Quaternion.identity);
+            GameObject unitGameObject = Instantiate(unitSpawnQueue.First.Value.worldPrefab, unitSpawnPoint.transform.position, Quaternion.identity);
             UnitV2 unit = unitGameObject.GetComponent<UnitV2>();
             unit.Faction = structure.Faction;
             unit.SetUnitType(unitSpawnQueue.First.Value.unitType);
@@ -196,7 +200,7 @@ public class SpawnQueue : MonoBehaviour
         int i = 0;
         foreach (UnitData unitData in unitSpawnQueue)
         {
-            queueSlotImages[i].overrideSprite = unitData.queueImage;
+            queueSlotImages[i].overrideSprite = unitData.worldQueueImage;
             i++;
 
             if (i >= unitSpawnQueue.Count)

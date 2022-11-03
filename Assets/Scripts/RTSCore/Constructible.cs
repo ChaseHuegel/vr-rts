@@ -17,7 +17,7 @@ public class Constructible : Obstacle
     {
         base.Initialize();
 
-        Attributes.AddOrUpdate(AttributeConstants.HEALTH, 0f, buildingData.hitPoints);
+        Attributes.AddOrUpdate(AttributeConstants.HEALTH, 0f, buildingData.maximumHitPoints);
         OnHealthRegainEvent += OnBuild;
 
         ResetStages();

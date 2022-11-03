@@ -68,7 +68,7 @@ public abstract class UnitV2 : ActorV2
     {
         Attributes.Get(AttributeConstants.ATTACK_RANGE).Value = data.attackRange;
         Attributes.Get(AttributeConstants.DAMAGE).MaxValue = data.attackDamage;
-        Attributes.Get(AttributeConstants.HEALTH).MaxValue = data.maxHitPoints;
+        Attributes.Get(AttributeConstants.HEALTH).MaxValue = data.maximumHitPoints;
     }
 
     protected override void OnFallingOntoBody(Body body)

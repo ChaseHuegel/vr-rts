@@ -12,16 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c98206bdc9ffd5547bf4552bd13d2c59, type: 3}
   m_Name: Farm
   m_EditorClassIdentifier: 
-  buildingType: 25
-  buildingTitle: Farm
-  dropoffTypes: 0
+  title: Farm
+  description: 
+  queueResearchTime: 25
+  worldPrefab: {fileID: 899507145775679583, guid: 98885f5b4fafa1c4d9c5fb6ecd229b0b,
+    type: 3}
+  worldButtonMaterial: {fileID: 0}
+  worldQueueImage: {fileID: 0}
+  populationCost: 0
   goldCost: 0
   stoneCost: 0
-  grainCost: 0
+  foodCost: 0
   woodCost: 60
+  buildingType: 25
+  dropoffTypes: 0
   populationSupported: 0
   maxUnitQueueSize: 0
-  hitPoints: 480
+  maximumHitPoints: 400
   garrisonCapacity: 0
   armor: 0
   menuPreviewPrefab: {fileID: 5959110493158330457, guid: 0a1c68b0b59c9bd438a05b408bbe3982,
@@ -34,8 +41,9 @@ MonoBehaviour:
     type: 3}
   constructablePrefab: {fileID: 8175526638185069591, guid: 401c6d31099149f4b99802c4f1bb1487,
     type: 3}
-  worldPrefab: {fileID: 899507145775679583, guid: 98885f5b4fafa1c4d9c5fb6ecd229b0b,
-    type: 3}
+  diagonalWorldPrefab: {fileID: 0}
+  diagonalWorldPreviewPrefab: {fileID: 0}
+  diagonalConstructablePrefab: {fileID: 0}
   boundingDimensionX: 5
   boundingDimensionY: 5
   allowedUnitsToSpawn: 

@@ -12,16 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c98206bdc9ffd5547bf4552bd13d2c59, type: 3}
   m_Name: Wood_Wall_Gate
   m_EditorClassIdentifier: 
-  buildingType: 100
-  buildingTitle: Wood Gate
-  dropoffTypes: 0
+  title: Wood Gate
+  description: 
+  queueResearchTime: 25
+  worldPrefab: {fileID: 5733846702584742329, guid: d3ab26c87f1150e449edc2209da1f2e9,
+    type: 3}
+  worldButtonMaterial: {fileID: 0}
+  worldQueueImage: {fileID: 0}
+  populationCost: 0
   goldCost: 0
   stoneCost: 0
-  grainCost: 0
+  foodCost: 0
   woodCost: 30
+  buildingType: 100
+  dropoffTypes: 0
   populationSupported: 0
   maxUnitQueueSize: 0
-  hitPoints: 400
+  maximumHitPoints: 400
   garrisonCapacity: 0
   armor: 2
   menuPreviewPrefab: {fileID: 2468851729165047813, guid: f36f547e7a0373547ba062c152842b8d,
@@ -33,8 +40,6 @@ MonoBehaviour:
   throwablePrefab: {fileID: 8908048140912160582, guid: 51c6117db052e2c45a7a07f027e63b51,
     type: 3}
   constructablePrefab: {fileID: 549320164299014470, guid: 1f168937329b08b48a382ff40ff718c6,
-    type: 3}
-  worldPrefab: {fileID: 5733846702584742329, guid: d3ab26c87f1150e449edc2209da1f2e9,
     type: 3}
   diagonalWorldPrefab: {fileID: 0}
   diagonalWorldPreviewPrefab: {fileID: 0}

@@ -12,16 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c98206bdc9ffd5547bf4552bd13d2c59, type: 3}
   m_Name: Castle
   m_EditorClassIdentifier: 
-  buildingType: 20
-  buildingTitle: Castle
-  dropoffTypes: 0
+  title: Castle
+  description: 
+  queueResearchTime: 25
+  worldPrefab: {fileID: 3697986734218680999, guid: 57f7f6d8cf839f84ab070fa4a4b926da,
+    type: 3}
+  worldButtonMaterial: {fileID: 0}
+  worldQueueImage: {fileID: 0}
+  populationCost: 0
   goldCost: 0
   stoneCost: 650
-  grainCost: 0
+  foodCost: 0
   woodCost: 0
+  buildingType: 20
+  dropoffTypes: 0
   populationSupported: 0
   maxUnitQueueSize: 12
-  hitPoints: 4800
+  maximumHitPoints: 400
   garrisonCapacity: 20
   armor: 8
   menuPreviewPrefab: {fileID: 5201421250654291111, guid: af5cd82d7b350a14fbd9db59f76e884f,
@@ -34,8 +41,9 @@ MonoBehaviour:
     type: 3}
   constructablePrefab: {fileID: 5275766485864662824, guid: 041d7b192105c7949a4bc280103b8436,
     type: 3}
-  worldPrefab: {fileID: 3697986734218680999, guid: 57f7f6d8cf839f84ab070fa4a4b926da,
-    type: 3}
+  diagonalWorldPrefab: {fileID: 0}
+  diagonalWorldPreviewPrefab: {fileID: 0}
+  diagonalConstructablePrefab: {fileID: 0}
   boundingDimensionX: 6
   boundingDimensionY: 6
   allowedUnitsToSpawn: 

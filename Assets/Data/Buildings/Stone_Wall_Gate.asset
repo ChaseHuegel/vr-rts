@@ -12,16 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c98206bdc9ffd5547bf4552bd13d2c59, type: 3}
   m_Name: Stone_Wall_Gate
   m_EditorClassIdentifier: 
-  buildingType: 120
-  buildingTitle: Stone Gate
-  dropoffTypes: 0
+  title: Stone Gate
+  description: 
+  queueResearchTime: 25
+  worldPrefab: {fileID: 3693272101881856475, guid: cb351a5712ec3964fa58db3461a9a822,
+    type: 3}
+  worldButtonMaterial: {fileID: 0}
+  worldQueueImage: {fileID: 0}
+  populationCost: 0
   goldCost: 0
   stoneCost: 30
-  grainCost: 0
+  foodCost: 0
   woodCost: 0
+  buildingType: 120
+  dropoffTypes: 0
   populationSupported: 0
   maxUnitQueueSize: 0
-  hitPoints: 1375
+  maximumHitPoints: 400
   garrisonCapacity: 0
   armor: 6
   menuPreviewPrefab: {fileID: 7623648367863573768, guid: 84ef2f52640894c4e8f8855f4e1364af,
@@ -34,8 +41,9 @@ MonoBehaviour:
     type: 3}
   constructablePrefab: {fileID: 2631679092763983175, guid: a43ddfbbcfffa5243bdb1fcad4f39a5b,
     type: 3}
-  worldPrefab: {fileID: 3693272101881856475, guid: cb351a5712ec3964fa58db3461a9a822,
-    type: 3}
+  diagonalWorldPrefab: {fileID: 0}
+  diagonalWorldPreviewPrefab: {fileID: 0}
+  diagonalConstructablePrefab: {fileID: 0}
   boundingDimensionX: 3
   boundingDimensionY: 3
   allowedUnitsToSpawn: 

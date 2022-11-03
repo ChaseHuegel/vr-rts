@@ -12,16 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c98206bdc9ffd5547bf4552bd13d2c59, type: 3}
   m_Name: Light_Tower
   m_EditorClassIdentifier: 
-  buildingType: 75
-  buildingTitle: Light Tower
-  dropoffTypes: 0
+  title: Light Tower
+  description: 
+  queueResearchTime: 25
+  worldPrefab: {fileID: 1455828424763799127, guid: 915b7d9c6541cf148af8e493d99db2e6,
+    type: 3}
+  worldButtonMaterial: {fileID: 0}
+  worldQueueImage: {fileID: 0}
+  populationCost: 0
   goldCost: 0
   stoneCost: 5
-  grainCost: 0
+  foodCost: 0
   woodCost: 25
+  buildingType: 75
+  dropoffTypes: 0
   populationSupported: 0
   maxUnitQueueSize: 0
-  hitPoints: 500
+  maximumHitPoints: 400
   garrisonCapacity: 0
   armor: 0
   menuPreviewPrefab: {fileID: 376012215637104550, guid: 436d47972a756144691b739203941859,
@@ -34,8 +41,9 @@ MonoBehaviour:
     type: 3}
   constructablePrefab: {fileID: 6648873963455101234, guid: 9373f35684af6ae4ead0754770d3c1fc,
     type: 3}
-  worldPrefab: {fileID: 1455828424763799127, guid: 915b7d9c6541cf148af8e493d99db2e6,
-    type: 3}
+  diagonalWorldPrefab: {fileID: 0}
+  diagonalWorldPreviewPrefab: {fileID: 0}
+  diagonalConstructablePrefab: {fileID: 0}
   boundingDimensionX: 2
   boundingDimensionY: 2
   allowedUnitsToSpawn: 

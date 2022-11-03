@@ -43,7 +43,7 @@ public class ThrowableBuilding : Throwable
 
             // Remove resources only when valid placement.
             PlayerManager.instance.DeductResourcesFromStockpile(rtsBuildingTypeData.goldCost,
-                                                rtsBuildingTypeData.grainCost,
+                                                rtsBuildingTypeData.foodCost,
                                                 rtsBuildingTypeData.woodCost,
                                                 rtsBuildingTypeData.stoneCost);
         }

@@ -12,16 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c98206bdc9ffd5547bf4552bd13d2c59, type: 3}
   m_Name: Townhall
   m_EditorClassIdentifier: 
-  buildingType: 85
-  buildingTitle: Town Hall
-  dropoffTypes: -1
+  title: Town Hall
+  description: 
+  queueResearchTime: 25
+  worldPrefab: {fileID: 1129064322338806663, guid: 9b01cde0f07486643a93faa1b4864738,
+    type: 3}
+  worldButtonMaterial: {fileID: 0}
+  worldQueueImage: {fileID: 0}
+  populationCost: 0
   goldCost: 0
   stoneCost: 100
-  grainCost: 0
+  foodCost: 0
   woodCost: 275
+  buildingType: 85
+  dropoffTypes: -1
   populationSupported: 5
   maxUnitQueueSize: 12
-  hitPoints: 2400
+  maximumHitPoints: 400
   garrisonCapacity: 15
   armor: 6
   menuPreviewPrefab: {fileID: 3524930301159418664, guid: d69494ea3f8ed644f8dfb3599c37b0b4,
@@ -34,8 +41,9 @@ MonoBehaviour:
     type: 3}
   constructablePrefab: {fileID: 7212294710510692635, guid: c6e9484158744d24c97a04c7c1cf9345,
     type: 3}
-  worldPrefab: {fileID: 1129064322338806663, guid: 9b01cde0f07486643a93faa1b4864738,
-    type: 3}
+  diagonalWorldPrefab: {fileID: 0}
+  diagonalWorldPreviewPrefab: {fileID: 0}
+  diagonalConstructablePrefab: {fileID: 0}
   boundingDimensionX: 6
   boundingDimensionY: 6
   allowedUnitsToSpawn: 020000000300000005000000060000000100000004000000

@@ -458,7 +458,7 @@ public class PlayerManager : MonoBehaviour
     {
         BuildingData buildingData = GameMaster.GetBuilding(buildingType);
         if (buildingData.goldCost > goldCollected || buildingData.woodCost > woodCollected ||
-            buildingData.grainCost > foodCollected || buildingData.stoneCost > stoneCollected)
+            buildingData.foodCost > foodCollected || buildingData.stoneCost > stoneCollected)
         {
             return false;
         }
@@ -466,9 +466,13 @@ public class PlayerManager : MonoBehaviour
         return true;
     }
 
-    public bool CanQueueUnit(RTSUnitType unitType)
+    public bool CanQueueUnit(UnitData unitData)
     {
-        UnitData unitData = GameMaster.GetUnit(unitType);
+        TechNode node = faction.techTree.tree.Find(x => x.tech == unitData);
+        
+        if (!node.unlocked)
+            return false;
+
         if (goldCollected < unitData.goldCost || woodCollected < unitData.woodCost ||
             foodCollected < unitData.foodCost || stoneCollected < unitData.stoneCost)
         {
@@ -486,7 +490,7 @@ public class PlayerManager : MonoBehaviour
 
     public void DeductBuildingCost(BuildingData buildingData)
     {
-        DeductResourcesFromStockpile(buildingData.goldCost, buildingData.grainCost, buildingData.woodCost, buildingData.stoneCost);
+        DeductResourcesFromStockpile(buildingData.goldCost, buildingData.foodCost, buildingData.woodCost, buildingData.stoneCost);
     }
 
     public void DeductUnitQueueCostFromStockpile(UnitData unitType)

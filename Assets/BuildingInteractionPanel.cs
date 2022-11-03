@@ -124,7 +124,7 @@ public class BuildingInteractionPanel : MonoBehaviour
         InitializeInteractionPanel();
         
         if (title == "")
-            title = this.gameObject.GetComponent<Structure>().buildingData.buildingTitle;
+            title = this.gameObject.GetComponent<Structure>().buildingData.title;
 
         if (enableTitleDisplay)
             InitializeTitleDisplay();

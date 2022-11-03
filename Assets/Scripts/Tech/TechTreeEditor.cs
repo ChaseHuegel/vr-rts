@@ -57,14 +57,14 @@ public class TechTreeEditor : Editor
             // Draw node
             Rect nodeRect = new Rect(targetTree.tree[nodeIdx].UIposition - scrollPosition, nodeSize);
             EditorGUI.BeginFoldoutHeaderGroup(nodeRect, true, targetTree.tree[nodeIdx].tech.name, (selectedNode == targetTree.tree[nodeIdx] ? selectedStyle : nodeStyle));
-            EditorGUI.LabelField(new Rect(targetTree.tree[nodeIdx].UIposition - scrollPosition + nextLineVec, nodeLabelSize), "Research Cost");
-            targetTree.tree[nodeIdx].researchCost = EditorGUI.IntField(new Rect(targetTree.tree[nodeIdx].UIposition - scrollPosition + nextLineVec + indentVec, nodeContentSize), targetTree.tree[nodeIdx].researchCost);
-            EditorGUI.LabelField(new Rect(targetTree.tree[nodeIdx].UIposition - scrollPosition + nextLineVec * 2, nodeLabelSize), "Invested");
-            targetTree.tree[nodeIdx].researchInvested = EditorGUI.IntField(new Rect(targetTree.tree[nodeIdx].UIposition - scrollPosition + nextLineVec * 2 + indentVec, nodeContentSize), targetTree.tree[nodeIdx].researchInvested);
+            EditorGUI.LabelField(new Rect(targetTree.tree[nodeIdx].UIposition - scrollPosition + nextLineVec, nodeLabelSize), "Unlocked");
+            targetTree.tree[nodeIdx].unlocked = EditorGUI.Toggle(new Rect(targetTree.tree[nodeIdx].UIposition - scrollPosition + nextLineVec + indentVec, nodeContentSize), targetTree.tree[nodeIdx].unlocked);
+            EditorGUI.LabelField(new Rect(targetTree.tree[nodeIdx].UIposition - scrollPosition + nextLineVec * 2, nodeLabelSize), "Researched");
+            targetTree.tree[nodeIdx].researched = EditorGUI.Toggle(new Rect(targetTree.tree[nodeIdx].UIposition - scrollPosition + nextLineVec * 2 + indentVec, nodeContentSize), targetTree.tree[nodeIdx].researched);
             EditorGUI.EndFoldoutHeaderGroup();
 
             // Draw Connections
-            foreach (Tech req in targetTree.tree[nodeIdx].requirements)
+            foreach (TechBase req in targetTree.tree[nodeIdx].techRequirements)
             {
                 int reqIdx = targetTree.FindTechIndex(req);
                 if (reqIdx != -1)
@@ -109,14 +109,14 @@ public class TechTreeEditor : Editor
                     if (currentEvent.button == 1 && selectedNode != null && selectedNode != targetTree.tree[nodeIdx])
                     {
                         // Remove any connection between the selectedNode and hovered node if exists
-                        if (targetTree.tree[nodeIdx].requirements.Contains(selectedNode.tech))
-                            targetTree.tree[nodeIdx].requirements.Remove(selectedNode.tech);
-                        else if (selectedNode.requirements.Contains(targetTree.tree[nodeIdx].tech))
-                            selectedNode.requirements.Remove(targetTree.tree[nodeIdx].tech);
+                        if (targetTree.tree[nodeIdx].techRequirements.Contains(selectedNode.tech))
+                            targetTree.tree[nodeIdx].techRequirements.Remove(selectedNode.tech);
+                        else if (selectedNode.techRequirements.Contains(targetTree.tree[nodeIdx].tech))
+                            selectedNode.techRequirements.Remove(targetTree.tree[nodeIdx].tech);
                         // If doesn't exist and they are connectible then create a connection
                         else if (targetTree.IsConnectible(targetTree.tree.IndexOf(selectedNode), nodeIdx))
                         {
-                            targetTree.tree[nodeIdx].requirements.Add(selectedNode.tech);
+                            targetTree.tree[nodeIdx].techRequirements.Add(selectedNode.tech);
 
                             // Creating connection may annul other requirement connections, so check all connections.
                             for (int k = 0; k < targetTree.tree.Count; k++)
@@ -171,8 +171,8 @@ public class TechTreeEditor : Editor
         {
             for (int i = 0; i < DragAndDrop.objectReferences.Length; i++)
             {
-                if (DragAndDrop.objectReferences[i] is Tech)
-                    targetTree.AddNode(DragAndDrop.objectReferences[i] as Tech, currentEvent.mousePosition + scrollPosition);
+                if (DragAndDrop.objectReferences[i] is TechBase)
+                    targetTree.AddNode(DragAndDrop.objectReferences[i] as TechBase, currentEvent.mousePosition + scrollPosition);
             }
         }
         EditorGUILayout.EndScrollView();

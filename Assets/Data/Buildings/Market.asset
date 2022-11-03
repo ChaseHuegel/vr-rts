@@ -12,16 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c98206bdc9ffd5547bf4552bd13d2c59, type: 3}
   m_Name: Market
   m_EditorClassIdentifier: 
-  buildingType: 55
-  buildingTitle: Market
-  dropoffTypes: 0
+  title: Market
+  description: 
+  queueResearchTime: 25
+  worldPrefab: {fileID: 7463673549537866113, guid: 26601efefc4db0e4fa8a58dada0b12b9,
+    type: 3}
+  worldButtonMaterial: {fileID: 0}
+  worldQueueImage: {fileID: 0}
+  populationCost: 0
   goldCost: 0
   stoneCost: 0
-  grainCost: 0
+  foodCost: 0
   woodCost: 175
+  buildingType: 55
+  dropoffTypes: 0
   populationSupported: 0
   maxUnitQueueSize: 0
-  hitPoints: 2100
+  maximumHitPoints: 400
   garrisonCapacity: 0
   armor: 3
   menuPreviewPrefab: {fileID: 4637506749218922857, guid: de48df9b807a76b4a9f9ec36753b52b6,
@@ -34,8 +41,9 @@ MonoBehaviour:
     type: 3}
   constructablePrefab: {fileID: 4440964997498988252, guid: 6f74d8eea3555774eadf892c1a06f430,
     type: 3}
-  worldPrefab: {fileID: 7463673549537866113, guid: 26601efefc4db0e4fa8a58dada0b12b9,
-    type: 3}
+  diagonalWorldPrefab: {fileID: 0}
+  diagonalWorldPreviewPrefab: {fileID: 0}
+  diagonalConstructablePrefab: {fileID: 0}
   boundingDimensionX: 5
   boundingDimensionY: 5
   allowedUnitsToSpawn: 

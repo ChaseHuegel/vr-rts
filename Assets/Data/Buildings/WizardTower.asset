@@ -12,16 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c98206bdc9ffd5547bf4552bd13d2c59, type: 3}
   m_Name: WizardTower
   m_EditorClassIdentifier: 
-  buildingType: 130
-  buildingTitle: Wizard Tower
-  dropoffTypes: 0
+  title: Wizard Tower
+  description: 
+  queueResearchTime: 25
+  worldPrefab: {fileID: 9170575514898702114, guid: 1a4eeab84e293dc47a281978fb1688a9,
+    type: 3}
+  worldButtonMaterial: {fileID: 0}
+  worldQueueImage: {fileID: 0}
+  populationCost: 0
   goldCost: 0
   stoneCost: 0
-  grainCost: 0
+  foodCost: 0
   woodCost: 100
+  buildingType: 130
+  dropoffTypes: 0
   populationSupported: 0
   maxUnitQueueSize: 12
-  hitPoints: 2100
+  maximumHitPoints: 400
   garrisonCapacity: 10
   armor: 3
   menuPreviewPrefab: {fileID: 9074834670005875286, guid: efeee9ae722d5f34eba66a949ce204ce,
@@ -34,8 +41,9 @@ MonoBehaviour:
     type: 3}
   constructablePrefab: {fileID: 2771461051004945865, guid: 0439d179d04988046a7f538eb64b9122,
     type: 3}
-  worldPrefab: {fileID: 9170575514898702114, guid: 1a4eeab84e293dc47a281978fb1688a9,
-    type: 3}
+  diagonalWorldPrefab: {fileID: 0}
+  diagonalWorldPreviewPrefab: {fileID: 0}
+  diagonalConstructablePrefab: {fileID: 0}
   boundingDimensionX: 5
   boundingDimensionY: 5
   allowedUnitsToSpawn: 

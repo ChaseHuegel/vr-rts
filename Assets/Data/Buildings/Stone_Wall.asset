@@ -12,16 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c98206bdc9ffd5547bf4552bd13d2c59, type: 3}
   m_Name: Stone_Wall
   m_EditorClassIdentifier: 
-  buildingType: 125
-  buildingTitle: Stone Wall
-  dropoffTypes: 0
+  title: Stone Wall
+  description: 
+  queueResearchTime: 25
+  worldPrefab: {fileID: 5451351604132603944, guid: 293682153f9dd6945adf5091d7b54634,
+    type: 3}
+  worldButtonMaterial: {fileID: 0}
+  worldQueueImage: {fileID: 0}
+  populationCost: 0
   goldCost: 0
   stoneCost: 15
-  grainCost: 0
+  foodCost: 0
   woodCost: 0
+  buildingType: 125
+  dropoffTypes: 0
   populationSupported: 0
   maxUnitQueueSize: 0
-  hitPoints: 900
+  maximumHitPoints: 400
   garrisonCapacity: 0
   armor: 8
   menuPreviewPrefab: {fileID: 2211096185657315397, guid: a03da76f79ceab94c8a45b1533ec729d,
@@ -33,8 +40,6 @@ MonoBehaviour:
   throwablePrefab: {fileID: 8379863153287022399, guid: 4ec37d6fb62504047843f8fa3244d772,
     type: 3}
   constructablePrefab: {fileID: 6766085133381536399, guid: e5ed527bdf002224ba41a539a90f5ff0,
-    type: 3}
-  worldPrefab: {fileID: 5451351604132603944, guid: 293682153f9dd6945adf5091d7b54634,
     type: 3}
   diagonalWorldPrefab: {fileID: 0}
   diagonalWorldPreviewPrefab: {fileID: 0}

@@ -540,7 +540,7 @@ public class InteractionPointer : MonoBehaviour
                 PlayBuildingPlacementAllowedAudio();
                 Instantiate(placementBuildingData.constructablePrefab, buildingPlacementPreviewObject.transform.position, buildingPlacementPreviewObject.transform.rotation);
                 PlayerManager.instance.DeductResourcesFromStockpile(placementBuildingData.goldCost,
-                                                placementBuildingData.grainCost,
+                                                placementBuildingData.foodCost,
                                                 placementBuildingData.woodCost,
                                                 placementBuildingData.stoneCost);
             }
