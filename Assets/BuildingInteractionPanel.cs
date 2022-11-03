@@ -90,7 +90,8 @@ public class BuildingInteractionPanel : MonoBehaviour
     [Header("Queue Menu Queue Slot Settings")]
     public byte numberOfQueueSlots = 12;
     public Sprite emptyQueueSlotSprite;
-    
+    public GameObject buttonLockPrefab;
+
     private float queueSlotSize = 1.0f;
     private float spaceBetweenQueueSlots = 0.025f;
     private UnityEngine.UI.Image[] queueSlotImages;
@@ -111,7 +112,7 @@ public class BuildingInteractionPanel : MonoBehaviour
     private Vector3 cancelButtonPosition;
     private SpawnQueue spawnQueue;
     private Damageable damageable;
-    public GameObject cancelButtonGameObject;
+    private GameObject cancelButtonGameObject;
 
     void Awake()
     {
@@ -435,17 +436,21 @@ public class BuildingInteractionPanel : MonoBehaviour
         face.transform.SetParent(button.transform, false);
         face.transform.localPosition = new Vector3(0.0f, 0.0f, -0.05f);
         face.transform.localScale = new Vector3(0.85f, 0.85f, 0.15f);
+        
         HoverButton hoverButton = face.GetComponent<HoverButton>();
         hoverButton.localMoveDistance = new Vector3(0, 0, 0.3f);
         face.GetComponent<Interactable>().highlightOnHover = false;
 
         // Lock (child of Button)
-        // GameObject buttonLock = Instantiate<GameObject>(buttonLockPrefab);
-        // buttonLock.name = "_lock";
-        // buttonLock.transform.SetParent(button.transform, false);
-        // buttonLock.transform.localPosition = new Vector3(0.0f, 0.0f, 0.13f);
-        // buttonLock.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
-        // buttonLock.SetActive(false);
+        if (buttonLockPrefab)
+        {
+            GameObject buttonLock = Instantiate<GameObject>(buttonLockPrefab);
+            buttonLock.name = "_lock";
+            buttonLock.transform.SetParent(button.transform, false);
+            buttonLock.transform.localPosition = new Vector3(0.0f, 0.0f, -0.14f);
+            buttonLock.transform.Rotate(0.0f, 180.0f, 0.0f);
+            buttonLock.SetActive(false);
+        }
 
         // MovingPart (child of Face)
         GameObject buttonMovingPart = GameObject.CreatePrimitive(PrimitiveType.Cube);

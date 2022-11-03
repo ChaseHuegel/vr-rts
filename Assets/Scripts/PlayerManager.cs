@@ -468,6 +468,7 @@ public class PlayerManager : MonoBehaviour
 
     public bool CanQueueUnit(UnitData unitData)
     {
+        // Make this unneccassary by having the queue button locked.
         TechNode node = faction.techTree.tree.Find(x => x.tech == unitData);
         
         if (!node.unlocked)
