@@ -99,7 +99,7 @@ public abstract class UnitV2 : ActorV2
 
         if (e.NewValue == true)
         {
-            if (Faction.IsSameFaction(PlayerManager.instance.faction))
+            if (Faction.IsSameFaction(PlayerManager.Instance.faction))
                 AudioSource.PlayOneShot(GameMaster.GetAudio("unit_pickup_friendly").GetClip(), 0.5f);
             else
                 AudioSource.PlayOneShot(GameMaster.GetAudio("unit_pickup_enemy").GetClip(), 0.5f);

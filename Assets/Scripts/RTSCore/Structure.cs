@@ -39,7 +39,7 @@ public class Structure : Obstacle
         AllStructures.Add(this);
 
         // TODO: Will need checks here for multiplayer
-        playerManager = PlayerManager.instance;
+        playerManager = PlayerManager.Instance;
 
         
 

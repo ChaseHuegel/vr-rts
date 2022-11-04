@@ -182,7 +182,7 @@ public class InteractionPointer : MonoBehaviour
     {
         HookIntoEvents();
 
-        playerManager = PlayerManager.instance;
+        playerManager = PlayerManager.Instance;
         headAudioSource.transform.SetParent(Player.instance.hmdTransform);
         headAudioSource.transform.localPosition = Vector3.zero;
         buildingPlacementAllowedSound = GameMaster.Instance.buildingPlacementAllowedSound;
@@ -540,7 +540,7 @@ public class InteractionPointer : MonoBehaviour
             {
                 PlayBuildingPlacementAllowedAudio();
                 Instantiate(placementBuildingData.constructablePrefab, buildingPlacementPreviewObject.transform.position, buildingPlacementPreviewObject.transform.rotation);
-                PlayerManager.instance.DeductResourcesFromStockpile(placementBuildingData.goldCost,
+                PlayerManager.Instance.DeductResourcesFromStockpile(placementBuildingData.goldCost,
                                                 placementBuildingData.foodCost,
                                                 placementBuildingData.woodCost,
                                                 placementBuildingData.stoneCost);

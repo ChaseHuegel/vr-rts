@@ -11,7 +11,7 @@ public class IgnorePanning : MonoBehaviour
 
     void Start()
     {
-        playerManager = PlayerManager.instance;
+        playerManager = PlayerManager.Instance;
     }
     void OnTriggerEnter(Collider other)
     {        

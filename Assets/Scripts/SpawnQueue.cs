@@ -44,7 +44,7 @@ public class SpawnQueue : MonoBehaviour
 
     void Start()
     {
-        playerManager = PlayerManager.instance;
+        playerManager = PlayerManager.Instance;
         //Initialize();
     }
 

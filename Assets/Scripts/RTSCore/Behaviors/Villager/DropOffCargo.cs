@@ -9,7 +9,7 @@ public class DropOffCargo : BehaviorAction<VillagerV2>
 
         GameMaster.SendFloatingIndicator(villager.Target.transform.position, $"+{(int)cargo.Value} {villager.CargoType}", Color.green);
 
-        PlayerManager.instance.AddResourceToStockpile(villager.CargoType, (int)cargo.Value);
+        PlayerManager.Instance.AddResourceToStockpile(villager.CargoType, (int)cargo.Value);
         cargo.Value = 0;
     }
 }

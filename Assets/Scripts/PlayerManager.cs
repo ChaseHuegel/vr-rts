@@ -12,7 +12,7 @@ using Valve.VR.InteractionSystem;
 public class PlayerManager : MonoBehaviour
 {
     [Header("Stats/Resources")]
-    public Faction faction;
+    
     public int woodCollected;
     public int goldCollected;
     public int stoneCollected;
@@ -22,6 +22,7 @@ public class PlayerManager : MonoBehaviour
     public int totalPopulation;
     public int populationLimit;
     public int queueCount;
+    public Faction faction;
 
     [Header("UI")]
     public SteamVR_Action_Boolean handMenuToggle;
@@ -52,7 +53,7 @@ public class PlayerManager : MonoBehaviour
     private Hand leftHand;
     private static PlayerManager _instance;
 
-    public static PlayerManager instance
+    public static PlayerManager Instance
     {
         get
         {
@@ -303,7 +304,7 @@ public class PlayerManager : MonoBehaviour
 
     public void CompleteResearch(TechBase tech)
     {
-        Debug.LogFormat("{0} research complete.", tech.title);
+        Debug.LogFormat("{0} research complete.", tech.title, this);
     }
 
     public void SetRightHandInteraction(bool canInteract)

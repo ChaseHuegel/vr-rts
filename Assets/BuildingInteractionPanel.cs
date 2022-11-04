@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -63,6 +62,9 @@ public class BuildingInteractionPanel : MonoBehaviour
     public Sprite healthBarForeground;
     public Color healthBarForegroundColor = Color.red;
     public Color healthBarTextColor = Color.white;
+
+    // TODO: Optimize - Move generation functions to a seperate class that can
+    // be unloaded once the menus are generated.
 
     [Header("Queue Menu Settings")]
     public bool enableQueueMenu;
@@ -422,7 +424,20 @@ public class BuildingInteractionPanel : MonoBehaviour
 
         QueueUnitButton queueUnitButton = button.GetComponent<QueueUnitButton>();
         queueUnitButton.techToQueue = tech;
-        //queueUnitButton.buttonLockedObject = buttonLockPrefab;
+
+        // Lock (child of Button)
+        if (buttonLockPrefab)
+        {
+            GameObject buttonLock = Instantiate<GameObject>(buttonLockPrefab);
+            buttonLock.name = "_lock";
+            buttonLock.transform.SetParent(button.transform, false);
+            buttonLock.transform.localPosition = new Vector3(0.0f, 0.0f, -0.14f);
+            buttonLock.transform.Rotate(0.0f, 180.0f, 0.0f);
+            
+            buttonLock.SetActive(!PlayerManager.Instance.faction.techTree.FindNode(tech).unlocked);
+
+            queueUnitButton.buttonLockedObject = buttonLock;
+        }
 
         // Base (child of Button)
         GameObject buttonBase = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -452,18 +467,7 @@ public class BuildingInteractionPanel : MonoBehaviour
         
         HoverButton hoverButton = face.GetComponent<HoverButton>();
         hoverButton.localMoveDistance = new Vector3(0, 0, 0.3f);
-        face.GetComponent<Interactable>().highlightOnHover = false;
-
-        // Lock (child of Button)
-        if (buttonLockPrefab)
-        {
-            GameObject buttonLock = Instantiate<GameObject>(buttonLockPrefab);
-            buttonLock.name = "_lock";
-            buttonLock.transform.SetParent(button.transform, false);
-            buttonLock.transform.localPosition = new Vector3(0.0f, 0.0f, -0.14f);
-            buttonLock.transform.Rotate(0.0f, 180.0f, 0.0f);
-            buttonLock.SetActive(false);
-        }
+        face.GetComponent<Interactable>().highlightOnHover = false;        
 
         // MovingPart (child of Face)
         GameObject buttonMovingPart = GameObject.CreatePrimitive(PrimitiveType.Cube);

@@ -15,7 +15,7 @@ public class WallGate : MonoBehaviour
 
     void Start()
     {
-        playerManager = PlayerManager.instance;
+        playerManager = PlayerManager.Instance;
         structure = GetComponentInParent<Structure>();
         animator = GetComponentInChildren<Animator>();
 

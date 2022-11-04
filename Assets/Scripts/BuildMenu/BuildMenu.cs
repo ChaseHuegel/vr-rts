@@ -11,7 +11,7 @@ public class BuildMenu : MonoBehaviour
     protected PlayerManager playerManager;
     void Start()
     {
-        playerManager = PlayerManager.instance;
+        playerManager = PlayerManager.Instance;
         RefreshSlots();
     }
 
@@ -25,7 +25,7 @@ public class BuildMenu : MonoBehaviour
     public void RefreshSlots()
     {
         if (!playerManager)
-            playerManager = PlayerManager.instance;
+            playerManager = PlayerManager.Instance;
             
         foreach(BuildMenuTab tab in tabs)
         {

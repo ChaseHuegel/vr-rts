@@ -37,12 +37,12 @@ public class ThrowableBuilding : Throwable
 
             //  Thrown buildings are the local player's faction
             Constructible constructible = spawned.GetComponent<Constructible>();
-            constructible.Faction = PlayerManager.instance.faction;
+            constructible.Faction = PlayerManager.Instance.faction;
 
             InteractionPointer.instance.PlayBuildingPlacementAllowedAudio();
 
             // Remove resources only when valid placement.
-            PlayerManager.instance.DeductResourcesFromStockpile(rtsBuildingTypeData.goldCost,
+            PlayerManager.Instance.DeductResourcesFromStockpile(rtsBuildingTypeData.goldCost,
                                                 rtsBuildingTypeData.foodCost,
                                                 rtsBuildingTypeData.woodCost,
                                                 rtsBuildingTypeData.stoneCost);

@@ -39,6 +39,27 @@ public class TechTree : ScriptableObject
             return false;
     }
 
+    public void SetNodeToUnlockedAndResearched(TechBase tech)
+    {
+        TechNode techNode = FindNode(tech);
+        techNode.unlocked = techNode.researched = true;
+    }
+
+    public void SetNodeToUnlocked(TechBase tech)
+    {
+        FindNode(tech).unlocked = true;
+    }
+
+    public void SetNodeToResearched(TechBase tech)
+    {
+        FindNode(tech).researched = true;
+    }
+
+    public TechNode FindNode(TechBase tech)
+    {
+        return tree.Find(x => x.tech == tech);
+    }
+
     public void DeleteNode(TechBase tech)
     {
         tree.RemoveAt(FindTechIndex(tech));
