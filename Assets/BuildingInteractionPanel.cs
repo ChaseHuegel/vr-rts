@@ -80,8 +80,7 @@ public class BuildingInteractionPanel : MonoBehaviour
     public Material cancelButtonMaterial;
     public AudioClip onButtonDownAudio;
     public AudioClip onButtonUpAudio;
-    public List<RTSUnitType> queueButtons;
-    public List<RTSTechType> queueTechButtons;
+    public List<TechBase> queueTechButtons;
 
     private float buttonSize = 0.25f;
     private float spaceBetweenButtons = 0.025f;
@@ -332,7 +331,7 @@ public class BuildingInteractionPanel : MonoBehaviour
         
         Vector3 startPosition = Vector3.zero;
         float buttonsTotalWidth = ((buttonSize + spaceBetweenButtons) * maxButtonColumns);
-        int totalRows = Mathf.CeilToInt((float)queueButtons.Count / (float)maxButtonColumns);
+        int totalRows = Mathf.CeilToInt((float)queueTechButtons.Count / (float)maxButtonColumns);
         //float buttonsTotalHeight = ((buttonSize + spaceBetweenButtons) * totalRows);
 
         startPosition.x = buttonsTotalWidth * -0.5f + (buttonSize * 0.5f + spaceBetweenButtons * 0.5f);
@@ -345,12 +344,10 @@ public class BuildingInteractionPanel : MonoBehaviour
         int currentButtonColumn = 0;
         int currentButtonRow = 0;
 
-        foreach (RTSUnitType unitType in queueButtons)
+        foreach (TechBase tech in queueTechButtons)
         {
-            if (unitType == RTSUnitType.None)
-                continue;
+            GenerateQueueButton(tech, nextButtonPosition, buttonsGameObject.transform);
 
-            GenerateQueueUnitButton(unitType, nextButtonPosition, buttonsGameObject.transform);
             currentButtonColumn++;
             if (currentButtonColumn >= maxButtonColumns)
             {
@@ -358,8 +355,24 @@ public class BuildingInteractionPanel : MonoBehaviour
                 currentButtonRow++;
             }
             nextButtonPosition.x = startPosition.x + ((buttonSize + spaceBetweenButtons) * currentButtonColumn);
-            nextButtonPosition.y = startPosition.y - ((buttonSize + spaceBetweenButtons) * currentButtonRow);            
-        }        
+            nextButtonPosition.y = startPosition.y - ((buttonSize + spaceBetweenButtons) * currentButtonRow);
+        }
+
+        // foreach (RTSUnitType unitType in queueButtons)
+        // {
+        //     if (unitType == RTSUnitType.None)
+        //         continue;
+
+        //     GenerateQueueUnitButton(unitType, nextButtonPosition, buttonsGameObject.transform);
+        //     currentButtonColumn++;
+        //     if (currentButtonColumn >= maxButtonColumns)
+        //     {
+        //         currentButtonColumn = 0;
+        //         currentButtonRow++;
+        //     }
+        //     nextButtonPosition.x = startPosition.x + ((buttonSize + spaceBetweenButtons) * currentButtonColumn);
+        //     nextButtonPosition.y = startPosition.y - ((buttonSize + spaceBetweenButtons) * currentButtonRow);            
+        // }        
     }
 
     public void Show()
@@ -395,20 +408,20 @@ public class BuildingInteractionPanel : MonoBehaviour
             healthBarGameObject.SetActive(false);;
     }
     
-    private GameObject GenerateQueueUnitButton(RTSUnitType unitType, Vector3 position, Transform parent)
+    private GameObject GenerateQueueButton(TechBase tech, Vector3 position, Transform parent)
     {
-        UnitData typeData = GameMaster.GetUnit(unitType);
+        //UnitData typeData = GameMaster.GetUnit(unitType);
 
         // Button
         GameObject button = new GameObject("_button", typeof(QueueUnitButton));
         button.transform.SetParent(parent, false);
         button.transform.localPosition = position;
-        button.name = string.Format("_queue_{0}_button", unitType.ToString());
+        button.name = string.Format("_queue_{0}_button", tech.title.ToString());
         button.transform.localScale = new Vector3(buttonSize, buttonSize, buttonSize);
         button.AddComponent<PointerInteractable>();
 
         QueueUnitButton queueUnitButton = button.GetComponent<QueueUnitButton>();
-        queueUnitButton.unitTypeToQueue = unitType;
+        queueUnitButton.techToQueue = tech;
         //queueUnitButton.buttonLockedObject = buttonLockPrefab;
 
         // Base (child of Button)
@@ -459,7 +472,7 @@ public class BuildingInteractionPanel : MonoBehaviour
         buttonMovingPart.transform.SetParent(face.transform, false);
         buttonMovingPart.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
         buttonMovingPart.transform.localPosition = Vector3.zero;
-        buttonMovingPart.transform.GetComponent<MeshRenderer>().sharedMaterial = typeData.worldButtonMaterial;
+        buttonMovingPart.transform.GetComponent<MeshRenderer>().sharedMaterial = tech.worldButtonMaterial;
 
         hoverButton.movingPart = buttonMovingPart.transform;
         button.transform.localRotation = Quaternion.identity;

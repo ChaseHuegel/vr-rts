@@ -164,7 +164,7 @@ public class PlayerManager : MonoBehaviour
         Damageable.OnDeathEvent -= OnDeathEvent;
         Damageable.OnSpawnEvent -= OnSpawnEvent;
     }
-
+    
     public void OnSpawnEvent(object sender, Damageable.SpawnEvent e)
     {
         Body body = e.target.GetComponent<Body>();
@@ -299,6 +299,11 @@ public class PlayerManager : MonoBehaviour
             leftHand.AttachObject(handBuildMenu, GrabTypes.Scripted);
         }
 
+    }
+
+    public void CompleteResearch(TechBase tech)
+    {
+        Debug.LogFormat("{0} research complete.", tech.title);
     }
 
     public void SetRightHandInteraction(bool canInteract)
@@ -466,26 +471,26 @@ public class PlayerManager : MonoBehaviour
         return true;
     }
 
-    public bool CanQueueUnit(UnitData unitData)
+    public bool CanQueueTech(TechBase tech)
     {
         // Make this unneccassary by having the queue button locked.
-        TechNode node = faction.techTree.tree.Find(x => x.tech == unitData);
+        TechNode node = faction.techTree.tree.Find(x => x.tech == tech);
         
-        if (!node.unlocked)
+        if (node == null || !node.unlocked)
             return false;
 
-        if (goldCollected < unitData.goldCost || woodCollected < unitData.woodCost ||
-            foodCollected < unitData.foodCost || stoneCollected < unitData.stoneCost)
+        if (goldCollected < tech.goldCost || woodCollected < tech.woodCost ||
+            foodCollected < tech.foodCost || stoneCollected < tech.stoneCost)
         {
             return false;
         }
 
-        if (unitData.populationCost + totalPopulation + queueCount > populationLimit)
+        if (tech.populationCost + totalPopulation + queueCount > populationLimit)
         {
             return false;
         }
 
-        queueCount += unitData.populationCost;
+        queueCount += tech.populationCost;
         return true;
     }
 
@@ -494,12 +499,12 @@ public class PlayerManager : MonoBehaviour
         DeductResourcesFromStockpile(buildingData.goldCost, buildingData.foodCost, buildingData.woodCost, buildingData.stoneCost);
     }
 
-    public void DeductUnitQueueCostFromStockpile(UnitData unitType)
+    public void DeductTechQueueCostFromStockpile(TechBase tech)
     {
-        woodCollected -= unitType.woodCost;
-        foodCollected -= unitType.foodCost;
-        goldCollected -= unitType.goldCost;
-        stoneCollected -= unitType.stoneCost;
+        woodCollected -= tech.woodCost;
+        foodCollected -= tech.foodCost;
+        goldCollected -= tech.goldCost;
+        stoneCollected -= tech.stoneCost;
 
         UpdateWristDisplayResourceText();
     }

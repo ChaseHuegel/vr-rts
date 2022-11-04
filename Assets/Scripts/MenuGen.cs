@@ -375,7 +375,7 @@ public class MenuGen : MonoBehaviour
         button.transform.localScale = new Vector3(buttonSize, buttonSize, buttonSize);
 
         QueueUnitButton queueUnitButton = button.GetComponent<QueueUnitButton>();
-        queueUnitButton.unitTypeToQueue = unitType;
+        //queueUnitButton.techToQueue = unitType;
         queueUnitButton.buttonLockedObject = buttonLockPrefab;
 
         // Base (child of Button)

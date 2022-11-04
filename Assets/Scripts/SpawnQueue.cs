@@ -10,12 +10,14 @@ using Valve.VR.InteractionSystem;
 
 public class SpawnQueue : MonoBehaviour
 {
-    [Header("Unit Spawn Queue Settings")]    
+    [Header("Unit Spawn Queue Settings")]
     public float unitRallyWaypointRadius;
 
     private Transform unitSpawnPoint;
+    public Transform UnitSpawnPoint { get => unitSpawnPoint; } 
     private Transform unitRallyWaypoint;
     private Cell unitRallyPointCell;
+    public Cell UnitRallyPointCell { get => unitRallyPointCell; }
     private AudioClip onButtonDownAudio;
     private AudioClip onButtonUpAudio;
     private Image[] queueSlotImages;
@@ -26,11 +28,13 @@ public class SpawnQueue : MonoBehaviour
 
     //=========================================================================
     private float timeElapsed = 0.0f;
-    private LinkedList<UnitData> unitSpawnQueue = new LinkedList<UnitData>();
+    private LinkedList<TechBase> queue = new LinkedList<TechBase>();
 
     //=========================================================================
     // Cached references
     private Structure structure;
+    public Structure Structure { get => structure; }
+
     private Damageable damageable;
     private AudioSource audioSource;
     private PlayerManager playerManager;
@@ -73,9 +77,9 @@ public class SpawnQueue : MonoBehaviour
 
         HookIntoEvents();
 
-        QueueUnitButton firstButton = GetComponentInChildren<QueueUnitButton>(true);
-        if (firstButton)
-            lastUnitQueued = firstButton.unitTypeToQueue;
+        // QueueUnitButton firstButton = GetComponentInChildren<QueueUnitButton>(true);
+        // if (firstButton)
+        //     lastUnitQueued = firstButton.techToQueue;
     }
 
     void Update() { UpdateUnitSpawnQueue(); }
@@ -84,9 +88,9 @@ public class SpawnQueue : MonoBehaviour
     {
         audioSource.PlayOneShot(onButtonDownAudio);
 
-        QueueUnitButton queueUnitButton = hand.hoveringInteractable.GetComponentInParent<QueueUnitButton>();
+        QueueUnitButton queueUnitButton = hand.hoveringInteractable?.GetComponentInParent<QueueUnitButton>();
         if (queueUnitButton)
-            QueueUnit(queueUnitButton.unitTypeToQueue);
+            QueueTech(queueUnitButton.techToQueue);
 
     }
 
@@ -98,41 +102,41 @@ public class SpawnQueue : MonoBehaviour
         DequeueUnit(); 
     }
 
-    public bool QueueLastUnitQueued() { return QueueUnit(lastUnitQueued); }
+    //public bool QueueLastUnitQueued() { return QueueUnit(lastUnitQueued); }
 
-    public bool QueueUnit(RTSUnitType unitTypeToQueue)
+    public bool QueueTech(TechBase tech)
     {
-        if (unitSpawnQueue.Count >= structure.buildingData.maxUnitQueueSize)
+        if (queue.Count >= structure.buildingData.maxUnitQueueSize)
             return false;
 
         if (!structure.Faction.IsSameFaction(playerManager.faction))
             return false;
 
-        UnitData unitData = GameMaster.GetUnit(unitTypeToQueue);
+        //UnitData unitData = GameMaster.GetUnit(tech);
 
-        if (!playerManager.CanQueueUnit(unitData))
+        if (!playerManager.CanQueueTech(tech))
             return false;
 
-        playerManager.DeductUnitQueueCostFromStockpile(unitData);
-        unitSpawnQueue.AddLast(unitData);
+        playerManager.DeductTechQueueCostFromStockpile(tech);
+        queue.AddLast(tech);
         RefreshQueueImages();
         return true;
     }
 
     private void UpdateUnitSpawnQueue()
     {
-        if (unitSpawnQueue.Count > 0)
+        if (queue.Count > 0)
         {
             timeElapsed += Time.deltaTime;
-            progressImage.fillAmount = (timeElapsed / unitSpawnQueue.First.Value.queueResearchTime);
+            progressImage.fillAmount = (timeElapsed / queue.First.Value.queueResearchTime);
             float progressPercent = UnityEngine.Mathf.Round(progressImage.fillAmount * 100);
             progressText.text = progressPercent.ToString() + "%";
 
-            if (timeElapsed >= unitSpawnQueue.First.Value.queueResearchTime)
-            {
-                SpawnUnit();
+            if (timeElapsed >= queue.First.Value.queueResearchTime)
+            {            
+                queue.First.Value.Execute(this);
                 timeElapsed = 0.0f;
-                unitSpawnQueue.RemoveFirst();
+                queue.RemoveFirst();
                 progressImage.fillAmount = 0;
                 progressImage.enabled = false;
                 progressText.enabled = false;
@@ -150,38 +154,23 @@ public class SpawnQueue : MonoBehaviour
 
     public void DequeueUnit()
     {
-        if (unitSpawnQueue.Count <= 0)
+        if (queue.Count <= 0)
             return;
 
-        else if (unitSpawnQueue.Count == 1)
+        else if (queue.Count == 1)
         {
-            playerManager.RemoveFromQueueCount(unitSpawnQueue.Last.Value.populationCost);
-            unitSpawnQueue.RemoveLast();
+            playerManager.RemoveFromQueueCount(queue.Last.Value.populationCost);
+            queue.RemoveLast();
             progressImage.fillAmount = 0;
             progressImage.enabled = false;
             progressText.enabled = false;            
         }
         else
         {
-            playerManager.RemoveFromQueueCount(unitSpawnQueue.Last.Value.populationCost);
-            unitSpawnQueue.RemoveLast();
+            playerManager.RemoveFromQueueCount(queue.Last.Value.populationCost);
+            queue.RemoveLast();
         }
         RefreshQueueImages();
-    }
-
-
-    private void SpawnUnit()
-    {
-        if (unitSpawnQueue.First.Value.worldPrefab)
-        {
-            GameObject unitGameObject = Instantiate(unitSpawnQueue.First.Value.worldPrefab, unitSpawnPoint.transform.position, Quaternion.identity);
-            UnitV2 unit = unitGameObject.GetComponent<UnitV2>();
-            unit.Faction = structure.Faction;
-            unit.SetUnitType(unitSpawnQueue.First.Value.unitType);
-            unit.IssueSmartOrder(unitRallyPointCell);
-        }
-        else
-            Debug.Log(string.Format("Spawn {0} failed. Missing prefabToSpawn.", unitSpawnQueue.First.Value.unitType));
     }
 
     private void ResetLastQueueImage()
@@ -198,12 +187,12 @@ public class SpawnQueue : MonoBehaviour
         }
 
         int i = 0;
-        foreach (UnitData unitData in unitSpawnQueue)
+        foreach (TechBase techBase in queue)
         {
-            queueSlotImages[i].overrideSprite = unitData.worldQueueImage;
+            queueSlotImages[i].overrideSprite = techBase.worldQueueImage;
             i++;
 
-            if (i >= unitSpawnQueue.Count)
+            if (i >= queue.Count)
                 break;
         }
     }

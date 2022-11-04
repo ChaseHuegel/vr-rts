@@ -27,4 +27,20 @@ public class UnitData : TechBase
     public int attackRange;
     public float attackDamage;
     public float armor;
+
+    public override void Execute(SpawnQueue spawnQueue)
+    {
+        base.Execute(spawnQueue);
+
+        if (worldPrefab)
+        {
+            GameObject unitGameObject = Instantiate(worldPrefab, spawnQueue.UnitSpawnPoint.position, Quaternion.identity);
+            UnitV2 unit = unitGameObject.GetComponent<UnitV2>();
+            unit.Faction = spawnQueue.Structure.Faction;
+            unit.SetUnitType(this.unitType);
+            unit.IssueSmartOrder(spawnQueue.UnitRallyPointCell);
+        }
+        else
+            Debug.Log(string.Format("Spawn {0} failed. Missing prefabToSpawn.", this.title));
+    }
 }

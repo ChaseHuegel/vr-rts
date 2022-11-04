@@ -438,7 +438,7 @@ public class InteractionPointer : MonoBehaviour
             if (queueUnitButton)
             {
                 spawnQueue = pointedAtPointerInteractable.GetComponentInParent<SpawnQueue>();
-                spawnQueue.QueueUnit(queueUnitButton.unitTypeToQueue);
+                spawnQueue.QueueTech(queueUnitButton.techToQueue);
                 pointedAtPointerInteractable.GetComponentInChildren<HoverButton>().onButtonDown.Invoke(hand);
                 return;
             }

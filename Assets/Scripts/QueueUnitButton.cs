@@ -6,7 +6,7 @@ using Valve.VR.InteractionSystem;
 
 public class QueueUnitButton : MonoBehaviour
 {
-    public RTSUnitType unitTypeToQueue;
+    public TechBase techToQueue;
     public GameObject buttonLockedObject;
 
     [SerializeField]
