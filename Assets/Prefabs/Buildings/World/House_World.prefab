@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 5412639916344327254}
   - component: {fileID: 3213080094431032773}
   - component: {fileID: 762467159594771550}
-  - component: {fileID: 7772060213683463347}
+  - component: {fileID: 4855111610141517758}
   - component: {fileID: 3627030271484217253}
   m_Layer: 10
   m_Name: House_World
@@ -265,8 +265,8 @@ MonoBehaviour:
   PrefabHashGenerator: House_World
   AlwaysReplicateAsRoot: 0
   DontDestroyWithOwner: 0
---- !u!65 &7772060213683463347
-BoxCollider:
+--- !u!135 &4855111610141517758
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -276,8 +276,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.32305336, y: 0.26571378, z: 0.37012672}
-  m_Center: {x: -0.011207581, y: 0.11927186, z: -0.0056037903}
+  m_Radius: 0.19
+  m_Center: {x: 0, y: 0.1, z: 0}
 --- !u!114 &3627030271484217253
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -330,11 +330,10 @@ MonoBehaviour:
   cancelButtonMaterial: {fileID: 0}
   onButtonDownAudio: {fileID: 0}
   onButtonUpAudio: {fileID: 0}
-  queueButtons: 
-  queueTechButtons: 
+  queueTechButtons: []
   numberOfQueueSlots: 12
   emptyQueueSlotSprite: {fileID: 0}
-  cancelButtonGameObject: {fileID: 0}
+  buttonLockPrefab: {fileID: 0}
 --- !u!1 &5377417405777167938
 GameObject:
   m_ObjectHideFlags: 0

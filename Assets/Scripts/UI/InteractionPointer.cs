@@ -295,10 +295,10 @@ public class InteractionPointer : MonoBehaviour
                     rotationIncrement = 22.5f;
 
                 if (WasRotateClockwiseButtonPressed(hand))
-                    buildingPlacementPreviewObject.transform.Rotate(0.0f, 0.0f, rotationIncrement);
+                    buildingPlacementPreviewObject.transform.Rotate(0.0f, -rotationIncrement, 0.0f);
 
                 if (WasRotateCounterclockwiseButtonPressed(hand))
-                    buildingPlacementPreviewObject.transform.Rotate(0.0f, 0.0f, -rotationIncrement);
+                    buildingPlacementPreviewObject.transform.Rotate(0.0f, rotationIncrement, 0.0f);
 
                 // TODO: Should probably be moved to update pointer.
                 HardSnapToGrid(destinationReticleTransform, placementBuildingData.boundingDimensionX, placementBuildingData.boundingDimensionY);
@@ -393,7 +393,7 @@ public class InteractionPointer : MonoBehaviour
             if (!wallPlacementPreviewStartObject)
             {
                 wallPlacementPreviewStartObject = Instantiate(buildingPlacementPreviewObject);
-                wallPlacementPreviewStartObject.transform.Rotate(0, 0, lastBuildingRotation);
+                wallPlacementPreviewStartObject.transform.Rotate(0, lastBuildingRotation, 0);
                 wallPlacementPreviewStartObject.transform.position = buildingPlacementPreviewObject.transform.position;
             }
 
@@ -550,7 +550,7 @@ public class InteractionPointer : MonoBehaviour
                 PlayBuildingPlacementDeniedAudio();
             }
 
-            lastBuildingRotation = buildingPlacementPreviewObject.transform.localRotation.eulerAngles.y;
+            lastBuildingRotation = buildingPlacementPreviewObject.transform.localRotation.eulerAngles.z;
             Destroy(buildingPlacementPreviewObject);
             buildingPlacementPreviewObject = null;
 

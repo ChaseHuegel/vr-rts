@@ -5,7 +5,7 @@ using TMPro;
 using Valve.VR.InteractionSystem;
 using Swordfish;
 
-[RequireComponent(typeof(PointerInteractable), typeof(BoxCollider))]
+[RequireComponent(typeof(PointerInteractable), typeof(Collider))]
 public class BuildingInteractionPanel : MonoBehaviour
 {
     [Header("Panel Behaviour")]
@@ -126,7 +126,10 @@ public class BuildingInteractionPanel : MonoBehaviour
         InitializeInteractionPanel();
         
         if (title == "")
-            title = this.gameObject.GetComponent<Structure>().buildingData.title;
+            title = this.gameObject.GetComponent<Structure>()?.buildingData.title;
+
+        if (title == "")
+            title = this.gameObject.GetComponent<Constructible>()?.buildingData.title;
 
         if (enableTitleDisplay)
             InitializeTitleDisplay();
@@ -152,7 +155,12 @@ public class BuildingInteractionPanel : MonoBehaviour
             spawnQueue.Initialize();
 
             this.gameObject.GetComponent<PointerInteractable>().AddChildrenToHideHighlight(interactionPanelObject);
-        }        
+        }
+
+        if (startHidden)
+            Hide();
+        else
+            Show();
     }
 
     private void InitializeInteractionPanel()
@@ -164,9 +172,7 @@ public class BuildingInteractionPanel : MonoBehaviour
         radiusExitTime = Time.time;
         Quaternion rot = faceTarget.transform.rotation;
         rot.z = rot.x = 0;
-        interactionPanelObject.transform.rotation = rot;
-
-        interactionPanelObject.SetActive(!startHidden);
+        interactionPanelObject.transform.rotation = rot;              
     }
 
     // Update is called once per frame
@@ -207,8 +213,9 @@ public class BuildingInteractionPanel : MonoBehaviour
                 if (onAutoHide != null)
                     onAutoHide();
 
-                if (disableSelf)
-                    interactionPanelObject.SetActive(false);
+                // if (disableSelf)
+                //     this.enabled = false;
+                Hide();                
 
                 autohideTimerStarted = false;
             }
@@ -279,7 +286,7 @@ public class BuildingInteractionPanel : MonoBehaviour
             healthBarTextObject.AddComponent<Canvas>();
 
             healthBarText = healthBarTextObject.AddComponent<TextMeshPro>();
-            healthBarText.SetText(title);
+            //healthBarText.SetText(title);
             healthBarText.fontStyle = FontStyles.Bold;
             healthBarText.fontSize = 0.8f;
             healthBarText.horizontalAlignment = HorizontalAlignmentOptions.Center;
@@ -289,7 +296,7 @@ public class BuildingInteractionPanel : MonoBehaviour
             healthBarText.color = healthBarTextColor;            
         }
 
-        damageable = GetComponentInParent<Damageable>();
+        damageable = this.gameObject.GetComponent<Damageable>();
 
         if (damageable)
         {
@@ -379,15 +386,31 @@ public class BuildingInteractionPanel : MonoBehaviour
 
     public void Show()
     {
-        interactionPanelObject.SetActive(true);
+        titleGameObject?.SetActive(true);
+        menuGameObject?.SetActive(true);
+        healthBarGameObject?.SetActive(true);        
 
         foreach (GameObject go in objectsToAutohide)
             go.SetActive(true);
     }
 
     public void Hide()
-    {
-        interactionPanelObject.SetActive(false);
+    {        
+        titleGameObject?.SetActive(false);
+        menuGameObject?.SetActive(false);
+
+        // TODO: Should be based on the healthbars autoshowAt/autohideAt values.
+        // TODO: Change to healthbar events that autohideBillboard can subscribe to.
+        // if (healthBar.isVisible)
+        //     autoHideBillboard.enabled = true;
+        // else
+        //     autoHideBillboard.enabled = false;
+
+        if (healthBarForegroundImage.fillAmount < healthBarAutoShowAt &&
+            healthBarForegroundImage.fillAmount > 0)
+            return;
+
+        healthBarGameObject.SetActive(false);
 
         foreach (GameObject go in objectsToAutohide)
             go.SetActive(false);
@@ -399,12 +422,12 @@ public class BuildingInteractionPanel : MonoBehaviour
             healthBarForegroundImage.fillAmount = amount;
 
         if (showHealthText)
-            healthBarText.text = (((int)(amount * 100)).ToString()) + "%";
+            healthBarText.text = (damageable.GetHealthPercent() * 100.0f ).ToString() + "%";
 
-        // if (amount >= healthBarAutoHideAt)
-        //     healthBarGameObject.SetActive(false);
-        // else if (amount < healthBarAutoShowAt)
-        //     healthBarGameObject.SetActive(true);
+        if (amount >= healthBarAutoHideAt)
+            healthBarGameObject.SetActive(false);
+        else if (amount < healthBarAutoShowAt)
+            healthBarGameObject.SetActive(true);
 
         if (amount <= 0.0f)
             healthBarGameObject.SetActive(false);;

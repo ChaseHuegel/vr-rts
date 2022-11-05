@@ -104,7 +104,7 @@ public class Constructible : Obstacle
 
     public void OnBuild(object sender, HealthRegainEvent e)
     {
-        Debug.Log(Attributes.ValueOf(AttributeConstants.HEALTH) + "/" + Attributes.MaxValueOf(AttributeConstants.HEALTH));
+        //Debug.Log(Attributes.ValueOf(AttributeConstants.HEALTH) + "/" + Attributes.MaxValueOf(AttributeConstants.HEALTH));
         if (Attributes.Get(AttributeConstants.HEALTH).PeekAdd(e.amount) == GetMaxHealth())
         {
             //  Try placing a prefab
