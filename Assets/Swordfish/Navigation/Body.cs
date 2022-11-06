@@ -12,7 +12,7 @@ namespace Swordfish.Navigation
 
         [Header("Body Settings")]
         [SerializeField]
-        protected Vector2 BoundingDimensions = Vector2.one;
+        public Vector2 BoundingDimensions = Vector2.one;
 
         [SerializeField]
         protected Vector2 BoundingOrigin = Vector2.zero;

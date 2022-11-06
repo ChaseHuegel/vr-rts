@@ -41,7 +41,7 @@ public class Constructible : Obstacle
             BakeToGrid();
         }
     }
-
+    
     private void RemoveExistingWalls()
     {
         Cell thisCell = GetCell();
@@ -88,9 +88,9 @@ public class Constructible : Obstacle
         float progress = Attributes.CalculatePercentOf(AttributeConstants.HEALTH);
         int progressStage = 0;// = (int)(progress / (1f / ConstructionStages.Length));
 
-        if (progress >= 0.45f)
+        if (progress >= 0.33)
             progressStage = 1;
-        else if (progress >= 0.95f)
+        else if (progress >= 0.66f)
             progressStage = 2;
 
         if (currentStage != progressStage)
@@ -112,7 +112,7 @@ public class Constructible : Obstacle
             {
                 Instantiate(OnBuiltPrefab, transform.position, transform.rotation);
                 Structure structure = OnBuiltPrefab.GetComponent<Structure>();
-                structure.Faction = Faction;
+                structure.Faction = this.Faction;
 
                 AudioSource.PlayClipAtPoint(buildingData.constructionCompletedAudio?.GetClip(), transform.position);
             }

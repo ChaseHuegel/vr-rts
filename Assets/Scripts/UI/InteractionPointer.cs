@@ -539,7 +539,8 @@ public class InteractionPointer : MonoBehaviour
             if (!cellsOccupied)
             {
                 PlayBuildingPlacementAllowedAudio();
-                Instantiate(placementBuildingData.constructablePrefab, buildingPlacementPreviewObject.transform.position, buildingPlacementPreviewObject.transform.rotation);
+                GameObject gameObject = Instantiate(placementBuildingData.constructablePrefab, buildingPlacementPreviewObject.transform.position, buildingPlacementPreviewObject.transform.rotation);
+                gameObject.GetComponent<Constructible>().Faction = this.faction;
                 PlayerManager.Instance.DeductResourcesFromStockpile(placementBuildingData.goldCost,
                                                 placementBuildingData.foodCost,
                                                 placementBuildingData.woodCost,

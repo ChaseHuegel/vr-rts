@@ -27,7 +27,7 @@ namespace Valve.VR
         protected bool showLeftPreview = false;
 
         [SerializeField]
-        protected bool showRightPreview = true; //show the right hand by default
+        protected bool showRightPreview = false; //show the right hand by default
 
         [SerializeField]
         protected GameObject previewLeftInstance;

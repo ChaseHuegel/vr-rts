@@ -17,7 +17,7 @@ public class BuildingData : TechBase
     public int garrisonCapacity;
     public int armor;
 
-    [Header("Additional Visuals")]
+    [Header("Additional Visual Prefabs")]
     public GameObject menuPreviewPrefab;
     public GameObject fadedPreviewPrefab;
     public GameObject worldPreviewPrefab;

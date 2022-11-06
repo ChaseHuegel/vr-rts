@@ -123,6 +123,9 @@ public class BuildingInteractionPanel : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if (interactionPanelObject)
+            return;
+            
         InitializeInteractionPanel();
         
         if (title == "")
