@@ -30,7 +30,7 @@ public class ThrowableBuilding : Throwable
 
         if (hitPointValid && !cellsOccupied)
         {
-            GameObject spawned = GameObject.Instantiate(rtsBuildingTypeData.constructablePrefab);
+            GameObject spawned = GameObject.Instantiate(rtsBuildingTypeData.constructionPrefab);
             spawned.transform.position = groundPosition;
             spawned.transform.rotation = rtsBuildingTypeData.worldPrefab.transform.rotation;
             spawned.transform.Rotate(0f, 0f, Random.Range(0, 4) * 90);

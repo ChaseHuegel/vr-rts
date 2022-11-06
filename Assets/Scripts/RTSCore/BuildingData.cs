@@ -22,7 +22,7 @@ public class BuildingData : TechBase
     public GameObject fadedPreviewPrefab;
     public GameObject worldPreviewPrefab;
     public GameObject throwablePrefab;
-    public GameObject constructablePrefab;
+    public GameObject constructionPrefab;
     
     [Header("Wall Specific Prefabs")]
     public GameObject diagonalWorldPrefab;

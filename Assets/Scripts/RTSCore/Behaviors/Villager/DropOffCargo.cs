@@ -7,7 +7,10 @@ public class DropOffCargo : BehaviorAction<VillagerV2>
     {
         var cargo = villager.Attributes.Get(AttributeConstants.CARGO);
 
-        GameMaster.SendFloatingIndicator(villager.Target.transform.position, $"+{(int)cargo.Value} {villager.CargoType}", Color.green);
+        Vector3 pos = villager.Target.transform.position;
+        pos.y += 0.5f;
+
+        GameMaster.SendFloatingIndicator(pos, $"+{(int)cargo.Value} {villager.CargoType}", Color.green);
 
         PlayerManager.Instance.AddResourceToStockpile(villager.CargoType, (int)cargo.Value);
         cargo.Value = 0;

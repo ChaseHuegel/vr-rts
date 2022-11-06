@@ -400,7 +400,7 @@ public class InteractionPointer : MonoBehaviour
             if (placementBuildingData.buildingType == RTSBuildingType.Wood_Wall_Corner)
             {
                 BuildingData bData = GameMaster.GetBuilding(RTSBuildingType.Wood_Wall_1x1);
-                wallWorld_1x1_Constructible = bData.constructablePrefab;
+                wallWorld_1x1_Constructible = bData.constructionPrefab;
                 wallWorld_1x1_Diagonal_Constructable = bData.diagonalConstructablePrefab;
                 wallWorld_1x1_Preview = bData.worldPreviewPrefab;
                 wallWorld_1x1_Diagonal_Preview = bData.diagonalWorldPreviewPrefab;
@@ -408,7 +408,7 @@ public class InteractionPointer : MonoBehaviour
             else if (placementBuildingData.buildingType == RTSBuildingType.Stone_Wall_Corner)
             {
                 BuildingData bData = GameMaster.GetBuilding(RTSBuildingType.Stone_Wall_1x1);
-                wallWorld_1x1_Constructible = bData.constructablePrefab;
+                wallWorld_1x1_Constructible = bData.constructionPrefab;
                 wallWorld_1x1_Diagonal_Constructable = bData.diagonalConstructablePrefab;
                 wallWorld_1x1_Preview = bData.worldPreviewPrefab;
                 wallWorld_1x1_Diagonal_Preview = bData.diagonalWorldPreviewPrefab;
@@ -477,7 +477,7 @@ public class InteractionPointer : MonoBehaviour
 
             // Start corner piece
             playerManager.DeductBuildingCost(placementBuildingData);
-            Instantiate(placementBuildingData.constructablePrefab, wallPlacementPreviewStartObject.transform.position, wallPlacementPreviewStartObject.transform.rotation);
+            Instantiate(placementBuildingData.constructionPrefab, wallPlacementPreviewStartObject.transform.position, wallPlacementPreviewStartObject.transform.rotation);
 
             foreach (GameObject go in wallPreviewSections)
             {
@@ -502,14 +502,14 @@ public class InteractionPointer : MonoBehaviour
                     (currentSegmentPosition.x == previousSegmentPosition.x ||
                     currentSegmentPosition.y == previousSegmentPosition.y))
                 {
-                    Instantiate(placementBuildingData.constructablePrefab, World.ToTransformSpace(currentSegmentPosition), buildingPlacementPreviewObject.transform.rotation);
+                    Instantiate(placementBuildingData.constructionPrefab, World.ToTransformSpace(currentSegmentPosition), buildingPlacementPreviewObject.transform.rotation);
                 }
                 else
                 {
                     // If this is the last piece we are able to build, make it a corner.
                     if (!playerManager.CanConstructBuilding(placementBuildingData.buildingType))
                     {
-                        Instantiate(placementBuildingData.constructablePrefab, World.ToTransformSpace(currentSegmentPosition), buildingPlacementPreviewObject.transform.rotation);
+                        Instantiate(placementBuildingData.constructionPrefab, World.ToTransformSpace(currentSegmentPosition), buildingPlacementPreviewObject.transform.rotation);
                         EndWallPlacementMode();
                         return;
                     }
@@ -525,7 +525,7 @@ public class InteractionPointer : MonoBehaviour
             {
                 playerManager.DeductBuildingCost(placementBuildingData);
                 if (buildingPlacementPreviewObject.activeSelf)
-                    Instantiate(placementBuildingData.constructablePrefab, buildingPlacementPreviewObject.transform.position, buildingPlacementPreviewObject.transform.rotation);
+                    Instantiate(placementBuildingData.constructionPrefab, buildingPlacementPreviewObject.transform.position, buildingPlacementPreviewObject.transform.rotation);
             }
 
             EndWallPlacementMode();
@@ -539,7 +539,7 @@ public class InteractionPointer : MonoBehaviour
             if (!cellsOccupied)
             {
                 PlayBuildingPlacementAllowedAudio();
-                GameObject gameObject = Instantiate(placementBuildingData.constructablePrefab, buildingPlacementPreviewObject.transform.position, buildingPlacementPreviewObject.transform.rotation);
+                GameObject gameObject = Instantiate(placementBuildingData.constructionPrefab, buildingPlacementPreviewObject.transform.position, buildingPlacementPreviewObject.transform.rotation);
                 gameObject.GetComponent<Constructible>().Faction = this.faction;
                 PlayerManager.Instance.DeductResourcesFromStockpile(placementBuildingData.goldCost,
                                                 placementBuildingData.foodCost,
@@ -898,7 +898,7 @@ public class InteractionPointer : MonoBehaviour
                 Destroy(constructable);
 
                 segmentPos = World.ToTransformSpace(currentPosition);
-                obj = Instantiate(placementBuildingData.constructablePrefab, segmentPos, buildingPlacementPreviewObject.transform.rotation);
+                obj = Instantiate(placementBuildingData.constructionPrefab, segmentPos, buildingPlacementPreviewObject.transform.rotation);
                 return obj;
             }
 
@@ -914,7 +914,7 @@ public class InteractionPointer : MonoBehaviour
                 Destroy(structure);
 
                 segmentPos = World.ToTransformSpace(currentPosition);
-                obj = Instantiate(placementBuildingData.constructablePrefab, segmentPos, buildingPlacementPreviewObject.transform.rotation);
+                obj = Instantiate(placementBuildingData.constructionPrefab, segmentPos, buildingPlacementPreviewObject.transform.rotation);
                 return obj;
             }
 
@@ -1057,6 +1057,9 @@ public class InteractionPointer : MonoBehaviour
         }
         else if (isInUnitSelectionMode && pointedAtPointerInteractable != null)
         {
+            if (selectedActors == null)
+                Debug.Log(selectedActors);
+                
             // Only add units to selection if trigger is pressed in more than 60%
             if (selectedActors.Count <= maxUnitSelectionCount && uiInteractAction.GetAxis(pointerHand.handType) > triggerAddToSelectionThreshold)
             {

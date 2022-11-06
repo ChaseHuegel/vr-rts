@@ -112,7 +112,13 @@ public class Constructible : Obstacle
             {
                 Instantiate(OnBuiltPrefab, transform.position, transform.rotation);
                 Structure structure = OnBuiltPrefab.GetComponent<Structure>();
-                structure.Faction = this.Faction;
+                if (structure) 
+                    structure.Faction = this.Faction;
+                else
+                {
+                    Resource constructible = OnBuiltPrefab.GetComponent<Resource>();
+                    constructible.Faction = this.Faction;
+                }
 
                 AudioSource.PlayClipAtPoint(buildingData.constructionCompletedAudio?.GetClip(), transform.position);
             }

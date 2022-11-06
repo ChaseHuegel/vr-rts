@@ -52,7 +52,7 @@ public class BuildingDataCustomEditorWindow : EditorWindow
         EditorGUILayout.ObjectField("Faded Preview", bData.fadedPreviewPrefab, typeof(GameObject), false);
         EditorGUILayout.ObjectField("World Preview", bData.worldPreviewPrefab, typeof(GameObject), false);
         EditorGUILayout.ObjectField("Throwable", bData.throwablePrefab, typeof(GameObject), false);
-        EditorGUILayout.ObjectField("Construction", bData.constructablePrefab, typeof(GameObject), false);
+        EditorGUILayout.ObjectField("Construction", bData.constructionPrefab, typeof(GameObject), false);
 
         EditorGUILayout.Space();
 
@@ -146,8 +146,10 @@ public class BuildingDataCustomEditorWindow : EditorWindow
             constructible.ConstructionStages[1] = stage2;
             constructible.ConstructionStages[2] = stage3;
 
-            bData.constructablePrefab = SavePrefabObject(construction);
+            bData.constructionPrefab = SavePrefabObject(construction);
 
+            EditorUtility.SetDirty(bData);
+            
             // Cleanup
             DestroyImmediate(menuPreview);
             DestroyImmediate(fadedPreview);
