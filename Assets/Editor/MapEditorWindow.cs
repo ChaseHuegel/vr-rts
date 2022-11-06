@@ -37,7 +37,6 @@ public class MapEditorWindow : EditorWindow
             SnapSelection();
 
     }
-
     void SnapSelection()
     {
         foreach (GameObject go in Selection.gameObjects)
