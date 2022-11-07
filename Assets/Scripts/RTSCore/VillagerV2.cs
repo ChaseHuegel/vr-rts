@@ -95,7 +95,7 @@ public class VillagerV2 : UnitV2
     {
         base.AttachListeners();
         Attributes.Get(AttributeConstants.CARGO).ValueBinding.Changed += OnCargoChanged;
-        //  TODO add a listener on CargoType change to update COLLECT_RATE appropriately
+        // TODO: add a listener on CargoType change to update COLLECT_RATE appropriately
     }
 
     protected override void CleanupListeners()
@@ -156,7 +156,7 @@ public class VillagerV2 : UnitV2
     protected virtual void OnCargoChanged(object sender, DataChangedEventArgs<float> e)
     {
         bool isCargoFull = e.NewValue == Attributes.MaxValueOf(AttributeConstants.CARGO);
-        if (isCargoFull || e.NewValue == 0f)
+        if (isCargoFull || e.NewValue == 0.0f)
             UpdateCurrentCargoObject(isCargoFull);
     }
 
@@ -205,7 +205,7 @@ public class VillagerV2 : UnitV2
     {
         if (CurrentCargoObject == null) return;
         
-        CurrentCargoObject?.gameObject.SetActive(false);
+        CurrentCargoObject.gameObject.SetActive(false);
         switch (CargoType)
         {
             case ResourceGatheringType.Grain:
@@ -228,7 +228,8 @@ public class VillagerV2 : UnitV2
                 CurrentCargoObject = null;
                 return;
         }
-        CurrentCargoObject?.gameObject.SetActive(visible);
+        
+        CurrentCargoObject.gameObject.SetActive(visible);
     }
 
     protected virtual void ProcessCollectRoutine(float deltaTime)
