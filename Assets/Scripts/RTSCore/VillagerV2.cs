@@ -168,8 +168,6 @@ public class VillagerV2 : UnitV2
 
     private void UpdateCurrentToolObject()
     {
-        if (CurrentToolObject == null) return;
-
         CurrentToolObject?.gameObject.SetActive(false);
         
         switch (State)
@@ -196,6 +194,7 @@ public class VillagerV2 : UnitV2
                 CurrentToolObject = null;
                 return;
         }
+        
         CurrentToolObject?.gameObject.SetActive(true);
 
         HuntingBackObject.gameObject.SetActive(HuntingToolObject.gameObject.activeSelf);
@@ -203,9 +202,6 @@ public class VillagerV2 : UnitV2
 
     private void UpdateCurrentCargoObject(bool visible)
     {
-        if (CurrentCargoObject == null) return;
-        
-        CurrentCargoObject.gameObject.SetActive(false);
         switch (CargoType)
         {
             case ResourceGatheringType.Grain:
@@ -228,7 +224,7 @@ public class VillagerV2 : UnitV2
                 CurrentCargoObject = null;
                 return;
         }
-        
+
         CurrentCargoObject.gameObject.SetActive(visible);
     }
 
