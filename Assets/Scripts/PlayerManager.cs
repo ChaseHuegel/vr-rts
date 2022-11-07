@@ -220,6 +220,7 @@ public class PlayerManager : MonoBehaviour
             Vector3 position = new Vector3(14.8597126f, 0.681457937f, -10.2036371f);
             handBuildMenu = Instantiate(handBuildMenuPrefab, position, Quaternion.identity, autohideHandMenuObject.transform);
             buildMenu = handBuildMenu.GetComponent<BuildMenu>();
+            handBuildMenu.SetActive(false);
         }
         else
             Debug.LogError("HandBuildMenuPrefab not set.", this);

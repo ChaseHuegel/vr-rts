@@ -185,7 +185,9 @@ public class VillagerV2 : UnitV2
                 CurrentToolObject = BuilderToolObject;
                 break;
             case ActorAnimationState.FISHING:
-                CurrentToolObject = FishingToolObject;
+                // TODO: Specific check for boats for the time being
+                if (FishingToolObject) 
+                    CurrentToolObject = FishingToolObject;
                 break;
             case ActorAnimationState.HUNTING:
                 CurrentToolObject = HuntingToolObject;
@@ -197,7 +199,7 @@ public class VillagerV2 : UnitV2
         
         CurrentToolObject?.gameObject.SetActive(true);
 
-        HuntingBackObject.gameObject.SetActive(HuntingToolObject.gameObject.activeSelf);
+        HuntingBackObject?.gameObject.SetActive(HuntingToolObject.gameObject.activeSelf);
     }
 
     private void UpdateCurrentCargoObject(bool visible)
