@@ -30,24 +30,35 @@ public class PlayerManager : MonoBehaviour
     [Header("Hammer")]
     public bool hammerOnLeft = true;
     public bool hammerOnRight = false;
-    public Transform rHandHammerAttachmentpoint;
-    public Transform lHandHammerAttachmentPoint;
+    public Transform rightHandHammerStorage;
+    public Transform leftHandHammerStorage;
 
     [Header("Autohide Hand Menu")]
     [Tooltip("Switch between clipboard build menu or palm build menu.")]
     public bool autoHideHandMenuEnabled;
     public float handMenuTrackingSensitivity = 0.5f;
+
+
+    [Header("Attachment/Tracking Points")]
     public Transform rHandAttachmentPoint;
     public Transform rHandTrackingPoint;
     public Transform lHandAttachmentPoint;
     public Transform lHandTrackingPoint;
     public GameObject autohideHandMenuObject;
+
+    [Header("Information Displays")]
     public WristDisplay WristDisplay;
     public WristDisplay FaceDisplay;
+
+    [Header("Prefabs")]
+    public GameObject handBuildMenuPrefab;
+
     private GripPan gripPan;
     private Hand buildMenuHand;
     private Hand selectionHand;
-    public GameObject handBuildMenu;
+    
+    private GameObject handBuildMenu;
+    
     protected BuildMenu buildMenu;
     private Hand rightHand;
     private Hand leftHand;
@@ -92,10 +103,10 @@ public class PlayerManager : MonoBehaviour
             Debug.Log("autohideHandMenuObject not set.", this);
 
         // Initialize hammer position
-        lHandHammerAttachmentPoint.gameObject.SetActive(hammerOnLeft);
-        rHandHammerAttachmentpoint.gameObject.SetActive(hammerOnRight);
+        leftHandHammerStorage.gameObject.SetActive(hammerOnLeft);
+        rightHandHammerStorage.gameObject.SetActive(hammerOnRight);
 
-        buildMenu = handBuildMenu.GetComponent<BuildMenu>();
+        InitializeHandBuildMenu();        
 
         handMenuToggle?.AddOnStateDownListener(OnHandToggleMenuRightDown, SteamVR_Input_Sources.RightHand);
         handMenuToggle?.AddOnStateDownListener(OnHandToggleMenuLeftDown, SteamVR_Input_Sources.LeftHand);
@@ -201,6 +212,19 @@ public class PlayerManager : MonoBehaviour
     }
 
     protected bool IsClipboardPalmMenuVisible;
+
+    private void InitializeHandBuildMenu()
+    {
+        if (handBuildMenuPrefab)
+        {
+            Vector3 position = new Vector3(14.8597126f, 0.681457937f, -10.2036371f);
+            handBuildMenu = Instantiate(handBuildMenuPrefab, position, Quaternion.identity, autohideHandMenuObject.transform);
+            buildMenu = handBuildMenu.GetComponent<BuildMenu>();
+        }
+        else
+            Debug.LogError("HandBuildMenuPrefab not set.", this);
+            
+    }
 
     public void OnHandToggleMenuRightDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {

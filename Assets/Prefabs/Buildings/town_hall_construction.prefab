@@ -94,6 +94,7 @@ GameObject:
   - component: {fileID: 1504598307365471219}
   - component: {fileID: 5622566912516124254}
   - component: {fileID: 2728092626280893785}
+  - component: {fileID: 2266029956344757266}
   m_Layer: 0
   m_Name: town_hall_1(Clone)
   m_TagString: Untagged
@@ -166,6 +167,20 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!136 &2266029956344757266
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4351967132735183206}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.09802719
+  m_Height: 0.39628685
+  m_Direction: 1
+  m_Center: {x: -0.122569844, y: 0.34, z: 3.453417e-17}
 --- !u!1 &4981801186455602416
 GameObject:
   m_ObjectHideFlags: 0
@@ -400,7 +415,10 @@ MonoBehaviour:
   Faction: {fileID: 0}
   BoundingDimensions: {x: 6, y: 6}
   BoundingOrigin: {x: 0, y: 0}
-  SkinRendererTargets: []
+  SkinRendererTargets:
+  - {fileID: 2698709695698702583}
+  - {fileID: 2728092626280893785}
+  - {fileID: 2502280804733742636}
   bakeOnStart: 1
   allowPathThru: 0
   DestroyOnBuilt: 1

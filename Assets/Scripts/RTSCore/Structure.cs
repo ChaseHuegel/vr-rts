@@ -49,17 +49,17 @@ public class Structure : Obstacle
             ignorePanning.gameObject.layer = LayerMask.NameToLayer("UI");
 
         if (!buildingData)
-            Debug.Log("BuildingData not set.");
+            Debug.LogError("BuildingData not set.");
 
         if (!(damageable = GetComponent<Damageable>()))
-            Debug.Log("No damageable component on structure!");
+            Debug.LogError("No damageable component on structure!");
 
         // Set max health based on building database hit point value.
         damageable.Attributes.Get(AttributeConstants.HEALTH).MaxValue = buildingData.maximumHitPoints;
         damageable.OnDamageEvent += OnDamage;
 
         if (!GameMaster.Instance.buildingDamagedFX)
-            Debug.Log("buildingDamagedFX not set in GameMaster.", this);
+            Debug.LogError("buildingDamagedFX not set in GameMaster.", this);
 
         // Only refresh visuals if hit points are not full so we don't generate
         // building damage FX particle systems on buildings that don't need them yet.

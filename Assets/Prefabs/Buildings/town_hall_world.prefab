@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 8580054357101469083}
   - component: {fileID: 7799785980354746952}
   - component: {fileID: 6863785217574491828}
+  - component: {fileID: 8805676235268775860}
   m_Layer: 10
   m_Name: town_hall_world
   m_TagString: Untagged
@@ -181,7 +182,7 @@ MonoBehaviour:
   allowPathThru: 0
   buildingData: {fileID: 11400000, guid: acd2012d81514a643bd75779f8900a24, type: 2}
   meshes:
-  - {fileID: 0}
+  - {fileID: 8935139082883856064}
   skinnedMeshes: []
 --- !u!114 &7799785980354746956
 MonoBehaviour:
@@ -325,8 +326,22 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.38
+  m_Radius: 0.35797086
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!136 &8805676235268775860
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1129064322338806663}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.09802719
+  m_Height: 0.39628685
+  m_Direction: 1
+  m_Center: {x: -0.122569844, y: 0.5456341, z: 3.453417e-17}
 --- !u!1 &2763229506784724340
 GameObject:
   m_ObjectHideFlags: 0
@@ -807,6 +822,12 @@ PrefabInstance:
 --- !u!4 &7761058385723624879 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: f3f9627098bc62f4c846329191aabdc6,
+    type: 3}
+  m_PrefabInstance: {fileID: 7799785980111809092}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &8935139082883856064 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: f3f9627098bc62f4c846329191aabdc6,
     type: 3}
   m_PrefabInstance: {fileID: 7799785980111809092}
   m_PrefabAsset: {fileID: 0}

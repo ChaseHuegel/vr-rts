@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class Constructible : Obstacle
 {
+    [Tooltip("Destroy the constructible gameobject once construction is complete.")]
     public bool DestroyOnBuilt = true;
     public bool ClearExistingWalls;
     public BuildingData buildingData;
