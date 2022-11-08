@@ -199,7 +199,7 @@ public class VillagerV2 : UnitV2
         
         CurrentToolObject?.gameObject.SetActive(true);
 
-        HuntingBackObject?.gameObject.SetActive(HuntingToolObject.gameObject.activeSelf);
+        //HuntingBackObject.gameObject.SetActive(HuntingToolObject.gameObject.activeSelf);
     }
 
     private void UpdateCurrentCargoObject(bool visible)
@@ -227,7 +227,7 @@ public class VillagerV2 : UnitV2
                 return;
         }
 
-        CurrentCargoObject.gameObject.SetActive(visible);
+        CurrentCargoObject?.gameObject.SetActive(visible);
     }
 
     protected virtual void ProcessCollectRoutine(float deltaTime)
