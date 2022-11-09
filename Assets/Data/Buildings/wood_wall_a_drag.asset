@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 28b639bd8c1567e45a5dc6fc5308b6d9, type: 3}
-  m_Name: wood_wall_a
+  m_Name: wood_wall_a_drag
   m_EditorClassIdentifier: 
   title: Wood Wall
   description: 
@@ -30,7 +30,7 @@ MonoBehaviour:
   boundingDimensionY: 1
   populationSupported: 0
   maxUnitQueueSize: 0
-  maximumHitPoints: 100
+  maximumHitPoints: 10
   garrisonCapacity: 0
   armor: 2
   menuPreviewPrefab: {fileID: 7439364707674458179, guid: 987e33cf346daed4c9984f2d54883511,
@@ -45,17 +45,11 @@ MonoBehaviour:
     type: 3}
   constructionCompletedAudio: {fileID: 11400000, guid: c72159ec98440534abf1b3058c7edd57,
     type: 2}
-  endWorldPrefab: {fileID: 2735593572440158462, guid: 593ded4fe061a214b98ae180528f5f1c,
-    type: 3}
-  endPreviewPrefab: {fileID: 4517119325836890131, guid: d82344627a3608341babb3ea522a5a1d,
-    type: 3}
-  cornerWorldPrefab: {fileID: 2735593572440158462, guid: 593ded4fe061a214b98ae180528f5f1c,
-    type: 3}
   cornerPreviewPrefab: {fileID: 4517119325836890131, guid: d82344627a3608341babb3ea522a5a1d,
     type: 3}
-  diagonalWorldPrefab: {fileID: 8557850150113861732, guid: 3292462fb2e75a8499e46f130ff63822,
+  cornerConstructionPrefab: {fileID: 9032269131364386575, guid: 7a46da43b343d67419a8aaff0d0a68db,
     type: 3}
-  diagonalWorldPreviewPrefab: {fileID: 932453039997868059, guid: ed0fad3499b87354eaba2d64b012692d,
+  diagonalPreviewPrefab: {fileID: 932453039997868059, guid: ed0fad3499b87354eaba2d64b012692d,
     type: 3}
   diagonalConstructionPrefab: {fileID: 5710345439929530679, guid: 6c0f36801d7d6a34fa6fa38bab74b740,
     type: 3}

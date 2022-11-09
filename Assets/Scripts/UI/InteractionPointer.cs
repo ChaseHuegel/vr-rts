@@ -459,19 +459,19 @@ public class InteractionPointer : MonoBehaviour
         if (isInWallPlacementMode)
         {
             Swordfish.Coord2D previousSegmentPosition = World.ToWorldCoord(wallPlacementPreviewAnchorObject.transform.position);
-            if (!playerManager.CanConstructBuilding(placementBuildingData.buildingType))
+            if (!playerManager.CanConstructTech(currentWallData))
             {
                 EndWallPlacementMode();
                 return;
             }
 
             // Start corner piece
-            playerManager.DeductBuildingCost(placementBuildingData);
-            Instantiate(placementBuildingData.constructionPrefab, wallPlacementPreviewAnchorObject.transform.position, wallPlacementPreviewAnchorObject.transform.rotation);
+            playerManager.DeductTechCost(currentWallData);
+            Instantiate(currentWallData.cornerConstructionPrefab, wallPlacementPreviewAnchorObject.transform.position, wallPlacementPreviewAnchorObject.transform.rotation);
 
             foreach (GameObject go in wallPreviewSections)
             {
-                playerManager.DeductBuildingCost(placementBuildingData);
+                playerManager.DeductTechCost(currentWallData);
 
                 Swordfish.Coord2D currentSegmentPosition = World.ToWorldCoord(go.transform.position);
                 int currentIndex = wallPreviewSections.IndexOf(go);
@@ -485,37 +485,38 @@ public class InteractionPointer : MonoBehaviour
                     nextSegmentPosition = World.ToWorldCoord(nextObject.transform.position);
                 }
 
-                // Corner
+                // Corner -------------------------------------------
                 if (nextObject &&
                     nextSegmentPosition.x != previousSegmentPosition.x &&
                     nextSegmentPosition.y != previousSegmentPosition.y &&
                     (currentSegmentPosition.x == previousSegmentPosition.x ||
                     currentSegmentPosition.y == previousSegmentPosition.y))
                 {
-                    Instantiate(placementBuildingData.constructionPrefab, World.ToTransformSpace(currentSegmentPosition), buildingPlacementPreviewObject.transform.rotation);
+                    Instantiate(currentWallData.cornerConstructionPrefab, World.ToTransformSpace(currentSegmentPosition), Quaternion.identity);
                 }
                 else
                 {
                     // If this is the last piece we are able to build, make it a corner.
-                    if (!playerManager.CanConstructBuilding(placementBuildingData.buildingType))
+                    if (!playerManager.CanConstructTech(currentWallData))
                     {
-                        Instantiate(placementBuildingData.constructionPrefab, World.ToTransformSpace(currentSegmentPosition), buildingPlacementPreviewObject.transform.rotation);
+                        Instantiate(currentWallData.cornerConstructionPrefab, World.ToTransformSpace(currentSegmentPosition), Quaternion.identity);
                         EndWallPlacementMode();
                         return;
                     }
+                    // Center wall segment
                     else
-                        CreateWallSegment(previousSegmentPosition, currentSegmentPosition, previousSegmentPosition, currentWallData.constructionPrefab, currentWallData.diagonalConstructionPrefab);
+                        CreateWorldWallSegment(previousSegmentPosition, currentSegmentPosition, previousSegmentPosition, currentWallData.constructionPrefab, currentWallData.diagonalConstructionPrefab);
                 }
 
 
                 previousSegmentPosition = currentSegmentPosition;
             }
 
-            if (playerManager.CanConstructBuilding(placementBuildingData.buildingType))
+            if (playerManager.CanConstructTech(currentWallData))
             {
-                playerManager.DeductBuildingCost(placementBuildingData);
+                playerManager.DeductTechCost(placementBuildingData);
                 if (buildingPlacementPreviewObject.activeSelf)
-                    Instantiate(placementBuildingData.constructionPrefab, buildingPlacementPreviewObject.transform.position, buildingPlacementPreviewObject.transform.rotation);
+                    Instantiate(currentWallData.cornerConstructionPrefab, buildingPlacementPreviewObject.transform.position, Quaternion.identity);
             }
 
             EndWallPlacementMode();
@@ -724,7 +725,7 @@ public class InteractionPointer : MonoBehaviour
             for (int i = 1; i < sizeX; ++i)
             {
                 nextSegmentPosition.x += 1 * (int)Mathf.Sign(difference.x);
-                DrawWallSegmentPreview(nextSegmentPosition, 0.0f, currentWallData.worldPreviewPrefab);
+                DrawWallSegmentPreview(nextSegmentPosition, 90.0f, currentWallData.worldPreviewPrefab);
             }
 
             // Not a straight wall, need a corner
@@ -866,7 +867,7 @@ public class InteractionPointer : MonoBehaviour
         return obj;
     }
 
-    private GameObject CreateWallSegment(Coord2D lastPosition, Coord2D currentPosition, Coord2D nextPosition, GameObject normalWall, GameObject diagonalWall)
+    private GameObject CreateWorldWallSegment(Coord2D lastPosition, Coord2D currentPosition, Coord2D nextPosition, GameObject normalWall, GameObject diagonalWall)
     {
         GameObject obj = null;
 
@@ -919,7 +920,7 @@ public class InteractionPointer : MonoBehaviour
         else if (currentPosition.x > lastPosition.x && currentPosition.y == lastPosition.y)
         {
             obj = Instantiate(normalWall, segmentPos, buildingPlacementPreviewObject.transform.rotation);
-            obj.transform.Rotate(0, 0, 90);
+            obj.transform.Rotate(0, 90, 0);
         }
         // Southeast
         else if (currentPosition.x > lastPosition.x && currentPosition.y < lastPosition.y)
@@ -939,7 +940,7 @@ public class InteractionPointer : MonoBehaviour
         else if (currentPosition.x < lastPosition.x && currentPosition.y == lastPosition.y)
         {
             obj = Instantiate(normalWall, segmentPos, buildingPlacementPreviewObject.transform.rotation);
-            obj.transform.Rotate(0, 0, 90);
+            obj.transform.Rotate(0, 90, 0);
         }
         // Southwest
         else if (currentPosition.x < lastPosition.x && currentPosition.y < lastPosition.y)
@@ -1554,12 +1555,6 @@ public class InteractionPointer : MonoBehaviour
     void OnDestroy()
     {
         CleanupEvents();
-    }
-
-    public void StopPlacement(Hand hand)
-    {
-        visible = false;
-        HidePointer();
     }
 }
 

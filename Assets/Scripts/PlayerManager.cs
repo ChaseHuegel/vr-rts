@@ -485,11 +485,10 @@ public class PlayerManager : MonoBehaviour
     }
 
 
-    public bool CanConstructBuilding(RTSBuildingType buildingType)
+    public bool CanConstructTech(TechBase tech)
     {
-        BuildingData buildingData = GameMaster.GetBuilding(buildingType);
-        if (buildingData.goldCost > goldCollected || buildingData.woodCost > woodCollected ||
-            buildingData.foodCost > foodCollected || buildingData.stoneCost > stoneCollected)
+        if (tech.goldCost > goldCollected || tech.woodCost > woodCollected ||
+            tech.foodCost > foodCollected || tech.stoneCost > stoneCollected)
         {
             return false;
         }
@@ -522,9 +521,9 @@ public class PlayerManager : MonoBehaviour
         return true;
     }
 
-    public void DeductBuildingCost(BuildingData buildingData)
+    public void DeductTechCost(TechBase techData)
     {
-        DeductResourcesFromStockpile(buildingData.goldCost, buildingData.foodCost, buildingData.woodCost, buildingData.stoneCost);
+        DeductResourcesFromStockpile(techData.goldCost, techData.foodCost, techData.woodCost, techData.stoneCost);
     }
 
     public void DeductTechQueueCostFromStockpile(TechBase tech)

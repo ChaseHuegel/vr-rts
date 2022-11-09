@@ -8,12 +8,10 @@ public class WallData : BuildingData
 {
 
     [Header("Wall Prefabs")]
-    public GameObject endWorldPrefab;
-    public GameObject endPreviewPrefab;
-    public GameObject cornerWorldPrefab;
     public GameObject cornerPreviewPrefab;
-    public GameObject diagonalWorldPrefab;
-    public GameObject diagonalWorldPreviewPrefab;
+    public GameObject cornerConstructionPrefab;
+    public GameObject diagonalPreviewPrefab;
     public GameObject diagonalConstructionPrefab;
+    
 
 }
