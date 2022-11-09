@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,8 +9,8 @@ public class TechNode
 {
     public TechBase tech;
     public bool unlocked;
+    public bool researched;
     public List<TechBase> techRequirements;    
-    public bool researched;    
     public Vector2 UIposition;
 
     public TechNode(TechBase tech, List<TechBase> reqs, Vector2 position, bool unlocked = false, bool researched = false )
@@ -20,13 +21,18 @@ public class TechNode
         this.unlocked = unlocked;
         this.UIposition = position;
     }
-
 }
 
 [CreateAssetMenu(menuName = "RTS/Tech/New Tech Tree")]
 public class TechTree : ScriptableObject
 {
     public List<TechNode> tree;
+
+    public delegate void NodeLockChanged(bool locked);
+    public static event NodeLockChanged OnNodeLockChanged;
+
+    public delegate void NodeResearchChanged(bool researched);
+    public static event NodeResearchChanged OnNodeResearchChanged;
 
     public bool AddNode(TechBase tech, Vector2 UIpos)
     {
@@ -40,20 +46,32 @@ public class TechTree : ScriptableObject
             return false;
     }
 
-    public void SetNodeToUnlockedAndResearched(TechBase tech)
+    public void UnlockTech(TechBase tech)
     {
-        TechNode techNode = FindNode(tech);
-        techNode.unlocked = techNode.researched = true;
+        FindNode(tech).unlocked = true; 
+
+        if (OnNodeLockChanged != null)
+            OnNodeLockChanged(true);
     }
 
-    public void SetNodeToUnlocked(TechBase tech)
-    {
-        FindNode(tech).unlocked = true;
-    }
-
-    public void SetNodeToResearched(TechBase tech)
+    public void ResearchTech(TechBase tech)
     {
         FindNode(tech).researched = true;
+
+        if (OnNodeResearchChanged != null)
+            OnNodeResearchChanged(true);
+    }
+
+    public bool IsUnlocked(TechBase tech)
+    {
+        TechNode node = FindNode(tech);
+        return node != null ? node.unlocked : false;
+    }
+
+    public bool IsResearched(TechBase tech)
+    {
+        TechNode node = FindNode(tech);
+        return node != null ? node.researched : false;
     }
 
     public TechNode FindNode(TechBase tech)
@@ -121,4 +139,6 @@ public class TechTree : ScriptableObject
                 tree[idx].techRequirements.Remove(t);
         }
     }
+
+    
 }

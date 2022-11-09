@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(TechTree))]
-public class TechTreeEditor : Editor
+public class TechTreeEditor : EditorWindow
 {
     // positioning
     Vector2 nodeSize = new Vector2(100f, 70f);
@@ -27,10 +26,19 @@ public class TechTreeEditor : Editor
     TechNode activeNode; // moved node stored here
     TechNode selectedNode; // selected node stored here
 
-    public override void OnInspectorGUI()
+    public TechTree targetTree;
+
+    [MenuItem("Window/Tech Tree Editor")]
+    private static void OpenWindow()
     {
-        TechTree targetTree = (TechTree)target; // get the associated Techtree
-        
+        TechTreeEditor window = GetWindow<TechTreeEditor>();
+        window.titleContent = new GUIContent("Tech Tree Editor");
+    }
+
+    public void OnGUI()
+    {
+        targetTree = (TechTree)EditorGUILayout.ObjectField("Tech Tree", targetTree, typeof(TechTree), false);
+
         // Mouse events
         Event currentEvent = Event.current;
         int controlID = GUIUtility.GetControlID(FocusType.Passive);
@@ -38,9 +46,29 @@ public class TechTreeEditor : Editor
 
         // node styles
         GUIStyle nodeStyle = new GUIStyle(EditorStyles.helpBox);
-        GUIStyle selectedStyle = new GUIStyle(EditorStyles.helpBox);
-        selectedStyle.fontStyle = FontStyle.BoldAndItalic;
-        
+        GUIStyle selectedNodeStyle = new GUIStyle(EditorStyles.helpBox);
+        selectedNodeStyle.fontStyle = FontStyle.BoldAndItalic;
+
+        // Shows selecetd node tech and gives option to delete node
+        EditorGUILayout.BeginHorizontal();
+        if (selectedNode == null || selectedNode.tech == null)
+        {
+            EditorGUILayout.LabelField("selected tech: none");
+        }
+        else
+        {
+            EditorGUILayout.LabelField("seleceted tech: " + selectedNode.tech.name);
+            if (GUILayout.Button("delete tech"))
+            {
+                targetTree.DeleteNode(selectedNode.tech);
+                if (activeNode == selectedNode)
+                    activeNode = null;
+
+                selectedNode = null;
+            }
+        }
+        GUILayout.EndHorizontal();
+
         // The techtree view
         EditorGUILayout.BeginScrollView(Vector2.zero, GUILayout.MinHeight(720)); // the inspector height is set to 720
 
@@ -56,9 +84,12 @@ public class TechTreeEditor : Editor
             
             // Draw node
             Rect nodeRect = new Rect(targetTree.tree[nodeIdx].UIposition - scrollPosition, nodeSize);
-            EditorGUI.BeginFoldoutHeaderGroup(nodeRect, true, targetTree.tree[nodeIdx].tech.name, (selectedNode == targetTree.tree[nodeIdx] ? selectedStyle : nodeStyle));
+
+            EditorGUI.BeginFoldoutHeaderGroup(nodeRect, true, targetTree.tree[nodeIdx].tech.name, (selectedNode == targetTree.tree[nodeIdx] ? selectedNodeStyle : nodeStyle));
+            
             EditorGUI.LabelField(new Rect(targetTree.tree[nodeIdx].UIposition - scrollPosition + nextLineVec, nodeLabelSize), "Unlocked");
             targetTree.tree[nodeIdx].unlocked = EditorGUI.Toggle(new Rect(targetTree.tree[nodeIdx].UIposition - scrollPosition + nextLineVec + indentVec, nodeContentSize), targetTree.tree[nodeIdx].unlocked);
+            
             EditorGUI.LabelField(new Rect(targetTree.tree[nodeIdx].UIposition - scrollPosition + nextLineVec * 2, nodeLabelSize), "Researched");
             targetTree.tree[nodeIdx].researched = EditorGUI.Toggle(new Rect(targetTree.tree[nodeIdx].UIposition - scrollPosition + nextLineVec * 2 + indentVec, nodeContentSize), targetTree.tree[nodeIdx].researched);
             EditorGUI.EndFoldoutHeaderGroup();
@@ -179,26 +210,6 @@ public class TechTreeEditor : Editor
 
         scrollPosition.x = GUILayout.HorizontalScrollbar(scrollPosition.x, 20.0f, 0.0f, minTreeWidth);
         scrollPosition.y = GUI.VerticalScrollbar(new Rect(0, 0, 20, 720), scrollPosition.y, 20f, 0f, minTreeHeight);
-
-        // Shows selecetd node tech and gives option to delete node
-        EditorGUILayout.BeginHorizontal();
-        if (selectedNode == null || selectedNode.tech == null)
-        {
-            EditorGUILayout.LabelField("selected tech: none");
-        }
-        else
-        {
-            EditorGUILayout.LabelField("seleceted tech: " + selectedNode.tech.name);
-            if (GUILayout.Button("delete tech"))
-            {
-                targetTree.DeleteNode(selectedNode.tech);
-                if (activeNode == selectedNode)
-                    activeNode = null;
-
-                selectedNode = null;
-            }
-        }
-        EditorGUILayout.EndHorizontal();
 
         EditorUtility.SetDirty(targetTree); // Makes sure changes are persistent.
     }

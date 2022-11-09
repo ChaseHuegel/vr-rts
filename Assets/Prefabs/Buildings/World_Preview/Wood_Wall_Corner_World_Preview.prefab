@@ -28,6 +28,7 @@ Transform:
   m_LocalRotation: {x: -0.0000009834763, y: 0.0000009834763, z: 0.7071068, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2882590708120918002}
   m_RootOrder: 0
@@ -51,6 +52,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -90,7 +92,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2882590708120918002}
-  m_Layer: 10
+  m_Layer: 5
   m_Name: Wood_Wall_Corner_World_Preview
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -107,6 +109,7 @@ Transform:
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: -12.283058, y: -0.0009999275, z: -11.739019}
   m_LocalScale: {x: 0.065, y: 0.065, z: 0.065}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1504243950066827498}
   m_Father: {fileID: 0}

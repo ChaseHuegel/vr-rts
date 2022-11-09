@@ -17,7 +17,7 @@ public class BuildMenuTab : MonoBehaviour
     public Material slotEnabledMaterial;
     public Material slotDisabledMaterial;
     public TMPro.TMP_FontAsset titleFont;
-    public RTSBuildingType[] Buttons;    
+    public TechBase[] ButtonsNew;
 
     void Awake()
     {
@@ -32,7 +32,7 @@ public class BuildMenuTab : MonoBehaviour
     {
         Vector3 origin = Vector3.zero;
         origin.x = (maximumNumberOfColumns - 1) * horzontalButtonSpacing * -0.5f;
-        float rows = Mathf.Ceil((float)Buttons.Length / (float)maximumNumberOfColumns);
+        float rows = Mathf.Ceil((float)ButtonsNew.Length / (float)maximumNumberOfColumns);
         origin.y = (verticalButtonSpacing * -0.5f);
         origin.y += (verticalButtonSpacing * rows) * 0.5f;
 
@@ -44,10 +44,10 @@ public class BuildMenuTab : MonoBehaviour
         float slotPositionY = origin.y;
         
         DestroyChildren();
-        
-        foreach ( RTSBuildingType rtsBuildingType in Buttons )
+
+        foreach (TechBase tech in ButtonsNew)
         {
-            if (rtsBuildingType != RTSBuildingType.None)
+            if (tech is BuildingData || tech is WallData)
             {
                 // Create the button slot gameobject
                 GameObject slotObject = new GameObject("_slot_" + i);
@@ -57,7 +57,7 @@ public class BuildMenuTab : MonoBehaviour
                 slotObject.transform.Rotate(0, 90, -90);
                 slotObject.AddComponent<Interactable>();
                 slotObject.GetComponent<Interactable>().highlightOnHover = false;
-                
+
                 // Set layer
                 slotObject.layer = LayerMask.NameToLayer("UI");
 
@@ -73,10 +73,11 @@ public class BuildMenuTab : MonoBehaviour
                 resourceCost.transform.localRotation = Quaternion.identity;
 
                 // Fetch and set the building type data from the database
-                buildMenuSlot.rtsTypeData = GameMaster.GetBuilding(rtsBuildingType);
+                // TODO: Probably not needed if using scriptable objects
+                buildMenuSlot.rtsTypeData = (BuildingData)tech;
 
                 CreateSlotTitle(buildMenuSlot);
-                
+
                 // Popluate the resource cost prefab text objects
                 BuildMenuResouceCost cost = resourceCost.GetComponent<BuildMenuResouceCost>();
                 cost.woodText.text = buildMenuSlot.rtsTypeData.woodCost.ToString();
@@ -87,11 +88,11 @@ public class BuildMenuTab : MonoBehaviour
                 // Create/Instatiate preview objects for slots
                 buildMenuSlot.CreatePreviewObject();
             }
-            
+
             // Move to next column, or to the next row if we
             // reach max column count.
             column++;
-            if ( column >= maximumNumberOfColumns )
+            if (column >= maximumNumberOfColumns)
             {
                 row++;
                 column = 0;

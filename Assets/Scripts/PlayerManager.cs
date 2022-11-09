@@ -326,7 +326,7 @@ public class PlayerManager : MonoBehaviour
         }
 
     }
-
+    
     public void CompleteResearch(TechBase tech)
     {
         Debug.LogFormat("{0} research complete.", tech.title, this);
@@ -501,8 +501,8 @@ public class PlayerManager : MonoBehaviour
     {
         // Make this unneccassary by having the queue button locked.
         TechNode node = faction.techTree.tree.Find(x => x.tech == tech);
-        
-        if (node == null || !node.unlocked)
+
+        if (!faction.techTree.IsUnlocked(tech))
             return false;
 
         if (goldCollected < tech.goldCost || woodCollected < tech.woodCost ||
@@ -511,12 +511,14 @@ public class PlayerManager : MonoBehaviour
             return false;
         }
 
-        if (tech.populationCost + totalPopulation + queueCount > populationLimit)
+        if (tech.populationCost > 0)
         {
-            return false;
+            if (tech.populationCost + totalPopulation + queueCount > populationLimit)
+                return false;
+
+            queueCount += tech.populationCost;
         }
 
-        queueCount += tech.populationCost;
         return true;
     }
 

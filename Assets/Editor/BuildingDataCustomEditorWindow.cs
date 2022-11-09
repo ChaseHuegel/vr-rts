@@ -25,11 +25,24 @@ public class BuildingDataCustomEditorWindow : EditorWindow
     SteamVR_Skeleton_Pose grabPose;
     SteamVR_Skeleton_Pose pinchPose;
     Vector2 boundingDimensions = Vector2.one;
+    Vector2 scrollPosition = Vector2.zero;
 
     public void OnGUI()
     {
-        bData = (BuildingData)EditorGUILayout.ObjectField("Building Data", bData, typeof(BuildingData), false); ;
+        scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
 
+        bData = (BuildingData)EditorGUILayout.ObjectField("Building Data", bData, typeof(BuildingData), false);
+        
+        if (bData)
+        {
+            DrawEditor();
+        }
+
+        EditorGUILayout.EndScrollView();
+    }
+
+    private void DrawEditor()
+    {
         EditorGUILayout.TextField("Title", bData.title);
         EditorGUILayout.TextField("Description", bData.description);
         EditorGUILayout.FloatField("Queue Research Time", bData.queueResearchTime);
@@ -66,7 +79,7 @@ public class BuildingDataCustomEditorWindow : EditorWindow
         EditorGUILayout.Space();
 
         EditorGUILayout.LabelField("Building Settings", EditorStyles.boldLabel);
-        EditorGUILayout.EnumPopup("Building Type",bData.buildingType);
+        EditorGUILayout.EnumPopup("Building Type", bData.buildingType);
         EditorGUILayout.EnumFlagsField("Dropoff Types", bData.dropoffTypes);
         EditorGUILayout.Vector2Field("Bounding Dimensions", new Vector2(bData.boundingDimensionX, bData.boundingDimensionY));
 
@@ -97,28 +110,55 @@ public class BuildingDataCustomEditorWindow : EditorWindow
         grabPose = (SteamVR_Skeleton_Pose)EditorGUILayout.ObjectField("Grab Pose", grabPose, typeof(SteamVR_Skeleton_Pose), true);
         pinchPose = (SteamVR_Skeleton_Pose)EditorGUILayout.ObjectField("Pinch Pose", pinchPose, typeof(SteamVR_Skeleton_Pose), true);
 
+        int worldLayer = LayerMask.NameToLayer("Building");
+        worldLayer = EditorGUILayout.LayerField("World Layer", worldLayer);
+
+        int menuPreviewLayer = LayerMask.NameToLayer("UI");
+        menuPreviewLayer = EditorGUILayout.LayerField("Menu Preview Layer", menuPreviewLayer);
+
+        int fadedPreviewLayer = LayerMask.NameToLayer("UI");
+        fadedPreviewLayer = EditorGUILayout.LayerField("Faded Preview Layer", fadedPreviewLayer);
+
+        int worldPreviewLayer = LayerMask.NameToLayer("UI");
+        worldPreviewLayer = EditorGUILayout.LayerField("World Preview Layer", worldPreviewLayer);
+
+        int throwableLayer = LayerMask.NameToLayer("ThrowableBuilding");
+        throwableLayer = EditorGUILayout.LayerField("Throwable Layer", throwableLayer);
+
+        int constructionLayer = LayerMask.NameToLayer("Building");
+        constructionLayer = EditorGUILayout.LayerField("Construction Layer", constructionLayer);
+
         if (GUILayout.Button("Generate Visual Prefabs"))
         {
-            string editedName = bData.title.Replace(' ', '_').ToLower();
+            string editedName = bData.name.Replace(' ', '_').ToLower();
+
+            // World
+            if (bData.worldPrefab)
+                bData.worldPrefab.layer = worldLayer;
 
             // Menu preview
             GameObject menuPreview = GenerateObject(editedName + "_menu_preview", model, skinMaterial);
             menuPreview.transform.localScale = new Vector3(0.125033662f, 0.125033662f, 0.125033662f);
+            menuPreview.layer = menuPreviewLayer;
             bData.menuPreviewPrefab = SavePrefabObject(menuPreview);
 
             // Faded preview
             GameObject fadedPreview = GenerateObject(editedName + "_faded_preview", model, fadedMaterial);
+            fadedPreview.layer = LayerMask.NameToLayer("UI");
             bData.fadedPreviewPrefab = SavePrefabObject(fadedPreview);
 
             // World preview
             GameObject worldPreview = GenerateObject(editedName + "_world_preview", model, skinMaterial);
+            worldPreview.layer = worldPreviewLayer;
             bData.worldPreviewPrefab = SavePrefabObject(worldPreview);
 
             // Throwable
             GameObject throwable = GenerateThrowable(bData, model, editedName);
+            throwable.layer = throwableLayer;
 
             // Construction
             GameObject construction = new GameObject(editedName + "_construction");
+            construction.layer = constructionLayer;
             construction.AddComponent<AudioSource>();
             construction.AddComponent<PointerInteractable>().highlightOnHover = true;
             construction.AddComponent<Interactable>();
@@ -149,7 +189,7 @@ public class BuildingDataCustomEditorWindow : EditorWindow
             bData.constructionPrefab = SavePrefabObject(construction);
 
             EditorUtility.SetDirty(bData);
-            
+
             // Cleanup
             DestroyImmediate(menuPreview);
             DestroyImmediate(fadedPreview);
@@ -157,9 +197,6 @@ public class BuildingDataCustomEditorWindow : EditorWindow
             DestroyImmediate(throwable);
             DestroyImmediate(construction);
         }
-
-        EditorGUILayout.Space();
-        //bData.worldPrefab = (GameObject)EditorGUILayout.ObjectField("Blah", bData.worldPrefab, typeof(GameObject), false);
     }
 
     private GameObject GenerateThrowable(BuildingData bData, GameObject model, string name)

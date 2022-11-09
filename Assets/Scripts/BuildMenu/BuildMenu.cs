@@ -27,14 +27,14 @@ public class BuildMenu : MonoBehaviour
         if (!playerManager)
             playerManager = PlayerManager.Instance;
             
-        foreach(BuildMenuTab tab in tabs)
-        {
-            foreach(BuildMenuSlot slot in tab.GetComponentsInChildren<BuildMenuSlot>())
-            {
-                bool canBuild = playerManager.CanConstructBuilding(slot.rtsTypeData.buildingType);                
-                slot.SlotEnabled(canBuild); 
-            }
-        }
+        // foreach(BuildMenuTab tab in tabs)
+        // {
+        //     foreach(BuildMenuSlot slot in tab.GetComponentsInChildren<BuildMenuSlot>())
+        //     {
+        //         bool canBuild = playerManager.CanConstructBuilding(slot.rtsTypeData.buildingType);                
+        //         slot.SlotEnabled(canBuild); 
+        //     }
+        // }
     }
 
     public void SetActiveTab(int tabNumber)

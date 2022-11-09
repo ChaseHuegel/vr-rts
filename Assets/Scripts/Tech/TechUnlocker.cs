@@ -8,13 +8,18 @@ public class TechUnlocker : TechBase
 {
     bool unlockTechNode;
 
+    public List<TechBase> targetTechs;
+
     public override void Execute(SpawnQueue spawnQueue)
     {
         base.Execute(spawnQueue);
 
-        // Unlock tech node
-        PlayerManager.Instance.faction.techTree.SetNodeToUnlocked(this);
+        // Unlock tech nodes
+        foreach (TechBase tech in targetTechs)
+        {
+            PlayerManager.Instance.faction.techTree.UnlockTech(tech);
 
-        Debug.LogFormat("{0} research complete.", this.title);
+            Debug.LogFormat("{0} unlocked.", tech.title);
+        }
     }
 }

@@ -460,7 +460,7 @@ public class BuildingInteractionPanel : MonoBehaviour
             buttonLock.transform.localPosition = new Vector3(0.0f, 0.0f, -0.14f);
             buttonLock.transform.Rotate(0.0f, 180.0f, 0.0f);
             
-            buttonLock.SetActive(!PlayerManager.Instance.faction.techTree.FindNode(tech).unlocked);
+            buttonLock.SetActive(!PlayerManager.Instance.faction.techTree.IsUnlocked(tech));
 
             queueUnitButton.buttonLockedObject = buttonLock;
         }

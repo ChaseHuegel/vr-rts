@@ -9,6 +9,8 @@ public class BuildingData : TechBase
     [Header("Building Settings")]
     public RTSBuildingType buildingType;    
     public ResourceGatheringType dropoffTypes;
+    public int boundingDimensionX;
+    public int boundingDimensionY;
 
     [Header("Stats")]
     public int populationSupported;
@@ -23,14 +25,7 @@ public class BuildingData : TechBase
     public GameObject worldPreviewPrefab;
     public GameObject throwablePrefab;
     public GameObject constructionPrefab;
-    
-    [Header("Wall Specific Prefabs")]
-    public GameObject diagonalWorldPrefab;
-    public GameObject diagonalWorldPreviewPrefab;
-    public GameObject diagonalConstructablePrefab;
-    
-    public int boundingDimensionX;
-    public int boundingDimensionY;
-    public List<RTSUnitType> allowedUnitsToSpawn;
+
+    [Header("Other Settings")]
     public SoundElement constructionCompletedAudio;
 }

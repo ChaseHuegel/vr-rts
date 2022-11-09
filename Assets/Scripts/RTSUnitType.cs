@@ -7,7 +7,7 @@ public enum RTSUnitType
     Villager,    
     Swordsman,
     OrcGrunt,
-    Scout,
+    Bowman,
     Clubman,
     FishingBoat,
     TradeBoat,

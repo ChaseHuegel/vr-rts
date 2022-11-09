@@ -1,5 +1,5 @@
 public static class AttributeConstants
-{
+{    
     public const string HEALTH = "hp";
     public const string SPEED = "spd";
     public const string REACH = "reach";
