@@ -94,7 +94,7 @@ public class InteractionPointer : MonoBehaviour
     private Resource pointedAtResource;
     private Vector3 rallyWaypointArcStartPosition;
     private GameObject rallyPointObject;
-    private float triggerAddToSelectionThreshold = 0.75f;
+    private float triggerAddToSelectionThreshold = 0.85f;
 
     // Cache value
     private int maxUnitSelectionCount;
@@ -247,15 +247,16 @@ public class InteractionPointer : MonoBehaviour
 
             if (WasTeleportButtonReleased(hand))
             {
-                // if (pointerHand == hand)
+                if (pointerHand == hand)
+                    pointerHand = null;
+                
                 TryTeleportPlayer();
                 isSelectingTeleportLocation = false;
                 teleportArc.Hide();
-                // pointerHand = null;
             }
             else if (WasTeleportButtonPressed(hand))
             {
-                // pointerHand = hand;
+                pointerHand = hand;
                 teleportArc.Show();
                 isSelectingTeleportLocation = true;
             }
@@ -269,6 +270,7 @@ public class InteractionPointer : MonoBehaviour
             }
             else if (WasCancelButtonPressed(hand))
             {
+                pointerHand = hand;
                 if (isInUnitSelectionMode)
                     EndUnitSelectionMode();
                 else if (isInBuildingPlacementMode)
@@ -283,8 +285,14 @@ public class InteractionPointer : MonoBehaviour
                     }
                 }
             }
+            else if (WasCancelButtonReleased(hand))
+            {
+                if (pointerHand == hand)
+                    pointerHand = null;
+            }
             else if (WasSelectButtonPressed(hand))
             {
+                pointerHand = hand;
                 if (pointedAtPointerInteractable)
                 {
                     BuildingInteractionPanel buildingInteractionPanel = pointedAtPointerInteractable.GetComponentInChildren<BuildingInteractionPanel>();
@@ -302,6 +310,12 @@ public class InteractionPointer : MonoBehaviour
                     }
                 }          
             }            
+            else if (WasSelectButtonReleased(hand))
+            {
+                if (pointerHand == hand)
+                    pointerHand = null;
+            }
+
             else if (isInBuildingPlacementMode)
             {
                 // TODO: Should gates snap to nearby walls without having to be exactly lined
@@ -353,7 +367,7 @@ public class InteractionPointer : MonoBehaviour
 
     private bool WasInteractButtonPressed(Hand hand)
     {
-        if (CanInteract(hand) && pointerHand == null)
+        if (CanInteract(hand))
         {
             if (uiInteractAction.GetAxis(hand.handType) > 0)
             {
@@ -378,7 +392,6 @@ public class InteractionPointer : MonoBehaviour
 
         return false;
     }
-
 
     private bool WasGrabGripPressed(Hand hand)
     {
@@ -426,7 +439,10 @@ public class InteractionPointer : MonoBehaviour
             }
 
             ActorV2 hoveredActor = pointedAtPointerInteractable.GetComponent<ActorV2>();
-            if (hoveredActor && !isInUnitSelectionMode && hoveredActor.Faction.IsSameFaction(faction))
+            if (hoveredActor &&
+                !isInUnitSelectionMode &&
+                hoveredActor.Faction.IsSameFaction(faction) &&
+                uiInteractAction.GetAxis(pointerHand.handType) > triggerAddToSelectionThreshold)
             {
                 selectedActors.Add(hoveredActor);
                 isInUnitSelectionMode = true;
@@ -958,9 +974,12 @@ public class InteractionPointer : MonoBehaviour
                 uiInteractAction.GetAxis(pointerHand.handType) > triggerAddToSelectionThreshold)
             {
                 ActorV2 hoveredActor = pointedAtPointerInteractable.GetComponent<ActorV2>();
-                if (hoveredActor && !selectedActors.Contains(hoveredActor) && hoveredActor.Faction.IsSameFaction(faction))
+                if (hoveredActor &&
+                    !selectedActors.Contains(hoveredActor) && 
+                    hoveredActor.Faction.IsSameFaction(faction))
                 {
                     selectedActors.Add(hoveredActor);
+                    PlayPointerHaptic(true);
                 }
             }
         }
