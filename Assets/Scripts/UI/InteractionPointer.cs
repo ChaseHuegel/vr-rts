@@ -739,7 +739,7 @@ public class InteractionPointer : MonoBehaviour
                 // Preview objects don't have buildingDimensions on the object
                 // so we have to snap ourselves.
                 if (obj)
-                    HardSnapToGrid(obj.transform, 1, 1);
+                    HardSnapToGrid(obj.transform, 1, 1, true);
             }
         }
 
@@ -773,7 +773,7 @@ public class InteractionPointer : MonoBehaviour
                 // Preview objects don't have buildingDimensions on the object
                 // so we have to snap ourselves.
                 if (obj)
-                    HardSnapToGrid(obj.transform, 1, 1);
+                    HardSnapToGrid(obj.transform, 1, 1, true);
             }
 
             // Not a straight wall, need a corner
@@ -786,7 +786,7 @@ public class InteractionPointer : MonoBehaviour
                 {                    
                     obj = Instantiate(currentWallData.cornerPreviewPrefab, World.ToTransformSpace(currentSegmentCoord), Quaternion.identity);
 
-                    HardSnapToGrid(obj.transform, 1, 1);
+                    HardSnapToGrid(obj.transform, 1, 1, true);
                     wallPreviewCornerSegments.Add(obj);
                 }
                 // currentCell.occupied = true
@@ -800,7 +800,7 @@ public class InteractionPointer : MonoBehaviour
                 // Preview objects don't have buildingDimensions on the object
                 // so we have to snap ourselves.
                 if (obj)
-                    HardSnapToGrid(obj.transform, 1, 1);
+                    HardSnapToGrid(obj.transform, 1, 1, true);
             }
 
             //-----------------------------------------------------------------
@@ -831,7 +831,7 @@ public class InteractionPointer : MonoBehaviour
                 // Preview objects don't have buildingDimensions on the object
                 // so we have to snap ourselves.
                 if (obj)
-                    HardSnapToGrid(obj.transform, 1, 1);
+                    HardSnapToGrid(obj.transform, 1, 1, true);
             }
         }
 
@@ -1009,7 +1009,7 @@ public class InteractionPointer : MonoBehaviour
         }
         else if (isInWallPlacementMode)
         {
-            HardSnapToGrid(destinationReticleTransform, placementBuildingData.boundingDimensionX, placementBuildingData.boundingDimensionY);
+            HardSnapToGrid(destinationReticleTransform, placementBuildingData.boundingDimensionX, placementBuildingData.boundingDimensionY, true);
             if (wallPlacementPreviewAnchor)// && buildingPlacementPreviewObject)
             {
                 DrawWallPreviewSegments();
@@ -1381,6 +1381,16 @@ public class InteractionPointer : MonoBehaviour
 
         // TODO: Vertical snapping should snap to terrain dynamically
         float positionY = verticalSnap == true ? 0.0f : obj.position.y;
+
+        if (verticalSnap)
+        {
+            RaycastHit hit;
+            Vector3 sourceLocation = obj.position;
+            sourceLocation.y += 10.0f;
+
+            if (Physics.Raycast(sourceLocation, Vector3.down, out hit, 30.0f))
+                positionY = hit.point.y;
+        }
 
         obj.position = World.ToTransformSpace(new Vector3(Mathf.RoundToInt(pos.x), positionY, Mathf.RoundToInt(pos.z)));
 
