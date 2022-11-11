@@ -50,13 +50,13 @@ public class Constructible : Obstacle
 
         for (int i = 0; i < neighbors.Length; ++i)
         {
-            WallSegment wallSegment = neighbors[i].GetFirstOccupant<Structure>()?.GetComponent<WallSegment>();
+            WallSegment wallSegment = neighbors[i].GetFirstOccupant<Body>()?.GetComponent<WallSegment>();
 
             if (wallSegment)
                 Destroy(wallSegment.gameObject);
         }
 
-        WallSegment thisWallSegment = thisCell.GetFirstOccupant<Structure>()?.GetComponent<WallSegment>();
+        WallSegment thisWallSegment = thisCell.GetFirstOccupant<Body>()?.GetComponent<WallSegment>();
 
         if (thisWallSegment)
             Destroy(thisWallSegment.gameObject);

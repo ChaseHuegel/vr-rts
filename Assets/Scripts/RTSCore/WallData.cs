@@ -12,6 +12,6 @@ public class WallData : BuildingData
     public GameObject cornerConstructionPrefab;
     public GameObject diagonalPreviewPrefab;
     public GameObject diagonalConstructionPrefab;
-    
+
 
 }

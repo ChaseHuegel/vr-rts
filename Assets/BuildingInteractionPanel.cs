@@ -114,6 +114,7 @@ public class BuildingInteractionPanel : MonoBehaviour
     private SpawnQueue spawnQueue;
     private Damageable damageable;
     private GameObject cancelButtonGameObject;
+    private bool isVisible;
 
     void Awake()
     {
@@ -387,6 +388,20 @@ public class BuildingInteractionPanel : MonoBehaviour
         // }        
     }
 
+    public void Toggle()
+    {
+        if (isVisible)
+        {
+            Hide();
+            isVisible = false;
+        }
+        else
+        {
+            Show();
+            isVisible = true;
+        }
+    }
+    
     public void Show()
     {
         titleGameObject?.SetActive(true);

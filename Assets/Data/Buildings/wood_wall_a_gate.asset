@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c98206bdc9ffd5547bf4552bd13d2c59, type: 3}
-  m_Name: Wood_Wall_Gate
+  m_Name: wood_wall_a_gate
   m_EditorClassIdentifier: 
   title: Wood Gate
   description: 
@@ -26,26 +26,22 @@ MonoBehaviour:
   woodCost: 30
   buildingType: 100
   dropoffTypes: 0
-  populationSupported: 0
-  maxUnitQueueSize: 0
-  maximumHitPoints: 100
-  garrisonCapacity: 0
-  armor: 2
-  menuPreviewPrefab: {fileID: 2468851729165047813, guid: f36f547e7a0373547ba062c152842b8d,
-    type: 3}
-  fadedPreviewPrefab: {fileID: 4787501367066796365, guid: 66bd02943c30ab244a30181f22b03924,
-    type: 3}
-  worldPreviewPrefab: {fileID: 549320164299014470, guid: c5cab34ef20c8e5419a97dd495620bfd,
-    type: 3}
-  throwablePrefab: {fileID: 8908048140912160582, guid: 51c6117db052e2c45a7a07f027e63b51,
-    type: 3}
-  constructablePrefab: {fileID: 549320164299014470, guid: 1f168937329b08b48a382ff40ff718c6,
-    type: 3}
-  diagonalWorldPrefab: {fileID: 0}
-  diagonalWorldPreviewPrefab: {fileID: 0}
-  diagonalConstructablePrefab: {fileID: 0}
   boundingDimensionX: 3
   boundingDimensionY: 3
-  allowedUnitsToSpawn: 
+  populationSupported: 0
+  maxUnitQueueSize: 0
+  maximumHitPoints: 10
+  garrisonCapacity: 0
+  armor: 2
+  menuPreviewPrefab: {fileID: 7159461885893815296, guid: f4a2ed5fd54a5d649a47db51cef7977a,
+    type: 3}
+  fadedPreviewPrefab: {fileID: 4013362369166548745, guid: 2293aeb283bec124eb128994980d99f7,
+    type: 3}
+  worldPreviewPrefab: {fileID: 9205358891605464538, guid: 551edcd306fa83f41931eb6289a41296,
+    type: 3}
+  throwablePrefab: {fileID: 8562680007258773684, guid: 4f92d860155aaa143879b5b6bf13770d,
+    type: 3}
+  constructionPrefab: {fileID: 2473681656239883059, guid: 14edfcf620858d048be027b8e275193f,
+    type: 3}
   constructionCompletedAudio: {fileID: 11400000, guid: c72159ec98440534abf1b3058c7edd57,
     type: 2}

@@ -8,8 +8,8 @@ public class WallGate : MonoBehaviour
     private Structure structure;
     private Animator animator;
 
-    [InspectorButton("ToggleDoors")]
-    public bool toggleDoors;
+    // [InspectorButton("ToggleDoors")]
+    // public bool toggleDoors;
 
     bool isOpen = false;
 
@@ -28,11 +28,11 @@ public class WallGate : MonoBehaviour
 
     void OnTriggerEnter(Collider collider)
     {
-        UnitV2 unit = collider.gameObject.GetComponentInParent<UnitV2>();
+        UnitV2 unit = collider.gameObject.GetComponent<UnitV2>();
         if (unit)
         {
             // Friendly
-            if (!unit.Faction.IsSameFaction(playerManager.faction) && openConditions.HasFlag(OpenCondition.Friendly))
+            if (unit.Faction.IsSameFaction(playerManager.faction) && openConditions.HasFlag(OpenCondition.Friendly))
             {
                 OpenDoors();
                 return;
@@ -61,21 +61,21 @@ public class WallGate : MonoBehaviour
             CloseDoors();
     }
 
-    private void OpenDoors()
+    public void OpenDoors()
     {
-        animator.SetTrigger("Open");
+        animator.SetBool("DoorOpen", true);
         structure.UnbakeFromGrid();
         isOpen = true;
     }
 
-    private void CloseDoors()
+    public void CloseDoors()
     {
-        animator.SetTrigger("Close");
+        animator.SetBool("DoorOpen", false);
         structure.BakeToGrid();
         isOpen = false;
     }
 
-    private void ToggleDoors()
+    public void ToggleDoors()
     {
         if (isOpen)
             CloseDoors();
