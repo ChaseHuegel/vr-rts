@@ -8,11 +8,6 @@ public class Structure : Obstacle
     public readonly static List<Structure> AllStructures = new();
 
     public BuildingData buildingData;
-
-    [Header("Skin Settings")]
-    public MeshRenderer[] meshes;
-    public SkinnedMeshRenderer[] skinnedMeshes;
-
     private Damageable damageable;
     public Damageable AttributeHandler { get { return damageable; } }
     private AudioSource audioSource;
@@ -30,6 +25,17 @@ public class Structure : Obstacle
     {
         if (!(audioSource = GetComponent<AudioSource>()))
             Debug.Log("Audiosource component not found.");
+    }
+
+    protected override void UpdateSkin()
+    {
+        if (SkinRendererTargets.Length <= 0) return;
+
+        if (Faction?.skin?.buildingMaterial)
+        {
+            foreach (var renderer in SkinRendererTargets)
+                renderer.sharedMaterial = Faction.skin.buildingMaterial;
+        }
     }
 
     public override void Initialize()

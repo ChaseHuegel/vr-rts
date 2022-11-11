@@ -222,7 +222,10 @@ MonoBehaviour:
   Faction: {fileID: 0}
   BoundingDimensions: {x: 1, y: 1}
   BoundingOrigin: {x: 0, y: 0}
-  SkinRendererTargets: []
+  SkinRendererTargets:
+  - {fileID: 62998806723961261}
+  - {fileID: 7381818111521268228}
+  - {fileID: 5044160766158422150}
   bakeOnStart: 1
   allowPathThru: 0
   DestroyOnBuilt: 1
@@ -334,6 +337,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 899868cc2340653499391ee2e5659eea, type: 3}
+--- !u!23 &62998806723961261 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: 899868cc2340653499391ee2e5659eea,
+    type: 3}
+  m_PrefabInstance: {fileID: 1665844458143137065}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1194858836932025026 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 899868cc2340653499391ee2e5659eea,
@@ -425,6 +434,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0909966885c15ab4dae3e5a85421e7af, type: 3}
+--- !u!23 &5044160766158422150 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: 0909966885c15ab4dae3e5a85421e7af,
+    type: 3}
+  m_PrefabInstance: {fileID: 5891237023921429506}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6218162259828030441 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 0909966885c15ab4dae3e5a85421e7af,
@@ -516,6 +531,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e54b54a87fed2754ea7bb18d18a2bc38, type: 3}
+--- !u!23 &7381818111521268228 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: e54b54a87fed2754ea7bb18d18a2bc38,
+    type: 3}
+  m_PrefabInstance: {fileID: 8192304835830726272}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8519210338646415723 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: e54b54a87fed2754ea7bb18d18a2bc38,

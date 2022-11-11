@@ -108,7 +108,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: ee90f878377271b4fbbf915249f24476, type: 2}
+  - {fileID: 2100000, guid: 4a8b820c98c7b4540bab4e4f3d70d7fb, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -423,13 +423,13 @@ MonoBehaviour:
   Faction: {fileID: 11400000, guid: effa210fcfc5796468bcaecb24cb5693, type: 2}
   BoundingDimensions: {x: 3, y: 3}
   BoundingOrigin: {x: 0, y: 0}
-  SkinRendererTargets: []
+  SkinRendererTargets:
+  - {fileID: 9136405110758045158}
+  - {fileID: 1318014236775810314}
+  - {fileID: 7452560615941617889}
   bakeOnStart: 1
   allowPathThru: 1
   buildingData: {fileID: 11400000, guid: 5563b94f1188a1c4e8f99f9596e6f399, type: 2}
-  meshes: []
-  skinnedMeshes:
-  - {fileID: 7452560615941617889}
 --- !u!114 &-3040173863063974761
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -612,7 +612,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: ee90f878377271b4fbbf915249f24476, type: 2}
+  - {fileID: 2100000, guid: 4a8b820c98c7b4540bab4e4f3d70d7fb, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

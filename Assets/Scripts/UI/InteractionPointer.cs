@@ -115,8 +115,6 @@ public class InteractionPointer : MonoBehaviour
     [Header("Building Placement")]
     public float buildingPlacementRotationIncrement = 45.0f;
     public float wallPlacementRotationIncrement = 22.5f;
-    public Hand placementHand;
-    public bool placementEnded;
     private GameObject buildingPlacementPreviewObject;
     private float lastBuildingRotation;
     private BuildingData placementBuildingData;
@@ -169,11 +167,6 @@ public class InteractionPointer : MonoBehaviour
 #endif
         teleportArc = GetComponent<TeleportArc>();
         teleportArc.traceLayerMask = traceLayerMask;
-
-        // loopingAudioMaxVolume = loopingAudioSource.volume;
-        // float invalidReticleStartingScale = invalidReticleTransform.localScale.x;
-        // invalidReticleMinScale *= invalidReticleStartingScale;
-        // invalidReticleMaxScale *= invalidReticleStartingScale;
     }
 
     //=========================================================================
@@ -189,8 +182,7 @@ public class InteractionPointer : MonoBehaviour
         //interactableObjects = GameObject.FindObjectsOfType<PointerInteractable>();
         selectedActors = new List<ActorV2>();
 
-        // Cache some values, going to need them a lot and don't need to keep
-        // bothering the GameMaster/PlayerManager for them.
+        // Cache some values
         maxUnitSelectionCount = GameMaster.Instance.maximumUnitSelectionCount;
         faction = playerManager.faction;
         

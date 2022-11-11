@@ -42,7 +42,18 @@ public class Constructible : Obstacle
             BakeToGrid();
         }
     }
-    
+
+    protected override void UpdateSkin()
+    {
+        if (SkinRendererTargets.Length <= 0) return;
+
+        if (Faction?.skin?.buildingMaterial)
+        {
+            foreach (var renderer in SkinRendererTargets)
+                renderer.sharedMaterial = Faction.skin.buildingMaterial;
+        }
+    }
+
     private void RemoveExistingWalls()
     {
         Cell thisCell = GetCell();

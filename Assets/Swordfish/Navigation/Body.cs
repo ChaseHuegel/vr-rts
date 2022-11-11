@@ -302,7 +302,7 @@ namespace Swordfish.Navigation
             }
         }
 
-        private void UpdateSkin()
+        protected virtual void UpdateSkin()
         {
             if (SkinRendererTargets.Length <= 0) return;
             

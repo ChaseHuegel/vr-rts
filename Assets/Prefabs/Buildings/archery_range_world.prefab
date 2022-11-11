@@ -301,13 +301,11 @@ MonoBehaviour:
   Faction: {fileID: 11400000, guid: effa210fcfc5796468bcaecb24cb5693, type: 2}
   BoundingDimensions: {x: 5, y: 5}
   BoundingOrigin: {x: 0, y: 0}
-  SkinRendererTargets: []
+  SkinRendererTargets:
+  - {fileID: 1123641553571543255}
   bakeOnStart: 1
   allowPathThru: 0
   buildingData: {fileID: 11400000, guid: ffca4340b49b17e4e93030ba6c0d567e, type: 2}
-  meshes:
-  - {fileID: 0}
-  skinnedMeshes: []
 --- !u!114 &-8151898422001902557
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -519,7 +517,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: ee90f878377271b4fbbf915249f24476, type: 2}
+      objectReference: {fileID: 2100000, guid: 4a8b820c98c7b4540bab4e4f3d70d7fb, type: 2}
     - target: {fileID: 919132149155446097, guid: 83b21cbd94e89e54a98bdc9ac8fb2100,
         type: 3}
       propertyPath: m_Name
@@ -527,6 +525,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 83b21cbd94e89e54a98bdc9ac8fb2100, type: 3}
+--- !u!23 &1123641553571543255 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: 83b21cbd94e89e54a98bdc9ac8fb2100,
+    type: 3}
+  m_PrefabInstance: {fileID: 1753711889262404691}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2295946127001781176 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 83b21cbd94e89e54a98bdc9ac8fb2100,

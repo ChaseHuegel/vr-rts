@@ -4042,10 +4042,20 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1795755898709520999, guid: 27cc3b43b77aafe4da537e66c4fe1efd,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 4a8b820c98c7b4540bab4e4f3d70d7fb, type: 2}
     - target: {fileID: 3042174803139083339, guid: 27cc3b43b77aafe4da537e66c4fe1efd,
         type: 3}
       propertyPath: m_Name
       value: house_world
+      objectReference: {fileID: 0}
+    - target: {fileID: 5412639916344327254, guid: 27cc3b43b77aafe4da537e66c4fe1efd,
+        type: 3}
+      propertyPath: meshes.Array.size
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5412639916344327254, guid: 27cc3b43b77aafe4da537e66c4fe1efd,
         type: 3}
@@ -9706,8 +9716,6 @@ MonoBehaviour:
   bakeOnStart: 1
   allowPathThru: 0
   buildingData: {fileID: 11400000, guid: 963461a3aaf76f0458420eb41fae093d, type: 2}
-  meshes: []
-  skinnedMeshes: []
 --- !u!114 &215332172
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -39716,6 +39724,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 771802060}
     m_Modifications:
+    - target: {fileID: 386326486916388643, guid: 98885f5b4fafa1c4d9c5fb6ecd229b0b,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 792a4bad9e08b8e41bfbd3f0b8aac1ab, type: 2}
     - target: {fileID: 899507145775679583, guid: 98885f5b4fafa1c4d9c5fb6ecd229b0b,
         type: 3}
       propertyPath: m_Name
@@ -61009,7 +61022,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 4a8b820c98c7b4540bab4e4f3d70d7fb, type: 2}
+      objectReference: {fileID: 2100000, guid: 792a4bad9e08b8e41bfbd3f0b8aac1ab, type: 2}
     - target: {fileID: 899507145775679583, guid: 98885f5b4fafa1c4d9c5fb6ecd229b0b,
         type: 3}
       propertyPath: m_Name
@@ -83912,6 +83925,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 771802060}
     m_Modifications:
+    - target: {fileID: 659349593715173017, guid: 6857ebc49b069d543b38c881fd5a90bd,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 4a8b820c98c7b4540bab4e4f3d70d7fb, type: 2}
     - target: {fileID: 4557053880173028622, guid: 6857ebc49b069d543b38c881fd5a90bd,
         type: 3}
       propertyPath: m_RootOrder
@@ -83967,11 +83985,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4574908427596831513, guid: 6857ebc49b069d543b38c881fd5a90bd,
-        type: 3}
-      propertyPath: meshes.Array.data[0]
-      value: 
-      objectReference: {fileID: 2006977551}
     - target: {fileID: 5446827206036786404, guid: 6857ebc49b069d543b38c881fd5a90bd,
         type: 3}
       propertyPath: m_Name
@@ -83979,12 +83992,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6857ebc49b069d543b38c881fd5a90bd, type: 3}
---- !u!23 &2006977551 stripped
-MeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 659349593715173017, guid: 6857ebc49b069d543b38c881fd5a90bd,
-    type: 3}
-  m_PrefabInstance: {fileID: 2006977550}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2008406041 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8724854349296649426, guid: a6a54e351f7131743b15fdaba02005ca,
@@ -90050,9 +90057,6 @@ MonoBehaviour:
   bakeOnStart: 1
   allowPathThru: 0
   buildingData: {fileID: 11400000, guid: ffca4340b49b17e4e93030ba6c0d567e, type: 2}
-  meshes:
-  - {fileID: 769854116}
-  skinnedMeshes: []
 --- !u!1001 &1981065966667365709
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -92702,9 +92706,6 @@ MonoBehaviour:
   bakeOnStart: 1
   allowPathThru: 0
   buildingData: {fileID: 11400000, guid: acd2012d81514a643bd75779f8900a24, type: 2}
-  meshes:
-  - {fileID: 604685151}
-  skinnedMeshes: []
 --- !u!1001 &9081886262575886237
 PrefabInstance:
   m_ObjectHideFlags: 0
