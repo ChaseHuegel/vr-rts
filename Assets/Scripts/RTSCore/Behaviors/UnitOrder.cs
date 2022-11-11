@@ -8,5 +8,5 @@ public enum UnitOrder
     Attack,
     Hunt,
     Repair,
-    RepairWalls,
+    BuildWalls,
 }

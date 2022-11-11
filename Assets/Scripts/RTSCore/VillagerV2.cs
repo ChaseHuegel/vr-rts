@@ -121,7 +121,7 @@ public class VillagerV2 : UnitV2
             case Constructible constructible:
                 Target = constructible;
                 if (constructible.buildingData is WallData)
-                    Order = UnitOrder.RepairWalls;
+                    Order = UnitOrder.BuildWalls;
                 else
                     Order = UnitOrder.Repair;
                 break;
@@ -129,7 +129,7 @@ public class VillagerV2 : UnitV2
             case Structure structure:
                 Target = structure;
                 if (structure.buildingData is WallData)
-                    Order = UnitOrder.RepairWalls;
+                    Order = UnitOrder.BuildWalls;
                 else if (structure.Attributes.Get(AttributeConstants.HEALTH).IsMax())
                     Order = UnitOrder.DropOff;
                 else

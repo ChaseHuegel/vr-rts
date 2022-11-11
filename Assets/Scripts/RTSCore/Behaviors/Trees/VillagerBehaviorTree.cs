@@ -189,6 +189,28 @@ public static class VillagerBehaviorTree
                 )
             ),
 
+            new OrderIs(UnitOrder.BuildWalls,
+                new BehaviorSelector(
+                    //  Attempt to repair the target
+                    new BehaviorSequence(
+                        new BehaviorSelector(
+                            new HasTarget(),
+                            new TargetNearestConstructibleWall()
+                        ),
+                        
+                        new GoToTarget(),
+                        new SetActorState(ActorAnimationState.BUILDANDREPAIR),
+                        new HealTarget()
+                    ),
+
+                    //  Else order is complete
+                    new BehaviorSequence(
+                        new ResetTarget(),
+                        new ResetOrder()
+                    )
+                )
+            ),
+
             //  Try to navigate to our current destination
             new IfHasDestination(
                 new BehaviorSequence(
