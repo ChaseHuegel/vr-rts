@@ -359,7 +359,7 @@ public class InteractionPointer : MonoBehaviour
 
     private bool WasInteractButtonPressed(Hand hand)
     {
-        if (CanInteract(hand))
+        if (CanInteract(hand) && pointerHand == null)
         {
             if (uiInteractAction.GetAxis(hand.handType) > 0)
             {
@@ -433,8 +433,7 @@ public class InteractionPointer : MonoBehaviour
             ActorV2 hoveredActor = pointedAtPointerInteractable.GetComponent<ActorV2>();
             if (hoveredActor &&
                 !isInUnitSelectionMode &&
-                hoveredActor.Faction.IsSameFaction(faction) &&
-                uiInteractAction.GetAxis(pointerHand.handType) > triggerAddToSelectionThreshold)
+                hoveredActor.Faction.IsSameFaction(faction))
             {
                 selectedActors.Add(hoveredActor);
                 isInUnitSelectionMode = true;

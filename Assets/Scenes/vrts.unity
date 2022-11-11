@@ -91818,6 +91818,12 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 792a4bad9e08b8e41bfbd3f0b8aac1ab, type: 2}
+    - target: {fileID: 6288977562737275087, guid: 0ed989efa1d7b57439176775883b3bfb,
+        type: 3}
+      propertyPath: Faction
+      value: 
+      objectReference: {fileID: 11400000, guid: effa210fcfc5796468bcaecb24cb5693,
+        type: 2}
     - target: {fileID: 7344858272092093813, guid: 0ed989efa1d7b57439176775883b3bfb,
         type: 3}
       propertyPath: m_RootOrder
@@ -92770,6 +92776,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: fishing boat
       objectReference: {fileID: 0}
+    - target: {fileID: 4757335921325631622, guid: 4185ce91d7075834d81120bb07a10054,
+        type: 3}
+      propertyPath: Faction
+      value: 
+      objectReference: {fileID: 11400000, guid: effa210fcfc5796468bcaecb24cb5693,
+        type: 2}
+    - target: {fileID: 4757335921325631622, guid: 4185ce91d7075834d81120bb07a10054,
+        type: 3}
+      propertyPath: SkinRendererTargets.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4757335921325631622, guid: 4185ce91d7075834d81120bb07a10054,
+        type: 3}
+      propertyPath: SkinRendererTargets.Array.data[0]
+      value: 
+      objectReference: {fileID: 9081886262575886238}
     - target: {fileID: 7622556575887789630, guid: 4185ce91d7075834d81120bb07a10054,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -92777,3 +92799,9 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 792a4bad9e08b8e41bfbd3f0b8aac1ab, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4185ce91d7075834d81120bb07a10054, type: 3}
+--- !u!23 &9081886262575886238 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 7622556575887789630, guid: 4185ce91d7075834d81120bb07a10054,
+    type: 3}
+  m_PrefabInstance: {fileID: 9081886262575886237}
+  m_PrefabAsset: {fileID: 0}
