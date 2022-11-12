@@ -160,12 +160,42 @@ public class BuildingInteractionPanel : MonoBehaviour
             spawnQueue.Initialize();
 
             this.gameObject.GetComponent<PointerInteractable>().AddChildrenToHideHighlight(interactionPanelObject);
+
+            HookIntoEvents();
         }
 
         if (startHidden)
             Hide();
         else
             Show();
+    }
+
+    private void OnNodeUnlocked(TechNode node)
+    {
+        queueUnitButtons.Find(x => x.techToQueue == node.tech)?.SetLocked(false);
+    }
+
+    private void OnNodeLocked(TechNode node)
+    {
+        queueUnitButtons.Find(x => x.techToQueue == node.tech)?.SetLocked(true);
+    }
+
+    private void OnNodeResearched(TechNode node)
+    {
+
+    }
+    private void HookIntoEvents()
+    {
+        TechTree.OnNodeUnlocked += OnNodeUnlocked;
+        TechTree.OnNodeLocked += OnNodeLocked;
+        TechTree.OnNodeResearched += OnNodeResearched;
+    }
+
+    private void CleanupEvents()
+    {
+        TechTree.OnNodeUnlocked -= OnNodeUnlocked;
+        TechTree.OnNodeLocked -= OnNodeUnlocked;
+        TechTree.OnNodeResearched -= OnNodeResearched;
     }
 
     private void InitializeInteractionPanel()
@@ -211,6 +241,9 @@ public class BuildingInteractionPanel : MonoBehaviour
                 interactionPanelObject.transform.rotation = Quaternion.Slerp(interactionPanelObject.transform.rotation, rot, Time.deltaTime * rotationSpeed);
             }
         }
+
+        if (!autoHide)
+            return;
 
         if (autohideTimerStarted)
         {
@@ -357,6 +390,9 @@ public class BuildingInteractionPanel : MonoBehaviour
         int currentButtonColumn = 0;
         int currentButtonRow = 0;
 
+        if (queueUnitButtons == null)
+            queueUnitButtons = new List<QueueUnitButton>();
+
         foreach (TechBase tech in queueTechButtons)
         {
             GenerateQueueButton(tech, nextButtonPosition, buttonsGameObject.transform);
@@ -370,22 +406,6 @@ public class BuildingInteractionPanel : MonoBehaviour
             nextButtonPosition.x = startPosition.x + ((buttonSize + spaceBetweenButtons) * currentButtonColumn);
             nextButtonPosition.y = startPosition.y - ((buttonSize + spaceBetweenButtons) * currentButtonRow);
         }
-
-        // foreach (RTSUnitType unitType in queueButtons)
-        // {
-        //     if (unitType == RTSUnitType.None)
-        //         continue;
-
-        //     GenerateQueueUnitButton(unitType, nextButtonPosition, buttonsGameObject.transform);
-        //     currentButtonColumn++;
-        //     if (currentButtonColumn >= maxButtonColumns)
-        //     {
-        //         currentButtonColumn = 0;
-        //         currentButtonRow++;
-        //     }
-        //     nextButtonPosition.x = startPosition.x + ((buttonSize + spaceBetweenButtons) * currentButtonColumn);
-        //     nextButtonPosition.y = startPosition.y - ((buttonSize + spaceBetweenButtons) * currentButtonRow);            
-        // }        
     }
 
     public void Toggle()
@@ -454,7 +474,9 @@ public class BuildingInteractionPanel : MonoBehaviour
         if (amount <= 0.0f)
             healthBarGameObject.SetActive(false);;
     }
-    
+
+    private List<QueueUnitButton> queueUnitButtons;
+
     private GameObject GenerateQueueButton(TechBase tech, Vector3 position, Transform parent)
     {
         //UnitData typeData = GameMaster.GetUnit(unitType);
@@ -469,20 +491,7 @@ public class BuildingInteractionPanel : MonoBehaviour
 
         QueueUnitButton queueUnitButton = button.GetComponent<QueueUnitButton>();
         queueUnitButton.techToQueue = tech;
-
-        // Lock (child of Button)
-        if (buttonLockPrefab)
-        {
-            GameObject buttonLock = Instantiate<GameObject>(buttonLockPrefab);
-            buttonLock.name = "_lock";
-            buttonLock.transform.SetParent(button.transform, false);
-            buttonLock.transform.localPosition = new Vector3(0.0f, 0.0f, -0.14f);
-            buttonLock.transform.Rotate(0.0f, 180.0f, 0.0f);
-            
-            buttonLock.SetActive(!PlayerManager.Instance.faction.techTree.IsUnlocked(tech));
-
-            queueUnitButton.buttonLockedObject = buttonLock;
-        }
+        queueUnitButtons.Add(queueUnitButton);        
 
         // Base (child of Button)
         GameObject buttonBase = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -525,6 +534,19 @@ public class BuildingInteractionPanel : MonoBehaviour
 
         hoverButton.movingPart = buttonMovingPart.transform;
         button.transform.localRotation = Quaternion.identity;
+
+        // Lock (child of Button)
+        if (buttonLockPrefab)
+        {
+            GameObject buttonLock = Instantiate<GameObject>(buttonLockPrefab);
+            buttonLock.name = "_lock";
+            buttonLock.transform.SetParent(button.transform, false);
+            buttonLock.transform.localPosition = new Vector3(0.0f, 0.0f, -0.14f);
+            buttonLock.transform.Rotate(0.0f, 180.0f, 0.0f);
+
+            queueUnitButton.buttonLockedObject = buttonLock;
+            queueUnitButton.SetLocked(!PlayerManager.Instance.faction.techTree.IsUnlocked(tech));
+        }
 
         Destroy(buttonBase.GetComponent<BoxCollider>());
 

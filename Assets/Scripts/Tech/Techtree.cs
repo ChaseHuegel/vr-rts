@@ -28,11 +28,14 @@ public class TechTree : ScriptableObject
 {
     public List<TechNode> tree;
 
-    public delegate void NodeLockChanged(bool locked);
-    public static event NodeLockChanged OnNodeLockChanged;
+    public delegate void NodeUnlocked(TechNode node);
+    public static event NodeUnlocked OnNodeUnlocked;
 
-    public delegate void NodeResearchChanged(bool researched);
-    public static event NodeResearchChanged OnNodeResearchChanged;
+    public delegate void NodeLocked(TechNode node);
+    public static event NodeLocked OnNodeLocked;
+
+    public delegate void NodeResearched(TechNode node);
+    public static event NodeResearched OnNodeResearched;
 
     public bool AddNode(TechBase tech, Vector2 UIpos)
     {
@@ -48,18 +51,20 @@ public class TechTree : ScriptableObject
 
     public void UnlockTech(TechBase tech)
     {
-        FindNode(tech).unlocked = true; 
+        TechNode node = FindNode(tech);
+        node.unlocked = true;
 
-        if (OnNodeLockChanged != null)
-            OnNodeLockChanged(true);
+        if (OnNodeUnlocked != null)
+            OnNodeUnlocked(node);
     }
 
     public void ResearchTech(TechBase tech)
     {
-        FindNode(tech).researched = true;
+        TechNode node = FindNode(tech);
+        node.researched = true;
 
-        if (OnNodeResearchChanged != null)
-            OnNodeResearchChanged(true);
+        if (OnNodeResearched != null)
+            OnNodeResearched(node);
     }
 
     public bool IsUnlocked(TechBase tech)

@@ -11,8 +11,11 @@ public class QueueUnitButton : MonoBehaviour
 
     [SerializeField]
     private bool locked;
-    protected SpawnQueue buildingSpawnQueue;
+
     HoverButton hoverButton;
+
+    //protected SpawnQueue buildingSpawnQueue;
+
     void Start()
     {
         hoverButton = GetComponentInChildren<HoverButton>();
@@ -20,20 +23,26 @@ public class QueueUnitButton : MonoBehaviour
         // hoverButton.onButtonDown.AddListener(OnButtonDown);
     }
 
-    // TODO: Instantiate lock object when needed rather than every button
+    // TODO: Optimize - Instantiate lock object when needed rather than every button
     // having an inactive object?
-    public void Lock()
+    public void SetLocked(bool locked)
     {
-        buttonLockedObject.SetActive(true);
-        hoverButton.enabled = false;
-        locked = true;
-    }
+        if (!hoverButton)
+            hoverButton = GetComponentInChildren<HoverButton>();
+            
+        if (locked)
+        {
+            buttonLockedObject.SetActive(true);
+            hoverButton.enabled = false;
+            locked = true;
+        }
+        else
+        {
+            buttonLockedObject.SetActive(false);
+            hoverButton.enabled = true;
+            locked = false;
+        }
 
-    public void Unlock()
-    {
-        buttonLockedObject.SetActive(false);
-        hoverButton.enabled = true;
-        locked = false;
     }
 
     // // TODO: Switch this to use C# event rather than HandEvent which inherits from
