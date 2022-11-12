@@ -219,9 +219,6 @@ public class BuildingInteractionPanel : MonoBehaviour
                 if (onAutoHide != null)
                     onAutoHide();
 
-                if (disableSelf)
-                    this.enabled = false;
-
                 Hide();                
 
                 autohideTimerStarted = false;
@@ -394,20 +391,17 @@ public class BuildingInteractionPanel : MonoBehaviour
     public void Toggle()
     {
         if (isVisible)
-        {
             Hide();
-            isVisible = false;
-        }
         else
-        {
             Show();
-            isVisible = true;
-        }
     }
     
     public void Show()
     {
-        this.enabled = true;
+        if (disableSelf)
+            this.enabled = true;
+        
+        isVisible = true;
         titleGameObject?.SetActive(true);
         menuGameObject?.SetActive(true);
         healthBarGameObject?.SetActive(true);        
@@ -417,7 +411,8 @@ public class BuildingInteractionPanel : MonoBehaviour
     }
 
     public void Hide()
-    {        
+    {
+        
         titleGameObject?.SetActive(false);
         menuGameObject?.SetActive(false);
 
@@ -439,6 +434,8 @@ public class BuildingInteractionPanel : MonoBehaviour
 
         if (disableSelf)
             this.enabled = false;
+
+        isVisible = false;
     }
 
     private void SetHealthBarFilledAmount(float amount)
