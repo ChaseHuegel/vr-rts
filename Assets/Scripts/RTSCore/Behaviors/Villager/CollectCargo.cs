@@ -7,7 +7,7 @@ public class CollectCargo : BehaviorNode<VillagerV2>
         if (villager.IsCargoFull())
             return BehaviorState.SUCCESS;
 
-        villager.CollectingTarget = villager.HasValidTarget<Resource>();
+        villager.CollectingTarget = villager.Target is Resource;
 
         return villager.CollectingTarget ? BehaviorState.RUNNING : BehaviorState.FAILED;
     }

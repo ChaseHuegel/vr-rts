@@ -14,7 +14,7 @@ public class PursueTarget : BehaviorNode<UnitV2>
             return BehaviorState.SUCCESS;
         }
 
-        if (!unit.HasValidPath() || unit.TargetChangedRecently || (unit.TryGetTarget(out ActorV2 target) && target.PositionChangedRecently))
+        if (!unit.HasValidPath() || unit.TargetChangedRecently || (unit.Target is ActorV2 target && target.PositionChangedRecently))
         {
             PathManager.RequestPath(unit, position.x, position.y, true);
             return BehaviorState.RUNNING;

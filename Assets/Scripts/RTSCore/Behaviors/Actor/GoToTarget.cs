@@ -14,7 +14,7 @@ public class GoToTarget : BehaviorNode<ActorV2>
             return BehaviorState.SUCCESS;
         }
 
-        if (!actor.HasValidPath() || actor.TargetChangedRecently || (actor.TryGetTarget(out ActorV2 target) && target.IsMoving))
+        if (!actor.HasValidPath() || actor.TargetChangedRecently || (actor.Target is ActorV2 target && target.IsMoving))
         {
             PathManager.RequestPath(actor, position.x, position.y, true);
             return BehaviorState.RUNNING;
