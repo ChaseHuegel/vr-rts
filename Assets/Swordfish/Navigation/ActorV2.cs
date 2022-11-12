@@ -192,6 +192,27 @@ namespace Swordfish.Navigation
             RepathAttempts = 0;
         }
 
+        public virtual bool HasValidTarget()
+        {
+            return Target != null && !Target.Equals(null);
+        }
+
+        public virtual bool HasValidTarget<T>()
+        {
+            return Target is T && !Target.Equals(null);
+        }
+
+        public virtual bool TryGetTarget<T>(out T target)
+        {
+            if (HasValidTarget<T>())
+            {
+                target = (T)Target;
+                return true;
+            }
+
+            return false;
+        }
+
         public bool HasValidPath()
         {
             return CurrentPath != null && CurrentPath.Count > 0;
