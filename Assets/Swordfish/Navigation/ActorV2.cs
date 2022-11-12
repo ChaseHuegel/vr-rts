@@ -42,7 +42,15 @@ namespace Swordfish.Navigation
 
         public Body Target
         {
-            get => TargetBinding.Get();
+            get
+            {
+                Body target = TargetBinding.Get();
+                if (target != null && !target.Equals(null))
+                    return target;
+
+                return null;
+            }
+
             set => TargetBinding.Set(value);
         }
 
