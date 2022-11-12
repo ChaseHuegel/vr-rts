@@ -86,6 +86,11 @@ public class PlayerManager : MonoBehaviour
     {
         HookIntoEvents();
 
+#if !UNITY_EDITOR
+        TechTree tree = Instantiate(faction.techTree);
+        faction = Instantiate(faction);
+        faction.techTree = tree;
+#endif
         rightHand = Player.instance.rightHand;
         leftHand = Player.instance.leftHand;
 
@@ -211,8 +216,6 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    protected bool IsClipboardPalmMenuVisible;
-
     private void InitializeHandBuildMenu()
     {
         if (handBuildMenuPrefab)
@@ -222,9 +225,12 @@ public class PlayerManager : MonoBehaviour
             buildMenu = handBuildMenu.GetComponent<BuildMenu>();
             handBuildMenu.SetActive(false);
         }
+
+#if UNITY_EDITOR
         else
             Debug.LogError("HandBuildMenuPrefab not set.", this);
-            
+#endif
+
     }
 
     public void OnHandToggleMenuRightDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
