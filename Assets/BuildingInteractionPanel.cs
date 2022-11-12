@@ -9,6 +9,7 @@ using Swordfish;
 public class BuildingInteractionPanel : MonoBehaviour
 {
     [Header("Panel Behaviour")]
+    public Vector3 panelScale = new Vector3(1.0f, 1.0f, 1.0f);
     public Vector3 panelPositionOffset = new Vector3(0.0f, 1.0f, 0.0f);
     public bool startHidden = true;
 
@@ -171,7 +172,8 @@ public class BuildingInteractionPanel : MonoBehaviour
     {        
         interactionPanelObject = new GameObject("_interaction_panel");
         interactionPanelObject.transform.SetParent(this.gameObject.transform, false);
-        interactionPanelObject.transform.localPosition = panelPositionOffset;                
+        interactionPanelObject.transform.localPosition = panelPositionOffset;
+        interactionPanelObject.transform.localScale = panelScale;
 
         radiusExitTime = Time.time;
         Quaternion rot = faceTarget.transform.rotation;

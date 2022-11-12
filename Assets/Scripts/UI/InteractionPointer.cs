@@ -113,8 +113,8 @@ public class InteractionPointer : MonoBehaviour
 
     //=========================================================================
     [Header("Building Placement")]
-    public float buildingPlacementRotationIncrement = 45.0f;
-    public float wallPlacementRotationIncrement = 22.5f;
+    public float buildingPlacementRotationIncrement = 90.0f;
+    public float wallPlacementRotationIncrement = 45f;
     private GameObject buildingPlacementPreviewObject;
     private float lastBuildingRotation;
     private BuildingData placementBuildingData;
@@ -292,14 +292,7 @@ public class InteractionPointer : MonoBehaviour
                     {
                         buildingInteractionPanel.Toggle();
                         continue;
-                    }
-
-                    WallGate wallGate = pointedAtPointerInteractable.GetComponent<WallGate>();
-                    if (wallGate)
-                    {
-                        wallGate.ToggleDoors();
-                        continue;
-                    }
+                    }                    
                 }          
             }            
             else if (WasSelectButtonReleased(hand))
@@ -315,7 +308,7 @@ public class InteractionPointer : MonoBehaviour
                 float rotationIncrement = buildingPlacementRotationIncrement;
                 if (placementBuildingData.buildingType == RTSBuildingType.Wood_Wall_Gate ||
                     placementBuildingData.buildingType == RTSBuildingType.Stone_Wall_Gate)
-                    rotationIncrement = 22.5f;
+                    rotationIncrement = wallPlacementRotationIncrement;
 
                 if (WasRotateClockwiseButtonPressed(hand))
                     buildingPlacementPreviewObject.transform.Rotate(0.0f, -rotationIncrement, 0.0f);
@@ -412,7 +405,7 @@ public class InteractionPointer : MonoBehaviour
             if (!wallPlacementPreviewAnchor)
             {
                 wallPlacementPreviewAnchor = Instantiate(buildingPlacementPreviewObject);
-                wallPlacementPreviewAnchor.transform.Rotate(0, lastBuildingRotation, 0);
+                //wallPlacementPreviewAnchor.transform.Rotate(0, lastBuildingRotation, 0);
                 wallPlacementPreviewAnchor.transform.position = buildingPlacementPreviewObject.transform.position;
             }
             
@@ -455,6 +448,12 @@ public class InteractionPointer : MonoBehaviour
             {                
                 hoverButton.onButtonDown.Invoke(hand);
                 return;
+            }
+
+            WallGate wallGate = pointedAtPointerInteractable.GetComponent<WallGate>();
+            if (wallGate)
+            {
+                wallGate.ToggleDoors();
             }
 
             //Debug.Log(string.Format("Unit: {0} interactable: {1}", selectedUnit, pointedAtPointerInteractable));
@@ -516,7 +515,7 @@ public class InteractionPointer : MonoBehaviour
                                                 placementBuildingData.stoneCost);
             }
 
-            lastBuildingRotation = buildingPlacementPreviewObject.transform.localRotation.eulerAngles.z;
+            //lastBuildingRotation = buildingPlacementPreviewObject.transform.localRotation.eulerAngles.z;
             Destroy(buildingPlacementPreviewObject);
             buildingPlacementPreviewObject = null;
 
@@ -1076,7 +1075,7 @@ public class InteractionPointer : MonoBehaviour
         {
             isInBuildingPlacementMode = true;
             buildingPlacementPreviewObject = Instantiate(placementBuildingData.worldPreviewPrefab, destinationReticleTransform);
-            buildingPlacementPreviewObject.transform.Rotate(0, 0, lastBuildingRotation);
+            //buildingPlacementPreviewObject.transform.Rotate(0, 0, lastBuildingRotation);
             MeshRenderer meshRenderer = buildingPlacementPreviewObject.GetComponentInChildren<MeshRenderer>();
             if (meshRenderer)
                 buildingPlacementCachedMat = meshRenderer.sharedMaterial;

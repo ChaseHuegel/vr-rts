@@ -182,13 +182,15 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5733846702584782233}
-  - component: {fileID: 1313241953}
   - component: {fileID: 3626730025151612172}
   - component: {fileID: 3788212890412211216}
   - component: {fileID: 6604127596648191158}
   - component: {fileID: 6604127596648191160}
   - component: {fileID: 6604127596648191161}
   - component: {fileID: -3040173863063974761}
+  - component: {fileID: 5392236401510568659}
+  - component: {fileID: 3780435051237295582}
+  - component: {fileID: 1439684234320673100}
   m_Layer: 10
   m_Name: wood_wall_a_gate_world
   m_TagString: Untagged
@@ -212,19 +214,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
---- !u!135 &1313241953
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5733846702584742329}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 3.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!82 &3626730025151612172
 AudioSource:
   m_ObjectHideFlags: 0
@@ -443,6 +432,93 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   openConditions: 1
+--- !u!136 &5392236401510568659
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5733846702584742329}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 1.8120459
+  m_Height: 5.9228463
+  m_Direction: 2
+  m_Center: {x: 0, y: 0.54, z: 0}
+--- !u!136 &3780435051237295582
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5733846702584742329}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 1.27
+  m_Height: 6.15
+  m_Direction: 2
+  m_Center: {x: 0, y: 4.22, z: 0}
+--- !u!114 &1439684234320673100
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5733846702584742329}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ecfb27e8681cd1840a5c620f6627c88b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  panelScale: {x: 12.972945, y: 12.972945, z: 12.972945}
+  panelPositionOffset: {x: 0, y: 12.972945, z: 0}
+  startHidden: 1
+  autoHide: 1
+  disableSelf: 1
+  useTimer: 1
+  useDistance: 1
+  autoHideDelay: 15
+  autoHideDistance: 2
+  stopRotatingAtDistance: 0.75
+  rotationSpeed: 5
+  copyHmdRotation: 1
+  objectsToAutohide: []
+  title: 
+  enableTitleDisplay: 1
+  titleDisplayVerticalOffset: 0.075
+  titleColor: {r: 1, g: 1, b: 1, a: 1}
+  enableHealthBarDisplay: 1
+  healthBarAutoShowAt: 0.98
+  healthBarAutoHideAt: 1
+  showBarBackground: 1
+  showHealthText: 1
+  healthBarVerticalOffset: -0.075
+  healthBarWidth: 1
+  healthBarHeight: 0.1
+  healthBarBackground: {fileID: 21300000, guid: 85867c66586f9ea45a4c1f56a281d550,
+    type: 3}
+  healthBarBackgroundColor: {r: 0, g: 0, b: 0, a: 1}
+  healthBarForeground: {fileID: 21300000, guid: 99a941ae1b6ae874587381380f3516e5,
+    type: 3}
+  healthBarForegroundColor: {r: 1, g: 0, b: 0, a: 1}
+  healthBarTextColor: {r: 1, g: 1, b: 1, a: 1}
+  enableQueueMenu: 0
+  QueueMenuVerticalOffset: 0
+  unitSpawnPoint: {fileID: 0}
+  unitRallyWaypoint: {fileID: 0}
+  progressImage: {fileID: 0}
+  progressColor: {r: 0, g: 0, b: 0, a: 0}
+  progressFont: {fileID: 0}
+  buttonBaseMaterial: {fileID: 0}
+  cancelButtonMaterial: {fileID: 0}
+  onButtonDownAudio: {fileID: 0}
+  onButtonUpAudio: {fileID: 0}
+  queueTechButtons: []
+  numberOfQueueSlots: 12
+  emptyQueueSlotSprite: {fileID: 0}
+  buttonLockPrefab: {fileID: 0}
 --- !u!1 &5961063802323506598
 GameObject:
   m_ObjectHideFlags: 0

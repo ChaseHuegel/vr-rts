@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 6355609625548158117}
   - component: {fileID: 6436450868235303748}
   - component: {fileID: 4541918278667965550}
+  - component: {fileID: 8388540412907714894}
   m_Layer: 11
   m_Name: farm_world
   m_TagString: Untagged
@@ -256,6 +257,64 @@ MonoBehaviour:
   allowPathThru: 0
   type: 1
   amount: 200
+--- !u!114 &8388540412907714894
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 899507145775679583}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ecfb27e8681cd1840a5c620f6627c88b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  panelPositionOffset: {x: 0, y: 1, z: 0}
+  startHidden: 1
+  autoHide: 1
+  disableSelf: 1
+  useTimer: 1
+  useDistance: 1
+  autoHideDelay: 15
+  autoHideDistance: 2
+  stopRotatingAtDistance: 0.75
+  rotationSpeed: 5
+  copyHmdRotation: 1
+  objectsToAutohide: []
+  title: 
+  enableTitleDisplay: 1
+  titleDisplayVerticalOffset: 0.075
+  titleColor: {r: 1, g: 1, b: 1, a: 1}
+  enableHealthBarDisplay: 1
+  healthBarAutoShowAt: 0.98
+  healthBarAutoHideAt: 1
+  showBarBackground: 1
+  showHealthText: 1
+  healthBarVerticalOffset: -0.075
+  healthBarWidth: 1
+  healthBarHeight: 0.1
+  healthBarBackground: {fileID: 21300000, guid: 85867c66586f9ea45a4c1f56a281d550,
+    type: 3}
+  healthBarBackgroundColor: {r: 0, g: 0, b: 0, a: 1}
+  healthBarForeground: {fileID: 21300000, guid: 99a941ae1b6ae874587381380f3516e5,
+    type: 3}
+  healthBarForegroundColor: {r: 1, g: 0, b: 0, a: 1}
+  healthBarTextColor: {r: 1, g: 1, b: 1, a: 1}
+  enableQueueMenu: 0
+  QueueMenuVerticalOffset: 0
+  unitSpawnPoint: {fileID: 0}
+  unitRallyWaypoint: {fileID: 0}
+  progressImage: {fileID: 0}
+  progressColor: {r: 0, g: 0, b: 0, a: 0}
+  progressFont: {fileID: 0}
+  buttonBaseMaterial: {fileID: 0}
+  cancelButtonMaterial: {fileID: 0}
+  onButtonDownAudio: {fileID: 0}
+  onButtonUpAudio: {fileID: 0}
+  queueTechButtons: []
+  numberOfQueueSlots: 12
+  emptyQueueSlotSprite: {fileID: 0}
+  buttonLockPrefab: {fileID: 0}
 --- !u!1001 &1341250551842294695
 PrefabInstance:
   m_ObjectHideFlags: 0
