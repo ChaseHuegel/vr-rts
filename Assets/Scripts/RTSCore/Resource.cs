@@ -11,6 +11,8 @@ public class Resource : Obstacle
     public ResourceGatheringType type = ResourceGatheringType.None;
     public float amount = 1000;
 
+    public GameObject onDestroyPrefab;
+
     public override void Initialize()
     {
         base.Initialize();
@@ -41,6 +43,10 @@ public class Resource : Obstacle
         if (amount <= 0)
         {
             UnbakeFromGrid();
+            
+            if (onDestroyPrefab)
+                Instantiate(onDestroyPrefab, this.transform.position, Quaternion.identity);
+
             Destroy(gameObject);
         }
 
