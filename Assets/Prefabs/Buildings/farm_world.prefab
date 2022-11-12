@@ -257,6 +257,7 @@ MonoBehaviour:
   allowPathThru: 0
   type: 1
   amount: 200
+  onDestroyPrefab: {fileID: 0}
 --- !u!114 &8388540412907714894
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -269,6 +270,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ecfb27e8681cd1840a5c620f6627c88b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  panelScale: {x: 1, y: 1, z: 1}
   panelPositionOffset: {x: 0, y: 1, z: 0}
   startHidden: 1
   autoHide: 1
@@ -281,7 +283,7 @@ MonoBehaviour:
   rotationSpeed: 5
   copyHmdRotation: 1
   objectsToAutohide: []
-  title: 
+  title: Farm
   enableTitleDisplay: 1
   titleDisplayVerticalOffset: 0.075
   titleColor: {r: 1, g: 1, b: 1, a: 1}
