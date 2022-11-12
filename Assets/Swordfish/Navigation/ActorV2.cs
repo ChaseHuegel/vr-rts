@@ -44,6 +44,10 @@ namespace Swordfish.Navigation
         {
             get
             {
+                //  Target != null can resolve true if Destroy(Target.gameObject) was called
+                //  in the same frame due to it being marked for destruction, but not being
+                //  destroyed yet, causing a MissingReferenceException.
+                //      See: https://answers.unity.com/questions/586144/destroyed-monobehaviour-not-comparing-to-null.html
                 Body target = TargetBinding.Get();
                 if (target != null && !target.Equals(null))
                     return target;
