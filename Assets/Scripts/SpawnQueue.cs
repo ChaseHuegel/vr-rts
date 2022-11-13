@@ -117,7 +117,7 @@ public class SpawnQueue : MonoBehaviour
         if (!playerManager.CanQueueTech(tech))
             return false;
 
-        playerManager.DeductTechQueueCostFromStockpile(tech);
+        playerManager.DeductTechResourceCost(tech);
         queue.AddLast(tech);
         RefreshQueueImages();
         return true;

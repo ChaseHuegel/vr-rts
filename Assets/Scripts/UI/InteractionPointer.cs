@@ -495,10 +495,7 @@ public class InteractionPointer : MonoBehaviour
                         PlayBuildingPlacementAllowedAudio();
                         GameObject gameObject = Instantiate(placementBuildingData.constructionPrefab, buildingPlacementPreviewObject.transform.position, buildingPlacementPreviewObject.transform.rotation);
                         gameObject.GetComponent<Constructible>().Faction = this.faction;
-                        PlayerManager.Instance.DeductTechFromResources(placementBuildingData.goldCost,
-                                                        placementBuildingData.foodCost,
-                                                        placementBuildingData.woodCost,
-                                                        placementBuildingData.stoneCost);
+                        PlayerManager.Instance.DeductTechResourceCost(placementBuildingData);
                     }
                 }
                 else
@@ -509,10 +506,7 @@ public class InteractionPointer : MonoBehaviour
                 PlayBuildingPlacementAllowedAudio();
                 GameObject gameObject = Instantiate(placementBuildingData.constructionPrefab, buildingPlacementPreviewObject.transform.position, buildingPlacementPreviewObject.transform.rotation);
                 gameObject.GetComponent<Constructible>().Faction = this.faction;
-                PlayerManager.Instance.DeductTechFromResources(placementBuildingData.goldCost,
-                                                placementBuildingData.foodCost,
-                                                placementBuildingData.woodCost,
-                                                placementBuildingData.stoneCost);
+                PlayerManager.Instance.DeductTechResourceCost(placementBuildingData);
             }
 
             //lastBuildingRotation = buildingPlacementPreviewObject.transform.localRotation.eulerAngles.z;

@@ -484,22 +484,24 @@ public class PlayerManager : MonoBehaviour
         buildMenu.RefreshSlots();
     }
 
-    public void DeductTechFromResources(int gold, int grain, int wood, int stone)
+    public void DeductTechResourceCost(TechBase techBase)
     {
-        goldCollected -= gold;
-        foodCollected -= grain;
-        woodCollected -= wood;
-        stoneCollected -= stone;
+        goldCollected -= techBase.goldCost;
+        foodCollected -= techBase.foodCost;
+        woodCollected -= techBase.woodCost;
+        stoneCollected -= techBase.stoneCost;
 
         UpdateWristDisplayResourceText();
+
+        // TODO: Switch this to events
         buildMenu.RefreshSlots();
     }
 
 
-    public bool CanConstructTech(TechBase tech)
+    public bool CanConstructTech(TechBase techBase)
     {
-        if (tech.goldCost > goldCollected || tech.woodCost > woodCollected ||
-            tech.foodCost > foodCollected || tech.stoneCost > stoneCollected)
+        if (techBase.goldCost > goldCollected || techBase.woodCost > woodCollected ||
+            techBase.foodCost > foodCollected || techBase.stoneCost > stoneCollected)
         {
             return false;
         }
@@ -507,44 +509,28 @@ public class PlayerManager : MonoBehaviour
         return true;
     }
 
-    public bool CanQueueTech(TechBase tech)
+    public bool CanQueueTech(TechBase techBase)
     {
         // Make this unneccassary by having the queue button locked.
-        TechNode node = faction.techTree.tree.Find(x => x.tech == tech);
+        TechNode node = faction.techTree.tree.Find(x => x.tech == techBase);
 
-        if (!faction.techTree.IsUnlocked(tech))
+        if (!faction.techTree.IsUnlocked(techBase))
             return false;
 
-        if (goldCollected < tech.goldCost || woodCollected < tech.woodCost ||
-            foodCollected < tech.foodCost || stoneCollected < tech.stoneCost)
+        if (goldCollected < techBase.goldCost || woodCollected < techBase.woodCost ||
+            foodCollected < techBase.foodCost || stoneCollected < techBase.stoneCost)
         {
             return false;
         }
 
-        if (tech.populationCost > 0)
+        if (techBase.populationCost > 0)
         {
-            if (tech.populationCost + totalPopulation + queueCount > populationLimit)
+            if (techBase.populationCost + totalPopulation + queueCount > populationLimit)
                 return false;
 
-            queueCount += tech.populationCost;
+            queueCount += techBase.populationCost;
         }
 
         return true;
-    }
-
-    public void DeductTechCost(TechBase techData)
-    {
-        DeductTechFromResources(techData.goldCost, techData.foodCost, techData.woodCost, techData.stoneCost);
-    }
-
-    public void DeductTechQueueCostFromStockpile(TechBase tech)
-    {
-        woodCollected -= tech.woodCost;
-        foodCollected -= tech.foodCost;
-        goldCollected -= tech.goldCost;
-        stoneCollected -= tech.stoneCost;
-
-        UpdateWristDisplayResourceText();
-    }
-    
+    }    
 }
