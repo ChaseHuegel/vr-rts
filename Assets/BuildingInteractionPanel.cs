@@ -691,6 +691,11 @@ public class BuildingInteractionPanel : MonoBehaviour
             healthBarGameObject.SetActive(false);
     }
 
+    void OnDestroy()
+    {
+        CleanupEvents();
+    }
+    
     public delegate void OnAutohide();
     public event OnAutohide onAutoHide;
 }

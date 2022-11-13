@@ -52,7 +52,7 @@ public class BuildMenuSlot : MonoBehaviour
         previewObjectOriginalScale = previewObject.transform.localScale;
     }
 
-    public void SlotEnabled(bool enabled = true)
+    public void SetEnabled(bool enabled = true)
     {
         if (!grabCollider)
             grabCollider = GetComponent<SphereCollider>();

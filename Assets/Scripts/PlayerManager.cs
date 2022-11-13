@@ -119,6 +119,11 @@ public class PlayerManager : MonoBehaviour
         Valve.VR.OpenVR.Chaperone.ResetZeroPose(ETrackingUniverseOrigin.TrackingUniverseStanding);
     }
 
+    void OnDestroy()
+    {
+        CleanupEvents();
+    }
+
     private bool isAutohideHandMenuVisible;
 
     void Update()
@@ -541,8 +546,5 @@ public class PlayerManager : MonoBehaviour
 
         UpdateWristDisplayResourceText();
     }
-    public void OnDestroy()
-    {
-        CleanupEvents();
-    }
+    
 }

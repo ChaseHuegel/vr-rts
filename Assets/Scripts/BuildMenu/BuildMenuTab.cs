@@ -9,7 +9,6 @@ using TMPro;
 [Serializable]
 public class BuildMenuTab : MonoBehaviour
 {
-    
     public float horzontalButtonSpacing = 71.0f;
     public float verticalButtonSpacing = 96.0f;
     public int maximumNumberOfColumns = 3;
@@ -19,13 +18,47 @@ public class BuildMenuTab : MonoBehaviour
     public TMPro.TMP_FontAsset titleFont;
     public TechBase[] ButtonsNew;
 
+    public BuildMenuSlot[] slots;
+
     void Awake()
     {
         // if (transform.childCount <= 0)
         //     Generate();
         BuildMenuSlot.disabledMat = slotDisabledMaterial;
         BuildMenuSlot.enabledMat = slotEnabledMaterial;
+        HookIntoEvents();
     }
+
+    void Start()
+    {
+        slots = GetComponentsInChildren<BuildMenuSlot>();
+
+        foreach(BuildMenuSlot slot in slots)
+            slot.SetEnabled(PlayerManager.Instance.faction.techTree.IsUnlocked(slot.rtsTypeData));
+    }
+
+    private void OnNodeUnlocked(TechNode node)
+    {
+        Array.Find<BuildMenuSlot>(slots, x => x.rtsTypeData == node.tech)?.SetEnabled(true);
+    }
+
+    private void OnNodeLocked(TechNode node)
+    {
+        Array.Find<BuildMenuSlot>(slots, x => x.rtsTypeData == node.tech)?.SetEnabled(false);
+    }
+
+    private void HookIntoEvents()
+    {
+        TechTree.OnNodeUnlocked += OnNodeUnlocked;
+        TechTree.OnNodeLocked += OnNodeLocked;
+    }
+
+    private void CleanupEvents()
+    {
+        TechTree.OnNodeUnlocked -= OnNodeUnlocked;
+        TechTree.OnNodeLocked -= OnNodeUnlocked;
+    }
+
 
     [ExecuteInEditMode]
     public void Generate()
@@ -73,7 +106,6 @@ public class BuildMenuTab : MonoBehaviour
                 resourceCost.transform.localRotation = Quaternion.identity;
 
                 // Fetch and set the building type data from the database
-                // TODO: Probably not needed if using scriptable objects
                 buildMenuSlot.rtsTypeData = (BuildingData)tech;
 
                 CreateSlotTitle(buildMenuSlot);
@@ -86,7 +118,7 @@ public class BuildMenuTab : MonoBehaviour
                 cost.stoneText.text = buildMenuSlot.rtsTypeData.stoneCost.ToString();
 
                 // Create/Instatiate preview objects for slots
-                buildMenuSlot.CreatePreviewObject();
+                buildMenuSlot.CreatePreviewObject();                           
             }
 
             // Move to next column, or to the next row if we
