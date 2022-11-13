@@ -13,6 +13,7 @@ public class InteractionPointer : MonoBehaviour
     //=========================================================================
     [Header("Actions")]
     public SteamVR_Action_Single uiInteractAction = SteamVR_Input.GetAction<SteamVR_Action_Single>("InteractUI");
+    public SteamVR_Action_Boolean showPointerAction = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("ShowPointer");
     public SteamVR_Action_Boolean selectAction = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("Select");
     public SteamVR_Action_Boolean cancelAction = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("Cancel");
     public SteamVR_Action_Boolean queueAction = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("Queue");
@@ -70,7 +71,7 @@ public class InteractionPointer : MonoBehaviour
     public Hand pointerHand = null;
     private Player player = null;
     private TeleportArc teleportArc = null;
-    public bool visible = false;
+    public bool showPointerArc = false;
     private PointerInteractable pointedAtPointerInteractable;
     private SpawnQueue spawnQueue;
     private List<ActorV2> selectedActors;
@@ -131,8 +132,6 @@ public class InteractionPointer : MonoBehaviour
     private List<GameObject> wallPreviewCornerSegments = new List<GameObject>();
     private List<GameObject> wallPreviewStraightSegments = new List<GameObject>();
     private Swordfish.Coord2D lastPreviewPointerPosition;
-
-    private bool isSelectingTeleportLocation;
 
     //=========================================================================
     private static InteractionPointer _instance;
@@ -236,6 +235,12 @@ public class InteractionPointer : MonoBehaviour
                 EndUnitSelectionMode();
                 return;
             }
+            
+            if (showPointerAction.GetState(SteamVR_Input_Sources.Any) == true &&
+                !isInUnitSelectionMode)
+                ShowPointer();
+            else
+                HidePointer();
 
             if (WasTeleportButtonReleased(hand))
             {
@@ -243,14 +248,12 @@ public class InteractionPointer : MonoBehaviour
                     pointerHand = null;
                 
                 TryTeleportPlayer();
-                isSelectingTeleportLocation = false;
-                teleportArc.Hide();
+                HidePointer();                
             }
             else if (WasTeleportButtonPressed(hand))
             {
                 pointerHand = hand;
-                teleportArc.Show();
-                isSelectingTeleportLocation = true;
+                ShowPointer();
             }
             else if (WasInteractButtonReleased(hand))
             {
@@ -906,7 +909,7 @@ public class InteractionPointer : MonoBehaviour
         teleportArc.SetArcData(pointerStart, arcVelocity, true, pointerAtBadAngle);
 
         teleportArc.FindProjectileCollision(out hitInfo);
-        if (isSelectingTeleportLocation)
+        if (showPointerArc)
             teleportArc.DrawArc(out hitInfo);
 
         if (hitInfo.collider)
@@ -1239,7 +1242,7 @@ public class InteractionPointer : MonoBehaviour
         // 	teleportingToMarker.TeleportPlayer( pointedAtPosition );
         // }
 
-        isSelectingTeleportLocation = false;
+        showPointerArc = false;
     }
 
     public void DrawQuadraticBezierCurve(LineRenderer lineRenderer, Vector3 start, Vector3 end)
@@ -1276,10 +1279,10 @@ public class InteractionPointer : MonoBehaviour
     }
     private void HidePointer()
     {
-        if (visible)
+        if (showPointerArc)
             pointerHideStartTime = Time.time;
 
-        visible = false;
+        showPointerArc = false;
         //pointerObject.SetActive( false );
         teleportArc.Hide();
     }
@@ -1288,11 +1291,11 @@ public class InteractionPointer : MonoBehaviour
     //=========================================================================
     private void ShowPointer()
     {
-        if (!visible)
+        if (!showPointerArc)
         {
             pointedAtPointerInteractable = null;
             pointerShowStartTime = Time.time;
-            visible = true;
+            showPointerArc = true;
             //pointerObject.SetActive( false );
             teleportArc.Show();
 
@@ -1305,10 +1308,10 @@ public class InteractionPointer : MonoBehaviour
 
         pointerStartTransform = pointerAttachmentPoint.transform;
 
-        if (pointerHand.currentAttachedObject != null)
-        {
-            //allowTeleportWhileAttached = pointerHand.currentAttachedObject.GetComponent<AllowTeleportWhileAttachedToHand>();
-        }
+        // if (pointerHand.currentAttachedObject != null)
+        // {
+        //     //allowTeleportWhileAttached = pointerHand.currentAttachedObject.GetComponent<AllowTeleportWhileAttachedToHand>();
+        // }
     }
 
     private bool WasQueueButtonPressed(Hand hand)

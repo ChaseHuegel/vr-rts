@@ -161,6 +161,14 @@ namespace Valve.VR
             }
         }
         
+        public virtual SteamVR_Action_Boolean ShowPointer
+        {
+            get
+            {
+                return SteamVR_Actions.default_ShowPointer;
+            }
+        }
+        
         public virtual SteamVR_Action_Vibration Haptic
         {
             get

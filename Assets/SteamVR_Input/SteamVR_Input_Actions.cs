@@ -53,6 +53,8 @@ namespace Valve.VR
         
         private static SteamVR_Action_Boolean p_default_RotateBuildingCounterclockwise;
         
+        private static SteamVR_Action_Boolean p_default_ShowPointer;
+        
         private static SteamVR_Action_Vibration p_default_Haptic;
         
         public static SteamVR_Action_Single default_InteractUI
@@ -199,6 +201,14 @@ namespace Valve.VR
             }
         }
         
+        public static SteamVR_Action_Boolean default_ShowPointer
+        {
+            get
+            {
+                return SteamVR_Actions.p_default_ShowPointer.GetCopy<SteamVR_Action_Boolean>();
+            }
+        }
+        
         public static SteamVR_Action_Vibration default_Haptic
         {
             get
@@ -228,6 +238,7 @@ namespace Valve.VR
                     SteamVR_Actions.default_Dequeue,
                     SteamVR_Actions.default_RotateBuildingClockwise,
                     SteamVR_Actions.default_RotateBuildingCounterclockwise,
+                    SteamVR_Actions.default_ShowPointer,
                     SteamVR_Actions.default_Haptic};
             Valve.VR.SteamVR_Input.actionsIn = new Valve.VR.ISteamVR_Action_In[] {
                     SteamVR_Actions.default_InteractUI,
@@ -247,7 +258,8 @@ namespace Valve.VR
                     SteamVR_Actions.default_Queue,
                     SteamVR_Actions.default_Dequeue,
                     SteamVR_Actions.default_RotateBuildingClockwise,
-                    SteamVR_Actions.default_RotateBuildingCounterclockwise};
+                    SteamVR_Actions.default_RotateBuildingCounterclockwise,
+                    SteamVR_Actions.default_ShowPointer};
             Valve.VR.SteamVR_Input.actionsOut = new Valve.VR.ISteamVR_Action_Out[] {
                     SteamVR_Actions.default_Haptic};
             Valve.VR.SteamVR_Input.actionsVibration = new Valve.VR.SteamVR_Action_Vibration[] {
@@ -267,7 +279,8 @@ namespace Valve.VR
                     SteamVR_Actions.default_Queue,
                     SteamVR_Actions.default_Dequeue,
                     SteamVR_Actions.default_RotateBuildingClockwise,
-                    SteamVR_Actions.default_RotateBuildingCounterclockwise};
+                    SteamVR_Actions.default_RotateBuildingCounterclockwise,
+                    SteamVR_Actions.default_ShowPointer};
             Valve.VR.SteamVR_Input.actionsSingle = new Valve.VR.SteamVR_Action_Single[] {
                     SteamVR_Actions.default_InteractUI,
                     SteamVR_Actions.default_Squeeze};
@@ -291,7 +304,8 @@ namespace Valve.VR
                     SteamVR_Actions.default_Queue,
                     SteamVR_Actions.default_Dequeue,
                     SteamVR_Actions.default_RotateBuildingClockwise,
-                    SteamVR_Actions.default_RotateBuildingCounterclockwise};
+                    SteamVR_Actions.default_RotateBuildingCounterclockwise,
+                    SteamVR_Actions.default_ShowPointer};
         }
         
         private static void PreInitActions()
@@ -314,6 +328,7 @@ namespace Valve.VR
             SteamVR_Actions.p_default_Dequeue = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/default/in/Dequeue")));
             SteamVR_Actions.p_default_RotateBuildingClockwise = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/default/in/RotateBuildingClockwise")));
             SteamVR_Actions.p_default_RotateBuildingCounterclockwise = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/default/in/RotateBuildingCounterclockwise")));
+            SteamVR_Actions.p_default_ShowPointer = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/default/in/ShowPointer")));
             SteamVR_Actions.p_default_Haptic = ((SteamVR_Action_Vibration)(SteamVR_Action.Create<SteamVR_Action_Vibration>("/actions/default/out/Haptic")));
         }
     }

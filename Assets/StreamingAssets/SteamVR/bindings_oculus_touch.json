@@ -12,7 +12,16 @@
       },
       "/actions/default" : {
          "chords" : [],
-         "haptics" : [],
+         "haptics" : [
+            {
+               "output" : "/actions/default/out/haptic",
+               "path" : "/user/hand/left/output/haptic"
+            },
+            {
+               "output" : "/actions/default/out/haptic",
+               "path" : "/user/hand/right/output/haptic"
+            }
+         ],
          "poses" : [
             {
                "output" : "/actions/default/in/pose",
@@ -41,6 +50,9 @@
                   },
                   "pull" : {
                      "output" : "/actions/default/in/interactui"
+                  },
+                  "touch" : {
+                     "output" : "/actions/default/in/showpointer"
                   }
                },
                "mode" : "trigger",
@@ -153,6 +165,9 @@
                   },
                   "pull" : {
                      "output" : "/actions/default/in/interactui"
+                  },
+                  "touch" : {
+                     "output" : "/actions/default/in/showpointer"
                   }
                },
                "mode" : "trigger",
@@ -223,6 +238,42 @@
                   "sub_mode" : "touch"
                },
                "path" : "/user/hand/right/input/joystick"
+            },
+            {
+               "inputs" : {
+                  "click" : {
+                     "output" : "/actions/default/in/queue"
+                  }
+               },
+               "mode" : "button",
+               "path" : "/user/hand/left/input/x"
+            },
+            {
+               "inputs" : {
+                  "click" : {
+                     "output" : "/actions/default/in/queue"
+                  }
+               },
+               "mode" : "button",
+               "path" : "/user/hand/right/input/x"
+            },
+            {
+               "inputs" : {
+                  "click" : {
+                     "output" : "/actions/default/in/dequeue"
+                  }
+               },
+               "mode" : "button",
+               "path" : "/user/hand/left/input/y"
+            },
+            {
+               "inputs" : {
+                  "click" : {
+                     "output" : "/actions/default/in/dequeue"
+                  }
+               },
+               "mode" : "button",
+               "path" : "/user/hand/right/input/y"
             }
          ]
       },

@@ -18,11 +18,11 @@ public class ThrowableBuilding : Throwable
 
         if (hitPointValid)
         {
-            ContactPoint contact = collision.contacts[0];
+            ContactPoint contact = collision.GetContact(0);
 
-            float backTrackLength = 1f;
-            Ray ray = new Ray(contact.point - (-contact.normal * backTrackLength), -contact.normal);
-            //Debug.DrawRay(ray.origin, ray.direction, Color.cyan, 5, true);
+            // float backTrackLength = 1f;
+            // Ray ray = new Ray(contact.point - (-contact.normal * backTrackLength), -contact.normal);
+            // Debug.DrawRay(ray.origin, ray.direction, Color.cyan, 5, true);
             groundPosition = contact.point;
         }
 
@@ -48,6 +48,8 @@ public class ThrowableBuilding : Throwable
             ContactPoint contact = collision.contacts[0];
             GameObject spawned = GameObject.Instantiate(GameMaster.Instance.buildingPlacementDeniedFX);
             spawned.transform.position = contact.point;
+
+            // TODO: Not sure if this should be handled by the playermanager or interaction pointer
             InteractionPointer.instance.PlayBuildingPlacementDeniedAudio();
         }
 
