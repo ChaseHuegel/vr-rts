@@ -944,8 +944,10 @@ public class InteractionPointer : MonoBehaviour
         {
             bool cellsOccupied = CellsOccupied(buildingPlacementPreviewObject.transform.position, placementBuildingData.boundingDimensionX, placementBuildingData.boundingDimensionY);
 
+            // Gate/Wall
             if (cellsOccupied && placementBuildingData.constructionPrefab.GetComponent<Constructible>().ClearExistingWalls == true)
             {                
+
             }
             else if (cellsOccupied)            
             {
@@ -1025,8 +1027,11 @@ public class InteractionPointer : MonoBehaviour
     {
         if (isInBuildingPlacementMode)
             EndBuildingPlacementMode();
-            
-        // ! Want to eventually switch action maps based on activity?
+
+        if (isInWallPlacementMode)
+            EndWallPlacementMode();
+
+        // TODO: Do we want to eventually switch steam action maps based on activity?
         // SteamVR_Actions.construction.Activate();
 
         SetSnapTurnEnabled(false, false);
@@ -1045,7 +1050,7 @@ public class InteractionPointer : MonoBehaviour
             isInBuildingPlacementMode = true;
             buildingPlacementPreviewObject = Instantiate(placementBuildingData.worldPreviewPrefab, destinationReticleTransform);
             buildingPlacementPreviewObject.transform.rotation = Quaternion.identity;
-            //buildingPlacementPreviewObject.transform.Rotate(0, 0, lastBuildingRotation);
+            
             MeshRenderer meshRenderer = buildingPlacementPreviewObject.GetComponentInChildren<MeshRenderer>();
             if (meshRenderer)
                 buildingPlacementCachedMat = meshRenderer.sharedMaterial;
@@ -1346,7 +1351,16 @@ public class InteractionPointer : MonoBehaviour
 
     public void HardSnapToGrid(Transform obj, int boundingDimensionX, int boundingDimensionY, bool verticalSnap = false)
     {
-        Vector3 pos = World.ToWorldSpace(obj.position);
+        Vector3 pos = World.ToWorldSpace(obj.position);        
+
+        obj.position = World.ToTransformSpace(new Vector3(Mathf.RoundToInt(pos.x), pos.y, Mathf.RoundToInt(pos.z)));
+
+        Vector3 modPos = obj.position;
+        if (boundingDimensionX % 2 == 0)
+            modPos.x = obj.position.x + World.GetUnit() * -0.5f;
+
+        if (boundingDimensionY % 2 == 0)
+            modPos.z = obj.position.z + World.GetUnit() * -0.5f;
 
         // TODO: Vertical snapping should snap to terrain dynamically
         float positionY = verticalSnap == true ? 0.0f : obj.position.y;
@@ -1357,18 +1371,9 @@ public class InteractionPointer : MonoBehaviour
             Vector3 sourceLocation = obj.position;
             sourceLocation.y += 10.0f;
 
-            if (Physics.Raycast(sourceLocation, Vector3.down, out hit, 30.0f))
-                positionY = hit.point.y;
+            if (Physics.Raycast(sourceLocation, Vector3.down, out hit, 30.0f, allowedPlacementLayers))
+                modPos.y = hit.point.y;
         }
-
-        obj.position = World.ToTransformSpace(new Vector3(Mathf.RoundToInt(pos.x), positionY, Mathf.RoundToInt(pos.z)));
-
-        Vector3 modPos = obj.position;
-        if (boundingDimensionX % 2 == 0)
-            modPos.x = obj.position.x + World.GetUnit() * -0.5f;
-
-        if (boundingDimensionY % 2 == 0)
-            modPos.z = obj.position.z + World.GetUnit() * -0.5f;
 
         obj.position = modPos;
     }
