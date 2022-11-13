@@ -225,8 +225,9 @@ MonoBehaviour:
   interactable: {fileID: 0}
   disallowedLayersMask:
     serializedVersion: 2
-    m_Bits: 0
-  rtsBuildingTypeData: {fileID: 0}
+    m_Bits: 3600
+  rtsBuildingTypeData: {fileID: 11400000, guid: 963461a3aaf76f0458420eb41fae093d,
+    type: 2}
 --- !u!114 &8888280730316978471
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -241,9 +242,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   poseEditorExpanded: 1
   blendEditorExpanded: 1
-  poseNames: []
-  overridePreviewLeftHandPrefab: {fileID: 0}
-  overridePreviewRightHandPrefab: {fileID: 0}
+  poseNames:
+  - building_grab_pose (MAIN)
+  - building_pinch_pose
+  overridePreviewLeftHandPrefab: {fileID: 1000013348574242, guid: 638779290bce1af49b356f33dcc6fccf,
+    type: 3}
+  overridePreviewRightHandPrefab: {fileID: 1000010304998954, guid: 6def53d002137b747aec0b29551e0e25,
+    type: 3}
   skeletonMainPose: {fileID: 11400000, guid: 42d7c33dc7d39714bbbf33b62199c691, type: 2}
   skeletonAdditionalPoses:
   - {fileID: 11400000, guid: 7cdeed11f422d6e40a765c2f1a8a32d1, type: 2}
@@ -276,4 +281,4 @@ MonoBehaviour:
       pinky: 1
       values: 010101010101
     previewEnabled: 0
-  scale: 0
+  scale: 1

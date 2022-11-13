@@ -17,8 +17,7 @@ public class BuildMenuTab : MonoBehaviour
     public Material slotDisabledMaterial;
     public TMPro.TMP_FontAsset titleFont;
     public TechBase[] ButtonsNew;
-
-    public BuildMenuSlot[] slots;
+    private BuildMenuSlot[] slots;
 
     void Awake()
     {
@@ -33,8 +32,14 @@ public class BuildMenuTab : MonoBehaviour
     {
         slots = GetComponentsInChildren<BuildMenuSlot>();
 
-        foreach(BuildMenuSlot slot in slots)
+        foreach (BuildMenuSlot slot in slots)
+        {
+            bool enabled = false;
+            enabled = PlayerManager.Instance.faction.techTree.IsUnlocked(slot.rtsTypeData);
+            enabled &= PlayerManager.Instance.faction.techTree.IsResearched(slot.rtsTypeData);
+
             slot.SetEnabled(PlayerManager.Instance.faction.techTree.IsUnlocked(slot.rtsTypeData));
+        }
     }
 
     private void OnNodeUnlocked(TechNode node)

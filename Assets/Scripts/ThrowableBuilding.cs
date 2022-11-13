@@ -14,7 +14,6 @@ public class ThrowableBuilding : Throwable
     private void OnCollisionEnter(Collision collision)
     {
         bool hitPointValid = !LayerMatchTest(disallowedLayersMask, collision.gameObject);
-        bool cellsOccupied = false;
         Vector3 groundPosition = Vector3.zero;
 
         if (hitPointValid)
@@ -25,24 +24,24 @@ public class ThrowableBuilding : Throwable
             Ray ray = new Ray(contact.point - (-contact.normal * backTrackLength), -contact.normal);
             //Debug.DrawRay(ray.origin, ray.direction, Color.cyan, 5, true);
             groundPosition = contact.point;
-            cellsOccupied = CellsOccupied(groundPosition, rtsBuildingTypeData.boundingDimensionX, rtsBuildingTypeData.boundingDimensionY);
         }
 
-        if (hitPointValid && !cellsOccupied)
+        // TODO: Move function to a library?        
+        hitPointValid &= !CellsOccupied(groundPosition, rtsBuildingTypeData.boundingDimensionX, rtsBuildingTypeData.boundingDimensionY);
+        
+        if (hitPointValid)
         {
-            GameObject spawned = GameObject.Instantiate(rtsBuildingTypeData.constructionPrefab);
-            spawned.transform.position = groundPosition;
-            spawned.transform.rotation = rtsBuildingTypeData.worldPrefab.transform.rotation;
-            spawned.transform.Rotate(0f, 0f, Random.Range(0, 4) * 90);
+            Quaternion rotation = Quaternion.AngleAxis(Random.Range(0, 4) * 90, Vector3.up);
+            GameObject spawned = Instantiate(rtsBuildingTypeData.constructionPrefab, groundPosition, rotation);
 
-            //  Thrown buildings are the local player's faction
-            Constructible constructible = spawned.GetComponent<Constructible>();
-            constructible.Faction = PlayerManager.Instance.faction;
+            // Thrown buildings are the local player's faction
+           spawned.GetComponent<Constructible>().Faction = PlayerManager.Instance.faction;
 
+            // TODO: Switch this to a 'construction started' sound rather than placement allowed
             InteractionPointer.instance.PlayBuildingPlacementAllowedAudio();
 
             // Remove resources only when valid placement.
-            PlayerManager.Instance.DeductResourcesFromStockpile(rtsBuildingTypeData.goldCost,
+            PlayerManager.Instance.DeductTechFromResources(rtsBuildingTypeData.goldCost,
                                                 rtsBuildingTypeData.foodCost,
                                                 rtsBuildingTypeData.woodCost,
                                                 rtsBuildingTypeData.stoneCost);

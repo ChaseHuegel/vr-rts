@@ -484,7 +484,7 @@ public class PlayerManager : MonoBehaviour
         buildMenu.RefreshSlots();
     }
 
-    public void DeductResourcesFromStockpile(int gold, int grain, int wood, int stone)
+    public void DeductTechFromResources(int gold, int grain, int wood, int stone)
     {
         goldCollected -= gold;
         foodCollected -= grain;
@@ -534,7 +534,7 @@ public class PlayerManager : MonoBehaviour
 
     public void DeductTechCost(TechBase techData)
     {
-        DeductResourcesFromStockpile(techData.goldCost, techData.foodCost, techData.woodCost, techData.stoneCost);
+        DeductTechFromResources(techData.goldCost, techData.foodCost, techData.woodCost, techData.stoneCost);
     }
 
     public void DeductTechQueueCostFromStockpile(TechBase tech)
