@@ -63,7 +63,8 @@ public class PlayerManager : MonoBehaviour
     private Hand rightHand;
     private Hand leftHand;
     private static PlayerManager _instance;
-
+    //private bool isAutohideHandMenuVisible;
+    
     public static PlayerManager Instance
     {
         get
@@ -124,7 +125,7 @@ public class PlayerManager : MonoBehaviour
         CleanupEvents();
     }
 
-    private bool isAutohideHandMenuVisible;
+    
 
     void Update()
     {
@@ -134,14 +135,14 @@ public class PlayerManager : MonoBehaviour
             {
                 buildMenu.RefreshSlots();
                 SetLeftHandInteraction(false);
-                isAutohideHandMenuVisible = true;
+                //isAutohideHandMenuVisible = true;
                 autohideHandMenuObject.SetActive(true);
             }
             else
             {
                 autohideHandMenuObject.SetActive(false);
                 SetLeftHandInteraction(true);
-                isAutohideHandMenuVisible = false;
+                //isAutohideHandMenuVisible = false;
             }
         }
     }

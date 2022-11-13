@@ -79,14 +79,14 @@ public class InteractionPointer : MonoBehaviour
     private Vector3 prevPointedAtPosition;
     private float pointerShowStartTime = 0.0f;
     private float pointerHideStartTime = 0.0f;
-    private bool meshFading = false;
+    // private bool meshFading = false;
     private float fullTintAlpha;
-    private float invalidReticleMinScale = 0.2f;
-    private float invalidReticleMaxScale = 1.0f;
-    private float loopingAudioMaxVolume = 0.0f;
+    // private float invalidReticleMinScale = 0.2f;
+    // private float invalidReticleMaxScale = 1.0f;
+    // private float loopingAudioMaxVolume = 0.0f;
     private AllowTeleportWhileAttachedToHand allowTeleportWhileAttached = null;
-    private Vector3 startingFeetOffset = Vector3.zero;
-    private bool movedFeetFarEnough = false;
+    //private Vector3 startingFeetOffset = Vector3.zero;
+    //private bool movedFeetFarEnough = false;
     public Hand handReticle;
     public bool useHandAsReticle;
     private bool teleporting = false;
@@ -102,7 +102,6 @@ public class InteractionPointer : MonoBehaviour
 
     // Cache value
     private Faction faction;
-    private byte factionId;
     private PlayerManager playerManager;
 
     //=========================================================================
@@ -156,7 +155,6 @@ public class InteractionPointer : MonoBehaviour
         pointerLineRenderer = GetComponentInChildren<LineRenderer>();
         pointerObject = pointerLineRenderer.gameObject;
         handReticle.enabled = useHandAsReticle;
-
 
 #if UNITY_URP
 		fullTintAlpha = 0.5f;
@@ -220,9 +218,7 @@ public class InteractionPointer : MonoBehaviour
     {
         this.enabled = true;
     }
-
-    
-
+ 
     //=========================================================================
     void Update()
     {
@@ -236,11 +232,13 @@ public class InteractionPointer : MonoBehaviour
                 return;
             }
             
-            if (showPointerAction.GetState(SteamVR_Input_Sources.Any) == true &&
-                !isInUnitSelectionMode)
-                ShowPointer();
-            else
-                HidePointer();
+            // if (showPointerAction.GetState(SteamVR_Input_Sources.Any) == true &&
+            //     !isInUnitSelectionMode &&
+            //     !hand.hoveringInteractable &&
+            //     !hand.currentAttachedObject)
+            //     ShowPointer();
+            // else
+            //     HidePointer();
 
             if (WasTeleportButtonReleased(hand))
             {
@@ -407,9 +405,8 @@ public class InteractionPointer : MonoBehaviour
         {
             if (!wallPlacementPreviewAnchor)
             {
-                wallPlacementPreviewAnchor = Instantiate(buildingPlacementPreviewObject);
+                wallPlacementPreviewAnchor = Instantiate(buildingPlacementPreviewObject, buildingPlacementPreviewObject.transform.position, Quaternion.identity);
                 //wallPlacementPreviewAnchor.transform.Rotate(0, lastBuildingRotation, 0);
-                wallPlacementPreviewAnchor.transform.position = buildingPlacementPreviewObject.transform.position;
             }
             
             currentWallData = (WallData)placementBuildingData;
@@ -458,8 +455,6 @@ public class InteractionPointer : MonoBehaviour
             {
                 wallGate.ToggleDoors();
             }
-
-            //Debug.Log(string.Format("Unit: {0} interactable: {1}", selectedUnit, pointedAtPointerInteractable));
         }
         // Start unit selection mode if no interactible object is pointed at.
         else if (pointedAtPointerInteractable == null)
@@ -485,7 +480,6 @@ public class InteractionPointer : MonoBehaviour
         else if (isInBuildingPlacementMode)
         {
             isInBuildingPlacementMode = false;
-
             bool cellsOccupied = CellsOccupied(buildingPlacementPreviewObject.transform.position, placementBuildingData.boundingDimensionX, placementBuildingData.boundingDimensionY);
 
             if (cellsOccupied)
@@ -577,9 +571,7 @@ public class InteractionPointer : MonoBehaviour
             if (!currentCell.occupied)
                 Instantiate(currentWallData.constructionPrefab, gameObject.transform.position, gameObject.transform.rotation);
             else if (IsCellOccupiedByConstructionWall(currentCell, true) || IsCellOccupiedByExistingWall(currentCell, true))
-            {                
                 Instantiate(currentWallData.cornerConstructionPrefab, gameObject.transform.position, gameObject.transform.rotation);
-            }
         }
 
         foreach (GameObject gameObject in wallPreviewDiagonalSegments)
@@ -589,9 +581,7 @@ public class InteractionPointer : MonoBehaviour
             if (!currentCell.occupied)
                 Instantiate(currentWallData.diagonalConstructionPrefab, gameObject.transform.position, gameObject.transform.rotation);
             else if (IsCellOccupiedByConstructionWall(currentCell, true) || IsCellOccupiedByExistingWall(currentCell, true))
-            {
                 Instantiate(currentWallData.cornerConstructionPrefab, gameObject.transform.position, gameObject.transform.rotation);
-            }
         }
 
         foreach (GameObject gameObject in wallPreviewCornerSegments)
@@ -601,9 +591,7 @@ public class InteractionPointer : MonoBehaviour
             if (!currentCell.occupied)
                 Instantiate(currentWallData.cornerConstructionPrefab, gameObject.transform.position, gameObject.transform.rotation);
             else if (IsCellOccupiedByConstructionWall(currentCell, true) || IsCellOccupiedByExistingWall(currentCell, true))
-            {
                 Instantiate(currentWallData.cornerConstructionPrefab, gameObject.transform.position, gameObject.transform.rotation);
-            }
         }
 
         EndWallPlacementMode();
@@ -624,14 +612,9 @@ public class InteractionPointer : MonoBehaviour
             {
                 Cell curCell = World.at(x, y);
                 if (curCell.occupied)
-                {
-                    // Debug.Log(string.Format("x: {0} y: {1} name: {2}",
-                    //         curCell.x, curCell.y, curCell.occupants[0].name));
                     return true;
-                }
             }
         }
-
         return false;
     }
 
@@ -651,23 +634,20 @@ public class InteractionPointer : MonoBehaviour
     {
         GameObject[] walls = wallPreviewCornerSegments.ToArray();
         for (int i = 0; i < walls.Length; i++)
-        {
             Destroy(walls[i]);
-        }
+
         wallPreviewCornerSegments.Clear();
 
         walls = wallPreviewDiagonalSegments.ToArray();
         for (int i = 0; i < walls.Length; i++)
-        {
             Destroy(walls[i]);
-        }
+
         wallPreviewDiagonalSegments.Clear();
 
         walls = wallPreviewStraightSegments.ToArray();
         for (int i = 0; i < walls.Length; i++)
-        {
             Destroy(walls[i]);
-        }
+
         wallPreviewStraightSegments.Clear();
         
     }
@@ -686,7 +666,6 @@ public class InteractionPointer : MonoBehaviour
         // if (lastPreviewPointerPosition == World.ToWorldCoord(reticlePosition))
         //     return;
         // lastPreviewPointerPosition = World.ToWorldCoord(reticlePosition);
-
 
         // Grid unit * wall bounding dimension
         float wallWorldLength = 0.125f * 1.0f;
@@ -781,7 +760,6 @@ public class InteractionPointer : MonoBehaviour
                 if (!currentCell.occupied)
                 {                    
                     obj = Instantiate(currentWallData.cornerPreviewPrefab, World.ToTransformSpace(currentSegmentCoord), Quaternion.identity);
-
                     HardSnapToGrid(obj.transform, 1, 1, true);
                     wallPreviewCornerSegments.Add(obj);
                 }
@@ -789,8 +767,7 @@ public class InteractionPointer : MonoBehaviour
                 else if (IsCellOccupiedByExistingWall(currentCell) || IsCellOccupiedByConstructionWall(currentCell))
                 {
                     obj = Instantiate(currentWallData.cornerPreviewPrefab, World.ToTransformSpace(currentSegmentCoord), Quaternion.identity);
-                    wallPreviewCornerSegments.Add(obj);
-                    
+                    wallPreviewCornerSegments.Add(obj);                    
                 }
 
                 // Preview objects don't have buildingDimensions on the object
@@ -848,10 +825,8 @@ public class InteractionPointer : MonoBehaviour
                 structure.gameObject.SetActive(false);
                 Destroy(structure.gameObject);
             }
-
             return true;
         }
-
         return false;
     }
 
@@ -866,10 +841,8 @@ public class InteractionPointer : MonoBehaviour
                 constructible.gameObject.SetActive(false);
                 Destroy(constructible.gameObject);
             }
-
             return true;
         }
-
         return false;
     }
 
@@ -896,17 +869,17 @@ public class InteractionPointer : MonoBehaviour
         Vector3 arcVelocity = pointerDir * arcDistance;
         PointerInteractable hitPointerInteractable = null;
 
-        //Check pointer angle
-        float dotUp = Vector3.Dot(pointerDir, Vector3.up);
-        float dotForward = Vector3.Dot(pointerDir, player.hmdTransform.forward);
-        bool pointerAtBadAngle = false;
+        // Check pointer angle
+        // float dotUp = Vector3.Dot(pointerDir, Vector3.up);
+        // float dotForward = Vector3.Dot(pointerDir, player.hmdTransform.forward);
+        // bool pointerAtBadAngle = false;
 
-        if ((dotForward > 0 && dotUp > 0.75f) || (dotForward < 0.0f && dotUp > 0.5f))
-            pointerAtBadAngle = true;
+        // if ((dotForward > 0 && dotUp > 0.75f) || (dotForward < 0.0f && dotUp > 0.5f))
+        //     pointerAtBadAngle = true;
 
-        //Trace to see if the pointer hit anything
+        // Trace to see if the pointer hit anything
         RaycastHit hitInfo;
-        teleportArc.SetArcData(pointerStart, arcVelocity, true, pointerAtBadAngle);
+        teleportArc.SetArcData(pointerStart, arcVelocity, true, false);// pointerAtBadAngle);
 
         teleportArc.FindProjectileCollision(out hitInfo);
         if (showPointerArc)
@@ -951,10 +924,7 @@ public class InteractionPointer : MonoBehaviour
 
         }
         else if (isInUnitSelectionMode && pointedAtPointerInteractable != null)
-        {
-            if (selectedActors == null)
-                Debug.Log(selectedActors);
-                
+        {                
             // Only add units to selection if trigger is pressed in more than triggerAddToSelectionThreshold
             if (selectedActors.Count <= maxUnitSelectionCount && 
                 pointerHand != null &&
@@ -975,8 +945,7 @@ public class InteractionPointer : MonoBehaviour
             bool cellsOccupied = CellsOccupied(buildingPlacementPreviewObject.transform.position, placementBuildingData.boundingDimensionX, placementBuildingData.boundingDimensionY);
 
             if (cellsOccupied && placementBuildingData.constructionPrefab.GetComponent<Constructible>().ClearExistingWalls == true)
-            {
-                
+            {                
             }
             else if (cellsOccupied)            
             {
@@ -1054,6 +1023,9 @@ public class InteractionPointer : MonoBehaviour
     /// <param name="e"></param>
     public void OnBuildingPlacementStarted(object sender, BuildMenuSlot.BuildingPlacementEvent e)
     {
+        if (isInBuildingPlacementMode)
+            EndBuildingPlacementMode();
+            
         // ! Want to eventually switch action maps based on activity?
         // SteamVR_Actions.construction.Activate();
 
@@ -1072,6 +1044,7 @@ public class InteractionPointer : MonoBehaviour
         {
             isInBuildingPlacementMode = true;
             buildingPlacementPreviewObject = Instantiate(placementBuildingData.worldPreviewPrefab, destinationReticleTransform);
+            buildingPlacementPreviewObject.transform.rotation = Quaternion.identity;
             //buildingPlacementPreviewObject.transform.Rotate(0, 0, lastBuildingRotation);
             MeshRenderer meshRenderer = buildingPlacementPreviewObject.GetComponentInChildren<MeshRenderer>();
             if (meshRenderer)
@@ -1302,8 +1275,8 @@ public class InteractionPointer : MonoBehaviour
             // foreach ( PointerInteractable interactObject in interactableObjects )
             // 	interactObject.Highlight( false );
 
-            startingFeetOffset = player.trackingOriginTransform.position - player.feetPositionGuess;
-            movedFeetFarEnough = false;
+            //startingFeetOffset = player.trackingOriginTransform.position - player.feetPositionGuess;
+            //movedFeetFarEnough = false;
         }
 
         pointerStartTransform = pointerAttachmentPoint.transform;

@@ -239,8 +239,7 @@ public class BuildMenuSlot : MonoBehaviour
         if (WasSelectButtonReleased(hand))
         {
             if (isPointerPlacementStarting)
-            {
-                
+            {                
                 BuildingPlacementEvent e = new BuildingPlacementEvent{ buildingData = rtsTypeData, hand = hand };
                 OnBuildingPlacementEvent?.Invoke(this, e);
                 // itemIsSpawned = true;
