@@ -188,6 +188,25 @@ public class TechTreeEditor : EditorWindow
         }
     }
 
+/* 
+    public Action<Node> OnRemoveNode;
+
+    private void ProcessContextMenu()
+    {
+        GenericMenu genericMenu = new GenericMenu();
+        genericMenu.AddItem(new GUIContent("Remove node"), false, OnClickRemoveNode);
+        genericMenu.ShowAsContext();
+    }
+
+    private void OnClickRemoveNode()
+    {
+        if (OnRemoveNode != null)
+        {
+            OnRemoveNode(this);
+        }
+    }
+ */
+ 
     private void DrawConnectionLine(Event e)
     {
         if (selectedInPointNode != null && selectedOutPointNode == null)
@@ -314,7 +333,7 @@ public class TechTreeEditor : EditorWindow
 
     private void DrawNodeConnections(int nodeIdx)
     {
-        foreach (TechBase req in targetTree.tree[nodeIdx].techRequirements)
+        foreach (TechBase req in targetTree.tree[nodeIdx].techRequirements.ToArray())
         {
             int reqIdx = targetTree.FindTechIndex(req);
             if (reqIdx != -1)

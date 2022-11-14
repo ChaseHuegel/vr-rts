@@ -280,7 +280,6 @@ public class NodeBasedEditor : EditorWindow
 
     private void OnClickRemoveConnection(Connection connection)
     {
-        Debug.Log("hello");
         connections.Remove(connection);
     }
 
