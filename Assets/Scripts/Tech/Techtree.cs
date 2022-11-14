@@ -61,9 +61,17 @@ public class TechTree : ScriptableObject
             }
 
             if (requirementsMet)
+            {
                 techNode.unlocked = true;
+                if (OnNodeUnlocked != null)
+                    OnNodeUnlocked(techNode);
+            }
             else
+            {
                 techNode.unlocked = false;
+                if (OnNodeLocked != null)
+                    OnNodeLocked(techNode);
+            }
         }
     }
 
@@ -73,6 +81,7 @@ public class TechTree : ScriptableObject
         if (tIdx == -1)
         {
             tree.Add(new TechNode(tech, new List<TechBase>(), UIpos));
+            RefreshNodes();
             return true;
         }
         else
@@ -83,6 +92,7 @@ public class TechTree : ScriptableObject
     {
         TechNode node = FindNode(tech);
         node.unlocked = true;
+        RefreshNodes();
 
         if (OnNodeUnlocked != null)
             OnNodeUnlocked(node);
@@ -92,6 +102,7 @@ public class TechTree : ScriptableObject
     {
         TechNode node = FindNode(tech);
         node.researched = true;
+        RefreshNodes();
 
         if (OnNodeResearched != null)
             OnNodeResearched(node);
@@ -121,6 +132,8 @@ public class TechTree : ScriptableObject
         {
             if (tn.techRequirements.Contains(tech)) tn.techRequirements.Remove(tech);
         }
+
+        RefreshNodes();
     }
 
     public int FindTechIndex(TechBase tech)

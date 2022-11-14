@@ -32,47 +32,100 @@ public class BuildMenuSlot : MonoBehaviour
     public UnityEvent dropEvent;
     private GameObject previewObject;
     public bool justPickedUpItem = false;
-    public static Material disabledMat;
-    public static Material enabledMat;
     SphereCollider grabCollider;
-
     private Vector3 previewObjectOriginalScale;
 
     MeshRenderer[] meshRenderers;
     SkinnedMeshRenderer[] skinnedMeshRenderers;
+
+    public GameObject lockObject;
+    public GameObject iconObject;
+
+    private BuildMenuTab parentTab;
+
     void Awake()
     {
-        if (disabledMat == null)
-                Debug.LogError("Disabled Material is missing", this);
-        
-        if (!(grabCollider = GetComponent<SphereCollider>()))
-            Debug.Log("grabCollider missing.");    
+        parentTab = GetComponentInParent<BuildMenuTab>();
+        grabCollider = GetComponent<SphereCollider>();
+
+#if UNITY_EDITOR
+        if (!parentTab) Debug.LogError("Parent tab missing.", this);
+        if (!grabCollider) Debug.LogError("grabCollider missing.", this);
+#endif
 
         CreatePreviewObject();
         previewObjectOriginalScale = previewObject.transform.localScale;
+
+        HookIntoEvents();
+    }
+
+    public void Lock()
+    {
+        iconObject.SetActive(true);
+        lockObject.SetActive(true);
+        previewObject.SetActive(false);
+    }
+
+    public void Unlock()
+    {
+        iconObject.SetActive(false);
+        lockObject.SetActive(false);
+        previewObject.SetActive(true);
     }
 
     public void SetEnabled(bool enabled = true)
-    {
+    {        
+        // TODO: Sort this out so it's not neccassary here
         if (!grabCollider)
             grabCollider = GetComponent<SphereCollider>();
-        
+
         GetMeshRenderers();
         
         if (enabled)
         {
             grabCollider.enabled = true;
-
-            if (previewObject)
-                SetMaterial(enabledMat);
+            iconObject.SetActive(false);
+            previewObject?.SetActive(true);
+            // if (previewObject)
+            //     SetMeshMaterial(parentTab.slotEnabledMaterial);
         }
         else
         {   
-            grabCollider.enabled = false;  
-
-            if(previewObject)
-                SetMaterial(disabledMat);
+            grabCollider.enabled = false;
+            iconObject.SetActive(true);
+            previewObject?.SetActive(false);
+            // if(previewObject)
+            //     SetMeshMaterial(parentTab.slotDisabledMaterial);
         }
+    }
+
+    private void OnNodeLocked(TechNode node)
+    {
+        if (node.tech == rtsTypeData)
+            Unlock();
+    }
+
+    private void OnNodeUnlocked(TechNode node)
+    {
+        if (node.tech == rtsTypeData)
+            Lock();
+    }
+
+    private void HookIntoEvents()
+    {
+        TechTree.OnNodeUnlocked += OnNodeUnlocked;
+        TechTree.OnNodeLocked += OnNodeLocked;
+    }
+
+    private void CleanupEvents()
+    {
+        TechTree.OnNodeUnlocked -= OnNodeUnlocked;
+        TechTree.OnNodeLocked -= OnNodeUnlocked;
+    }
+
+    void OnDestroy()
+    {
+        CleanupEvents();
     }
 
     public void CreatePreviewObject()
@@ -85,6 +138,7 @@ public class BuildMenuSlot : MonoBehaviour
             if (rtsTypeData.menuPreviewPrefab != null)
             {
                 previewObject = Instantiate( rtsTypeData.menuPreviewPrefab, transform.position, Quaternion.identity ) as GameObject;
+                previewObject.name = "_" + previewObject.name;
                 previewObject.transform.parent = transform;
                 previewObject.transform.localRotation = Quaternion.identity;
             }            
@@ -95,6 +149,7 @@ public class BuildMenuSlot : MonoBehaviour
             if (rtsTypeData.fadedPreviewPrefab != null)
             {
                 previewObject = Instantiate( rtsTypeData.fadedPreviewPrefab, transform.position, Quaternion.identity ) as GameObject;
+                previewObject.name = "_" + previewObject.name;
                 previewObject.transform.parent = transform;
                 previewObject.transform.localRotation = Quaternion.identity;
             }
@@ -112,45 +167,44 @@ public class BuildMenuSlot : MonoBehaviour
         skinnedMeshRenderers = previewObject.GetComponentsInChildren<SkinnedMeshRenderer>();
     }
 
-    private void SetMaterial(Material material)
+    private void SetMeshMaterial(Material material)
     {
         foreach (MeshRenderer meshRenderer in meshRenderers)
-        {
             meshRenderer.sharedMaterial = material;
-        }
 
         foreach (SkinnedMeshRenderer skinnedMeshRenderer in skinnedMeshRenderers)
-        {
             skinnedMeshRenderer.sharedMaterial = material;
-        }
     }
 
     private void ClearPreview()
     {
-        GameObject[] allChildren = new GameObject [ transform.childCount ] ;
+#if UNITY_EDITOR
+        DestroyImmediate(previewObject);
+#else
+        Destroy(previewObject);
+#endif
 
-        int i = 0;
+        //         GameObject[] allChildren = new GameObject [ transform.childCount ] ;
 
-        foreach ( Transform child in transform )
-        {
-            allChildren [ i ] = child.gameObject;
-            i++;
-        }
+        //         int i = 0;
 
-        foreach ( GameObject child in allChildren )
-        {
-            if (Time.time > 0)
-            {
-                if (!child.GetComponent<BuildMenuResouceCost>() && !child.GetComponent<TMPro.TextMeshPro>())
-                {
-                    GameObject.Destroy(child.gameObject);
-                }
-            }
-            else if (!child.GetComponent<BuildMenuResouceCost>() && !child.GetComponent<TMPro.TextMeshPro>())
-            {
-                GameObject.DestroyImmediate( child.gameObject );
-            }
-        }
+        //         foreach ( Transform child in transform )
+        //         {
+        //             allChildren [ i ] = child.gameObject;
+        //             i++;
+        //         }
+
+        //         foreach ( GameObject child in allChildren )
+        //         {
+        //             if (!child.GetComponent<BuildMenuResouceCost>() && !child.GetComponent<TMPro.TextMeshPro>())
+        //             {
+        // #if UNITY_EDITOR
+        //                 GameObject.DestroyImmediate(child.gameObject);
+        // #else
+        //                 GameObject.Destroy(child.gameObject);
+        // #endif
+        //             }
+        //         }
     }
 
     void Update()

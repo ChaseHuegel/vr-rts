@@ -195,7 +195,9 @@ public class InteractionPointer : MonoBehaviour
 
         rallyPointObject = wayPointReticle.transform.GetChild(0).gameObject;
 
-        ShowPointer();
+        // Initialize reticle
+        //ShowPointer();
+        pointerStartTransform = pointerAttachmentPoint.transform;
     }
 
     // Setup LineRenderers for unit selection

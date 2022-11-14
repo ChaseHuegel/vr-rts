@@ -13,9 +13,19 @@ public class BuildMenuTab : MonoBehaviour
     public float verticalButtonSpacing = 96.0f;
     public int maximumNumberOfColumns = 3;
     public GameObject resourceCostPrefab;
+    public GameObject slotLockedPrefab;
     public Material slotEnabledMaterial;
     public Material slotDisabledMaterial;
     public TMPro.TMP_FontAsset titleFont;
+
+    [Header("Slot Icon Transform")]
+    public Vector3 slotIconPosition;
+    public Vector3 slotIconRotation;
+    public Vector3 slotIconScale = Vector3.one;
+
+    [Header("Slot Lock Transform")]
+    public Vector3 slotLockPosition;
+
     public TechBase[] ButtonsNew;
     private BuildMenuSlot[] slots;
 
@@ -23,13 +33,9 @@ public class BuildMenuTab : MonoBehaviour
     {
         // if (transform.childCount <= 0)
         //     Generate();
-        BuildMenuSlot.disabledMat = slotDisabledMaterial;
-        BuildMenuSlot.enabledMat = slotEnabledMaterial;
-        HookIntoEvents();
-    }
 
-    void Start()
-    {
+        //HookIntoEvents();
+
         slots = GetComponentsInChildren<BuildMenuSlot>();
 
         foreach (BuildMenuSlot slot in slots)
@@ -42,28 +48,34 @@ public class BuildMenuTab : MonoBehaviour
         }
     }
 
-    private void OnNodeUnlocked(TechNode node)
-    {
-        Array.Find<BuildMenuSlot>(slots, x => x.rtsTypeData == node.tech)?.SetEnabled(true);
-    }
+    // private void OnNodeUnlocked(TechNode node)
+    // {
+    //     if (slots != null)
+    //         Array.Find<BuildMenuSlot>(slots, x => x.rtsTypeData == node?.tech)?.Unlock();
+    // }
 
-    private void OnNodeLocked(TechNode node)
-    {
-        Array.Find<BuildMenuSlot>(slots, x => x.rtsTypeData == node.tech)?.SetEnabled(false);
-    }
+    // private void OnNodeLocked(TechNode node)
+    // {
+    //     if (slots != null)
+    //         Array.Find<BuildMenuSlot>(slots, x => x.rtsTypeData == node?.tech)?.Lock();
+    // }
 
-    private void HookIntoEvents()
-    {
-        TechTree.OnNodeUnlocked += OnNodeUnlocked;
-        TechTree.OnNodeLocked += OnNodeLocked;
-    }
+    // private void HookIntoEvents()
+    // {
+    //     TechTree.OnNodeUnlocked += OnNodeUnlocked;
+    //     TechTree.OnNodeLocked += OnNodeLocked;
+    // }
 
-    private void CleanupEvents()
-    {
-        TechTree.OnNodeUnlocked -= OnNodeUnlocked;
-        TechTree.OnNodeLocked -= OnNodeUnlocked;
-    }
+    // private void CleanupEvents()
+    // {
+    //     TechTree.OnNodeUnlocked -= OnNodeUnlocked;
+    //     TechTree.OnNodeLocked -= OnNodeUnlocked;
+    // }
 
+    // void OnDestroy()
+    // {
+    //     CleanupEvents();
+    // }
 
     [ExecuteInEditMode]
     public void Generate()
@@ -82,48 +94,69 @@ public class BuildMenuTab : MonoBehaviour
         float slotPositionY = origin.y;
         
         DestroyChildren();
-
+        
         foreach (TechBase tech in ButtonsNew)
         {
             if (tech is BuildingData || tech is WallData)
             {
                 // Create the button slot gameobject
-                GameObject slotObject = new GameObject("_slot_" + i);
-                slotObject.transform.SetParent(this.gameObject.transform);
+                GameObject slot = new GameObject("_slot_" + i);
+                slot.transform.SetParent(this.gameObject.transform);
 
-                slotObject.transform.localPosition = new Vector3(slotPositionX, slotPositionY, origin.z);
-                slotObject.transform.Rotate(0, 90, -90);
-                slotObject.AddComponent<Interactable>();
-                slotObject.GetComponent<Interactable>().highlightOnHover = false;
+                slot.transform.localPosition = new Vector3(slotPositionX, slotPositionY, origin.z);
+                slot.transform.Rotate(0, 90, -90);
+                slot.AddComponent<Interactable>();
+                slot.GetComponent<Interactable>().highlightOnHover = false;
 
                 // Set layer
-                slotObject.layer = LayerMask.NameToLayer("UI");
+                slot.layer = LayerMask.NameToLayer("UI");
 
-                // Add components needed
-                BuildMenuSlot buildMenuSlot = slotObject.AddComponent<BuildMenuSlot>();
-                SphereCollider sphereCollider = slotObject.AddComponent<SphereCollider>();
+                // Lock
+                GameObject lockObject = Instantiate(slotLockedPrefab, Vector3.zero, Quaternion.identity, slot.transform);
+                lockObject.name = "_lock";
+                lockObject.transform.localPosition = slotLockPosition;
+                lockObject.SetActive(false);
+
+                // Icon
+                GameObject iconObject = new GameObject("_icon");
+                iconObject.transform.SetParent(slot.transform, false);
+                iconObject.transform.localPosition = slotIconPosition;
+                iconObject.transform.localScale = slotIconScale;
+                iconObject.transform.localEulerAngles = slotIconRotation;
+                iconObject.SetActive(false);
+
+                //iconObject.transform.localScale = new Vector3(0.0160526186f, 0.0160526186f, 0.0160526186f);
+                SpriteRenderer spriteRenderer = iconObject.AddComponent<SpriteRenderer>();
+                spriteRenderer.sprite = tech.worldQueueImage;
+
+                // BuildMenuSlot component
+                BuildMenuSlot buildMenuSlotComponent = slot.AddComponent<BuildMenuSlot>();
+                SphereCollider sphereCollider = slot.AddComponent<SphereCollider>();
                 sphereCollider.radius = 0.045f;
                 sphereCollider.center.Set(0.0f, 0.02f, 0.0f);
 
-                // Instantiate the resource cost gameobject
-                GameObject resourceCost = Instantiate(resourceCostPrefab, Vector3.zero, Quaternion.identity, slotObject.transform);
-                resourceCost.transform.localPosition = new Vector3(0.0743f, -0.002f, 0.0f);
-                resourceCost.transform.localRotation = Quaternion.identity;
+                // Resource cost gameobject
+                GameObject resourceCostObject = Instantiate(resourceCostPrefab, Vector3.zero, Quaternion.identity, slot.transform);
+                resourceCostObject.name = "_resource_cost";
+                resourceCostObject.transform.localPosition = new Vector3(0.0743f, -0.002f, 0.0f);
+                resourceCostObject.transform.localRotation = Quaternion.identity;
 
                 // Fetch and set the building type data from the database
-                buildMenuSlot.rtsTypeData = (BuildingData)tech;
+                buildMenuSlotComponent.rtsTypeData = (BuildingData)tech;
+                buildMenuSlotComponent.lockObject = lockObject;
+                buildMenuSlotComponent.iconObject = iconObject;
 
-                CreateSlotTitle(buildMenuSlot);
+                CreateSlotTitle(buildMenuSlotComponent);
 
                 // Popluate the resource cost prefab text objects
-                BuildMenuResouceCost cost = resourceCost.GetComponent<BuildMenuResouceCost>();
-                cost.woodText.text = buildMenuSlot.rtsTypeData.woodCost.ToString();
-                cost.goldText.text = buildMenuSlot.rtsTypeData.goldCost.ToString();
-                cost.grainText.text = buildMenuSlot.rtsTypeData.foodCost.ToString();
-                cost.stoneText.text = buildMenuSlot.rtsTypeData.stoneCost.ToString();
+                BuildMenuResouceCost cost = resourceCostObject.GetComponent<BuildMenuResouceCost>();
+                cost.woodText.text = buildMenuSlotComponent.rtsTypeData.woodCost.ToString();
+                cost.goldText.text = buildMenuSlotComponent.rtsTypeData.goldCost.ToString();
+                cost.grainText.text = buildMenuSlotComponent.rtsTypeData.foodCost.ToString();
+                cost.stoneText.text = buildMenuSlotComponent.rtsTypeData.stoneCost.ToString();
 
                 // Create/Instatiate preview objects for slots
-                buildMenuSlot.CreatePreviewObject();                           
+                buildMenuSlotComponent.CreatePreviewObject();                           
             }
 
             // Move to next column, or to the next row if we
@@ -139,11 +172,12 @@ public class BuildMenuTab : MonoBehaviour
             slotPositionY = -1 * row * verticalButtonSpacing + origin.y;
             i++;
         }
+
+        EditorUtility.SetDirty(this);
     }
 
     private void CreateSlotTitle(BuildMenuSlot slot)
     {
-
         GameObject titleGameObject = new GameObject("_title");
         titleGameObject.transform.position = new Vector3(0.0513f, -0.0042f, 0.0f);
         titleGameObject.transform.SetParent(slot.transform, false);
@@ -173,7 +207,11 @@ public class BuildMenuTab : MonoBehaviour
         
         foreach (GameObject child in allChildren)
         {
+#if UNITY_EDITOR
             DestroyImmediate(child.gameObject);
+#else
+            Destroy(child.gameObject);
+#endif
         }
     }
 }
