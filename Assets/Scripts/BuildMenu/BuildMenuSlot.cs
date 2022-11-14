@@ -30,7 +30,7 @@ public class BuildMenuSlot : MonoBehaviour
     private bool useFadedPreview;
     public UnityEvent pickupEvent;
     public UnityEvent dropEvent;
-    private GameObject previewObject;
+    public GameObject previewObject;
     public bool justPickedUpItem = false;
     SphereCollider grabCollider;
     private Vector3 previewObjectOriginalScale;
@@ -102,13 +102,13 @@ public class BuildMenuSlot : MonoBehaviour
     private void OnNodeLocked(TechNode node)
     {
         if (node.tech == rtsTypeData)
-            Unlock();
+            Lock();
     }
 
     private void OnNodeUnlocked(TechNode node)
     {
         if (node.tech == rtsTypeData)
-            Lock();
+            Unlock();
     }
 
     private void HookIntoEvents()
@@ -120,7 +120,7 @@ public class BuildMenuSlot : MonoBehaviour
     private void CleanupEvents()
     {
         TechTree.OnNodeUnlocked -= OnNodeUnlocked;
-        TechTree.OnNodeLocked -= OnNodeUnlocked;
+        TechTree.OnNodeLocked -= OnNodeLocked;
     }
 
     void OnDestroy()

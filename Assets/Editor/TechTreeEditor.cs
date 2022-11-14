@@ -113,7 +113,7 @@ public class TechTreeEditor : EditorWindow
 
         if (GUI.changed)
         {
-            targetTree.RefreshNodes();
+            targetTree.RefreshNodesForEditor();
             Repaint();
         }
 

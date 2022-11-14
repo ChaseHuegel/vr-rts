@@ -75,6 +75,33 @@ public class TechTree : ScriptableObject
         }
     }
 
+#if UNITY_EDITOR
+    public void RefreshNodesForEditor()
+    {
+        foreach (TechNode techNode in tree)
+        {
+            bool requirementsMet = true;
+
+            if (techNode.techRequirements.Count <= 0)
+                continue;
+
+            foreach (TechBase req in techNode.techRequirements)
+            {
+                if (FindNode(req).researched == false)
+                {
+                    requirementsMet = false;
+                    break;
+                }
+            }
+
+            if (requirementsMet)
+                techNode.unlocked = true;
+            else
+                techNode.unlocked = false;
+        }
+    }
+#endif
+
     public bool AddNode(TechBase tech, Vector2 UIpos)
     {
         int tIdx = FindTechIndex(tech);
