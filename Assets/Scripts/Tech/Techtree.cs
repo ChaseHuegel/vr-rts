@@ -37,6 +37,36 @@ public class TechTree : ScriptableObject
     public delegate void NodeResearched(TechNode node);
     public static event NodeResearched OnNodeResearched;
 
+    void Start()
+    {
+        RefreshNodes();
+    }
+
+    public void RefreshNodes()
+    {
+        foreach (TechNode techNode in tree)
+        {
+            bool requirementsMet = true;
+
+            if (techNode.techRequirements.Count <= 0)
+                continue;
+                
+            foreach (TechBase req in techNode.techRequirements)
+            {
+                if (FindNode(req).researched == false)
+                {
+                    requirementsMet = false;
+                    break;
+                }
+            }
+
+            if (requirementsMet)
+                techNode.unlocked = true;
+            else
+                techNode.unlocked = false;
+        }
+    }
+
     public bool AddNode(TechBase tech, Vector2 UIpos)
     {
         int tIdx = FindTechIndex(tech);

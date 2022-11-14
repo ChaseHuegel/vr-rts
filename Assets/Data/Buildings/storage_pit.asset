@@ -18,7 +18,7 @@ MonoBehaviour:
   worldPrefab: {fileID: 8485509391712707482, guid: 9c51a25f1105c864782a78f742c761af,
     type: 3}
   worldButtonMaterial: {fileID: 0}
-  worldQueueImage: {fileID: 0}
+  worldQueueImage: {fileID: 21300000, guid: 454f4f26342e9484f9409dfc68914bac, type: 3}
   populationCost: 0
   goldCost: 0
   stoneCost: 0
@@ -26,6 +26,8 @@ MonoBehaviour:
   woodCost: 100
   buildingType: 51
   dropoffTypes: -1
+  boundingDimensionX: 5
+  boundingDimensionY: 5
   populationSupported: 0
   maxUnitQueueSize: 0
   maximumHitPoints: 100
@@ -41,11 +43,5 @@ MonoBehaviour:
     type: 3}
   constructionPrefab: {fileID: 6199601559403147735, guid: 304577438296ac54aa0bc9dff40f6a8d,
     type: 3}
-  diagonalWorldPrefab: {fileID: 0}
-  diagonalWorldPreviewPrefab: {fileID: 0}
-  diagonalConstructablePrefab: {fileID: 0}
-  boundingDimensionX: 5
-  boundingDimensionY: 5
-  allowedUnitsToSpawn: 
   constructionCompletedAudio: {fileID: 11400000, guid: c72159ec98440534abf1b3058c7edd57,
     type: 2}

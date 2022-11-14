@@ -149,7 +149,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3693272101881856475}
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0.0625, y: 0, z: 0.0625}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.0770835, y: 0.0770835, z: 0.0770835}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -303,18 +303,13 @@ MonoBehaviour:
   Weaknesses: 
   Resistances: 
   Immunities: 
-  FactionID: 0
+  Faction: {fileID: 0}
   BoundingDimensions: {x: 1, y: 1}
   BoundingOrigin: {x: 0, y: 0}
-  GridPosition:
-    x: 0
-    y: 0
+  SkinRendererTargets: []
   bakeOnStart: 1
   allowPathThru: 1
   buildingData: {fileID: 11400000, guid: 18b0f2fbce743bc40b00edc6681b3bcc, type: 2}
-  meshes: []
-  skinnedMeshes:
-  - {fileID: 407757870596418816}
 --- !u!114 &2843186804932039898
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -403,7 +398,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   openConditions: 1
-  toggleDoors: 0
 --- !u!135 &1363663276483560402
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -546,12 +540,6 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 4a8b820c98c7b4540bab4e4f3d70d7fb, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e9554c943e8d60643a12a6ee55c092e6, type: 3}
---- !u!137 &407757870596418816 stripped
-SkinnedMeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 13700000, guid: e9554c943e8d60643a12a6ee55c092e6,
-    type: 3}
-  m_PrefabInstance: {fileID: 407757870601725600}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &407757870601600032 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: e9554c943e8d60643a12a6ee55c092e6,

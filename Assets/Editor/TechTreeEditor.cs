@@ -6,11 +6,13 @@ using UnityEditor;
 public class TechTreeEditor : EditorWindow
 {
     // positioning
-    Vector2 nodeSize = new Vector2(150, 80);
+    Vector2 nodeSize = new Vector2(175, 90);
     // float minTreeHeight = 720f;
     // float minTreeWidth = 1000f;
 
+    float nodeTitleMargin = 10.0f;
     Vector2 nodeContentMargin = new Vector2(10.0f, 5.0f);
+
     Vector2 lineHeight = new Vector2(0f, 20f);
     float toggleButtonIndent = 102.0f;
     Vector2 nodeContentSize = new Vector2(40f, 20f);
@@ -67,7 +69,7 @@ public class TechTreeEditor : EditorWindow
         DrawGrid(20, 0.2f, Color.gray);
         DrawGrid(100, 0.4f, Color.gray);
 
-        targetTree = (TechTree)EditorGUILayout.ObjectField("Tech Tree", targetTree, typeof(TechTree), false);
+        targetTree = (TechTree)EditorGUILayout.ObjectField("Tech Tree", targetTree, typeof(TechTree), false);        
 
         if (!targetTree)
             return;
@@ -109,7 +111,11 @@ public class TechTreeEditor : EditorWindow
         // scrollPosition.x = GUILayout.HorizontalScrollbar(scrollPosition.x, 20.0f, 0.0f, minTreeWidth);
         // scrollPosition.y = GUI.VerticalScrollbar(new Rect(0, 0, 20, 720), scrollPosition.y, 20f, 0f, minTreeHeight);
 
-        if (GUI.changed) Repaint();
+        if (GUI.changed)
+        {
+            targetTree.RefreshNodes();
+            Repaint();
+        }
 
         EditorUtility.SetDirty(targetTree); // Makes sure changes are persistent.
     }
@@ -400,32 +406,39 @@ public class TechTreeEditor : EditorWindow
         if (GUI.Button(outPointRect, "", outPointStyle))
             OnClickOutPoint(targetTree.tree[nodeIdx]);
 
-        GUI.Box(nodeRect, "", (selectedNode == targetTree.tree[nodeIdx] ? selectedNodeStyle : nodeStyle));
-
-        Rect rowRect = new Rect(targetTree.tree[nodeIdx].UIposition - scrollPosition, nodeLabelSize);
-        rowRect.x += nodeContentMargin.x;
-        rowRect.y += lineHeight.y * 0.25f;
+        GUILayout.BeginArea(nodeRect, (selectedNode == targetTree.tree[nodeIdx] ? selectedNodeStyle : nodeStyle));
 
         GUIStyle style = new GUIStyle();
         style.fontStyle = FontStyle.Bold;
         style.normal.textColor = Color.white;
-        GUI.Label(rowRect, targetTree.tree[nodeIdx].tech.name, style);
+        style.alignment = TextAnchor.UpperCenter;
 
-        rowRect.y += lineHeight.y;
+        GUILayout.Label(targetTree.tree[nodeIdx].tech.name, style);
         
-        GUI.Label(rowRect, "Unlocked");
+        EditorGUILayout.BeginHorizontal();
 
-        Rect toggleRect = new Rect(targetTree.tree[nodeIdx].UIposition - scrollPosition + lineHeight, nodeContentSize);
-        toggleRect.x += toggleButtonIndent;
-        toggleRect.y = rowRect.y;
+        if (targetTree.tree[nodeIdx].tech.worldQueueImage != null)
+            GUILayout.Label(targetTree.tree[nodeIdx].tech.worldQueueImage.texture, GUILayout.Width(52.0f), GUILayout.Height(52.0f));
 
-        targetTree.tree[nodeIdx].unlocked = EditorGUI.Toggle(toggleRect, targetTree.tree[nodeIdx].unlocked);
-        
-        rowRect.y += lineHeight.y;
-        GUI.Label(rowRect, "Researched");
+        EditorGUILayout.BeginVertical();
 
-        toggleRect.y = rowRect.y;
-        targetTree.tree[nodeIdx].researched = EditorGUI.Toggle(toggleRect, targetTree.tree[nodeIdx].researched);
+        EditorGUILayout.BeginHorizontal();        
+        GUILayout.Label("Unlocked");
+        GUILayout.FlexibleSpace();
+        targetTree.tree[nodeIdx].unlocked = EditorGUILayout.Toggle("", targetTree.tree[nodeIdx].unlocked);
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.BeginHorizontal();        
+        GUILayout.Label("Researched");
+        GUILayout.FlexibleSpace();
+        targetTree.tree[nodeIdx].researched = EditorGUILayout.Toggle("", targetTree.tree[nodeIdx].researched);
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.EndVertical();
+
+        EditorGUILayout.EndHorizontal();
+
+        GUILayout.EndArea();
 
         return nodeRect;
     }

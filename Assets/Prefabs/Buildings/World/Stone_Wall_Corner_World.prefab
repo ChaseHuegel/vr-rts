@@ -30,8 +30,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8560964342145233846}
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0.0625, y: 0, z: 0.0625}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.065, y: 0.065, z: 0.065}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5250803266357029299}
   m_Father: {fileID: 0}
@@ -160,14 +161,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8753ff4a5012a141b16468281698adb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attributes:
-  - attribute: 0
-    value: 900
-    max: 900
-  invulnerable: 0
-  weaknesses: 
-  resistances: 
-  immunities: 
+  Invulnerable: 0
+  Weaknesses: 
+  Resistances: 
+  Immunities: 
 --- !u!114 &7132157594760652470
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -180,12 +177,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6494f394dde4732498f2aecf5968b6e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boundingDimensions: {x: 1, y: 1}
-  boundingOrigin: {x: 0, y: 0}
-  gridPosition:
-    x: 160
-    y: 160
-  factionId: 0
+  Invulnerable: 0
+  Weaknesses: 
+  Resistances: 
+  Immunities: 
+  Faction: {fileID: 0}
+  BoundingDimensions: {x: 1, y: 1}
+  BoundingOrigin: {x: 0, y: 0}
+  SkinRendererTargets: []
   bakeOnStart: 1
   allowPathThru: 0
   buildingData: {fileID: 11400000, guid: cb48a273d55d01944a37ded59920870a, type: 2}
