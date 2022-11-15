@@ -473,7 +473,7 @@ public class InteractionPointer : MonoBehaviour
     {
         if (isInWallPlacementMode)
         {
-            if (playerManager.CanConstructTech(currentWallData))
+            if (playerManager.CanAffordTech(currentWallData))
                 InstantiateWallConstructionSegments();
             else
                 EndWallPlacementMode();

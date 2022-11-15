@@ -12,12 +12,12 @@ public class BuildMenu : MonoBehaviour
     void Start()
     {
         playerManager = PlayerManager.Instance;
-        RefreshSlots();
+        //RefreshSlots();
     }
 
     public void OnAttachedToHand(Hand hand)
     {
-        RefreshSlots();
+        //RefreshSlots();
     }
 
     // TODO: This could be changed to just update the active tab for
@@ -45,7 +45,7 @@ public class BuildMenu : MonoBehaviour
         }
         tabs[tabNumber].gameObject.SetActive(true);
         
-        RefreshSlots();
+        //RefreshSlots();
     }
 
     public void GenerateTabs()

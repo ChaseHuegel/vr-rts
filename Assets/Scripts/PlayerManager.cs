@@ -117,6 +117,8 @@ public class PlayerManager : MonoBehaviour
         handMenuToggle?.AddOnStateDownListener(OnHandToggleMenuRightDown, SteamVR_Input_Sources.RightHand);
         handMenuToggle?.AddOnStateDownListener(OnHandToggleMenuLeftDown, SteamVR_Input_Sources.LeftHand);
 
+        faction.techTree.RefreshNodes();
+
         Valve.VR.OpenVR.Chaperone.ResetZeroPose(ETrackingUniverseOrigin.TrackingUniverseStanding);
     }
 
@@ -133,7 +135,7 @@ public class PlayerManager : MonoBehaviour
         {
             if (lHandTrackingPoint.right.y > handMenuTrackingSensitivity)
             {
-                buildMenu.RefreshSlots();
+                //buildMenu.RefreshSlots();
                 SetLeftHandInteraction(false);
                 //isAutohideHandMenuVisible = true;
                 autohideHandMenuObject.SetActive(true);
@@ -241,7 +243,7 @@ public class PlayerManager : MonoBehaviour
 
     public void OnHandToggleMenuRightDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
-        buildMenu.RefreshSlots();
+        //buildMenu.RefreshSlots();
 
         // Don't use both methods to display the menu.
         if (autoHideHandMenuEnabled) return;
@@ -291,7 +293,7 @@ public class PlayerManager : MonoBehaviour
 
     public void OnHandToggleMenuLeftDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
-        buildMenu.RefreshSlots();
+        //buildMenu.RefreshSlots();
 
         // Don't use both methods to display the menu at the same time.
         if (autoHideHandMenuEnabled) return;
@@ -482,7 +484,8 @@ public class PlayerManager : MonoBehaviour
                 break;
         }
 
-        buildMenu.RefreshSlots();
+        faction.techTree.RefreshNodes();
+        //buildMenu.RefreshSlots();
     }
 
     public void DeductTechResourceCost(TechBase techBase)
@@ -494,19 +497,19 @@ public class PlayerManager : MonoBehaviour
 
         UpdateWristDisplayResourceText();
 
-        // TODO: Switch this to events
-        buildMenu.RefreshSlots();
+        // TODO: Switch this to events?
+        faction.techTree.RefreshNodes();
+        //buildMenu.RefreshSlots();
     }
 
 
-    public bool CanConstructTech(TechBase techBase)
+    public bool CanAffordTech(TechBase techBase)
     {
         if (techBase.goldCost > goldCollected || techBase.woodCost > woodCollected ||
             techBase.foodCost > foodCollected || techBase.stoneCost > stoneCollected)
         {
             return false;
         }
-
         return true;
     }
 
@@ -518,11 +521,8 @@ public class PlayerManager : MonoBehaviour
         if (!faction.techTree.IsUnlocked(techBase))
             return false;
 
-        if (goldCollected < techBase.goldCost || woodCollected < techBase.woodCost ||
-            foodCollected < techBase.foodCost || stoneCollected < techBase.stoneCost)
-        {
+        if (!CanAffordTech(techBase))
             return false;
-        }
 
         if (techBase.populationCost > 0)
         {

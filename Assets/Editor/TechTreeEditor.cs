@@ -113,7 +113,11 @@ public class TechTreeEditor : EditorWindow
 
         if (GUI.changed)
         {
-            targetTree.RefreshNodesForEditor();
+            if (Time.time > 0)
+                targetTree.RefreshNodes();
+            else
+                targetTree.RefreshNodesForEditor();
+
             Repaint();
         }
 
@@ -432,6 +436,12 @@ public class TechTreeEditor : EditorWindow
         GUILayout.Label("Researched");
         GUILayout.FlexibleSpace();
         targetTree.tree[nodeIdx].researched = EditorGUILayout.Toggle("", targetTree.tree[nodeIdx].researched);
+        EditorGUILayout.EndHorizontal();
+        
+        EditorGUILayout.BeginHorizontal();
+        GUILayout.Label("Enabled");
+        GUILayout.FlexibleSpace();
+        targetTree.tree[nodeIdx].enabled = EditorGUILayout.Toggle("", targetTree.tree[nodeIdx].enabled);
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.EndVertical();

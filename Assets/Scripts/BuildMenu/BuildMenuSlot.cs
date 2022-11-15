@@ -59,44 +59,52 @@ public class BuildMenuSlot : MonoBehaviour
         HookIntoEvents();
     }
 
-    public void Lock()
+    private void Lock()
     {
         iconObject.SetActive(true);
         lockObject.SetActive(true);
         previewObject.SetActive(false);
     }
 
-    public void Unlock()
+    private void Unlock()
     {
         iconObject.SetActive(false);
         lockObject.SetActive(false);
         previewObject.SetActive(true);
     }
 
-    public void SetEnabled(bool enabled = true)
-    {        
-        // TODO: Sort this out so it's not neccassary here
+    private void InitializeGrabCollider()
+    {
         if (!grabCollider)
             grabCollider = GetComponent<SphereCollider>();
+    }
 
+    private void Enable()
+    {
+        // TODO: Sort this out so it's not neccassary here
+        InitializeGrabCollider();
         GetMeshRenderers();
+
+        grabCollider.enabled = true;
+        iconObject.SetActive(false);
+        previewObject?.SetActive(true);
         
-        if (enabled)
-        {
-            grabCollider.enabled = true;
-            iconObject.SetActive(false);
-            previewObject?.SetActive(true);
-            // if (previewObject)
-            //     SetMeshMaterial(parentTab.slotEnabledMaterial);
-        }
-        else
-        {   
-            grabCollider.enabled = false;
-            iconObject.SetActive(true);
-            previewObject?.SetActive(false);
-            // if(previewObject)
-            //     SetMeshMaterial(parentTab.slotDisabledMaterial);
-        }
+        // if (previewObject)
+        //     SetMeshMaterial(parentTab.slotEnabledMaterial);
+    }
+
+    private void Disable()
+    {
+        // TODO: Sort this out so it's not neccassary here
+        InitializeGrabCollider();
+        GetMeshRenderers();
+
+        grabCollider.enabled = false;
+        iconObject.SetActive(true);
+        previewObject?.SetActive(false);
+
+        // if(previewObject)
+        //     SetMeshMaterial(parentTab.slotDisabledMaterial);
     }
 
     private void OnNodeLocked(TechNode node)
@@ -111,16 +119,32 @@ public class BuildMenuSlot : MonoBehaviour
             Unlock();
     }
 
+    private void OnNodeEnabled(TechNode node)
+    {
+        if (node.tech == rtsTypeData)
+            Enable();
+    }
+
+    private void OnNodeDisabled(TechNode node)
+    {   
+        if (node.tech == rtsTypeData)
+            Disable();
+    }
+
     private void HookIntoEvents()
     {
         TechTree.OnNodeUnlocked += OnNodeUnlocked;
         TechTree.OnNodeLocked += OnNodeLocked;
+        TechTree.OnNodeEnabled += OnNodeEnabled;
+        TechTree.OnNodeDisabled += OnNodeDisabled;
     }
 
     private void CleanupEvents()
     {
         TechTree.OnNodeUnlocked -= OnNodeUnlocked;
         TechTree.OnNodeLocked -= OnNodeLocked;
+        TechTree.OnNodeEnabled -= OnNodeEnabled;
+        TechTree.OnNodeDisabled -= OnNodeDisabled;
     }
 
     void OnDestroy()

@@ -8,8 +8,10 @@ using UnityEngine.Events;
 public class TechNode
 {
     public TechBase tech;
+
     public bool unlocked;
     public bool researched;
+    public bool enabled;
     public List<TechBase> techRequirements;    
     public Vector2 UIposition;
 
@@ -37,6 +39,12 @@ public class TechTree : ScriptableObject
     public delegate void NodeResearched(TechNode node);
     public static event NodeResearched OnNodeResearched;
 
+    public delegate void NodeEnabled(TechNode node);
+    public static event NodeEnabled OnNodeEnabled;
+
+    public delegate void NodeDisabled(TechNode node);
+    public static event NodeDisabled OnNodeDisabled;
+
     void Start()
     {
         RefreshNodes();
@@ -46,21 +54,22 @@ public class TechTree : ScriptableObject
     {
         foreach (TechNode techNode in tree)
         {
-            bool requirementsMet = true;
+            bool requirementsPassed = true;
 
             if (techNode.techRequirements.Count <= 0)
                 continue;
                 
             foreach (TechBase req in techNode.techRequirements)
             {
-                if (FindNode(req).researched == false)
-                {
-                    requirementsMet = false;
-                    break;
-                }
-            }
+                requirementsPassed = FindNode(req).researched;
 
-            if (requirementsMet)
+                if (requirementsPassed)
+                    continue;
+                else
+                    break;
+            }
+            
+            if (requirementsPassed)
             {
                 techNode.unlocked = true;
                 if (OnNodeUnlocked != null)
@@ -72,7 +81,21 @@ public class TechTree : ScriptableObject
                 if (OnNodeLocked != null)
                     OnNodeLocked(techNode);
             }
-        }
+
+            if (techNode.unlocked && techNode.researched &&
+                PlayerManager.Instance.CanAffordTech(techNode.tech))
+            {
+                techNode.enabled = true;
+                if (OnNodeEnabled != null)
+                    OnNodeEnabled(techNode);
+            }
+            else
+            {
+                techNode.enabled = false;
+                if (OnNodeDisabled != null)
+                    OnNodeDisabled(techNode);
+            }
+        }           
     }
 
 #if UNITY_EDITOR
@@ -80,24 +103,33 @@ public class TechTree : ScriptableObject
     {
         foreach (TechNode techNode in tree)
         {
-            bool requirementsMet = true;
+            bool requirementsPassed = true;
 
             if (techNode.techRequirements.Count <= 0)
                 continue;
 
             foreach (TechBase req in techNode.techRequirements)
             {
-                if (FindNode(req).researched == false)
-                {
-                    requirementsMet = false;
+                requirementsPassed = FindNode(req).researched;
+
+                if (requirementsPassed)
+                    continue;
+                else
                     break;
-                }
             }
 
-            if (requirementsMet)
+            if (requirementsPassed)
                 techNode.unlocked = true;
+                if (OnNodeUnlocked != null)
+                    OnNodeUnlocked(techNode);
             else
                 techNode.unlocked = false;
+
+            if (techNode.unlocked && techNode.researched &&
+                PlayerManager.Instance.CanAffordTech(techNode.tech))
+                techNode.enabled = true;
+            else
+                techNode.enabled = false;
         }
     }
 #endif
