@@ -11,8 +11,8 @@ using Valve.VR.InteractionSystem;
 
 public class PlayerManager : MonoBehaviour
 {
+    //=========================================================================
     [Header("Stats/Resources")]
-    
     public int woodCollected;
     public int goldCollected;
     public int stoneCollected;
@@ -24,21 +24,39 @@ public class PlayerManager : MonoBehaviour
     public int queueCount;
     public Faction faction;
 
+    //=========================================================================
+    [Header("Audio Sources")]
+    public AudioSource headAudioSource;
+
+    //=========================================================================
+    [Header("Sounds")]
+    private AudioClip setRallyPointSound;
+    private AudioClip queueSuccessSound;
+    private AudioClip queueFailedSound;
+    private AudioClip dequeueSound;
+    private AudioClip teleportSound;
+    private AudioClip epochResearchCompleteSound;
+    private AudioClip buildingPlacementAllowedSound;
+    private AudioClip buildingPlacementDeniedSound;
+
     [Header("UI")]
     public SteamVR_Action_Boolean handMenuToggle;
 
+    //=========================================================================
     [Header("Hammer")]
     public bool hammerOnLeft = true;
     public bool hammerOnRight = false;
     public Transform rightHandHammerStorage;
     public Transform leftHandHammerStorage;
 
+    //=========================================================================
     [Header("Autohide Hand Menu")]
     [Tooltip("Switch between clipboard build menu or palm build menu.")]
     public bool autoHideHandMenuEnabled;
     public float handMenuTrackingSensitivity = 0.5f;
 
 
+    //=========================================================================
     [Header("Attachment/Tracking Points")]
     public Transform rHandAttachmentPoint;
     public Transform rHandTrackingPoint;
@@ -46,10 +64,12 @@ public class PlayerManager : MonoBehaviour
     public Transform lHandTrackingPoint;
     public GameObject autohideHandMenuObject;
 
+    //=========================================================================
     [Header("Information Displays")]
     public WristDisplay WristDisplay;
     public WristDisplay FaceDisplay;
 
+    //=========================================================================
     [Header("Prefabs")]
     public GameObject handBuildMenuPrefab;
 
@@ -86,6 +106,19 @@ public class PlayerManager : MonoBehaviour
     void Start()
     {
         HookIntoEvents();
+
+        headAudioSource.transform.SetParent(Player.instance.hmdTransform);
+        headAudioSource.transform.localPosition = Vector3.zero;
+
+        // Fetch sounds
+        buildingPlacementAllowedSound = GameMaster.Instance.buildingPlacementAllowedSound;
+        buildingPlacementDeniedSound = GameMaster.Instance.buildingPlacementDeniedSound;
+        setRallyPointSound = GameMaster.Instance.setRallyPointSound;
+        queueSuccessSound = GameMaster.Instance.queueSuccessSound;
+        queueFailedSound = GameMaster.Instance.queueFailedSound;
+        dequeueSound = GameMaster.Instance.dequeueSound;
+        teleportSound = GameMaster.Instance.teleportSound;
+        epochResearchCompleteSound = GameMaster.Instance.epochResearchCompleteSound;
 
 #if !UNITY_EDITOR
         TechTree tree = Instantiate(faction.techTree);
@@ -127,7 +160,41 @@ public class PlayerManager : MonoBehaviour
         CleanupEvents();
     }
 
-    
+    public void PlayEpochResearchCompleteAudio()
+    {
+        PlayAudioAtHeadSource(epochResearchCompleteSound);
+    }
+
+    public void PlayBuildingPlacementAllowedAudio()
+    {
+        PlayAudioAtHeadSource(buildingPlacementAllowedSound);
+    }
+
+    public void PlayBuildingPlacementDeniedAudio()
+    {
+        PlayAudioAtHeadSource(buildingPlacementDeniedSound);
+    }
+
+    public void PlaySetRallyPointSound()
+    {
+        PlayAudioAtHeadSource(setRallyPointSound);
+    }
+
+    public void PlayTeleportSound()
+    {
+        PlayAudioAtHeadSource(teleportSound);
+    }
+    public void PlayAudioAtHeadSource(AudioClip clip)
+    {
+        PlayAudioClip(headAudioSource, clip);
+    }
+
+    //=========================================================================
+    private void PlayAudioClip(AudioSource source, AudioClip clip)
+    {
+        source.clip = clip;
+        source.Play();
+    }
 
     void Update()
     {
@@ -343,6 +410,9 @@ public class PlayerManager : MonoBehaviour
     
     public void CompleteResearch(TechBase tech)
     {
+        faction.techTree.ResearchTech(tech);
+        PlayEpochResearchCompleteAudio();
+        
         Debug.LogFormat("{0} research complete.", tech.title, this);
     }
 
@@ -515,7 +585,7 @@ public class PlayerManager : MonoBehaviour
 
     public bool CanQueueTech(TechBase techBase)
     {
-        // Make this unneccassary by having the queue button locked.
+        // TODO: Make this unneccassary by having the queue button locked.
         TechNode node = faction.techTree.tree.Find(x => x.tech == techBase);
 
         if (!faction.techTree.IsUnlocked(techBase))

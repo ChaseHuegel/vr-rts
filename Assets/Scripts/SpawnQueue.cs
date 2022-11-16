@@ -64,7 +64,8 @@ public class SpawnQueue : MonoBehaviour
             }
         }
 
-        SetUnitRallyPointPosition(unitSpawnPoint.position);
+        if (unitSpawnPoint)
+            SetUnitRallyPointPosition(unitSpawnPoint.position);
 
         if (!(damageable = gameObject.GetComponentInParent<Damageable>()))
             Debug.Log("Missing damageable component in parent.", this);

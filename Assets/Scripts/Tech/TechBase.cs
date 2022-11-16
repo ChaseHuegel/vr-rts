@@ -32,7 +32,9 @@ public class TechBase : ScriptableObject
     public int woodCost;
 
     public virtual void Execute(SpawnQueue spawnQueue)
-    { }
+    {
+        PlayerManager.Instance.CompleteResearch(this);
+    }
 }
 
 

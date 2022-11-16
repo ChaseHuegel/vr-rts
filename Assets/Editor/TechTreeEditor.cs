@@ -2,27 +2,52 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using System;
+
+class GetStringInputWindow : EditorWindow
+{
+
+    string fileName;
+
+    void OnGUI()
+    {
+        fileName = EditorGUILayout.TextField("Name", fileName);
+
+        if (GUILayout.Button("OK"))
+        {
+            OnClickOk();
+            GUIUtility.ExitGUI();
+        }
+    }
+
+    void OnClickOk()
+    {
+        fileName = fileName.Trim();
+
+        if (string.IsNullOrEmpty(fileName))
+        {
+            EditorUtility.DisplayDialog("Name required", "Please specify a valid name.", "Close");
+            return;
+        }
+
+        // You may also want to check for illegal characters :)
+
+        // Save your prefab
+
+        Close();
+    }
+
+}
 
 public class TechTreeEditor : EditorWindow
 {
     // positioning
-    Vector2 nodeSize = new Vector2(175, 90);
-    // float minTreeHeight = 720f;
-    // float minTreeWidth = 1000f;
-
-    float nodeTitleMargin = 10.0f;
-    Vector2 nodeContentMargin = new Vector2(10.0f, 5.0f);
-
-    Vector2 lineHeight = new Vector2(0f, 20f);
-    float toggleButtonIndent = 102.0f;
-    Vector2 nodeContentSize = new Vector2(40f, 20f);
-    Vector2 nodeLabelSize = new Vector2(100f, 20f);
+    Vector2 nodeSize = new Vector2(220, 110);
 
     // scrolling and moving
     Vector2 mouseSelectionOffset;
-    Vector2 scrollPosition = Vector2.zero; // Move everything by scrollPosition
     Vector2 scrollStartPos;
-    TechNode activeNode; // moved node stored here
+    TechNode draggedNode; // moved node stored here
     TechNode selectedNode; // selected node stored here
     public TechTree targetTree;
 
@@ -30,6 +55,7 @@ public class TechTreeEditor : EditorWindow
     private GUIStyle selectedNodeStyle;
     private GUIStyle inPointStyle;
     private GUIStyle outPointStyle;
+    private GUIStyle nodeTitleStyle;
 
     TechNode selectedInPointNode;
     TechNode selectedOutPointNode;
@@ -41,17 +67,47 @@ public class TechTreeEditor : EditorWindow
         window.titleContent = new GUIContent("Tech Tree Editor");
     }
 
+    #region Animator style graph background etc..
+    /*
+    private UnityEditor.Graphs.Graph graph;
+    private GraphGUITest graphGUI;
+
+    class GraphGUITest : UnityEditor.Graphs.GraphGUI
+    {
+    }
+
+    private void OnEnable()
+    {
+        graph = CreateInstance<UnityEditor.Graphs.Graph>();
+        graphGUI = CreateInstance<GraphGUITest>();
+        graphGUI.graph = graph;
+    }
+
+    private void OnGUI()
+    {
+        graphGUI.BeginGraphGUI(this, new Rect(0f, 0f, position.width, position.height));
+        // GUI inside scroll view here
+        //graphGUI.OnGraphGUI();
+        graphGUI.EndGraphGUI();
+    }
+     */
+    #endregion
+
     private void OnEnable()
     {
         nodeStyle = new GUIStyle();
         nodeStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1.png") as Texture2D;
         nodeStyle.border = new RectOffset(12, 12, 12, 12);
-        nodeStyle.padding = new RectOffset(10, 0, 0, 0);
-
+        nodeStyle.padding = new RectOffset(10, 10, 0, 0);
+        nodeStyle.alignment = TextAnchor.MiddleCenter;
+        
         selectedNodeStyle = new GUIStyle();
         selectedNodeStyle.fontStyle = FontStyle.BoldAndItalic;
         selectedNodeStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1 on.png") as Texture2D;
         selectedNodeStyle.border = new RectOffset(12, 12, 12, 12);
+        selectedNodeStyle.padding = new RectOffset(10, 10, 0, 0);
+        selectedNodeStyle.alignment = TextAnchor.MiddleCenter;
+
 
         inPointStyle = new GUIStyle();
         inPointStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn left.png") as Texture2D;
@@ -62,18 +118,50 @@ public class TechTreeEditor : EditorWindow
         outPointStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn right.png") as Texture2D;
         outPointStyle.active.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn right on.png") as Texture2D;
         outPointStyle.border = new RectOffset(4, 4, 12, 12);
+
+        nodeTitleStyle = new GUIStyle();
+        nodeTitleStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn.png") as Texture2D;
+        nodeTitleStyle.border = new RectOffset(4, 4, 1, 1);
+        nodeTitleStyle.fontStyle = FontStyle.Bold;
+        nodeTitleStyle.normal.textColor = Color.white;
+        nodeTitleStyle.alignment = TextAnchor.UpperCenter;        
     }
 
+    private const float kZoomMin = 0.1f;
+    private const float kZoomMax = 10.0f;
+    private Rect _zoomArea = new Rect(0.0f, 75.0f, 600.0f, 300.0f - 100.0f);
+    private float _zoom = 1.0f;
+    private Vector2 _zoomCoordsOrigin = Vector2.zero;
+    
     public void OnGUI()
     {
-        DrawGrid(20, 0.2f, Color.gray);
-        DrawGrid(100, 0.4f, Color.gray);
+        Rect graphPosition = new Rect(0f, 0f, position.width, position.height);
+        GraphBackground.DrawGraphBackground(graphPosition, graphPosition);
 
+        _zoomArea = new Rect(0.0f, 0.0f, position.width, position.height);
         targetTree = (TechTree)EditorGUILayout.ObjectField("Tech Tree", targetTree, typeof(TechTree), false);        
 
         if (!targetTree)
             return;
 
+        // The zoom area clipping is sometimes not fully confined to the passed in rectangle. At certain
+        // zoom levels you will get a line of pixels rendered outside of the passed in area because of
+        // floating point imprecision in the scaling. Therefore, it is recommended to draw the zoom
+        // area first and then draw everything else so that there is no undesired overlap.
+        DrawNonZoomArea();
+        DrawZoomArea();
+        
+        if (GUI.changed)
+        {
+            targetTree.RefreshNodes();
+            Repaint();
+        }
+
+        EditorUtility.SetDirty(targetTree); // Makes sure changes are persistent.
+    }
+
+    private void DrawNonZoomArea()
+    {
         // Shows selected node tech and gives option to delete node
         EditorGUILayout.BeginHorizontal();
         if (selectedNode == null || selectedNode.tech == null)
@@ -83,48 +171,33 @@ public class TechTreeEditor : EditorWindow
         else
         {
             EditorGUILayout.LabelField("seleceted tech: " + selectedNode.tech.name);
-            if (GUILayout.Button("delete tech"))
-            {
-                targetTree.DeleteNode(selectedNode.tech);
-                if (activeNode == selectedNode)
-                    activeNode = null;
-
-                selectedNode = null;
-            }
+            // if (GUILayout.Button("delete tech"))
+            // {
+            //     RemoveNode();
+            // }
         }
-        GUILayout.EndHorizontal();
+        EditorGUILayout.EndHorizontal();
+    }
 
-        // The techtree view
-        //EditorGUILayout.BeginScrollView(Vector2.zero, GUILayout.MinHeight(720)); // the inspector height is set to 720
+    private void DrawZoomArea()
+    {
+        // Within the zoom area all coordinates are relative to the top left corner of the zoom area
+        // with the width and height being scaled versions of the original/unzoomed area's width and height.
+        EditorZoomArea.Begin(_zoom, _zoomArea);
 
-        if (targetTree.tree == null) 
+        if (targetTree.tree == null)
             targetTree.tree = new List<TechNode>();
-        
-        DrawNodes(Event.current, nodeStyle, selectedNodeStyle);
+
+        DrawNodes(Event.current);
 
         DrawConnectionLine(Event.current);
 
         ProcessEvents(Event.current);
-
-        // EditorGUILayout.EndScrollView();
-
-        // scrollPosition.x = GUILayout.HorizontalScrollbar(scrollPosition.x, 20.0f, 0.0f, minTreeWidth);
-        // scrollPosition.y = GUI.VerticalScrollbar(new Rect(0, 0, 20, 720), scrollPosition.y, 20f, 0f, minTreeHeight);
-
-        if (GUI.changed)
-        {
-            if (Time.time > 0)
-                targetTree.RefreshNodes();
-            else
-                targetTree.RefreshNodesForEditor();
-
-            Repaint();
-        }
-
-        EditorUtility.SetDirty(targetTree); // Makes sure changes are persistent.
+        
+        EditorZoomArea.End();
     }
 
-    private void DrawNodes(Event currentEvent, GUIStyle nodeStyle, GUIStyle selectedNodeStyle)
+    private void DrawNodes(Event currentEvent)
     {
         for (int nodeIdx = 0; nodeIdx < targetTree.tree.Count; nodeIdx++)
         {
@@ -132,96 +205,81 @@ public class TechTreeEditor : EditorWindow
             {
                 targetTree.DeleteNode(null);
                 continue;
-            }
+            }    
 
             // Draw node
             Rect nodeRect = DrawNode( nodeIdx);
 
             // Draw Connections
-            DrawNodeConnections(nodeIdx);
+            DrawNodeConnections(nodeIdx);     
 
             ProcessNodeEvents(currentEvent, nodeIdx, nodeRect);
         }
     }
 
-    private void ProcessEvents(Event e)
+    private void OnDrag(Event e)
     {
-        switch (e.type)
-        {
-            case EventType.MouseDown:
-                if (e.button == 0)
-                    ClearConnectionSelection();
-
-                if (e.button == 1)
-                {
-                    //ProcessContextMenu(e.mousePosition);
-                }
-
-                if (e.button == 2)
-                    scrollStartPos = (e.mousePosition + scrollPosition); // Store the coordinate
-
-                break;
-
-            case EventType.MouseDrag:
-                if (e.button == 0)
-                { }
-
-                if (e.button == 2)
-                {
-                    scrollPosition -= e.delta;
-                    GUI.changed = true; // Repaint the GUI                
-                }
-
-                if (activeNode != null)
-                {
-                    activeNode.UIposition = e.mousePosition + mouseSelectionOffset;
-                    GUI.changed = true;
-                }
-
-                break;
-
-            case EventType.DragUpdated: // Import new tech
-                DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
-                break;
-
-            case EventType.DragPerform:
-                for (int i = 0; i < DragAndDrop.objectReferences.Length; i++)
-                {
-                    if (DragAndDrop.objectReferences[i] is TechBase)
-                        targetTree.AddNode(DragAndDrop.objectReferences[i] as TechBase, e.mousePosition + scrollPosition);
-                }
-                break;
-
-            case EventType.MouseUp:
-                activeNode = null;
-                break;
-        }
+        _zoomCoordsOrigin += e.delta;
+        e.Use();        
+        GUI.changed = true; // Repaint the GUI 
     }
 
-/* 
-    public Action<Node> OnRemoveNode;
-
-    private void ProcessContextMenu()
+    private void ProcessContextMenu(Vector2 mousePosition)
     {
         GenericMenu genericMenu = new GenericMenu();
-        genericMenu.AddItem(new GUIContent("Remove node"), false, OnClickRemoveNode);
+        genericMenu.AddItem(new GUIContent("New Researcher Node"), false, OnClickNewResearcherNode);
+        genericMenu.AddItem(new GUIContent("New Epoch Node"), false, OnClickNewEpochNode);
+        genericMenu.AddItem(new GUIContent("New Tech Tree"), false, OnClickNewTechTree);
+        genericMenu.AddItem(new GUIContent("Remove node"), false, RemoveNode);
         genericMenu.ShowAsContext();
     }
 
-    private void OnClickRemoveNode()
+    /* public Action<Node> OnRemoveNode;
+    private void RemoveNode()
     {
         if (OnRemoveNode != null)
         {
             OnRemoveNode(this);
         }
+    } */
+
+    private void RemoveNode()
+    {
+        targetTree.DeleteNode(selectedNode.tech);
+        if (draggedNode == selectedNode)
+            draggedNode = null;
+
+        selectedNode = null;
     }
- */
+
+    public void OnClickNewResearcherNode()
+    {
+        string path = EditorUtility.SaveFilePanelInProject("Save", "New Research Node", "", "Blah");
+        if (!string.IsNullOrEmpty(path))
+        {
+            Debug.Log(path);
+        }
+
+        // GetStringInputWindow inputWindow = new GetStringInputWindow();
+        // inputWindow.Show();
+    }
+
+    public void OnClickNewEpochNode()
+    {
+
+    }
+
+    public void OnClickNewTechTree()
+    {
+
+    }
+
  
     private void DrawConnectionLine(Event e)
     {
         if (selectedInPointNode != null && selectedOutPointNode == null)
         {
-            Rect nodeRect = new Rect(selectedInPointNode.UIposition - scrollPosition, nodeSize);
+            Rect nodeRect = new Rect(selectedInPointNode.UIposition + _zoomCoordsOrigin, nodeSize);
             Rect inPointRect = GetInPointRect(ref nodeRect);
 
             Handles.DrawBezier(
@@ -239,7 +297,7 @@ public class TechTreeEditor : EditorWindow
 
         if (selectedOutPointNode != null && selectedInPointNode == null)
         {
-            Rect nodeRect = new Rect(selectedOutPointNode.UIposition - scrollPosition, nodeSize);
+            Rect nodeRect = new Rect(selectedOutPointNode.UIposition + _zoomCoordsOrigin, nodeSize);
             Rect outPointRect = GetOutPointRect(ref nodeRect);
 
             Handles.DrawBezier(
@@ -256,18 +314,101 @@ public class TechTreeEditor : EditorWindow
         }
     }
 
+    private void ProcessEvents(Event e)
+    {
+        switch (e.type)
+        {
+            case EventType.MouseDown:
+                if (e.button == 0)
+                {
+                    ClearConnectionSelection();
+                    selectedNode = null;
+                    draggedNode = null;
+                    GUI.changed = true; // Repaint to see the style change momentarily
+                }
+
+                else if (e.button == 1)
+                { }
+                break;
+
+            case EventType.MouseDrag:
+                if (e.button == 0)
+                    if (Event.current.modifiers == EventModifiers.Alt)
+                        OnDrag(Event.current);
+
+                    else if (draggedNode != null)
+                    {
+                        draggedNode.UIposition = e.mousePosition + mouseSelectionOffset;
+                        GUI.changed = true;
+                    }
+
+                if (e.button == 2)
+                    OnDrag(Event.current);
+
+                break;
+
+            // Allow adjusting the zoom with the mouse wheel. Use the mouse coordinates
+            // as the zoom center. This is achieved by maintaining an origin that is 
+            // used as offset when drawing any GUI elements in the zoom area.
+            // BROKEN
+            case EventType.ScrollWheel:
+                {
+                    Vector2 delta = Event.current.delta;
+                    Vector2 zoomCoordsMousePos = ((Event.current.mousePosition - _zoomArea.TopLeft()) / _zoom) + _zoomCoordsOrigin;
+                    float zoomDelta = -delta.y / 150.0f;
+                    float oldZoom = _zoom;
+                    _zoom += zoomDelta;
+                    _zoom = Mathf.Clamp(_zoom, kZoomMin, kZoomMax);
+                    _zoomCoordsOrigin += (zoomCoordsMousePos - _zoomCoordsOrigin) - ((oldZoom / _zoom) * (zoomCoordsMousePos - _zoomCoordsOrigin));
+
+                    Event.current.Use();
+                }
+                break;
+
+            case EventType.DragUpdated: // Import new tech
+                DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
+                break;
+
+            case EventType.DragPerform:
+                for (int i = 0; i < DragAndDrop.objectReferences.Length; i++)
+                {
+                    if (DragAndDrop.objectReferences[i] is TechBase)
+                        targetTree.AddNode(DragAndDrop.objectReferences[i] as TechBase, e.mousePosition + _zoomCoordsOrigin);
+                }
+                break;
+
+            case EventType.MouseUp:
+                if (e.button == 0)
+                {
+                    // selectedNode = null;
+                    // GUI.changed = true; // Repaint to see the style change momentarily
+                }
+                else if (e.button == 1)
+                {
+                    ProcessContextMenu(e.mousePosition);
+                }
+
+                draggedNode = null;
+                break;
+        }
+    }
+
     private void ProcessNodeEvents(Event e, int nodeIdx, Rect nodeRect)
     {
         switch (e.type)
         {
             case EventType.MouseDown:
                 if (e.button == 0)  // If left mouse button is pressed
-                {
+                {   
                     // Set activeNode
                     if (nodeRect.Contains(e.mousePosition))
                     {
-                        activeNode = targetTree.tree[nodeIdx];
-                        mouseSelectionOffset = activeNode.UIposition - e.mousePosition; // offset from the corner of the node to mouse position
+                        selectedNode = targetTree.tree[nodeIdx];
+                        GUI.changed = true; // Repaint to see the style change momentarily  
+                        
+                        draggedNode = targetTree.tree[nodeIdx];
+                        mouseSelectionOffset = draggedNode.UIposition - e.mousePosition; // offset from the corner of the node to mouse position
+                        e.Use();
                     }
                 }
 
@@ -280,7 +421,19 @@ public class TechTreeEditor : EditorWindow
                         GUI.changed = true; // Repaint to see the style change momentarily        
                     }
                 }
+                break;
 
+            case EventType.MouseUp:
+                if (e.button == 0)
+                {
+                    if (nodeRect.Contains(e.mousePosition))
+                    {
+                        // Set selectedNode
+                        selectedNode = targetTree.tree[nodeIdx];
+                        GUI.changed = true; // Repaint to see the style change momentarily      
+                        e.Use();
+                    }
+                }
                 break;
         }
     }
@@ -309,7 +462,7 @@ public class TechTreeEditor : EditorWindow
 
         if (selectedInPointNode != null)
         {
-            if (selectedOutPointNode != selectedInPointNode)
+            if (selectedInPointNode != selectedOutPointNode)
             {
                 CreateConnection();
                 ClearConnectionSelection();
@@ -348,10 +501,10 @@ public class TechTreeEditor : EditorWindow
             int reqIdx = targetTree.FindTechIndex(req);
             if (reqIdx != -1)
             {
-                Rect inNodeRect = new Rect(targetTree.tree[nodeIdx].UIposition - scrollPosition, nodeSize);
+                Rect inNodeRect = new Rect(targetTree.tree[nodeIdx].UIposition + _zoomCoordsOrigin, nodeSize);
                 Rect inPointRect = GetInPointRect(ref inNodeRect);
 
-                Rect outNodeRect = new Rect(targetTree.tree[reqIdx].UIposition - scrollPosition, nodeSize);
+                Rect outNodeRect = new Rect(targetTree.tree[reqIdx].UIposition + _zoomCoordsOrigin, nodeSize);
                 Rect outPointRect = GetOutPointRect(ref outNodeRect);
 
                 Handles.DrawBezier(
@@ -400,7 +553,7 @@ public class TechTreeEditor : EditorWindow
 
     private Rect DrawNode(int nodeIdx)
     {
-        Rect nodeRect = new Rect(targetTree.tree[nodeIdx].UIposition - scrollPosition, nodeSize);
+        Rect nodeRect = new Rect(targetTree.tree[nodeIdx].UIposition + _zoomCoordsOrigin, nodeSize);
 
         Rect inPointRect = GetInPointRect(ref nodeRect);
         if (GUI.Button(inPointRect, "", inPointStyle))
@@ -412,36 +565,41 @@ public class TechTreeEditor : EditorWindow
 
         GUILayout.BeginArea(nodeRect, (selectedNode == targetTree.tree[nodeIdx] ? selectedNodeStyle : nodeStyle));
 
-        GUIStyle style = new GUIStyle();
-        style.fontStyle = FontStyle.Bold;
-        style.normal.textColor = Color.white;
-        style.alignment = TextAnchor.UpperCenter;
+        GUILayout.Label(targetTree.tree[nodeIdx].tech.name, nodeTitleStyle);
 
-        GUILayout.Label(targetTree.tree[nodeIdx].tech.name, style);
-        
         EditorGUILayout.BeginHorizontal();
 
         if (targetTree.tree[nodeIdx].tech.worldQueueImage != null)
             GUILayout.Label(targetTree.tree[nodeIdx].tech.worldQueueImage.texture, GUILayout.Width(52.0f), GUILayout.Height(52.0f));
 
-        EditorGUILayout.BeginVertical();
+        EditorGUILayout.BeginVertical();        
 
-        EditorGUILayout.BeginHorizontal();        
-        GUILayout.Label("Unlocked");
+        EditorGUILayout.BeginHorizontal();
+        GUILayout.Label("Requires Research");
         GUILayout.FlexibleSpace();
-        targetTree.tree[nodeIdx].unlocked = EditorGUILayout.Toggle("", targetTree.tree[nodeIdx].unlocked);
+        if (targetTree.tree[nodeIdx].requiresResearch = EditorGUILayout.Toggle("", targetTree.tree[nodeIdx].requiresResearch))
+            GUI.changed = true;
+
         EditorGUILayout.EndHorizontal();
 
-        EditorGUILayout.BeginHorizontal();        
+        EditorGUILayout.BeginHorizontal();
         GUILayout.Label("Researched");
         GUILayout.FlexibleSpace();
-        targetTree.tree[nodeIdx].researched = EditorGUILayout.Toggle("", targetTree.tree[nodeIdx].researched);
+        if (targetTree.tree[nodeIdx].researched = EditorGUILayout.Toggle("", targetTree.tree[nodeIdx].researched))
+            GUI.changed = true;
+            
         EditorGUILayout.EndHorizontal();
-        
+
+        EditorGUILayout.BeginHorizontal();
+        GUILayout.Label("Unlocked");
+        GUILayout.FlexibleSpace();
+        EditorGUILayout.Toggle("", targetTree.tree[nodeIdx].unlocked);
+        EditorGUILayout.EndHorizontal();
+
         EditorGUILayout.BeginHorizontal();
         GUILayout.Label("Enabled");
         GUILayout.FlexibleSpace();
-        targetTree.tree[nodeIdx].enabled = EditorGUILayout.Toggle("", targetTree.tree[nodeIdx].enabled);
+        EditorGUILayout.Toggle("", targetTree.tree[nodeIdx].enabled);
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.EndVertical();
@@ -451,29 +609,5 @@ public class TechTreeEditor : EditorWindow
         GUILayout.EndArea();
 
         return nodeRect;
-    }
-
-    private void DrawGrid(float gridSpacing, float gridOpacity, Color gridColor)
-    {
-        int widthDivs = Mathf.CeilToInt(position.width / gridSpacing);
-        int heightDivs = Mathf.CeilToInt(position.height / gridSpacing);
-
-        Handles.BeginGUI();
-        Handles.color = new Color(gridColor.r, gridColor.g, gridColor.b, gridOpacity);
-
-        Vector3 newOffset = new Vector3(-scrollPosition.x % gridSpacing, -scrollPosition.y % gridSpacing, 0);
-
-        for (int i = 0; i < widthDivs; i++)
-        {
-            Handles.DrawLine(new Vector3(gridSpacing * i, -gridSpacing, 0) + newOffset, new Vector3(gridSpacing * i, position.height, 0f) + newOffset);
-        }
-
-        for (int j = 0; j < heightDivs; j++)
-        {
-            Handles.DrawLine(new Vector3(-gridSpacing, gridSpacing * j, 0) + newOffset, new Vector3(position.width, gridSpacing * j, 0f) + newOffset);
-        }
-
-        Handles.color = Color.white;
-        Handles.EndGUI();
     }
 }

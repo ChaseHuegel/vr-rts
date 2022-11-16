@@ -11,6 +11,7 @@ public class TechNode
 
     public bool unlocked;
     public bool researched;
+    public bool requiresResearch;
     public bool enabled;
     public List<TechBase> techRequirements;    
     public Vector2 UIposition;
@@ -47,33 +48,61 @@ public class TechTree : ScriptableObject
 
     void Start()
     {
+
         RefreshNodes();
     }
-
+    
     public void RefreshNodes()
     {
         foreach (TechNode techNode in tree)
         {
-            bool requirementsPassed = true;
 
-            if (techNode.techRequirements.Count <= 0)
-                continue;
-                
-            foreach (TechBase req in techNode.techRequirements)
-            {
-                requirementsPassed = FindNode(req).researched;
+            // if (requirementNode.requiresResearch && !requirementNode.researched)
+            //     return false;
 
-                if (requirementsPassed)
-                    continue;
-                else
-                    break;
-            }
-            
-            if (requirementsPassed)
+            // if (techNode.requiresResearch && !techNode.researched)
+            //     return false;
+
+            if (RequirementsUnlocked(techNode))
             {
                 techNode.unlocked = true;
                 if (OnNodeUnlocked != null)
                     OnNodeUnlocked(techNode);
+
+                // if (!techNode.requiresResearch ||
+                //     (techNode.requiresResearch && techNode.researched))
+                // {
+                //     techNode.unlocked = true;
+                //     if (OnNodeUnlocked != null)
+                //         OnNodeUnlocked(techNode);
+                // }
+                // else
+                // {
+                //     techNode.unlocked = false;
+                //     if (OnNodeLocked != null)
+                //         OnNodeLocked(techNode);
+                // }
+
+                // if (!techNode.requiresResearch)
+                // {
+                //     techNode.unlocked = true;
+                //     if (OnNodeUnlocked != null)
+                //         OnNodeUnlocked(techNode);
+                // }
+                // // requires research and is researched
+                // else if (techNode.researched)
+                // {
+                //     techNode.unlocked = true;
+                //     if (OnNodeUnlocked != null)
+                //         OnNodeUnlocked(techNode);
+                // }
+                // // requires research and isn't researched
+                // else
+                // {
+                //     techNode.unlocked = false;
+                //     if (OnNodeLocked != null)
+                //         OnNodeLocked(techNode);
+                // }
             }
             else
             {
@@ -82,8 +111,8 @@ public class TechTree : ScriptableObject
                     OnNodeLocked(techNode);
             }
 
-            if (techNode.unlocked && techNode.researched &&
-                PlayerManager.Instance.CanAffordTech(techNode.tech))
+            bool canAfford = PlayerManager.Instance.CanAffordTech(techNode.tech);
+            if (canAfford && techNode.unlocked)
             {
                 techNode.enabled = true;
                 if (OnNodeEnabled != null)
@@ -95,44 +124,25 @@ public class TechTree : ScriptableObject
                 if (OnNodeDisabled != null)
                     OnNodeDisabled(techNode);
             }
-        }           
-    }
-
-#if UNITY_EDITOR
-    public void RefreshNodesForEditor()
-    {
-        foreach (TechNode techNode in tree)
-        {
-            bool requirementsPassed = true;
-
-            if (techNode.techRequirements.Count <= 0)
-                continue;
-
-            foreach (TechBase req in techNode.techRequirements)
-            {
-                requirementsPassed = FindNode(req).researched;
-
-                if (requirementsPassed)
-                    continue;
-                else
-                    break;
-            }
-
-            if (requirementsPassed)
-                techNode.unlocked = true;
-                if (OnNodeUnlocked != null)
-                    OnNodeUnlocked(techNode);
-            else
-                techNode.unlocked = false;
-
-            if (techNode.unlocked && techNode.researched &&
-                PlayerManager.Instance.CanAffordTech(techNode.tech))
-                techNode.enabled = true;
-            else
-                techNode.enabled = false;
         }
     }
-#endif
+
+    private bool RequirementsUnlocked(TechNode techNode)
+    {
+        foreach (TechBase req in techNode.techRequirements)
+        {
+            TechNode requirementNode = FindNode(req);
+            if (!requirementNode.unlocked)
+                return false;           
+
+            if (requirementNode.requiresResearch && requirementNode.researched == false)
+                return false;
+                
+            continue;
+        }
+
+        return true;
+    }
 
     public bool AddNode(TechBase tech, Vector2 UIpos)
     {
@@ -152,19 +162,19 @@ public class TechTree : ScriptableObject
         TechNode node = FindNode(tech);
         node.unlocked = true;
         RefreshNodes();
-
-        if (OnNodeUnlocked != null)
-            OnNodeUnlocked(node);
     }
 
     public void ResearchTech(TechBase tech)
     {
         TechNode node = FindNode(tech);
-        node.researched = true;
-        RefreshNodes();
+        if (node == null)
+            return;
 
+        node.researched = true;
         if (OnNodeResearched != null)
             OnNodeResearched(node);
+
+        RefreshNodes();        
     }
 
     public bool IsUnlocked(TechBase tech)

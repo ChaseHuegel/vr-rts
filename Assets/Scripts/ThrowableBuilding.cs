@@ -38,7 +38,7 @@ public class ThrowableBuilding : Throwable
            spawned.GetComponent<Constructible>().Faction = PlayerManager.Instance.faction;
 
             // TODO: Switch this to a 'construction started' sound rather than placement allowed
-            InteractionPointer.instance.PlayBuildingPlacementAllowedAudio();
+            PlayerManager.Instance.PlayBuildingPlacementAllowedAudio();
 
             // Remove resources only when valid placement.
             PlayerManager.Instance.DeductTechResourceCost(rtsBuildingTypeData);
@@ -50,7 +50,7 @@ public class ThrowableBuilding : Throwable
             spawned.transform.position = contact.point;
 
             // TODO: Not sure if this should be handled by the playermanager or interaction pointer
-            InteractionPointer.instance.PlayBuildingPlacementDeniedAudio();
+            PlayerManager.Instance.PlayBuildingPlacementDeniedAudio();
         }
 
         Destroy(this.gameObject);

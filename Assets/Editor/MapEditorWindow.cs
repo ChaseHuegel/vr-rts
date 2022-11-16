@@ -36,7 +36,16 @@ public class MapEditorWindow : EditorWindow
         if (GUILayout.Button("Snap Selection"))
             SnapSelection();
 
+        if (GUILayout.Button("Tech Tree Editor"))
+            OpenTechTreeWindow();
+
     }
+
+    void OpenTechTreeWindow()
+    {
+        TechTreeEditor editor = EditorWindow.GetWindow<TechTreeEditor>();
+    }
+
     void SnapSelection()
     {
         foreach (GameObject go in Selection.gameObjects)

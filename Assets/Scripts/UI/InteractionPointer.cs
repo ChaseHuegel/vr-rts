@@ -36,31 +36,6 @@ public class InteractionPointer : MonoBehaviour
     public float arcDistance = 10.0f;
 
     //=========================================================================
-    [Header("Audio Sources")]
-    public AudioSource pointerAudioSource;
-    public AudioSource loopingAudioSource;
-    public AudioSource headAudioSource;
-    public AudioSource reticleAudioSource;
-
-    //=========================================================================
-    [Header("Sounds")]
-
-    public SoundElement setRallyPointSound;
-    public AudioClip queueSuccessSound;
-    public AudioClip queueFailedSound;
-    public AudioClip dequeueSound;
-    public AudioClip teleportSound;
-    public AudioClip pointerLoopSound;
-    public AudioClip pointerStopSound;
-    public AudioClip goodHighlightSound;
-    public AudioClip badHighlightSound;
-
-    //=========================================================================
-    // Cached sounds
-    private AudioClip buildingPlacementAllowedSound;
-    private AudioClip buildingPlacementDeniedSound;
-
-    //=========================================================================
     public Material buildingPlacementInvalidMat;
     private Material buildingPlacementCachedMat;
     private LineRenderer pointerLineRenderer;
@@ -172,10 +147,6 @@ public class InteractionPointer : MonoBehaviour
         HookIntoEvents();
 
         playerManager = PlayerManager.Instance;
-        headAudioSource.transform.SetParent(Player.instance.hmdTransform);
-        headAudioSource.transform.localPosition = Vector3.zero;
-        buildingPlacementAllowedSound = GameMaster.Instance.buildingPlacementAllowedSound;
-        buildingPlacementDeniedSound = GameMaster.Instance.buildingPlacementDeniedSound;
         //interactableObjects = GameObject.FindObjectsOfType<PointerInteractable>();
         selectedActors = new List<ActorV2>();
 
@@ -491,18 +462,18 @@ public class InteractionPointer : MonoBehaviour
                     Cell currentCell = World.at(World.ToWorldCoord(buildingPlacementPreviewObject.transform.position));
                     if (currentCell.GetFirstOccupant<Body>().GetComponent<WallSegment>())
                     {
-                        PlayBuildingPlacementAllowedAudio();
+                        PlayerManager.Instance.PlayBuildingPlacementAllowedAudio();
                         GameObject gameObject = Instantiate(placementBuildingData.constructionPrefab, buildingPlacementPreviewObject.transform.position, buildingPlacementPreviewObject.transform.rotation);
                         gameObject.GetComponent<Constructible>().Faction = this.faction;
                         PlayerManager.Instance.DeductTechResourceCost(placementBuildingData);
                     }
                 }
                 else
-                    PlayBuildingPlacementDeniedAudio();
+                    PlayerManager.Instance.PlayBuildingPlacementDeniedAudio();
             }
             else if (!cellsOccupied)
             {
-                PlayBuildingPlacementAllowedAudio();
+                PlayerManager.Instance.PlayBuildingPlacementAllowedAudio();
                 GameObject gameObject = Instantiate(placementBuildingData.constructionPrefab, buildingPlacementPreviewObject.transform.position, buildingPlacementPreviewObject.transform.rotation);
                 gameObject.GetComponent<Constructible>().Faction = this.faction;
                 PlayerManager.Instance.DeductTechResourceCost(placementBuildingData);
@@ -529,7 +500,7 @@ public class InteractionPointer : MonoBehaviour
             gameObject.GetComponentInChildren<Animator>().Play("deploy");
             Destroy(gameObject, 2.0f);
 
-            PlayAudioClip(headAudioSource, setRallyPointSound.GetClip());
+            PlayerManager.Instance.PlaySetRallyPointSound();
             spawnQueue = null;
             isSettingRallyPoint = false;
             pointerLineRenderer.enabled = false;
@@ -1193,10 +1164,7 @@ public class InteractionPointer : MonoBehaviour
 
         SteamVR_Fade.Start(Color.clear, 0);
         SteamVR_Fade.Start(Color.black, currentFadeTime);
-
-        headAudioSource.transform.SetParent(player.hmdTransform);
-        headAudioSource.transform.localPosition = Vector3.zero;
-        PlayAudioClip(headAudioSource, teleportSound);
+        PlayerManager.Instance.PlayTeleportSound();
 
         Invoke("TeleportPlayer", currentFadeTime);
     }
@@ -1378,28 +1346,6 @@ public class InteractionPointer : MonoBehaviour
         }
 
         obj.position = modPos;
-    }
-
-    public void PlayBuildingPlacementAllowedAudio()
-    {
-        PlayAudioClip(headAudioSource, buildingPlacementAllowedSound);
-    }
-
-    public void PlayBuildingPlacementDeniedAudio()
-    {
-        PlayAudioClip(headAudioSource, buildingPlacementDeniedSound);
-    }
-
-    public void PlayAudioAtHeadSource(AudioClip clip)
-    {
-        PlayAudioClip(headAudioSource, clip);
-    }
-
-    //=========================================================================
-    private void PlayAudioClip(AudioSource source, AudioClip clip)
-    {
-        source.clip = clip;
-        source.Play();
     }
 
 

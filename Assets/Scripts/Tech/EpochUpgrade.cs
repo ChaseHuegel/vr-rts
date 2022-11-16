@@ -8,9 +8,6 @@ public class EpochUpgrade : TechBase
 {
     public override void Execute(SpawnQueue spawnQueue)
     {
-        base.Execute(spawnQueue);
-
-        PlayerManager.Instance.faction.techTree.UnlockTech(this);
-        PlayerManager.Instance.faction.techTree.ResearchTech(this);
+        base.Execute(spawnQueue);        
     }
 }

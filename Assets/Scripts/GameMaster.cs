@@ -46,6 +46,12 @@ public class GameMaster : Singleton<GameMaster>
     public AudioClip buildingDestroyedSound;
     public AudioClip buildingPlacementAllowedSound;
     public AudioClip buildingPlacementDeniedSound;
+    public AudioClip setRallyPointSound;
+    public AudioClip queueSuccessSound;
+    public AudioClip queueFailedSound;
+    public AudioClip dequeueSound;
+    public AudioClip teleportSound;
+    public AudioClip epochResearchCompleteSound;
 
     public int maximumUnitSelectionCount = 20;
     public float unitCorpseDecayTime = 30.0f;
