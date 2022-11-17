@@ -134,24 +134,9 @@ public class BuildingInteractionPanel : MonoBehaviour
 
             InitializeMenuDisplay();
 
-            // TODO: Should this stuff be moved to this class?
-            spawnQueue.SetButtonsParentObject(buttonsGameObject);            
-            spawnQueue.SetButtonDownAudio(GameMaster.Instance.onButtonDownAudio);
-            spawnQueue.SetButtonUpAudio(GameMaster.Instance.onButtonUpAudio);
-            spawnQueue.SetCancelButton(cancelButtonGameObject.GetComponentInChildren<HoverButton>(true));
-            
-            if (unitSpawnPoint)
-                spawnQueue.SetUnitSpawnPointTransform(unitSpawnPoint);
+            InitializeSpawnQueue();
 
-            if (unitRallyWaypoint)
-                spawnQueue.SetUnitRallyPointTransform(unitRallyWaypoint);
-                
-            spawnQueue.Initialize();
-
-            this.gameObject.GetComponent<PointerInteractable>().AddChildrenToHideHighlight(interactionPanelObject);
-            
-            foreach(QueueUnitButton btn in queueUnitButtons)
-                btn.Initialize();
+            this.gameObject.GetComponent<PointerInteractable>().AddChildrenToHideHighlight(interactionPanelObject);            
 
             HookIntoEvents();            
         }
@@ -174,14 +159,19 @@ public class BuildingInteractionPanel : MonoBehaviour
 
     private void OnNodeResearched(TechNode node) 
     {
-        QueueUnitButton button = queueUnitButtons.Find(x => x.techToQueue == node.tech);
         queueTechButtons.Remove(node.tech);
-        queueUnitButtons.Remove(button);
-        GameObject gameObject = button?.gameObject;
-        if (gameObject)
-            Destroy(gameObject);
 
+        // TODO: Just move the buttons into new positions rather
+        // than regenerating them
+        foreach(QueueUnitButton queueUnitButton in queueUnitButtons.ToArray())
+        {
+            GameObject obj = queueUnitButton.gameObject;
+            Destroy(obj);
+        }
+
+        queueUnitButtons.Clear();
         InitializeQueueButtons();
+        InitializeSpawnQueue();
     }
 
     // private void OnNodeEnabled(TechNode node) 
@@ -230,6 +220,23 @@ public class BuildingInteractionPanel : MonoBehaviour
         Quaternion rot = faceTarget.transform.rotation;
         rot.z = rot.x = 0;
         interactionPanelObject.transform.rotation = rot;              
+    }
+
+    private void InitializeSpawnQueue()
+    {
+        // TODO: Should this stuff be moved to this class?
+        spawnQueue.SetButtonsParentObject(buttonsGameObject);
+        spawnQueue.SetButtonDownAudio(GameMaster.Instance.onButtonDownAudio);
+        spawnQueue.SetButtonUpAudio(GameMaster.Instance.onButtonUpAudio);
+        spawnQueue.SetCancelButton(cancelButtonGameObject.GetComponentInChildren<HoverButton>(true));
+
+        if (unitSpawnPoint)
+            spawnQueue.SetUnitSpawnPointTransform(unitSpawnPoint);
+
+        if (unitRallyWaypoint)
+            spawnQueue.SetUnitRallyPointTransform(unitRallyWaypoint);
+
+        spawnQueue.Initialize();
     }
 
     // Update is called once per frame
@@ -397,7 +404,7 @@ public class BuildingInteractionPanel : MonoBehaviour
         {
             buttonsGameObject = new GameObject("_buttons");
             buttonsGameObject.transform.SetParent(menuGameObject.transform, false);
-        }
+        }        
 
         Vector3 startPosition = Vector3.zero;
         float buttonsTotalWidth = ((buttonSize + spaceBetweenButtons) * maxButtonColumns);
@@ -430,6 +437,9 @@ public class BuildingInteractionPanel : MonoBehaviour
             nextButtonPosition.x = startPosition.x + ((buttonSize + spaceBetweenButtons) * currentButtonColumn);
             nextButtonPosition.y = startPosition.y - ((buttonSize + spaceBetweenButtons) * currentButtonRow);
         }
+
+        foreach (QueueUnitButton btn in queueUnitButtons)
+            btn.Initialize();
     }
 
     public void Toggle()
