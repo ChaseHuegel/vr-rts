@@ -79,9 +79,9 @@ public class QueueUnitButton : MonoBehaviour
             Disable();
     }
 
-    private void OnNodeResearched(TechNode node)
-    {
-    }
+    // private void OnNodeResearched(TechNode node)
+    // {
+    // }
     
     private void HookIntoEvents()
     {
@@ -89,7 +89,7 @@ public class QueueUnitButton : MonoBehaviour
         TechTree.OnNodeLocked += OnNodeLocked;
         TechTree.OnNodeEnabled += OnNodeEnabled;
         TechTree.OnNodeDisabled += OnNodeDisabled;
-        TechTree.OnNodeResearched += OnNodeResearched;
+        // TechTree.OnNodeResearched += OnNodeResearched;
     }
 
     private void CleanupEvents()
@@ -98,7 +98,7 @@ public class QueueUnitButton : MonoBehaviour
         TechTree.OnNodeLocked -= OnNodeLocked;
         TechTree.OnNodeEnabled -= OnNodeEnabled;
         TechTree.OnNodeDisabled -= OnNodeDisabled;
-        TechTree.OnNodeResearched -= OnNodeResearched;
+        // TechTree.OnNodeResearched -= OnNodeResearched;
     }
 
     void OnDestroy()

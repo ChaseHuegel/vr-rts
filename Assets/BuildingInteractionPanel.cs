@@ -175,9 +175,13 @@ public class BuildingInteractionPanel : MonoBehaviour
     private void OnNodeResearched(TechNode node) 
     {
         QueueUnitButton button = queueUnitButtons.Find(x => x.techToQueue == node.tech);
+        queueTechButtons.Remove(node.tech);
+        queueUnitButtons.Remove(button);
         GameObject gameObject = button?.gameObject;
         if (gameObject)
             Destroy(gameObject);
+
+        InitializeQueueButtons();
     }
 
     // private void OnNodeEnabled(TechNode node) 
@@ -389,9 +393,12 @@ public class BuildingInteractionPanel : MonoBehaviour
 
     private void InitializeQueueButtons()
     {
-        buttonsGameObject = new GameObject("_buttons");        
-        buttonsGameObject.transform.SetParent(menuGameObject.transform, false);        
-        
+        if (!buttonsGameObject)
+        {
+            buttonsGameObject = new GameObject("_buttons");
+            buttonsGameObject.transform.SetParent(menuGameObject.transform, false);
+        }
+
         Vector3 startPosition = Vector3.zero;
         float buttonsTotalWidth = ((buttonSize + spaceBetweenButtons) * maxButtonColumns);
         int totalRows = Mathf.CeilToInt((float)queueTechButtons.Count / (float)maxButtonColumns);

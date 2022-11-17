@@ -192,6 +192,8 @@ public class BuildMenuTab : MonoBehaviour
         titleText.verticalAlignment = VerticalAlignmentOptions.Middle;
         titleText.color = Color.white;
         titleText.raycastTarget = false;
+        titleText.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 0.02f);
+        titleText.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 0.1f);
     }
 
     void DestroyChildren()
