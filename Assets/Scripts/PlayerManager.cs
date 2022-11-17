@@ -263,13 +263,25 @@ public class PlayerManager : MonoBehaviour
     public void ProcessRotateClockwiseEvent(Hand hand)
     {
         if (hand.currentAttachedObject == HandBuildMenuGameObject)
-            buildMenu.NextTab(); 
+        {
+            buildMenu.NextTab();
+
+            // Refresh tech tree so events are called on previously
+            // disabled build menu tab
+            faction.techTree.RefreshNodes();
+        }
     }
 
     public void ProcessRotateCounterClockwiseEvent(Hand hand) 
     {
         if (hand.currentAttachedObject == HandBuildMenuGameObject)
-            buildMenu.PreviousTab(); 
+        {
+            buildMenu.PreviousTab();
+
+            // Refresh tech tree so events are called on previously
+            // disabled build menu tab
+            faction.techTree.RefreshNodes();
+        }
     }
 
     public void OnSpawnEvent(object sender, Damageable.SpawnEvent e)

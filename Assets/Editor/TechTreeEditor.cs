@@ -60,38 +60,16 @@ public class TechTreeEditor : EditorWindow
     TechNode selectedInPointNode;
     TechNode selectedOutPointNode;
 
+    Vector2 startPos;
+    Vector2 currentPos;
+    bool drawingSelectionBox;
+
     [MenuItem("Window/Tech Tree Editor")]
     private static void OpenWindow()
     {
         TechTreeEditor window = GetWindow<TechTreeEditor>();
         window.titleContent = new GUIContent("Tech Tree Editor");
     }
-
-    #region Animator style graph background etc..
-    /*
-    private UnityEditor.Graphs.Graph graph;
-    private GraphGUITest graphGUI;
-
-    class GraphGUITest : UnityEditor.Graphs.GraphGUI
-    {
-    }
-
-    private void OnEnable()
-    {
-        graph = CreateInstance<UnityEditor.Graphs.Graph>();
-        graphGUI = CreateInstance<GraphGUITest>();
-        graphGUI.graph = graph;
-    }
-
-    private void OnGUI()
-    {
-        graphGUI.BeginGraphGUI(this, new Rect(0f, 0f, position.width, position.height));
-        // GUI inside scroll view here
-        //graphGUI.OnGraphGUI();
-        graphGUI.EndGraphGUI();
-    }
-     */
-    #endregion
 
     private void OnEnable()
     {
@@ -137,7 +115,7 @@ public class TechTreeEditor : EditorWindow
     {
         Rect graphPosition = new Rect(0f, 0f, position.width, position.height);
         GraphBackground.DrawGraphBackground(graphPosition, graphPosition);
-
+        
         _zoomArea = new Rect(0.0f, 0.0f, position.width, position.height);
         targetTree = (TechTree)EditorGUILayout.ObjectField("Tech Tree", targetTree, typeof(TechTree), false);        
 
@@ -150,7 +128,7 @@ public class TechTreeEditor : EditorWindow
         // area first and then draw everything else so that there is no undesired overlap.
         DrawNonZoomArea();
         DrawZoomArea();
-        
+
         if (GUI.changed)
         {
             targetTree.RefreshNodes();
@@ -217,7 +195,7 @@ public class TechTreeEditor : EditorWindow
         }
     }
 
-    private void OnDrag(Event e)
+    private void OnPan(Event e)
     {
         _zoomCoordsOrigin += e.delta;
         e.Use();        
@@ -230,6 +208,9 @@ public class TechTreeEditor : EditorWindow
         genericMenu.AddItem(new GUIContent("New Researcher Node"), false, OnClickNewResearcherNode);
         genericMenu.AddItem(new GUIContent("New Epoch Node"), false, OnClickNewEpochNode);
         genericMenu.AddItem(new GUIContent("New Tech Tree"), false, OnClickNewTechTree);
+        genericMenu.AddSeparator("");
+        genericMenu.AddItem(new GUIContent("Reset Researched"), false, OnClickResetResearch);
+        genericMenu.AddSeparator("");
         genericMenu.AddItem(new GUIContent("Remove node"), false, RemoveNode);
         genericMenu.ShowAsContext();
     }
@@ -245,11 +226,23 @@ public class TechTreeEditor : EditorWindow
 
     private void RemoveNode()
     {
+        if (selectedNode == null)
+            return;
+
         targetTree.DeleteNode(selectedNode.tech);
         if (draggedNode == selectedNode)
             draggedNode = null;
 
         selectedNode = null;
+    }
+
+    public void OnClickResetResearch()
+    {
+        foreach (TechNode node in targetTree.tree)
+        {
+            node.researched = false;
+        }
+        targetTree.RefreshNodes();
     }
 
     public void OnClickNewResearcherNode()
@@ -314,8 +307,12 @@ public class TechTreeEditor : EditorWindow
         }
     }
 
+    
     private void ProcessEvents(Event e)
     {
+        if (drawingSelectionBox)
+            EditorGUI.DrawRect(new Rect(startPos.x, startPos.y, currentPos.x - startPos.x, currentPos.y - startPos.y), new Color(0.1882353f, 0.3137255f, 0.5490196f, 0.5f));
+
         switch (e.type)
         {
             case EventType.MouseDown:
@@ -331,19 +328,27 @@ public class TechTreeEditor : EditorWindow
                 { }
                 break;
 
-            case EventType.MouseDrag:
+            case EventType.MouseDrag:                
                 if (e.button == 0)
+                {
+                    currentPos = e.mousePosition;
+                    if (!drawingSelectionBox && draggedNode == null)
+                    {
+                        drawingSelectionBox = true;
+                        startPos = currentPos;
+                    }
+
                     if (Event.current.modifiers == EventModifiers.Alt)
-                        OnDrag(Event.current);
+                        OnPan(Event.current);
 
                     else if (draggedNode != null)
                     {
                         draggedNode.UIposition = e.mousePosition + mouseSelectionOffset;
                         GUI.changed = true;
                     }
-
-                if (e.button == 2)
-                    OnDrag(Event.current);
+                }
+                else if (e.button == 2)
+                    OnPan(Event.current);
 
                 break;
 
@@ -366,7 +371,7 @@ public class TechTreeEditor : EditorWindow
                 break;
 
             case EventType.DragUpdated: // Import new tech
-                DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
+                DragAndDrop.visualMode = DragAndDropVisualMode.Copy;                
                 break;
 
             case EventType.DragPerform:
@@ -374,7 +379,7 @@ public class TechTreeEditor : EditorWindow
                 {
                     if (DragAndDrop.objectReferences[i] is TechBase)
                         targetTree.AddNode(DragAndDrop.objectReferences[i] as TechBase, e.mousePosition - _zoomCoordsOrigin);
-                }
+                }                
                 break;
 
             case EventType.MouseUp:
@@ -387,7 +392,7 @@ public class TechTreeEditor : EditorWindow
                 {
                     ProcessContextMenu(e.mousePosition);
                 }
-
+                drawingSelectionBox = false;
                 draggedNode = null;
                 break;
         }
@@ -404,10 +409,10 @@ public class TechTreeEditor : EditorWindow
                     if (nodeRect.Contains(e.mousePosition))
                     {
                         selectedNode = targetTree.tree[nodeIdx];
-                        GUI.changed = true; // Repaint to see the style change momentarily  
-                        
                         draggedNode = targetTree.tree[nodeIdx];
                         mouseSelectionOffset = draggedNode.UIposition - e.mousePosition; // offset from the corner of the node to mouse position
+                        GUI.changed = true; // Repaint to see the style change momentarily 
+                        drawingSelectionBox = false;
                         e.Use();
                     }
                 }
@@ -418,6 +423,7 @@ public class TechTreeEditor : EditorWindow
                     {
                         // Set selectedNode
                         selectedNode = targetTree.tree[nodeIdx];
+                        drawingSelectionBox = false;
                         GUI.changed = true; // Repaint to see the style change momentarily        
                     }
                 }
@@ -429,8 +435,9 @@ public class TechTreeEditor : EditorWindow
                     if (nodeRect.Contains(e.mousePosition))
                     {
                         // Set selectedNode
-                        selectedNode = targetTree.tree[nodeIdx];
-                        GUI.changed = true; // Repaint to see the style change momentarily      
+                        selectedNode = targetTree.tree[nodeIdx];                         
+                        drawingSelectionBox = false;
+                        GUI.changed = true; // Repaint to see the style change momentarily   
                         e.Use();
                     }
                 }

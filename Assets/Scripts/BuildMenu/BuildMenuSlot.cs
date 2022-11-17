@@ -59,6 +59,11 @@ public class BuildMenuSlot : MonoBehaviour
         HookIntoEvents();
     }
 
+    void Start()
+    {
+        
+    }
+
     private void Lock()
     {
         iconObject.SetActive(true);

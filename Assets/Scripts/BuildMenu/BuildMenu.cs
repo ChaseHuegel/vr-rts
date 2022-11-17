@@ -16,11 +16,6 @@ public class BuildMenu : MonoBehaviour
         SetActiveTab(0);
     }
     
-    public void OnAttachedToHand(Hand hand)
-    {
-        //RefreshSlots();
-    }
-
     public void NextTab()
     {        
         tabs[activeTabIndex].gameObject.SetActive(false);
@@ -30,6 +25,7 @@ public class BuildMenu : MonoBehaviour
             activeTabIndex = 0;
 
         tabs[activeTabIndex].gameObject.SetActive(true);
+
     }
 
     public void PreviousTab()
