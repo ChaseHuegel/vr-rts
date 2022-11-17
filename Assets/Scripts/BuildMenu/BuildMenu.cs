@@ -8,51 +8,52 @@ using Valve.VR.InteractionSystem;
 public class BuildMenu : MonoBehaviour
 {
     public BuildMenuTab[] tabs;
-    protected PlayerManager playerManager;
+
+    private int activeTabIndex = 0;
+
     void Start()
     {
-        playerManager = PlayerManager.Instance;
-        //RefreshSlots();
     }
-
+    
     public void OnAttachedToHand(Hand hand)
     {
         //RefreshSlots();
     }
 
-    // TODO: This could be changed to just update the active tab for
-    // performance gains.
-    public void RefreshSlots()
-    {
-        if (!playerManager)
-            playerManager = PlayerManager.Instance;
-            
-        // foreach(BuildMenuTab tab in tabs)
-        // {
-        //     foreach(BuildMenuSlot slot in tab.GetComponentsInChildren<BuildMenuSlot>())
-        //     {
-        //         bool canBuild = playerManager.CanConstructBuilding(slot.rtsTypeData.buildingType);                
-        //         slot.SlotEnabled(canBuild); 
-        //     }
-        // }
+    public void NextTab()
+    {        
+        tabs[activeTabIndex].gameObject.SetActive(false);
+
+        activeTabIndex++;
+        if (activeTabIndex >= tabs.Length)
+            activeTabIndex = 0;
+
+        tabs[activeTabIndex].gameObject.SetActive(true);
     }
 
-    public void SetActiveTab(int tabNumber)
+    public void PreviousTab()
     {
-        foreach(BuildMenuTab tab in tabs)
-        {
-            tab.gameObject.SetActive(false);
-        }
-        tabs[tabNumber].gameObject.SetActive(true);
-        
-        //RefreshSlots();
+        tabs[activeTabIndex].gameObject.SetActive(false);
+
+        activeTabIndex++;
+        if (activeTabIndex >= tabs.Length)
+            activeTabIndex = 0;
+
+        tabs[activeTabIndex].gameObject.SetActive(true);
+    }
+
+    public void SetActiveTab(int newTabIndex)
+    {
+        tabs[activeTabIndex].gameObject.SetActive(false);
+        activeTabIndex = newTabIndex;
+        tabs[activeTabIndex].gameObject.SetActive(true);
     }
 
     public void GenerateTabs()
     {
-        // foreach(BuildMenuTab tab in tabs)
-        // {
-        //     tab.Generate();
-        // }
+        foreach(BuildMenuTab tab in tabs)
+        {
+            tab.Generate();
+        }
     }
 }

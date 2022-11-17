@@ -54,14 +54,8 @@ public class InteractionPointer : MonoBehaviour
     private Vector3 prevPointedAtPosition;
     private float pointerShowStartTime = 0.0f;
     private float pointerHideStartTime = 0.0f;
-    // private bool meshFading = false;
     private float fullTintAlpha;
-    // private float invalidReticleMinScale = 0.2f;
-    // private float invalidReticleMaxScale = 1.0f;
-    // private float loopingAudioMaxVolume = 0.0f;
     private AllowTeleportWhileAttachedToHand allowTeleportWhileAttached = null;
-    //private Vector3 startingFeetOffset = Vector3.zero;
-    //private bool movedFeetFarEnough = false;
     public Hand handReticle;
     public bool useHandAsReticle;
     private bool teleporting = false;
@@ -274,14 +268,46 @@ public class InteractionPointer : MonoBehaviour
                 if (pointerHand == hand)
                     pointerHand = null;
             }
+            else if (WasRotateClockwiseButtonPressed(hand))
+            {
+                if (isInBuildingPlacementMode)
+                {
+                    float rotationIncrement = buildingPlacementRotationIncrement;
+                    if (placementBuildingData.buildingType == RTSBuildingType.Wood_Wall_A_Gate ||
+                        placementBuildingData.buildingType == RTSBuildingType.Stone_Wall_A_Gate)
+                        rotationIncrement = wallPlacementRotationIncrement;
 
-            else if (isInBuildingPlacementMode)
+                    buildingPlacementPreviewObject.transform.Rotate(0.0f, -rotationIncrement, 0.0f);
+                }
+                else
+                {                    
+                    PlayerManager.Instance.ProcessRotateClockwiseEvent(hand);
+                }
+            }
+            else if (WasRotateCounterclockwiseButtonPressed(hand))
+            {
+                if (isInBuildingPlacementMode)
+                {
+                    float rotationIncrement = buildingPlacementRotationIncrement;
+                    if (placementBuildingData.buildingType == RTSBuildingType.Wood_Wall_A_Gate ||
+                        placementBuildingData.buildingType == RTSBuildingType.Stone_Wall_A_Gate)
+                        rotationIncrement = wallPlacementRotationIncrement;
+
+                    buildingPlacementPreviewObject.transform.Rotate(0.0f, rotationIncrement, 0.0f);
+                }
+                else
+                {
+                    PlayerManager.Instance.ProcessRotateCounterClockwiseEvent(hand);
+                }
+            }
+            
+            /* else if (isInBuildingPlacementMode)
             {
                 // TODO: Should gates snap to nearby walls without having to be exactly lined
                 // TODO: up with the wall?
                 float rotationIncrement = buildingPlacementRotationIncrement;
-                if (placementBuildingData.buildingType == RTSBuildingType.Wood_Wall_Gate ||
-                    placementBuildingData.buildingType == RTSBuildingType.Stone_Wall_Gate)
+                if (placementBuildingData.buildingType == RTSBuildingType.Wood_Wall_A_Gate ||
+                    placementBuildingData.buildingType == RTSBuildingType.Stone_Wall_A_Gate)
                     rotationIncrement = wallPlacementRotationIncrement;
 
                 if (WasRotateClockwiseButtonPressed(hand))
@@ -289,7 +315,7 @@ public class InteractionPointer : MonoBehaviour
 
                 if (WasRotateCounterclockwiseButtonPressed(hand))
                     buildingPlacementPreviewObject.transform.Rotate(0.0f, rotationIncrement, 0.0f);
-            }
+            } */
             
             /* if (WasQueueButtonPressed(hand))
                 newPointerHand = hand;

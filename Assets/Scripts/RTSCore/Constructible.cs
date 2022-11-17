@@ -29,8 +29,8 @@ public class Constructible : Obstacle
 
             // TODO: Switch to rotated/fixed prefab?
             // Stretch if diagonal gate
-            if (buildingData.buildingType == RTSBuildingType.Wood_Wall_Gate ||
-                buildingData.buildingType == RTSBuildingType.Stone_Wall_Gate)
+            if (buildingData.buildingType == RTSBuildingType.Wood_Wall_A_Gate ||
+                buildingData.buildingType == RTSBuildingType.Stone_Wall_A_Gate)
             {
                 float angle = Mathf.Round(transform.eulerAngles.y);
                 if (angle == 45.0f || angle == 135.0f || angle == 225.0f || angle == 315.0f)

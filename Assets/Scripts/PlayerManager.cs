@@ -77,9 +77,12 @@ public class PlayerManager : MonoBehaviour
     private Hand buildMenuHand;
     private Hand selectionHand;
     
-    private GameObject handBuildMenu;
-    
+    private GameObject handBuildMenuGameObject;
+    public GameObject HandBuildMenuGameObject{ get => handBuildMenuGameObject; }
+
     protected BuildMenu buildMenu;
+    public BuildMenu Buildmenu { get => buildMenu; }
+
     private Hand rightHand;
     private Hand leftHand;
     private static PlayerManager _instance;
@@ -257,6 +260,18 @@ public class PlayerManager : MonoBehaviour
         Damageable.OnSpawnEvent -= OnSpawnEvent;
     }
     
+    public void ProcessRotateClockwiseEvent(Hand hand)
+    {
+        if (hand.currentAttachedObject == HandBuildMenuGameObject)
+            buildMenu.NextTab(); 
+    }
+
+    public void ProcessRotateCounterClockwiseEvent(Hand hand) 
+    {
+        if (hand.currentAttachedObject == HandBuildMenuGameObject)
+            buildMenu.PreviousTab(); 
+    }
+
     public void OnSpawnEvent(object sender, Damageable.SpawnEvent e)
     {
         Body body = e.target.GetComponent<Body>();
@@ -296,9 +311,9 @@ public class PlayerManager : MonoBehaviour
         if (handBuildMenuPrefab)
         {
             Vector3 position = new Vector3(14.8597126f, 0.681457937f, -10.2036371f);
-            handBuildMenu = Instantiate(handBuildMenuPrefab, position, Quaternion.identity, autohideHandMenuObject.transform);
-            buildMenu = handBuildMenu.GetComponent<BuildMenu>();
-            handBuildMenu.SetActive(false);
+            handBuildMenuGameObject = Instantiate(handBuildMenuPrefab, position, Quaternion.identity, autohideHandMenuObject.transform);
+            buildMenu = handBuildMenuGameObject.GetComponent<BuildMenu>();
+            handBuildMenuGameObject.SetActive(false);
         }
 
 #if UNITY_EDITOR
@@ -316,20 +331,20 @@ public class PlayerManager : MonoBehaviour
         if (autoHideHandMenuEnabled) return;
 
         // Menu is already visible.
-        if (handBuildMenu.activeSelf)
+        if (handBuildMenuGameObject.activeSelf)
         {
             // Menu is attached to right hand, deactivate it, detach it, and
             // enable interactions in right hand.
-            if (rightHand.currentAttachedObject == handBuildMenu)
+            if (rightHand.currentAttachedObject == handBuildMenuGameObject)
             {
-                rightHand.DetachObject(handBuildMenu);
+                rightHand.DetachObject(handBuildMenuGameObject);
 
                 // TODO: This should be taken care of by DetachObject -> OnDetachedFromHand event 
                 // but OnDetachedFromHand has no reciever (Interactable) for some reason.
                 if (rightHand.skeleton != null)
                     rightHand.skeleton.BlendToSkeleton(0.2f);
 
-                handBuildMenu.SetActive(false);
+                handBuildMenuGameObject.SetActive(false);
                 SetRightHandInteraction(true);
             }
             // Menu must be attached to left hand, disable interaction in the right hand,
@@ -342,7 +357,7 @@ public class PlayerManager : MonoBehaviour
                     leftHand.skeleton.BlendToSkeleton(0.2f);
 
                 SetRightHandInteraction(false);
-                rightHand.AttachObject(handBuildMenu, GrabTypes.Scripted);
+                rightHand.AttachObject(handBuildMenuGameObject, GrabTypes.Scripted);
                 SetLeftHandInteraction(true);
             }
         }
@@ -352,8 +367,8 @@ public class PlayerManager : MonoBehaviour
             // Disable interaction in right hand, activate the build menu, and 
             // attach build menu to right hand,
             SetRightHandInteraction(false);
-            handBuildMenu.SetActive(true);
-            rightHand.AttachObject(handBuildMenu, GrabTypes.Scripted);
+            handBuildMenuGameObject.SetActive(true);
+            rightHand.AttachObject(handBuildMenuGameObject, GrabTypes.Scripted);
         }
 
     }
@@ -366,20 +381,20 @@ public class PlayerManager : MonoBehaviour
         if (autoHideHandMenuEnabled) return;
 
         // Menu is already visible.
-        if (handBuildMenu.activeSelf)
+        if (handBuildMenuGameObject.activeSelf)
         {
             // Menu is attached to left hand, deactivate it, detach it, and
             // enable interactions in left hand.
-            if (leftHand.currentAttachedObject == handBuildMenu)
+            if (leftHand.currentAttachedObject == handBuildMenuGameObject)
             {
-                leftHand.DetachObject(handBuildMenu);
+                leftHand.DetachObject(handBuildMenuGameObject);
 
                 // TODO: This should be taken care of by DetachObject -> OnDetachedFromHand event 
                 // but OnDetachedFromHand has no reciever (Interactable) for some reason.
                 if (leftHand.skeleton != null)
                     leftHand.skeleton.BlendToSkeleton(0.2f);
 
-                handBuildMenu.SetActive(false);
+                handBuildMenuGameObject.SetActive(false);
                 SetLeftHandInteraction(true);
             }
             // Menu must be attached to right hand, disable interaction in the left hand,
@@ -392,7 +407,7 @@ public class PlayerManager : MonoBehaviour
                     rightHand.skeleton.BlendToSkeleton(0.2f);
 
                 SetLeftHandInteraction(false);
-                leftHand.AttachObject(handBuildMenu, GrabTypes.Scripted);
+                leftHand.AttachObject(handBuildMenuGameObject, GrabTypes.Scripted);
                 SetRightHandInteraction(true);
             }
         }
@@ -402,8 +417,8 @@ public class PlayerManager : MonoBehaviour
             // Disable interaction in left hand, activate the build menu, and 
             // attach build menu to left hand,
             SetLeftHandInteraction(false);
-            handBuildMenu.SetActive(true);
-            leftHand.AttachObject(handBuildMenu, GrabTypes.Scripted);
+            handBuildMenuGameObject.SetActive(true);
+            leftHand.AttachObject(handBuildMenuGameObject, GrabTypes.Scripted);
         }
 
     }
