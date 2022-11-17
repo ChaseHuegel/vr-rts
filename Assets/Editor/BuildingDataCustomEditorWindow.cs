@@ -191,13 +191,14 @@ public class BuildingDataCustomEditorWindow : EditorWindow
 
             // Menu preview
             GameObject menuPreview = GenerateObject(editedName + "_menu_preview", model, skinMaterial);
-            menuPreview.transform.localScale = new Vector3(0.125033662f, 0.125033662f, 0.125033662f);
+            menuPreview.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
             menuPreview.layer = menuPreviewLayer;
             bData.menuPreviewPrefab = SavePrefabObject(menuPreview);
 
             // Faded preview
             GameObject fadedPreview = GenerateObject(editedName + "_faded_preview", model, fadedMaterial);
             fadedPreview.layer = LayerMask.NameToLayer("UI");
+            fadedPreview.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
             bData.fadedPreviewPrefab = SavePrefabObject(fadedPreview);
 
             // World preview

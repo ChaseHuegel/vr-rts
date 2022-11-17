@@ -17,13 +17,9 @@ public class BuildMenuTab : MonoBehaviour
     public Material slotEnabledMaterial;
     public Material slotDisabledMaterial;
     public TMPro.TMP_FontAsset titleFont;
-
-    [Header("Slot Icon Transform")]
     public Vector3 slotIconPosition;
     public Vector3 slotIconRotation;
     public Vector3 slotIconScale = Vector3.one;
-
-    [Header("Slot Lock Transform")]
     public Vector3 slotLockPosition;
 
     public TechBase[] ButtonsNew;
@@ -116,7 +112,6 @@ public class BuildMenuTab : MonoBehaviour
                 iconObject.transform.localEulerAngles = slotIconRotation;
                 iconObject.SetActive(false);
 
-                //iconObject.transform.localScale = new Vector3(0.0160526186f, 0.0160526186f, 0.0160526186f);
                 SpriteRenderer spriteRenderer = iconObject.AddComponent<SpriteRenderer>();
                 spriteRenderer.sprite = tech.worldQueueImage;
 
