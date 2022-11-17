@@ -142,7 +142,7 @@ public class BuildMenuTab : MonoBehaviour
                 cost.stoneText.text = buildMenuSlotComponent.rtsTypeData.stoneCost.ToString();
 
                 // Create/Instatiate preview objects for slots
-                buildMenuSlotComponent.CreatePreviewObject();                           
+                buildMenuSlotComponent.CreatePreviewObjects();                           
             }
 
             // Move to next column, or to the next row if we

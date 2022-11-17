@@ -30,7 +30,9 @@ public class BuildMenuSlot : MonoBehaviour
     private bool useFadedPreview;
     public UnityEvent pickupEvent;
     public UnityEvent dropEvent;
-    public GameObject previewObject;
+    //private GameObject oldpreviewcrap;
+    private GameObject fadedPreviewObject;
+    private GameObject normalPreviewObject;
     public bool justPickedUpItem = false;
     SphereCollider grabCollider;
     private Vector3 previewObjectOriginalScale;
@@ -53,29 +55,24 @@ public class BuildMenuSlot : MonoBehaviour
         if (!grabCollider) Debug.LogError("grabCollider missing.", this);
 #endif
 
-        CreatePreviewObject();
-        previewObjectOriginalScale = previewObject.transform.localScale;
+        CreatePreviewObjects();
+        previewObjectOriginalScale = normalPreviewObject.transform.localScale;
 
         HookIntoEvents();
-    }
-
-    void Start()
-    {
-        
     }
 
     private void Lock()
     {
         iconObject.SetActive(true);
         lockObject.SetActive(true);
-        previewObject.SetActive(false);
+        normalPreviewObject.SetActive(false);
     }
 
     private void Unlock()
     {
         iconObject.SetActive(false);
         lockObject.SetActive(false);
-        previewObject.SetActive(true);
+        normalPreviewObject.SetActive(true);
     }
 
     private void InitializeGrabCollider()
@@ -92,7 +89,7 @@ public class BuildMenuSlot : MonoBehaviour
 
         grabCollider.enabled = true;
         iconObject.SetActive(false);
-        previewObject?.SetActive(true);
+        normalPreviewObject?.SetActive(true);
         
         // if (previewObject)
         //     SetMeshMaterial(parentTab.slotEnabledMaterial);
@@ -106,7 +103,7 @@ public class BuildMenuSlot : MonoBehaviour
 
         grabCollider.enabled = false;
         iconObject.SetActive(true);
-        previewObject?.SetActive(false);
+        normalPreviewObject?.SetActive(false);
 
         // if(previewObject)
         //     SetMeshMaterial(parentTab.slotDisabledMaterial);
@@ -157,31 +154,25 @@ public class BuildMenuSlot : MonoBehaviour
         CleanupEvents();
     }
 
-    public void CreatePreviewObject()
+    public void CreatePreviewObjects()
     {
-        ClearPreview();
-
-        // Use normal preview
-        if ( useFadedPreview == false )
-        {             
-            if (rtsTypeData.menuPreviewPrefab != null)
-            {
-                previewObject = Instantiate( rtsTypeData.menuPreviewPrefab, transform.position, Quaternion.identity ) as GameObject;
-                previewObject.name = "_" + previewObject.name;
-                previewObject.transform.parent = transform;
-                previewObject.transform.localRotation = Quaternion.identity;
-            }            
-        }
-        // Spawned item is being held, use faded preview
-        else
+        ClearPreviews();
+                  
+        if (rtsTypeData.menuPreviewPrefab != null)
         {
-            if (rtsTypeData.fadedPreviewPrefab != null)
-            {
-                previewObject = Instantiate( rtsTypeData.fadedPreviewPrefab, transform.position, Quaternion.identity ) as GameObject;
-                previewObject.name = "_" + previewObject.name;
-                previewObject.transform.parent = transform;
-                previewObject.transform.localRotation = Quaternion.identity;
-            }
+            normalPreviewObject = Instantiate( rtsTypeData.menuPreviewPrefab, transform.position, Quaternion.identity ) as GameObject;
+            normalPreviewObject.name = "_" + normalPreviewObject.name;
+            normalPreviewObject.transform.parent = transform;
+            normalPreviewObject.transform.localRotation = Quaternion.identity;
+        }            
+    
+        if (rtsTypeData.fadedPreviewPrefab != null)
+        {
+            fadedPreviewObject = Instantiate( rtsTypeData.fadedPreviewPrefab, transform.position, Quaternion.identity ) as GameObject;
+            fadedPreviewObject.name = "_" + fadedPreviewObject.name;
+            fadedPreviewObject.transform.parent = transform;
+            fadedPreviewObject.transform.localRotation = Quaternion.identity;
+            fadedPreviewObject.SetActive(false);
         }
 
         GetMeshRenderers();
@@ -189,11 +180,11 @@ public class BuildMenuSlot : MonoBehaviour
 
     private void GetMeshRenderers()
     {
-        if (!previewObject)
+        if (!normalPreviewObject)
             return;
 
-        meshRenderers = previewObject.GetComponentsInChildren<MeshRenderer>();
-        skinnedMeshRenderers = previewObject.GetComponentsInChildren<SkinnedMeshRenderer>();
+        meshRenderers = normalPreviewObject.GetComponentsInChildren<MeshRenderer>();
+        skinnedMeshRenderers = normalPreviewObject.GetComponentsInChildren<SkinnedMeshRenderer>();
     }
 
     private void SetMeshMaterial(Material material)
@@ -205,12 +196,14 @@ public class BuildMenuSlot : MonoBehaviour
             skinnedMeshRenderer.sharedMaterial = material;
     }
 
-    private void ClearPreview()
+    private void ClearPreviews()
     {
 #if UNITY_EDITOR
-        DestroyImmediate(previewObject);
+        DestroyImmediate(fadedPreviewObject);
+        DestroyImmediate(normalPreviewObject);
 #else
-        Destroy(previewObject);
+        Destroy(fadedPreviewObject);
+        Destray(normalPreviewObject);
 #endif
 
         //         GameObject[] allChildren = new GameObject [ transform.childCount ] ;
@@ -242,19 +235,32 @@ public class BuildMenuSlot : MonoBehaviour
         {
             itemIsSpawned = false;
             useFadedPreview = false;
-            dropEvent.Invoke();
-            CreatePreviewObject();
+            dropEvent.Invoke();           
         }                  
+    }
+
+    void SwapPreviewObject()
+    {
+        if (normalPreviewObject.activeSelf) 
+        {
+            normalPreviewObject.SetActive(false);
+            fadedPreviewObject.SetActive(true);
+        }
+        else
+        {
+            normalPreviewObject.SetActive(true);
+            fadedPreviewObject.SetActive(false);
+        }
     }
 
     private void ScaleUp()
     {
-        previewObject.transform.localScale = previewObjectOriginalScale * 1.25f;
+        normalPreviewObject.transform.localScale = previewObjectOriginalScale * 1.25f;
     }
     
     private void ResetScale()
     {
-        previewObject.transform.localScale = previewObjectOriginalScale;
+        normalPreviewObject.transform.localScale = previewObjectOriginalScale;
     }
 
     private void OnHandHoverBegin( Hand hand )
@@ -415,7 +421,6 @@ public class BuildMenuSlot : MonoBehaviour
 
         useFadedPreview = true;
         pickupEvent.Invoke();
-        CreatePreviewObject();
     }
 
     public static event EventHandler<BuildingPlacementEvent> OnBuildingPlacementEvent;
