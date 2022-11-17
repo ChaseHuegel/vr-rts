@@ -113,7 +113,7 @@ public class PlayerManager : MonoBehaviour
         headAudioSource.transform.SetParent(Player.instance.hmdTransform);
         headAudioSource.transform.localPosition = Vector3.zero;
 
-        // Fetch sounds
+        // Cache sounds
         buildingPlacementAllowedSound = GameMaster.Instance.buildingPlacementAllowedSound;
         buildingPlacementDeniedSound = GameMaster.Instance.buildingPlacementDeniedSound;
         setRallyPointSound = GameMaster.Instance.setRallyPointSound;
@@ -423,12 +423,26 @@ public class PlayerManager : MonoBehaviour
 
     }
     
-    public void CompleteResearch(TechBase tech)
+    public void ProcessTechQueueComplete(TechBase tech)
     {
         if (!faction.techTree.ResearchTech(tech))
             return;
 
-        PlayEpochResearchCompleteAudio();
+        switch (tech)
+        {
+            case EpochUpgrade:
+                PlayEpochResearchCompleteAudio();
+                break;
+
+            case TechResearcher:
+                PlayEpochResearchCompleteAudio();
+                break;
+
+            case UnitData:
+            case BuildingData:
+                break;
+        }        
+        
         Debug.LogFormat("{0} research complete.", tech.title, this);
     }
 

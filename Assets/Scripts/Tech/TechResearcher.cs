@@ -11,7 +11,7 @@ public class TechResearcher : TechBase
 {
     public override void Execute(SpawnQueue spawnQueue)
     {
-        base.Execute(spawnQueue);        
+        base.Execute(spawnQueue);       
     }
 }
 

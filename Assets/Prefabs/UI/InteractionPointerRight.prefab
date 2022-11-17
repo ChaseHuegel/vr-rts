@@ -130,7 +130,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &773110052526719006
 Transform:
   m_ObjectHideFlags: 0
@@ -140,7 +140,7 @@ Transform:
   m_GameObject: {fileID: 773110052526719007}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.02, y: 0.02, z: 0.02}
+  m_LocalScale: {x: 0.15, y: 0.15, z: 0.15}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 941335741155386090}
@@ -2504,6 +2504,9 @@ MonoBehaviour:
   uiInteractAction:
     actionPath: /actions/default/in/InteractUI
     needsReinit: 0
+  showPointerAction:
+    actionPath: /actions/default/in/ShowPointer
+    needsReinit: 0
   selectAction:
     actionPath: /actions/default/in/Select
     needsReinit: 0
@@ -2543,31 +2546,16 @@ MonoBehaviour:
   pointerValidColor: {r: 0.10980393, g: 0.89019614, b: 0.11764707, a: 1}
   pointerInvalidColor: {r: 0.8470589, g: 0.14117648, b: 0.14117648, a: 1}
   arcDistance: 10
-  pointerAudioSource: {fileID: 7675742794468059971}
-  loopingAudioSource: {fileID: 7675742794468273749}
-  headAudioSource: {fileID: 7675742794468265493}
-  reticleAudioSource: {fileID: 7675742794468269543}
-  setRallyPointSound: {fileID: 11400000, guid: c72159ec98440534abf1b3058c7edd57, type: 2}
-  queueSuccessSound: {fileID: 8300000, guid: 39cd38d16e194ab47ae7ae092c5f9e07, type: 3}
-  queueFailedSound: {fileID: 8300000, guid: 465e24e196f24c3498bbd20246f9f1ca, type: 3}
-  dequeueSound: {fileID: 8300000, guid: 2ec0e14254efe4040b7ae3a0da46d5a6, type: 3}
-  teleportSound: {fileID: 8300000, guid: e9befd794befe7540ad040be41dba757, type: 3}
-  pointerLoopSound: {fileID: 8300000, guid: 47b5e90896f0e004c85bebd26e6057e2, type: 3}
-  pointerStopSound: {fileID: 8300000, guid: aa9e211c83b607f479bd7772eb56a98c, type: 3}
-  goodHighlightSound: {fileID: 8300000, guid: 4e2e74504a83fbd438147cfda37cf3d0, type: 3}
-  badHighlightSound: {fileID: 8300000, guid: aa9e211c83b607f479bd7772eb56a98c, type: 3}
   buildingPlacementInvalidMat: {fileID: 2100000, guid: 5c650c5a544d2754886cd2d4e8144103,
     type: 2}
   teleportFadeTime: 0.1
   pointerHand: {fileID: 0}
-  visible: 0
+  showPointerArc: 0
   handReticle: {fileID: 773110052998418745}
   useHandAsReticle: 0
   wayPointReticle: {fileID: 773110052526719007}
   buildingPlacementRotationIncrement: 45
   wallPlacementRotationIncrement: 22.5
-  placementHand: {fileID: 0}
-  placementEnded: 0
 --- !u!114 &7675742794465093253
 MonoBehaviour:
   m_ObjectHideFlags: 0

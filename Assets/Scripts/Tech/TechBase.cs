@@ -33,7 +33,7 @@ public class TechBase : ScriptableObject
 
     public virtual void Execute(SpawnQueue spawnQueue)
     {
-        PlayerManager.Instance.CompleteResearch(this);
+        PlayerManager.Instance.ProcessTechQueueComplete(this);
     }
 }
 

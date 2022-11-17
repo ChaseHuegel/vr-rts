@@ -12,7 +12,6 @@ public class SpawnQueue : MonoBehaviour
 {
     [Header("Unit Spawn Queue Settings")]
     public float unitRallyWaypointRadius;
-
     private Transform unitSpawnPoint;
     public Transform UnitSpawnPoint { get => unitSpawnPoint; } 
     private Transform unitRallyWaypoint;

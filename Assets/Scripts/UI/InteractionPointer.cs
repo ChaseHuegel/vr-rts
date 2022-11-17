@@ -915,11 +915,14 @@ public class InteractionPointer : MonoBehaviour
         destinationReticleTransform.position = pointedAtPosition;
         destinationReticleTransform.gameObject.SetActive(true);
 
+        // TODO: Change reticle collision layers when setting rally point?
         if (isSettingRallyPoint)
         {
             DrawQuadraticBezierCurve(pointerLineRenderer, rallyWaypointArcStartPosition, pointedAtPosition);
             if (pointerLineRenderer.enabled == false)
                 pointerLineRenderer.enabled = true;
+
+            HardSnapToGrid(destinationReticleTransform, 1, 1, false);
 
         }
         else if (isInUnitSelectionMode && pointedAtPointerInteractable != null)

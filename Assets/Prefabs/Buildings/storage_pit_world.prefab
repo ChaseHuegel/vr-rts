@@ -135,7 +135,7 @@ Transform:
   m_Children:
   - {fileID: 665806898373692617}
   - {fileID: 5202464505488867077}
-  - {fileID: 2569351662392974518}
+  - {fileID: 1975170241746787734}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
@@ -250,10 +250,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 0}
   highlightOnHover: 1
   hideHighlight:
-  - {fileID: 0}
   - {fileID: 8341432398600124995}
-  - {fileID: 8686980540218723702}
-  - {fileID: 0}
 --- !u!114 &83535743768523879
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -400,41 +397,9 @@ MonoBehaviour:
   enableQueueMenu: 0
   QueueMenuVerticalOffset: 0
   unitSpawnPoint: {fileID: 5202464505488867077}
-  unitRallyWaypoint: {fileID: 2569351662392974518}
+  unitRallyWaypoint: {fileID: 1975170241746787734}
   queueTechButtons: []
   numberOfQueueSlots: 12
---- !u!1 &8686980540218723702
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2569351662392974518}
-  m_Layer: 10
-  m_Name: UnitRallyWaypoint
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &2569351662392974518
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8686980540218723702}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.425, y: 0, z: -0.069}
-  m_LocalScale: {x: 0.096817, y: 0.096817, z: 0.096817}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1292112448073045457}
-  m_Father: {fileID: 101465085620259440}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1060547846805973794
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -646,17 +611,17 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1558022523513169730}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &1604523697710858885
+--- !u!1001 &2072744890709363394
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 2569351662392974518}
+    m_TransformParent: {fileID: 101465085620259440}
     m_Modifications:
     - target: {fileID: 552509685689849684, guid: d73c0ebd7248acd4daabf362cf93287b,
         type: 3}
       propertyPath: m_RootOrder
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 552509685689849684, guid: d73c0ebd7248acd4daabf362cf93287b,
         type: 3}
@@ -676,22 +641,22 @@ PrefabInstance:
     - target: {fileID: 552509685689849684, guid: d73c0ebd7248acd4daabf362cf93287b,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 552509685689849684, guid: d73c0ebd7248acd4daabf362cf93287b,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 552509685689849684, guid: d73c0ebd7248acd4daabf362cf93287b,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 552509685689849684, guid: d73c0ebd7248acd4daabf362cf93287b,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -2.710506e-20
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 552509685689849684, guid: d73c0ebd7248acd4daabf362cf93287b,
         type: 3}
@@ -711,13 +676,13 @@ PrefabInstance:
     - target: {fileID: 552509685690141556, guid: d73c0ebd7248acd4daabf362cf93287b,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint
+      value: RallyPoint
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d73c0ebd7248acd4daabf362cf93287b, type: 3}
---- !u!4 &1292112448073045457 stripped
+--- !u!4 &1975170241746787734 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 552509685689849684, guid: d73c0ebd7248acd4daabf362cf93287b,
     type: 3}
-  m_PrefabInstance: {fileID: 1604523697710858885}
+  m_PrefabInstance: {fileID: 2072744890709363394}
   m_PrefabAsset: {fileID: 0}
