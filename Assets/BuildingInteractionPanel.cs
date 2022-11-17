@@ -462,17 +462,18 @@ public class BuildingInteractionPanel : MonoBehaviour
         isVisible = true;
         titleGameObject?.SetActive(true);
         menuGameObject?.SetActive(true);
-        healthBarGameObject?.SetActive(true);        
+        healthBarGameObject?.SetActive(true);
+        unitRallyWaypoint?.gameObject.SetActive(true);
 
         foreach (GameObject go in objectsToAutohide)
             go.SetActive(true);
     }
 
     public void Hide()
-    {
-        
+    {        
         titleGameObject?.SetActive(false);
         menuGameObject?.SetActive(false);
+        unitRallyWaypoint?.gameObject.SetActive(false);
 
         // TODO: Should be based on the healthbars autoshowAt/autohideAt values.
         // TODO: Change to healthbar events that autohideBillboard can subscribe to.

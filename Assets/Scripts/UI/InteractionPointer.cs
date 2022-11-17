@@ -922,7 +922,7 @@ public class InteractionPointer : MonoBehaviour
             if (pointerLineRenderer.enabled == false)
                 pointerLineRenderer.enabled = true;
 
-            HardSnapToGrid(destinationReticleTransform, 1, 1, false);
+            //HardSnapToGrid(destinationReticleTransform, 1, 1, false);
 
         }
         else if (isInUnitSelectionMode && pointedAtPointerInteractable != null)
@@ -988,8 +988,7 @@ public class InteractionPointer : MonoBehaviour
             if (pointerLineRenderer.enabled == false)
                 pointerLineRenderer.enabled = true;
         }
-        else
-            if (pointerLineRenderer.enabled == true)
+        else if (pointerLineRenderer.enabled == true)
             pointerLineRenderer.enabled = false;
 
         if (selectedActors.Count > 0)
