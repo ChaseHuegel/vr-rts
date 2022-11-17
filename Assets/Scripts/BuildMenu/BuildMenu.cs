@@ -13,6 +13,7 @@ public class BuildMenu : MonoBehaviour
 
     void Start()
     {
+        SetActiveTab(0);
     }
     
     public void OnAttachedToHand(Hand hand)
