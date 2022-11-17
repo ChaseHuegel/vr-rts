@@ -31,10 +31,13 @@ public class BuildMenuSlot : MonoBehaviour
     public UnityEvent pickupEvent;
     public UnityEvent dropEvent;
     //private GameObject oldpreviewcrap;
+    [SerializeField]
     private GameObject fadedPreviewObject;
+
+    [SerializeField]
     private GameObject normalPreviewObject;
     public bool justPickedUpItem = false;
-    SphereCollider grabCollider;
+    private SphereCollider grabCollider;
     private Vector3 previewObjectOriginalScale;
 
     MeshRenderer[] meshRenderers;
@@ -55,7 +58,7 @@ public class BuildMenuSlot : MonoBehaviour
         if (!grabCollider) Debug.LogError("grabCollider missing.", this);
 #endif
 
-        CreatePreviewObjects();
+        //CreatePreviewObjects();
         previewObjectOriginalScale = normalPreviewObject.transform.localScale;
 
         HookIntoEvents();
@@ -156,9 +159,7 @@ public class BuildMenuSlot : MonoBehaviour
 
     public void CreatePreviewObjects()
     {
-        ClearPreviews();
-                  
-        if (rtsTypeData.menuPreviewPrefab != null)
+        if (rtsTypeData.menuPreviewPrefab != null && !normalPreviewObject)
         {
             normalPreviewObject = Instantiate( rtsTypeData.menuPreviewPrefab, transform.position, Quaternion.identity ) as GameObject;
             normalPreviewObject.name = "_" + normalPreviewObject.name;
@@ -166,7 +167,7 @@ public class BuildMenuSlot : MonoBehaviour
             normalPreviewObject.transform.localRotation = Quaternion.identity;
         }            
     
-        if (rtsTypeData.fadedPreviewPrefab != null)
+        if (rtsTypeData.fadedPreviewPrefab != null && !fadedPreviewObject)
         {
             fadedPreviewObject = Instantiate( rtsTypeData.fadedPreviewPrefab, transform.position, Quaternion.identity ) as GameObject;
             fadedPreviewObject.name = "_" + fadedPreviewObject.name;
@@ -194,39 +195,6 @@ public class BuildMenuSlot : MonoBehaviour
 
         foreach (SkinnedMeshRenderer skinnedMeshRenderer in skinnedMeshRenderers)
             skinnedMeshRenderer.sharedMaterial = material;
-    }
-
-    private void ClearPreviews()
-    {
-#if UNITY_EDITOR
-        DestroyImmediate(fadedPreviewObject);
-        DestroyImmediate(normalPreviewObject);
-#else
-        Destroy(fadedPreviewObject);
-        Destray(normalPreviewObject);
-#endif
-
-        //         GameObject[] allChildren = new GameObject [ transform.childCount ] ;
-
-        //         int i = 0;
-
-        //         foreach ( Transform child in transform )
-        //         {
-        //             allChildren [ i ] = child.gameObject;
-        //             i++;
-        //         }
-
-        //         foreach ( GameObject child in allChildren )
-        //         {
-        //             if (!child.GetComponent<BuildMenuResouceCost>() && !child.GetComponent<TMPro.TextMeshPro>())
-        //             {
-        // #if UNITY_EDITOR
-        //                 GameObject.DestroyImmediate(child.gameObject);
-        // #else
-        //                 GameObject.Destroy(child.gameObject);
-        // #endif
-        //             }
-        //         }
     }
 
     void Update()
@@ -358,9 +326,7 @@ public class BuildMenuSlot : MonoBehaviour
     private void OnHandHoverEnd( Hand hand )
     {
         if ( !justPickedUpItem && requireGrabActionToTake && showTriggerHint )
-        {
             hand.HideGrabHint();
-        }
 
         justPickedUpItem = false;
         ResetScale();
@@ -372,17 +338,13 @@ public class BuildMenuSlot : MonoBehaviour
 
         // Verify the hand is holding something
         if ( currentAttachedObject == null )
-        {
             return null;
-        }
 
         ThrowableBuilding throwableBuilding = hand.currentAttachedObject.GetComponent<ThrowableBuilding>();
 
         // Verify the item in the hand is a throwable building
         if ( throwableBuilding == null )
-        {
             return null;
-        }
 
         return throwableBuilding;
     }

@@ -162,8 +162,8 @@ public class BuildingInteractionPanel : MonoBehaviour
 
     private void OnNodeResearched(TechNode node) 
     {
-        // Do not destroy buttons when research is complete if they aren't upgrades.
-        if (node.tech is not EpochUpgrade || node.tech is not TechResearcher)
+        // Do not destroy buttons when research is complete if they aren't single use.
+        if (!node.tech.singleUse)
             return;
 
         queueTechButtons.Remove(node.tech);

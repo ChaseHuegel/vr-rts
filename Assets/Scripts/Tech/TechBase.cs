@@ -31,6 +31,8 @@ public class TechBase : ScriptableObject
     public int foodCost;
     public int woodCost;
 
+    public bool singleUse;
+    
     public virtual void Execute(SpawnQueue spawnQueue)
     {
         PlayerManager.Instance.ProcessTechQueueComplete(this);

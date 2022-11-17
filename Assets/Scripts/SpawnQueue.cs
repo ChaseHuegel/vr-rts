@@ -117,6 +117,12 @@ public class SpawnQueue : MonoBehaviour
 
         //UnitData unitData = GameMaster.GetUnit(tech);
 
+        if (tech.singleUse && queue.Contains(tech))
+        {
+            Debug.Log("Single use tech.");
+            return false;
+        }
+
         if (!PlayerManager.Instance.CanQueueTech(tech))
         {
             Debug.Log("Can't queue tech.");
