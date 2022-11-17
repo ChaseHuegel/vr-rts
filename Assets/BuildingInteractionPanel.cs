@@ -103,7 +103,7 @@ public class BuildingInteractionPanel : MonoBehaviour
 
     void Awake()
     {
-        if (!faceTarget) faceTarget = Player.instance.hmdTransform;
+        if (!faceTarget) faceTarget = Player.instance.hmdTransform;        
     }
 
     // Start is called before the first frame update
@@ -141,10 +141,13 @@ public class BuildingInteractionPanel : MonoBehaviour
             HookIntoEvents();            
         }
 
+        // TODO: Probably should be handled differently
+        PlayerManager.Instance.faction.techTree.RefreshNodes();
+
         if (startHidden)
             Hide();
         else
-            Show();
+            Show();        
     }
 
     // private void OnNodeUnlocked(TechNode node)
@@ -473,7 +476,9 @@ public class BuildingInteractionPanel : MonoBehaviour
     {        
         titleGameObject?.SetActive(false);
         menuGameObject?.SetActive(false);
-        unitRallyWaypoint?.gameObject.SetActive(false);
+
+        if (enableQueueMenu && unitRallyWaypoint)
+            unitRallyWaypoint.gameObject?.SetActive(false);
 
         // TODO: Should be based on the healthbars autoshowAt/autohideAt values.
         // TODO: Change to healthbar events that autohideBillboard can subscribe to.
