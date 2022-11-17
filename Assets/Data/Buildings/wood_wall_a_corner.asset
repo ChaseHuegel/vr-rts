@@ -26,8 +26,10 @@ MonoBehaviour:
   woodCost: 5
   buildingType: 95
   dropoffTypes: 0
+  boundingDimensionX: 1
+  boundingDimensionY: 1
   populationSupported: 0
-  maxUnitQueueSize: 0
+  maxUnitQueueSize: 12
   maximumHitPoints: 100
   garrisonCapacity: 0
   armor: 2
@@ -39,13 +41,6 @@ MonoBehaviour:
     type: 3}
   throwablePrefab: {fileID: 7383185804663225200, guid: 28dac60af2eb7464988d198763118686,
     type: 3}
-  constructablePrefab: {fileID: 2882590708120947666, guid: 5ceb8f887862a9d4d83e71e0147d91ea,
-    type: 3}
-  diagonalWorldPrefab: {fileID: 0}
-  diagonalWorldPreviewPrefab: {fileID: 0}
-  diagonalConstructablePrefab: {fileID: 0}
-  boundingDimensionX: 1
-  boundingDimensionY: 1
-  allowedUnitsToSpawn: 
+  constructionPrefab: {fileID: 0}
   constructionCompletedAudio: {fileID: 11400000, guid: c72159ec98440534abf1b3058c7edd57,
     type: 2}

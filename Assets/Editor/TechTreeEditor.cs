@@ -373,7 +373,7 @@ public class TechTreeEditor : EditorWindow
                 for (int i = 0; i < DragAndDrop.objectReferences.Length; i++)
                 {
                     if (DragAndDrop.objectReferences[i] is TechBase)
-                        targetTree.AddNode(DragAndDrop.objectReferences[i] as TechBase, e.mousePosition + _zoomCoordsOrigin);
+                        targetTree.AddNode(DragAndDrop.objectReferences[i] as TechBase, e.mousePosition - _zoomCoordsOrigin);
                 }
                 break;
 

@@ -152,7 +152,7 @@ public class PlayerManager : MonoBehaviour
 
         faction.techTree.RefreshNodes();
 
-        Valve.VR.OpenVR.Chaperone.ResetZeroPose(ETrackingUniverseOrigin.TrackingUniverseStanding);
+        Valve.VR.OpenVR.Chaperone?.ResetZeroPose(ETrackingUniverseOrigin.TrackingUniverseStanding);
     }
 
     void OnDestroy()
@@ -410,9 +410,10 @@ public class PlayerManager : MonoBehaviour
     
     public void CompleteResearch(TechBase tech)
     {
-        faction.techTree.ResearchTech(tech);
+        if (!faction.techTree.ResearchTech(tech))
+            return;
+
         PlayEpochResearchCompleteAudio();
-        
         Debug.LogFormat("{0} research complete.", tech.title, this);
     }
 

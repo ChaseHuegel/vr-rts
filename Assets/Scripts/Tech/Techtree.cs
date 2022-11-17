@@ -8,7 +8,6 @@ using UnityEngine.Events;
 public class TechNode
 {
     public TechBase tech;
-
     public bool unlocked;
     public bool researched;
     public bool requiresResearch;
@@ -48,7 +47,6 @@ public class TechTree : ScriptableObject
 
     void Start()
     {
-
         RefreshNodes();
     }
     
@@ -56,53 +54,11 @@ public class TechTree : ScriptableObject
     {
         foreach (TechNode techNode in tree)
         {
-
-            // if (requirementNode.requiresResearch && !requirementNode.researched)
-            //     return false;
-
-            // if (techNode.requiresResearch && !techNode.researched)
-            //     return false;
-
             if (RequirementsUnlocked(techNode))
             {
                 techNode.unlocked = true;
                 if (OnNodeUnlocked != null)
                     OnNodeUnlocked(techNode);
-
-                // if (!techNode.requiresResearch ||
-                //     (techNode.requiresResearch && techNode.researched))
-                // {
-                //     techNode.unlocked = true;
-                //     if (OnNodeUnlocked != null)
-                //         OnNodeUnlocked(techNode);
-                // }
-                // else
-                // {
-                //     techNode.unlocked = false;
-                //     if (OnNodeLocked != null)
-                //         OnNodeLocked(techNode);
-                // }
-
-                // if (!techNode.requiresResearch)
-                // {
-                //     techNode.unlocked = true;
-                //     if (OnNodeUnlocked != null)
-                //         OnNodeUnlocked(techNode);
-                // }
-                // // requires research and is researched
-                // else if (techNode.researched)
-                // {
-                //     techNode.unlocked = true;
-                //     if (OnNodeUnlocked != null)
-                //         OnNodeUnlocked(techNode);
-                // }
-                // // requires research and isn't researched
-                // else
-                // {
-                //     techNode.unlocked = false;
-                //     if (OnNodeLocked != null)
-                //         OnNodeLocked(techNode);
-                // }
             }
             else
             {
@@ -111,6 +67,8 @@ public class TechTree : ScriptableObject
                     OnNodeLocked(techNode);
             }
 
+
+            //bool canEnable = techNode.requiresResearch ? techNode.researched : true;
             bool canAfford = PlayerManager.Instance.CanAffordTech(techNode.tech);
             if (canAfford && techNode.unlocked)
             {
@@ -164,17 +122,19 @@ public class TechTree : ScriptableObject
         RefreshNodes();
     }
 
-    public void ResearchTech(TechBase tech)
+    public bool ResearchTech(TechBase tech)
     {
         TechNode node = FindNode(tech);
         if (node == null)
-            return;
+            return false;
 
         node.researched = true;
         if (OnNodeResearched != null)
             OnNodeResearched(node);
 
-        RefreshNodes();        
+        RefreshNodes();
+
+        return true;
     }
 
     public bool IsUnlocked(TechBase tech)

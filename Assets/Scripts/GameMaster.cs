@@ -53,6 +53,29 @@ public class GameMaster : Singleton<GameMaster>
     public AudioClip teleportSound;
     public AudioClip epochResearchCompleteSound;
 
+    [Header("Building Health Bars")]
+    public Sprite healthBarBackground;
+    public Color healthBarBackgroundColor = Color.black;
+    public Sprite healthBarForeground;
+    public Color healthBarForegroundColor = Color.red;
+    public Color healthBarTextColor = Color.white;
+
+    [Header("Queue Menu Progress Bar Settings")]
+    public Sprite progressImage;
+    public Color progressColor;
+    public TMPro.TMP_FontAsset progressFont;
+
+    [Header("Queue Menu Button Settings")]
+    public Material buttonBaseMaterial;
+    public Material cancelButtonMaterial;
+    public AudioClip onButtonDownAudio;
+    public AudioClip onButtonUpAudio;
+
+    [Header("Queue Menu Queue Slot Settings")]
+    public Sprite emptyQueueSlotSprite;
+    public GameObject buttonLockPrefab;
+    
+    [Header("Unit settings")]
     public int maximumUnitSelectionCount = 20;
     public float unitCorpseDecayTime = 30.0f;
 

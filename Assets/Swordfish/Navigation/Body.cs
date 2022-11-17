@@ -19,7 +19,7 @@ namespace Swordfish.Navigation
 
         [Header("Skin Settings")]
         [SerializeField]
-        protected Renderer[] SkinRendererTargets = new Renderer[0];
+        public Renderer[] SkinRendererTargets = new Renderer[0];
 
         protected Coord2D GridPosition = new(0, 0);
 

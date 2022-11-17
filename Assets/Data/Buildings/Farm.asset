@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c98206bdc9ffd5547bf4552bd13d2c59, type: 3}
-  m_Name: Farm
+  m_Name: farm
   m_EditorClassIdentifier: 
   title: Farm
   description: 
   queueResearchTime: 25
   worldPrefab: {fileID: 899507145775679583, guid: 98885f5b4fafa1c4d9c5fb6ecd229b0b,
     type: 3}
-  worldButtonMaterial: {fileID: 0}
+  worldButtonMaterial: {fileID: 2100000, guid: 7efca1a23fe081b458699fedbe0e5312, type: 2}
   worldQueueImage: {fileID: 21300000, guid: 2c2769f7899614b4291842e6975181ae, type: 3}
   populationCost: 0
   goldCost: 0
@@ -29,7 +29,7 @@ MonoBehaviour:
   boundingDimensionX: 5
   boundingDimensionY: 5
   populationSupported: 0
-  maxUnitQueueSize: 0
+  maxUnitQueueSize: 12
   maximumHitPoints: 100
   garrisonCapacity: 0
   armor: 0

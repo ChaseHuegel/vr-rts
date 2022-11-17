@@ -9,34 +9,16 @@ public class QueueUnitButton : MonoBehaviour
     public TechBase techToQueue;
     public GameObject buttonLockedObject;
 
-    [SerializeField]
-    private bool locked;
+    public bool IsButtonUnlocked
+    {
+        get { return !buttonLockedObject.activeSelf; }
+    }
+    public bool IsButtonEnabled
+    {
+        get { return hoverButton.enabled; }
+    }
 
-    HoverButton hoverButton;
-
-    //protected SpawnQueue buildingSpawnQueue;
-
-    // TODO: Optimize - Instantiate lock object when needed rather than every button
-    // having an inactive object?
-    // public void SetLocked(bool locked)
-    // {
-    //     if (!hoverButton)
-    //         hoverButton = GetComponentInChildren<HoverButton>();
-            
-    //     if (locked)
-    //     {
-    //         buttonLockedObject.SetActive(true);
-    //         hoverButton.enabled = false;
-    //         locked = true;
-    //     }
-    //     else
-    //     {
-    //         buttonLockedObject.SetActive(false);
-    //         hoverButton.enabled = true;
-    //         locked = false;
-    //     }
-
-    // }
+    private HoverButton hoverButton;
 
     public void Initialize()
     {
@@ -51,30 +33,24 @@ public class QueueUnitButton : MonoBehaviour
 
     public void Lock()
     {
-        //Initialize();
         buttonLockedObject.SetActive(true);
         hoverButton.enabled = false;
     }
 
     public void Unlock()
     {
-        //Initialize();
         buttonLockedObject.SetActive(false);
         hoverButton.enabled = true;
     }
 
     public void Enable()
     {
-        // TODO: Sort this out so it's not neccassary here
-        //Initialize();
         buttonLockedObject.SetActive(false);
         hoverButton.enabled = true;
     }
 
     public void Disable()
     {
-        // TODO: Sort this out so it's not neccassary here
-        //Initialize();
         buttonLockedObject.SetActive(true);
         hoverButton.enabled = false;
     }

@@ -36,6 +36,9 @@ public class MapEditorWindow : EditorWindow
         if (GUILayout.Button("Snap Selection"))
             SnapSelection();
 
+        if (GUILayout.Button("Building Data Editor"))
+            OpenBuildingDataEditorWindow();
+
         if (GUILayout.Button("Tech Tree Editor"))
             OpenTechTreeWindow();
 
@@ -44,6 +47,11 @@ public class MapEditorWindow : EditorWindow
     void OpenTechTreeWindow()
     {
         TechTreeEditor editor = EditorWindow.GetWindow<TechTreeEditor>();
+    }
+
+    void OpenBuildingDataEditorWindow()
+    {
+        BuildingDataCustomEditorWindow editor = EditorWindow.GetWindow<BuildingDataCustomEditorWindow>();
     }
 
     void SnapSelection()

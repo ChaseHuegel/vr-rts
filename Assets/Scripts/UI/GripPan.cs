@@ -50,7 +50,7 @@ public class GripPan : MonoBehaviour
     Vector3 velocity;
     float grabTime;
 
-    bool isPanEnabled;
+    //bool isPanEnabled;
     bool isRightHandPanEnabled = true;
     bool isLeftHandPanEnabled = true;
 
@@ -74,7 +74,7 @@ public class GripPan : MonoBehaviour
             return;
         }
 
-        isPanEnabled = true;
+        //isPanEnabled = true;
                 
         GripOnOff.AddOnStateDownListener(OnRightGripPressed, SteamVR_Input_Sources.RightHand);
         GripOnOff.AddOnStateUpListener(OnRightGripReleased, SteamVR_Input_Sources.RightHand);

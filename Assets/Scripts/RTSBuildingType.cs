@@ -15,10 +15,12 @@ public enum RTSBuildingType
     Granary = 30,
     House = 35,
     Keep = 40,
+    CivilCenter = 43,
     Library = 45,
     Lumbermill = 50,
     StoragePit = 51,
     MiningCamp = 52,
+    Fort = 54,
     Market = 55,
     Stables = 60,
     Temple = 65,
@@ -36,6 +38,6 @@ public enum RTSBuildingType
     Stone_Wall_Gate = 120,
     Stone_Wall = 125,
     WizardTower = 130,
-    Workshop = 135,
+    SiegeWorkshop = 135,
     
     };

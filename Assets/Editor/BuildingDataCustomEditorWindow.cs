@@ -17,6 +17,7 @@ public class BuildingDataCustomEditorWindow : EditorWindow
 
     BuildingData bData;
     GameObject model;
+    GameObject rallyPointPrefab;
     GameObject constructionPrefabStage1;
     GameObject constructionPrefabStage2;
     GameObject constructionStage3;
@@ -24,7 +25,8 @@ public class BuildingDataCustomEditorWindow : EditorWindow
     Material fadedMaterial;
     SteamVR_Skeleton_Pose grabPose;
     SteamVR_Skeleton_Pose pinchPose;
-    Vector2 boundingDimensions = Vector2.one;
+    int boundingDimensionX;
+    int boundingDimensionY;
     Vector2 scrollPosition = Vector2.zero;
 
     public void OnGUI()
@@ -43,15 +45,16 @@ public class BuildingDataCustomEditorWindow : EditorWindow
 
     private void DrawEditor()
     {
-        EditorGUILayout.TextField("Title", bData.title);
-        EditorGUILayout.TextField("Description", bData.description);
-        EditorGUILayout.FloatField("Queue Research Time", bData.queueResearchTime);
+        bData.title = EditorGUILayout.TextField("Title", bData.title);
+        bData.description = EditorGUILayout.TextField("Description", bData.description);
+        bData.queueResearchTime = EditorGUILayout.FloatField("Queue Research Time", bData.queueResearchTime);
 
         EditorGUILayout.Space();
 
         EditorGUILayout.LabelField("World Visuals", EditorStyles.boldLabel);
-        EditorGUILayout.ObjectField("World Prefab", bData.worldPrefab, typeof(GameObject), false);
-        EditorGUILayout.ObjectField("World Button Material", bData.worldButtonMaterial, typeof(Material), false);
+        bData.worldPrefab = (GameObject)EditorGUILayout.ObjectField("World Prefab", bData.worldPrefab, typeof(GameObject), false);
+
+        bData.worldButtonMaterial = (Material)EditorGUILayout.ObjectField("World Button Material", bData.worldButtonMaterial, typeof(Material), false);
 
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.PrefixLabel("World Queue Image");
@@ -70,26 +73,27 @@ public class BuildingDataCustomEditorWindow : EditorWindow
         EditorGUILayout.Space();
 
         EditorGUILayout.LabelField("Economic Costs", EditorStyles.boldLabel);
-        EditorGUILayout.IntField("Population Cost", bData.populationCost);
-        EditorGUILayout.IntField("Gold Cost", bData.goldCost);
-        EditorGUILayout.IntField("Stone Cost", bData.stoneCost);
-        EditorGUILayout.IntField("Food Cost", bData.foodCost);
-        EditorGUILayout.IntField("Wood Cost", bData.woodCost);
+        bData.populationCost = EditorGUILayout.IntField("Population Cost", bData.populationCost);
+        bData.goldCost = EditorGUILayout.IntField("Gold Cost", bData.goldCost);
+        bData.stoneCost = EditorGUILayout.IntField("Stone Cost", bData.stoneCost);
+        bData.foodCost = EditorGUILayout.IntField("Food Cost", bData.foodCost);
+        bData.woodCost = EditorGUILayout.IntField("Wood Cost", bData.woodCost);
 
         EditorGUILayout.Space();
 
         EditorGUILayout.LabelField("Building Settings", EditorStyles.boldLabel);
-        EditorGUILayout.EnumPopup("Building Type", bData.buildingType);
-        EditorGUILayout.EnumFlagsField("Dropoff Types", bData.dropoffTypes);
-        EditorGUILayout.Vector2Field("Bounding Dimensions", new Vector2(bData.boundingDimensionX, bData.boundingDimensionY));
+        bData.buildingType = (RTSBuildingType)EditorGUILayout.EnumPopup("Building Type", bData.buildingType);
+        bData.dropoffTypes = (ResourceGatheringType)EditorGUILayout.EnumFlagsField("Dropoff Types", bData.dropoffTypes);
+        bData.boundingDimensionX = EditorGUILayout.IntField("Bounding Dimensions X", bData.boundingDimensionX);
+        bData.boundingDimensionY = EditorGUILayout.IntField("Bounding Dimensions Y", bData.boundingDimensionY);
 
         EditorGUILayout.Space();
 
         EditorGUILayout.LabelField("Stats", EditorStyles.boldLabel);
-        EditorGUILayout.IntField("Population Supported", bData.populationSupported);
-        EditorGUILayout.IntField("Max Unit Queue Size", bData.maxUnitQueueSize);
-        EditorGUILayout.IntField("Maximum Hit Points", bData.maximumHitPoints);
-        EditorGUILayout.IntField("Armor", bData.armor);
+        bData.populationSupported = EditorGUILayout.IntField("Population Supported", bData.populationSupported);
+        bData.maxUnitQueueSize = EditorGUILayout.IntField("Max Unit Queue Size", bData.maxUnitQueueSize);
+        bData.maximumHitPoints = EditorGUILayout.IntField("Maximum Hit Points", bData.maximumHitPoints);
+        bData.armor = EditorGUILayout.IntField("Armor", bData.armor);
 
         EditorGUILayout.Space();
 
@@ -103,6 +107,8 @@ public class BuildingDataCustomEditorWindow : EditorWindow
         model = (GameObject)EditorGUILayout.ObjectField("Model", model, typeof(GameObject), true);
         skinMaterial = (Material)EditorGUILayout.ObjectField("Skin Material", skinMaterial, typeof(Material), true);
         fadedMaterial = (Material)EditorGUILayout.ObjectField("Faded Material", fadedMaterial, typeof(Material), true);
+
+        rallyPointPrefab = (GameObject)EditorGUILayout.ObjectField("Rally Point Prefab", rallyPointPrefab, typeof(GameObject), true);
 
         constructionPrefabStage1 = (GameObject)EditorGUILayout.ObjectField("Construction Stage 1", constructionPrefabStage1, typeof(GameObject), true);
         constructionPrefabStage2 = (GameObject)EditorGUILayout.ObjectField("Construction Stage 2", constructionPrefabStage2, typeof(GameObject), true);
@@ -132,9 +138,56 @@ public class BuildingDataCustomEditorWindow : EditorWindow
         {
             string editedName = bData.name.Replace(' ', '_').ToLower();
 
-            // World
-            if (bData.worldPrefab)
+            // World prefab exists
+            if (bData.worldPrefab != null)
                 bData.worldPrefab.layer = worldLayer;
+            // Generate world prefab
+            else
+            {
+                GameObject worldObject = new GameObject(editedName + "_world");
+                worldObject.layer = worldLayer;
+                worldObject.AddComponent<AudioSource>();
+                worldObject.AddComponent<PointerInteractable>();
+
+                GameObject displayModel = Instantiate(model, Vector3.zero, Quaternion.identity, worldObject.transform);
+                GameObject rallyPointModel = Instantiate(rallyPointPrefab, Vector3.zero, Quaternion.identity, worldObject.transform);
+                
+                GameObject spawnPoint = new GameObject("spawnPoint");
+                spawnPoint.transform.SetParent(worldObject.transform);
+
+                Structure structure = worldObject.AddComponent<Structure>();
+                structure.buildingData = bData;
+                structure.BoundingDimensions.x = boundingDimensionX;
+                structure.BoundingDimensions.y = boundingDimensionY;
+                structure.SkinRendererTargets = new Renderer[1];
+                structure.SkinRendererTargets[0] = displayModel.GetComponent<MeshRenderer>();
+
+                worldObject.AddComponent<Swordfish.Damageable>();
+                worldObject.AddComponent<Interactable>().highlightOnHover = false;
+                
+                SphereCollider collider = worldObject.AddComponent<SphereCollider>();
+                collider.radius = 0.21f;
+                collider.center = new Vector3(0.0f, 0.06f, 0.0f);
+
+                BuildingInteractionPanel interactionPanel = worldObject.AddComponent<BuildingInteractionPanel>();
+                // interactionPanel.healthBarBackground = null;
+                // interactionPanel.healthBarForeground = null;
+
+                // interactionPanel.progressImage = null;
+                // interactionPanel.progressFont = null;
+
+                // interactionPanel.buttonBaseMaterial = null;
+                // interactionPanel.cancelButtonMaterial = null;
+                // interactionPanel.onButtonDownAudio = null;
+                // interactionPanel.onButtonUpAudio = null;
+                // interactionPanel.emptyQueueSlotSprite = null;
+                // interactionPanel.buttonLockPrefab = null;
+
+                interactionPanel.unitRallyWaypoint = rallyPointModel.transform;
+                interactionPanel.unitSpawnPoint = spawnPoint.transform;
+
+                bData.worldPrefab = SavePrefabObject(worldObject);
+            }
 
             // Menu preview
             GameObject menuPreview = GenerateObject(editedName + "_menu_preview", model, skinMaterial);
@@ -165,7 +218,8 @@ public class BuildingDataCustomEditorWindow : EditorWindow
             construction.AddComponent<SphereCollider>().radius = 0.3f;
 
             Constructible constructible = construction.AddComponent<Constructible>();
-            constructible.BoundingDimensions = boundingDimensions;
+            constructible.BoundingDimensions.x = boundingDimensionX;
+            constructible.BoundingDimensions.y = boundingDimensionY;
             constructible.buildingData = bData;
             constructible.OnBuiltPrefab = bData.worldPrefab;
 
@@ -241,22 +295,26 @@ public class BuildingDataCustomEditorWindow : EditorWindow
 
     private GameObject SavePrefabObject(GameObject gameObject)
     {
-        string path = "Assets/Prefabs/";
+        string path = "Assets/Prefabs/Buildings";
 
-        if (!Directory.Exists(path)) AssetDatabase.CreateFolder("Assets", "Prefabs");
-        path += "Buildings/";
+        if (!Directory.Exists(path)) AssetDatabase.CreateFolder("Assets/Prefabs", "Buildings");
+        path += "/Generated";
+        if (!Directory.Exists(path)) AssetDatabase.CreateFolder("Assets/Prefabs/Buildings", "Generated");
+                
+        if (!Directory.Exists(path))
+        {
+            Debug.LogError("Path failure");
+            return null;
+        }
 
-        if (!Directory.Exists(path)) AssetDatabase.CreateFolder("Prefabs", "Buildings");
-
-        // Menu preview           
-        string localPath = path + gameObject.name + ".prefab";
+        string localPath = path + "/" + gameObject.name + ".prefab";
         localPath = AssetDatabase.GenerateUniqueAssetPath(localPath);
 
         bool prefabSuccess = false;
         GameObject prefab = PrefabUtility.SaveAsPrefabAsset(gameObject, localPath, out prefabSuccess);
 
         if (prefabSuccess == true)
-            Debug.Log("Prefab was saved successfully");
+            Debug.LogFormat("Prefab was saved successfully: {0}", localPath);
         else
             Debug.Log("Prefab failed to save" + prefabSuccess);
 

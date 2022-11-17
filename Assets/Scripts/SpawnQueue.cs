@@ -36,17 +36,9 @@ public class SpawnQueue : MonoBehaviour
     public Structure Structure { get => structure; }
 
     private Damageable damageable;
-    private AudioSource audioSource;
-    private PlayerManager playerManager;
 
     //=========================================================================
     private RTSUnitType lastUnitQueued;
-
-    void Start()
-    {
-        playerManager = PlayerManager.Instance;
-        //Initialize();
-    }
 
     public void Initialize()
     {
@@ -56,25 +48,25 @@ public class SpawnQueue : MonoBehaviour
             if (structure)
             {
                 unitSpawnPoint = structure.transform;
-                Debug.Log("UnitSpawnPoint not set, using structure transform.", this);
+                //Debug.LogWarning("UnitSpawnPoint not set, using structure transform.", this);
+
+                if (!structure.Faction)
+                    Debug.LogError("Structure missing faction.", this);
             }
             else
             {
-                Debug.Log("UnitSpawnPoint not set and no structure found.", this);
+                Debug.LogError("UnitSpawnPoint not set, no structure found.", this);
             }
         }
 
-        if (unitSpawnPoint)
+        if (unitSpawnPoint && unitRallyWaypoint)
             SetUnitRallyPointPosition(unitSpawnPoint.position);
 
         if (!(damageable = gameObject.GetComponentInParent<Damageable>()))
-            Debug.Log("Missing damageable component in parent.", this);
+            Debug.LogError("Missing damageable component in parent.", this);
 
         if (!(structure = gameObject.GetComponentInParent<Structure>()))
-            Debug.Log("Missing structure component in parent.", this);
-
-        if (!(audioSource = gameObject.GetComponentInParent<AudioSource>()))
-            Debug.Log("Missing audiosource component in parent.", this);
+            Debug.LogError("Missing structure component in parent.", this);
 
         HookIntoEvents();
 
@@ -85,21 +77,26 @@ public class SpawnQueue : MonoBehaviour
 
     void Update() { UpdateUnitSpawnQueue(); }
 
-    public void OnButtonDown(Hand hand)
+    public void OnHoverButtonDown(Hand hand)
     {
-        audioSource.PlayOneShot(onButtonDownAudio);
-
         QueueUnitButton queueUnitButton = hand.hoveringInteractable?.GetComponentInParent<QueueUnitButton>();
         if (queueUnitButton)
-            QueueTech(queueUnitButton.techToQueue);
+        {
+            if (queueUnitButton.IsButtonUnlocked && queueUnitButton.IsButtonEnabled)
+                QueueTech(queueUnitButton.techToQueue);                
+        }
 
+        PlayerManager.Instance.PlayAudioAtHeadSource(onButtonDownAudio);
     }
 
-    public void OnButtonUp(Hand hand) { audioSource.PlayOneShot(onButtonUpAudio); }
+    public void OnHoverButtonUp(Hand hand)
+    {
+        PlayerManager.Instance.PlayAudioAtHeadSource(onButtonUpAudio);
+    }
 
     public void OnCancelButtonDown(Hand hand)
     {
-        audioSource.PlayOneShot(onButtonDownAudio);
+        PlayerManager.Instance.PlayAudioAtHeadSource(onButtonDownAudio);
         DequeueUnit(); 
     }
 
@@ -108,17 +105,26 @@ public class SpawnQueue : MonoBehaviour
     public bool QueueTech(TechBase tech)
     {
         if (queue.Count >= structure.buildingData.maxUnitQueueSize)
+        {
+            Debug.Log("Queue size >= maxUnitQueueSize.");
             return false;
+        }
 
-        if (!structure.Faction.IsSameFaction(playerManager.faction))
+        if (!structure.Faction.IsSameFaction(PlayerManager.Instance.faction))
+        {
+            Debug.Log("Faction not the same.");
             return false;
+        }
 
         //UnitData unitData = GameMaster.GetUnit(tech);
 
-        if (!playerManager.CanQueueTech(tech))
+        if (!PlayerManager.Instance.CanQueueTech(tech))
+        {
+            Debug.Log("Can't queue tech.");
             return false;
+        }
 
-        playerManager.DeductTechResourceCost(tech);
+        PlayerManager.Instance.DeductTechResourceCost(tech);
         queue.AddLast(tech);
         RefreshQueueImages();
         return true;
@@ -160,7 +166,7 @@ public class SpawnQueue : MonoBehaviour
 
         else if (queue.Count == 1)
         {
-            playerManager.RemoveFromQueueCount(queue.Last.Value.populationCost);
+            PlayerManager.Instance.RemoveFromQueueCount(queue.Last.Value.populationCost);
             queue.RemoveLast();
             progressImage.fillAmount = 0;
             progressImage.enabled = false;
@@ -168,7 +174,7 @@ public class SpawnQueue : MonoBehaviour
         }
         else
         {
-            playerManager.RemoveFromQueueCount(queue.Last.Value.populationCost);
+            PlayerManager.Instance.RemoveFromQueueCount(queue.Last.Value.populationCost);
             queue.RemoveLast();
         }
         RefreshQueueImages();
@@ -279,8 +285,8 @@ public class SpawnQueue : MonoBehaviour
                     if (hButton.onButtonUp == null)
                         hButton.onButtonUp = new HandEvent();
                         
-                    hButton.onButtonDown.AddListener(OnButtonDown);
-                    hButton.onButtonUp.AddListener(OnButtonUp);
+                    hButton.onButtonDown.AddListener(OnHoverButtonDown);
+                    hButton.onButtonUp.AddListener(OnHoverButtonUp);
                 }
         }
         else
@@ -305,8 +311,8 @@ public class SpawnQueue : MonoBehaviour
             if (hoverButtons.Length > 0)
                 foreach (HoverButton hButton in hoverButtons)
                 {
-                    hButton.onButtonDown.RemoveListener(OnButtonDown);
-                    hButton.onButtonUp.RemoveListener(OnButtonUp);
+                    hButton.onButtonDown.RemoveListener(OnHoverButtonDown);
+                    hButton.onButtonUp.RemoveListener(OnHoverButtonUp);                    
                 }
         }
         else

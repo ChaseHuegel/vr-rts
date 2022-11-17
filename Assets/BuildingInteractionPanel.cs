@@ -43,7 +43,7 @@ public class BuildingInteractionPanel : MonoBehaviour
     [Tooltip("Leave empty to use title from structure component.")]
     public string title;
     public bool enableTitleDisplay = true;
-    public float titleDisplayVerticalOffset = -0.5f;
+    public float titleDisplayVerticalOffset = 0.075f;
     public Color titleColor = Color.white;
 
     [Header("Health Bar Settings")]
@@ -55,14 +55,9 @@ public class BuildingInteractionPanel : MonoBehaviour
     public float healthBarAutoHideAt = 1.0f;
     public bool showBarBackground = true;
     public bool showHealthText = true;
-    public float healthBarVerticalOffset = 0.5f;
+    public float healthBarVerticalOffset = -0.075f;
     public float healthBarWidth = 1.0f;
     public float healthBarHeight = 0.1f;
-    public Sprite healthBarBackground;
-    public Color healthBarBackgroundColor = Color.black;
-    public Sprite healthBarForeground;
-    public Color healthBarForegroundColor = Color.red;
-    public Color healthBarTextColor = Color.white;
 
     // TODO: Optimize - Move generation functions to a seperate class that can
     // be unloaded once the menus are generated.
@@ -73,27 +68,14 @@ public class BuildingInteractionPanel : MonoBehaviour
     public Transform unitSpawnPoint;
     public Transform unitRallyWaypoint;
 
-    [Header("Queue Menu Progress Bar Settings")]
-    public Sprite progressImage;
-    public Color progressColor;
-    public TMPro.TMP_FontAsset progressFont;
-
     [Header("Queue Menu Button Settings")]
-    public Material buttonBaseMaterial;
-    public Material cancelButtonMaterial;
-    public AudioClip onButtonDownAudio;
-    public AudioClip onButtonUpAudio;
     public List<TechBase> queueTechButtons;
-
     private float buttonSize = 0.25f;
     private float spaceBetweenButtons = 0.025f;
     private int maxButtonColumns = 5;
 
     [Header("Queue Menu Queue Slot Settings")]
     public byte numberOfQueueSlots = 12;
-    public Sprite emptyQueueSlotSprite;
-    public GameObject buttonLockPrefab;
-
     private float queueSlotSize = 1.0f;
     private float spaceBetweenQueueSlots = 0.025f;
     private UnityEngine.UI.Image[] queueSlotImages;
@@ -154,8 +136,8 @@ public class BuildingInteractionPanel : MonoBehaviour
 
             // TODO: Should this stuff be moved to this class?
             spawnQueue.SetButtonsParentObject(buttonsGameObject);            
-            spawnQueue.SetButtonDownAudio(onButtonDownAudio);
-            spawnQueue.SetButtonUpAudio(onButtonUpAudio);
+            spawnQueue.SetButtonDownAudio(GameMaster.Instance.onButtonDownAudio);
+            spawnQueue.SetButtonUpAudio(GameMaster.Instance.onButtonUpAudio);
             spawnQueue.SetCancelButton(cancelButtonGameObject.GetComponentInChildren<HoverButton>(true));
             
             if (unitSpawnPoint)
@@ -333,8 +315,8 @@ public class BuildingInteractionPanel : MonoBehaviour
 
             healthBarBackgroundImage = healthBarBackroundGameObject.AddComponent<Image>();
             healthBarBackroundGameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(healthBarWidth, healthBarHeight);
-            healthBarBackgroundImage.sprite = healthBarBackground;
-            healthBarBackgroundImage.color = healthBarBackgroundColor;
+            healthBarBackgroundImage.sprite = GameMaster.Instance.healthBarBackground;
+            healthBarBackgroundImage.color = GameMaster.Instance.healthBarBackgroundColor;
         }
 
         GameObject healthBarForegroundGameObject = new GameObject("_health_bar_foreground");
@@ -344,12 +326,12 @@ public class BuildingInteractionPanel : MonoBehaviour
 
         healthBarForegroundImage = healthBarForegroundGameObject.AddComponent<Image>();
         healthBarForegroundGameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(healthBarWidth, healthBarHeight);
-        healthBarForegroundImage.sprite = healthBarForeground;
+        healthBarForegroundImage.sprite = GameMaster.Instance.healthBarForeground;
         healthBarForegroundImage.type = Image.Type.Filled;
         healthBarForegroundImage.fillMethod = Image.FillMethod.Horizontal;
         healthBarForegroundImage.fillOrigin = (int)Image.OriginHorizontal.Left;
         healthBarForegroundImage.raycastTarget = false;
-        healthBarForegroundImage.color = healthBarForegroundColor;
+        healthBarForegroundImage.color = GameMaster.Instance.healthBarForegroundColor;
 
         if (showHealthText)
         {
@@ -365,7 +347,7 @@ public class BuildingInteractionPanel : MonoBehaviour
             healthBarText.verticalAlignment = VerticalAlignmentOptions.Middle;
             healthBarText.raycastTarget = false;
             healthBarText.sortingOrder = 2;
-            healthBarText.color = healthBarTextColor;            
+            healthBarText.color = GameMaster.Instance.healthBarTextColor;            
         }
 
         damageable = this.gameObject.GetComponent<Damageable>();
@@ -495,7 +477,7 @@ public class BuildingInteractionPanel : MonoBehaviour
 
     private void SetHealthBarFilledAmount(float amount)
     {
-        if (healthBarForeground)
+        if (GameMaster.Instance.healthBarForeground)
             healthBarForegroundImage.fillAmount = amount;
 
         if (showHealthText)
@@ -534,7 +516,7 @@ public class BuildingInteractionPanel : MonoBehaviour
         buttonBase.transform.SetParent(button.transform, false);
         buttonBase.transform.localScale = new Vector3(1.0f, 1.0f, 0.15f);
         buttonBase.transform.localPosition = Vector3.zero;
-        buttonBase.transform.GetComponent<MeshRenderer>().sharedMaterial = buttonBaseMaterial;
+        buttonBase.transform.GetComponent<MeshRenderer>().sharedMaterial = GameMaster.Instance.buttonBaseMaterial;
 
         // Instantiate the resource cost gameobject
         // GameObject resourceCost = Instantiate(resourceCostPrefab, Vector3.zero, Quaternion.identity, button.transform);
@@ -571,9 +553,9 @@ public class BuildingInteractionPanel : MonoBehaviour
         button.transform.localRotation = Quaternion.identity;
 
         // Lock (child of Button)
-        if (buttonLockPrefab)
+        if (GameMaster.Instance.buttonLockPrefab)
         {
-            GameObject buttonLock = Instantiate<GameObject>(buttonLockPrefab);
+            GameObject buttonLock = Instantiate<GameObject>(GameMaster.Instance.buttonLockPrefab);
             buttonLock.name = "_lock";
             buttonLock.transform.SetParent(button.transform, false);
             buttonLock.transform.localPosition = new Vector3(0.0f, 0.0f, -0.14f);
@@ -639,7 +621,7 @@ public class BuildingInteractionPanel : MonoBehaviour
         image.transform.SetParent(parent, false);
         image.rectTransform.sizeDelta = new Vector2(queueSlotSize, queueSlotSize);
         image.rectTransform.anchoredPosition = position;
-        image.sprite = emptyQueueSlotSprite;
+        image.sprite = GameMaster.Instance.emptyQueueSlotSprite;
 
         return image;
     }
@@ -654,8 +636,8 @@ public class BuildingInteractionPanel : MonoBehaviour
         paddedSize.y -= verticalPadding;
         image.rectTransform.sizeDelta = paddedSize;
         image.rectTransform.anchoredPosition = position;
-        image.sprite = progressImage;
-        image.color = progressColor;
+        image.sprite = GameMaster.Instance.progressImage;
+        image.color = GameMaster.Instance.progressColor;
         image.type = Image.Type.Filled;
         image.fillMethod = Image.FillMethod.Horizontal;
         image.fillOrigin = (int)Image.OriginHorizontal.Left;
@@ -669,7 +651,7 @@ public class BuildingInteractionPanel : MonoBehaviour
         text.horizontalAlignment = TMPro.HorizontalAlignmentOptions.Center;
         text.verticalAlignment = TMPro.VerticalAlignmentOptions.Middle;
         text.fontSize = 1.0f;
-        text.font = progressFont;
+        text.font = GameMaster.Instance.progressFont;
         text.text = "100%";
 
         if (enableQueueMenu)
@@ -687,7 +669,7 @@ public class BuildingInteractionPanel : MonoBehaviour
         buttonBase.transform.SetParent(parent, false);
         buttonBase.transform.localScale = new Vector3(1.0f, 1.0f, 0.15f);
         buttonBase.transform.localPosition = Vector3.zero;
-        buttonBase.transform.GetComponent<MeshRenderer>().sharedMaterial = buttonBaseMaterial;        
+        buttonBase.transform.GetComponent<MeshRenderer>().sharedMaterial = GameMaster.Instance.buttonBaseMaterial;        
 
         // Face (child of parent)
         GameObject face = new GameObject("_face", typeof(Interactable), typeof(HoverButton));
@@ -706,7 +688,7 @@ public class BuildingInteractionPanel : MonoBehaviour
         buttonMovingPart.transform.SetParent(face.transform, false);
         buttonMovingPart.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
         buttonMovingPart.transform.localPosition = Vector3.zero;
-        buttonMovingPart.transform.GetComponent<MeshRenderer>().sharedMaterial = cancelButtonMaterial;
+        buttonMovingPart.transform.GetComponent<MeshRenderer>().sharedMaterial = GameMaster.Instance.cancelButtonMaterial;
 
         hoverButton.movingPart = buttonMovingPart.transform;
 

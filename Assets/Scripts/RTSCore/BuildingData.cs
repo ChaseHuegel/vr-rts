@@ -14,7 +14,7 @@ public class BuildingData : TechBase
 
     [Header("Stats")]
     public int populationSupported;
-    public int maxUnitQueueSize;
+    public int maxUnitQueueSize = 12;
     public int maximumHitPoints;
     public int garrisonCapacity;
     public int armor;

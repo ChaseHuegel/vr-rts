@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c98206bdc9ffd5547bf4552bd13d2c59, type: 3}
-  m_Name: House
+  m_Name: house
   m_EditorClassIdentifier: 
   title: House
   description: 
   queueResearchTime: 25
   worldPrefab: {fileID: 3042174803139083339, guid: 27cc3b43b77aafe4da537e66c4fe1efd,
     type: 3}
-  worldButtonMaterial: {fileID: 0}
+  worldButtonMaterial: {fileID: 2100000, guid: 7efca1a23fe081b458699fedbe0e5312, type: 2}
   worldQueueImage: {fileID: 21300000, guid: 8e4fb6739caa5d346a21dccce778ca64, type: 3}
   populationCost: 0
   goldCost: 0
@@ -29,7 +29,7 @@ MonoBehaviour:
   boundingDimensionX: 3
   boundingDimensionY: 3
   populationSupported: 5
-  maxUnitQueueSize: 0
+  maxUnitQueueSize: 12
   maximumHitPoints: 20
   garrisonCapacity: 0
   armor: 3
