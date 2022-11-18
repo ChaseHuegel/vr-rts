@@ -68,7 +68,7 @@ public class TechTreeEditor : EditorWindow
     Vector2 currentPos;
     bool drawingSelectionBox;
 
-    [MenuItem("Window/Tech Tree Editor")]
+    [MenuItem("VRTS/Tech Tree Editor")]
     private static void OpenWindow()
     {
         TechTreeEditor window = GetWindow<TechTreeEditor>();
@@ -715,6 +715,7 @@ public class TechTreeEditor : EditorWindow
 
             EditorGUILayout.EndHorizontal();
         }
+        
         // EditorGUILayout.BeginHorizontal();
         // GUILayout.Label("Requires Research");
         // GUILayout.FlexibleSpace();
@@ -750,7 +751,7 @@ public class TechTreeEditor : EditorWindow
         {
             EpochNode epochNode = (EpochNode)node;
             EditorGUILayout.BeginHorizontal();
-            GUILayout.Label("Required Tech#");
+            GUILayout.Label("Req. Bldg #");
             epochNode.requiredBuildingCount = EditorGUILayout.IntField(epochNode.requiredBuildingCount, GUILayout.MaxWidth(30.0f));
             GUILayout.FlexibleSpace();
             EditorGUILayout.EndHorizontal();

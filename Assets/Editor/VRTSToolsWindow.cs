@@ -5,14 +5,14 @@ using Swordfish.Navigation;
 using UnityEditor;
 using UnityEngine;
 
-public class MapEditorWindow : EditorWindow
+public class VRTSToolsWindow : EditorWindow
 {
     public bool autosnapOn;
 
-    [MenuItem("MapTools/MapTools Window")]
+    [MenuItem("VRTS/VRTS Tools")]
     static void Init()
     {
-        MapEditorWindow window = (MapEditorWindow)GetWindow(typeof(MapEditorWindow));
+        VRTSToolsWindow window = (VRTSToolsWindow)GetWindow(typeof(VRTSToolsWindow));
         window.Show();
     }
 
