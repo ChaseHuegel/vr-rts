@@ -138,6 +138,8 @@ public class TechTreeEditor : EditorWindow
     private float _zoom = 1.0f;
     private Vector2 _zoomCoordsOrigin = Vector2.zero;
     
+    
+
     public void OnGUI()
     {
         Rect graphPosition = new Rect(0f, 0f, position.width, position.height);
@@ -155,6 +157,8 @@ public class TechTreeEditor : EditorWindow
         // area first and then draw everything else so that there is no undesired overlap.
         DrawNonZoomArea();
         DrawZoomArea();
+
+        //Selection.activeObject = selectedNode.tech;
 
         if (GUI.changed)
         {
@@ -401,7 +405,7 @@ public class TechTreeEditor : EditorWindow
                 else if (e.button == 1)
                 { }
                 break;
-
+            
             case EventType.MouseDrag:                
                 if (e.button == 0)
                 {
@@ -474,49 +478,21 @@ public class TechTreeEditor : EditorWindow
         }
     }
 
-    private void AddDraggedInNodeType(TechBase techBase, Vector2 position)
-    {
-        if (techBase is UnitData)
-        {
-            UnitNode node = new UnitNode(techBase, new List<TechBase>(), position);
-            targetTree.AddNode(node, position);
-        }
-        else if (techBase is BuildingData)
-        {
-            BuildingNode node = new BuildingNode(techBase, new List<TechBase>(), position);
-            targetTree.AddNode(node, position);
-        }
-        else if (techBase is EpochUpgrade)
-        {
-            EpochNode node = new EpochNode(techBase, new List<TechBase>(), position);
-            targetTree.AddNode(node, position);
-        }
-        else if (techBase is TechResearcher)
-        {
-            ResearchNode node = new ResearchNode(techBase, new List<TechBase>(), position);
-            targetTree.AddNode(node, position);
-        }
-        else
-        {
-            targetTree.CreateNode(techBase, position);
-        }
-
-
-        
-    }
-
     private void ProcessNodeEvents(Event e, TechNode techNode, Rect nodeRect)
     {
         switch (e.type)
-        {
+        { 
             case EventType.MouseDown:
                 if (e.button == 0)  // If left mouse button is pressed
-                {   
+                {                    
                     // Set activeNode
                     if (nodeRect.Contains(e.mousePosition))
                     {
+                        if (e.clickCount == 2)
+                            OnNodeDoubleClick(techNode);
+
                         selectedNode = techNode;
-                        draggedNode = techNode;
+                        draggedNode = techNode;                        
                         mouseSelectionOffset = draggedNode.UIposition - e.mousePosition; // offset from the corner of the node to mouse position
                         GUI.changed = true; // Repaint to see the style change momentarily 
                         drawingSelectionBox = false;
@@ -550,6 +526,38 @@ public class TechTreeEditor : EditorWindow
                 }
                 break;
         }
+    }
+
+    private void OnNodeDoubleClick(TechNode node)
+    {
+        Selection.activeObject = node.tech;
+    }
+
+    private void AddDraggedInNodeType(TechBase techBase, Vector2 position)
+    {
+        if (techBase is UnitData)
+        {
+            UnitNode node = new UnitNode(techBase, new List<TechBase>(), position);
+            targetTree.AddNode(node, position);
+        }
+        else if (techBase is BuildingData)
+        {
+            BuildingNode node = new BuildingNode(techBase, new List<TechBase>(), position);
+            targetTree.AddNode(node, position);
+        }
+        else if (techBase is EpochUpgrade)
+        {
+            EpochNode node = new EpochNode(techBase, new List<TechBase>(), position);
+            node.requiredBuildingCount = ((EpochUpgrade)techBase).requiredBuildingCount;
+            targetTree.AddNode(node, position);
+        }
+        else if (techBase is TechResearcher)
+        {
+            ResearchNode node = new ResearchNode(techBase, new List<TechBase>(), position);
+            targetTree.AddNode(node, position);
+        }
+        else
+            targetTree.CreateNode(techBase, position);
     }
 
     private void OnClickInPoint(TechNode inPointNode)
@@ -752,6 +760,8 @@ public class TechTreeEditor : EditorWindow
             EpochNode epochNode = (EpochNode)node;
             EditorGUILayout.BeginHorizontal();
             GUILayout.Label("Req. Bldg #");
+            //EpochUpgrade epochUpgrade = (EpochUpgrade)epochNode.tech;
+            //epochUpgrade.requiredBuildingCount = EditorGUILayout.IntField(epochUpgrade.requiredBuildingCount, GUILayout.MaxWidth(30.0f));
             epochNode.requiredBuildingCount = EditorGUILayout.IntField(epochNode.requiredBuildingCount, GUILayout.MaxWidth(30.0f));
             GUILayout.FlexibleSpace();
             EditorGUILayout.EndHorizontal();
