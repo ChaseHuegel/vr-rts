@@ -42,7 +42,11 @@ class GetStringInputWindow : EditorWindow
 public class TechTreeEditor : EditorWindow
 {
     // positioning
-    Vector2 nodeSize = new Vector2(210, 115);
+    Vector2 defaultNodeSize = new Vector2(210, 115);
+    Vector2 unitNodeSize = new Vector2(160, 85);
+    Vector2 buildingNodeSize = new Vector2(160, 90);
+    Vector2 epochNodeSize = new Vector2(185, 110);
+    Vector2 researchNodeSize = new Vector2(180, 90);
 
     // scrolling and moving
     Vector2 mouseSelectionOffset;
@@ -138,7 +142,19 @@ public class TechTreeEditor : EditorWindow
     private float _zoom = 1.0f;
     private Vector2 _zoomCoordsOrigin = Vector2.zero;
     
-    
+    private Vector2 GetNodeSize(TechNode node)
+    {
+        if (node is EpochNode)
+            return epochNodeSize;
+        else if (node is BuildingNode)
+            return buildingNodeSize;
+        else if (node is UnitNode)
+            return unitNodeSize;
+        else if (node is ResearchNode)
+            return researchNodeSize;
+
+        return defaultNodeSize;
+    }
 
     public void OnGUI()
     {
@@ -350,7 +366,7 @@ public class TechTreeEditor : EditorWindow
     {
         if (selectedInPointNode != null && selectedOutPointNode == null)
         {
-            Rect nodeRect = new Rect(selectedInPointNode.UIposition + _zoomCoordsOrigin, nodeSize);
+            Rect nodeRect = new Rect(selectedInPointNode.UIposition + _zoomCoordsOrigin, GetNodeSize(selectedInPointNode));
             Rect inPointRect = GetInPointRect(ref nodeRect);
 
             Handles.DrawBezier(
@@ -368,7 +384,7 @@ public class TechTreeEditor : EditorWindow
 
         if (selectedOutPointNode != null && selectedInPointNode == null)
         {
-            Rect nodeRect = new Rect(selectedOutPointNode.UIposition + _zoomCoordsOrigin, nodeSize);
+            Rect nodeRect = new Rect(selectedOutPointNode.UIposition + _zoomCoordsOrigin, GetNodeSize(selectedOutPointNode));
             Rect outPointRect = GetOutPointRect(ref nodeRect);
 
             Handles.DrawBezier(
@@ -623,10 +639,10 @@ public class TechTreeEditor : EditorWindow
             int reqIdx = targetTree.FindTechIndex(req);
             if (reqIdx != -1)
             {
-                Rect inNodeRect = new Rect(techNode.UIposition + _zoomCoordsOrigin, nodeSize);
+                Rect inNodeRect = new Rect(techNode.UIposition + _zoomCoordsOrigin, GetNodeSize(techNode));
                 Rect inPointRect = GetInPointRect(ref inNodeRect);
 
-                Rect outNodeRect = new Rect(targetTree.tree[reqIdx].UIposition + _zoomCoordsOrigin, nodeSize);
+                Rect outNodeRect = new Rect(targetTree.tree[reqIdx].UIposition + _zoomCoordsOrigin, GetNodeSize(targetTree.tree[reqIdx]));
                 Rect outPointRect = GetOutPointRect(ref outNodeRect);
 
                 Handles.DrawBezier(
@@ -660,7 +676,7 @@ public class TechTreeEditor : EditorWindow
 
     private static Rect GetInPointRect(ref Rect nodeRect)
     {
-        Rect inPointRect = new Rect(0, 0, 10f, 20f);
+        Rect inPointRect = new Rect(0, 0, 12f, 24f);
         inPointRect.y = nodeRect.y + (nodeRect.height * 0.5f) - inPointRect.height * 0.5f;
         inPointRect.x = nodeRect.x - inPointRect.width + 8f;
         return inPointRect;
@@ -668,26 +684,17 @@ public class TechTreeEditor : EditorWindow
 
     private static Rect GetOutPointRect(ref Rect nodeRect)
     {
-        Rect outPointRect = new Rect(0, 0, 10f, 20f);
+        Rect outPointRect = new Rect(0, 0, 12f, 24f);
         outPointRect.y = nodeRect.y + (nodeRect.height * 0.5f) - outPointRect.height * 0.5f;
         outPointRect.x = nodeRect.x + nodeRect.width - 8f;
         return outPointRect;
     }
 
+    
     private Rect DrawNode(TechNode node)
     {
-        Rect nodeRect = new Rect(node.UIposition + _zoomCoordsOrigin, nodeSize);
-
-        Rect inPointRect = GetInPointRect(ref nodeRect);
-        if (GUI.Button(inPointRect, "", inPointStyle))
-            OnClickInPoint(node);
-
-        Rect outPointRect = GetOutPointRect(ref nodeRect);
-        if (GUI.Button(outPointRect, "", outPointStyle))
-            OnClickOutPoint(node);
-
         GUIStyle areaStyle = nodeStyle;
-        
+
         if (node is EpochNode)
             areaStyle = epochNodeStyle;
         else if (node is BuildingNode)
@@ -696,6 +703,16 @@ public class TechTreeEditor : EditorWindow
             areaStyle = unitNodeStyle;
         else if (node is ResearchNode)
             areaStyle = researchNodeStyle;
+
+        Rect nodeRect = new Rect(node.UIposition + _zoomCoordsOrigin, GetNodeSize(node));
+
+        Rect inPointRect = GetInPointRect(ref nodeRect);
+        if (GUI.Button(inPointRect, "", inPointStyle))
+            OnClickInPoint(node);
+
+        Rect outPointRect = GetOutPointRect(ref nodeRect);
+        if (GUI.Button(outPointRect, "", outPointStyle))
+            OnClickOutPoint(node);        
 
         if (selectedNode == node)
             GUI.Box(nodeRect, "", selectedNodeStyle);
