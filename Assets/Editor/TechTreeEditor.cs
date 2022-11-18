@@ -498,7 +498,7 @@ public class TechTreeEditor : EditorWindow
         }
         else
         {
-            targetTree.AddNode(techBase, position);
+            targetTree.CreateNode(techBase, position);
         }
 
 

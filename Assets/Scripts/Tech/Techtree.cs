@@ -86,7 +86,7 @@ public class TechTree : ScriptableObject
         return null;
     }
 
-    public bool AddNode(TechBase tech, Vector2 UIpos)
+    public bool CreateNode(TechBase tech, Vector2 UIpos)
     {
         int tIdx = FindTechIndex(tech);
         if (tIdx == -1)
