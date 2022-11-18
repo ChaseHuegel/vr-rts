@@ -294,8 +294,8 @@ public class PlayerManager : MonoBehaviour
                 case Structure structure:
                     IncreasePopulationLimit(structure.buildingData.populationSupported);
 
-                    // Set this building to researched in tech tree
-                    faction.techTree.ResearchTech(structure.buildingData);
+                    // Set this building to built in tech tree
+                    faction.techTree.SetIsBuilt(structure.buildingData);
                     break;
                 case UnitV2 unit:
                     AddToPopulation(unit);
@@ -328,9 +328,9 @@ public class PlayerManager : MonoBehaviour
                 case Structure structure:
                     DecreasePopulationLimit(structure.buildingData.populationSupported);
 
-                    // Revoke research status if no instances of this building type exist
+                    // Revoke isBuilt status if no instances of this building type exist
                     if (!AnotherBuildingLikeThisExists(structure))
-                        faction.techTree.RevokeTechResearch(structure.buildingData);
+                        faction.techTree.RevokeIsBuilt(structure.buildingData);
                     break;
                 case UnitV2 unit:
                     RemoveFromPopulation(unit);

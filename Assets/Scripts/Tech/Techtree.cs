@@ -21,6 +21,12 @@ public class TechTree : ScriptableObject
     public delegate void NodeRevokeTechResearch(TechNode node);
     public static event NodeRevokeTechResearch OnNodeRevokeTechResearch;
 
+    public delegate void NodeRevokeIsBuilt(BuildingNode node);
+    public static event NodeRevokeIsBuilt OnNodeRevokeIsBuilt;
+
+    public delegate void NodeSetIsBuilt(BuildingNode node);
+    public static event NodeSetIsBuilt OnNodeSetIsBuilt;
+
     public delegate void NodeEnabled(TechNode node);
     public static event NodeEnabled OnNodeEnabled;
 
@@ -144,20 +150,6 @@ public class TechTree : ScriptableObject
         }
 
         return false;
-
-        /* foreach (TechBase req in techNode.techRequirements)
-        {
-            TechNode requirementNode = FindNode(req);
-            if (!requirementNode.unlocked)
-                return false;
-
-            if (requirementNode.requiresResearch && requirementNode.researched == false)
-                return false;
-
-            continue;
-        }
-
-        return true; */
     }
 
     public TechNode AddNode(TechNode node, Vector2 UIpos)
@@ -193,6 +185,23 @@ public class TechTree : ScriptableObject
         RefreshNodes();
     }
 
+    public void RevokeIsBuilt(TechBase tech)
+    {
+        TechNode node = FindNode(tech);
+        if (node == null)
+            return;
+        
+        if (node is BuildingNode)
+        {
+            BuildingNode bNode = (BuildingNode)node;
+            bNode.isBuilt = false;
+            if (OnNodeRevokeIsBuilt != null)
+                OnNodeRevokeIsBuilt(bNode);
+
+            RefreshNodes();
+        }
+    }
+
     public void RevokeTechResearch(TechBase tech)
     {
         TechNode node = FindNode(tech);
@@ -204,6 +213,27 @@ public class TechTree : ScriptableObject
             OnNodeRevokeTechResearch(node);
 
         RefreshNodes();
+    }
+
+    public bool SetIsBuilt(TechBase tech)
+    {
+        TechNode node = FindNode(tech);
+        if (node == null)
+            return false;
+
+        if (node is BuildingNode)
+        {
+            BuildingNode bNode = (BuildingNode)node;
+            bNode.isBuilt = true;
+            if (OnNodeSetIsBuilt != null)
+                OnNodeSetIsBuilt(bNode);
+
+            RefreshNodes();
+
+            return true;
+        }
+
+        return false;
     }
 
     public bool ResearchTech(TechBase tech)
