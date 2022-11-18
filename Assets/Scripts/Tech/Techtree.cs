@@ -4,31 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-[System.Serializable]
-public class TechNode
-{
-    public TechBase tech;
-    public bool unlocked;
-    public bool researched;
-    public bool requiresResearch;
-    public int requiredTechCount = -1;
-    public bool enabled;
-    public List<TechBase> techRequirements;    
-    public Vector2 UIposition;
-
-    public TechNode(TechBase tech, List<TechBase> reqs, Vector2 position, bool unlocked = false, bool researched = false )
-    {
-        this.tech = tech;
-        this.techRequirements = reqs;
-        this.researched = researched;
-        this.unlocked = unlocked;
-        this.UIposition = position;
-    }
-}
-
 [CreateAssetMenu(menuName = "RTS/Tech/New Tech Tree")]
 public class TechTree : ScriptableObject
 {
+    [SerializeReference]
     public List<TechNode> tree;
 
     public delegate void NodeUnlocked(TechNode node);
@@ -89,25 +68,109 @@ public class TechTree : ScriptableObject
 
     private bool NodeRequirementsUnlocked(TechNode techNode)
     {
-        // int count = 0;
-        foreach (TechBase req in techNode.techRequirements)
+        if (techNode is EpochNode)
+        {
+            if (techNode.techRequirements.Count <= 0)
+                return true;
+
+            int count = 0;
+            foreach (TechBase req in techNode.techRequirements)
+            {
+                TechNode requirementNode = FindNode(req);
+                if (!requirementNode.unlocked)
+                    return false;
+
+                if (((BuildingNode)requirementNode).isBuilt == true)
+                    count++;
+                
+                if (count >= ((EpochNode)techNode).requiredBuildingCount)
+                    return true;
+
+                continue;
+            }
+
+            return false;
+        }
+
+        else if (techNode is BuildingNode)
+        {
+            foreach (TechBase req in techNode.techRequirements)
+            {
+                TechNode requirementNode = FindNode(req);
+                if (!requirementNode.unlocked)
+                    return false;
+
+                else if (requirementNode is EpochNode)
+                {
+                    if (!requirementNode.researched)
+                        return false;
+                }
+                else if (requirementNode is BuildingNode)
+                    if (((BuildingNode)requirementNode).isBuilt != true)
+                        return false;
+
+                continue;
+            }
+
+            return true;
+        }
+
+        else if (techNode is UnitNode)
+        {
+            foreach (TechBase req in techNode.techRequirements)
+            {
+                TechNode requirementNode = FindNode(req);
+                if (!requirementNode.unlocked)
+                    return false;
+
+                continue;
+            }
+
+            return true;
+        }
+
+        else if (techNode is ResearchNode)
+        {
+            foreach (TechBase req in techNode.techRequirements)
+            {
+                TechNode requirementNode = FindNode(req);
+                if (!requirementNode.unlocked)
+                    return false;
+
+                continue;
+            }
+
+            return true;
+        }
+
+        return false;
+
+        /* foreach (TechBase req in techNode.techRequirements)
         {
             TechNode requirementNode = FindNode(req);
             if (!requirementNode.unlocked)
-                return false;           
+                return false;
 
             if (requirementNode.requiresResearch && requirementNode.researched == false)
                 return false;
 
-            // count++;
-
-            // if (count >= techNode.requiredTechCount)
-            //     return true;
-
             continue;
         }
 
-        return true;
+        return true; */
+    }
+
+    public TechNode AddNode(TechNode node, Vector2 UIpos)
+    {
+        int tIdx = FindTechIndex(node.tech);
+        if (tIdx == -1)
+        {
+            tree.Add(node);
+            RefreshNodes();
+            return node;
+        }
+
+        return null;
     }
 
     public bool AddNode(TechBase tech, Vector2 UIpos)
@@ -236,7 +299,68 @@ public class TechTree : ScriptableObject
             if (tree[idx].techRequirements.Contains(t))
                 tree[idx].techRequirements.Remove(t);
         }
-    }
+    }    
+}
 
-    
+[System.Serializable]
+public class TechNode
+{
+    public TechBase tech;
+    public bool unlocked;
+    public bool researched;
+    public bool requiresResearch;
+    public bool enabled;
+    public List<TechBase> techRequirements;
+    public Vector2 UIposition;
+
+    public TechNode() { }
+    public TechNode(TechBase tech, List<TechBase> reqs, Vector2 position, bool unlocked = false, bool researched = false)
+    {
+        this.tech = tech;
+        this.techRequirements = reqs;
+        this.researched = researched;
+        this.unlocked = unlocked;
+        this.UIposition = position;
+    }
+}
+
+[System.Serializable]
+public class ResearchNode : TechNode
+{
+    public int requiredTechCount = 0;
+    public ResearchNode(TechBase tech, List<TechBase> reqs, Vector2 position, bool unlocked = false, bool researched = false)
+    : base(tech, reqs, position, unlocked, researched)
+    {
+    }
+}
+
+[System.Serializable]
+public class EpochNode : TechNode
+{
+    public int requiredBuildingCount = 0;
+    public EpochNode(TechBase tech, List<TechBase> reqs, Vector2 position, bool unlocked = false, bool researched = false)
+    : base(tech, reqs, position, unlocked, researched)
+    {
+    }
+}
+
+[System.Serializable]
+public class UnitNode : TechNode
+{
+    public int requiredTechCount = 0;
+    public UnitNode(TechBase tech, List<TechBase> reqs, Vector2 position, bool unlocked = false, bool researched = false)
+    : base(tech, reqs, position, unlocked, researched)
+    {
+    }
+}
+
+[System.Serializable]
+public class BuildingNode : TechNode
+{
+    public bool isBuilt;
+    public int requiredTechCount = 0;
+    public BuildingNode(TechBase tech, List<TechBase> reqs, Vector2 position, bool unlocked = false, bool researched = false)
+    : base(tech, reqs, position, unlocked, researched)
+    {
+    }
 }
