@@ -615,7 +615,6 @@ public class TechTreeEditor : EditorWindow
         // GUILayout.FlexibleSpace();
         // EditorGUILayout.EndHorizontal();
 
-
         EditorGUILayout.EndVertical();
 
         EditorGUILayout.EndHorizontal();

@@ -132,9 +132,12 @@ public class Structure : Obstacle
 
     private void OnDeath(object sender, Damageable.DeathEvent e)
     {
-        AudioSource.PlayClipAtPoint(GameMaster.GetAudio("building_collapsed").GetClip(), transform.position, 0.5f);
-        UnbakeFromGrid();
-        Destroy(gameObject);
+        if (e.victim == damageable)
+        {
+            AudioSource.PlayClipAtPoint(GameMaster.GetAudio("building_collapsed").GetClip(), transform.position, 0.5f);
+            UnbakeFromGrid();
+            Destroy(gameObject);
+        }
     }
 
     public void TryRepair(float count, ActorV2 repairer = null)

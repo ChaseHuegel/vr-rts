@@ -57,7 +57,7 @@ public class TechTree : ScriptableObject
     {
         foreach (TechNode techNode in tree)
         {
-            if (NodeRequirementsUnlocked(techNode))
+            if (NodeRequirementsUnlocked(techNode))// && techNode.researched && !techNode.requiresResearch)
             {
                 techNode.unlocked = true;
                 if (OnNodeUnlocked != null)
