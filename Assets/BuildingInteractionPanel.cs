@@ -161,8 +161,8 @@ public class BuildingInteractionPanel : MonoBehaviour
     // }
     private void OnNodeResearched(TechNode node) 
     {
-        // Do not destroy buttons when research is complete if they aren't single use.
-        if (!node.tech.singleUse)
+        // Do not destroy buttons if node is a unit node
+        if (node.tech is UnitData)
             return;
 
         queueTechButtons.Remove(node.tech);

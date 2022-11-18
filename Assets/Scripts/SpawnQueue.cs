@@ -117,9 +117,9 @@ public class SpawnQueue : MonoBehaviour
 
         //UnitData unitData = GameMaster.GetUnit(tech);
 
-        if (tech.singleUse && queue.Contains(tech))
+        if (!(tech is UnitData) && queue.Contains(tech))
         {
-            Debug.Log("Single use tech.");
+            Debug.Log("Tech already queued.");
             return false;
         }
 
@@ -127,7 +127,7 @@ public class SpawnQueue : MonoBehaviour
         {
             Debug.Log("Can't queue tech.");
             return false;
-        }
+        }        
 
         PlayerManager.Instance.DeductTechResourceCost(tech);
         queue.AddLast(tech);
