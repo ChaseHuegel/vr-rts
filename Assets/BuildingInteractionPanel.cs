@@ -159,7 +159,6 @@ public class BuildingInteractionPanel : MonoBehaviour
     // {
     //     queueUnitButtons.Find(x => x.techToQueue == node.tech)?.Lock();
     // }
-
     private void OnNodeResearched(TechNode node) 
     {
         // Do not destroy buttons when research is complete if they aren't single use.
@@ -198,7 +197,7 @@ public class BuildingInteractionPanel : MonoBehaviour
         // TechTree.OnNodeEnabled += OnNodeEnabled;
         // TechTree.OnNodeDisabled += OnNodeDisabled;
         TechTree.OnNodeResearched += OnNodeResearched;
-        
+
     }
 
     private void CleanupEvents()

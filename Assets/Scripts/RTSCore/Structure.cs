@@ -24,7 +24,7 @@ public class Structure : Obstacle
     public void Awake()
     {
         if (!(audioSource = GetComponent<AudioSource>()))
-            Debug.Log("Audiosource component not found.");
+            Debug.Log("Audiosource component not found.");        
     }
 
     protected override void UpdateSkin()
@@ -45,9 +45,7 @@ public class Structure : Obstacle
         AllStructures.Add(this);
 
         // TODO: Will need checks here for multiplayer
-        playerManager = PlayerManager.Instance;
-
-        
+        playerManager = PlayerManager.Instance;        
 
         // Setup some defaults that tend to get switched in the editor.
         IgnorePanning ignorePanning = GetComponentInChildren<IgnorePanning>();
@@ -60,9 +58,12 @@ public class Structure : Obstacle
         if (!(damageable = GetComponent<Damageable>()))
             Debug.LogError("No damageable component on structure!");
 
+       
         // Set max health based on building database hit point value.
         damageable.Attributes.Get(AttributeConstants.HEALTH).MaxValue = buildingData.maximumHitPoints;
-        damageable.OnDamageEvent += OnDamage;
+
+        HookIntoEvents();
+        
 
         if (!GameMaster.Instance.buildingDamagedFX)
             Debug.LogError("buildingDamagedFX not set in GameMaster.", this);
@@ -75,9 +76,22 @@ public class Structure : Obstacle
             RefreshVisuals();
     }
 
+    private void HookIntoEvents()
+    {
+        damageable.OnDamageEvent += OnDamage;
+        Damageable.OnDeathEvent += OnDeath;
+    }
+
+    private void CleanupEvents()
+    {
+        damageable.OnDamageEvent -= OnDamage;
+        Damageable.OnDeathEvent -= OnDeath;
+    }
+
     public override void OnDestroy()
     {
         base.OnDestroy();
+        CleanupEvents();
         AllStructures.Remove(this);
     }
 
@@ -114,13 +128,13 @@ public class Structure : Obstacle
     void OnDamage(object sender, Damageable.DamageEvent e)
     {
         RefreshVisuals();
+    }
 
-        if (AttributeHandler.Attributes.ValueOf(AttributeConstants.HEALTH) == 0f)
-        {
-            AudioSource.PlayClipAtPoint(GameMaster.GetAudio("building_collapsed").GetClip(), transform.position, 0.5f);
-            UnbakeFromGrid();
-            Destroy(gameObject);
-        }
+    private void OnDeath(object sender, Damageable.DeathEvent e)
+    {
+        AudioSource.PlayClipAtPoint(GameMaster.GetAudio("building_collapsed").GetClip(), transform.position, 0.5f);
+        UnbakeFromGrid();
+        Destroy(gameObject);
     }
 
     public void TryRepair(float count, ActorV2 repairer = null)

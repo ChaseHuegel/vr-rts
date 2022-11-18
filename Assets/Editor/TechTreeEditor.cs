@@ -572,7 +572,7 @@ public class TechTreeEditor : EditorWindow
 
         GUILayout.BeginArea(nodeRect, (selectedNode == targetTree.tree[nodeIdx] ? selectedNodeStyle : nodeStyle));
 
-        GUILayout.Label(targetTree.tree[nodeIdx].tech.name, nodeTitleStyle);
+        GUILayout.Label(targetTree.tree[nodeIdx].tech.name, nodeTitleStyle);        
 
         EditorGUILayout.BeginHorizontal();
 
@@ -602,12 +602,19 @@ public class TechTreeEditor : EditorWindow
         GUILayout.FlexibleSpace();
         EditorGUILayout.Toggle("", targetTree.tree[nodeIdx].unlocked);
         EditorGUILayout.EndHorizontal();
-
+        
         EditorGUILayout.BeginHorizontal();
         GUILayout.Label("Enabled");
         GUILayout.FlexibleSpace();
         EditorGUILayout.Toggle("", targetTree.tree[nodeIdx].enabled);
         EditorGUILayout.EndHorizontal();
+
+        // EditorGUILayout.BeginHorizontal();
+        // GUILayout.Label("Required Tech#");
+        // targetTree.tree[nodeIdx].requiredTechCount = EditorGUILayout.IntField(targetTree.tree[nodeIdx].requiredTechCount, GUILayout.MaxWidth(30.0f));
+        // GUILayout.FlexibleSpace();
+        // EditorGUILayout.EndHorizontal();
+
 
         EditorGUILayout.EndVertical();
 

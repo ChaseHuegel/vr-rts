@@ -11,6 +11,7 @@ public class TechNode
     public bool unlocked;
     public bool researched;
     public bool requiresResearch;
+    public int requiredTechCount = -1;
     public bool enabled;
     public List<TechBase> techRequirements;    
     public Vector2 UIposition;
@@ -38,6 +39,8 @@ public class TechTree : ScriptableObject
 
     public delegate void NodeResearched(TechNode node);
     public static event NodeResearched OnNodeResearched;
+    public delegate void NodeRevokeTechResearch(TechNode node);
+    public static event NodeRevokeTechResearch OnNodeRevokeTechResearch;
 
     public delegate void NodeEnabled(TechNode node);
     public static event NodeEnabled OnNodeEnabled;
@@ -54,7 +57,7 @@ public class TechTree : ScriptableObject
     {
         foreach (TechNode techNode in tree)
         {
-            if (RequirementsUnlocked(techNode))
+            if (NodeRequirementsUnlocked(techNode))
             {
                 techNode.unlocked = true;
                 if (OnNodeUnlocked != null)
@@ -66,7 +69,6 @@ public class TechTree : ScriptableObject
                 if (OnNodeLocked != null)
                     OnNodeLocked(techNode);
             }
-
 
             //bool canEnable = techNode.requiresResearch ? techNode.researched : true;
             bool canAfford = PlayerManager.Instance.CanAffordTech(techNode.tech);
@@ -85,8 +87,9 @@ public class TechTree : ScriptableObject
         }
     }
 
-    private bool RequirementsUnlocked(TechNode techNode)
+    private bool NodeRequirementsUnlocked(TechNode techNode)
     {
+        // int count = 0;
         foreach (TechBase req in techNode.techRequirements)
         {
             TechNode requirementNode = FindNode(req);
@@ -95,7 +98,12 @@ public class TechTree : ScriptableObject
 
             if (requirementNode.requiresResearch && requirementNode.researched == false)
                 return false;
-                
+
+            // count++;
+
+            // if (count >= techNode.requiredTechCount)
+            //     return true;
+
             continue;
         }
 
@@ -119,6 +127,19 @@ public class TechTree : ScriptableObject
     {
         TechNode node = FindNode(tech);
         node.unlocked = true;
+        RefreshNodes();
+    }
+
+    public void RevokeTechResearch(TechBase tech)
+    {
+        TechNode node = FindNode(tech);
+        if (node == null)
+            return;
+
+        node.researched = false;
+        if (OnNodeRevokeTechResearch != null)
+            OnNodeRevokeTechResearch(node);
+
         RefreshNodes();
     }
 

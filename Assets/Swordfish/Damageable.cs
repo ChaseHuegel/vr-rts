@@ -134,12 +134,12 @@ namespace Swordfish
                     }
                 }
             }
-
+            
             OnDamaged(e);
             Attributes.Get(AttributeConstants.HEALTH).Remove(e.damage);
 
             //  If the damage was enough to kill, invoke a death event
-            if (Attributes.ValueOf(AttributeConstants.HEALTH) == 0)
+            if (Attributes.ValueOf(AttributeConstants.HEALTH) <= 0)
             {
                 DeathEvent e2 = new()
                 {

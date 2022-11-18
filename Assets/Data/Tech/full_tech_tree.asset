@@ -15,16 +15,18 @@ MonoBehaviour:
   tree:
   - tech: {fileID: 11400000, guid: 963461a3aaf76f0458420eb41fae093d, type: 2}
     unlocked: 1
-    researched: 0
+    researched: 1
     requiresResearch: 0
+    requiredTechCount: -1
     enabled: 1
     techRequirements:
     - {fileID: 11400000, guid: e8855eb8a447c704ca7745172e7203be, type: 2}
     UIposition: {x: 98.42554, y: 7.8666077}
   - tech: {fileID: 11400000, guid: acd2012d81514a643bd75779f8900a24, type: 2}
     unlocked: 0
-    researched: 0
+    researched: 1
     requiresResearch: 0
+    requiredTechCount: -1
     enabled: 0
     techRequirements:
     - {fileID: 11400000, guid: beb0cd18c4c3b0e4bbed28e5eb7b79f6, type: 2}
@@ -33,55 +35,62 @@ MonoBehaviour:
     unlocked: 1
     researched: 0
     requiresResearch: 0
+    requiredTechCount: -1
     enabled: 1
     techRequirements:
     - {fileID: 11400000, guid: 963461a3aaf76f0458420eb41fae093d, type: 2}
-    UIposition: {x: 352.61523, y: -100.050064}
+    UIposition: {x: 350.61523, y: -64.050064}
   - tech: {fileID: 11400000, guid: e2b8096b7a6bbdf4d914c05ac91463b9, type: 2}
     unlocked: 1
     researched: 0
     requiresResearch: 0
+    requiredTechCount: -1
     enabled: 1
     techRequirements:
     - {fileID: 11400000, guid: e8855eb8a447c704ca7745172e7203be, type: 2}
     UIposition: {x: 110.29733, y: 284.6756}
   - tech: {fileID: 11400000, guid: 1a362cc56473cff4f9da8674ee86dcab, type: 2}
-    unlocked: 1
+    unlocked: 0
     researched: 0
     requiresResearch: 0
-    enabled: 1
+    requiredTechCount: -1
+    enabled: 0
     techRequirements:
     - {fileID: 11400000, guid: ffca4340b49b17e4e93030ba6c0d567e, type: 2}
     UIposition: {x: 948.75507, y: 73.42432}
   - tech: {fileID: 11400000, guid: ffca4340b49b17e4e93030ba6c0d567e, type: 2}
-    unlocked: 1
-    researched: 0
+    unlocked: 0
+    researched: 1
     requiresResearch: 0
-    enabled: 1
+    requiredTechCount: -1
+    enabled: 0
     techRequirements:
     - {fileID: 11400000, guid: 1c99027ec54ca054aa9caa1c7f275bff, type: 2}
-    UIposition: {x: 659.15656, y: 145.4628}
+    UIposition: {x: 706.15656, y: 188.4628}
   - tech: {fileID: 11400000, guid: 64634b340e568eb48a24fdd6215d07d2, type: 2}
     unlocked: 1
-    researched: 0
+    researched: 1
     requiresResearch: 0
+    requiredTechCount: -1
     enabled: 1
     techRequirements:
     - {fileID: 11400000, guid: e8855eb8a447c704ca7745172e7203be, type: 2}
     UIposition: {x: 107.67529, y: 701.98615}
   - tech: {fileID: 11400000, guid: 5c95a25871bd007468afb167a2a15b21, type: 2}
     unlocked: 1
-    researched: 0
+    researched: 1
     requiresResearch: 0
+    requiredTechCount: -1
     enabled: 1
     techRequirements:
     - {fileID: 11400000, guid: e8855eb8a447c704ca7745172e7203be, type: 2}
     UIposition: {x: 109.7796, y: 442.11273}
   - tech: {fileID: 11400000, guid: 2f7f4977aa58e7c46ab5a611830a99fc, type: 2}
-    unlocked: 1
+    unlocked: 0
     researched: 0
     requiresResearch: 0
-    enabled: 1
+    requiredTechCount: -1
+    enabled: 0
     techRequirements:
     - {fileID: 11400000, guid: 151c3865ab4ae0f4c93958b3e02345f8, type: 2}
     UIposition: {x: 1009.4326, y: 551.6148}
@@ -89,22 +98,25 @@ MonoBehaviour:
     unlocked: 1
     researched: 0
     requiresResearch: 0
+    requiredTechCount: -1
     enabled: 1
     techRequirements:
     - {fileID: 11400000, guid: 64634b340e568eb48a24fdd6215d07d2, type: 2}
-    UIposition: {x: 380.4398, y: 699.3972}
+    UIposition: {x: 355.4398, y: 656.3972}
   - tech: {fileID: 11400000, guid: 0d22bb17f33f0494297bbbd6b3291d6d, type: 2}
     unlocked: 1
     researched: 0
     requiresResearch: 0
+    requiredTechCount: -1
     enabled: 1
     techRequirements:
     - {fileID: 11400000, guid: 64634b340e568eb48a24fdd6215d07d2, type: 2}
-    UIposition: {x: 373.49518, y: 815.2951}
+    UIposition: {x: 355.49518, y: 804.2951}
   - tech: {fileID: 11400000, guid: 78d59a1d65cdf224f94e8dbd7eea43cf, type: 2}
     unlocked: 1
     researched: 0
     requiresResearch: 0
+    requiredTechCount: -1
     enabled: 1
     techRequirements:
     - {fileID: 11400000, guid: e8855eb8a447c704ca7745172e7203be, type: 2}
@@ -113,16 +125,18 @@ MonoBehaviour:
     unlocked: 0
     researched: 0
     requiresResearch: 0
+    requiredTechCount: -1
     enabled: 0
     techRequirements:
     - {fileID: 11400000, guid: ffca4340b49b17e4e93030ba6c0d567e, type: 2}
     - {fileID: 11400000, guid: 744691140f29f074ea9f47aad6f1fffb, type: 2}
     UIposition: {x: 1499.5044, y: 243.67068}
   - tech: {fileID: 11400000, guid: 3a39ca3ab0e90a64b9f9e99a5b245745, type: 2}
-    unlocked: 1
+    unlocked: 0
     researched: 0
     requiresResearch: 0
-    enabled: 1
+    requiredTechCount: -1
+    enabled: 0
     techRequirements:
     - {fileID: 11400000, guid: b1d3b8f6efd121f4eace566be7c84a0d, type: 2}
     UIposition: {x: 1020.2539, y: 819.6609}
@@ -130,6 +144,7 @@ MonoBehaviour:
     unlocked: 0
     researched: 0
     requiresResearch: 0
+    requiredTechCount: -1
     enabled: 0
     techRequirements:
     - {fileID: 11400000, guid: 021c4f863a92d6e44a157dae3bc6a5ec, type: 2}
@@ -138,30 +153,33 @@ MonoBehaviour:
     unlocked: 1
     researched: 0
     requiresResearch: 0
+    requiredTechCount: -1
     enabled: 1
     techRequirements:
     - {fileID: 11400000, guid: e8855eb8a447c704ca7745172e7203be, type: 2}
-    UIposition: {x: 110.03674, y: 556.92694}
+    UIposition: {x: 107.472595, y: 554.36285}
   - tech: {fileID: 11400000, guid: e8855eb8a447c704ca7745172e7203be, type: 2}
     unlocked: 1
     researched: 0
     requiresResearch: 0
+    requiredTechCount: -1
     enabled: 1
     techRequirements: []
     UIposition: {x: -238.68767, y: 357.10477}
   - tech: {fileID: 11400000, guid: 1c99027ec54ca054aa9caa1c7f275bff, type: 2}
     unlocked: 1
-    researched: 1
-    requiresResearch: 1
-    enabled: 1
-    techRequirements:
-    - {fileID: 11400000, guid: e8855eb8a447c704ca7745172e7203be, type: 2}
-    UIposition: {x: 385.6418, y: 360.2997}
-  - tech: {fileID: 11400000, guid: 744691140f29f074ea9f47aad6f1fffb, type: 2}
-    unlocked: 1
     researched: 0
     requiresResearch: 1
+    requiredTechCount: -1
     enabled: 1
+    techRequirements: []
+    UIposition: {x: 383.6418, y: 328.2997}
+  - tech: {fileID: 11400000, guid: 744691140f29f074ea9f47aad6f1fffb, type: 2}
+    unlocked: 0
+    researched: 0
+    requiresResearch: 1
+    requiredTechCount: -1
+    enabled: 0
     techRequirements:
     - {fileID: 11400000, guid: 1c99027ec54ca054aa9caa1c7f275bff, type: 2}
     UIposition: {x: 1176.133, y: 357.1281}
@@ -169,32 +187,35 @@ MonoBehaviour:
     unlocked: 0
     researched: 0
     requiresResearch: 1
+    requiredTechCount: -1
     enabled: 0
     techRequirements:
     - {fileID: 11400000, guid: 744691140f29f074ea9f47aad6f1fffb, type: 2}
     UIposition: {x: 1955.4618, y: 353.86682}
   - tech: {fileID: 11400000, guid: b1d3b8f6efd121f4eace566be7c84a0d, type: 2}
-    unlocked: 1
-    researched: 1
-    requiresResearch: 1
-    enabled: 1
-    techRequirements:
-    - {fileID: 11400000, guid: 1c99027ec54ca054aa9caa1c7f275bff, type: 2}
-    - {fileID: 11400000, guid: 5c95a25871bd007468afb167a2a15b21, type: 2}
-    UIposition: {x: 745.53375, y: 730.7209}
-  - tech: {fileID: 11400000, guid: 021c4f863a92d6e44a157dae3bc6a5ec, type: 2}
-    unlocked: 1
+    unlocked: 0
     researched: 0
     requiresResearch: 1
-    enabled: 1
+    requiredTechCount: -1
+    enabled: 0
     techRequirements:
     - {fileID: 11400000, guid: 1c99027ec54ca054aa9caa1c7f275bff, type: 2}
     - {fileID: 11400000, guid: 5c95a25871bd007468afb167a2a15b21, type: 2}
+    UIposition: {x: 741.53375, y: 736.7209}
+  - tech: {fileID: 11400000, guid: 021c4f863a92d6e44a157dae3bc6a5ec, type: 2}
+    unlocked: 0
+    researched: 0
+    requiresResearch: 1
+    requiredTechCount: -1
+    enabled: 0
+    techRequirements:
+    - {fileID: 11400000, guid: 1c99027ec54ca054aa9caa1c7f275bff, type: 2}
     UIposition: {x: 729.2951, y: 584.02435}
   - tech: {fileID: 11400000, guid: beb0cd18c4c3b0e4bbed28e5eb7b79f6, type: 2}
     unlocked: 0
     researched: 0
     requiresResearch: 0
+    requiredTechCount: -1
     enabled: 0
     techRequirements:
     - {fileID: 11400000, guid: 744691140f29f074ea9f47aad6f1fffb, type: 2}
@@ -203,33 +224,37 @@ MonoBehaviour:
     unlocked: 0
     researched: 0
     requiresResearch: 0
+    requiredTechCount: -1
     enabled: 0
     techRequirements:
     - {fileID: 11400000, guid: 744691140f29f074ea9f47aad6f1fffb, type: 2}
     - {fileID: 11400000, guid: 151c3865ab4ae0f4c93958b3e02345f8, type: 2}
     UIposition: {x: 1494.4928, y: 499.12872}
   - tech: {fileID: 11400000, guid: 151c3865ab4ae0f4c93958b3e02345f8, type: 2}
-    unlocked: 1
+    unlocked: 0
     researched: 0
     requiresResearch: 0
-    enabled: 1
+    requiredTechCount: -1
+    enabled: 0
     techRequirements:
     - {fileID: 11400000, guid: 1c99027ec54ca054aa9caa1c7f275bff, type: 2}
     - {fileID: 11400000, guid: 5c95a25871bd007468afb167a2a15b21, type: 2}
     UIposition: {x: 731.3982, y: 452.70013}
   - tech: {fileID: 11400000, guid: 67f2f7dfaea9004439f13867b2d7d45a, type: 2}
-    unlocked: 1
+    unlocked: 0
     researched: 0
     requiresResearch: 0
-    enabled: 1
+    requiredTechCount: -1
+    enabled: 0
     techRequirements:
-    - {fileID: 11400000, guid: 963461a3aaf76f0458420eb41fae093d, type: 2}
     - {fileID: 11400000, guid: 1c99027ec54ca054aa9caa1c7f275bff, type: 2}
-    UIposition: {x: 633.20776, y: -23.966217}
+    - {fileID: 11400000, guid: 963461a3aaf76f0458420eb41fae093d, type: 2}
+    UIposition: {x: 642.20776, y: 48.033783}
   - tech: {fileID: 11400000, guid: 6000e073267327e4087219770d64b6b5, type: 2}
     unlocked: 0
     researched: 0
     requiresResearch: 0
+    requiredTechCount: -1
     enabled: 0
     techRequirements:
     - {fileID: 11400000, guid: 67f2f7dfaea9004439f13867b2d7d45a, type: 2}
@@ -239,6 +264,7 @@ MonoBehaviour:
     unlocked: 0
     researched: 0
     requiresResearch: 0
+    requiredTechCount: -1
     enabled: 0
     techRequirements:
     - {fileID: 11400000, guid: 744691140f29f074ea9f47aad6f1fffb, type: 2}
@@ -247,6 +273,7 @@ MonoBehaviour:
     unlocked: 0
     researched: 0
     requiresResearch: 0
+    requiredTechCount: -1
     enabled: 0
     techRequirements:
     - {fileID: 11400000, guid: 744691140f29f074ea9f47aad6f1fffb, type: 2}

@@ -27,5 +27,5 @@ public class BuildingData : TechBase
     public GameObject constructionPrefab;
 
     [Header("Other Settings")]
-    public SoundElement constructionCompletedAudio;
+    public SoundElement constructionCompletedAudio;    
 }

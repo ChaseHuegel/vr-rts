@@ -293,12 +293,29 @@ public class PlayerManager : MonoBehaviour
             {
                 case Structure structure:
                     IncreasePopulationLimit(structure.buildingData.populationSupported);
+
+                    // Set this building to researched in tech tree
+                    faction.techTree.ResearchTech(structure.buildingData);
                     break;
                 case UnitV2 unit:
                     AddToPopulation(unit);
                     break;
             }
         }
+    }
+
+    private bool AnotherBuildingLikeThisExists(Structure structure)
+    {
+        foreach(Structure st in Structure.AllStructures)
+        {
+            if (st == structure)
+                continue;
+
+            if (st.buildingData.buildingType == structure.buildingData.buildingType)
+                return true;
+        }
+        
+        return false;
     }
 
     public void OnDeathEvent(object sender, Damageable.DeathEvent e)
@@ -310,6 +327,10 @@ public class PlayerManager : MonoBehaviour
             {
                 case Structure structure:
                     DecreasePopulationLimit(structure.buildingData.populationSupported);
+
+                    // Revoke research status if no instances of this building type exist
+                    if (!AnotherBuildingLikeThisExists(structure))
+                        faction.techTree.RevokeTechResearch(structure.buildingData);
                     break;
                 case UnitV2 unit:
                     RemoveFromPopulation(unit);
@@ -443,7 +464,7 @@ public class PlayerManager : MonoBehaviour
         switch (tech)
         {
             case EpochUpgrade:
-                PlayEpochResearchCompleteAudio();
+                PlaySetRallyPointSound();
                 break;
 
             case TechResearcher:
