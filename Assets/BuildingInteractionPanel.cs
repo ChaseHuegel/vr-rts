@@ -100,6 +100,7 @@ public class BuildingInteractionPanel : MonoBehaviour
     private bool isVisible;
 
     private List<QueueUnitButton> queueUnitButtons;
+    private BuildingData buildingData;
 
     void Awake()
     {
@@ -109,6 +110,15 @@ public class BuildingInteractionPanel : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        buildingData = GetComponent<Structure>().buildingData;
+        if (buildingData.techQueueButtons.Count > 0)
+        {
+            enableQueueMenu = true;
+            queueTechButtons = buildingData.techQueueButtons;
+        }
+        else
+            enableQueueMenu = false;
+
         if (interactionPanelObject)
             return;
             
@@ -430,6 +440,7 @@ public class BuildingInteractionPanel : MonoBehaviour
         if (queueUnitButtons == null)
             queueUnitButtons = new List<QueueUnitButton>();
 
+        
         foreach (TechBase tech in queueTechButtons)
         {
             GenerateQueueButton(tech, nextButtonPosition, buttonsGameObject.transform);
