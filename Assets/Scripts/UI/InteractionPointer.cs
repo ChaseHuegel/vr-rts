@@ -222,11 +222,11 @@ public class InteractionPointer : MonoBehaviour
             }
             else if (WasInteractButtonReleased(hand))
             {
-                ExecuteInteraction();
+                Process_InteractUI_Action_End();
             }
             else if (WasInteractButtonPressed(hand))
             {
-                StartInteraction(hand);
+                Process_InteractUI_Action_Start(hand);
             }
             else if (WasCancelButtonPressed(hand))
             {
@@ -398,7 +398,7 @@ public class InteractionPointer : MonoBehaviour
     /// Starts intaraction with the button bound to InteractUI.
     /// </summary>
     /// <param name="hand">The hand that pressed the InteractUI button.</param>
-    private void StartInteraction(Hand hand)
+    private void Process_InteractUI_Action_Start(Hand hand)
     {
         if (isInWallPlacementMode)
         {
@@ -432,22 +432,7 @@ public class InteractionPointer : MonoBehaviour
                 return;
             }
 
-            QueueUnitButton queueUnitButton = pointedAtPointerInteractable.GetComponentInChildren<QueueUnitButton>();
-            if (queueUnitButton)
-            {
-                spawnQueue = pointedAtPointerInteractable.GetComponentInParent<SpawnQueue>();
-                spawnQueue.QueueTech(queueUnitButton.techToQueue);
-                pointedAtPointerInteractable.GetComponentInChildren<HoverButton>().onButtonDown.Invoke(hand);
-                return;
-            }
-
-            // TODO: This should be used for queueing as well...
-            HoverButton hoverButton = pointedAtPointerInteractable.GetComponentInChildren<HoverButton>();
-            if (hoverButton)
-            {                
-                hoverButton.onButtonDown.Invoke(hand);
-                return;
-            }
+            if (ProcessQueueUnitButtonClick(hand)) return;
 
             WallGate wallGate = pointedAtPointerInteractable.GetComponent<WallGate>();
             if (wallGate)
@@ -462,11 +447,39 @@ public class InteractionPointer : MonoBehaviour
         }
     }
 
+    private QueueUnitButton ProcessQueueUnitButtonClick(Hand hand)
+    {
+        QueueUnitButton queueUnitButton = pointedAtPointerInteractable.GetComponentInChildren<QueueUnitButton>();
+        if (queueUnitButton)
+        {
+            spawnQueue = pointedAtPointerInteractable.GetComponentInParent<SpawnQueue>();
+            spawnQueue.QueueTech(queueUnitButton.techToQueue);
+
+            HoverButton hoverButton = pointedAtPointerInteractable.GetComponentInChildren<HoverButton>();
+            if (hoverButton)
+                hoverButton.onButtonDown.Invoke(hand);
+        }
+
+        return queueUnitButton;
+    }
+
+    private void ProcessQueueUnitButton()
+    {
+
+    }
+    
+    private T GetPointingAtComponentType<T>(PointerInteractable pointerInteractable)
+    {
+        T ret = pointerInteractable.GetComponentInChildren<T>();
+
+        return ret;
+    }
+
     /// <summary>
     /// Executes an interaction. The interation has been accepted and this function
     /// completes it, in contrast to a cancelled interaction.
     /// </summary>
-    private void ExecuteInteraction()
+    private void Process_InteractUI_Action_End()
     {
         if (isInWallPlacementMode)
         {
