@@ -110,7 +110,16 @@ public class BuildingInteractionPanel : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        buildingData = GetComponent<Structure>().buildingData;
+        Structure structure = GetComponent<Structure>();
+        if (structure)
+            buildingData = GetComponent<Structure>().buildingData;
+        else
+        {
+            FactionedResource factionedResource = GetComponent<FactionedResource>();
+            if (factionedResource)
+                buildingData = factionedResource.buildingData;
+        }
+
         if (buildingData.techQueueButtons.Count > 0)
         {
             enableQueueMenu = true;

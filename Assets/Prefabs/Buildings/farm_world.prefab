@@ -258,6 +258,7 @@ MonoBehaviour:
   type: 1
   amount: 200
   onDestroyPrefab: {fileID: 0}
+  buildingData: {fileID: 11400000, guid: 2f7f4977aa58e7c46ab5a611830a99fc, type: 2}
 --- !u!114 &8388540412907714894
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -295,28 +296,11 @@ MonoBehaviour:
   healthBarVerticalOffset: -0.075
   healthBarWidth: 1
   healthBarHeight: 0.1
-  healthBarBackground: {fileID: 21300000, guid: 85867c66586f9ea45a4c1f56a281d550,
-    type: 3}
-  healthBarBackgroundColor: {r: 0, g: 0, b: 0, a: 1}
-  healthBarForeground: {fileID: 21300000, guid: 99a941ae1b6ae874587381380f3516e5,
-    type: 3}
-  healthBarForegroundColor: {r: 1, g: 0, b: 0, a: 1}
-  healthBarTextColor: {r: 1, g: 1, b: 1, a: 1}
   enableQueueMenu: 0
   QueueMenuVerticalOffset: 0
   unitSpawnPoint: {fileID: 0}
   unitRallyWaypoint: {fileID: 0}
-  progressImage: {fileID: 0}
-  progressColor: {r: 0, g: 0, b: 0, a: 0}
-  progressFont: {fileID: 0}
-  buttonBaseMaterial: {fileID: 0}
-  cancelButtonMaterial: {fileID: 0}
-  onButtonDownAudio: {fileID: 0}
-  onButtonUpAudio: {fileID: 0}
-  queueTechButtons: []
   numberOfQueueSlots: 12
-  emptyQueueSlotSprite: {fileID: 0}
-  buttonLockPrefab: {fileID: 0}
 --- !u!1001 &1341250551842294695
 PrefabInstance:
   m_ObjectHideFlags: 0

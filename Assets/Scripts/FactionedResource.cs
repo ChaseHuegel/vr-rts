@@ -8,6 +8,7 @@ using UnityEngine;
 /// </summary>
 public class FactionedResource : Resource
 {
+    public BuildingData buildingData;
     protected override void UpdateSkin()
     {
         if (SkinRendererTargets.Length <= 0) return;
