@@ -51,7 +51,7 @@ public class TechTreeEditor : EditorWindow
     Vector2 mouseSelectionOffset;
     Vector2 scrollStartPos;
     TechNode draggedNode; // moved node stored here
-    TechNode selectedNode; // selected node stored here
+    public TechNode selectedNode; // selected node stored here
     public TechTree targetTree;
 
     private GUIStyle nodeStyle;
@@ -187,8 +187,8 @@ public class TechTreeEditor : EditorWindow
         // zoom levels you will get a line of pixels rendered outside of the passed in area because of
         // floating point imprecision in the scaling. Therefore, it is recommended to draw the zoom
         // area first and then draw everything else so that there is no undesired overlap.
-        DrawNonZoomArea();
         DrawZoomArea();
+        DrawNonZoomArea();
 
         //Selection.activeObject = selectedNode.tech;
 
@@ -202,7 +202,7 @@ public class TechTreeEditor : EditorWindow
     }
 
     private void DrawNonZoomArea()
-    {
+    {        
         // Shows selected node tech and gives option to delete node
         EditorGUILayout.BeginHorizontal();
         if (selectedNode == null || selectedNode.tech == null)
@@ -217,6 +217,7 @@ public class TechTreeEditor : EditorWindow
             //     RemoveNode();
             // }
         }
+
         EditorGUILayout.EndHorizontal();
     }
 
