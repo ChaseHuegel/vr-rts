@@ -11,6 +11,11 @@ using Valve.VR.InteractionSystem;
 
 public class PlayerManager : MonoBehaviour
 {
+
+#if UNITY_EDITOR
+    public bool newTechTreeInstance;
+#endif
+
     //=========================================================================
     [Header("Stats/Resources")]
     public int woodCollected;
@@ -85,6 +90,8 @@ public class PlayerManager : MonoBehaviour
 
     private Hand rightHand;
     private Hand leftHand;
+
+
     private static PlayerManager _instance;
     //private bool isAutohideHandMenuVisible;
     
@@ -127,6 +134,13 @@ public class PlayerManager : MonoBehaviour
         TechTree tree = Instantiate(faction.techTree);
         faction = Instantiate(faction);
         faction.techTree = tree;
+#else
+        if (newTechTreeInstance)
+        {
+            TechTree tree = Instantiate(faction.techTree);
+            faction = Instantiate(faction);
+            faction.techTree = tree;
+        }
 #endif
         rightHand = Player.instance.rightHand;
         leftHand = Player.instance.leftHand;

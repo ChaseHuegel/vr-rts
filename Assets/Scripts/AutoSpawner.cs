@@ -111,6 +111,15 @@ public class AutoSpawner : MonoBehaviour
         spawnTimer += Time.deltaTime;
     }
 
+    public void OnDrawGizmos()
+    {
+        if (Application.isEditor != true || Application.isPlaying) return;
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(unitSpawnPoint.position, unitSpawnPointRadius);
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(unitRallyWaypoint.position, unitRallyWaypointRadius);
+    }
+
     private void SpawnUnit(RTSUnitType unitType)
     {
         UnitData unitData = GameMaster.GetUnit(unitType);

@@ -429,7 +429,8 @@ public class TechTreeEditor : EditorWindow
         }
     }
 
-    
+    private bool snapEnabled;
+
     private void ProcessEvents(Event e)
     {
         if (drawingSelectionBox)
@@ -437,6 +438,11 @@ public class TechTreeEditor : EditorWindow
 
         switch (e.type)
         {
+            case EventType.KeyUp:
+                if (e.keyCode == KeyCode.F9)
+                    snapEnabled = !snapEnabled;
+                break;
+
             case EventType.MouseDown:
                 if (e.button == 0)
                 {
@@ -466,6 +472,13 @@ public class TechTreeEditor : EditorWindow
                     else if (draggedNode != null)
                     {
                         draggedNode.UIposition = e.mousePosition + mouseSelectionOffset;
+
+                        if (snapEnabled)
+                        {
+                            float x = Snapping.Snap(draggedNode.UIposition.x, 10.0f);
+                            float y = Snapping.Snap(draggedNode.UIposition.y, 10.0f);
+                            draggedNode.UIposition = new Vector2(x, y);
+                        }
 
                         if (Event.current.modifiers == EventModifiers.Control)
                         {

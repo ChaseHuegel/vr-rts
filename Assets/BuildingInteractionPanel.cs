@@ -123,7 +123,7 @@ public class BuildingInteractionPanel : MonoBehaviour
         if (buildingData.techQueueButtons.Count > 0)
         {
             enableQueueMenu = true;
-            queueTechButtons = buildingData.techQueueButtons;
+            queueTechButtons = new List<TechBase>(buildingData.techQueueButtons);
         }
         else
             enableQueueMenu = false;
