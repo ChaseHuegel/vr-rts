@@ -16,6 +16,7 @@ public class PlayerManager : MonoBehaviour
     public bool newTechTreeInstance;
 #endif
 
+    public TechTree currentTree;
     //=========================================================================
     [Header("Stats/Resources")]
     public int woodCollected;
@@ -140,6 +141,7 @@ public class PlayerManager : MonoBehaviour
             TechTree tree = Instantiate(faction.techTree);
             faction = Instantiate(faction);
             faction.techTree = tree;
+            currentTree = faction.techTree;
         }
 #endif
         rightHand = Player.instance.rightHand;
