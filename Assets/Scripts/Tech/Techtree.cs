@@ -290,6 +290,28 @@ public class TechNode
 }
 
 [System.Serializable]
+public class UpgradeNode : TechNode
+{
+    public int requiredTechCount = 0;
+    public UpgradeNode(TechBase tech, List<TechBase> reqs, Vector2 position, bool unlocked = false, bool researched = false)
+    : base(tech, reqs, position, unlocked, researched)
+    {
+    }
+
+    public override bool RequirementsPassed(TechTree techTree)
+    {
+        foreach (TechBase req in techRequirements)
+        {
+            TechNode requirementNode = techTree.FindNode(req);
+            if (!requirementNode.unlocked)
+                return false;
+        }
+
+        return true;
+    }
+}
+
+[System.Serializable]
 public class ResearchNode : TechNode
 {
     public int requiredTechCount = 0;
@@ -311,7 +333,6 @@ public class ResearchNode : TechNode
                 if (!requirementNode.researched)
                     return false;
             }
-            continue;
         }
 
         return true;
@@ -329,13 +350,12 @@ public class EpochNode : TechNode
 
     public override bool RequirementsPassed(TechTree techTree)
     {
+        if (techRequirements.Count <= 0)
+            return true;
+
+        int count = 0;
         foreach (TechBase req in techRequirements)
         {
-            if (techRequirements.Count <= 0)
-                return true;
-
-            int count = 0;
-
             TechNode requirementNode = techTree.FindNode(req);
             if (!requirementNode.unlocked)
                 return false;
@@ -345,11 +365,9 @@ public class EpochNode : TechNode
 
             if (count >= requiredBuildingCount)
                 return true;
-
-            continue;
         }
 
-        return true;
+        return false;
     }
 }
 
@@ -369,8 +387,6 @@ public class UnitNode : TechNode
             TechNode requirementNode = techTree.FindNode(req);
             if (!requirementNode.unlocked)
                 return false;
-
-            continue;
         }
 
         return true;
@@ -407,8 +423,6 @@ public class BuildingNode : TechNode
             else if (requirementNode is BuildingNode)
                 if (((BuildingNode)requirementNode).isBuilt != true)
                     return false;
-
-            continue;
         }
 
         return true;
