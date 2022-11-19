@@ -82,6 +82,8 @@ namespace Swordfish.Navigation
             private set => IsMovingBinding.Set(value);
         }
 
+        public NavigationLayers Layers { get; set; } = NavigationLayers.ALL;
+
         public BehaviorTree<ActorV2> BehaviorTree { get; private set; }
 
         public bool OrderChangedRecently { get; private set; }
