@@ -198,6 +198,7 @@ MonoBehaviour:
         - {fileID: 11400000, guid: ffca4340b49b17e4e93030ba6c0d567e, type: 2}
         - {fileID: 11400000, guid: b9819998b4da79649a51b87956d9f193, type: 2}
         - {fileID: 11400000, guid: 7be3d59cc22b5e9488db57b9034e2c21, type: 2}
+        - {fileID: 11400000, guid: beb0cd18c4c3b0e4bbed28e5eb7b79f6, type: 2}
         UIposition: {x: 1570, y: 350}
         requiredBuildingCount: 2
     - rid: 8296355504631316532
@@ -228,12 +229,11 @@ MonoBehaviour:
       type: {class: UnitNode, ns: , asm: Assembly-CSharp}
       data:
         tech: {fileID: 11400000, guid: 1a362cc56473cff4f9da8674ee86dcab, type: 2}
-        unlocked: 0
+        unlocked: 1
         researched: 0
         requiresResearch: 0
-        enabled: 0
-        techRequirements:
-        - {fileID: 11400000, guid: 1c99027ec54ca054aa9caa1c7f275bff, type: 2}
+        enabled: 1
+        techRequirements: []
         UIposition: {x: 1290, y: -90}
         requiredTechCount: 0
     - rid: 8296355504631316536
