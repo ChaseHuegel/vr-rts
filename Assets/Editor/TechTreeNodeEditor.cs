@@ -100,6 +100,7 @@ public class TechTreeNodeEditor : EditorWindow
 
     private void DrawUnitNodeEditor(UnitNode node)
     {
+    
     }
 
     private void DrawResearchNodeEditor(ResearchNode node)
@@ -197,8 +198,12 @@ public class TechTreeNodeEditor : EditorWindow
             {
                 if (GUILayout.Button(tech.worldQueueImage.texture, GUILayout.Width(64.0f), GUILayout.Height(64.0f)))
                 {
+                    if (Event.current.button == 0)
+                    {
+                        Selection.activeObject = tech;
+                    }
                     if (Event.current.button == 1)
-                        ProcessContextMenu(tech);
+                        ProcessContextMenu(tech);                        
                 }
             }
         }
