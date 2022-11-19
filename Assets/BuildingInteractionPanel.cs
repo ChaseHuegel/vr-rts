@@ -69,7 +69,7 @@ public class BuildingInteractionPanel : MonoBehaviour
     public Transform unitRallyWaypoint;
 
     [Header("Queue Menu Button Settings")]
-    public List<TechBase> queueTechButtons;
+    private List<TechBase> queueTechButtons;
     private float buttonSize = 0.25f;
     private float spaceBetweenButtons = 0.025f;
     private int maxButtonColumns = 5;
