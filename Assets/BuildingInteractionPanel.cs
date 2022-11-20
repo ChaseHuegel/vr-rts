@@ -197,13 +197,17 @@ public class BuildingInteractionPanel : MonoBehaviour
     {
         TechTree.OnNodeResearched -= OnNodeResearched;
 
-        if (cancelButtonGameObject)
-            cancelButtonGameObject.GetComponentInChildren<HoverButton>().onButtonDown.RemoveListener(OnCancelQueueHoverButtonDown);
-
-        foreach (HoverButton button in buttonsGameObject.GetComponentsInChildren<HoverButton>())
+        if (enableQueueMenu)
         {
-            button.onButtonDown.RemoveListener(OnQueueHoverButtonDown);
-            button.onButtonUp.RemoveListener(OnQueueHoverButtonUp);
+            if (cancelButtonGameObject)
+                cancelButtonGameObject.GetComponentInChildren<HoverButton>().onButtonDown.RemoveListener(OnCancelQueueHoverButtonDown);
+
+            if (buttonsGameObject)
+                foreach (HoverButton button in buttonsGameObject.GetComponentsInChildren<HoverButton>())
+                {
+                    button.onButtonDown.RemoveListener(OnQueueHoverButtonDown);
+                    button.onButtonUp.RemoveListener(OnQueueHoverButtonUp);
+                }
         }
     }
 

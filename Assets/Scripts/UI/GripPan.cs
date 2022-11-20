@@ -155,15 +155,33 @@ public class GripPan : MonoBehaviour
         }
         else if (isGliding)
         {
-            magnitude -= momentumDrag * Time.deltaTime;
+            magnitude -= momentumDrag * Time.deltaTime / player.transform.localScale.x;
             if (magnitude < 0) magnitude = 0;
 
-            Player.instance.transform.position += glidingVector * magnitude * Time.deltaTime / player.transform.localScale.x;
+            //Player.instance.transform.position += glidingVector * magnitude * Time.deltaTime;// / player.transform.localScale.x;
             //transform.position = Vector3.Lerp(transform.position, transform.position + glidingVector * magnitude, Time.deltaTime);
         }
+
         //  Don't let player go below the 'floor'
-        // if (Player.instance.transform.position.y < floorHeight)
-        //     Player.instance.transform.position = new Vector3(Player.instance.transform.position.x, floorHeight, Player.instance.transform.position.z);
+        // RaycastHit hit;
+        // Vector3 sourceLocation = Player.instance.hmdTransform.position;
+        // sourceLocation.y += 10.0f;
+        // Physics.Raycast(sourceLocation, Vector3.down, out hit, 30.0f, LayerMask.GetMask("Terrain"));
+
+        // float min = hit.point.y + floorHeight;
+        // if (Player.instance.hmdTransform.position.y < min)
+        // {
+        //     float requiredDistance = min - Player.instance.hmdTransform.position.y;
+        //     float newFeetPosition = Player.instance.transform.position.y + requiredDistance;
+        //     Player.instance.transform.position = new Vector3(Player.instance.transform.position.x, newFeetPosition, Player.instance.transform.position.z);
+        // }
+
+        // if (Player.instance.hmdTransform.position.y < floorHeight)
+        // {
+        //     // float requiredDistance = floorHeight - Player.instance.hmdTransform.position.y;
+        //     // float newFeetPosition = Player.instance.transform.position.y + requiredDistance;
+        //     // Player.instance.transform.position = new Vector3(Player.instance.transform.position.x, newFeetPosition, Player.instance.transform.position.z);
+        // }
     }
 
     public void OnRightGripReleased(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
