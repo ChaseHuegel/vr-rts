@@ -158,7 +158,7 @@ public class GripPan : MonoBehaviour
             magnitude -= momentumDrag * Time.deltaTime / player.transform.localScale.x;
             if (magnitude < 0) magnitude = 0;
 
-            //Player.instance.transform.position += glidingVector * magnitude * Time.deltaTime;// / player.transform.localScale.x;
+            Player.instance.transform.position += glidingVector * magnitude * Time.deltaTime;// / player.transform.localScale.x;
             //transform.position = Vector3.Lerp(transform.position, transform.position + glidingVector * magnitude, Time.deltaTime);
         }
 

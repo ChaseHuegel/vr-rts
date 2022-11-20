@@ -29,10 +29,8 @@ public class InteractionPointer : MonoBehaviour
     public GameObject pointerAttachmentPoint;
     public LayerMask traceLayerMask;
     public LayerMask allowedPlacementLayers;
-    public float floorFixupMaximumTraceDistance = 1.0f;
     public Material pointVisibleMaterial;
     public Transform destinationReticleTransform;
-    public Transform invalidReticleTransform;
     public Color pointerValidColor;
     public Color pointerInvalidColor;
     public float arcDistance = 10.0f;   
@@ -66,7 +64,7 @@ public class InteractionPointer : MonoBehaviour
     public GameObject wayPointReticle;
     private Resource pointedAtResource;
     private Vector3 rallyWaypointArcStartPosition;
-    private GameObject rallyPointObject;
+    public GameObject setRallyPointPrefab;
     private float triggerAddToSelectionThreshold = 0.85f;
 
     // Cache value
@@ -160,8 +158,6 @@ public class InteractionPointer : MonoBehaviour
             Destroy(this.gameObject);
             return;
         }
-
-        rallyPointObject = wayPointReticle.transform.GetChild(0).gameObject;
 
         // Initialize reticle
         //ShowPointer();
@@ -533,8 +529,8 @@ public class InteractionPointer : MonoBehaviour
             spawnQueue.SetUnitRallyPointPosition(wayPointReticle.transform.position);
             wayPointReticle.SetActive(false);
 
-            GameObject gameObject = Instantiate<GameObject>(rallyPointObject, rallyPointObject.transform.position, rallyPointObject.transform.rotation);
-            gameObject.transform.localScale = rallyPointObject.transform.lossyScale;
+            GameObject gameObject = Instantiate<GameObject>(setRallyPointPrefab, setRallyPointPrefab.transform.position, setRallyPointPrefab.transform.rotation);
+            gameObject.transform.localScale = setRallyPointPrefab.transform.lossyScale;
             gameObject.GetComponentInChildren<Animator>().Play("deploy");
             Destroy(gameObject, 2.0f);
 
