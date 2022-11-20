@@ -52,7 +52,7 @@ public class GameMaster : Singleton<GameMaster>
     public AudioClip dequeueSound;
     public AudioClip teleportSound;
     public AudioClip epochResearchCompleteSound;
-
+    
     [Header("Building Health Bars")]
     public Sprite healthBarBackground;
     public Color healthBarBackgroundColor = Color.black;
@@ -68,8 +68,8 @@ public class GameMaster : Singleton<GameMaster>
     [Header("Queue Menu Button Settings")]
     public Material buttonBaseMaterial;
     public Material cancelButtonMaterial;
-    public AudioClip onButtonDownAudio;
-    public AudioClip onButtonUpAudio;
+    public AudioClip onQueueButtonDownSound;
+    public AudioClip onQueueButtonUpSound;
 
     [Header("Queue Menu Queue Slot Settings")]
     public Sprite emptyQueueSlotSprite;

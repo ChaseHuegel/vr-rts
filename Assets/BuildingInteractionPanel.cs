@@ -153,8 +153,6 @@ public class BuildingInteractionPanel : MonoBehaviour
 
             InitializeMenuDisplay();
 
-            InitializeSpawnQueue();
-
             this.gameObject.GetComponent<PointerInteractable>().AddChildrenToHideHighlight(interactionPanelObject);            
 
             HookIntoEvents();            
@@ -196,7 +194,6 @@ public class BuildingInteractionPanel : MonoBehaviour
 
         queueUnitButtons.Clear();
         InitializeQueueButtons();
-        InitializeSpawnQueue();
     }
 
     // private void OnNodeEnabled(TechNode node) 
@@ -226,7 +223,14 @@ public class BuildingInteractionPanel : MonoBehaviour
         // TechTree.OnNodeEnabled -= OnNodeEnabled;
         // TechTree.OnNodeDisabled -= OnNodeDisabled;
         TechTree.OnNodeResearched -= OnNodeResearched;
-        
+
+        cancelButtonGameObject.GetComponentInChildren<HoverButton>()?.onButtonDown?.RemoveListener(OnCancelQueueHoverButtonDown);
+
+        foreach (HoverButton button in buttonsGameObject.GetComponentsInChildren<HoverButton>())
+        {
+            button.onButtonDown.RemoveListener(OnQueueHoverButtonDown);
+            button.onButtonUp.RemoveListener(OnQueueHoverButtonUp);
+        }
     }
 
     void OnDestroy()
@@ -245,23 +249,6 @@ public class BuildingInteractionPanel : MonoBehaviour
         Quaternion rot = faceTarget.transform.rotation;
         rot.z = rot.x = 0;
         interactionPanelObject.transform.rotation = rot;              
-    }
-
-    private void InitializeSpawnQueue()
-    {
-        // TODO: Should this stuff be moved to this class?
-        spawnQueue.SetButtonsParentObject(buttonsGameObject);
-        spawnQueue.SetButtonDownAudio(GameMaster.Instance.onButtonDownAudio);
-        spawnQueue.SetButtonUpAudio(GameMaster.Instance.onButtonUpAudio);
-        spawnQueue.SetCancelButton(cancelButtonGameObject.GetComponentInChildren<HoverButton>(true));
-
-        if (unitSpawnPoint)
-            spawnQueue.SetUnitSpawnPointTransform(unitSpawnPoint);
-
-        if (unitRallyWaypoint)
-            spawnQueue.SetUnitRallyPointTransform(unitRallyWaypoint);
-
-        spawnQueue.Initialize();
     }
 
     // Update is called once per frame
@@ -464,8 +451,8 @@ public class BuildingInteractionPanel : MonoBehaviour
             nextButtonPosition.y = startPosition.y - ((buttonSize + spaceBetweenButtons) * currentButtonRow);
         }
 
-        foreach (QueueUnitButton btn in queueUnitButtons)
-            btn.Initialize();
+        // foreach (QueueUnitButton btn in queueUnitButtons)
+        //     btn.Initialize();
     }
 
     public void Toggle()
@@ -576,16 +563,32 @@ public class BuildingInteractionPanel : MonoBehaviour
         // cost.grainText.text = typeData.foodCost.ToString();
         // cost.stoneText.text = typeData.stoneCost.ToString();
 
+        //---------------------------------------------------------------------
         // Face (child of Button)
         GameObject face = new GameObject("_face", typeof(Interactable), typeof(HoverButton));
         face.transform.SetParent(button.transform, false);
         face.transform.localPosition = new Vector3(0.0f, 0.0f, -0.05f);
         face.transform.localScale = new Vector3(0.85f, 0.85f, 0.15f);
-        
+        face.GetComponent<Interactable>().highlightOnHover = false;
+
+        //---------------------------------------------------------------------
+        // Hover button
         HoverButton hoverButton = face.GetComponent<HoverButton>();
         hoverButton.localMoveDistance = new Vector3(0, 0, 0.3f);
-        face.GetComponent<Interactable>().highlightOnHover = false;        
+        hoverButton.onButtonDown.AddListener(OnQueueHoverButtonDown);
+        hoverButton.onButtonUp.AddListener(OnQueueHoverButtonUp);
 
+        //---------------------------------------------------------------------
+        // Set up and initialize queue
+        if (unitSpawnPoint)
+            spawnQueue.SetUnitSpawnPointTransform(unitSpawnPoint);
+
+        if (unitRallyWaypoint)
+            spawnQueue.SetUnitRallyPointTransform(unitRallyWaypoint);
+
+        spawnQueue.Initialize();
+
+        //---------------------------------------------------------------------
         // MovingPart (child of Face)
         GameObject buttonMovingPart = GameObject.CreatePrimitive(PrimitiveType.Cube);
         buttonMovingPart.AddComponent<UVCubeMap>();
@@ -598,6 +601,7 @@ public class BuildingInteractionPanel : MonoBehaviour
         hoverButton.movingPart = buttonMovingPart.transform;
         button.transform.localRotation = Quaternion.identity;
 
+        //---------------------------------------------------------------------
         // Lock (child of Button)
         if (GameMaster.Instance.buttonLockPrefab)
         {
@@ -606,14 +610,41 @@ public class BuildingInteractionPanel : MonoBehaviour
             buttonLock.transform.SetParent(button.transform, false);
             buttonLock.transform.localPosition = new Vector3(0.0f, 0.0f, -0.14f);
             buttonLock.transform.Rotate(0.0f, 180.0f, 0.0f);
+            buttonLock.SetActive(false);
 
             queueUnitButton.buttonLockedObject = buttonLock;
-            //queueUnitButton.SetLocked(!PlayerManager.Instance.faction.techTree.IsUnlocked(tech));
+            queueUnitButton.Initialize();
+            if (PlayerManager.Instance.faction.techTree.IsUnlocked(tech))
+                queueUnitButton.Unlock();
+            else
+                queueUnitButton.Lock();
         }
 
         Destroy(buttonBase.GetComponent<BoxCollider>());
 
         return button;
+    }
+
+    public void OnQueueHoverButtonDown(Hand hand)
+    {
+        // TODO: Change this so Hand has references to it's interaction pointer and
+        // pointer interactables or create InteractionPointer events
+        QueueUnitButton queueUnitButton = hand.GetComponent<InteractionPointer>().PointedAtQueueButton;
+        if (queueUnitButton)
+            spawnQueue.QueueTech(queueUnitButton.techToQueue);        
+
+        PlayerManager.Instance.PlayQueueButtonDownSound();
+    }
+
+    public void OnQueueHoverButtonUp(Hand hand)
+    {
+        PlayerManager.Instance.PlayQueueButtonUpSound();
+    }
+
+    public void OnCancelQueueHoverButtonDown(Hand hand)
+    {
+        PlayerManager.Instance.PlayQueueButtonDownSound();
+        spawnQueue.DequeueUnit();
     }
 
     private void InitializeQueueSlots(Transform parent, int maxColumns, float padding)
@@ -722,10 +753,12 @@ public class BuildingInteractionPanel : MonoBehaviour
         face.transform.SetParent(parent, false);
         face.transform.localPosition = new Vector3(0.0f, 0.0f, -0.05f);
         face.transform.localScale = new Vector3(0.85f, 0.85f, 0.15f);
+        face.GetComponent<Interactable>().highlightOnHover = false;
+        
         HoverButton hoverButton = face.GetComponent<HoverButton>();
         hoverButton.localMoveDistance = new Vector3(0, 0, 0.3f);
-        face.GetComponent<Interactable>().highlightOnHover = false;
 
+        hoverButton.onButtonDown.AddListener(OnCancelQueueHoverButtonDown);
 
         // MovingPart (child of Face)
         GameObject buttonMovingPart = GameObject.CreatePrimitive(PrimitiveType.Cube);

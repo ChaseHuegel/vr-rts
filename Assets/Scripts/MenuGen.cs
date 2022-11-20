@@ -94,9 +94,7 @@ public class MenuGen : MonoBehaviour
 
             // spawnQueue.SetMenuParentObject(menuParent.gameObject);
             // spawnQueue.SetSpawnQueueSlotCount(numberOfQueueSlots);
-            spawnQueue.SetButtonDownAudio(onButtonDownAudio);
-            spawnQueue.SetButtonUpAudio(onButtonUpAudio);
-
+    
             GameObject queueSlotsParent = new GameObject("_QueueSlots");
             queueSlotsParent.AddComponent<Canvas>();
             queueSlotsParent.transform.SetParent(menuParent, false);

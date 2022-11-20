@@ -8,6 +8,8 @@ using Swordfish.Navigation;
 using UnityEngine;
 using Valve.VR;
 using Valve.VR.InteractionSystem;
+using UnityEngine.Events;
+
 public class InteractionPointer : MonoBehaviour
 {
     //=========================================================================
@@ -33,7 +35,7 @@ public class InteractionPointer : MonoBehaviour
     public Transform invalidReticleTransform;
     public Color pointerValidColor;
     public Color pointerInvalidColor;
-    public float arcDistance = 10.0f;
+    public float arcDistance = 10.0f;   
 
     //=========================================================================
     public Material buildingPlacementInvalidMat;
@@ -48,6 +50,7 @@ public class InteractionPointer : MonoBehaviour
     private TeleportArc teleportArc = null;
     public bool showPointerArc = false;
     private PointerInteractable pointedAtPointerInteractable;
+    public QueueUnitButton PointedAtQueueButton { get => pointedAtPointerInteractable.GetComponentInChildren<QueueUnitButton>(); }
     private SpawnQueue spawnQueue;
     private List<ActorV2> selectedActors;
     private Vector3 pointedAtPosition;
@@ -432,7 +435,17 @@ public class InteractionPointer : MonoBehaviour
                 return;
             }
 
-            if (ProcessQueueUnitButtonClick(hand)) return;
+            //-----------------------------------------------------------------
+            //Queue/Cancel buttons in building interaction panels            
+            // Hands use SendMessage to call events on targeted 'Interactable' so for our
+            // 'PointerInteractable' we use GetComponent instead. Should probably switch
+            // hands to use GetComponent as well for performance.
+            HoverButton hoverButton = pointedAtPointerInteractable.GetComponentInChildren<HoverButton>();
+            if (hoverButton)
+            {
+                hoverButton.onButtonDown.Invoke(hand);
+                return;
+            }
 
             WallGate wallGate = pointedAtPointerInteractable.GetComponent<WallGate>();
             if (wallGate)
@@ -445,34 +458,6 @@ public class InteractionPointer : MonoBehaviour
         {
             isInUnitSelectionMode = true;
         }
-    }
-
-    private QueueUnitButton ProcessQueueUnitButtonClick(Hand hand)
-    {
-        QueueUnitButton queueUnitButton = pointedAtPointerInteractable.GetComponentInChildren<QueueUnitButton>();
-        if (queueUnitButton)
-        {
-            spawnQueue = pointedAtPointerInteractable.GetComponentInParent<SpawnQueue>();
-            spawnQueue.QueueTech(queueUnitButton.techToQueue);
-
-            HoverButton hoverButton = pointedAtPointerInteractable.GetComponentInChildren<HoverButton>();
-            if (hoverButton)
-                hoverButton.onButtonDown.Invoke(hand);
-        }
-
-        return queueUnitButton;
-    }
-
-    private void ProcessQueueUnitButton()
-    {
-
-    }
-    
-    private T GetPointingAtComponentType<T>(PointerInteractable pointerInteractable)
-    {
-        T ret = pointerInteractable.GetComponentInChildren<T>();
-
-        return ret;
     }
 
     /// <summary>
@@ -1452,6 +1437,6 @@ public class InteractionPointer : MonoBehaviour
     void OnDestroy()
     {
         CleanupEvents();
-    }
+    }    
 }
 

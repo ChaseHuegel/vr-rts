@@ -34,17 +34,6 @@ public class PlayerManager : MonoBehaviour
     [Header("Audio Sources")]
     public AudioSource headAudioSource;
 
-    //=========================================================================
-    [Header("Sounds")]
-    private AudioClip setRallyPointSound;
-    private AudioClip queueSuccessSound;
-    private AudioClip queueFailedSound;
-    private AudioClip dequeueSound;
-    private AudioClip teleportSound;
-    private AudioClip epochResearchCompleteSound;
-    private AudioClip buildingPlacementAllowedSound;
-    private AudioClip buildingPlacementDeniedSound;
-
     [Header("UI")]
     public SteamVR_Action_Boolean handMenuToggle;
 
@@ -121,16 +110,6 @@ public class PlayerManager : MonoBehaviour
         headAudioSource.transform.SetParent(Player.instance.hmdTransform);
         headAudioSource.transform.localPosition = Vector3.zero;
 
-        // Cache sounds
-        buildingPlacementAllowedSound = GameMaster.Instance.buildingPlacementAllowedSound;
-        buildingPlacementDeniedSound = GameMaster.Instance.buildingPlacementDeniedSound;
-        setRallyPointSound = GameMaster.Instance.setRallyPointSound;
-        queueSuccessSound = GameMaster.Instance.queueSuccessSound;
-        queueFailedSound = GameMaster.Instance.queueFailedSound;
-        dequeueSound = GameMaster.Instance.dequeueSound;
-        teleportSound = GameMaster.Instance.teleportSound;
-        epochResearchCompleteSound = GameMaster.Instance.epochResearchCompleteSound;
-
 #if !UNITY_EDITOR
         TechTree tree = Instantiate(faction.techTree);
         faction = Instantiate(faction);
@@ -181,28 +160,39 @@ public class PlayerManager : MonoBehaviour
 
     public void PlayEpochResearchCompleteAudio()
     {
-        PlayAudioAtHeadSource(epochResearchCompleteSound);
+        PlayAudioAtHeadSource(GameMaster.Instance.epochResearchCompleteSound);
     }
 
     public void PlayBuildingPlacementAllowedAudio()
     {
-        PlayAudioAtHeadSource(buildingPlacementAllowedSound);
+        PlayAudioAtHeadSource(GameMaster.Instance.buildingPlacementAllowedSound);
     }
 
     public void PlayBuildingPlacementDeniedAudio()
     {
-        PlayAudioAtHeadSource(buildingPlacementDeniedSound);
+        PlayAudioAtHeadSource(GameMaster.Instance.buildingPlacementDeniedSound);
     }
 
     public void PlaySetRallyPointSound()
     {
-        PlayAudioAtHeadSource(setRallyPointSound);
+        PlayAudioAtHeadSource(GameMaster.Instance.setRallyPointSound);
     }
 
     public void PlayTeleportSound()
     {
-        PlayAudioAtHeadSource(teleportSound);
+        PlayAudioAtHeadSource(GameMaster.Instance.teleportSound);
     }
+
+    public void PlayQueueButtonDownSound()
+    {
+        PlayAudioAtHeadSource(GameMaster.Instance.onQueueButtonDownSound);
+    }
+
+    public void PlayQueueButtonUpSound()
+    {
+        PlayAudioAtHeadSource(GameMaster.Instance.onQueueButtonUpSound);
+    }
+
     public void PlayAudioAtHeadSource(AudioClip clip)
     {
         PlayAudioClip(headAudioSource, clip);

@@ -17,8 +17,6 @@ public class SpawnQueue : MonoBehaviour
     private Transform unitRallyWaypoint;
     private Cell unitRallyPointCell;
     public Cell UnitRallyPointCell { get => unitRallyPointCell; }
-    private AudioClip onButtonDownAudio;
-    private AudioClip onButtonUpAudio;
     private Image[] queueSlotImages;
     private TMPro.TMP_Text progressText;
     private Image progressImage;
@@ -37,7 +35,7 @@ public class SpawnQueue : MonoBehaviour
     private Damageable damageable;
 
     //=========================================================================
-    private RTSUnitType lastUnitQueued;
+    private TechBase lastTechQueued;
 
     public void Initialize()
     {
@@ -67,39 +65,14 @@ public class SpawnQueue : MonoBehaviour
         if (!(structure = gameObject.GetComponentInParent<Structure>()))
             Debug.LogError("Missing structure component in parent.", this);
 
-        HookIntoEvents();
-
-        // QueueUnitButton firstButton = GetComponentInChildren<QueueUnitButton>(true);
-        // if (firstButton)
-        //     lastUnitQueued = firstButton.techToQueue;
+        QueueUnitButton firstButton = GetComponentInChildren<QueueUnitButton>(true);
+        if (firstButton)
+            lastTechQueued = firstButton.techToQueue;
     }
 
     void Update() { UpdateUnitSpawnQueue(); }
 
-    public void OnHoverButtonDown(Hand hand)
-    {
-        QueueUnitButton queueUnitButton = hand.hoveringInteractable?.GetComponentInParent<QueueUnitButton>();
-        if (queueUnitButton)
-        {
-            if (queueUnitButton.IsButtonUnlocked && queueUnitButton.IsButtonEnabled)
-                QueueTech(queueUnitButton.techToQueue);                
-        }
-
-        PlayerManager.Instance.PlayAudioAtHeadSource(onButtonDownAudio);
-    }
-
-    public void OnHoverButtonUp(Hand hand)
-    {
-        PlayerManager.Instance.PlayAudioAtHeadSource(onButtonUpAudio);
-    }
-
-    public void OnCancelButtonDown(Hand hand)
-    {
-        PlayerManager.Instance.PlayAudioAtHeadSource(onButtonDownAudio);
-        DequeueUnit(); 
-    }
-
-    //public bool QueueLastUnitQueued() { return QueueUnit(lastUnitQueued); }
+    public bool QueueLastTechQueued() { return QueueTech(lastTechQueued); }
 
     public bool QueueTech(TechBase tech)
     {
@@ -210,7 +183,7 @@ public class SpawnQueue : MonoBehaviour
     }
 
     //=========================================================================
-    // Menu Generation Utilities
+    // Generation Access
     //-------------------------------------------------------------------------
 
     /// <summary>
@@ -254,16 +227,6 @@ public class SpawnQueue : MonoBehaviour
         if (gameObject) buttonsParent = gameObject;
     }
 
-    public void SetButtonDownAudio(AudioClip clip)
-    {
-        onButtonDownAudio = clip;
-    }
-
-    public void SetButtonUpAudio(AudioClip clip)
-    {
-        onButtonUpAudio = clip;
-    }
-
     public void SetProgressImage(Image image)
     {
         progressImage = image;
@@ -272,65 +235,5 @@ public class SpawnQueue : MonoBehaviour
     public void SetProgressText(TMPro.TextMeshPro text)
     {
         progressText = text;
-    }
-
-    //=========================================================================
-
-    private void HookIntoEvents()
-    {
-        if (buttonsParent)
-        {
-            HoverButton[] hoverButtons = buttonsParent.GetComponentsInChildren<HoverButton>(true);
-            if (hoverButtons.Length > 0)
-                foreach (HoverButton hButton in hoverButtons)
-                {
-                    if (hButton.onButtonDown == null)
-                        hButton.onButtonDown = new HandEvent();
-
-                    if (hButton.onButtonUp == null)
-                        hButton.onButtonUp = new HandEvent();
-                        
-                    hButton.onButtonDown.AddListener(OnHoverButtonDown);
-                    hButton.onButtonUp.AddListener(OnHoverButtonUp);
-                }
-        }
-        else
-            Debug.LogWarning("HookIntoEvents: buttonsParent not found.", this);
-
-        if (cancelButton)
-        {
-            if (cancelButton.onButtonDown == null)
-                cancelButton.onButtonDown = new HandEvent();
-
-            cancelButton.onButtonDown.AddListener(OnCancelButtonDown);
-        }
-        else
-            Debug.LogWarning("HookIntoEvents: cancelButton not found.", this);
-    }
-
-    private void CleanupEvents()
-    {
-        if (buttonsParent)
-        {
-            HoverButton[] hoverButtons = buttonsParent.GetComponentsInChildren<HoverButton>(true);
-            if (hoverButtons.Length > 0)
-                foreach (HoverButton hButton in hoverButtons)
-                {
-                    hButton.onButtonDown.RemoveListener(OnHoverButtonDown);
-                    hButton.onButtonUp.RemoveListener(OnHoverButtonUp);                    
-                }
-        }
-        else
-            Debug.LogWarning("CleanupEvents: buttonsParent not found.", this);
-
-        if (cancelButton)
-            cancelButton.onButtonDown.RemoveListener(OnCancelButtonDown);
-        else
-            Debug.LogWarning("CleanupEvents: cancelButton not found.", this);
-    }
-
-    void OnDestroy()
-    {
-        CleanupEvents();
-    }
+    }    
 }
