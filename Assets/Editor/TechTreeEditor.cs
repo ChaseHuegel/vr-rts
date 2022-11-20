@@ -44,6 +44,7 @@ public class TechTreeEditor : EditorWindow
     Vector2 defaultNodeSize = new Vector2(210, 110);
     Vector2 unitNodeSize = new Vector2(160, 90);
     Vector2 buildingNodeSize = new Vector2(160, 90);
+    Vector2 buildingNodeWithButtonsSize = new Vector2(160, 110);
     Vector2 epochNodeSize = new Vector2(190, 110);
     Vector2 researchNodeSize = new Vector2(180, 90);
     Vector2 upgradeNodeSize = new Vector2(180, 90);
@@ -161,7 +162,14 @@ public class TechTreeEditor : EditorWindow
         if (node is EpochNode)
             return epochNodeSize;
         else if (node is BuildingNode)
-            return buildingNodeSize;
+        {
+            BuildingData buildingData = (BuildingData)node.tech;
+
+            if (buildingData.techQueueButtons.Count > 0)
+                return buildingNodeWithButtonsSize;     
+            else
+                return buildingNodeSize;
+        }
         else if (node is UnitNode)
             return unitNodeSize;
         else if (node is ResearchNode)
@@ -191,7 +199,7 @@ public class TechTreeEditor : EditorWindow
         DrawNonZoomArea();
 
         //Selection.activeObject = selectedNode.tech;
-
+        
         if (GUI.changed)
         {
             targetTree.RefreshNodes();
@@ -744,15 +752,15 @@ public class TechTreeEditor : EditorWindow
         return outPointRect;
     }
 
-    
+
     private Rect DrawNode(TechNode node)
     {
         GUIStyle areaStyle = nodeStyle;
 
         if (node is EpochNode)
             areaStyle = epochNodeStyle;
-        else if (node is BuildingNode)
-            areaStyle = buildingNodeStyle;
+        else if (node is BuildingNode)        
+            areaStyle = buildingNodeStyle;           
         else if (node is UnitNode)
             areaStyle = unitNodeStyle;
         else if (node is ResearchNode)
@@ -771,7 +779,7 @@ public class TechTreeEditor : EditorWindow
             OnClickOutPoint(node);        
 
         if (selectedNode == node)
-            GUI.Box(nodeRect, "", selectedNodeStyle);
+            GUI.Box(nodeRect, "", selectedNodeStyle);        
 
         GUILayout.BeginArea(nodeRect, areaStyle);        
 
@@ -788,12 +796,13 @@ public class TechTreeEditor : EditorWindow
         {
             BuildingNode buildingNode = (BuildingNode)node;
             EditorGUILayout.BeginHorizontal();
+
             GUILayout.Label("Is Built", nodeTextStyle);
             GUILayout.FlexibleSpace();
             if (buildingNode.isBuilt = EditorGUILayout.Toggle("", buildingNode.isBuilt))
                 GUI.changed = true;
 
-            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.EndHorizontal();            
         }
         
         // EditorGUILayout.BeginHorizontal();
@@ -838,10 +847,45 @@ public class TechTreeEditor : EditorWindow
             GUILayout.FlexibleSpace();
             EditorGUILayout.EndHorizontal();
         }
-
+        
         EditorGUILayout.EndVertical();
 
         EditorGUILayout.EndHorizontal();
+
+        if (node is BuildingNode)
+        {
+            EditorGUILayout.BeginHorizontal();
+            BuildingNode buildingNode = (BuildingNode)node;
+            BuildingData buildingData = (BuildingData)buildingNode.tech;
+
+            GUIStyle queueButtonStyle = new GUIStyle();
+            queueButtonStyle.margin = new RectOffset(1, 1, 1, 1);
+
+            foreach (TechBase tech in buildingData.techQueueButtons)
+            {
+                if (tech.worldQueueImage != null)
+                {
+                    if (GUILayout.Button(new GUIContent(tech.worldQueueImage.texture, tech.title), queueButtonStyle, GUILayout.Width(24.0f), GUILayout.Height(24.0f)))
+                    {
+                        Selection.activeObject = tech;
+                    }
+
+                    // if (GUILayout.Button(tech.worldQueueImage.texture, queueButtonStyle, GUILayout.Width(24.0f), GUILayout.Height(24.0f)))
+                    
+                    // {
+                    //     EditorGUILayout.Popup(new GUIContent("movementStepToMoveTo", "YOUR TOOLTIP HERE"));
+                    //     if (Event.current.button == 0)
+                    //     {
+                    //         Selection.activeObject = tech;
+                    //     }
+                    //     // if (Event.current.button == 1)
+                    //     //     ProcessContextMenu(tech);
+                    // }
+                }
+            }
+
+            EditorGUILayout.EndHorizontal();
+        }
 
         GUILayout.EndArea();
 

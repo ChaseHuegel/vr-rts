@@ -23,8 +23,12 @@ public class TechTreeNodeEditor : EditorWindow
 
     void OnInspectorUpdate() => Repaint();
 
+    Vector2 scrollPosition = Vector2.zero;
+
     public void OnGUI()
     {
+        scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
+
         // Shows selected node tech and gives option to delete node
         EditorGUILayout.BeginVertical();
 
@@ -58,6 +62,7 @@ public class TechTreeNodeEditor : EditorWindow
             Repaint();
 
         EditorGUILayout.EndVertical();
+        EditorGUILayout.EndScrollView();
     }
 
     private void ProcessEvents(Event e)
@@ -189,9 +194,10 @@ public class TechTreeNodeEditor : EditorWindow
         node.isBuilt = EditorGUILayout.Toggle("IsBuilt", node.isBuilt);
 
         EditorGUILayout.Space();
+        EditorGUILayout.LabelField("Buttons", EditorStyles.boldLabel);
 
         EditorGUILayout.BeginHorizontal();
-
+        
         foreach(TechBase tech in buildingData.techQueueButtons)
         {
             if (tech.worldQueueImage != null)
