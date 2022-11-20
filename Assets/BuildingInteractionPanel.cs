@@ -607,7 +607,7 @@ public class BuildingInteractionPanel : MonoBehaviour
     {
         // TODO: Change this so Hand has references to it's interaction pointer and
         // pointer interactables or create InteractionPointer events
-        QueueUnitButton queueUnitButton = hand.GetComponent<InteractionPointer>().PointedAtQueueButton;
+        QueueUnitButton queueUnitButton = InteractionPointer.Instance.PointedAtQueueButton;
         if (queueUnitButton)
             spawnQueue.QueueTech(queueUnitButton.techToQueue);        
 

@@ -104,14 +104,12 @@ public class InteractionPointer : MonoBehaviour
 
     //=========================================================================
     private static InteractionPointer _instance;
-    public static InteractionPointer instance
+    public static InteractionPointer Instance
     {
         get
         {
             if (_instance == null)
-            {
                 _instance = GameObject.FindObjectOfType<InteractionPointer>();
-            }
 
             return _instance;
         }

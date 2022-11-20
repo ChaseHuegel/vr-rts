@@ -492,13 +492,13 @@ public class PlayerManager : MonoBehaviour
     public void DisableGripPanning(Hand hand)
     {
         gripPan.DisablePanning(hand);
-        InteractionPointer.instance.DisableInteraction();
+        InteractionPointer.Instance.DisableInteraction();
     }
 
     public void EnableGripPanning(Hand hand)
     {
         gripPan.EnablePanning(hand);
-        InteractionPointer.instance.EnableInteraction();
+        InteractionPointer.Instance.EnableInteraction();
         //InteractionPointer.instance.enabled = true;
     }
 
