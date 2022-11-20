@@ -67,7 +67,7 @@ namespace Swordfish.Navigation
                 foreach (Cell neighbor in current.neighbors())
                 {
                     //  Neighbor must be on the same nav layer(s)
-                    if (neighbor.layers & layers == 0)
+                    if ((neighbor.layers & layers) == 0)
                         continue;
 
                     if (neighbor != end && neighbor.canPathThru == false)
