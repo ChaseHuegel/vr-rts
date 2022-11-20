@@ -94,13 +94,15 @@ public class BuildingInteractionPanel : MonoBehaviour
     private Transform faceTarget;
     private Vector3 progressPosition;
     private Vector3 cancelButtonPosition;
-    private SpawnQueue spawnQueue;
+    private SpawnQueue techQueue;
     private Damageable damageable;
     private GameObject cancelButtonGameObject;
     private bool isVisible;
 
     private List<QueueUnitButton> queueUnitButtons;
     private BuildingData buildingData;
+
+    private bool canQueueUnits = false;
 
     void Awake()
     {
@@ -147,8 +149,8 @@ public class BuildingInteractionPanel : MonoBehaviour
 
         if (enableQueueMenu)
         {
-            spawnQueue = this.gameObject.AddComponent<SpawnQueue>();
-            if (!spawnQueue)
+            techQueue = this.gameObject.AddComponent<SpawnQueue>();
+            if (!techQueue)
                 Debug.LogWarning("Missing SpawnQueue component.", this);
 
             InitializeMenuDisplay();
@@ -414,9 +416,13 @@ public class BuildingInteractionPanel : MonoBehaviour
         if (queueUnitButtons == null)
             queueUnitButtons = new List<QueueUnitButton>();
 
-        
+        canQueueUnits = false;
+
         foreach (TechBase tech in queueTechButtons)
         {
+            if (tech is UnitData)
+                canQueueUnits = true;
+
             GenerateQueueButton(tech, nextButtonPosition, buttonsGameObject.transform);
 
             currentButtonColumn++;
@@ -447,7 +453,9 @@ public class BuildingInteractionPanel : MonoBehaviour
         titleGameObject?.SetActive(true);
         menuGameObject?.SetActive(true);
         healthBarGameObject?.SetActive(true);
-        unitRallyWaypoint?.gameObject.SetActive(true);
+
+        if (canQueueUnits && unitRallyWaypoint)
+            unitRallyWaypoint.gameObject.SetActive(true);
 
         foreach (GameObject go in objectsToAutohide)
             go.SetActive(true);
@@ -458,8 +466,8 @@ public class BuildingInteractionPanel : MonoBehaviour
         titleGameObject?.SetActive(false);
         menuGameObject?.SetActive(false);
 
-        if (enableQueueMenu && unitRallyWaypoint)
-            unitRallyWaypoint.gameObject?.SetActive(false);
+        if (unitRallyWaypoint && canQueueUnits)
+            unitRallyWaypoint.gameObject.SetActive(false);
 
         // TODO: Should be based on the healthbars autoshowAt/autohideAt values.
         // TODO: Change to healthbar events that autohideBillboard can subscribe to.
@@ -499,8 +507,6 @@ public class BuildingInteractionPanel : MonoBehaviour
         if (amount <= 0.0f)
             healthBarGameObject.SetActive(false);;
     }
-
-    
 
     private GameObject GenerateQueueButton(TechBase tech, Vector3 position, Transform parent)
     {
@@ -558,12 +564,12 @@ public class BuildingInteractionPanel : MonoBehaviour
         //---------------------------------------------------------------------
         // Set up and initialize queue
         if (unitSpawnPoint)
-            spawnQueue.SetUnitSpawnPointTransform(unitSpawnPoint);
+            techQueue.SetUnitSpawnPointTransform(unitSpawnPoint);
 
         if (unitRallyWaypoint)
-            spawnQueue.SetUnitRallyPointTransform(unitRallyWaypoint);
+            techQueue.SetUnitRallyPointTransform(unitRallyWaypoint);
 
-        spawnQueue.Initialize();
+        techQueue.Initialize();
 
         //---------------------------------------------------------------------
         // MovingPart (child of Face)
@@ -608,7 +614,7 @@ public class BuildingInteractionPanel : MonoBehaviour
         // pointer interactables or create InteractionPointer events
         QueueUnitButton queueUnitButton = InteractionPointer.Instance.PointedAtQueueButton;
         if (queueUnitButton)
-            spawnQueue.QueueTech(queueUnitButton.techToQueue);        
+            techQueue.QueueTech(queueUnitButton.techToQueue);        
 
         PlayerManager.Instance.PlayQueueButtonDownSound();
     }
@@ -621,7 +627,7 @@ public class BuildingInteractionPanel : MonoBehaviour
     public void OnCancelQueueHoverButtonDown(Hand hand)
     {
         PlayerManager.Instance.PlayQueueButtonDownSound();
-        spawnQueue.DequeueUnit();
+        techQueue.DequeueUnit();
     }
 
     private void InitializeQueueSlots(Transform parent, int maxColumns, float padding)
@@ -643,12 +649,12 @@ public class BuildingInteractionPanel : MonoBehaviour
         cancelButtonPosition.y -= queueSlotSize * 0.5f;
 
         Vector3 nextButtonPosition = startPosition;
-        spawnQueue.SetSpawnQueueSlotCount(numberOfQueueSlots);
+        techQueue.SetSpawnQueueSlotCount(numberOfQueueSlots);
 
         for (int i = numberOfQueueSlots - 1; i >= 0; i--)
         {
             queueSlotImages[i] = GenerateQueueSlot(nextButtonPosition, parent);
-            spawnQueue.SetQueueSlotImage(queueSlotImages[i], (byte)i);
+            techQueue.SetQueueSlotImage(queueSlotImages[i], (byte)i);
 
             currentQueueSlotColumn++;
             if (currentQueueSlotColumn >= maxColumns)
@@ -710,8 +716,8 @@ public class BuildingInteractionPanel : MonoBehaviour
 
         if (enableQueueMenu)
         {
-            spawnQueue.SetProgressText(text);
-            spawnQueue.SetProgressImage(image);
+            techQueue.SetProgressText(text);
+            techQueue.SetProgressImage(image);
         }
     }
 
