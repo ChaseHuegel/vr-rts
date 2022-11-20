@@ -527,8 +527,8 @@ public class InteractionPointer : MonoBehaviour
             spawnQueue.SetUnitRallyPointPosition(wayPointReticle.transform.position);
             wayPointReticle.SetActive(false);
 
-            GameObject gameObject = Instantiate<GameObject>(setRallyPointPrefab, setRallyPointPrefab.transform.position, setRallyPointPrefab.transform.rotation);
-            gameObject.transform.localScale = setRallyPointPrefab.transform.lossyScale;
+            GameObject gameObject = Instantiate<GameObject>(setRallyPointPrefab, wayPointReticle.transform.position, wayPointReticle.transform.rotation);
+            gameObject.transform.localScale = setRallyPointPrefab.transform.localScale;
             gameObject.GetComponentInChildren<Animator>().Play("deploy");
             Destroy(gameObject, 2.0f);
 
