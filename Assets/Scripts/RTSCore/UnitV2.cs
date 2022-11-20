@@ -7,8 +7,7 @@ public abstract class UnitV2 : ActorV2
 {
     public abstract bool IsCivilian { get; }
 
-    public UnitData unitData;// => m_UnitData ??= GameMaster.GetUnit(UnitType);
-    //private UnitData m_UnitData;
+    public UnitData unitData;
 
     public bool AttackingTarget
     {
@@ -52,12 +51,6 @@ public abstract class UnitV2 : ActorV2
         Attributes.AddOrUpdate(AttributeConstants.ATTACK_RANGE, Attributes.ValueOf(AttributeConstants.REACH));
         Attributes.AddOrUpdate(AttributeConstants.HEAL_RATE, 1f);
     }
-
-    // public virtual void SetUnitData(UnitData data)
-    // {
-    //     unitData = data;
-    //     OnLoadUnitData(unitData);
-    // }
 
     protected virtual void OnLoadUnitData(UnitData data)
     {
