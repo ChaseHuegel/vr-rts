@@ -122,13 +122,13 @@ public class Constructible : Obstacle
             //  Try placing a prefab
             if (OnBuiltPrefab != null)
             {
-                Instantiate(OnBuiltPrefab, transform.position, transform.rotation);
-                Structure structure = OnBuiltPrefab.GetComponent<Structure>();
-                if (structure) 
+                GameObject gameObject = Instantiate(OnBuiltPrefab, transform.position, transform.rotation);
+                Structure structure = gameObject.GetComponent<Structure>();
+                if (structure)
                     structure.Faction = this.Faction;
                 else
                 {
-                    Resource constructible = OnBuiltPrefab.GetComponent<Resource>();
+                    Resource constructible = gameObject.GetComponent<Resource>();
                     constructible.Faction = this.Faction;
                 }
 

@@ -95,10 +95,10 @@ GameObject:
   - component: {fileID: 1816000465289794642}
   - component: {fileID: 6929555586794667368}
   - component: {fileID: 493454431486109437}
-  - component: {fileID: 5790928021406692932}
   - component: {fileID: 6740682029821101653}
+  - component: {fileID: 1626260714517434391}
   m_Layer: 10
-  m_Name: stone_wall_a_construction
+  m_Name: stone_wall_a_1x1_construction
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -285,19 +285,6 @@ MonoBehaviour:
   highlightOnHover: 1
   hideHighlight: []
   hoverPriority: 0
---- !u!135 &5790928021406692932
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3625756549702738129}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.3
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &6740682029821101653
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -315,7 +302,7 @@ MonoBehaviour:
   Resistances: 
   Immunities: 
   Faction: {fileID: 0}
-  BoundingDimensions: {x: 0, y: 0}
+  BoundingDimensions: {x: 1, y: 1}
   BoundingOrigin: {x: 0, y: 0}
   SkinRendererTargets: []
   bakeOnStart: 1
@@ -329,6 +316,20 @@ MonoBehaviour:
   - {fileID: 1669584451290461569}
   - {fileID: 8129550063042327647}
   - {fileID: 8570578439489338725}
+--- !u!136 &1626260714517434391
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3625756549702738129}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.06016878
+  m_Height: 0.19518752
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.037363954, z: 0}
 --- !u!1 &8129550063042327647
 GameObject:
   m_ObjectHideFlags: 0

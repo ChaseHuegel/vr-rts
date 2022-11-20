@@ -728,10 +728,10 @@ GameObject:
   - component: {fileID: 8622338275478004158}
   - component: {fileID: 4397910894140513137}
   - component: {fileID: 368591531554275847}
-  - component: {fileID: 8094791914746604659}
   - component: {fileID: 2943156806837804067}
+  - component: {fileID: -1699530213084456613}
   m_Layer: 10
-  m_Name: stone_wall_a_world
+  m_Name: stone_wall_a_1x1_world
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -883,7 +883,7 @@ MonoBehaviour:
   Resistances: 
   Immunities: 
   Faction: {fileID: 0}
-  BoundingDimensions: {x: 0, y: 0}
+  BoundingDimensions: {x: 1, y: 1}
   BoundingOrigin: {x: 0, y: 0}
   SkinRendererTargets:
   - {fileID: 4681896033751458358}
@@ -958,19 +958,6 @@ MonoBehaviour:
   highlightOnHover: 0
   hideHighlight: []
   hoverPriority: 0
---- !u!135 &8094791914746604659
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8277061446100368997}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.21
-  m_Center: {x: 0, y: 0.06, z: 0}
 --- !u!114 &2943156806837804067
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1013,6 +1000,20 @@ MonoBehaviour:
   unitSpawnPoint: {fileID: 2429729752740856431}
   unitRallyWaypoint: {fileID: 8980351826291966615}
   numberOfQueueSlots: 12
+--- !u!136 &-1699530213084456613
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8277061446100368997}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.06016878
+  m_Height: 0.34247857
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.11100948, z: 0}
 --- !u!1 &8307900653199698482
 GameObject:
   m_ObjectHideFlags: 0
