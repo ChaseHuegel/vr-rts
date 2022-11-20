@@ -36,7 +36,7 @@ namespace Swordfish.Navigation
             return path;
         }
 
-        public static List<Cell> Find(Cell start, Cell end, bool ignoreActors = true)
+        public static List<Cell> Find(Cell start, Cell end, bool ignoreActors = true, NavigationLayers layers = NavigationLayers.ALL)
         {
             //  TODO: waypoint system to break down long or complex treks into multiple pathfind attempts
             //  a 'waypoint' can represent the end of this path but not the actual end goal
@@ -66,6 +66,10 @@ namespace Swordfish.Navigation
                 //  Not there yet! Go through all neighbors of the current cell..
                 foreach (Cell neighbor in current.neighbors())
                 {
+                    //  Neighbor must be on the same nav layer(s)
+                    if ((neighbor.layers & layers) == 0)
+                        continue;
+
                     if (neighbor != end && neighbor.canPathThru == false)
                     {
                         //-------------------------------------------------------

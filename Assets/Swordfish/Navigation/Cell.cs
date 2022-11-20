@@ -5,7 +5,6 @@ using UnityEngine;
 
 namespace Swordfish.Navigation
 {
-
     public class Cell : IHeapItem<Cell>
     {
         //  Pathfinding info
@@ -29,6 +28,7 @@ namespace Swordfish.Navigation
         public byte weight = 0;
         public bool passable = true;
         public bool canPathThru = false;
+        public NavigationLayers layers = NavigationLayers.ALL;
 
         //  Occupants
         public UniqueList<Body> occupants = new UniqueList<Body>();
@@ -36,7 +36,7 @@ namespace Swordfish.Navigation
 
         public Body GetFirstOccupant()
         {
-            if (occupants.Count > 0)
+            if (occupied)
                 return occupants[0];
             else
                 return null;
@@ -106,18 +106,6 @@ namespace Swordfish.Navigation
         public List<Cell> neighbors()
         {
             List<Cell> cells = new List<Cell>();
-
-            //  Diagonals
-            // cells.Add( grid.at( x - 1, y + 1) );
-            // cells.Add( grid.at( x + 1, y + 1) );
-            // cells.Add( grid.at( x - 1, y - 1) );
-            // cells.Add( grid.at( x + 1, y - 1) );
-
-            //  Direct neighbors
-            // cells.Add( grid.at( x + 1, y) );
-            // cells.Add( grid.at( x, y + 1) );
-            // cells.Add( grid.at( x - 1, y) );
-            // cells.Add( grid.at( x, y - 1) );
 
             //  ordered counter clockwise starting from right
             cells.Add(grid.at(x + 1, y));
