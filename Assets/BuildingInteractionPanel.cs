@@ -547,6 +547,20 @@ public class BuildingInteractionPanel : MonoBehaviour
         cost.stoneText.text = tech.stoneCost.ToString();
 
         //---------------------------------------------------------------------
+        // Button label
+        GameObject textObject = new GameObject("_button_label");
+        TMPro.TextMeshPro text = textObject.AddComponent<TMPro.TextMeshPro>();
+        textObject.transform.SetParent(button.transform, false);
+        text.rectTransform.sizeDelta = new Vector2(1.0f, 0.25f);
+        text.rectTransform.localPosition = new Vector3(0.0f, 0.484f, -0.088f);
+        text.sortingOrder = 1;
+        text.horizontalAlignment = TMPro.HorizontalAlignmentOptions.Center;
+        text.verticalAlignment = TMPro.VerticalAlignmentOptions.Middle;
+        text.fontSize = 1.0f;
+        text.font = GameMaster.Instance.progressFont;
+        text.text = tech.title;
+
+        //---------------------------------------------------------------------
         // Face (child of Button)
         GameObject face = new GameObject("_face", typeof(Interactable), typeof(HoverButton));
         face.transform.SetParent(button.transform, false);
