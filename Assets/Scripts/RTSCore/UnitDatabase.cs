@@ -8,10 +8,10 @@ public class UnitDatabase : ScriptableObject
 {
     [SerializeField] private List<UnitData> database = new List<UnitData>();
 
-    public UnitData Get(RTSUnitType type)
-    {
-        return database.Find(x => x.unitType == type);
-    }
+    // public UnitData Get(UnitData type)
+    // {
+    //     return database.Find(x => x.unitType == type);
+    // }
 
     public UnitData Get(string name)
     {

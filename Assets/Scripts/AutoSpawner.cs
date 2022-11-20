@@ -37,10 +37,10 @@ public class AutoSpawner : MonoBehaviour
     public float unitSpawnPointRadius;
     public Transform unitRallyWaypoint;
     public float unitRallyWaypointRadius;
-    public RTSUnitType[] unitSpawnList;
+    public UnitData[] unitSpawnList;
 
     [Header("Instant Spawn")]
-    public RTSUnitType unit;
+    public UnitData unit;
     [InspectorButton("OnSpawnClicked")]
     public bool spawn;
     private LinkedList<UnitData> unitSpawnQueue = new LinkedList<UnitData>();
@@ -111,10 +111,17 @@ public class AutoSpawner : MonoBehaviour
         spawnTimer += Time.deltaTime;
     }
 
-    private void SpawnUnit(RTSUnitType unitType)
+    public void OnDrawGizmos()
     {
-        UnitData unitData = GameMaster.GetUnit(unitType);
+        if (Application.isEditor != true || Application.isPlaying) return;
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(unitSpawnPoint.position, unitSpawnPointRadius);
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(unitRallyWaypoint.position, unitRallyWaypointRadius);
+    }
 
+    private void SpawnUnit(UnitData unitData)
+    {
         if (unitData?.worldPrefab)
         {
             Vector3 randomPos = Random.insideUnitSphere * unitSpawnPointRadius;
@@ -128,7 +135,7 @@ public class AutoSpawner : MonoBehaviour
 
             UnitV2 unit = unitGameObject.GetComponent<UnitV2>();
             unit.Faction = GameMaster.Factions.Find(x => x.Id == factionID);
-            unit.SetUnitType(unitData.unitType);
+            unit.unitData = unitData;
 
             randomPos = Random.insideUnitSphere * unitSpawnPointRadius;
             position = unitRallyWaypoint.transform.position + randomPos;
@@ -137,7 +144,7 @@ public class AutoSpawner : MonoBehaviour
         }
         else
         {
-            Debug.Log(string.Format("Spawn {0} failed. Missing prefabToSpawn.", unitData.unitType));
+            Debug.Log(string.Format("Spawn {0} failed. Missing prefabToSpawn.", unitData.name));
         }
     }
 }

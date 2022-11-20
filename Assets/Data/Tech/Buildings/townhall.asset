@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c98206bdc9ffd5547bf4552bd13d2c59, type: 3}
+  m_Name: townhall
+  m_EditorClassIdentifier: 
+  title: Town Hall
+  description: 
+  queueResearchTime: 25
+  worldPrefab: {fileID: 1129064322338806663, guid: 9b01cde0f07486643a93faa1b4864738,
+    type: 3}
+  worldButtonMaterial: {fileID: 2100000, guid: 7efca1a23fe081b458699fedbe0e5312, type: 2}
+  worldQueueImage: {fileID: 21300000, guid: 3ef14d1b95a99cd48adb3afe65621bb8, type: 3}
+  populationCost: 0
+  goldCost: 0
+  stoneCost: 100
+  foodCost: 0
+  woodCost: 275
+  buildingType: 85
+  dropoffTypes: -1
+  boundingDimensionX: 6
+  boundingDimensionY: 6
+  populationSupported: 5
+  maxUnitQueueSize: 12
+  maximumHitPoints: 100
+  garrisonCapacity: 15
+  armor: 6
+  menuPreviewPrefab: {fileID: 6762361472588772891, guid: 76864ca5d7aacd148b07c6f6951ce407,
+    type: 3}
+  fadedPreviewPrefab: {fileID: 8181061439616555921, guid: 2f99df15e44780045b4f8234a2223ded,
+    type: 3}
+  worldPreviewPrefab: {fileID: 1463259147629669500, guid: bc2256f6665eee54787a7bf25f2d9109,
+    type: 3}
+  throwablePrefab: {fileID: 5174908472927614204, guid: 1da41843bc02b7142b7feceeaa914f97,
+    type: 3}
+  constructionPrefab: {fileID: 4981801186455602416, guid: 1bcddc84105801342bd00e7918e40d9c,
+    type: 3}
+  constructionCompletedAudio: {fileID: 11400000, guid: c72159ec98440534abf1b3058c7edd57,
+    type: 2}
+  techQueueButtons:
+  - {fileID: 11400000, guid: e2b8096b7a6bbdf4d914c05ac91463b9, type: 2}
+  - {fileID: 11400000, guid: 1c99027ec54ca054aa9caa1c7f275bff, type: 2}
+  - {fileID: 11400000, guid: 744691140f29f074ea9f47aad6f1fffb, type: 2}
+  - {fileID: 11400000, guid: 608a2f45476427b47b18d337ac49899d, type: 2}

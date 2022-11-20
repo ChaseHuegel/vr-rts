@@ -18,6 +18,7 @@ public class TechTree : ScriptableObject
 
     public delegate void NodeResearched(TechNode node);
     public static event NodeResearched OnNodeResearched;
+
     public delegate void NodeRevokeTechResearch(TechNode node);
     public static event NodeRevokeTechResearch OnNodeRevokeTechResearch;
 
@@ -41,8 +42,8 @@ public class TechTree : ScriptableObject
     public void RefreshNodes()
     {
         foreach (TechNode techNode in tree)
-        {
-            if (NodeRequirementsUnlocked(techNode))// && techNode.researched && !techNode.requiresResearch)
+        {   
+            if (techNode.RequirementsPassed(this))
             {
                 techNode.unlocked = true;
                 if (OnNodeUnlocked != null)
@@ -72,86 +73,6 @@ public class TechTree : ScriptableObject
         }
     }
 
-    private bool NodeRequirementsUnlocked(TechNode techNode)
-    {
-        if (techNode is EpochNode)
-        {
-            if (techNode.techRequirements.Count <= 0)
-                return true;
-
-            int count = 0;
-            foreach (TechBase req in techNode.techRequirements)
-            {
-                TechNode requirementNode = FindNode(req);
-                if (!requirementNode.unlocked)
-                    return false;
-
-                if (((BuildingNode)requirementNode).isBuilt == true)
-                    count++;
-                
-                if (count >= ((EpochNode)techNode).requiredBuildingCount)
-                    return true;
-
-                continue;
-            }
-
-            return false;
-        }
-
-        else if (techNode is BuildingNode)
-        {
-            foreach (TechBase req in techNode.techRequirements)
-            {
-                TechNode requirementNode = FindNode(req);
-                if (!requirementNode.unlocked)
-                    return false;
-
-                else if (requirementNode is EpochNode)
-                {
-                    if (!requirementNode.researched)
-                        return false;
-                }
-                else if (requirementNode is BuildingNode)
-                    if (((BuildingNode)requirementNode).isBuilt != true)
-                        return false;
-
-                continue;
-            }
-
-            return true;
-        }
-
-        else if (techNode is UnitNode)
-        {
-            foreach (TechBase req in techNode.techRequirements)
-            {
-                TechNode requirementNode = FindNode(req);
-                if (!requirementNode.unlocked)
-                    return false;
-
-                continue;
-            }
-
-            return true;
-        }
-
-        else if (techNode is ResearchNode)
-        {
-            foreach (TechBase req in techNode.techRequirements)
-            {
-                TechNode requirementNode = FindNode(req);
-                if (!requirementNode.unlocked)
-                    return false;
-
-                continue;
-            }
-
-            return true;
-        }
-
-        return false;
-    }
-
     public TechNode AddNode(TechNode node, Vector2 UIpos)
     {
         int tIdx = FindTechIndex(node.tech);
@@ -165,7 +86,7 @@ public class TechTree : ScriptableObject
         return null;
     }
 
-    public bool AddNode(TechBase tech, Vector2 UIpos)
+    public bool CreateNode(TechBase tech, Vector2 UIpos)
     {
         int tIdx = FindTechIndex(tech);
         if (tIdx == -1)
@@ -352,6 +273,42 @@ public class TechNode
         this.unlocked = unlocked;
         this.UIposition = position;
     }
+
+    public virtual bool RequirementsPassed(TechTree techTree)
+    {
+        foreach (TechBase req in techRequirements)
+        {
+            TechNode requirementNode = techTree.FindNode(req);
+            if (!requirementNode.unlocked)
+                return false;
+
+            continue;
+        }
+
+        return true;
+    }
+}
+
+[System.Serializable]
+public class UpgradeNode : TechNode
+{
+    public int requiredTechCount = 0;
+    public UpgradeNode(TechBase tech, List<TechBase> reqs, Vector2 position, bool unlocked = false, bool researched = false)
+    : base(tech, reqs, position, unlocked, researched)
+    {
+    }
+
+    public override bool RequirementsPassed(TechTree techTree)
+    {
+        foreach (TechBase req in techRequirements)
+        {
+            TechNode requirementNode = techTree.FindNode(req);
+            if (!requirementNode.unlocked)
+                return false;
+        }
+
+        return true;
+    }
 }
 
 [System.Serializable]
@@ -361,6 +318,24 @@ public class ResearchNode : TechNode
     public ResearchNode(TechBase tech, List<TechBase> reqs, Vector2 position, bool unlocked = false, bool researched = false)
     : base(tech, reqs, position, unlocked, researched)
     {
+    }
+
+    public override bool RequirementsPassed(TechTree techTree)
+    {
+        foreach (TechBase req in techRequirements)
+        {
+            TechNode requirementNode = techTree.FindNode(req);
+            if (!requirementNode.unlocked)
+                return false;
+
+            else if (requirementNode is EpochNode)
+            {
+                if (!requirementNode.researched)
+                    return false;
+            }
+        }
+
+        return true;
     }
 }
 
@@ -372,6 +347,28 @@ public class EpochNode : TechNode
     : base(tech, reqs, position, unlocked, researched)
     {
     }
+
+    public override bool RequirementsPassed(TechTree techTree)
+    {
+        if (techRequirements.Count <= 0)
+            return true;
+
+        int count = 0;
+        foreach (TechBase req in techRequirements)
+        {
+            TechNode requirementNode = techTree.FindNode(req);
+            if (!requirementNode.unlocked)
+                return false;
+
+            if (((BuildingNode)requirementNode).isBuilt == true)
+                count++;
+
+            if (count >= requiredBuildingCount)
+                return true;
+        }
+
+        return false;
+    }
 }
 
 [System.Serializable]
@@ -381,6 +378,18 @@ public class UnitNode : TechNode
     public UnitNode(TechBase tech, List<TechBase> reqs, Vector2 position, bool unlocked = false, bool researched = false)
     : base(tech, reqs, position, unlocked, researched)
     {
+    }
+
+    public override bool RequirementsPassed(TechTree techTree)
+    {
+        foreach (TechBase req in techRequirements)
+        {
+            TechNode requirementNode = techTree.FindNode(req);
+            if (!requirementNode.unlocked)
+                return false;
+        }
+
+        return true;
     }
 }
 
@@ -392,5 +401,30 @@ public class BuildingNode : TechNode
     public BuildingNode(TechBase tech, List<TechBase> reqs, Vector2 position, bool unlocked = false, bool researched = false)
     : base(tech, reqs, position, unlocked, researched)
     {
+    }
+
+    public override bool RequirementsPassed(TechTree techTree)
+    {
+        foreach (TechBase req in techRequirements)
+        {
+            TechNode requirementNode = techTree.FindNode(req);
+            if (!requirementNode.unlocked)
+                return false;
+            else if (requirementNode is ResearchNode)
+            {
+                if (!requirementNode.researched)
+                    return false;
+            }
+            else if (requirementNode is EpochNode)
+            {
+                if (!requirementNode.researched)
+                    return false;
+            }
+            else if (requirementNode is BuildingNode)
+                if (((BuildingNode)requirementNode).isBuilt != true)
+                    return false;
+        }
+
+        return true;
     }
 }

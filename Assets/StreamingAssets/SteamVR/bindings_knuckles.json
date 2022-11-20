@@ -102,8 +102,8 @@
                },
                "mode" : "dpad",
                "parameters" : {
-                  "deadzone_pct" : "25",
-                  "overlap_pct" : "30",
+                  "deadzone_pct" : "35",
+                  "overlap_pct" : "0",
                   "sub_mode" : "touch"
                },
                "path" : "/user/hand/left/input/thumbstick"
@@ -125,8 +125,8 @@
                },
                "mode" : "dpad",
                "parameters" : {
-                  "deadzone_pct" : "25",
-                  "overlap_pct" : "30",
+                  "deadzone_pct" : "35",
+                  "overlap_pct" : "0",
                   "sub_mode" : "touch"
                },
                "path" : "/user/hand/right/input/thumbstick"
@@ -264,6 +264,7 @@
                },
                "mode" : "dpad",
                "parameters" : {
+                  "overlap_pct" : "0",
                   "sub_mode" : "touch"
                },
                "path" : "/user/hand/left/input/thumbstick"
@@ -279,6 +280,7 @@
                },
                "mode" : "dpad",
                "parameters" : {
+                  "overlap_pct" : "0",
                   "sub_mode" : "touch"
                },
                "path" : "/user/hand/right/input/thumbstick"

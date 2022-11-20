@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Swordfish.Audio;
-
+using System;
 [CreateAssetMenu(fileName = "New Building", menuName = "RTS/Buildings/Building Data")]
 public class BuildingData : TechBase
 {
@@ -27,5 +27,8 @@ public class BuildingData : TechBase
     public GameObject constructionPrefab;
 
     [Header("Other Settings")]
-    public SoundElement constructionCompletedAudio;    
+    public SoundElement constructionCompletedAudio;
+
+    public List<TechBase> techQueueButtons;
 }
+

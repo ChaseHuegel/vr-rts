@@ -69,7 +69,7 @@ public class BuildingInteractionPanel : MonoBehaviour
     public Transform unitRallyWaypoint;
 
     [Header("Queue Menu Button Settings")]
-    public List<TechBase> queueTechButtons;
+    private List<TechBase> queueTechButtons;
     private float buttonSize = 0.25f;
     private float spaceBetweenButtons = 0.025f;
     private int maxButtonColumns = 5;
@@ -94,12 +94,15 @@ public class BuildingInteractionPanel : MonoBehaviour
     private Transform faceTarget;
     private Vector3 progressPosition;
     private Vector3 cancelButtonPosition;
-    private SpawnQueue spawnQueue;
+    private SpawnQueue techQueue;
     private Damageable damageable;
     private GameObject cancelButtonGameObject;
     private bool isVisible;
 
     private List<QueueUnitButton> queueUnitButtons;
+    private BuildingData buildingData;
+
+    private bool canQueueUnits = false;
 
     void Awake()
     {
@@ -109,6 +112,24 @@ public class BuildingInteractionPanel : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Structure structure = GetComponent<Structure>();
+        if (structure)
+            buildingData = GetComponent<Structure>().buildingData;
+        else
+        {
+            FactionedResource factionedResource = GetComponent<FactionedResource>();
+            if (factionedResource)
+                buildingData = factionedResource.buildingData;
+        }
+
+        if (buildingData.techQueueButtons.Count > 0)
+        {
+            enableQueueMenu = true;
+            queueTechButtons = new List<TechBase>(buildingData.techQueueButtons);
+        }
+        else
+            enableQueueMenu = false;
+
         if (interactionPanelObject)
             return;
             
@@ -128,13 +149,11 @@ public class BuildingInteractionPanel : MonoBehaviour
 
         if (enableQueueMenu)
         {
-            spawnQueue = this.gameObject.AddComponent<SpawnQueue>();
-            if (!spawnQueue)
+            techQueue = this.gameObject.AddComponent<SpawnQueue>();
+            if (!techQueue)
                 Debug.LogWarning("Missing SpawnQueue component.", this);
 
             InitializeMenuDisplay();
-
-            InitializeSpawnQueue();
 
             this.gameObject.GetComponent<PointerInteractable>().AddChildrenToHideHighlight(interactionPanelObject);            
 
@@ -150,19 +169,10 @@ public class BuildingInteractionPanel : MonoBehaviour
             Show();        
     }
 
-    // private void OnNodeUnlocked(TechNode node)
-    // {
-    //     queueUnitButtons.Find(x => x.techToQueue == node.tech)?.Unlock();
-    // }
-
-    // private void OnNodeLocked(TechNode node)
-    // {
-    //     queueUnitButtons.Find(x => x.techToQueue == node.tech)?.Lock();
-    // }
     private void OnNodeResearched(TechNode node) 
     {
-        // Do not destroy buttons when research is complete if they aren't single use.
-        if (!node.tech.singleUse)
+        // Do not destroy buttons if node is a unit node
+        if (node.tech is UnitData)
             return;
 
         queueTechButtons.Remove(node.tech);
@@ -177,37 +187,30 @@ public class BuildingInteractionPanel : MonoBehaviour
 
         queueUnitButtons.Clear();
         InitializeQueueButtons();
-        InitializeSpawnQueue();
     }
-
-    // private void OnNodeEnabled(TechNode node) 
-    // {
-    //     queueUnitButtons.Find(x => x.techToQueue == node.tech)?.Enable();
-    // }
-
-    // private void OnNodeDisabled(TechNode node)
-    // {
-    //     queueUnitButtons.Find(x => x.techToQueue == node.tech)?.Disable();
-    // }
 
     private void HookIntoEvents()
     {
-        // TechTree.OnNodeUnlocked += OnNodeUnlocked;
-        // TechTree.OnNodeLocked += OnNodeLocked;
-        // TechTree.OnNodeEnabled += OnNodeEnabled;
-        // TechTree.OnNodeDisabled += OnNodeDisabled;
         TechTree.OnNodeResearched += OnNodeResearched;
 
     }
 
     private void CleanupEvents()
     {
-        // TechTree.OnNodeUnlocked -= OnNodeUnlocked;
-        // TechTree.OnNodeLocked -= OnNodeUnlocked;
-        // TechTree.OnNodeEnabled -= OnNodeEnabled;
-        // TechTree.OnNodeDisabled -= OnNodeDisabled;
         TechTree.OnNodeResearched -= OnNodeResearched;
-        
+
+        if (enableQueueMenu)
+        {
+            if (cancelButtonGameObject)
+                cancelButtonGameObject.GetComponentInChildren<HoverButton>().onButtonDown.RemoveListener(OnCancelQueueHoverButtonDown);
+
+            if (buttonsGameObject)
+                foreach (HoverButton button in buttonsGameObject.GetComponentsInChildren<HoverButton>())
+                {
+                    button.onButtonDown.RemoveListener(OnQueueHoverButtonDown);
+                    button.onButtonUp.RemoveListener(OnQueueHoverButtonUp);
+                }
+        }
     }
 
     void OnDestroy()
@@ -226,23 +229,6 @@ public class BuildingInteractionPanel : MonoBehaviour
         Quaternion rot = faceTarget.transform.rotation;
         rot.z = rot.x = 0;
         interactionPanelObject.transform.rotation = rot;              
-    }
-
-    private void InitializeSpawnQueue()
-    {
-        // TODO: Should this stuff be moved to this class?
-        spawnQueue.SetButtonsParentObject(buttonsGameObject);
-        spawnQueue.SetButtonDownAudio(GameMaster.Instance.onButtonDownAudio);
-        spawnQueue.SetButtonUpAudio(GameMaster.Instance.onButtonUpAudio);
-        spawnQueue.SetCancelButton(cancelButtonGameObject.GetComponentInChildren<HoverButton>(true));
-
-        if (unitSpawnPoint)
-            spawnQueue.SetUnitSpawnPointTransform(unitSpawnPoint);
-
-        if (unitRallyWaypoint)
-            spawnQueue.SetUnitRallyPointTransform(unitRallyWaypoint);
-
-        spawnQueue.Initialize();
     }
 
     // Update is called once per frame
@@ -430,8 +416,13 @@ public class BuildingInteractionPanel : MonoBehaviour
         if (queueUnitButtons == null)
             queueUnitButtons = new List<QueueUnitButton>();
 
+        canQueueUnits = false;
+
         foreach (TechBase tech in queueTechButtons)
         {
+            if (tech is UnitData)
+                canQueueUnits = true;
+
             GenerateQueueButton(tech, nextButtonPosition, buttonsGameObject.transform);
 
             currentButtonColumn++;
@@ -443,9 +434,6 @@ public class BuildingInteractionPanel : MonoBehaviour
             nextButtonPosition.x = startPosition.x + ((buttonSize + spaceBetweenButtons) * currentButtonColumn);
             nextButtonPosition.y = startPosition.y - ((buttonSize + spaceBetweenButtons) * currentButtonRow);
         }
-
-        foreach (QueueUnitButton btn in queueUnitButtons)
-            btn.Initialize();
     }
 
     public void Toggle()
@@ -465,7 +453,9 @@ public class BuildingInteractionPanel : MonoBehaviour
         titleGameObject?.SetActive(true);
         menuGameObject?.SetActive(true);
         healthBarGameObject?.SetActive(true);
-        unitRallyWaypoint?.gameObject.SetActive(true);
+
+        if (canQueueUnits && unitRallyWaypoint)
+            unitRallyWaypoint.gameObject.SetActive(true);
 
         foreach (GameObject go in objectsToAutohide)
             go.SetActive(true);
@@ -476,8 +466,8 @@ public class BuildingInteractionPanel : MonoBehaviour
         titleGameObject?.SetActive(false);
         menuGameObject?.SetActive(false);
 
-        if (enableQueueMenu && unitRallyWaypoint)
-            unitRallyWaypoint.gameObject?.SetActive(false);
+        if (unitRallyWaypoint && canQueueUnits)
+            unitRallyWaypoint.gameObject.SetActive(false);
 
         // TODO: Should be based on the healthbars autoshowAt/autohideAt values.
         // TODO: Change to healthbar events that autohideBillboard can subscribe to.
@@ -518,12 +508,9 @@ public class BuildingInteractionPanel : MonoBehaviour
             healthBarGameObject.SetActive(false);;
     }
 
-    
-
     private GameObject GenerateQueueButton(TechBase tech, Vector3 position, Transform parent)
     {
-        //UnitData typeData = GameMaster.GetUnit(unitType);
-
+        //---------------------------------------------------------------------
         // Button
         GameObject button = new GameObject("_button", typeof(QueueUnitButton));
         button.transform.SetParent(parent, false);
@@ -534,8 +521,9 @@ public class BuildingInteractionPanel : MonoBehaviour
 
         QueueUnitButton queueUnitButton = button.GetComponent<QueueUnitButton>();
         queueUnitButton.techToQueue = tech;
-        queueUnitButtons.Add(queueUnitButton);        
+        queueUnitButtons.Add(queueUnitButton);
 
+        //---------------------------------------------------------------------
         // Base (child of Button)
         GameObject buttonBase = GameObject.CreatePrimitive(PrimitiveType.Cube);
         buttonBase.name = "_base";
@@ -544,28 +532,46 @@ public class BuildingInteractionPanel : MonoBehaviour
         buttonBase.transform.localPosition = Vector3.zero;
         buttonBase.transform.GetComponent<MeshRenderer>().sharedMaterial = GameMaster.Instance.buttonBaseMaterial;
 
+        //---------------------------------------------------------------------
         // Instantiate the resource cost gameobject
-        // GameObject resourceCost = Instantiate(resourceCostPrefab, Vector3.zero, Quaternion.identity, button.transform);
-        // resourceCost.transform.localPosition = new Vector3(0.0f, -0.462f, 0.008f);
-        // resourceCost.transform.localRotation = Quaternion.identity;
+        GameObject resourceCost = Instantiate(GameMaster.Instance.interactionPanelResourceCostPrefab, Vector3.zero, Quaternion.identity, button.transform);
+        resourceCost.transform.localPosition = new Vector3(0.0f, -0.462f, -0.092f);
+        resourceCost.transform.localRotation = Quaternion.identity;
 
+        //---------------------------------------------------------------------
         // Popluate the resource cost prefab text objects
-        // BuildMenuResouceCost cost = resourceCost.GetComponent<BuildMenuResouceCost>();
-        // cost.woodText.text = typeData.woodCost.ToString();
-        // cost.goldText.text = typeData.goldCost.ToString();
-        // cost.grainText.text = typeData.foodCost.ToString();
-        // cost.stoneText.text = typeData.stoneCost.ToString();
+        BuildMenuResouceCost cost = resourceCost.GetComponent<BuildMenuResouceCost>();
+        cost.woodText.text = tech.woodCost.ToString();
+        cost.goldText.text = tech.goldCost.ToString();
+        cost.grainText.text = tech.foodCost.ToString();
+        cost.stoneText.text = tech.stoneCost.ToString();
 
+        //---------------------------------------------------------------------
         // Face (child of Button)
         GameObject face = new GameObject("_face", typeof(Interactable), typeof(HoverButton));
         face.transform.SetParent(button.transform, false);
         face.transform.localPosition = new Vector3(0.0f, 0.0f, -0.05f);
         face.transform.localScale = new Vector3(0.85f, 0.85f, 0.15f);
-        
+        face.GetComponent<Interactable>().highlightOnHover = false;
+
+        //---------------------------------------------------------------------
+        // Hover button
         HoverButton hoverButton = face.GetComponent<HoverButton>();
         hoverButton.localMoveDistance = new Vector3(0, 0, 0.3f);
-        face.GetComponent<Interactable>().highlightOnHover = false;        
+        hoverButton.onButtonDown.AddListener(OnQueueHoverButtonDown);
+        hoverButton.onButtonUp.AddListener(OnQueueHoverButtonUp);
 
+        //---------------------------------------------------------------------
+        // Set up and initialize queue
+        if (unitSpawnPoint)
+            techQueue.SetUnitSpawnPointTransform(unitSpawnPoint);
+
+        if (unitRallyWaypoint)
+            techQueue.SetUnitRallyPointTransform(unitRallyWaypoint);
+
+        techQueue.Initialize();
+
+        //---------------------------------------------------------------------
         // MovingPart (child of Face)
         GameObject buttonMovingPart = GameObject.CreatePrimitive(PrimitiveType.Cube);
         buttonMovingPart.AddComponent<UVCubeMap>();
@@ -578,6 +584,7 @@ public class BuildingInteractionPanel : MonoBehaviour
         hoverButton.movingPart = buttonMovingPart.transform;
         button.transform.localRotation = Quaternion.identity;
 
+        //---------------------------------------------------------------------
         // Lock (child of Button)
         if (GameMaster.Instance.buttonLockPrefab)
         {
@@ -586,14 +593,41 @@ public class BuildingInteractionPanel : MonoBehaviour
             buttonLock.transform.SetParent(button.transform, false);
             buttonLock.transform.localPosition = new Vector3(0.0f, 0.0f, -0.14f);
             buttonLock.transform.Rotate(0.0f, 180.0f, 0.0f);
+            buttonLock.SetActive(false);
 
             queueUnitButton.buttonLockedObject = buttonLock;
-            //queueUnitButton.SetLocked(!PlayerManager.Instance.faction.techTree.IsUnlocked(tech));
+            queueUnitButton.Initialize();
+            if (PlayerManager.Instance.faction.techTree.IsUnlocked(tech))
+                queueUnitButton.Unlock();
+            else
+                queueUnitButton.Lock();
         }
 
         Destroy(buttonBase.GetComponent<BoxCollider>());
 
         return button;
+    }
+
+    public void OnQueueHoverButtonDown(Hand hand)
+    {
+        // TODO: Change this so Hand has references to it's interaction pointer and
+        // pointer interactables or create InteractionPointer events
+        QueueUnitButton queueUnitButton = InteractionPointer.Instance.PointedAtQueueButton;
+        if (queueUnitButton)
+            techQueue.QueueTech(queueUnitButton.techToQueue);        
+
+        PlayerManager.Instance.PlayQueueButtonDownSound();
+    }
+
+    public void OnQueueHoverButtonUp(Hand hand)
+    {
+        PlayerManager.Instance.PlayQueueButtonUpSound();
+    }
+
+    public void OnCancelQueueHoverButtonDown(Hand hand)
+    {
+        PlayerManager.Instance.PlayQueueButtonDownSound();
+        techQueue.DequeueUnit();
     }
 
     private void InitializeQueueSlots(Transform parent, int maxColumns, float padding)
@@ -615,12 +649,12 @@ public class BuildingInteractionPanel : MonoBehaviour
         cancelButtonPosition.y -= queueSlotSize * 0.5f;
 
         Vector3 nextButtonPosition = startPosition;
-        spawnQueue.SetSpawnQueueSlotCount(numberOfQueueSlots);
+        techQueue.SetSpawnQueueSlotCount(numberOfQueueSlots);
 
         for (int i = numberOfQueueSlots - 1; i >= 0; i--)
         {
             queueSlotImages[i] = GenerateQueueSlot(nextButtonPosition, parent);
-            spawnQueue.SetQueueSlotImage(queueSlotImages[i], (byte)i);
+            techQueue.SetQueueSlotImage(queueSlotImages[i], (byte)i);
 
             currentQueueSlotColumn++;
             if (currentQueueSlotColumn >= maxColumns)
@@ -682,8 +716,8 @@ public class BuildingInteractionPanel : MonoBehaviour
 
         if (enableQueueMenu)
         {
-            spawnQueue.SetProgressText(text);
-            spawnQueue.SetProgressImage(image);
+            techQueue.SetProgressText(text);
+            techQueue.SetProgressImage(image);
         }
     }
 
@@ -702,10 +736,12 @@ public class BuildingInteractionPanel : MonoBehaviour
         face.transform.SetParent(parent, false);
         face.transform.localPosition = new Vector3(0.0f, 0.0f, -0.05f);
         face.transform.localScale = new Vector3(0.85f, 0.85f, 0.15f);
+        face.GetComponent<Interactable>().highlightOnHover = false;
+        
         HoverButton hoverButton = face.GetComponent<HoverButton>();
         hoverButton.localMoveDistance = new Vector3(0, 0, 0.3f);
-        face.GetComponent<Interactable>().highlightOnHover = false;
 
+        hoverButton.onButtonDown.AddListener(OnCancelQueueHoverButtonDown);
 
         // MovingPart (child of Face)
         GameObject buttonMovingPart = GameObject.CreatePrimitive(PrimitiveType.Cube);

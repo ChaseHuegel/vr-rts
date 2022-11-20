@@ -11,6 +11,10 @@ using Valve.VR.InteractionSystem;
 
 public class PlayerManager : MonoBehaviour
 {
+
+    public bool newTechTreeInstance;
+
+    public TechTree currentTree;
     //=========================================================================
     [Header("Stats/Resources")]
     public int woodCollected;
@@ -27,17 +31,6 @@ public class PlayerManager : MonoBehaviour
     //=========================================================================
     [Header("Audio Sources")]
     public AudioSource headAudioSource;
-
-    //=========================================================================
-    [Header("Sounds")]
-    private AudioClip setRallyPointSound;
-    private AudioClip queueSuccessSound;
-    private AudioClip queueFailedSound;
-    private AudioClip dequeueSound;
-    private AudioClip teleportSound;
-    private AudioClip epochResearchCompleteSound;
-    private AudioClip buildingPlacementAllowedSound;
-    private AudioClip buildingPlacementDeniedSound;
 
     [Header("UI")]
     public SteamVR_Action_Boolean handMenuToggle;
@@ -85,6 +78,8 @@ public class PlayerManager : MonoBehaviour
 
     private Hand rightHand;
     private Hand leftHand;
+
+
     private static PlayerManager _instance;
     //private bool isAutohideHandMenuVisible;
     
@@ -113,21 +108,13 @@ public class PlayerManager : MonoBehaviour
         headAudioSource.transform.SetParent(Player.instance.hmdTransform);
         headAudioSource.transform.localPosition = Vector3.zero;
 
-        // Cache sounds
-        buildingPlacementAllowedSound = GameMaster.Instance.buildingPlacementAllowedSound;
-        buildingPlacementDeniedSound = GameMaster.Instance.buildingPlacementDeniedSound;
-        setRallyPointSound = GameMaster.Instance.setRallyPointSound;
-        queueSuccessSound = GameMaster.Instance.queueSuccessSound;
-        queueFailedSound = GameMaster.Instance.queueFailedSound;
-        dequeueSound = GameMaster.Instance.dequeueSound;
-        teleportSound = GameMaster.Instance.teleportSound;
-        epochResearchCompleteSound = GameMaster.Instance.epochResearchCompleteSound;
+        if (newTechTreeInstance)
+        {
+            currentTree = Instantiate(faction.techTree);
+            faction = Instantiate(faction);
+            faction.techTree = currentTree;
+        }
 
-#if !UNITY_EDITOR
-        TechTree tree = Instantiate(faction.techTree);
-        faction = Instantiate(faction);
-        faction.techTree = tree;
-#endif
         rightHand = Player.instance.rightHand;
         leftHand = Player.instance.leftHand;
 
@@ -165,28 +152,39 @@ public class PlayerManager : MonoBehaviour
 
     public void PlayEpochResearchCompleteAudio()
     {
-        PlayAudioAtHeadSource(epochResearchCompleteSound);
+        PlayAudioAtHeadSource(GameMaster.Instance.epochResearchCompleteSound);
     }
 
     public void PlayBuildingPlacementAllowedAudio()
     {
-        PlayAudioAtHeadSource(buildingPlacementAllowedSound);
+        PlayAudioAtHeadSource(GameMaster.Instance.buildingPlacementAllowedSound);
     }
 
     public void PlayBuildingPlacementDeniedAudio()
     {
-        PlayAudioAtHeadSource(buildingPlacementDeniedSound);
+        PlayAudioAtHeadSource(GameMaster.Instance.buildingPlacementDeniedSound);
     }
 
     public void PlaySetRallyPointSound()
     {
-        PlayAudioAtHeadSource(setRallyPointSound);
+        PlayAudioAtHeadSource(GameMaster.Instance.setRallyPointSound);
     }
 
     public void PlayTeleportSound()
     {
-        PlayAudioAtHeadSource(teleportSound);
+        PlayAudioAtHeadSource(GameMaster.Instance.teleportSound);
     }
+
+    public void PlayQueueButtonDownSound()
+    {
+        PlayAudioAtHeadSource(GameMaster.Instance.onQueueButtonDownSound);
+    }
+
+    public void PlayQueueButtonUpSound()
+    {
+        PlayAudioAtHeadSource(GameMaster.Instance.onQueueButtonUpSound);
+    }
+
     public void PlayAudioAtHeadSource(AudioClip clip)
     {
         PlayAudioClip(headAudioSource, clip);
@@ -494,13 +492,13 @@ public class PlayerManager : MonoBehaviour
     public void DisableGripPanning(Hand hand)
     {
         gripPan.DisablePanning(hand);
-        InteractionPointer.instance.DisableInteraction();
+        InteractionPointer.Instance.DisableInteraction();
     }
 
     public void EnableGripPanning(Hand hand)
     {
         gripPan.EnablePanning(hand);
-        InteractionPointer.instance.EnableInteraction();
+        InteractionPointer.Instance.EnableInteraction();
         //InteractionPointer.instance.enabled = true;
     }
 
@@ -520,8 +518,8 @@ public class PlayerManager : MonoBehaviour
             FaceDisplay?.SetMilitaryPopulationText(militaryPopulation.ToString());
         }
 
-        totalPopulation += unit.UnitData.populationCost;
-        queueCount -= unit.UnitData.populationCost;
+        totalPopulation += unit.unitData.populationCost;
+        queueCount -= unit.unitData.populationCost;
         if (queueCount < 0) queueCount = 0;
         UpdateWristDisplayPopulationLimit();
     }
@@ -542,7 +540,7 @@ public class PlayerManager : MonoBehaviour
             FaceDisplay.SetMilitaryPopulationText(militaryPopulation.ToString());
         }
 
-        totalPopulation -= unit.UnitData.populationCost;
+        totalPopulation -= unit.unitData.populationCost;
         UpdateWristDisplayPopulationLimit();
     }
 
@@ -646,16 +644,16 @@ public class PlayerManager : MonoBehaviour
         return true;
     }
 
-    public bool CanQueueTech(TechBase techBase)
+    /// <summary>
+    /// This should be the last test called right before a queue is cleared
+    /// or spawned.
+    /// </summary>
+    public bool TryToQueueTech(TechBase techBase)
     {
-        // TODO: Make this unneccassary by having the queue button locked.
-        TechNode node = faction.techTree.tree.Find(x => x.tech == techBase);
-
-        if (!faction.techTree.IsUnlocked(techBase))
-            return false;
-
+        // This should already be cleared by the enabling of the button in the techtree
+        // but check just in case something changed since the last tree update.
         if (!CanAffordTech(techBase))
-            return false;
+            return false;        
 
         if (techBase.populationCost > 0)
         {
@@ -663,6 +661,7 @@ public class PlayerManager : MonoBehaviour
                 return false;
 
             queueCount += techBase.populationCost;
+            DeductTechResourceCost(techBase);
         }
 
         return true;

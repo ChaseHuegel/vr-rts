@@ -8,7 +8,7 @@ using Valve.VR;
 
 public class BuildingDataCustomEditorWindow : EditorWindow
 {
-    [MenuItem("Window/Building Data Editor")]
+    [MenuItem("VRTS/Building Data Editor")]
     private static void OpenWindow()
     {
         BuildingDataCustomEditorWindow window = GetWindow<BuildingDataCustomEditorWindow>();

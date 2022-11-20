@@ -3420,7 +3420,6 @@ GameObject:
   - component: {fileID: 4603657074508637907}
   - component: {fileID: 4603657074826361736}
   - component: {fileID: 4603657074826361737}
-  - component: {fileID: 4603657074826361782}
   - component: {fileID: 4603657074826361739}
   - component: {fileID: 4603657074501646245}
   - component: {fileID: 4603657074501646244}
@@ -3502,7 +3501,7 @@ MonoBehaviour:
   TriggerOnOff:
     actionPath: 
     needsReinit: 0
-  floorHeight: -1
+  floorHeight: 0.5
   panMovementRate: 3
   useMomentum: 1
   momentumStrength: 3
@@ -3522,25 +3521,6 @@ MonoBehaviour:
   isInGaze: 0
   gazeInCutoff: 0.15
   gazeOutCutoff: 0.4
---- !u!114 &4603657074826361782
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4603657074501646247}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a043c731a29ecd745a9270fbf002ee68, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  segmentCount: 60
-  thickness: 0.01
-  arcDuration: 3
-  segmentBreak: 0.025
-  arcSpeed: 0.2
-  material: {fileID: 2100000, guid: 140bd0e59d9bee94f9f0284c9eef5b32, type: 2}
-  traceLayerMask: 0
 --- !u!114 &4603657074826361739
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3553,6 +3533,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a3e71b7592171349abeac5713d6d99d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  newTechTreeInstance: 0
+  currentTree: {fileID: 0}
   woodCollected: 0
   goldCollected: 0
   stoneCollected: 0

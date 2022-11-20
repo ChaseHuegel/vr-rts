@@ -31,24 +31,27 @@ class GetStringInputWindow : EditorWindow
         }
 
         // You may also want to check for illegal characters :)
-
+        
         // Save your prefab
 
         Close();
     }
-
 }
 
 public class TechTreeEditor : EditorWindow
 {
     // positioning
-    Vector2 nodeSize = new Vector2(210, 115);
-
+    Vector2 defaultNodeSize = new Vector2(210, 110);
+    Vector2 unitNodeSize = new Vector2(160, 90);
+    Vector2 buildingNodeSize = new Vector2(160, 90);
+    Vector2 epochNodeSize = new Vector2(190, 110);
+    Vector2 researchNodeSize = new Vector2(180, 90);
+    Vector2 upgradeNodeSize = new Vector2(180, 90);
     // scrolling and moving
     Vector2 mouseSelectionOffset;
     Vector2 scrollStartPos;
     TechNode draggedNode; // moved node stored here
-    TechNode selectedNode; // selected node stored here
+    public TechNode selectedNode; // selected node stored here
     public TechTree targetTree;
 
     private GUIStyle nodeStyle;
@@ -57,9 +60,11 @@ public class TechTreeEditor : EditorWindow
     private GUIStyle unitNodeStyle;
     private GUIStyle buildingNodeStyle;
     private GUIStyle researchNodeStyle;
+    private GUIStyle upgradeNodeStyle;
     private GUIStyle inPointStyle;
     private GUIStyle outPointStyle;
     private GUIStyle nodeTitleStyle;
+    private GUIStyle nodeTextStyle;
 
     TechNode selectedInPointNode;
     TechNode selectedOutPointNode;
@@ -68,7 +73,7 @@ public class TechTreeEditor : EditorWindow
     Vector2 currentPos;
     bool drawingSelectionBox;
 
-    [MenuItem("Window/Tech Tree Editor")]
+    [MenuItem("VRTS/Tech Tree Editor")]
     private static void OpenWindow()
     {
         TechTreeEditor window = GetWindow<TechTreeEditor>();
@@ -88,6 +93,7 @@ public class TechTreeEditor : EditorWindow
         epochNodeStyle.border = new RectOffset(12, 12, 12, 12);
         epochNodeStyle.padding = new RectOffset(10, 10, 0, 0);
         epochNodeStyle.alignment = TextAnchor.MiddleCenter;
+        epochNodeStyle.normal.textColor = Color.black;
 
         unitNodeStyle = new GUIStyle();
         unitNodeStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node3.png") as Texture2D;
@@ -107,6 +113,12 @@ public class TechTreeEditor : EditorWindow
         researchNodeStyle.padding = new RectOffset(10, 10, 0, 0);
         researchNodeStyle.alignment = TextAnchor.MiddleCenter;
 
+        upgradeNodeStyle = new GUIStyle();
+        upgradeNodeStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node4.png") as Texture2D;
+        upgradeNodeStyle.border = new RectOffset(12, 12, 12, 12);
+        upgradeNodeStyle.padding = new RectOffset(10, 10, 0, 0);
+        upgradeNodeStyle.alignment = TextAnchor.MiddleCenter;
+        
         selectedNodeStyle = new GUIStyle();
         selectedNodeStyle.fontStyle = FontStyle.BoldAndItalic;
         selectedNodeStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1 on.png") as Texture2D;
@@ -129,7 +141,13 @@ public class TechTreeEditor : EditorWindow
         nodeTitleStyle.border = new RectOffset(4, 4, 1, 1);
         nodeTitleStyle.fontStyle = FontStyle.Bold;
         nodeTitleStyle.normal.textColor = Color.white;
-        nodeTitleStyle.alignment = TextAnchor.UpperCenter;        
+        nodeTitleStyle.alignment = TextAnchor.UpperCenter;
+
+        nodeTextStyle = new GUIStyle();
+        nodeTextStyle.normal.textColor = Color.black;
+        nodeTextStyle.margin = new RectOffset(0, 0, 4, 0);
+        nodeTextStyle.alignment = TextAnchor.LowerCenter;
+        nodeTextStyle.fontSize = 11;
     }
 
     private const float kZoomMin = 0.1f;
@@ -138,6 +156,22 @@ public class TechTreeEditor : EditorWindow
     private float _zoom = 1.0f;
     private Vector2 _zoomCoordsOrigin = Vector2.zero;
     
+    private Vector2 GetNodeSize(TechNode node)
+    {
+        if (node is EpochNode)
+            return epochNodeSize;
+        else if (node is BuildingNode)
+            return buildingNodeSize;
+        else if (node is UnitNode)
+            return unitNodeSize;
+        else if (node is ResearchNode)
+            return researchNodeSize;
+        else if (node is UpgradeNode)
+            return upgradeNodeSize;
+
+        return defaultNodeSize;
+    }
+
     public void OnGUI()
     {
         Rect graphPosition = new Rect(0f, 0f, position.width, position.height);
@@ -153,8 +187,10 @@ public class TechTreeEditor : EditorWindow
         // zoom levels you will get a line of pixels rendered outside of the passed in area because of
         // floating point imprecision in the scaling. Therefore, it is recommended to draw the zoom
         // area first and then draw everything else so that there is no undesired overlap.
-        DrawNonZoomArea();
         DrawZoomArea();
+        DrawNonZoomArea();
+
+        //Selection.activeObject = selectedNode.tech;
 
         if (GUI.changed)
         {
@@ -166,7 +202,7 @@ public class TechTreeEditor : EditorWindow
     }
 
     private void DrawNonZoomArea()
-    {
+    {        
         // Shows selected node tech and gives option to delete node
         EditorGUILayout.BeginHorizontal();
         if (selectedNode == null || selectedNode.tech == null)
@@ -181,6 +217,7 @@ public class TechTreeEditor : EditorWindow
             //     RemoveNode();
             // }
         }
+
         EditorGUILayout.EndHorizontal();
     }
 
@@ -237,6 +274,7 @@ public class TechTreeEditor : EditorWindow
         genericMenu.AddItem(new GUIContent("Convert/To Building Node"), false, OnClickConvertNode, NodeType.Building);
         genericMenu.AddItem(new GUIContent("Convert/To Epoch Node"), false, OnClickConvertNode, NodeType.Epoch);
         genericMenu.AddItem(new GUIContent("Convert/To Research Node"), false, OnClickConvertNode, NodeType.Research);
+        genericMenu.AddItem(new GUIContent("Convert/To Upgrade Node"), false, OnClickConvertNode, NodeType.Upgrade);
         genericMenu.AddSeparator("");
         genericMenu.AddItem(new GUIContent("Reset Researched"), false, OnClickResetResearch);
         genericMenu.AddItem(new GUIContent("Reset IsBuilt"), false, OnClickResetIsBuilt);
@@ -290,6 +328,7 @@ public class TechTreeEditor : EditorWindow
         Building,
         Epoch,
         Research,
+        Upgrade,
     }
 
     private void OnClickConvertNode(object num)
@@ -307,7 +346,8 @@ public class TechTreeEditor : EditorWindow
             ConvertToEpochNode();
         else if (x == NodeType.Research)
             ConvertToResearchNode();
-
+        else if (x == NodeType.Upgrade)
+            ConvertToUpgradeNode();
     }
 
     private void ConvertToEpochNode()
@@ -341,12 +381,20 @@ public class TechTreeEditor : EditorWindow
         targetTree.DeleteNode(tech);
         selectedNode = targetTree.AddNode(node, selectedNode.UIposition);
     }
- 
+
+    private void ConvertToUpgradeNode()
+    {
+        TechBase tech = selectedNode.tech;
+        UpgradeNode node = new UpgradeNode(tech, new List<TechBase>(), selectedNode.UIposition);
+        targetTree.DeleteNode(tech);
+        selectedNode = targetTree.AddNode(node, selectedNode.UIposition);
+    }
+
     private void DrawConnectionLine(Event e)
     {
         if (selectedInPointNode != null && selectedOutPointNode == null)
         {
-            Rect nodeRect = new Rect(selectedInPointNode.UIposition + _zoomCoordsOrigin, nodeSize);
+            Rect nodeRect = new Rect(selectedInPointNode.UIposition + _zoomCoordsOrigin, GetNodeSize(selectedInPointNode));
             Rect inPointRect = GetInPointRect(ref nodeRect);
 
             Handles.DrawBezier(
@@ -364,7 +412,7 @@ public class TechTreeEditor : EditorWindow
 
         if (selectedOutPointNode != null && selectedInPointNode == null)
         {
-            Rect nodeRect = new Rect(selectedOutPointNode.UIposition + _zoomCoordsOrigin, nodeSize);
+            Rect nodeRect = new Rect(selectedOutPointNode.UIposition + _zoomCoordsOrigin, GetNodeSize(selectedOutPointNode));
             Rect outPointRect = GetOutPointRect(ref nodeRect);
 
             Handles.DrawBezier(
@@ -381,7 +429,8 @@ public class TechTreeEditor : EditorWindow
         }
     }
 
-    
+    private bool snapEnabled;
+
     private void ProcessEvents(Event e)
     {
         if (drawingSelectionBox)
@@ -389,6 +438,11 @@ public class TechTreeEditor : EditorWindow
 
         switch (e.type)
         {
+            case EventType.KeyUp:
+                if (e.keyCode == KeyCode.F9)
+                    snapEnabled = !snapEnabled;
+                break;
+
             case EventType.MouseDown:
                 if (e.button == 0)
                 {
@@ -401,7 +455,7 @@ public class TechTreeEditor : EditorWindow
                 else if (e.button == 1)
                 { }
                 break;
-
+            
             case EventType.MouseDrag:                
                 if (e.button == 0)
                 {
@@ -418,6 +472,21 @@ public class TechTreeEditor : EditorWindow
                     else if (draggedNode != null)
                     {
                         draggedNode.UIposition = e.mousePosition + mouseSelectionOffset;
+
+                        if (snapEnabled)
+                        {
+                            float x = Snapping.Snap(draggedNode.UIposition.x, 10.0f);
+                            float y = Snapping.Snap(draggedNode.UIposition.y, 10.0f);
+                            draggedNode.UIposition = new Vector2(x, y);
+                        }
+
+                        if (Event.current.modifiers == EventModifiers.Control)
+                        {
+                            float x = Snapping.Snap(draggedNode.UIposition.x, 10.0f);
+                            float y = Snapping.Snap(draggedNode.UIposition.y, 10.0f);
+                            draggedNode.UIposition = new Vector2(x, y);
+                        }
+                        
                         GUI.changed = true;
                     }
                 }
@@ -474,49 +543,21 @@ public class TechTreeEditor : EditorWindow
         }
     }
 
-    private void AddDraggedInNodeType(TechBase techBase, Vector2 position)
-    {
-        if (techBase is UnitData)
-        {
-            UnitNode node = new UnitNode(techBase, new List<TechBase>(), position);
-            targetTree.AddNode(node, position);
-        }
-        else if (techBase is BuildingData)
-        {
-            BuildingNode node = new BuildingNode(techBase, new List<TechBase>(), position);
-            targetTree.AddNode(node, position);
-        }
-        else if (techBase is EpochUpgrade)
-        {
-            EpochNode node = new EpochNode(techBase, new List<TechBase>(), position);
-            targetTree.AddNode(node, position);
-        }
-        else if (techBase is TechResearcher)
-        {
-            ResearchNode node = new ResearchNode(techBase, new List<TechBase>(), position);
-            targetTree.AddNode(node, position);
-        }
-        else
-        {
-            targetTree.AddNode(techBase, position);
-        }
-
-
-        
-    }
-
     private void ProcessNodeEvents(Event e, TechNode techNode, Rect nodeRect)
     {
         switch (e.type)
-        {
+        { 
             case EventType.MouseDown:
                 if (e.button == 0)  // If left mouse button is pressed
-                {   
+                {                    
                     // Set activeNode
                     if (nodeRect.Contains(e.mousePosition))
                     {
+                        if (e.clickCount == 2)
+                            OnNodeDoubleClick(techNode);
+
                         selectedNode = techNode;
-                        draggedNode = techNode;
+                        draggedNode = techNode;                        
                         mouseSelectionOffset = draggedNode.UIposition - e.mousePosition; // offset from the corner of the node to mouse position
                         GUI.changed = true; // Repaint to see the style change momentarily 
                         drawingSelectionBox = false;
@@ -550,6 +591,43 @@ public class TechTreeEditor : EditorWindow
                 }
                 break;
         }
+    }
+
+    private void OnNodeDoubleClick(TechNode node)
+    {
+        Selection.activeObject = node.tech;
+    }
+
+    private void AddDraggedInNodeType(TechBase techBase, Vector2 position)
+    {
+        if (techBase is UnitData)
+        {
+            UnitNode node = new UnitNode(techBase, new List<TechBase>(), position);
+            targetTree.AddNode(node, position);
+        }
+        else if (techBase is BuildingData)
+        {
+            BuildingNode node = new BuildingNode(techBase, new List<TechBase>(), position);
+            targetTree.AddNode(node, position);
+        }
+        else if (techBase is EpochUpgrade)
+        {
+            EpochNode node = new EpochNode(techBase, new List<TechBase>(), position);
+            node.requiredBuildingCount = ((EpochUpgrade)techBase).requiredBuildingCount;
+            targetTree.AddNode(node, position);
+        }
+        else if (techBase is TechResearcher)
+        {
+            ResearchNode node = new ResearchNode(techBase, new List<TechBase>(), position);
+            targetTree.AddNode(node, position);
+        }
+        else if (techBase is StatUpgrade)
+        {
+            UpgradeNode node = new UpgradeNode(techBase, new List<TechBase>(), position);
+            targetTree.AddNode(node, position);
+        }
+        else
+            targetTree.CreateNode(techBase, position);
     }
 
     private void OnClickInPoint(TechNode inPointNode)
@@ -615,10 +693,10 @@ public class TechTreeEditor : EditorWindow
             int reqIdx = targetTree.FindTechIndex(req);
             if (reqIdx != -1)
             {
-                Rect inNodeRect = new Rect(techNode.UIposition + _zoomCoordsOrigin, nodeSize);
+                Rect inNodeRect = new Rect(techNode.UIposition + _zoomCoordsOrigin, GetNodeSize(techNode));
                 Rect inPointRect = GetInPointRect(ref inNodeRect);
 
-                Rect outNodeRect = new Rect(targetTree.tree[reqIdx].UIposition + _zoomCoordsOrigin, nodeSize);
+                Rect outNodeRect = new Rect(targetTree.tree[reqIdx].UIposition + _zoomCoordsOrigin, GetNodeSize(targetTree.tree[reqIdx]));
                 Rect outPointRect = GetOutPointRect(ref outNodeRect);
 
                 Handles.DrawBezier(
@@ -652,7 +730,7 @@ public class TechTreeEditor : EditorWindow
 
     private static Rect GetInPointRect(ref Rect nodeRect)
     {
-        Rect inPointRect = new Rect(0, 0, 10f, 20f);
+        Rect inPointRect = new Rect(0, 0, 12f, 24f);
         inPointRect.y = nodeRect.y + (nodeRect.height * 0.5f) - inPointRect.height * 0.5f;
         inPointRect.x = nodeRect.x - inPointRect.width + 8f;
         return inPointRect;
@@ -660,26 +738,17 @@ public class TechTreeEditor : EditorWindow
 
     private static Rect GetOutPointRect(ref Rect nodeRect)
     {
-        Rect outPointRect = new Rect(0, 0, 10f, 20f);
+        Rect outPointRect = new Rect(0, 0, 12f, 24f);
         outPointRect.y = nodeRect.y + (nodeRect.height * 0.5f) - outPointRect.height * 0.5f;
         outPointRect.x = nodeRect.x + nodeRect.width - 8f;
         return outPointRect;
     }
 
+    
     private Rect DrawNode(TechNode node)
     {
-        Rect nodeRect = new Rect(node.UIposition + _zoomCoordsOrigin, nodeSize);
-
-        Rect inPointRect = GetInPointRect(ref nodeRect);
-        if (GUI.Button(inPointRect, "", inPointStyle))
-            OnClickInPoint(node);
-
-        Rect outPointRect = GetOutPointRect(ref nodeRect);
-        if (GUI.Button(outPointRect, "", outPointStyle))
-            OnClickOutPoint(node);
-
         GUIStyle areaStyle = nodeStyle;
-        
+
         if (node is EpochNode)
             areaStyle = epochNodeStyle;
         else if (node is BuildingNode)
@@ -688,12 +757,23 @@ public class TechTreeEditor : EditorWindow
             areaStyle = unitNodeStyle;
         else if (node is ResearchNode)
             areaStyle = researchNodeStyle;
+        else if (node is UpgradeNode)
+            areaStyle = upgradeNodeStyle;
+
+        Rect nodeRect = new Rect(node.UIposition + _zoomCoordsOrigin, GetNodeSize(node));
+
+        Rect inPointRect = GetInPointRect(ref nodeRect);
+        if (GUI.Button(inPointRect, "", inPointStyle))
+            OnClickInPoint(node);
+
+        Rect outPointRect = GetOutPointRect(ref nodeRect);
+        if (GUI.Button(outPointRect, "", outPointStyle))
+            OnClickOutPoint(node);        
 
         if (selectedNode == node)
             GUI.Box(nodeRect, "", selectedNodeStyle);
 
         GUILayout.BeginArea(nodeRect, areaStyle);        
-        //GUILayout.BeginArea(nodeRect, (selectedNode == node ? selectedNodeStyle : areaStyle));
 
         GUILayout.Label(node.tech.name, nodeTitleStyle);
 
@@ -708,13 +788,14 @@ public class TechTreeEditor : EditorWindow
         {
             BuildingNode buildingNode = (BuildingNode)node;
             EditorGUILayout.BeginHorizontal();
-            GUILayout.Label("Is Built");
+            GUILayout.Label("Is Built", nodeTextStyle);
             GUILayout.FlexibleSpace();
             if (buildingNode.isBuilt = EditorGUILayout.Toggle("", buildingNode.isBuilt))
                 GUI.changed = true;
 
             EditorGUILayout.EndHorizontal();
         }
+        
         // EditorGUILayout.BeginHorizontal();
         // GUILayout.Label("Requires Research");
         // GUILayout.FlexibleSpace();
@@ -723,10 +804,10 @@ public class TechTreeEditor : EditorWindow
 
         //EditorGUILayout.EndHorizontal();
 
-        if (node is EpochNode || node is ResearchNode)
+        if (node is EpochNode || node is ResearchNode || node is UpgradeNode)
         {
             EditorGUILayout.BeginHorizontal();
-            GUILayout.Label("Researched");
+            GUILayout.Label("Researched", nodeTextStyle);
             GUILayout.FlexibleSpace();
             if (node.researched = EditorGUILayout.Toggle("", node.researched))
                 GUI.changed = true;
@@ -735,13 +816,13 @@ public class TechTreeEditor : EditorWindow
         }
 
         EditorGUILayout.BeginHorizontal();
-        GUILayout.Label("Unlocked");
+        GUILayout.Label("Unlocked", nodeTextStyle);
         GUILayout.FlexibleSpace();
         EditorGUILayout.Toggle("", node.unlocked);
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
-        GUILayout.Label("Enabled");
+        GUILayout.Label("Enabled", nodeTextStyle);
         GUILayout.FlexibleSpace();
         EditorGUILayout.Toggle("", node.enabled);
         EditorGUILayout.EndHorizontal();
@@ -750,7 +831,9 @@ public class TechTreeEditor : EditorWindow
         {
             EpochNode epochNode = (EpochNode)node;
             EditorGUILayout.BeginHorizontal();
-            GUILayout.Label("Required Tech#");
+            GUILayout.Label("Req. Bldg #", nodeTextStyle);
+            //EpochUpgrade epochUpgrade = (EpochUpgrade)epochNode.tech;
+            //epochUpgrade.requiredBuildingCount = EditorGUILayout.IntField(epochUpgrade.requiredBuildingCount, GUILayout.MaxWidth(30.0f));
             epochNode.requiredBuildingCount = EditorGUILayout.IntField(epochNode.requiredBuildingCount, GUILayout.MaxWidth(30.0f));
             GUILayout.FlexibleSpace();
             EditorGUILayout.EndHorizontal();

@@ -159,7 +159,9 @@ public class BuildMenuTab : MonoBehaviour
             i++;
         }
 
+#if UNITY_EDITOR
         EditorUtility.SetDirty(this);
+#endif
     }
 
     private void CreateSlotTitle(BuildMenuSlot slot)

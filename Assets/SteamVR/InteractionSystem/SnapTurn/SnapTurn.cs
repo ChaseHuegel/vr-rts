@@ -11,15 +11,11 @@ namespace Valve.VR.InteractionSystem
     public class SnapTurn : MonoBehaviour
     {
         public float snapAngle = 90.0f;
-
         public bool showTurnAnimation = true;
-
         public AudioSource snapTurnSource;
         public AudioClip rotateSound;
-
         public GameObject rotateRightFX;
         public GameObject rotateLeftFX;
-
         public SteamVR_Action_Boolean snapLeftAction = SteamVR_Input.GetBooleanAction("SnapTurnLeft");
         public SteamVR_Action_Boolean snapRightAction = SteamVR_Input.GetBooleanAction("SnapTurnRight");
 

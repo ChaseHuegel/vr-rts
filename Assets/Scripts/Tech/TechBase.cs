@@ -30,8 +30,6 @@ public class TechBase : ScriptableObject
     public int stoneCost;
     public int foodCost;
     public int woodCost;
-
-    public bool singleUse;
     
     public virtual void Execute(SpawnQueue spawnQueue)
     {

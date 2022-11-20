@@ -8,6 +8,8 @@ using Swordfish.Navigation;
 using UnityEngine;
 using Valve.VR;
 using Valve.VR.InteractionSystem;
+using UnityEngine.Events;
+
 public class InteractionPointer : MonoBehaviour
 {
     //=========================================================================
@@ -27,13 +29,11 @@ public class InteractionPointer : MonoBehaviour
     public GameObject pointerAttachmentPoint;
     public LayerMask traceLayerMask;
     public LayerMask allowedPlacementLayers;
-    public float floorFixupMaximumTraceDistance = 1.0f;
     public Material pointVisibleMaterial;
     public Transform destinationReticleTransform;
-    public Transform invalidReticleTransform;
     public Color pointerValidColor;
     public Color pointerInvalidColor;
-    public float arcDistance = 10.0f;
+    public float arcDistance = 10.0f;   
 
     //=========================================================================
     public Material buildingPlacementInvalidMat;
@@ -48,6 +48,7 @@ public class InteractionPointer : MonoBehaviour
     private TeleportArc teleportArc = null;
     public bool showPointerArc = false;
     private PointerInteractable pointedAtPointerInteractable;
+    public QueueUnitButton PointedAtQueueButton { get => pointedAtPointerInteractable.GetComponentInChildren<QueueUnitButton>(); }
     private SpawnQueue spawnQueue;
     private List<ActorV2> selectedActors;
     private Vector3 pointedAtPosition;
@@ -63,7 +64,7 @@ public class InteractionPointer : MonoBehaviour
     public GameObject wayPointReticle;
     private Resource pointedAtResource;
     private Vector3 rallyWaypointArcStartPosition;
-    private GameObject rallyPointObject;
+    public GameObject setRallyPointPrefab;
     private float triggerAddToSelectionThreshold = 0.85f;
 
     // Cache value
@@ -91,7 +92,6 @@ public class InteractionPointer : MonoBehaviour
     //=========================================================================
     // Wall Related
     private GameObject wallPlacementPreviewAnchor;
-    private GameObject wallPlacementPreviewCornerObject;
 
     //=========================================================================
     // Cached wall objects
@@ -99,18 +99,15 @@ public class InteractionPointer : MonoBehaviour
     private List<GameObject> wallPreviewDiagonalSegments = new List<GameObject>();
     private List<GameObject> wallPreviewCornerSegments = new List<GameObject>();
     private List<GameObject> wallPreviewStraightSegments = new List<GameObject>();
-    private Swordfish.Coord2D lastPreviewPointerPosition;
 
     //=========================================================================
     private static InteractionPointer _instance;
-    public static InteractionPointer instance
+    public static InteractionPointer Instance
     {
         get
         {
             if (_instance == null)
-            {
                 _instance = GameObject.FindObjectOfType<InteractionPointer>();
-            }
 
             return _instance;
         }
@@ -157,8 +154,6 @@ public class InteractionPointer : MonoBehaviour
             Destroy(this.gameObject);
             return;
         }
-
-        rallyPointObject = wayPointReticle.transform.GetChild(0).gameObject;
 
         // Initialize reticle
         //ShowPointer();
@@ -222,11 +217,11 @@ public class InteractionPointer : MonoBehaviour
             }
             else if (WasInteractButtonReleased(hand))
             {
-                ExecuteInteraction();
+                Process_InteractUI_Action_End();
             }
             else if (WasInteractButtonPressed(hand))
             {
-                StartInteraction(hand);
+                Process_InteractUI_Action_Start(hand);
             }
             else if (WasCancelButtonPressed(hand))
             {
@@ -260,7 +255,12 @@ public class InteractionPointer : MonoBehaviour
                     {
                         buildingInteractionPanel.Toggle();
                         continue;
-                    }                    
+                    }
+
+                    //-----------------------------------------------------------------
+                    // Queue/Cancel buttons in building interaction panels  
+                    if (TryInvokeHoverButton(hand))
+                        return;                    
                 }          
             }            
             else if (WasSelectButtonReleased(hand))
@@ -398,7 +398,7 @@ public class InteractionPointer : MonoBehaviour
     /// Starts intaraction with the button bound to InteractUI.
     /// </summary>
     /// <param name="hand">The hand that pressed the InteractUI button.</param>
-    private void StartInteraction(Hand hand)
+    private void Process_InteractUI_Action_Start(Hand hand)
     {
         if (isInWallPlacementMode)
         {
@@ -432,22 +432,11 @@ public class InteractionPointer : MonoBehaviour
                 return;
             }
 
-            QueueUnitButton queueUnitButton = pointedAtPointerInteractable.GetComponentInChildren<QueueUnitButton>();
-            if (queueUnitButton)
-            {
-                spawnQueue = pointedAtPointerInteractable.GetComponentInParent<SpawnQueue>();
-                spawnQueue.QueueTech(queueUnitButton.techToQueue);
-                pointedAtPointerInteractable.GetComponentInChildren<HoverButton>().onButtonDown.Invoke(hand);
+            //-----------------------------------------------------------------
+            // Queue/Cancel buttons in building interaction panels  
+            if (TryInvokeHoverButton(hand))
                 return;
-            }
 
-            // TODO: This should be used for queueing as well...
-            HoverButton hoverButton = pointedAtPointerInteractable.GetComponentInChildren<HoverButton>();
-            if (hoverButton)
-            {                
-                hoverButton.onButtonDown.Invoke(hand);
-                return;
-            }
 
             WallGate wallGate = pointedAtPointerInteractable.GetComponent<WallGate>();
             if (wallGate)
@@ -462,11 +451,26 @@ public class InteractionPointer : MonoBehaviour
         }
     }
 
+    private bool TryInvokeHoverButton(Hand hand)
+    {
+        // Hands use SendMessage to call events on targeted 'Interactable' so for our
+        // 'PointerInteractable' we use GetComponent instead. Should probably switch
+        // hands to use GetComponent as well for performance.
+        HoverButton hoverButton = pointedAtPointerInteractable.GetComponentInChildren<HoverButton>();
+        if (hoverButton)
+        {
+            hoverButton.onButtonDown.Invoke(hand);
+            return true;
+        }
+
+        return false;
+    }
+
     /// <summary>
     /// Executes an interaction. The interation has been accepted and this function
     /// completes it, in contrast to a cancelled interaction.
     /// </summary>
-    private void ExecuteInteraction()
+    private void Process_InteractUI_Action_End()
     {
         if (isInWallPlacementMode)
         {
@@ -521,8 +525,8 @@ public class InteractionPointer : MonoBehaviour
             spawnQueue.SetUnitRallyPointPosition(wayPointReticle.transform.position);
             wayPointReticle.SetActive(false);
 
-            GameObject gameObject = Instantiate<GameObject>(rallyPointObject, rallyPointObject.transform.position, rallyPointObject.transform.rotation);
-            gameObject.transform.localScale = rallyPointObject.transform.lossyScale;
+            GameObject gameObject = Instantiate<GameObject>(setRallyPointPrefab, wayPointReticle.transform.position, wayPointReticle.transform.rotation);
+            gameObject.transform.localScale = setRallyPointPrefab.transform.localScale;
             gameObject.GetComponentInChildren<Animator>().Play("deploy");
             Destroy(gameObject, 2.0f);
 
@@ -867,14 +871,6 @@ public class InteractionPointer : MonoBehaviour
         Vector3 playerFeetOffset = player.trackingOriginTransform.position - player.feetPositionGuess;
         Vector3 arcVelocity = pointerDir * arcDistance;
         PointerInteractable hitPointerInteractable = null;
-
-        // Check pointer angle
-        // float dotUp = Vector3.Dot(pointerDir, Vector3.up);
-        // float dotForward = Vector3.Dot(pointerDir, player.hmdTransform.forward);
-        // bool pointerAtBadAngle = false;
-
-        // if ((dotForward > 0 && dotUp > 0.75f) || (dotForward < 0.0f && dotUp > 0.5f))
-        //     pointerAtBadAngle = true;
 
         // Trace to see if the pointer hit anything
         RaycastHit hitInfo;
@@ -1275,11 +1271,9 @@ public class InteractionPointer : MonoBehaviour
             //pointerObject.SetActive( false );
             teleportArc.Show();
 
-            // foreach ( PointerInteractable interactObject in interactableObjects )
-            // 	interactObject.Highlight( false );
+            // foreach (PointerInteractable interactObject in interactableObjects)
+            //     interactObject.Highlight( false );
 
-            //startingFeetOffset = player.trackingOriginTransform.position - player.feetPositionGuess;
-            //movedFeetFarEnough = false;
         }
 
         pointerStartTransform = pointerAttachmentPoint.transform;
@@ -1360,7 +1354,7 @@ public class InteractionPointer : MonoBehaviour
         if (boundingDimensionY % 2 == 0)
             modPos.z = obj.position.z + World.GetUnit() * -0.5f;
 
-        // TODO: Vertical snapping should snap to terrain dynamically
+        // Vertical snapping
         float positionY = verticalSnap == true ? 0.0f : obj.position.y;
 
         if (verticalSnap)
@@ -1439,6 +1433,6 @@ public class InteractionPointer : MonoBehaviour
     void OnDestroy()
     {
         CleanupEvents();
-    }
+    }    
 }
 

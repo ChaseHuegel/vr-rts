@@ -23,10 +23,10 @@ public class GameMaster : Singleton<GameMaster>
 
     public UnitDatabase unitDatabase;
     public static UnitDatabase GetUnitDatabase() { return Instance.unitDatabase; }
-    public static UnitData GetUnit(RTSUnitType type)
-    {
-         return Instance.unitDatabase.Get(type);
-    }
+    // public static UnitData GetUnit(RTSUnitType type)
+    // {
+    //      return Instance.unitDatabase.Get(type);
+    // }
 
     public static UnitData GetUnit(string name) { return Instance.unitDatabase.Get(name); }
 
@@ -36,6 +36,7 @@ public class GameMaster : Singleton<GameMaster>
     
     [Header("Prefabs")]
     public GameObject floatingIndicatorPrefab;
+    public GameObject interactionPanelResourceCostPrefab;
 
     [Header("FX")]
     public GameObject buildingDamagedFX;
@@ -52,7 +53,7 @@ public class GameMaster : Singleton<GameMaster>
     public AudioClip dequeueSound;
     public AudioClip teleportSound;
     public AudioClip epochResearchCompleteSound;
-
+    
     [Header("Building Health Bars")]
     public Sprite healthBarBackground;
     public Color healthBarBackgroundColor = Color.black;
@@ -68,8 +69,8 @@ public class GameMaster : Singleton<GameMaster>
     [Header("Queue Menu Button Settings")]
     public Material buttonBaseMaterial;
     public Material cancelButtonMaterial;
-    public AudioClip onButtonDownAudio;
-    public AudioClip onButtonUpAudio;
+    public AudioClip onQueueButtonDownSound;
+    public AudioClip onQueueButtonUpSound;
 
     [Header("Queue Menu Queue Slot Settings")]
     public Sprite emptyQueueSlotSprite;

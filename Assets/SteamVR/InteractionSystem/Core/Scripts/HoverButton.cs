@@ -41,6 +41,13 @@ namespace Valve.VR.InteractionSystem
 
         private Hand lastHoveredHand;
 
+        private void Awake()
+        {
+            if (onButtonDown == null) onButtonDown = new HandEvent();
+            if (onButtonUp == null) onButtonUp = new HandEvent();
+            if (onButtonIsPressed == null) onButtonIsPressed = new HandEvent();
+        }
+
         private void Start()
         {
             if (movingPart == null && this.transform.childCount > 0)
@@ -48,7 +55,7 @@ namespace Valve.VR.InteractionSystem
 
             startPosition = movingPart.localPosition;
             endPosition = startPosition + localMoveDistance;
-            handEnteredPosition = endPosition;
+            handEnteredPosition = endPosition;            
         }
 
         private void HandHoverUpdate(Hand hand)
