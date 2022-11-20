@@ -263,7 +263,12 @@ public class InteractionPointer : MonoBehaviour
                     {
                         buildingInteractionPanel.Toggle();
                         continue;
-                    }                    
+                    }
+
+                    //-----------------------------------------------------------------
+                    // Queue/Cancel buttons in building interaction panels  
+                    if (TryInvokeHoverButton(hand))
+                        return;                    
                 }          
             }            
             else if (WasSelectButtonReleased(hand))
@@ -436,16 +441,10 @@ public class InteractionPointer : MonoBehaviour
             }
 
             //-----------------------------------------------------------------
-            //Queue/Cancel buttons in building interaction panels            
-            // Hands use SendMessage to call events on targeted 'Interactable' so for our
-            // 'PointerInteractable' we use GetComponent instead. Should probably switch
-            // hands to use GetComponent as well for performance.
-            HoverButton hoverButton = pointedAtPointerInteractable.GetComponentInChildren<HoverButton>();
-            if (hoverButton)
-            {
-                hoverButton.onButtonDown.Invoke(hand);
+            // Queue/Cancel buttons in building interaction panels  
+            if (TryInvokeHoverButton(hand))
                 return;
-            }
+
 
             WallGate wallGate = pointedAtPointerInteractable.GetComponent<WallGate>();
             if (wallGate)
@@ -458,6 +457,21 @@ public class InteractionPointer : MonoBehaviour
         {
             isInUnitSelectionMode = true;
         }
+    }
+
+    private bool TryInvokeHoverButton(Hand hand)
+    {
+        // Hands use SendMessage to call events on targeted 'Interactable' so for our
+        // 'PointerInteractable' we use GetComponent instead. Should probably switch
+        // hands to use GetComponent as well for performance.
+        HoverButton hoverButton = pointedAtPointerInteractable.GetComponentInChildren<HoverButton>();
+        if (hoverButton)
+        {
+            hoverButton.onButtonDown.Invoke(hand);
+            return true;
+        }
+
+        return false;
     }
 
     /// <summary>

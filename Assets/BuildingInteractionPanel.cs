@@ -167,15 +167,6 @@ public class BuildingInteractionPanel : MonoBehaviour
             Show();        
     }
 
-    // private void OnNodeUnlocked(TechNode node)
-    // {
-    //     queueUnitButtons.Find(x => x.techToQueue == node.tech)?.Unlock();
-    // }
-
-    // private void OnNodeLocked(TechNode node)
-    // {
-    //     queueUnitButtons.Find(x => x.techToQueue == node.tech)?.Lock();
-    // }
     private void OnNodeResearched(TechNode node) 
     {
         // Do not destroy buttons if node is a unit node
@@ -196,35 +187,18 @@ public class BuildingInteractionPanel : MonoBehaviour
         InitializeQueueButtons();
     }
 
-    // private void OnNodeEnabled(TechNode node) 
-    // {
-    //     queueUnitButtons.Find(x => x.techToQueue == node.tech)?.Enable();
-    // }
-
-    // private void OnNodeDisabled(TechNode node)
-    // {
-    //     queueUnitButtons.Find(x => x.techToQueue == node.tech)?.Disable();
-    // }
-
     private void HookIntoEvents()
     {
-        // TechTree.OnNodeUnlocked += OnNodeUnlocked;
-        // TechTree.OnNodeLocked += OnNodeLocked;
-        // TechTree.OnNodeEnabled += OnNodeEnabled;
-        // TechTree.OnNodeDisabled += OnNodeDisabled;
         TechTree.OnNodeResearched += OnNodeResearched;
 
     }
 
     private void CleanupEvents()
     {
-        // TechTree.OnNodeUnlocked -= OnNodeUnlocked;
-        // TechTree.OnNodeLocked -= OnNodeUnlocked;
-        // TechTree.OnNodeEnabled -= OnNodeEnabled;
-        // TechTree.OnNodeDisabled -= OnNodeDisabled;
         TechTree.OnNodeResearched -= OnNodeResearched;
 
-        cancelButtonGameObject.GetComponentInChildren<HoverButton>()?.onButtonDown?.RemoveListener(OnCancelQueueHoverButtonDown);
+        if (cancelButtonGameObject)
+            cancelButtonGameObject.GetComponentInChildren<HoverButton>().onButtonDown.RemoveListener(OnCancelQueueHoverButtonDown);
 
         foreach (HoverButton button in buttonsGameObject.GetComponentsInChildren<HoverButton>())
         {
