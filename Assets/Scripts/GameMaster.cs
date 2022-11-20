@@ -36,6 +36,7 @@ public class GameMaster : Singleton<GameMaster>
     
     [Header("Prefabs")]
     public GameObject floatingIndicatorPrefab;
+    public GameObject interactionPanelResourceCostPrefab;
 
     [Header("FX")]
     public GameObject buildingDamagedFX;

@@ -15848,6 +15848,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 0639eae71c60cad47accaae77c86683a, type: 2}
   floatingIndicatorPrefab: {fileID: 9120344270828691128, guid: 03f4c6a49fa74a74bbc566db67556d7f,
     type: 3}
+  interactionPanelResourceCostPrefab: {fileID: 6832047161754982391, guid: 238785b53a6892647a8da91395c427be,
+    type: 3}
   buildingDamagedFX: {fileID: 8884242477661490918, guid: b1bc0e4d58daa084aa08fbc5b07488f9,
     type: 3}
   buildingDestroyedFX: {fileID: 5399314560054189854, guid: 47b5fc1c9355d1545934def8bb495922,
@@ -32267,7 +32269,7 @@ Transform:
   - {fileID: 1722255692}
   - {fileID: 287080139}
   m_Father: {fileID: 0}
-  m_RootOrder: 18
+  m_RootOrder: 17
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &762300731
 PrefabInstance:
@@ -32542,7 +32544,7 @@ Transform:
   - {fileID: 8401969064978615387}
   - {fileID: 3669459839025456583}
   m_Father: {fileID: 0}
-  m_RootOrder: 16
+  m_RootOrder: 19
   m_LocalEulerAnglesHint: {x: 0, y: -180, z: 0}
 --- !u!4 &773077475 stripped
 Transform:
@@ -34918,7 +34920,7 @@ Transform:
   - {fileID: 1473876739}
   - {fileID: 1377999026}
   m_Father: {fileID: 0}
-  m_RootOrder: 17
+  m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &850566675 stripped
 Transform:
@@ -52338,7 +52340,7 @@ Transform:
   - {fileID: 225001051}
   - {fileID: 539520825}
   m_Father: {fileID: 0}
-  m_RootOrder: 19
+  m_RootOrder: 18
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1297049978
 PrefabInstance:
@@ -88272,27 +88274,27 @@ PrefabInstance:
     - target: {fileID: 7799785980354746952, guid: 9b01cde0f07486643a93faa1b4864738,
         type: 3}
       propertyPath: autoHide
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7799785980354746952, guid: 9b01cde0f07486643a93faa1b4864738,
         type: 3}
       propertyPath: useTimer
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7799785980354746952, guid: 9b01cde0f07486643a93faa1b4864738,
         type: 3}
       propertyPath: disableSelf
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7799785980354746952, guid: 9b01cde0f07486643a93faa1b4864738,
         type: 3}
       propertyPath: startHidden
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7799785980354746952, guid: 9b01cde0f07486643a93faa1b4864738,
         type: 3}
       propertyPath: useDistance
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7799785980354746952, guid: 9b01cde0f07486643a93faa1b4864738,
         type: 3}

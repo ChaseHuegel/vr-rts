@@ -530,16 +530,16 @@ public class BuildingInteractionPanel : MonoBehaviour
         buttonBase.transform.GetComponent<MeshRenderer>().sharedMaterial = GameMaster.Instance.buttonBaseMaterial;
 
         // Instantiate the resource cost gameobject
-        // GameObject resourceCost = Instantiate(resourceCostPrefab, Vector3.zero, Quaternion.identity, button.transform);
-        // resourceCost.transform.localPosition = new Vector3(0.0f, -0.462f, 0.008f);
-        // resourceCost.transform.localRotation = Quaternion.identity;
+        GameObject resourceCost = Instantiate(GameMaster.Instance.interactionPanelResourceCostPrefab, Vector3.zero, Quaternion.identity, button.transform);
+        resourceCost.transform.localPosition = new Vector3(0.0f, -0.462f, -0.092f);
+        resourceCost.transform.localRotation = Quaternion.identity;
 
         // Popluate the resource cost prefab text objects
-        // BuildMenuResouceCost cost = resourceCost.GetComponent<BuildMenuResouceCost>();
-        // cost.woodText.text = typeData.woodCost.ToString();
-        // cost.goldText.text = typeData.goldCost.ToString();
-        // cost.grainText.text = typeData.foodCost.ToString();
-        // cost.stoneText.text = typeData.stoneCost.ToString();
+        BuildMenuResouceCost cost = resourceCost.GetComponent<BuildMenuResouceCost>();
+        cost.woodText.text = tech.woodCost.ToString();
+        cost.goldText.text = tech.goldCost.ToString();
+        cost.grainText.text = tech.foodCost.ToString();
+        cost.stoneText.text = tech.stoneCost.ToString();
 
         //---------------------------------------------------------------------
         // Face (child of Button)

@@ -92,7 +92,6 @@ public class InteractionPointer : MonoBehaviour
     //=========================================================================
     // Wall Related
     private GameObject wallPlacementPreviewAnchor;
-    private GameObject wallPlacementPreviewCornerObject;
 
     //=========================================================================
     // Cached wall objects
@@ -100,7 +99,6 @@ public class InteractionPointer : MonoBehaviour
     private List<GameObject> wallPreviewDiagonalSegments = new List<GameObject>();
     private List<GameObject> wallPreviewCornerSegments = new List<GameObject>();
     private List<GameObject> wallPreviewStraightSegments = new List<GameObject>();
-    private Swordfish.Coord2D lastPreviewPointerPosition;
 
     //=========================================================================
     private static InteractionPointer _instance;
@@ -874,14 +872,6 @@ public class InteractionPointer : MonoBehaviour
         Vector3 arcVelocity = pointerDir * arcDistance;
         PointerInteractable hitPointerInteractable = null;
 
-        // Check pointer angle
-        // float dotUp = Vector3.Dot(pointerDir, Vector3.up);
-        // float dotForward = Vector3.Dot(pointerDir, player.hmdTransform.forward);
-        // bool pointerAtBadAngle = false;
-
-        // if ((dotForward > 0 && dotUp > 0.75f) || (dotForward < 0.0f && dotUp > 0.5f))
-        //     pointerAtBadAngle = true;
-
         // Trace to see if the pointer hit anything
         RaycastHit hitInfo;
         teleportArc.SetArcData(pointerStart, arcVelocity, true, false);// pointerAtBadAngle);
@@ -1281,11 +1271,9 @@ public class InteractionPointer : MonoBehaviour
             //pointerObject.SetActive( false );
             teleportArc.Show();
 
-            // foreach ( PointerInteractable interactObject in interactableObjects )
-            // 	interactObject.Highlight( false );
+            // foreach (PointerInteractable interactObject in interactableObjects)
+            //     interactObject.Highlight( false );
 
-            //startingFeetOffset = player.trackingOriginTransform.position - player.feetPositionGuess;
-            //movedFeetFarEnough = false;
         }
 
         pointerStartTransform = pointerAttachmentPoint.transform;
@@ -1366,7 +1354,7 @@ public class InteractionPointer : MonoBehaviour
         if (boundingDimensionY % 2 == 0)
             modPos.z = obj.position.z + World.GetUnit() * -0.5f;
 
-        // TODO: Vertical snapping should snap to terrain dynamically
+        // Vertical snapping
         float positionY = verticalSnap == true ? 0.0f : obj.position.y;
 
         if (verticalSnap)
