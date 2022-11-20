@@ -12,9 +12,7 @@ using Valve.VR.InteractionSystem;
 public class PlayerManager : MonoBehaviour
 {
 
-#if UNITY_EDITOR
     public bool newTechTreeInstance;
-#endif
 
     public TechTree currentTree;
     //=========================================================================
@@ -110,19 +108,13 @@ public class PlayerManager : MonoBehaviour
         headAudioSource.transform.SetParent(Player.instance.hmdTransform);
         headAudioSource.transform.localPosition = Vector3.zero;
 
-#if !UNITY_EDITOR
-        TechTree tree = Instantiate(faction.techTree);
-        faction = Instantiate(faction);
-        faction.techTree = tree;
-#else
         if (newTechTreeInstance)
         {
-            TechTree tree = Instantiate(faction.techTree);
+            currentTree = Instantiate(faction.techTree);
             faction = Instantiate(faction);
-            faction.techTree = tree;
-            currentTree = faction.techTree;
+            faction.techTree = currentTree;
         }
-#endif
+
         rightHand = Player.instance.rightHand;
         leftHand = Player.instance.leftHand;
 
@@ -526,8 +518,8 @@ public class PlayerManager : MonoBehaviour
             FaceDisplay?.SetMilitaryPopulationText(militaryPopulation.ToString());
         }
 
-        totalPopulation += unit.UnitData.populationCost;
-        queueCount -= unit.UnitData.populationCost;
+        totalPopulation += unit.unitData.populationCost;
+        queueCount -= unit.unitData.populationCost;
         if (queueCount < 0) queueCount = 0;
         UpdateWristDisplayPopulationLimit();
     }
@@ -548,7 +540,7 @@ public class PlayerManager : MonoBehaviour
             FaceDisplay.SetMilitaryPopulationText(militaryPopulation.ToString());
         }
 
-        totalPopulation -= unit.UnitData.populationCost;
+        totalPopulation -= unit.unitData.populationCost;
         UpdateWristDisplayPopulationLimit();
     }
 

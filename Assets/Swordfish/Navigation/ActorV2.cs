@@ -343,8 +343,8 @@ namespace Swordfish.Navigation
         {
             Vector3 gridToWorldSpace = World.ToTransformSpace(GridPosition.x, transform.position.y, GridPosition.y);
 
-            IsMoving = Util.DistanceUnsquared(transform.position, gridToWorldSpace) > 0.001f;
-
+            IsMoving = Util.DistanceUnsquared(transform.position, gridToWorldSpace) > 0.1f;
+            
             if (IsMoving)
             {
                 State = ActorAnimationState.MOVING;

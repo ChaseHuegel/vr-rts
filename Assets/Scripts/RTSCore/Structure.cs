@@ -64,10 +64,6 @@ public class Structure : Obstacle
 
         HookIntoEvents();
         
-
-        if (!GameMaster.Instance.buildingDamagedFX)
-            Debug.LogError("buildingDamagedFX not set in GameMaster.", this);
-
         // Only refresh visuals if hit points are not full so we don't generate
         // building damage FX particle systems on buildings that don't need them yet.
         // We can generate them at startup later on to gain real time performance

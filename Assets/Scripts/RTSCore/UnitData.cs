@@ -6,9 +6,6 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Unit", menuName = "RTS/Units/Unit Data")]
 public class UnitData : TechBase
 {
-    [Header("Unit Settings")]
-    public RTSUnitType unitType;
-
     [Header("Work Rates")]  
     public float buildRate;
     public float foragingRate;
@@ -37,7 +34,7 @@ public class UnitData : TechBase
             GameObject unitGameObject = Instantiate(worldPrefab, spawnQueue.UnitSpawnPoint.position, Quaternion.identity);
             UnitV2 unit = unitGameObject.GetComponent<UnitV2>();
             unit.Faction = spawnQueue.Structure.Faction;
-            unit.SetUnitType(this.unitType);
+            unit.unitData = this;
             unit.IssueSmartOrder(spawnQueue.UnitRallyPointCell);
         }
         else

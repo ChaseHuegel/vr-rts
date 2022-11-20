@@ -7,8 +7,8 @@ public abstract class UnitV2 : ActorV2
 {
     public abstract bool IsCivilian { get; }
 
-    public UnitData UnitData => m_UnitData ??= GameMaster.GetUnit(UnitType);
-    private UnitData m_UnitData;
+    public UnitData unitData;// => m_UnitData ??= GameMaster.GetUnit(UnitType);
+    //private UnitData m_UnitData;
 
     public bool AttackingTarget
     {
@@ -25,17 +25,13 @@ public abstract class UnitV2 : ActorV2
     public DataBinding<bool> AttackingTargetBinding { get; private set; } = new();
     public DataBinding<bool> HealTargetBinding { get; private set; } = new();
 
-    [Header("Unit Settings")]
-    [SerializeField]
-    private RTSUnitType UnitType;
-
     private float AttackTimer;
     private float HealTimer;
 
     protected override void Start()
     {
         base.Start();
-        SetUnitType(UnitType);
+        OnLoadUnitData(unitData);
     }
 
     protected override void Update()
@@ -57,12 +53,11 @@ public abstract class UnitV2 : ActorV2
         Attributes.AddOrUpdate(AttributeConstants.HEAL_RATE, 1f);
     }
 
-    public virtual void SetUnitType(RTSUnitType unitType)
-    {
-        UnitType = unitType;
-        m_UnitData = GameMaster.GetUnit(UnitType);
-        OnLoadUnitData(m_UnitData);
-    }
+    // public virtual void SetUnitData(UnitData data)
+    // {
+    //     unitData = data;
+    //     OnLoadUnitData(unitData);
+    // }
 
     protected virtual void OnLoadUnitData(UnitData data)
     {
@@ -137,7 +132,7 @@ public abstract class UnitV2 : ActorV2
 
     private void Attack(Damageable victim)
     {
-        //  TODO this is where we want to handle weapons, damage types, etc.
+        // TODO: this is where we want to handle weapons, damage types, etc.
         victim.Damage(Attributes.ValueOf(AttributeConstants.DAMAGE), AttributeChangeCause.ATTACKED, this, DamageType.NONE);
     }
 

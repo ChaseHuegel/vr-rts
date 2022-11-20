@@ -23,10 +23,10 @@ public class GameMaster : Singleton<GameMaster>
 
     public UnitDatabase unitDatabase;
     public static UnitDatabase GetUnitDatabase() { return Instance.unitDatabase; }
-    public static UnitData GetUnit(RTSUnitType type)
-    {
-         return Instance.unitDatabase.Get(type);
-    }
+    // public static UnitData GetUnit(RTSUnitType type)
+    // {
+    //      return Instance.unitDatabase.Get(type);
+    // }
 
     public static UnitData GetUnit(string name) { return Instance.unitDatabase.Get(name); }
 
