@@ -718,7 +718,10 @@ public class TechTreeEditor : EditorWindow
                 );
 
                 if (Handles.Button((inPointRect.center + outPointRect.center) * 0.5f, Quaternion.identity, 4, 8, Handles.RectangleHandleCap))
-                    OnClickRemoveConnection(techNode, targetTree.tree[reqIdx]);
+                {
+                    if(Event.current.button == 0)
+                        OnClickRemoveConnection(techNode, targetTree.tree[reqIdx]);
+                }
 
 
             }
@@ -860,28 +863,24 @@ public class TechTreeEditor : EditorWindow
 
             GUIStyle queueButtonStyle = new GUIStyle();
             queueButtonStyle.margin = new RectOffset(1, 1, 1, 1);
+            int count = 0;
 
             foreach (TechBase tech in buildingData.techQueueButtons)
             {
-                if (tech.worldQueueImage != null)
+                if (count < 6)
                 {
-                    if (GUILayout.Button(new GUIContent(tech.worldQueueImage.texture, tech.title), queueButtonStyle, GUILayout.Width(24.0f), GUILayout.Height(24.0f)))
+                    if (tech.worldQueueImage != null)
                     {
-                        Selection.activeObject = tech;
+                        if (GUILayout.Button(new GUIContent(tech.worldQueueImage.texture, tech.title), queueButtonStyle, GUILayout.Width(24.0f), GUILayout.Height(24.0f)))
+                        {
+                            if (Event.current.button == 0)
+                            {
+                                Selection.activeObject = tech;
+                            }
+                        }
                     }
-
-                    // if (GUILayout.Button(tech.worldQueueImage.texture, queueButtonStyle, GUILayout.Width(24.0f), GUILayout.Height(24.0f)))
-                    
-                    // {
-                    //     EditorGUILayout.Popup(new GUIContent("movementStepToMoveTo", "YOUR TOOLTIP HERE"));
-                    //     if (Event.current.button == 0)
-                    //     {
-                    //         Selection.activeObject = tech;
-                    //     }
-                    //     // if (Event.current.button == 1)
-                    //     //     ProcessContextMenu(tech);
-                    // }
                 }
+                count++;
             }
 
             EditorGUILayout.EndHorizontal();
