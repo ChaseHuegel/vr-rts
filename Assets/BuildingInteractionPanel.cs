@@ -428,9 +428,6 @@ public class BuildingInteractionPanel : MonoBehaviour
             nextButtonPosition.x = startPosition.x + ((buttonSize + spaceBetweenButtons) * currentButtonColumn);
             nextButtonPosition.y = startPosition.y - ((buttonSize + spaceBetweenButtons) * currentButtonRow);
         }
-
-        // foreach (QueueUnitButton btn in queueUnitButtons)
-        //     btn.Initialize();
     }
 
     public void Toggle()
@@ -507,8 +504,7 @@ public class BuildingInteractionPanel : MonoBehaviour
 
     private GameObject GenerateQueueButton(TechBase tech, Vector3 position, Transform parent)
     {
-        //UnitData typeData = GameMaster.GetUnit(unitType);
-
+        //---------------------------------------------------------------------
         // Button
         GameObject button = new GameObject("_button", typeof(QueueUnitButton));
         button.transform.SetParent(parent, false);
@@ -519,8 +515,9 @@ public class BuildingInteractionPanel : MonoBehaviour
 
         QueueUnitButton queueUnitButton = button.GetComponent<QueueUnitButton>();
         queueUnitButton.techToQueue = tech;
-        queueUnitButtons.Add(queueUnitButton);        
+        queueUnitButtons.Add(queueUnitButton);
 
+        //---------------------------------------------------------------------
         // Base (child of Button)
         GameObject buttonBase = GameObject.CreatePrimitive(PrimitiveType.Cube);
         buttonBase.name = "_base";
@@ -529,11 +526,13 @@ public class BuildingInteractionPanel : MonoBehaviour
         buttonBase.transform.localPosition = Vector3.zero;
         buttonBase.transform.GetComponent<MeshRenderer>().sharedMaterial = GameMaster.Instance.buttonBaseMaterial;
 
+        //---------------------------------------------------------------------
         // Instantiate the resource cost gameobject
         GameObject resourceCost = Instantiate(GameMaster.Instance.interactionPanelResourceCostPrefab, Vector3.zero, Quaternion.identity, button.transform);
         resourceCost.transform.localPosition = new Vector3(0.0f, -0.462f, -0.092f);
         resourceCost.transform.localRotation = Quaternion.identity;
 
+        //---------------------------------------------------------------------
         // Popluate the resource cost prefab text objects
         BuildMenuResouceCost cost = resourceCost.GetComponent<BuildMenuResouceCost>();
         cost.woodText.text = tech.woodCost.ToString();

@@ -206,6 +206,7 @@ MonoBehaviour:
   unitDatabase: {fileID: 0}
   factions: []
   floatingIndicatorPrefab: {fileID: 0}
+  interactionPanelResourceCostPrefab: {fileID: 0}
   buildingDamagedFX: {fileID: 0}
   buildingDestroyedFX: {fileID: 0}
   buildingPlacementDeniedFX: {fileID: 0}
@@ -228,8 +229,8 @@ MonoBehaviour:
   progressFont: {fileID: 0}
   buttonBaseMaterial: {fileID: 0}
   cancelButtonMaterial: {fileID: 0}
-  onButtonDownAudio: {fileID: 0}
-  onButtonUpAudio: {fileID: 0}
+  onQueueButtonDownSound: {fileID: 0}
+  onQueueButtonUpSound: {fileID: 0}
   emptyQueueSlotSprite: {fileID: 0}
   buttonLockPrefab: {fileID: 0}
   maximumUnitSelectionCount: 20
@@ -397,7 +398,7 @@ Camera:
   far clip plane: 1000
   field of view: 49
   orthographic: 1
-  orthographic size: 0.53
+  orthographic size: 0.32
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -440,13 +441,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68b915cc8c7ddfe48b4d319ace334443, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneObjects:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  sceneObjects: []
   pathFolder: Textures\queue icons
   suffix: _queue_icon
   size: 512
