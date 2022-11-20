@@ -652,16 +652,16 @@ public class PlayerManager : MonoBehaviour
         return true;
     }
 
-    public bool CanQueueTech(TechBase techBase)
+    /// <summary>
+    /// This should be the last test called right before a queue is cleared
+    /// or spawned.
+    /// </summary>
+    public bool TryToQueueTech(TechBase techBase)
     {
-        // TODO: Make this unneccassary by having the queue button locked.
-        TechNode node = faction.techTree.tree.Find(x => x.tech == techBase);
-
-        if (!faction.techTree.IsUnlocked(techBase))
-            return false;
-
+        // This should already be cleared by the enabling of the button in the techtree
+        // but check just in case something changed since the last tree update.
         if (!CanAffordTech(techBase))
-            return false;
+            return false;        
 
         if (techBase.populationCost > 0)
         {
@@ -669,6 +669,7 @@ public class PlayerManager : MonoBehaviour
                 return false;
 
             queueCount += techBase.populationCost;
+            DeductTechResourceCost(techBase);
         }
 
         return true;

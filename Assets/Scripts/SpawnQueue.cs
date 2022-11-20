@@ -78,13 +78,13 @@ public class SpawnQueue : MonoBehaviour
     {
         if (queue.Count >= structure.buildingData.maxUnitQueueSize)
         {
-            Debug.Log("Queue size >= maxUnitQueueSize.");
+            Debug.Log("Queue Failed: Queue size >= maxUnitQueueSize of structure.");
             return false;
         }
 
         if (!structure.Faction.IsSameFaction(PlayerManager.Instance.faction))
         {
-            Debug.Log("Faction not the same.");
+            Debug.Log("Queue Failed: Wrong faction.");
             return false;
         }
 
@@ -92,17 +92,16 @@ public class SpawnQueue : MonoBehaviour
 
         if (!(tech is UnitData) && queue.Contains(tech))
         {
-            Debug.Log("Tech already queued.");
+            Debug.Log("Queue Failed: Tech already queued.");
             return false;
         }
 
-        if (!PlayerManager.Instance.CanQueueTech(tech))
+        if (!PlayerManager.Instance.TryToQueueTech(tech))
         {
-            Debug.Log("Can't queue tech.");
+            Debug.Log("Queue Failed: Can't queue tech.");
             return false;
         }        
-
-        PlayerManager.Instance.DeductTechResourceCost(tech);
+        
         queue.AddLast(tech);
         RefreshQueueImages();
         return true;
