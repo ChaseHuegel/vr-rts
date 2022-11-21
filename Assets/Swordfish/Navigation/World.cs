@@ -130,6 +130,34 @@ namespace Swordfish.Navigation
             }
         }
 
+        /// <summary>
+        /// Checks if cells that surround position are occupied
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="dimensionX"></param>
+        /// <param name="dimensionY"></param>
+        /// <returns></returns>
+        public static bool CellsOccupied(Vector3 position, int dimensionX, int dimensionY)
+        {
+            Cell cell = World.at(World.ToWorldCoord(position));
+
+            int startX = cell.x - dimensionX / 2;
+            int startY = cell.y - dimensionY / 2;
+            int endX = startX + dimensionX;
+            int endY = startY + dimensionY;
+
+            for (int x = startX; x < endX; x++)
+            {
+                for (int y = startY; y < endY; y++)
+                {
+                    Cell curCell = World.at(x, y);
+                    if (curCell.occupied)
+                        return true;
+                }
+            }
+            return false;
+        }
+
         //  Debug draw the grid
         protected void OnDrawGizmos()
         {

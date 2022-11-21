@@ -501,7 +501,7 @@ public class InteractionPointer : MonoBehaviour
         else if (isInBuildingPlacementMode)
         {
             isInBuildingPlacementMode = false;
-            bool cellsOccupied = CellsOccupied(buildingPlacementPreviewObject.transform.position, placementBuildingData.boundingDimensionX, placementBuildingData.boundingDimensionY);
+            bool cellsOccupied = World.CellsOccupied(buildingPlacementPreviewObject.transform.position, placementBuildingData.boundingDimensionX, placementBuildingData.boundingDimensionY);
 
             if (cellsOccupied)
             {
@@ -618,26 +618,26 @@ public class InteractionPointer : MonoBehaviour
         EndWallPlacementMode();
     }
 
-    private bool CellsOccupied(Vector3 position, int dimensionX, int dimensionY)
-    {
-        Cell cell = World.at(World.ToWorldCoord(position));
+    // private bool CellsOccupied(Vector3 position, int dimensionX, int dimensionY)
+    // {
+    //     Cell cell = World.at(World.ToWorldCoord(position));
 
-        int startX = cell.x - dimensionX / 2;
-        int startY = cell.y - dimensionY / 2;
-        int endX = startX + dimensionX;
-        int endY = startY + dimensionY;
+    //     int startX = cell.x - dimensionX / 2;
+    //     int startY = cell.y - dimensionY / 2;
+    //     int endX = startX + dimensionX;
+    //     int endY = startY + dimensionY;
 
-        for (int x = startX; x < endX; x++)
-        {
-            for (int y = startY; y < endY; y++)
-            {
-                Cell curCell = World.at(x, y);
-                if (curCell.occupied)
-                    return true;
-            }
-        }
-        return false;
-    }
+    //     for (int x = startX; x < endX; x++)
+    //     {
+    //         for (int y = startY; y < endY; y++)
+    //         {
+    //             Cell curCell = World.at(x, y);
+    //             if (curCell.occupied)
+    //                 return true;
+    //         }
+    //     }
+    //     return false;
+    // }
 
     private void EndBuildingPlacementMode()
     {
@@ -878,6 +878,11 @@ public class InteractionPointer : MonoBehaviour
         }
     }
 
+    private bool IsAddingToUnitSelection() 
+    {
+        return uiInteractAction.GetAxis(pointerHand.handType) > triggerAddToSelectionThreshold; 
+    }
+
     //=========================================================================
     private void UpdatePointer()
     {
@@ -894,7 +899,7 @@ public class InteractionPointer : MonoBehaviour
         RaycastHit hitInfo;
         teleportArc.SetArcData(pointerStart, arcVelocity, true, false);// pointerAtBadAngle);
 
-        if (isInUnitSelectionMode && uiInteractAction.GetAxis(pointerHand.handType) > triggerAddToSelectionThreshold)
+        if (isInUnitSelectionMode && IsAddingToUnitSelection())
             teleportArc.traceLayerMask = unitSelectionMask;
         else
             teleportArc.traceLayerMask = traceLayerMask;
@@ -948,8 +953,7 @@ public class InteractionPointer : MonoBehaviour
         {                
             // Only add units to selection if trigger is pressed in more than triggerAddToSelectionThreshold
             if (selectedActors.Count <= maxUnitSelectionCount && 
-                pointerHand != null &&
-                uiInteractAction.GetAxis(pointerHand.handType) > triggerAddToSelectionThreshold)
+                pointerHand != null && IsAddingToUnitSelection())
             {
                 ActorV2 hoveredActor = pointedAtPointerInteractable.GetComponent<ActorV2>();
                 if (hoveredActor &&
@@ -963,8 +967,8 @@ public class InteractionPointer : MonoBehaviour
         }
         else if (isInBuildingPlacementMode)
         {
-            bool cellsOccupied = CellsOccupied(buildingPlacementPreviewObject.transform.position, placementBuildingData.boundingDimensionX, placementBuildingData.boundingDimensionY);
-
+            bool cellsOccupied = World.CellsOccupied(buildingPlacementPreviewObject.transform.position, placementBuildingData.boundingDimensionX, placementBuildingData.boundingDimensionY);
+            
             // Gate/Wall
             if (cellsOccupied && placementBuildingData.constructionPrefab.GetComponent<Constructible>().ClearExistingWalls == true)
             {                
