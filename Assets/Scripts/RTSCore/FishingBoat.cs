@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using Swordfish.Library.Types;
 using Swordfish.Navigation;
+using UnityEngine;
 
 public class FishingBoat : VillagerV2
 {
@@ -34,19 +31,20 @@ public class FishingBoat : VillagerV2
         }
     }
 
-    public override void OrderToCollect(ResourceGatheringType resourceType, Body target = null)
+    protected override void UpdateCurrentToolObject()
     {
-        Target = target;
-        Order = UnitOrder.Collect;
-        CargoType = resourceType;
+        //  Do nothing
     }
 
-    protected override void OnCargoChanged(object sender, DataChangedEventArgs<float> e)
+    protected override void UpdateCurrentCargoObject(bool visible)
     {
+        //  Do nothing
     }
 
-    protected override void OnStateUpdate()
+    protected override void Update()
     {
-        base.OnStateUpdate();
+        base.Update();
+
+        Debug.Log($"State: {State} Cargo: {Attributes.ValueOf(AttributeConstants.CARGO)}");
     }
 }

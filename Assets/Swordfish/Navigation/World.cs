@@ -10,8 +10,11 @@ namespace Swordfish.Navigation
         public bool showGizmos = true;
         public bool showDebugGrid = true;
 
-        [SerializeField] protected int gridSize = 10;
-        [SerializeField] protected float gridUnit = 1;
+        [SerializeField]
+        protected int gridSize = 10;
+
+        [SerializeField]
+        protected float gridUnit = 1;
 
         private Grid grid;
         public static Grid Grid { get { return Instance.grid; } }
@@ -115,6 +118,16 @@ namespace Swordfish.Navigation
         protected void Start()
         {
             grid = new Grid(gridSize);
+            for (int x = 0; x < gridSize; x++)
+            {
+                for (int z = 0; z < gridSize; z++)
+                {
+                    if (Physics.Raycast(ToTransformSpace(x, 1f, z), Vector3.down, out RaycastHit hit, 2f) && hit.collider.gameObject.layer == LayerMask.NameToLayer("Water"))
+                    {
+                        at(x, z).layers = NavigationLayers.LAYER1;
+                    }
+                }
+            }
         }
 
         //  Debug draw the grid
@@ -147,14 +160,19 @@ namespace Swordfish.Navigation
 
                     if (grid != null)
                     {
-                        if (at(x, y).canPathThru)
+                        Cell cell = at(x, y);
+
+                        if (cell.canPathThru)
                             Gizmos.color = Color.cyan;
-                        else if (!at(x, y).passable)
+                        else if (!cell.passable)
                             Gizmos.color = Color.yellow;
-                        else if (at(x, y).occupied)
+                        else if (cell.occupied)
                             Gizmos.color = Color.blue;
 
-                        if (!showDebugGrid && at(x, y).IsBlocked())
+                        if (cell.layers != NavigationLayers.DEFAULT)
+                            Gizmos.color *= Color.red;
+
+                        if (!showDebugGrid && cell.IsBlocked())
                         {
                             Gizmos.color *= new Color(1f, 1f, 1f, 0.5f);
                             Gizmos.DrawCube(ToTransformSpace(new Vector3(x, 0f, y)), new Vector3(GetUnit(), 0f, GetUnit()));

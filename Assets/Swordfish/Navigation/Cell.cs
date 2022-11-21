@@ -28,11 +28,11 @@ namespace Swordfish.Navigation
         public byte weight = 0;
         public bool passable = true;
         public bool canPathThru = false;
-        public NavigationLayers layers = NavigationLayers.ALL;
+        public NavigationLayers layers = NavigationLayers.DEFAULT;
 
         //  Occupants
-        public UniqueList<Body> occupants = new UniqueList<Body>();
-        public bool occupied { get { return occupants.Count > 0; } }
+        public UniqueList<Body> occupants = new();
+        public bool occupied => occupants.Count > 0;
 
         public Body GetFirstOccupant()
         {

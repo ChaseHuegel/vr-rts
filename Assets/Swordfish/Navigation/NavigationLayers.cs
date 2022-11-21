@@ -5,6 +5,7 @@ namespace Swordfish.Navigation
     [Flags]
     public enum NavigationLayers
     {
+        NONE = 0,
         DEFAULT = 1,
         LAYER1 = 2,
         LAYER2 = 4,

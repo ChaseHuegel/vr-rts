@@ -70,8 +70,7 @@ namespace Swordfish.Navigation
 
         public void PullRequest()
         {
-            PathRequest request;
-            requests.TryDequeue(out request);
+            requests.TryDequeue(out PathRequest request);
             if (request == null) return;
 
             //  Try to find an existing pathing attempt for this actor

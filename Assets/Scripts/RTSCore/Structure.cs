@@ -24,7 +24,7 @@ public class Structure : Obstacle
     public void Awake()
     {
         if (!(audioSource = GetComponent<AudioSource>()))
-            Debug.Log("Audiosource component not found.");        
+            Debug.Log("Audiosource component not found.");
     }
 
     protected override void UpdateSkin()
@@ -45,7 +45,7 @@ public class Structure : Obstacle
         AllStructures.Add(this);
 
         // TODO: Will need checks here for multiplayer
-        playerManager = PlayerManager.Instance;        
+        playerManager = PlayerManager.Instance;
 
         // Setup some defaults that tend to get switched in the editor.
         IgnorePanning ignorePanning = GetComponentInChildren<IgnorePanning>();
@@ -58,12 +58,12 @@ public class Structure : Obstacle
         if (!(damageable = GetComponent<Damageable>()))
             Debug.LogError("No damageable component on structure!");
 
-       
+
         // Set max health based on building database hit point value.
         damageable.Attributes.Get(AttributeConstants.HEALTH).MaxValue = buildingData.maximumHitPoints;
 
         HookIntoEvents();
-        
+
         // Only refresh visuals if hit points are not full so we don't generate
         // building damage FX particle systems on buildings that don't need them yet.
         // We can generate them at startup later on to gain real time performance

@@ -43,8 +43,8 @@ namespace Swordfish.Navigation
             //  this can be used to create a new path when a waypoint is reached
             //  This will result in long/complex treks being inaccurate, see: AoE 2 pathing
 
-            Heap<Cell> openList = new Heap<Cell>(Constants.PATH_HEAP_SIZE); //  Cells waiting to be tested
-            Heap<Cell> testedList = new Heap<Cell>(Constants.PATH_HEAP_SIZE);   //  Cells which have been tested
+            Heap<Cell> openList = new(Constants.PATH_HEAP_SIZE); //  Cells waiting to be tested
+            Heap<Cell> testedList = new(Constants.PATH_HEAP_SIZE);   //  Cells which have been tested
 
             //  Our starting point has to be tested...
             openList.Add(start);
@@ -66,10 +66,6 @@ namespace Swordfish.Navigation
                 //  Not there yet! Go through all neighbors of the current cell..
                 foreach (Cell neighbor in current.neighbors())
                 {
-                    //  Neighbor must be on the same nav layer(s)
-                    if ((neighbor.layers & layers) == 0)
-                        continue;
-
                     if (neighbor != end && neighbor.canPathThru == false)
                     {
                         //-------------------------------------------------------
@@ -99,6 +95,10 @@ namespace Swordfish.Navigation
                                 !current.neighbor(Direction.SOUTH).passable)
                                 continue;
                         }
+
+                        //  Neighbor must be on the same nav layer(s)
+                        if ((neighbor.layers & layers) == 0)
+                            continue;
 
                         //  Ignore this neighbor if its solid
                         if (!neighbor.passable)
