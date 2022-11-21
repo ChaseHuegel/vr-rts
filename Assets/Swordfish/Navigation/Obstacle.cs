@@ -37,11 +37,9 @@ namespace Swordfish.Navigation
 
             baked = true;
 
-            Debug.Log($"BakeToGrid {GetType()}");
-            Vector3 pos = World.ToWorldSpace(transform.position);
-
             //  Block all cells within bounds
             Cell cell;
+            Vector3 pos = World.ToWorldSpace(transform.position);
             for (int x = -(int)(BoundingDimensions.x / 2); x < BoundingDimensions.x / 2; x++)
             {
                 for (int y = -(int)(BoundingDimensions.y / 2); y < BoundingDimensions.y / 2; y++)
