@@ -10,12 +10,16 @@ namespace Swordfish.Navigation
         public bool bakeOnStart = true;
         public bool allowPathThru = false;
 
+        private bool baked;
+
         public override void Initialize()
         {
             base.Initialize();
 
             FetchBoundingDimensions();
-            if (bakeOnStart) BakeToGrid();
+
+            if (bakeOnStart)
+                BakeToGrid();
         }
 
         protected override void OnDestroy()
@@ -28,6 +32,12 @@ namespace Swordfish.Navigation
 
         public void BakeToGrid()
         {
+            if (baked)
+                return;
+
+            baked = true;
+
+            Debug.Log($"BakeToGrid {GetType()}");
             Vector3 pos = World.ToWorldSpace(transform.position);
 
             //  Block all cells within bounds
@@ -38,39 +48,24 @@ namespace Swordfish.Navigation
                 {
                     cell = World.at((int)pos.x + x, (int)pos.z + y);
 
-                    cell.passable = false;
-                    cell.canPathThru = allowPathThru;
-                    cell.occupants.Add(this);
+                    if (cell.occupants.TryAdd(this))
+                    {
+                        cell.passable = false;
+                        cell.canPathThru = allowPathThru;
+                    }
                 }
             }
 
             SyncToGrid();
-
-            // transform.position += new Vector3(boundingOrigin.x, 0f, boundingOrigin.y);
-
-            //-------------------------------------------------------------------------
-            // MapTools window has snap settings/tools and for some reason snapping/position here
-            // doesn't line up with snapping/position setting in the scene view so just leave it
-            // up to the user to snap things to the grid themselves and set the position of buildings
-            // etc...
-
-            // gridPosition.x = Mathf.RoundToInt(pos.x);
-            // gridPosition.y = Mathf.RoundToInt(pos.z);
-            // transform.position = World.ToTransformSpace(new Vector3(gridPosition.x, transform.position.y, gridPosition.y));
-
-            // This should do away with the need to have boundingOrigin settings.
-            // Vector3 modPos = transform.position;
-            // if (boundingDimensions.x % 2 == 0)
-            //     modPos.x = transform.position.x + World.GetUnit() * -0.5f;
-
-            // if (boundingDimensions.y % 2 == 0)
-            //     modPos.z = transform.position.z + World.GetUnit() * -0.5f;
-
-            // transform.position = modPos;
         }
 
         public void UnbakeFromGrid()
         {
+            if (!baked)
+                return;
+
+            baked = false;
+
             //  Unblock all cells within bounds
             Cell cell;
             for (int x = -(int)(BoundingDimensions.x / 2); x < BoundingDimensions.x / 2; x++)
@@ -81,9 +76,11 @@ namespace Swordfish.Navigation
 
                     cell = World.at((int)pos.x + x, (int)pos.z + y);
 
-                    cell.passable = true;
-                    cell.canPathThru = false;
-                    cell.occupants.Remove(this);
+                    if (cell.occupants.Remove(this))
+                    {
+                        cell.passable = true;
+                        cell.canPathThru = false;
+                    }
                 }
             }
         }

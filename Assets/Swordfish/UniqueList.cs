@@ -26,6 +26,17 @@ namespace Swordfish
                 Items.Add(item);
         }
 
+        public bool TryAdd(T item)
+        {
+            if (Items.IndexOf(item) == -1)
+            {
+                Items.Add(item);
+                return true;
+            }
+
+            return false;
+        }
+
         public void Clear() => Items.Clear();
 
         public bool Contains(T item) => Items.Contains(item);

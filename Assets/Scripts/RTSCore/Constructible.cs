@@ -119,6 +119,12 @@ public class Constructible : Obstacle
         //Debug.Log(Attributes.ValueOf(AttributeConstants.HEALTH) + "/" + Attributes.MaxValueOf(AttributeConstants.HEALTH));
         if (Attributes.Get(AttributeConstants.HEALTH).PeekAdd(e.amount) == GetMaxHealth())
         {
+            if (DestroyOnBuilt)
+            {
+                UnbakeFromGrid();
+                Destroy(gameObject);
+            }
+
             //  Try placing a prefab
             if (OnBuiltPrefab != null)
             {
@@ -133,12 +139,6 @@ public class Constructible : Obstacle
                 }
 
                 AudioSource.PlayClipAtPoint(buildingData.constructionCompletedAudio?.GetClip(), transform.position);
-            }
-
-            if (DestroyOnBuilt)
-            {
-                UnbakeFromGrid();
-                Destroy(gameObject);
             }
         }
         else
