@@ -170,6 +170,40 @@ public static class VillagerBehaviorTree
                 )
             ),
 
+            new OrderIs(UnitOrder.Farm,
+                new BehaviorSelector(
+                    //  Attempt to drop off if cargo is full
+                    new BehaviorSequence(
+                        new IsCargoFull(),
+                        new BehaviorSelector(
+                            //  Try the current target
+                            new CanDropOffAtTarget(),
+                            //  Or get the nearest dropoff
+                            new TargetNearestDropOff()
+                        ),
+                        new GoToTarget(),
+                        new LookAtTarget(),
+                        new CanDropOffAtTarget(),
+                        new DropOffCargo(),
+                        new TargetPrevious()
+                    ),
+                    //  Attempt to repair the target
+                    new BehaviorSequence(
+                        new HasTarget(),
+                        new GoToTarget(),
+                        new SetActorState(ActorAnimationState.BUILDANDREPAIR),
+                        new HealTarget(),
+                        new ResetTarget()                        
+                    ),
+                    
+                    //  Else order is complete
+                    new BehaviorSequence(
+                        new ResetTarget(),
+                        new ResetOrder()
+                    )
+                )
+            ),
+
             new OrderIs(UnitOrder.Repair,
                 new BehaviorSelector(
                     //  Attempt to repair the target
@@ -196,8 +230,7 @@ public static class VillagerBehaviorTree
                         new BehaviorSelector(
                             new HasTarget(),
                             new TargetNearestConstructibleWall()
-                        ),
-                        
+                        ),                        
                         new GoToTarget(),
                         new SetActorState(ActorAnimationState.BUILDANDREPAIR),
                         new HealTarget()
