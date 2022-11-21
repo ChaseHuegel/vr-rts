@@ -170,7 +170,7 @@ public static class VillagerBehaviorTree
                 )
             ),
 
-            new OrderIs(UnitOrder.Farm,
+            new OrderIs(UnitOrder.BuildAndFarm,
                 new BehaviorSelector(
                     //  Attempt to drop off if cargo is full
                     new BehaviorSequence(
@@ -187,15 +187,36 @@ public static class VillagerBehaviorTree
                         new DropOffCargo(),
                         new TargetPrevious()
                     ),
+                    //  Else attempt to collect resources
+                    new BehaviorSequence(
+                        new BehaviorSelector(
+                            //  Try the current target
+                            new CanCollectTarget(),
+                            //  Or find the nearest matching resource
+                            new TargetNearestResource(ResourceGatheringType.Grain)
+                        ),
+                        //  Navigate to the resource
+                        new GoToTarget(),
+                        //  Collect the resource
+                        new BehaviorSequence(
+                            //  If cargo isn't full
+                            new BehaviorInverter(
+                                new IsCargoFull()
+                            ),
+                            new CanCollectTarget(),
+                            new SetCargoType(ResourceGatheringType.Grain),
+                            new SetStateToGathering(),
+                            new CollectCargo()
+                        )
+                    ),
                     //  Attempt to repair the target
                     new BehaviorSequence(
                         new HasTarget(),
                         new GoToTarget(),
                         new SetActorState(ActorAnimationState.BUILDANDREPAIR),
                         new HealTarget(),
-                        new ResetTarget()                        
+                        new ResetTarget()
                     ),
-                    
                     //  Else order is complete
                     new BehaviorSequence(
                         new ResetTarget(),

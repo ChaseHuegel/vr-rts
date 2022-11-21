@@ -123,7 +123,7 @@ public class VillagerV2 : UnitV2
                 if (constructible.buildingData is WallData)
                     Order = UnitOrder.BuildWalls;
                 else if (constructible.buildingData.buildingType == RTSBuildingType.Farm)
-                    Order = UnitOrder.Farm;
+                    Order = UnitOrder.BuildAndFarm;
                 else
                     Order = UnitOrder.Repair;
                 break;
