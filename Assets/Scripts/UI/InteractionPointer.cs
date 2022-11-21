@@ -189,11 +189,13 @@ public class InteractionPointer : MonoBehaviour
 
         foreach (Hand hand in player.hands)
         {
-            if (isInUnitSelectionMode == true && hand.currentAttachedObject != null)
-            {
-                EndUnitSelectionMode();
-                return;
-            }
+            // Breaks unit selection mode when build menu is active
+            // if (isInUnitSelectionMode == true && hand.currentAttachedObject != null &&
+            //     hand.currentAttachedObject != PlayerManager.Instance.Buildmenu)
+            // {
+            //     EndUnitSelectionMode();
+            //     return;
+            // }
             
             // if (showPointerAction.GetState(SteamVR_Input_Sources.Any) == true &&
             //     !isInUnitSelectionMode &&
@@ -353,12 +355,11 @@ public class InteractionPointer : MonoBehaviour
         if (CanInteract(hand) && pointerHand == null)
         {
             if (uiInteractAction.GetAxis(hand.handType) > 0)
-            {
+            {                
                 pointerHand = hand;
                 return true;
             }
         }
-
         return false;
     }
 
@@ -617,27 +618,6 @@ public class InteractionPointer : MonoBehaviour
 
         EndWallPlacementMode();
     }
-
-    // private bool CellsOccupied(Vector3 position, int dimensionX, int dimensionY)
-    // {
-    //     Cell cell = World.at(World.ToWorldCoord(position));
-
-    //     int startX = cell.x - dimensionX / 2;
-    //     int startY = cell.y - dimensionY / 2;
-    //     int endX = startX + dimensionX;
-    //     int endY = startY + dimensionY;
-
-    //     for (int x = startX; x < endX; x++)
-    //     {
-    //         for (int y = startY; y < endY; y++)
-    //         {
-    //             Cell curCell = World.at(x, y);
-    //             if (curCell.occupied)
-    //                 return true;
-    //         }
-    //     }
-    //     return false;
-    // }
 
     private void EndBuildingPlacementMode()
     {
@@ -1115,7 +1095,6 @@ public class InteractionPointer : MonoBehaviour
 
     private bool CanInteract(Hand hand)
     {
-        // !PlayerManager.instance.handBuildMenu.activeSelf
         if (!hand.currentAttachedObject && !hand.hoveringInteractable)
             return true;
 

@@ -131,7 +131,7 @@ namespace Swordfish.Navigation
         }
 
         /// <summary>
-        /// Checks if cells that surround position are occupied
+        /// Checks if cells that surround position are occupied.
         /// </summary>
         /// <param name="position"></param>
         /// <param name="dimensionX"></param>
