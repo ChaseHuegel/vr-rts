@@ -38,8 +38,16 @@ namespace Swordfish.Navigation
             baked = true;
 
             //  Block all cells within bounds
-            Cell cell;
+            
             Vector3 pos = World.ToWorldSpace(transform.position);
+
+            Cell cell = World.at((int)pos.x, (int)pos.z);
+            if (cell.occupants.TryAdd(this))
+            {
+                cell.passable = false;
+                cell.canPathThru = allowPathThru;
+            }
+
             for (int x = -(int)(BoundingDimensions.x / 2); x < BoundingDimensions.x / 2; x++)
             {
                 for (int y = -(int)(BoundingDimensions.y / 2); y < BoundingDimensions.y / 2; y++)
