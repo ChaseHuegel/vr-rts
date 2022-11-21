@@ -38,7 +38,6 @@ public class Constructible : Obstacle
             }
 
             RemoveExistingWalls();
-
             BakeToGrid();
         }
     }

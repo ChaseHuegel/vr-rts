@@ -36,7 +36,6 @@ namespace Swordfish.Navigation
                 return;
 
             baked = true;
-
                       
             Vector3 pos = World.ToWorldSpace(transform.position);
             Cell cell = World.at((int)pos.x, (int)pos.z);

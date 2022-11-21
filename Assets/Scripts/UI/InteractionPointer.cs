@@ -250,17 +250,16 @@ public class InteractionPointer : MonoBehaviour
                 pointerHand = hand;
                 if (pointedAtPointerInteractable)
                 {
-                    BuildingInteractionPanel buildingInteractionPanel = pointedAtPointerInteractable.GetComponentInChildren<BuildingInteractionPanel>();
-                    if (buildingInteractionPanel)
-                    {
-                        buildingInteractionPanel.Toggle();
-                        continue;
-                    }
+                    if (TryToggleBuildingInteractionPanel(hand))
+                        return;
 
                     //-----------------------------------------------------------------
                     // Queue/Cancel buttons in building interaction panels  
                     if (TryInvokeHoverButton(hand))
-                        return;                    
+                        return;    
+
+                    if (TryToggleWallGate(hand))
+                        return;
                 }          
             }            
             else if (WasSelectButtonReleased(hand))
@@ -437,18 +436,27 @@ public class InteractionPointer : MonoBehaviour
             if (TryInvokeHoverButton(hand))
                 return;
 
-
-            WallGate wallGate = pointedAtPointerInteractable.GetComponent<WallGate>();
-            if (wallGate)
-            {
-                wallGate.ToggleDoors();
-            }
+            if (TryToggleWallGate(hand))
+                return;
+            
         }
         // Start unit selection mode if no interactible object is pointed at.
         else if (pointedAtPointerInteractable == null)
         {
             isInUnitSelectionMode = true;
         }
+    }
+
+    private bool TryToggleWallGate(Hand hand)
+    {
+        WallGate wallGate = pointedAtPointerInteractable.GetComponent<WallGate>();
+        if (wallGate)
+        {
+            wallGate.ToggleDoors();
+            return true;
+        }
+
+        return false;
     }
 
     private bool TryInvokeHoverButton(Hand hand)
@@ -463,6 +471,17 @@ public class InteractionPointer : MonoBehaviour
             return true;
         }
 
+        return false;
+    }
+
+    private bool TryToggleBuildingInteractionPanel(Hand hand)
+    {
+        BuildingInteractionPanel buildingInteractionPanel = pointedAtPointerInteractable.GetComponentInChildren<BuildingInteractionPanel>();
+        if (buildingInteractionPanel)
+        {
+            buildingInteractionPanel.Toggle();
+            return true;
+        }
         return false;
     }
 
