@@ -40,11 +40,4 @@ public class FishingBoat : VillagerV2
     {
         //  Do nothing
     }
-
-    protected override void Update()
-    {
-        base.Update();
-
-        Debug.Log($"State: {State} Cargo: {Attributes.ValueOf(AttributeConstants.CARGO)}");
-    }
 }
