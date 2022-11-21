@@ -29,6 +29,7 @@ public class InteractionPointer : MonoBehaviour
     public GameObject pointerAttachmentPoint;
     public LayerMask traceLayerMask;
     public LayerMask allowedPlacementLayers;
+    public LayerMask unitSelectionMask;
     public Material pointVisibleMaterial;
     public Transform destinationReticleTransform;
     public Color pointerValidColor;
@@ -250,15 +251,15 @@ public class InteractionPointer : MonoBehaviour
                 pointerHand = hand;
                 if (pointedAtPointerInteractable)
                 {
-                    if (TryToggleBuildingInteractionPanel(hand))
+                    if (TryToggleBuildingInteractionPanel(pointedAtPointerInteractable.gameObject))
                         return;
 
                     //-----------------------------------------------------------------
                     // Queue/Cancel buttons in building interaction panels  
-                    if (TryInvokeHoverButton(hand))
+                    if (TryInvokeHoverButton(hand, pointedAtPointerInteractable.gameObject))
                         return;    
 
-                    if (TryToggleWallGate(hand))
+                    if (TryToggleWallGate(pointedAtPointerInteractable.gameObject))
                         return;
                 }          
             }            
@@ -431,10 +432,10 @@ public class InteractionPointer : MonoBehaviour
 
             //-----------------------------------------------------------------
             // Queue/Cancel buttons in building interaction panels  
-            if (TryInvokeHoverButton(hand))
+            if (TryInvokeHoverButton(hand, pointedAtPointerInteractable.gameObject))
                 return;
 
-            if (TryToggleWallGate(hand))
+            if (TryToggleWallGate(pointedAtPointerInteractable.gameObject))
                 return;
             
         }
@@ -445,9 +446,9 @@ public class InteractionPointer : MonoBehaviour
         }
     }
 
-    private bool TryToggleWallGate(Hand hand)
+    private bool TryToggleWallGate(GameObject gameObject)
     {
-        WallGate wallGate = pointedAtPointerInteractable.GetComponent<WallGate>();
+        WallGate wallGate = gameObject.GetComponent<WallGate>();
         if (wallGate)
         {
             wallGate.ToggleDoors();
@@ -457,12 +458,12 @@ public class InteractionPointer : MonoBehaviour
         return false;
     }
 
-    private bool TryInvokeHoverButton(Hand hand)
+    private bool TryInvokeHoverButton(Hand hand, GameObject gameObject)
     {
         // Hands use SendMessage to call events on targeted 'Interactable' so for our
         // 'PointerInteractable' we use GetComponent instead. Should probably switch
         // hands to use GetComponent as well for performance.
-        HoverButton hoverButton = pointedAtPointerInteractable.GetComponentInChildren<HoverButton>();
+        HoverButton hoverButton = gameObject.GetComponentInChildren<HoverButton>();
         if (hoverButton)
         {
             hoverButton.onButtonDown.Invoke(hand);
@@ -472,9 +473,9 @@ public class InteractionPointer : MonoBehaviour
         return false;
     }
 
-    private bool TryToggleBuildingInteractionPanel(Hand hand)
+    private bool TryToggleBuildingInteractionPanel(GameObject gameObject)
     {
-        BuildingInteractionPanel buildingInteractionPanel = pointedAtPointerInteractable.GetComponentInChildren<BuildingInteractionPanel>();
+        BuildingInteractionPanel buildingInteractionPanel = gameObject.GetComponentInChildren<BuildingInteractionPanel>();
         if (buildingInteractionPanel)
         {
             buildingInteractionPanel.Toggle();
@@ -892,6 +893,11 @@ public class InteractionPointer : MonoBehaviour
         // Trace to see if the pointer hit anything
         RaycastHit hitInfo;
         teleportArc.SetArcData(pointerStart, arcVelocity, true, false);// pointerAtBadAngle);
+
+        if (isInUnitSelectionMode && uiInteractAction.GetAxis(pointerHand.handType) > triggerAddToSelectionThreshold)
+            teleportArc.traceLayerMask = unitSelectionMask;
+        else
+            teleportArc.traceLayerMask = traceLayerMask;
 
         teleportArc.FindProjectileCollision(out hitInfo);
         if (showPointerArc)
