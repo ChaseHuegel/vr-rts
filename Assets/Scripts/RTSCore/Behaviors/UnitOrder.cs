@@ -9,4 +9,5 @@ public enum UnitOrder
     Hunt,
     Repair,
     BuildWalls,
+    Farm,
 }

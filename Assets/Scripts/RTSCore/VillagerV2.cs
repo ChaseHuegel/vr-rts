@@ -122,6 +122,8 @@ public class VillagerV2 : UnitV2
                 Target = constructible;
                 if (constructible.buildingData is WallData)
                     Order = UnitOrder.BuildWalls;
+                else if (constructible.buildingData.buildingType == RTSBuildingType.Farm)
+                    Order = UnitOrder.Farm;
                 else
                     Order = UnitOrder.Repair;
                 break;
