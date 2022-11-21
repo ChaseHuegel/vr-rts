@@ -171,10 +171,10 @@ public class VillagerV2 : UnitV2
         UpdateCurrentToolObject();
     }
 
-    private void UpdateCurrentToolObject()
+    protected virtual void UpdateCurrentToolObject()
     {
         CurrentToolObject?.gameObject.SetActive(false);
-        
+
         switch (State)
         {
             case ActorAnimationState.FARMING:
@@ -190,9 +190,7 @@ public class VillagerV2 : UnitV2
                 CurrentToolObject = BuilderToolObject;
                 break;
             case ActorAnimationState.FISHING:
-                // TODO: Specific check for boats for the time being
-                if (FishingToolObject) 
-                    CurrentToolObject = FishingToolObject;
+                CurrentToolObject = FishingToolObject;
                 break;
             case ActorAnimationState.HUNTING:
                 CurrentToolObject = HuntingToolObject;
@@ -201,13 +199,13 @@ public class VillagerV2 : UnitV2
                 CurrentToolObject = null;
                 return;
         }
-        
+
         CurrentToolObject?.gameObject.SetActive(true);
 
-        //HuntingBackObject.gameObject.SetActive(HuntingToolObject.gameObject.activeSelf);
+        HuntingBackObject?.gameObject.SetActive(HuntingToolObject?.gameObject.activeSelf ?? false);
     }
 
-    private void UpdateCurrentCargoObject(bool visible)
+    protected virtual void UpdateCurrentCargoObject(bool visible)
     {
         switch (CargoType)
         {

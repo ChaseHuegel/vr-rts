@@ -82,7 +82,11 @@ namespace Swordfish.Navigation
             private set => IsMovingBinding.Set(value);
         }
 
-        public NavigationLayers Layers { get; set; } = NavigationLayers.ALL;
+        public NavigationLayers Layers
+        {
+            get => m_Layers;
+            set => m_Layers = value;
+        }
 
         public BehaviorTree<ActorV2> BehaviorTree { get; private set; }
 
@@ -109,6 +113,9 @@ namespace Swordfish.Navigation
 
         protected AudioSource AudioSource { get; private set; }
         protected Animator Animator { get; private set; }
+
+        [SerializeField]
+        private NavigationLayers m_Layers = NavigationLayers.DEFAULT;
 
         private byte PathWaitAttempts;
         private byte RepathAttempts;
@@ -346,7 +353,7 @@ namespace Swordfish.Navigation
             Vector3 gridToWorldSpace = World.ToTransformSpace(GridPosition.x, transform.position.y, GridPosition.y);
 
             IsMoving = Util.DistanceUnsquared(transform.position, gridToWorldSpace) > 0.001f;
-            
+
             if (IsMoving)
             {
                 State = ActorAnimationState.MOVING;

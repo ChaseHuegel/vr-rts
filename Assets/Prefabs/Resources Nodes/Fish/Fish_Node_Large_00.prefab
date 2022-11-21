@@ -56,9 +56,10 @@ MonoBehaviour:
   BoundingOrigin: {x: 0, y: 0}
   SkinRendererTargets: []
   bakeOnStart: 1
-  allowPathThru: 0
+  allowPathThru: 1
   type: 32
   amount: 200
+  onDestroyPrefab: {fileID: 0}
 --- !u!135 &5751858060140992668
 SphereCollider:
   m_ObjectHideFlags: 0

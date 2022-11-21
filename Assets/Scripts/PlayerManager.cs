@@ -69,9 +69,9 @@ public class PlayerManager : MonoBehaviour
     private GripPan gripPan;
     private Hand buildMenuHand;
     private Hand selectionHand;
-    
+
     private GameObject handBuildMenuGameObject;
-    public GameObject HandBuildMenuGameObject{ get => handBuildMenuGameObject; }
+    public GameObject HandBuildMenuGameObject { get => handBuildMenuGameObject; }
 
     protected BuildMenu buildMenu;
     public BuildMenu Buildmenu { get => buildMenu; }
@@ -82,7 +82,7 @@ public class PlayerManager : MonoBehaviour
 
     private static PlayerManager _instance;
     //private bool isAutohideHandMenuVisible;
-    
+
     public static PlayerManager Instance
     {
         get
@@ -135,7 +135,7 @@ public class PlayerManager : MonoBehaviour
         leftHandHammerStorage.gameObject.SetActive(hammerOnLeft);
         rightHandHammerStorage.gameObject.SetActive(hammerOnRight);
 
-        InitializeHandBuildMenu();        
+        InitializeHandBuildMenu();
 
         handMenuToggle?.AddOnStateDownListener(OnHandToggleMenuRightDown, SteamVR_Input_Sources.RightHand);
         handMenuToggle?.AddOnStateDownListener(OnHandToggleMenuLeftDown, SteamVR_Input_Sources.LeftHand);
@@ -257,7 +257,7 @@ public class PlayerManager : MonoBehaviour
         Damageable.OnDeathEvent -= OnDeathEvent;
         Damageable.OnSpawnEvent -= OnSpawnEvent;
     }
-    
+
     public void ProcessRotateClockwiseEvent(Hand hand)
     {
         if (hand.currentAttachedObject == HandBuildMenuGameObject)
@@ -270,7 +270,7 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    public void ProcessRotateCounterClockwiseEvent(Hand hand) 
+    public void ProcessRotateCounterClockwiseEvent(Hand hand)
     {
         if (hand.currentAttachedObject == HandBuildMenuGameObject)
         {
@@ -304,7 +304,7 @@ public class PlayerManager : MonoBehaviour
 
     private bool AnotherBuildingLikeThisExists(Structure structure)
     {
-        foreach(Structure st in Structure.AllStructures)
+        foreach (Structure st in Structure.AllStructures)
         {
             if (st == structure)
                 continue;
@@ -312,7 +312,7 @@ public class PlayerManager : MonoBehaviour
             if (st.buildingData.buildingType == structure.buildingData.buildingType)
                 return true;
         }
-        
+
         return false;
     }
 
@@ -341,7 +341,7 @@ public class PlayerManager : MonoBehaviour
     {
         if (handBuildMenuPrefab)
         {
-            Vector3 position = new Vector3(14.8597126f, 0.681457937f, -10.2036371f);
+            Vector3 position = new(14.8597126f, 0.681457937f, -10.2036371f);
             handBuildMenuGameObject = Instantiate(handBuildMenuPrefab, position, Quaternion.identity, autohideHandMenuObject.transform);
             buildMenu = handBuildMenuGameObject.GetComponent<BuildMenu>();
             handBuildMenuGameObject.SetActive(false);
@@ -453,7 +453,7 @@ public class PlayerManager : MonoBehaviour
         }
 
     }
-    
+
     public void ProcessTechQueueComplete(TechBase tech)
     {
         if (!faction.techTree.ResearchTech(tech))
@@ -472,8 +472,8 @@ public class PlayerManager : MonoBehaviour
             case UnitData:
             case BuildingData:
                 break;
-        }        
-        
+        }
+
         Debug.LogFormat("{0} research complete.", tech.title, this);
     }
 
@@ -653,7 +653,7 @@ public class PlayerManager : MonoBehaviour
         // This should already be cleared by the enabling of the button in the techtree
         // but check just in case something changed since the last tree update.
         if (!CanAffordTech(techBase))
-            return false;        
+            return false;
 
         if (techBase.populationCost > 0)
         {
@@ -665,5 +665,5 @@ public class PlayerManager : MonoBehaviour
         }
 
         return true;
-    }    
+    }
 }
