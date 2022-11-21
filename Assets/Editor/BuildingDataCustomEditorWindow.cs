@@ -82,7 +82,7 @@ public class BuildingDataCustomEditorWindow : EditorWindow
         EditorGUILayout.Space();
 
         EditorGUILayout.LabelField("Building Settings", EditorStyles.boldLabel);
-        bData.buildingType = (RTSBuildingType)EditorGUILayout.EnumPopup("Building Type", bData.buildingType);
+        bData.buildingType = (BuildingType)EditorGUILayout.EnumPopup("Building Type", bData.buildingType);
         bData.dropoffTypes = (ResourceGatheringType)EditorGUILayout.EnumFlagsField("Dropoff Types", bData.dropoffTypes);
         bData.boundingDimensionX = EditorGUILayout.IntField("Bounding Dimensions X", bData.boundingDimensionX);
         bData.boundingDimensionY = EditorGUILayout.IntField("Bounding Dimensions Y", bData.boundingDimensionY);

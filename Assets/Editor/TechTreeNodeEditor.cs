@@ -172,7 +172,7 @@ public class TechTreeNodeEditor : EditorWindow
         EditorGUILayout.Space();
 
         EditorGUILayout.LabelField("Building Settings", EditorStyles.boldLabel);
-        buildingData.buildingType = (RTSBuildingType)EditorGUILayout.EnumPopup("Building Type", buildingData.buildingType);
+        buildingData.buildingType = (BuildingType)EditorGUILayout.EnumPopup("Building Type", buildingData.buildingType);
         buildingData.dropoffTypes = (ResourceGatheringType)EditorGUILayout.EnumFlagsField("Dropoff Types", buildingData.dropoffTypes);
         buildingData.boundingDimensionX = EditorGUILayout.IntField("Bounding Dimensions X", buildingData.boundingDimensionX);
         buildingData.boundingDimensionY = EditorGUILayout.IntField("Bounding Dimensions Y", buildingData.boundingDimensionY);

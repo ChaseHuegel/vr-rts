@@ -7,7 +7,7 @@ using System;
 public class BuildingData : TechBase
 {
     [Header("Building Settings")]
-    public RTSBuildingType buildingType;    
+    public BuildingType buildingType;    
     public ResourceGatheringType dropoffTypes;
     public int boundingDimensionX;
     public int boundingDimensionY;

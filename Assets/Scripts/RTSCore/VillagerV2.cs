@@ -122,7 +122,7 @@ public class VillagerV2 : UnitV2
                 Target = constructible;
                 if (constructible.buildingData is WallData)
                     Order = UnitOrder.BuildWalls;
-                else if (constructible.buildingData.buildingType == RTSBuildingType.Farm)
+                else if (constructible.buildingData.buildingType == BuildingType.FactionedResource)
                     Order = UnitOrder.BuildAndFarm;
                 else
                     Order = UnitOrder.Repair;

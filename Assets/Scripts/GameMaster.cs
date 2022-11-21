@@ -18,7 +18,7 @@ public class GameMaster : Singleton<GameMaster>
 
     public BuildingDatabase buildingDatabase;
     public static BuildingDatabase GetBuildingDatabase() { return Instance.buildingDatabase; }
-    public static BuildingData GetBuilding(RTSBuildingType type) { return Instance.buildingDatabase.Get(type); }
+    public static BuildingData GetBuilding(BuildingType type) { return Instance.buildingDatabase.Get(type); }
     public static BuildingData GetBuilding(string name) { return Instance.buildingDatabase.Get(name); }
 
     public UnitDatabase unitDatabase;

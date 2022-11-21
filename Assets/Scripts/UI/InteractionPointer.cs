@@ -272,8 +272,7 @@ public class InteractionPointer : MonoBehaviour
                 if (isInBuildingPlacementMode)
                 {
                     float rotationIncrement = buildingPlacementRotationIncrement;
-                    if (placementBuildingData.buildingType == RTSBuildingType.Wood_Wall_A_Gate ||
-                        placementBuildingData.buildingType == RTSBuildingType.Stone_Wall_A_Gate)
+                    if (placementBuildingData.buildingType == BuildingType.WallGate)
                         rotationIncrement = wallPlacementRotationIncrement;
 
                     buildingPlacementPreviewObject.transform.Rotate(0.0f, -rotationIncrement, 0.0f);
@@ -288,8 +287,7 @@ public class InteractionPointer : MonoBehaviour
                 if (isInBuildingPlacementMode)
                 {
                     float rotationIncrement = buildingPlacementRotationIncrement;
-                    if (placementBuildingData.buildingType == RTSBuildingType.Wood_Wall_A_Gate ||
-                        placementBuildingData.buildingType == RTSBuildingType.Stone_Wall_A_Gate)
+                    if (placementBuildingData.buildingType == BuildingType.WallGate)
                         rotationIncrement = wallPlacementRotationIncrement;
 
                     buildingPlacementPreviewObject.transform.Rotate(0.0f, rotationIncrement, 0.0f);
