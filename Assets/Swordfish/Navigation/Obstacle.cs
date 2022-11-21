@@ -37,17 +37,17 @@ namespace Swordfish.Navigation
 
             baked = true;
 
-            //  Block all cells within bounds
-            
+                      
             Vector3 pos = World.ToWorldSpace(transform.position);
-
             Cell cell = World.at((int)pos.x, (int)pos.z);
-            if (cell.occupants.TryAdd(this))
-            {
-                cell.passable = false;
-                cell.canPathThru = allowPathThru;
-            }
 
+            // Flag initial cell as not passable, the initial cell is by default
+            // added to occupants by Body so it fails TryAdd checks and isn't able to 
+            // get it's passable flag set in the loop.
+            cell.passable = false;
+            cell.canPathThru = allowPathThru;
+
+            //  Block all cells within bounds  
             for (int x = -(int)(BoundingDimensions.x / 2); x < BoundingDimensions.x / 2; x++)
             {
                 for (int y = -(int)(BoundingDimensions.y / 2); y < BoundingDimensions.y / 2; y++)
@@ -59,6 +59,7 @@ namespace Swordfish.Navigation
                         cell.passable = false;
                         cell.canPathThru = allowPathThru;
                     }
+                    
                 }
             }
 
