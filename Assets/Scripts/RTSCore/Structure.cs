@@ -84,7 +84,7 @@ public class Structure : Obstacle
         Damageable.OnDeathEvent -= OnDeath;
     }
 
-    public override void OnDestroy()
+    protected override void OnDestroy()
     {
         base.OnDestroy();
         CleanupEvents();

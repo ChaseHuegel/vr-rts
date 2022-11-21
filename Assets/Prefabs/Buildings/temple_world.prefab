@@ -487,7 +487,6 @@ GameObject:
   - component: {fileID: 1277568241958548166}
   - component: {fileID: 2461490422744456266}
   - component: {fileID: 4531800198945808669}
-  - component: {fileID: 6790105542963088709}
   - component: {fileID: 1495391268286219427}
   - component: {fileID: 449491929498569952}
   - component: {fileID: 5938098503107134738}
@@ -651,22 +650,6 @@ MonoBehaviour:
   bakeOnStart: 1
   allowPathThru: 0
   buildingData: {fileID: 11400000, guid: b9819998b4da79649a51b87956d9f193, type: 2}
---- !u!114 &6790105542963088709
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6549949495045157559}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8753ff4a5012a141b16468281698adb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Invulnerable: 0
-  Weaknesses: 
-  Resistances: 
-  Immunities: 
 --- !u!114 &1495391268286219427
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -773,7 +756,6 @@ MonoBehaviour:
   QueueMenuVerticalOffset: 0
   unitSpawnPoint: {fileID: 2564868943116101143}
   unitRallyWaypoint: {fileID: 6536023394949403298}
-  queueTechButtons: []
   numberOfQueueSlots: 12
 --- !u!1 &6594117504586425840
 GameObject:

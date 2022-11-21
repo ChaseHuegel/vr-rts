@@ -19,7 +19,7 @@ public class Resource : Obstacle
         AllResources.Add(this);
     }
 
-    public override void OnDestroy()
+    protected override void OnDestroy()
     {
         base.OnDestroy();
         AllResources.Remove(this);
@@ -43,7 +43,7 @@ public class Resource : Obstacle
         if (amount <= 0)
         {
             UnbakeFromGrid();
-            
+
             if (onDestroyPrefab)
                 Instantiate(onDestroyPrefab, this.transform.position, Quaternion.identity);
 

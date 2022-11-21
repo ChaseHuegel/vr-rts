@@ -18,7 +18,7 @@ namespace Swordfish.Navigation
             if (bakeOnStart) BakeToGrid();
         }
 
-        public virtual void OnDestroy()
+        protected override void OnDestroy()
         {
             if (Application.isPlaying && gameObject.scene.isLoaded)
                 UnbakeFromGrid();
