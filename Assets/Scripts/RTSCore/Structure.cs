@@ -41,7 +41,6 @@ public class Structure : Obstacle
     public override void Initialize()
     {
         base.Initialize();
-
         AllStructures.Add(this);
 
         // TODO: Will need checks here for multiplayer
