@@ -141,6 +141,7 @@ public class PlayerManager : MonoBehaviour
         handMenuToggle?.AddOnStateDownListener(OnHandToggleMenuLeftDown, SteamVR_Input_Sources.LeftHand);
 
         faction.techTree.RefreshNodes();
+        InitializedUpgradeState();
 
         Valve.VR.OpenVR.Chaperone?.ResetZeroPose(ETrackingUniverseOrigin.TrackingUniverseStanding);
     }
@@ -148,6 +149,61 @@ public class PlayerManager : MonoBehaviour
     void OnDestroy()
     {
         CleanupEvents();
+    }
+
+    private Dictionary<UpgradeType, float> unitUpgradeState;
+    public void AddUpgradeToUpgradeState(UpgradeType upgradeType, float value)
+    {
+        unitUpgradeState[upgradeType] += value;
+    }
+
+    private void AdjustUnitStatsWithUpgradeState(UnitV2 unit)
+    {
+        // unit.Attributes.Get(AttributeConstants.HEALTH).Add(unitUpgradeState[UpgradeType.HEALTH]);
+        // unit.Attributes.Get(AttributeConstants.SPEED).Add(unitUpgradeState[UpgradeType.SPEED]);
+        // unit.Attributes.Get(AttributeConstants.REACH).Add(unitUpgradeState[UpgradeType.REACH]);
+        // unit.Attributes.Get(AttributeConstants.CARGO).Add(unitUpgradeState[UpgradeType.CARGO]);
+        // unit.Attributes.Get(AttributeConstants.DAMAGE).Add(unitUpgradeState[UpgradeType.DAMAGE]);
+        // unit.Attributes.Get(AttributeConstants.ARMOR).Add(unitUpgradeState[UpgradeType.ARMOR]);
+        // unit.Attributes.Get(AttributeConstants.SENSE_RADIUS).Add(unitUpgradeState[UpgradeType.SENSE_RADIUS]);
+        // unit.Attributes.Get(AttributeConstants.ATTACK_SPEED).Add(unitUpgradeState[UpgradeType.ATTACK_SPEED]);
+        // unit.Attributes.Get(AttributeConstants.ATTACK_RANGE).Add(unitUpgradeState[UpgradeType.ATTACK_RANGE]);
+        // unit.Attributes.Get(AttributeConstants.COLLECT_RATE).Add(unitUpgradeState[UpgradeType.COLLECT_RATE]);
+        // unit.Attributes.Get(AttributeConstants.HEAL_RATE).Add(unitUpgradeState[UpgradeType.HEAL_RATE]);
+
+    }
+
+    public float GetUpgradeState(UpgradeType upgradeType)
+    {
+        float ret = 0.0f;
+        unitUpgradeState.TryGetValue(upgradeType, out ret);
+        return ret;
+    }
+
+    // Keeps a list of running tallies of unit upgrades to apply to units
+    // when they spawn.
+    private void InitializedUpgradeState()
+    {
+        unitUpgradeState = new Dictionary<UpgradeType, float>();
+
+        // unitUpgradeState.Add(UpgradeType.HEALTH, 0);
+        // unitUpgradeState.Add(UpgradeType.SPEED, 0);
+        // unitUpgradeState.Add(UpgradeType.REACH, 0);
+        // unitUpgradeState.Add(UpgradeType.CARGO, 0);
+        // unitUpgradeState.Add(UpgradeType.DAMAGE, 0);
+        // unitUpgradeState.Add(UpgradeType.ARMOR, 0);
+        // unitUpgradeState.Add(UpgradeType.SENSE_RADIUS, 0);
+        // unitUpgradeState.Add(UpgradeType.ATTACK_SPEED, 0);
+        // unitUpgradeState.Add(UpgradeType.ATTACK_RANGE, 0);
+        // unitUpgradeState.Add(UpgradeType.COLLECT_RATE, 0);
+        // unitUpgradeState.Add(UpgradeType.HEAL_RATE, 0);
+        // unitUpgradeState.Add(UpgradeType.REPAIR_RATE, 0);
+        // unitUpgradeState.Add(UpgradeType.STONE_MINING_RATE, 0);
+        // unitUpgradeState.Add(UpgradeType.GOLD_MINING_RATE, 0);
+        // unitUpgradeState.Add(UpgradeType.FARMING_RATE, 0);
+        // unitUpgradeState.Add(UpgradeType.HUNTING_RATE, 0);
+        // unitUpgradeState.Add(UpgradeType.LUMBERJACKING_RATE, 0);
+        // unitUpgradeState.Add(UpgradeType.FISHING_RATE, 0);
     }
 
     public void PlayEpochResearchCompleteAudio()
@@ -296,6 +352,7 @@ public class PlayerManager : MonoBehaviour
                     faction.techTree.SetIsBuilt(structure.buildingData);
                     break;
                 case UnitV2 unit:
+                    AdjustUnitStatsWithUpgradeState(unit);
                     AddToPopulation(unit);
                     break;
             }

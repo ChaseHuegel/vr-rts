@@ -24,6 +24,7 @@ public class UnitData : TechBase
     public int attackRange;
     public float attackDamage;
     public float armor;
+    public float movementSpeed = 0.3f;
 
     public override void Execute(SpawnQueue spawnQueue)
     {
