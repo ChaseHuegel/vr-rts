@@ -616,7 +616,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5429390756199639882}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.411, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -863,11 +863,11 @@ GameObject:
   - component: {fileID: 1829613286073011724}
   - component: {fileID: 8964760528390938258}
   - component: {fileID: 4489571297985894244}
-  - component: {fileID: 4589225801594316327}
-  - component: {fileID: 999090462431763347}
   - component: {fileID: 5842187642439450030}
   - component: {fileID: 2938878332252261439}
   - component: {fileID: 9127262867258991712}
+  - component: {fileID: 2613046803236819577}
+  - component: {fileID: 2610934535095417122}
   m_Layer: 10
   m_Name: watch_tower_world
   m_TagString: Untagged
@@ -1004,46 +1004,6 @@ MonoBehaviour:
   highlightMaterial: {fileID: 0}
   highlightOnHover: 1
   hideHighlight: []
---- !u!114 &4589225801594316327
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7499504041459629693}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6494f394dde4732498f2aecf5968b6e8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Invulnerable: 0
-  Weaknesses: 
-  Resistances: 
-  Immunities: 
-  Faction: {fileID: 0}
-  BoundingDimensions: {x: 0, y: 0}
-  BoundingOrigin: {x: 0, y: 0}
-  SkinRendererTargets:
-  - {fileID: 3867009428939803601}
-  bakeOnStart: 1
-  allowPathThru: 0
-  buildingData: {fileID: 11400000, guid: bc71de8f503ea984dab70f06ddc0dac4, type: 2}
---- !u!114 &999090462431763347
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7499504041459629693}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8753ff4a5012a141b16468281698adb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Invulnerable: 0
-  Weaknesses: 
-  Resistances: 
-  Immunities: 
 --- !u!114 &5842187642439450030
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1152,6 +1112,50 @@ CapsuleCollider:
   m_Height: 0.5981693
   m_Direction: 1
   m_Center: {x: -0.00045146048, y: 0.24273479, z: 0}
+--- !u!135 &2613046803236819577
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7499504041459629693}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &2610934535095417122
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7499504041459629693}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b96ebac9ed8864f4c9de09581cf8b718, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Invulnerable: 0
+  Weaknesses: 
+  Resistances: 
+  Immunities: 
+  Faction: {fileID: 0}
+  BoundingDimensions: {x: 2, y: 2}
+  BoundingOrigin: {x: 0, y: 0}
+  SkinRendererTargets:
+  - {fileID: 3867009428939803601}
+  bakeOnStart: 1
+  allowPathThru: 0
+  buildingData: {fileID: 11400000, guid: bc71de8f503ea984dab70f06ddc0dac4, type: 2}
+  attackRange: 5
+  attackSpeed: 3
+  attackDamage: 1
+  rangedProjectile: {fileID: 3740421758085118616, guid: 33ebc7103c3a4b64ca93d64149b5fa33,
+    type: 3}
+  projectileSpeed: 5
+  projectileOrigin: {fileID: 4038321876082346590}
 --- !u!1 &7531677962141697290
 GameObject:
   m_ObjectHideFlags: 0

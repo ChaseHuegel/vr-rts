@@ -27,10 +27,14 @@ public abstract class UnitV2 : ActorV2
     private float AttackTimer;
     private float HealTimer;
 
+    private Vector3 originalScale = Vector3.one;
+
     protected override void Start()
     {
         base.Start();
         OnLoadUnitData(unitData);
+
+        originalScale = gameObject.transform.localScale;
     }
 
     protected override void Update()
@@ -92,6 +96,8 @@ public abstract class UnitV2 : ActorV2
             else
                 AudioSource.PlayOneShot(GameMaster.GetAudio("unit_pickup_enemy").GetClip(), 0.5f);
         }
+        else
+            gameObject.transform.localScale = originalScale;
     }
 
     protected override void OnOrderChanged(object target, DataChangedEventArgs<UnitOrder> e)

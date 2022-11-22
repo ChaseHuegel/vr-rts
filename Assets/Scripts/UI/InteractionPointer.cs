@@ -219,13 +219,11 @@ public class InteractionPointer : MonoBehaviour
                 ShowPointer();
             }
             else if (WasInteractButtonReleased(hand))
-            {
                 Process_InteractUI_Action_End();
-            }
+
             else if (WasInteractButtonPressed(hand))
-            {
                 Process_InteractUI_Action_Start(hand);
-            }
+
             else if (WasCancelButtonPressed(hand))
             {
                 pointerHand = hand;
@@ -285,6 +283,9 @@ public class InteractionPointer : MonoBehaviour
                     PlayerManager.Instance.ProcessRotateClockwiseEvent(hand);
                 }
             }
+            // else if (WasRotateClockwiseButtonReleased(hand)) { }
+            // else if (WasRotateCounterclockwiseButtonReleased(hand)) { }
+            
             else if (WasRotateCounterclockwiseButtonPressed(hand))
             {
                 if (isInBuildingPlacementMode)
@@ -1301,6 +1302,22 @@ public class InteractionPointer : MonoBehaviour
     private bool WasDequeueButtonReleased(Hand hand)
     {
         return dequeueAction.GetStateUp(hand.handType);
+    }
+
+    private bool WasRotateClockwiseButtonReleased(Hand hand)
+    {
+        // if (pointerHand == hand)
+        //     pointerHand = null;
+
+        return rotateBuildingClockwiseAction.GetStateUp(hand.handType);
+    }
+
+    private bool WasRotateCounterclockwiseButtonReleased(Hand hand)
+    {
+        // if (pointerHand == hand)
+        //     pointerHand = null;
+
+        return rotateBuildingCounterclockwiseAction.GetStateUp(hand.handType);
     }
 
     private bool WasRotateClockwiseButtonPressed(Hand hand)
