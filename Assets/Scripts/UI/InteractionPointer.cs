@@ -921,7 +921,7 @@ public class InteractionPointer : MonoBehaviour
         else if (isInUnitSelectionMode && pointedAtPointerInteractable != null)
         {                
             // Only add units to selection if trigger is pressed in more than triggerAddToSelectionThreshold
-            if (selectedActors.Count <= maxUnitSelectionCount && 
+            if (selectedActors.Count < maxUnitSelectionCount && 
                 pointerHand != null && IsAddingToUnitSelection())
             {
                 ActorV2 hoveredActor = pointedAtPointerInteractable.GetComponent<ActorV2>();
