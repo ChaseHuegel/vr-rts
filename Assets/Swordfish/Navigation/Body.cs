@@ -304,7 +304,7 @@ namespace Swordfish.Navigation
 
         protected virtual void UpdateSkin()
         {
-            if (SkinRendererTargets.Length <= 0) return;
+            if (SkinRendererTargets == null || SkinRendererTargets.Length <= 0) return;
 
             if (Faction?.skin?.unitMaterial)
             {
