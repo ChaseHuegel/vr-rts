@@ -424,6 +424,10 @@ public class InteractionPointer : MonoBehaviour
                 return;
             
         }
+        else if (isInBuildingPlacementMode)
+        {
+            return;
+        }
         // Start unit selection mode if no interactible object is pointed at.
         else if (pointedAtPointerInteractable == null)
         {
