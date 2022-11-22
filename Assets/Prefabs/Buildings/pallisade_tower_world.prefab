@@ -100,8 +100,8 @@ GameObject:
   - component: {fileID: 3560229043700524215}
   - component: {fileID: 3037522034950026482}
   - component: {fileID: 8092799426231881041}
-  - component: {fileID: 5669489185470580451}
   - component: {fileID: 3895896881970524612}
+  - component: {fileID: 6556388543407195842}
   m_Layer: 10
   m_Name: pallisade_tower_world
   m_TagString: Untagged
@@ -330,19 +330,6 @@ MonoBehaviour:
   highlightOnHover: 0
   hideHighlight: []
   hoverPriority: 0
---- !u!135 &5669489185470580451
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 591123639016174085}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.21
-  m_Center: {x: 0, y: 0.06, z: 0}
 --- !u!114 &3895896881970524612
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -385,6 +372,20 @@ MonoBehaviour:
   unitSpawnPoint: {fileID: 2161769696028892087}
   unitRallyWaypoint: {fileID: 5096355885839545381}
   numberOfQueueSlots: 12
+--- !u!136 &6556388543407195842
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 591123639016174085}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.09654482
+  m_Height: 0.62400633
+  m_Direction: 1
+  m_Center: {x: -0.00045146048, y: 0.2230964, z: 0}
 --- !u!1 &1474224900342416423
 GameObject:
   m_ObjectHideFlags: 0

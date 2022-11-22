@@ -95,8 +95,8 @@ GameObject:
   - component: {fileID: 6631578720866326631}
   - component: {fileID: 4216390504045345934}
   - component: {fileID: 8010372048081450637}
-  - component: {fileID: 8916662151994002569}
   - component: {fileID: 3180497261741262591}
+  - component: {fileID: 892905869438666131}
   m_Layer: 10
   m_Name: sentry_tower_construction
   m_TagString: Untagged
@@ -285,19 +285,6 @@ MonoBehaviour:
   highlightOnHover: 1
   hideHighlight: []
   hoverPriority: 0
---- !u!135 &8916662151994002569
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4269214081614591373}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.3
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &3180497261741262591
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -329,6 +316,20 @@ MonoBehaviour:
   - {fileID: 2215794506502517640}
   - {fileID: 7767442656111518924}
   - {fileID: 9209202657386373438}
+--- !u!136 &892905869438666131
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4269214081614591373}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.10533142
+  m_Height: 0.2880785
+  m_Direction: 1
+  m_Center: {x: -0.00045146048, y: 0.08768937, z: 0}
 --- !u!1 &7767442656111518924
 GameObject:
   m_ObjectHideFlags: 0

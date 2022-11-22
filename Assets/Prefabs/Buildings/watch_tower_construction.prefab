@@ -261,8 +261,8 @@ GameObject:
   - component: {fileID: 2593471959761631481}
   - component: {fileID: 4550789130298702078}
   - component: {fileID: 1905430353216586120}
-  - component: {fileID: 1272748564767638160}
   - component: {fileID: 1885880412564801650}
+  - component: {fileID: 7511566722877425876}
   m_Layer: 10
   m_Name: watch_tower_construction
   m_TagString: Untagged
@@ -451,19 +451,6 @@ MonoBehaviour:
   highlightOnHover: 1
   hideHighlight: []
   hoverPriority: 0
---- !u!135 &1272748564767638160
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9137572301299605535}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.3
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &1885880412564801650
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -495,3 +482,17 @@ MonoBehaviour:
   - {fileID: 1373587676944740293}
   - {fileID: 2328141086991719449}
   - {fileID: 4098817016984017087}
+--- !u!136 &7511566722877425876
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9137572301299605535}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.09176095
+  m_Height: 0.2880785
+  m_Direction: 1
+  m_Center: {x: -0.00045146048, y: 0.08768937, z: 0}

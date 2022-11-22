@@ -255,8 +255,8 @@ GameObject:
   - component: {fileID: 5345831951150271602}
   - component: {fileID: 5040017517527104030}
   - component: {fileID: 7649352366675847449}
-  - component: {fileID: 6472128405386411344}
   - component: {fileID: 4223340395449003741}
+  - component: {fileID: 7258821041333303876}
   m_Layer: 10
   m_Name: sentry_tower_world
   m_TagString: Untagged
@@ -485,19 +485,6 @@ MonoBehaviour:
   highlightOnHover: 0
   hideHighlight: []
   hoverPriority: 0
---- !u!135 &6472128405386411344
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3233172062331517444}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.21
-  m_Center: {x: 0, y: 0.06, z: 0}
 --- !u!114 &4223340395449003741
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -540,6 +527,20 @@ MonoBehaviour:
   unitSpawnPoint: {fileID: 6718648638174756951}
   unitRallyWaypoint: {fileID: 9155308876737187210}
   numberOfQueueSlots: 12
+--- !u!136 &7258821041333303876
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3233172062331517444}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.09479666
+  m_Height: 0.6174054
+  m_Direction: 1
+  m_Center: {x: -0.00045146048, y: 0.28793788, z: 0}
 --- !u!1 &4202318781281504373
 GameObject:
   m_ObjectHideFlags: 0

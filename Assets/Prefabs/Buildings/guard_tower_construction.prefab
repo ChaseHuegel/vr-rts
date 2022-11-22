@@ -178,8 +178,8 @@ GameObject:
   - component: {fileID: 8282293402362332570}
   - component: {fileID: 7904352932206557632}
   - component: {fileID: 2960018332517526224}
-  - component: {fileID: 8408913199884657263}
   - component: {fileID: 5471267873428841955}
+  - component: {fileID: 717665380032265244}
   m_Layer: 10
   m_Name: guard_tower_construction
   m_TagString: Untagged
@@ -368,19 +368,6 @@ MonoBehaviour:
   highlightOnHover: 1
   hideHighlight: []
   hoverPriority: 0
---- !u!135 &8408913199884657263
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7643112351946405732}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.3
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &5471267873428841955
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -412,6 +399,20 @@ MonoBehaviour:
   - {fileID: 8493441187548980108}
   - {fileID: 5868381860130062466}
   - {fileID: 3750195395257158719}
+--- !u!136 &717665380032265244
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7643112351946405732}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.12082627
+  m_Height: 0.2880785
+  m_Direction: 1
+  m_Center: {x: -0.00045146048, y: 0.08768937, z: 0}
 --- !u!1 &8493441187548980108
 GameObject:
   m_ObjectHideFlags: 0
