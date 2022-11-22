@@ -300,23 +300,7 @@ public class InteractionPointer : MonoBehaviour
                     PlayerManager.Instance.ProcessRotateCounterClockwiseEvent(hand);
                 }
             }
-            
-            /* else if (isInBuildingPlacementMode)
-            {
-                // TODO: Should gates snap to nearby walls without having to be exactly lined
-                // TODO: up with the wall?
-                float rotationIncrement = buildingPlacementRotationIncrement;
-                if (placementBuildingData.buildingType == RTSBuildingType.Wood_Wall_A_Gate ||
-                    placementBuildingData.buildingType == RTSBuildingType.Stone_Wall_A_Gate)
-                    rotationIncrement = wallPlacementRotationIncrement;
-
-                if (WasRotateClockwiseButtonPressed(hand))
-                    buildingPlacementPreviewObject.transform.Rotate(0.0f, -rotationIncrement, 0.0f);
-
-                if (WasRotateCounterclockwiseButtonPressed(hand))
-                    buildingPlacementPreviewObject.transform.Rotate(0.0f, rotationIncrement, 0.0f);
-            } */
-            
+                      
             /* if (WasQueueButtonPressed(hand))
                 newPointerHand = hand;
 
@@ -511,7 +495,7 @@ public class InteractionPointer : MonoBehaviour
                     Cell currentCell = World.at(World.ToWorldCoord(buildingPlacementPreviewObject.transform.position));
                     if (currentCell.GetFirstOccupant<Body>().GetComponent<WallSegment>())
                     {
-                        PlayerManager.Instance.PlayBuildingPlacementAllowedAudio();
+                        PlayerManager.Instance.PlayBuildingPlacedSound();
                         GameObject gameObject = Instantiate(placementBuildingData.constructionPrefab, buildingPlacementPreviewObject.transform.position, buildingPlacementPreviewObject.transform.rotation);
                         gameObject.GetComponent<Constructible>().Faction = this.faction;
                         PlayerManager.Instance.DeductTechResourceCost(placementBuildingData);
@@ -522,7 +506,7 @@ public class InteractionPointer : MonoBehaviour
             }
             else if (!cellsOccupied)
             {
-                PlayerManager.Instance.PlayBuildingPlacementAllowedAudio();
+                PlayerManager.Instance.PlayBuildingPlacedSound();
                 GameObject gameObject = Instantiate(placementBuildingData.constructionPrefab, buildingPlacementPreviewObject.transform.position, buildingPlacementPreviewObject.transform.rotation);
                 gameObject.GetComponent<Constructible>().Faction = this.faction;
                 PlayerManager.Instance.DeductTechResourceCost(placementBuildingData);

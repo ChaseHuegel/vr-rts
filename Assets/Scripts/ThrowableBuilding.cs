@@ -38,7 +38,7 @@ public class ThrowableBuilding : Throwable
            spawned.GetComponent<Constructible>().Faction = PlayerManager.Instance.faction;
 
             // TODO: Switch this to a 'construction started' sound rather than placement allowed
-            PlayerManager.Instance.PlayBuildingPlacementAllowedAudio();
+            PlayerManager.Instance.PlayBuildingPlacedSound();
 
             // Remove resources only when valid placement.
             PlayerManager.Instance.DeductTechResourceCost(rtsBuildingTypeData);

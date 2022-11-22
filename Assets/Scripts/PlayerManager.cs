@@ -155,7 +155,7 @@ public class PlayerManager : MonoBehaviour
         PlayAudioAtHeadSource(GameMaster.Instance.epochResearchCompleteSound);
     }
 
-    public void PlayBuildingPlacementAllowedAudio()
+    public void PlayBuildingPlacedSound()
     {
         PlayAudioAtHeadSource(GameMaster.Instance.buildingPlacementAllowedSound);
     }
