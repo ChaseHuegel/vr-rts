@@ -89,14 +89,6 @@ public class VillagerV2 : UnitV2
         base.OnLoadUnitData(data);
         Attributes.Get(AttributeConstants.COLLECT_RATE).Value = data.lumberjackingRate;
         Attributes.Get(AttributeConstants.HEAL_RATE).MaxValue = data.buildRate;
-
-        // Attributes.Get(AttributeConstants.REACH).Add(unitUpgradeState[UpgradeType.REACH]);
-        // Attributes.Get(AttributeConstants.CARGO).Add(unitUpgradeState[UpgradeType.CARGO]);
-        // Attributes.Get(AttributeConstants.ARMOR).Add(unitUpgradeState[UpgradeType.ARMOR]);
-        // Attributes.Get(AttributeConstants.SENSE_RADIUS).Add(unitUpgradeState[UpgradeType.SENSE_RADIUS]);
-        // Attributes.Get(AttributeConstants.ATTACK_SPEED).Add(unitUpgradeState[UpgradeType.ATTACK_SPEED]);
-        // Attributes.Get(AttributeConstants.COLLECT_RATE).Add(unitUpgradeState[UpgradeType.COLLECT_RATE]);
-        // Attributes.Get(AttributeConstants.HEAL_RATE).Add(unitUpgradeState[UpgradeType.HEAL_RATE]);
     }
 
     protected override void AttachListeners()

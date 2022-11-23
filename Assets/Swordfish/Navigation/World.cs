@@ -137,25 +137,56 @@ namespace Swordfish.Navigation
         /// <param name="dimensionX"></param>
         /// <param name="dimensionY"></param>
         /// <returns></returns>
-        public static bool CellsOccupied(Vector3 position, int dimensionX, int dimensionY)
+        public static bool CellsOccupied(Vector3 position, int dimensionX, int dimensionY, NavigationLayers allowedLayers = NavigationLayers.ALL, bool waterCheck = false)
         {
-            Cell cell = World.at(World.ToWorldCoord(position));
+            Cell initialCell = World.at(World.ToWorldCoord(position));
 
-            int startX = cell.x - dimensionX / 2;
-            int startY = cell.y - dimensionY / 2;
+            int startX = initialCell.x - dimensionX / 2;
+            int startY = initialCell.y - dimensionY / 2;
             int endX = startX + dimensionX;
             int endY = startY + dimensionY;
+            int dissallowed = 0;            
+            int allowed = 0;
 
-            for (int x = startX; x < endX; x++)
+            if (!waterCheck)
             {
-                for (int y = startY; y < endY; y++)
+                for (int x = startX; x < endX; x++)
                 {
-                    Cell curCell = World.at(x, y);
-                    if (curCell.occupied)
-                        return true;
+                    for (int y = startY; y < endY; y++)
+                    {
+                        Cell curCell = World.at(x, y);
+                        if (curCell.occupied)
+                            return true;
+                        // Cell layer is not on allowedLayers
+                        if ((curCell.layers & allowedLayers) == 0)
+                            return true;
+                    }
+                }
+                return false;
+            }
+            else
+            {
+                for (int x = startX; x < endX; x++)
+                {
+                    for (int y = startY; y < endY; y++)
+                    {
+                        Cell curCell = World.at(x, y);
+                        if (curCell.occupied)
+                            return true;
+                        // Cell layer is not on allowedLayers
+                        if ((curCell.layers & allowedLayers) == 0)
+                            dissallowed++;
+                        else
+                            allowed++;
+                    }
                 }
             }
-            return false;
+
+            if (allowed > dissallowed && dissallowed > 5)
+                return false;
+
+            return true;
+            
         }
 
         //  Debug draw the grid

@@ -11,6 +11,7 @@ public class BuildingData : TechBase
     public ResourceGatheringType dropoffTypes;
     public int boundingDimensionX;
     public int boundingDimensionY;
+    public Swordfish.Navigation.NavigationLayers allowedLayers;
 
     [Header("Stats")]
     public int populationSupported;

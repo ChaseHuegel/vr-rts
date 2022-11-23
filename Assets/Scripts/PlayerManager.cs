@@ -89,7 +89,7 @@ public class PlayerManager : MonoBehaviour
     }
 
     public static Dictionary<UnitData, List<AttributeBonus>> AllAttributeBonuses = new();
-    
+     
     private static PlayerManager _instance;
     //private bool isAutohideHandMenuVisible;
 
@@ -123,6 +123,8 @@ public class PlayerManager : MonoBehaviour
             currentTree = Instantiate(faction.techTree);
             faction = Instantiate(faction);
             faction.techTree = currentTree;
+            if (currentTree)
+                Debug.Log("New tech tree instance instantiated.");
         }
 
         rightHand = Player.instance.rightHand;
