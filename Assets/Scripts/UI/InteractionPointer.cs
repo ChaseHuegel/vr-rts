@@ -86,9 +86,9 @@ public class InteractionPointer : MonoBehaviour
     [Header("Building Placement")]
     public float buildingPlacementRotationIncrement = 90.0f;
     public float wallPlacementRotationIncrement = 45f;
-    private GameObject buildingPlacementPreviewObject;
+    private GameObject bldngPreview;
     private float lastBuildingRotation;
-    private BuildingData currentBuildingData;
+    private BuildingData curBldngData;
 
     //=========================================================================
     // Wall Related
@@ -273,10 +273,10 @@ public class InteractionPointer : MonoBehaviour
                 if (isInBuildingPlacementMode)
                 {
                     float rotationIncrement = buildingPlacementRotationIncrement;
-                    if (currentBuildingData.buildingType == BuildingType.WallGate)
+                    if (curBldngData.buildingType == BuildingType.WallGate)
                         rotationIncrement = wallPlacementRotationIncrement;
 
-                    buildingPlacementPreviewObject.transform.Rotate(0.0f, -rotationIncrement, 0.0f);
+                    bldngPreview.transform.Rotate(0.0f, -rotationIncrement, 0.0f);
                 }
                 else
                 {                    
@@ -291,10 +291,10 @@ public class InteractionPointer : MonoBehaviour
                 if (isInBuildingPlacementMode)
                 {
                     float rotationIncrement = buildingPlacementRotationIncrement;
-                    if (currentBuildingData.buildingType == BuildingType.WallGate)
+                    if (curBldngData.buildingType == BuildingType.WallGate)
                         rotationIncrement = wallPlacementRotationIncrement;
 
-                    buildingPlacementPreviewObject.transform.Rotate(0.0f, rotationIncrement, 0.0f);
+                    bldngPreview.transform.Rotate(0.0f, rotationIncrement, 0.0f);
                 }
                 else
                 {
@@ -388,11 +388,11 @@ public class InteractionPointer : MonoBehaviour
         {
             if (!wallPlacementPreviewAnchor)
             {
-                wallPlacementPreviewAnchor = Instantiate(buildingPlacementPreviewObject, buildingPlacementPreviewObject.transform.position, Quaternion.identity);
+                wallPlacementPreviewAnchor = Instantiate(bldngPreview, bldngPreview.transform.position, Quaternion.identity);
                 //wallPlacementPreviewAnchor.transform.Rotate(0, lastBuildingRotation, 0);
             }
             
-            currentWallData = (WallData)currentBuildingData;
+            currentWallData = (WallData)curBldngData;
         }
         else if (pointedAtPointerInteractable != null)
         {
@@ -491,19 +491,19 @@ public class InteractionPointer : MonoBehaviour
         else if (isInBuildingPlacementMode)
         {
             isInBuildingPlacementMode = false;
-            bool cellsOccupied = World.CellsOccupied(buildingPlacementPreviewObject.transform.position, currentBuildingData.boundingDimensionX, currentBuildingData.boundingDimensionY, currentBuildingData.allowedLayers, true);
-
+            bool cellsOccupied = World.CellsOccupied(bldngPreview.transform.position, curBldngData.boundingDimensionX, curBldngData.boundingDimensionY, curBldngData.allowedLayers);
+            
             if (cellsOccupied)
             {
-                if (currentBuildingData.constructionPrefab.GetComponent<Constructible>().ClearExistingWalls == true)
+                if (curBldngData.constructionPrefab.GetComponent<Constructible>().ClearExistingWalls == true)
                 {
-                    Cell currentCell = World.at(World.ToWorldCoord(buildingPlacementPreviewObject.transform.position));
+                    Cell currentCell = World.at(World.ToWorldCoord(bldngPreview.transform.position));
                     if (currentCell.GetFirstOccupant<Body>().GetComponent<WallSegment>())
                     {
                         PlayerManager.Instance.PlayBuildingPlacedSound();
-                        GameObject gameObject = Instantiate(currentBuildingData.constructionPrefab, buildingPlacementPreviewObject.transform.position, buildingPlacementPreviewObject.transform.rotation);
+                        GameObject gameObject = Instantiate(curBldngData.constructionPrefab, bldngPreview.transform.position, bldngPreview.transform.rotation);
                         gameObject.GetComponent<Constructible>().Faction = this.faction;
-                        PlayerManager.Instance.DeductTechResourceCost(currentBuildingData);
+                        PlayerManager.Instance.DeductTechResourceCost(curBldngData);
                     }
                 }
                 else
@@ -512,14 +512,14 @@ public class InteractionPointer : MonoBehaviour
             else if (!cellsOccupied)
             {
                 PlayerManager.Instance.PlayBuildingPlacedSound();
-                GameObject gameObject = Instantiate(currentBuildingData.constructionPrefab, buildingPlacementPreviewObject.transform.position, buildingPlacementPreviewObject.transform.rotation);
+                GameObject gameObject = Instantiate(curBldngData.constructionPrefab, bldngPreview.transform.position, bldngPreview.transform.rotation);
                 gameObject.GetComponent<Constructible>().Faction = this.faction;
-                PlayerManager.Instance.DeductTechResourceCost(currentBuildingData);
+                PlayerManager.Instance.DeductTechResourceCost(curBldngData);
             }
 
             //lastBuildingRotation = buildingPlacementPreviewObject.transform.localRotation.eulerAngles.z;
-            Destroy(buildingPlacementPreviewObject);
-            buildingPlacementPreviewObject = null;
+            Destroy(bldngPreview);
+            bldngPreview = null;
 
             // Reenable snap turn since it's turned off for rotating building using sticks
             // Should be unnecessary with different steam profiles for different action sets if we decide
@@ -572,7 +572,7 @@ public class InteractionPointer : MonoBehaviour
         Instantiate(currentWallData.cornerConstructionPrefab, wallPlacementPreviewAnchor.transform.position, gameObject.transform.rotation);
 
         // Last segment
-        Instantiate(currentWallData.cornerConstructionPrefab, buildingPlacementPreviewObject.transform.position, gameObject.transform.rotation);
+        Instantiate(currentWallData.cornerConstructionPrefab, bldngPreview.transform.position, gameObject.transform.rotation);
 
 
         foreach (GameObject gameObject in wallPreviewStraightSegments)
@@ -611,8 +611,8 @@ public class InteractionPointer : MonoBehaviour
     private void EndBuildingPlacementMode()
     {
         isInBuildingPlacementMode = false;
-        Destroy(buildingPlacementPreviewObject);
-        buildingPlacementPreviewObject = null;
+        Destroy(bldngPreview);
+        bldngPreview = null;
         buildingPlacementCachedMat = null;
 
         // TODO: Restore resources to player?
@@ -650,7 +650,7 @@ public class InteractionPointer : MonoBehaviour
         Vector3 anchorPosition = wallPlacementPreviewAnchor.transform.position;
 
         // Reticle position, will also be a corner
-        Vector3 reticlePosition = buildingPlacementPreviewObject.transform.position;
+        Vector3 reticlePosition = bldngPreview.transform.position;
 
         // ! This is to reduce DrawWallPreview calls, commented out for testing.
         // if (lastPreviewPointerPosition == World.ToWorldCoord(reticlePosition))
@@ -798,10 +798,10 @@ public class InteractionPointer : MonoBehaviour
             }
         }
 
-        if (buildingPlacementPreviewObject.activeSelf && World.at(endCoord).occupied)
-            buildingPlacementPreviewObject.SetActive(false);
-        else if (!buildingPlacementPreviewObject.activeSelf && !World.at(endCoord).occupied)
-            buildingPlacementPreviewObject.SetActive(true);
+        if (bldngPreview.activeSelf && World.at(endCoord).occupied)
+            bldngPreview.SetActive(false);
+        else if (!bldngPreview.activeSelf && !World.at(endCoord).occupied)
+            bldngPreview.SetActive(true);
     }
 
     private bool IsCellOccupiedByExistingWall(Cell cell, bool clearCell = false)
@@ -936,29 +936,29 @@ public class InteractionPointer : MonoBehaviour
         }
         else if (isInBuildingPlacementMode)
         {
-            bool cellsOccupied = World.CellsOccupied(buildingPlacementPreviewObject.transform.position, currentBuildingData.boundingDimensionX, currentBuildingData.boundingDimensionY, currentBuildingData.allowedLayers, true);
+            bool cellsOccupied = World.CellsOccupied(bldngPreview.transform.position, curBldngData.boundingDimensionX, curBldngData.boundingDimensionY, curBldngData.allowedLayers);
             
             // Gate/Wall
-            if (cellsOccupied && currentBuildingData.constructionPrefab.GetComponent<Constructible>().ClearExistingWalls == true)
+            if (cellsOccupied && curBldngData.constructionPrefab.GetComponent<Constructible>().ClearExistingWalls == true)
             {                
 
             }
             else if (cellsOccupied)            
             {
-                MeshRenderer meshRenderer = buildingPlacementPreviewObject.GetComponentInChildren<MeshRenderer>();
+                MeshRenderer meshRenderer = bldngPreview.GetComponentInChildren<MeshRenderer>();
                 if (meshRenderer)
                     meshRenderer.sharedMaterial = buildingPlacementInvalidMat;
                 else
-                    foreach (SkinnedMeshRenderer skinnedMeshRenderer in buildingPlacementPreviewObject.GetComponents<SkinnedMeshRenderer>())
+                    foreach (SkinnedMeshRenderer skinnedMeshRenderer in bldngPreview.GetComponents<SkinnedMeshRenderer>())
                         skinnedMeshRenderer.sharedMaterial = buildingPlacementInvalidMat;
             }
             else
             {
-                MeshRenderer meshRenderer = buildingPlacementPreviewObject.GetComponentInChildren<MeshRenderer>();
+                MeshRenderer meshRenderer = bldngPreview.GetComponentInChildren<MeshRenderer>();
                 if (meshRenderer)
                     meshRenderer.sharedMaterial = buildingPlacementCachedMat;
                 else
-                    foreach (SkinnedMeshRenderer skinnedMeshRenderer in buildingPlacementPreviewObject.GetComponents<SkinnedMeshRenderer>())
+                    foreach (SkinnedMeshRenderer skinnedMeshRenderer in bldngPreview.GetComponents<SkinnedMeshRenderer>())
                         skinnedMeshRenderer.sharedMaterial = buildingPlacementCachedMat;
             }
 
@@ -966,11 +966,11 @@ public class InteractionPointer : MonoBehaviour
             if (pointerLineRenderer.enabled == false)
                 pointerLineRenderer.enabled = true;
 
-            HardSnapToGrid(destinationReticleTransform, currentBuildingData.boundingDimensionX, currentBuildingData.boundingDimensionY, true);
+            HardSnapToGrid(destinationReticleTransform, curBldngData.boundingDimensionX, curBldngData.boundingDimensionY, true);
         }
         else if (isInWallPlacementMode)
         {
-            HardSnapToGrid(destinationReticleTransform, currentBuildingData.boundingDimensionX, currentBuildingData.boundingDimensionY, true);
+            HardSnapToGrid(destinationReticleTransform, curBldngData.boundingDimensionX, curBldngData.boundingDimensionY, true);
             if (wallPlacementPreviewAnchor)// && buildingPlacementPreviewObject)
             {
                 DrawWallPreviewSegments();
@@ -1028,28 +1028,28 @@ public class InteractionPointer : MonoBehaviour
         // SteamVR_Actions.construction.Activate();
 
         SetSnapTurnEnabled(false, false);
-        currentBuildingData = e.buildingData;
+        curBldngData = e.buildingData;
 
-        if (currentBuildingData is WallData)
+        if (curBldngData is WallData)
         {
             isInWallPlacementMode = true;
-            currentWallData = (WallData)currentBuildingData;
+            currentWallData = (WallData)curBldngData;
 
             // Instantiate wall corner as preview object and assign to reticle
-            buildingPlacementPreviewObject = Instantiate(currentWallData.cornerPreviewPrefab, destinationReticleTransform);
+            bldngPreview = Instantiate(currentWallData.cornerPreviewPrefab, destinationReticleTransform);
         }
-        else if (currentBuildingData is BuildingData)
+        else if (curBldngData is BuildingData)
         {
             isInBuildingPlacementMode = true;
-            buildingPlacementPreviewObject = Instantiate(currentBuildingData.worldPreviewPrefab, destinationReticleTransform);
-            buildingPlacementPreviewObject.transform.rotation = Quaternion.identity;
+            bldngPreview = Instantiate(curBldngData.worldPreviewPrefab, destinationReticleTransform);
+            bldngPreview.transform.rotation = Quaternion.identity;
             
-            MeshRenderer meshRenderer = buildingPlacementPreviewObject.GetComponentInChildren<MeshRenderer>();
+            MeshRenderer meshRenderer = bldngPreview.GetComponentInChildren<MeshRenderer>();
             if (meshRenderer)
                 buildingPlacementCachedMat = meshRenderer.sharedMaterial;
             else
             {
-                SkinnedMeshRenderer skinnedMeshRenderer = buildingPlacementPreviewObject.GetComponentInChildren<SkinnedMeshRenderer>();
+                SkinnedMeshRenderer skinnedMeshRenderer = bldngPreview.GetComponentInChildren<SkinnedMeshRenderer>();
                 if (skinnedMeshRenderer)
                     buildingPlacementCachedMat = skinnedMeshRenderer.sharedMaterial;
             }
@@ -1057,7 +1057,7 @@ public class InteractionPointer : MonoBehaviour
         else
             return;
 
-        buildingPlacementPreviewObject.transform.localPosition = Vector3.zero;
+        bldngPreview.transform.localPosition = Vector3.zero;
     }
 
     /// <summary>
@@ -1073,11 +1073,11 @@ public class InteractionPointer : MonoBehaviour
         if (wallPlacementPreviewAnchor)
             Destroy(wallPlacementPreviewAnchor);
 
-        if (buildingPlacementPreviewObject)
-            Destroy(buildingPlacementPreviewObject);
+        if (bldngPreview)
+            Destroy(bldngPreview);
 
         wallPlacementPreviewAnchor = null;
-        buildingPlacementPreviewObject = null;
+        bldngPreview = null;
 
         SetSnapTurnEnabled(true, true);
     }
