@@ -78,8 +78,18 @@ public class PlayerManager : MonoBehaviour
     public BuildMenu Buildmenu { get => buildMenu; }
 
     private Hand rightHand;
-    private Hand leftHand;    
+    private Hand leftHand;
 
+    public static event EventHandler<AttributeBonusChangeEvent> OnAttributeBonusChangedEvent;
+    public class AttributeBonusChangeEvent : Swordfish.Event
+    {
+        public UnitData unitData;
+        public AttributeType attributeType;
+        public float amount;
+    }
+
+    public static Dictionary<UnitData, List<AttributeBonus>> AllAttributeBonuses = new();
+    
     private static PlayerManager _instance;
     //private bool isAutohideHandMenuVisible;
 
@@ -99,55 +109,7 @@ public class PlayerManager : MonoBehaviour
         _instance = this;
         if (!(gripPan = Player.instance.GetComponent<GripPan>()))
             Debug.Log("GripPan not found.");
-    }
-
-    public event EventHandler<AttributeBonusChangeEvent> OnAttributeBonusChangedEvent;
-    public class AttributeBonusChangeEvent : Swordfish.Event
-    {
-        public AttributeType attributeType;
-        public float amount;
-    }
-
-
-    public static Dictionary<UnitData, List<AttributeBonus>> AllAttributeBonuses = new();
-
-    public void AddUnitStatUpgrade(UnitData unitData, AttributeBonus attributeBonus)
-    {
-        if (!AllAttributeBonuses.ContainsKey(unitData))
-        {
-            List<AttributeBonus> newBonusList = new List<AttributeBonus>();
-            newBonusList.Add(attributeBonus);
-
-            AllAttributeBonuses.Add(unitData, newBonusList);
-        }
-        else
-        {
-            AttributeBonus foundAttributeBonus = AllAttributeBonuses[unitData].Find(x => x.targetAttribute == attributeBonus.targetAttribute);
-            if (foundAttributeBonus == null)
-                AllAttributeBonuses[unitData].Add(attributeBonus);
-            else if (foundAttributeBonus != null)
-                foundAttributeBonus.amount += attributeBonus.amount;
-        }
-
-        AttributeBonusChangeEvent e = new()
-        {
-            attributeType = attributeBonus.targetAttribute,
-            amount = attributeBonus.amount
-        };
-
-        OnAttributeBonusChangedEvent?.Invoke(this, e);
-
-        Debug.LogFormat("{0} bonus added for {1}.", attributeBonus.ToString(), unitData.title);
-    }
-
-    public float GetUnitStatBonus(UnitData unitData, AttributeType attributeType)
-    {
-        AttributeBonus foundAttributeBonus = AllAttributeBonuses[unitData].Find(x => x.targetAttribute == attributeType);
-        if (foundAttributeBonus != null)
-            return foundAttributeBonus.amount;
-
-        return 0;
-    }
+    }    
 
     void Start()
     {
@@ -292,6 +254,35 @@ public class PlayerManager : MonoBehaviour
     private void TickActorBehaviorTree(ActorV2 actor, ParallelLoopState state, long index)
     {
         actor.BehaviorTree?.Tick(actor, Constants.TICK_RATE_DELTA);
+    }
+
+    public void AddUnitStatUpgrade(UnitData unitData, AttributeBonus attributeBonus)
+    {
+        if (!AllAttributeBonuses.ContainsKey(unitData))
+        {
+            List<AttributeBonus> newBonusList = new List<AttributeBonus>();
+            newBonusList.Add(new AttributeBonus(attributeBonus.targetAttribute, attributeBonus.amount));
+
+            AllAttributeBonuses.Add(unitData, newBonusList);
+        }
+        else
+        {
+            AttributeBonus foundAttributeBonus = AllAttributeBonuses[unitData].Find(x => x.targetAttribute == attributeBonus.targetAttribute);
+            if (foundAttributeBonus == null)
+                AllAttributeBonuses[unitData].Add(new AttributeBonus(attributeBonus.targetAttribute, attributeBonus.amount));
+            else if (foundAttributeBonus != null)
+                foundAttributeBonus.amount += attributeBonus.amount;
+        }
+
+        AttributeBonusChangeEvent e = new()
+        {
+            unitData = unitData,
+            attributeType = attributeBonus.targetAttribute,
+            amount = attributeBonus.amount
+        };
+
+        OnAttributeBonusChangedEvent?.Invoke(this, e);
+        //Debug.LogFormat("+{0} {1} bonus added for {2}.", attributeBonus.amount, attributeBonus.targetAttribute.ToString(), unitData.title);
     }
 
     public void HookIntoEvents()
