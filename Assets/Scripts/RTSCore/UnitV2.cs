@@ -62,6 +62,28 @@ public abstract class UnitV2 : ActorV2
         Attributes.Get(AttributeConstants.DAMAGE).MaxValue = data.attackDamage;
         Attributes.Get(AttributeConstants.HEALTH).MaxValue = data.maximumHitPoints;
         Attributes.Get(AttributeConstants.SPEED).MaxValue = data.movementSpeed;
+        
+        foreach(AttributeBonus bonus in PlayerManager.AllAttributeBonuses[unitData])
+        {
+            Attributes.Get(bonus.targetAttribute.ToString()).Value += bonus.amount;
+        }
+    }
+
+    protected virtual void OnAttributeBonusChanged(object sender, PlayerManager.AttributeBonusChangeEvent e)
+    {
+        Attributes.Get(e.attributeType.ToString()).Value += e.amount;
+    }
+
+    protected override void AttachListeners()
+    {
+        base.AttachListeners();
+        PlayerManager.Instance.OnAttributeBonusChangedEvent += OnAttributeBonusChanged;
+    }
+
+    protected override void CleanupListeners()
+    {
+        base.CleanupListeners();
+        PlayerManager.Instance.OnAttributeBonusChangedEvent -= OnAttributeBonusChanged;
     }
 
     protected override void OnFallingOntoBody(Body body)
@@ -132,6 +154,8 @@ public abstract class UnitV2 : ActorV2
 
     private void Attack(Damageable victim)
     {
+        Debug.Log("Attacking for " + Attributes.ValueOf(AttributeConstants.DAMAGE).ToString());
+        
         // TODO: this is where we want to handle weapons, damage types, etc.
         victim.Damage(Attributes.ValueOf(AttributeConstants.DAMAGE), AttributeChangeCause.ATTACKED, this, DamageType.NONE);
     }

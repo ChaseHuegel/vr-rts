@@ -2,7 +2,6 @@ using System;
 
 namespace Swordfish
 {   
-    [Flags]
     public enum DamageType
     {
         NONE = 0,

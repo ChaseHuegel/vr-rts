@@ -101,6 +101,54 @@ public class PlayerManager : MonoBehaviour
             Debug.Log("GripPan not found.");
     }
 
+    public event EventHandler<AttributeBonusChangeEvent> OnAttributeBonusChangedEvent;
+    public class AttributeBonusChangeEvent : Swordfish.Event
+    {
+        public AttributeType attributeType;
+        public float amount;
+    }
+
+
+    public static Dictionary<UnitData, List<AttributeBonus>> AllAttributeBonuses = new();
+
+    public void AddUnitStatUpgrade(UnitData unitData, AttributeBonus attributeBonus)
+    {
+        if (!AllAttributeBonuses.ContainsKey(unitData))
+        {
+            List<AttributeBonus> newBonusList = new List<AttributeBonus>();
+            newBonusList.Add(attributeBonus);
+
+            AllAttributeBonuses.Add(unitData, newBonusList);
+        }
+        else
+        {
+            AttributeBonus foundAttributeBonus = AllAttributeBonuses[unitData].Find(x => x.targetAttribute == attributeBonus.targetAttribute);
+            if (foundAttributeBonus == null)
+                AllAttributeBonuses[unitData].Add(attributeBonus);
+            else if (foundAttributeBonus != null)
+                foundAttributeBonus.amount += attributeBonus.amount;
+        }
+
+        AttributeBonusChangeEvent e = new()
+        {
+            attributeType = attributeBonus.targetAttribute,
+            amount = attributeBonus.amount
+        };
+
+        OnAttributeBonusChangedEvent?.Invoke(this, e);
+
+        Debug.LogFormat("{0} bonus added for {1}.", attributeBonus.ToString(), unitData.title);
+    }
+
+    public float GetUnitStatBonus(UnitData unitData, AttributeType attributeType)
+    {
+        AttributeBonus foundAttributeBonus = AllAttributeBonuses[unitData].Find(x => x.targetAttribute == attributeType);
+        if (foundAttributeBonus != null)
+            return foundAttributeBonus.amount;
+
+        return 0;
+    }
+
     void Start()
     {
         HookIntoEvents();

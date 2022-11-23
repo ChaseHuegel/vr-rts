@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   title: Inf_Cav_Attack
   description: +1 Infantry/Cavalry Attack
-  queueResearchTime: 25
+  queueResearchTime: 5
   worldPrefab: {fileID: 0}
   worldButtonMaterial: {fileID: 2100000, guid: 7efca1a23fe081b458699fedbe0e5312, type: 2}
   worldQueueImage: {fileID: 21300000, guid: 7f5d93b6c238dfc4b8876b3f0085fbe9, type: 3}
@@ -23,11 +23,10 @@ MonoBehaviour:
   stoneCost: 0
   foodCost: 0
   woodCost: 0
-  attributeUpgrades:
-  - targetUnits:
-    - {fileID: 11400000, guid: 5ebc57ae57ef9ee46a3cf4d75de285a6, type: 2}
-    - {fileID: 11400000, guid: 408ae3f890395334da0aa2b51e929d8e, type: 2}
-    - {fileID: 11400000, guid: afd0772933e012145b9e5ca2aa679480, type: 2}
-    targetAttribute: 16
-    damageType: -1
+  targetUnits:
+  - {fileID: 11400000, guid: 5ebc57ae57ef9ee46a3cf4d75de285a6, type: 2}
+  - {fileID: 11400000, guid: afd0772933e012145b9e5ca2aa679480, type: 2}
+  - {fileID: 11400000, guid: 408ae3f890395334da0aa2b51e929d8e, type: 2}
+  attributeBonuses:
+  - targetAttribute: 16
     amount: 1

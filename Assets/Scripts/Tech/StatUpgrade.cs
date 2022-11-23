@@ -5,8 +5,7 @@ using System;
 using Swordfish;
 using Swordfish.Library.Collections;
 
-[Flags]
-public enum AttributeUpgradeType
+public enum AttributeType
 {
     NONE = 0,
     HEALTH = 1,
@@ -28,34 +27,43 @@ public enum AttributeUpgradeType
     HUNTING_RATE = 65536,
     LUMBERJACKING_RATE = 131072,
     FISHING_RATE = 262144,
+    BLUDGEONING_DAMAGE = 524288,
+    PIERCING_DAMAGE = 1048576,
+    SLASHING_DAMAGE = 2097152,
+    HACKING_DAMAGE = 4194304,
 }
 
 [Serializable]
-public class AttributeUpgrade
+public class AttributeBonus
 {
-    public List<UnitData> targetUnits;
-    public AttributeUpgradeType targetAttribute;
-    public DamageType damageType;
+    public AttributeType targetAttribute;       
     public float amount;
+
+    public AttributeBonus(AttributeType attributeType, float fAmount)    
+    {
+        targetAttribute = attributeType;
+        amount = fAmount;
+    }
 }
 
 [CreateAssetMenu(fileName = "Stat Upgrade", menuName = "RTS/Tech/Stat Upgrade")]
 public class StatUpgrade : TechBase
 {
-    public static List<AttributeUpgrade> AllAttributeBonuses;
-    public List<AttributeUpgrade> attributeUpgrades;
-
+    public List<UnitData> targetUnits;
+    public List<AttributeBonus> attributeBonuses;
+    
     public override void Execute(SpawnQueue spawnQueue)
     {
         base.Execute(spawnQueue);
 
-        foreach (AttributeUpgrade attributeUpgrade in attributeUpgrades)
+        foreach (UnitData unitData in targetUnits)
         {
-            AllAttributeBonuses.Add(attributeUpgrade);
-
-            foreach (UnitData unitData in attributeUpgrade.targetUnits)
-                Debug.LogFormat("{0} bonus added for {1}.", attributeUpgrade.targetAttribute.ToString(), unitData.title);
+            foreach (AttributeBonus attributeBonus in attributeBonuses)
+            {
+                PlayerManager.Instance.AddUnitStatUpgrade(unitData, attributeBonus);
+            }
         }
+
         Debug.Log(this.title + "research completed.");
     }    
 }
