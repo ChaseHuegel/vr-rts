@@ -62,8 +62,9 @@ public abstract class UnitV2 : ActorV2
         Attributes.Get(AttributeConstants.DAMAGE).Value = data.attackDamage;
         Attributes.Get(AttributeConstants.HEALTH).MaxValue = data.maximumHitPoints;
         Attributes.Get(AttributeConstants.HEALTH).Value = data.maximumHitPoints;
-        Attributes.Get(AttributeConstants.SPEED).Value = data.movementSpeed;        
-        
+        Attributes.Get(AttributeConstants.SPEED).MaxValue = data.movementSpeed;
+        Attributes.Get(AttributeConstants.SPEED).Value = data.movementSpeed;
+
         if(PlayerManager.AllAttributeBonuses.ContainsKey(unitData))
             foreach(AttributeBonus bonus in PlayerManager.AllAttributeBonuses[unitData])
                 Attributes.Get(bonus.targetAttribute.ToString()).Value += bonus.amount;
@@ -72,7 +73,10 @@ public abstract class UnitV2 : ActorV2
     protected virtual void OnAttributeBonusChanged(object sender, PlayerManager.AttributeBonusChangeEvent e)
     {
         if (e.unitData == unitData)
+        {
+            Attributes.Get(e.attributeType.ToString()).MaxValue += e.amount;
             Attributes.Get(e.attributeType.ToString()).Value += e.amount;
+        }
     }
 
     protected override void AttachListeners()
