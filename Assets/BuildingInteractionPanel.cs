@@ -508,6 +508,7 @@ public class BuildingInteractionPanel : MonoBehaviour
             healthBarGameObject.SetActive(false);;
     }
 
+    
     private GameObject GenerateQueueButton(TechBase tech, Vector3 position, Transform parent)
     {
         //---------------------------------------------------------------------
@@ -525,10 +526,9 @@ public class BuildingInteractionPanel : MonoBehaviour
 
         //---------------------------------------------------------------------
         // Base (child of Button)
-        GameObject buttonBase = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        GameObject buttonBase = Instantiate(GameMaster.Instance.buttonBasePrefab, Vector3.zero, Quaternion.identity, button.transform);
         buttonBase.name = "_base";
-        buttonBase.transform.SetParent(button.transform, false);
-        buttonBase.transform.localScale = new Vector3(1.0f, 1.0f, 0.15f);
+        buttonBase.transform.localRotation = Quaternion.identity;
         buttonBase.transform.localPosition = Vector3.zero;
         buttonBase.transform.GetComponent<MeshRenderer>().sharedMaterial = GameMaster.Instance.buttonBaseMaterial;
 
@@ -565,7 +565,6 @@ public class BuildingInteractionPanel : MonoBehaviour
         GameObject face = new GameObject("_face", typeof(Interactable), typeof(HoverButton));
         face.transform.SetParent(button.transform, false);
         face.transform.localPosition = new Vector3(0.0f, 0.0f, -0.05f);
-        face.transform.localScale = new Vector3(0.85f, 0.85f, 0.15f);
         face.GetComponent<Interactable>().highlightOnHover = false;
 
         //---------------------------------------------------------------------
@@ -587,12 +586,10 @@ public class BuildingInteractionPanel : MonoBehaviour
 
         //---------------------------------------------------------------------
         // MovingPart (child of Face)
-        GameObject buttonMovingPart = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        buttonMovingPart.AddComponent<UVCubeMap>();
+        GameObject buttonMovingPart = Instantiate(GameMaster.Instance.buttonMovingPartPrefab, Vector3.zero, Quaternion.identity, face.transform);
         buttonMovingPart.name = "_moving_part";
-        buttonMovingPart.transform.SetParent(face.transform, false);
-        buttonMovingPart.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
         buttonMovingPart.transform.localPosition = Vector3.zero;
+        buttonMovingPart.transform.localRotation = Quaternion.identity;
         buttonMovingPart.transform.GetComponent<MeshRenderer>().sharedMaterial = tech.worldButtonMaterial;
 
         hoverButton.movingPart = buttonMovingPart.transform;
@@ -738,32 +735,27 @@ public class BuildingInteractionPanel : MonoBehaviour
     private void InitializeCancelButton(Transform parent)
     {
         // Base (child of parent)
-        GameObject buttonBase = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        GameObject buttonBase = Instantiate(GameMaster.Instance.buttonBasePrefab, Vector3.zero, Quaternion.identity, parent);
         buttonBase.name = "_base";
-        buttonBase.transform.SetParent(parent, false);
-        buttonBase.transform.localScale = new Vector3(1.0f, 1.0f, 0.15f);
+        buttonBase.transform.localRotation = Quaternion.identity;
         buttonBase.transform.localPosition = Vector3.zero;
-        buttonBase.transform.GetComponent<MeshRenderer>().sharedMaterial = GameMaster.Instance.buttonBaseMaterial;        
+        buttonBase.transform.GetComponent<MeshRenderer>().sharedMaterial = GameMaster.Instance.buttonBaseMaterial;
 
         // Face (child of parent)
         GameObject face = new GameObject("_face", typeof(Interactable), typeof(HoverButton));
         face.transform.SetParent(parent, false);
         face.transform.localPosition = new Vector3(0.0f, 0.0f, -0.05f);
-        face.transform.localScale = new Vector3(0.85f, 0.85f, 0.15f);
         face.GetComponent<Interactable>().highlightOnHover = false;
         
         HoverButton hoverButton = face.GetComponent<HoverButton>();
         hoverButton.localMoveDistance = new Vector3(0, 0, 0.3f);
-
         hoverButton.onButtonDown.AddListener(OnCancelQueueHoverButtonDown);
 
         // MovingPart (child of Face)
-        GameObject buttonMovingPart = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        buttonMovingPart.AddComponent<UVCubeMap>();
+        GameObject buttonMovingPart = Instantiate(GameMaster.Instance.buttonMovingPartPrefab, Vector3.zero, Quaternion.identity, face.transform);
         buttonMovingPart.name = "_moving_part";
-        buttonMovingPart.transform.SetParent(face.transform, false);
-        buttonMovingPart.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
         buttonMovingPart.transform.localPosition = Vector3.zero;
+        buttonMovingPart.transform.localRotation = Quaternion.identity;
         buttonMovingPart.transform.GetComponent<MeshRenderer>().sharedMaterial = GameMaster.Instance.cancelButtonMaterial;
 
         hoverButton.movingPart = buttonMovingPart.transform;

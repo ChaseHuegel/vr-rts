@@ -34,9 +34,10 @@ public class GameMaster : Singleton<GameMaster>
     public List<Faction> factions;
     public static List<Faction> Factions { get { return Instance.factions;} }
     
-    [Header("Prefabs")]
+    [Header("Misc. Prefabs")]
     public GameObject floatingIndicatorPrefab;
     public GameObject interactionPanelResourceCostPrefab;
+    
 
     [Header("FX")]
     public GameObject buildingDamagedFX;
@@ -67,6 +68,8 @@ public class GameMaster : Singleton<GameMaster>
     public TMPro.TMP_FontAsset progressFont;
 
     [Header("Queue Menu Button Settings")]
+    public GameObject buttonBasePrefab;
+    public GameObject buttonMovingPartPrefab;
     public Material buttonBaseMaterial;
     public Material cancelButtonMaterial;
     public AudioClip onQueueButtonDownSound;
