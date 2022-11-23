@@ -284,6 +284,8 @@ public class TechTreeEditor : EditorWindow
         genericMenu.AddItem(new GUIContent("Convert/To Research Node"), false, OnClickConvertNode, NodeType.Research);
         genericMenu.AddItem(new GUIContent("Convert/To Upgrade Node"), false, OnClickConvertNode, NodeType.Upgrade);
         genericMenu.AddSeparator("");
+        genericMenu.AddItem(new GUIContent("Unlock All"), false, OnClickUnlockAll);
+        genericMenu.AddSeparator("");
         genericMenu.AddItem(new GUIContent("Reset Researched"), false, OnClickResetResearch);
         genericMenu.AddItem(new GUIContent("Reset IsBuilt"), false, OnClickResetIsBuilt);
         genericMenu.AddSeparator("");
@@ -312,6 +314,20 @@ public class TechTreeEditor : EditorWindow
         selectedNode = null;
     }
 
+    public void OnClickUnlockAll()
+    {
+        foreach (TechNode node in targetTree.tree)
+        {
+            node.researched = true;
+            node.unlocked = true;
+            node.enabled = true;
+
+            if (node is BuildingNode)
+                ((BuildingNode)node).isBuilt = true;
+        }
+        targetTree.RefreshNodes();
+    }
+
     public void OnClickResetResearch()
     {
         foreach (TechNode node in targetTree.tree)
@@ -320,6 +336,7 @@ public class TechTreeEditor : EditorWindow
         }
         targetTree.RefreshNodes();
     }
+
     public void OnClickResetIsBuilt()
     {
         foreach (TechNode node in targetTree.tree)
