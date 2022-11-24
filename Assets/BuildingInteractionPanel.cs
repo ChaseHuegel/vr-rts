@@ -570,9 +570,10 @@ public class BuildingInteractionPanel : MonoBehaviour
         //---------------------------------------------------------------------
         // Hover button
         HoverButton hoverButton = face.GetComponent<HoverButton>();
-        hoverButton.localMoveDistance = new Vector3(0, 0, 0.3f);
+        hoverButton.localMoveDistance = new Vector3(0, 0, 0.04f);
         hoverButton.onButtonDown.AddListener(OnQueueHoverButtonDown);
         hoverButton.onButtonUp.AddListener(OnQueueHoverButtonUp);
+
 
         //---------------------------------------------------------------------
         // Set up and initialize queue
@@ -748,7 +749,7 @@ public class BuildingInteractionPanel : MonoBehaviour
         face.GetComponent<Interactable>().highlightOnHover = false;
         
         HoverButton hoverButton = face.GetComponent<HoverButton>();
-        hoverButton.localMoveDistance = new Vector3(0, 0, 0.3f);
+        hoverButton.localMoveDistance = new Vector3(0, 0, 0.04f);
         hoverButton.onButtonDown.AddListener(OnCancelQueueHoverButtonDown);
 
         // MovingPart (child of Face)
