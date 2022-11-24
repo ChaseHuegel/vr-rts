@@ -73,27 +73,6 @@
             },
             {
                "inputs" : {
-                  "east" : {
-                     "output" : "/actions/default/in/snapturnright"
-                  },
-                  "north" : {
-                     "output" : "/actions/default/in/teleport"
-                  },
-                  "south" : {
-                     "output" : "/actions/default/in/togglehandmenu"
-                  },
-                  "west" : {
-                     "output" : "/actions/default/in/snapturnleft"
-                  }
-               },
-               "mode" : "dpad",
-               "parameters" : {
-                  "sub_mode" : "touch"
-               },
-               "path" : "/user/hand/left/input/joystick"
-            },
-            {
-               "inputs" : {
                   "pull" : {
                      "output" : "/actions/default/in/squeeze"
                   }
@@ -136,27 +115,6 @@
                },
                "mode" : "trigger",
                "path" : "/user/hand/right/input/grip"
-            },
-            {
-               "inputs" : {
-                  "east" : {
-                     "output" : "/actions/default/in/snapturnright"
-                  },
-                  "north" : {
-                     "output" : "/actions/default/in/teleport"
-                  },
-                  "south" : {
-                     "output" : "/actions/default/in/togglehandmenu"
-                  },
-                  "west" : {
-                     "output" : "/actions/default/in/snapturnleft"
-                  }
-               },
-               "mode" : "dpad",
-               "parameters" : {
-                  "sub_mode" : "touch"
-               },
-               "path" : "/user/hand/right/input/joystick"
             },
             {
                "inputs" : {
@@ -211,8 +169,17 @@
             },
             {
                "inputs" : {
+                  "center" : {
+                     "output" : "/actions/default/in/togglemainmenu"
+                  },
                   "east" : {
                      "output" : "/actions/default/in/rotatebuildingclockwise"
+                  },
+                  "north" : {
+                     "output" : "/actions/default/in/teleport"
+                  },
+                  "south" : {
+                     "output" : "/actions/default/in/togglehandmenu"
                   },
                   "west" : {
                      "output" : "/actions/default/in/rotatebuildingcounterclockwise"
@@ -226,8 +193,17 @@
             },
             {
                "inputs" : {
+                  "center" : {
+                     "output" : "/actions/default/in/togglemainmenu"
+                  },
                   "east" : {
                      "output" : "/actions/default/in/rotatebuildingclockwise"
+                  },
+                  "north" : {
+                     "output" : "/actions/default/in/teleport"
+                  },
+                  "south" : {
+                     "output" : "/actions/default/in/togglehandmenu"
                   },
                   "west" : {
                      "output" : "/actions/default/in/rotatebuildingcounterclockwise"
@@ -274,6 +250,36 @@
                },
                "mode" : "button",
                "path" : "/user/hand/right/input/y"
+            },
+            {
+               "inputs" : {
+                  "east" : {
+                     "output" : "/actions/default/in/snapturnright"
+                  },
+                  "west" : {
+                     "output" : "/actions/default/in/snapturnleft"
+                  }
+               },
+               "mode" : "dpad",
+               "parameters" : {
+                  "sub_mode" : "touch"
+               },
+               "path" : "/user/hand/left/input/joystick"
+            },
+            {
+               "inputs" : {
+                  "east" : {
+                     "output" : "/actions/default/in/snapturnright"
+                  },
+                  "west" : {
+                     "output" : "/actions/default/in/snapturnleft"
+                  }
+               },
+               "mode" : "dpad",
+               "parameters" : {
+                  "sub_mode" : "touch"
+               },
+               "path" : "/user/hand/right/input/joystick"
             }
          ]
       },

@@ -49,6 +49,7 @@ public class PlayerManager : MonoBehaviour
     public bool autoHideHandMenuEnabled;
     public float handMenuTrackingSensitivity = 0.5f;
 
+    public GameObject mainMenuObject;
 
     //=========================================================================
     [Header("Attachment/Tracking Points")]
@@ -59,9 +60,9 @@ public class PlayerManager : MonoBehaviour
     public GameObject autohideHandMenuObject;
 
     //=========================================================================
-    [Header("Information Displays")]
-    public WristDisplay WristDisplay;
-    public WristDisplay FaceDisplay;
+    // [Header("Information Displays")]
+    // public WristDisplay WristDisplay;
+    // public WristDisplay FaceDisplay;
 
     //=========================================================================
     [Header("Prefabs")]
@@ -79,6 +80,49 @@ public class PlayerManager : MonoBehaviour
 
     private Hand rightHand;
     private Hand leftHand;
+
+    public event EventHandler<StoneResourceChangedEvent> OnStoneResourceChanged;
+    public class StoneResourceChangedEvent : Swordfish.Event
+    {
+        public int amount;
+        public int newValue;
+    }
+
+    public event EventHandler<GoldResourceChangedEvent> OnGoldResourceChanged;
+    public class GoldResourceChangedEvent : Swordfish.Event
+    {
+        public int amount;
+        public int newValue;
+    }
+
+    public event EventHandler<WoodResourceChangedEvent> OnWoodResourceChanged;
+    public class WoodResourceChangedEvent : Swordfish.Event
+    {
+        public int amount;
+        public int newValue;
+    }
+
+    public event EventHandler<FoodResourceChangedEvent> OnFoodResourceChanged;
+    public class FoodResourceChangedEvent : Swordfish.Event
+    {
+        public int amount;
+        public int newValue;
+    }
+
+    public event EventHandler<PopulationChangedEvent> OnPopulationChanged;
+    public class PopulationChangedEvent : Swordfish.Event
+    {
+        public int civilianPopulation;
+        public int militaryPopulation;
+        public int totalPopulation;    
+    }
+
+    public event EventHandler<PopulationLimitChangedEvent> OnPopulationLimitChanged;
+    public class PopulationLimitChangedEvent : Swordfish.Event
+    {
+        public int totalPopulation;
+        public int newValue;
+    }
 
     public static event EventHandler<AttributeBonusChangeEvent> OnAttributeBonusChangedEvent;
     public class AttributeBonusChangeEvent : Swordfish.Event
@@ -130,16 +174,6 @@ public class PlayerManager : MonoBehaviour
         rightHand = Player.instance.rightHand;
         leftHand = Player.instance.leftHand;
 
-        WristDisplay?.SetWoodText(woodCollected.ToString());
-        WristDisplay?.SetGrainText(foodCollected.ToString());
-        WristDisplay?.SetGoldText(goldCollected.ToString());
-        WristDisplay?.SetStoneText(stoneCollected.ToString());
-
-        FaceDisplay?.SetWoodText(woodCollected.ToString());
-        FaceDisplay?.SetGrainText(foodCollected.ToString());
-        FaceDisplay?.SetGoldText(goldCollected.ToString());
-        FaceDisplay?.SetStoneText(stoneCollected.ToString());
-
         if (!autohideHandMenuObject)
             Debug.Log("autohideHandMenuObject not set.", this);
 
@@ -152,9 +186,45 @@ public class PlayerManager : MonoBehaviour
         handMenuToggle?.AddOnStateDownListener(OnHandToggleMenuRightDown, SteamVR_Input_Sources.RightHand);
         handMenuToggle?.AddOnStateDownListener(OnHandToggleMenuLeftDown, SteamVR_Input_Sources.LeftHand);
 
-        faction.techTree.RefreshNodes();        
+        faction.techTree.RefreshNodes();
+
+        // Activate the menu so it can catch startup resource values.
+        mainMenuObject.SetActive(true);
+        
+        InitializeResources();
+
+        mainMenuObject.SetActive(false);
 
         Valve.VR.OpenVR.Chaperone?.ResetZeroPose(ETrackingUniverseOrigin.TrackingUniverseStanding);
+    }
+
+    public void ToggleMainMenu()
+    {
+        if (mainMenuObject.activeSelf)
+            CloseMenu();
+        else
+            ShowMenu();
+    }
+    public void ShowMenu()
+    {
+        float menuOffset = 0.75f;
+        Vector3 hmdPos = Player.instance.hmdTransform.position;
+        Vector3 hmdDirection = Player.instance.hmdTransform.forward;
+        Vector3 spawnPos = hmdPos + hmdDirection * menuOffset;
+
+        mainMenuObject.transform.position = spawnPos;
+        mainMenuObject.transform.rotation = new Quaternion(0.0f, Player.instance.hmdTransform.rotation.y, 0.0f, Player.instance.hmdTransform.rotation.w);
+        mainMenuObject.SetActive(true);
+    }
+
+    public void CloseMenu()
+    {
+        mainMenuObject.SetActive(false);
+    }
+
+    public void QuitGame()
+    {
+
     }
 
     void OnDestroy()
@@ -547,48 +617,51 @@ public class PlayerManager : MonoBehaviour
     {
         // Determine if the unit should be added to civilian or military population
         if (unit.IsCivilian)
-        {
-            civilianPopulation += 1;
-            WristDisplay?.SetCivilianPopulationText(civilianPopulation.ToString());
-            FaceDisplay?.SetCivilianPopulationText(civilianPopulation.ToString());
-        }
+            civilianPopulation += unit.unitData.populationCost;
         else
-        {
-            militaryPopulation += 1;
-            WristDisplay?.SetMilitaryPopulationText(militaryPopulation.ToString());
-            FaceDisplay?.SetMilitaryPopulationText(militaryPopulation.ToString());
-        }
+            militaryPopulation += unit.unitData.populationCost;
 
         totalPopulation += unit.unitData.populationCost;
         queueCount -= unit.unitData.populationCost;
         if (queueCount < 0) queueCount = 0;
-        UpdateWristDisplayPopulationLimit();
+
+        PopulationChangedEvent e = new()
+        {
+            civilianPopulation = civilianPopulation,
+            militaryPopulation = militaryPopulation,
+            totalPopulation = totalPopulation,
+        };
+        OnPopulationChanged?.Invoke(this, e);
     }
 
     public void RemoveFromPopulation(UnitV2 unit)
     {
         // Determine if the unit should be removed from civilian or military population
         if (unit.IsCivilian)
-        {
-            civilianPopulation -= 1;
-            WristDisplay.SetCivilianPopulationText(civilianPopulation.ToString());
-            FaceDisplay.SetCivilianPopulationText(civilianPopulation.ToString());
-        }
+            civilianPopulation -= unit.unitData.populationCost;
         else
-        {
-            militaryPopulation -= 1;
-            WristDisplay.SetMilitaryPopulationText(militaryPopulation.ToString());
-            FaceDisplay.SetMilitaryPopulationText(militaryPopulation.ToString());
-        }
+            militaryPopulation -= unit.unitData.populationCost;
 
         totalPopulation -= unit.unitData.populationCost;
-        UpdateWristDisplayPopulationLimit();
+        PopulationChangedEvent e = new()
+        {
+            civilianPopulation = civilianPopulation,
+            militaryPopulation = militaryPopulation,
+            totalPopulation = totalPopulation,
+        };
+        OnPopulationChanged?.Invoke(this, e);
     }
 
     public void IncreasePopulationLimit(int amountToIncreaseBy)
     {
         populationLimit += amountToIncreaseBy;
-        UpdateWristDisplayPopulationLimit();
+
+        PopulationLimitChangedEvent e = new()
+        {
+            totalPopulation = totalPopulation,
+            newValue = populationLimit,
+        };
+        OnPopulationLimitChanged?.Invoke(this, e);
     }
 
     public void RemoveFromQueueCount(int amount = 1)
@@ -599,57 +672,36 @@ public class PlayerManager : MonoBehaviour
     public void DecreasePopulationLimit(int amountDecreaseBy)
     {
         populationLimit -= amountDecreaseBy;
-        UpdateWristDisplayPopulationLimit();
-    }
-
-    void UpdateWristDisplayPopulationLimit()
-    {
-        WristDisplay?.SetTotalPopulationText(totalPopulation.ToString() + "/" + populationLimit.ToString());
-        FaceDisplay?.SetTotalPopulationText(totalPopulation.ToString() + "/" + populationLimit.ToString());
-    }
-
-    void UpdateWristDisplayResourceText()
-    {
-        WristDisplay?.SetWoodText(woodCollected.ToString());
-        WristDisplay?.SetGrainText(foodCollected.ToString());
-        WristDisplay?.SetGoldText(goldCollected.ToString());
-        WristDisplay?.SetStoneText(stoneCollected.ToString());
-
-        FaceDisplay?.SetWoodText(woodCollected.ToString());
-        FaceDisplay?.SetGrainText(foodCollected.ToString());
-        FaceDisplay?.SetGoldText(goldCollected.ToString());
-        FaceDisplay?.SetStoneText(stoneCollected.ToString());
+        PopulationLimitChangedEvent e = new()
+        {
+            totalPopulation = totalPopulation,
+            newValue = populationLimit,
+        };
+        OnPopulationLimitChanged?.Invoke(this, e);
     }
 
     public void AddResourceToStockpile(ResourceGatheringType type, int amount)
     {
+
         switch (type)
         {
             case ResourceGatheringType.Wood:
-                woodCollected += amount;
-                WristDisplay?.SetWoodText(woodCollected.ToString());
-                FaceDisplay?.SetWoodText(woodCollected.ToString());
+                UpdateWoodResource(amount);                
                 break;
 
             case ResourceGatheringType.Meat:
             case ResourceGatheringType.Fish:
             case ResourceGatheringType.Grain:
             case ResourceGatheringType.Berries:
-                foodCollected += amount;
-                WristDisplay?.SetGrainText(foodCollected.ToString());
-                FaceDisplay?.SetGrainText(foodCollected.ToString());
+                UpdateFoodResource(amount);
                 break;
 
             case ResourceGatheringType.Gold:
-                goldCollected += amount;
-                WristDisplay?.SetGoldText(goldCollected.ToString());
-                FaceDisplay?.SetGoldText(goldCollected.ToString());
+                UpdateGoldResource(amount);
                 break;
 
             case ResourceGatheringType.Stone:
-                stoneCollected += amount;
-                WristDisplay?.SetStoneText(stoneCollected.ToString());
-                FaceDisplay?.SetStoneText(stoneCollected.ToString());
+                UpdateStoneResource(amount);
                 break;
 
             default:
@@ -657,21 +709,73 @@ public class PlayerManager : MonoBehaviour
         }
 
         faction.techTree.RefreshNodes();
-        //buildMenu.RefreshSlots();
+    }
+
+    private void UpdateStoneResource(int amount)
+    {
+        stoneCollected += amount;        
+        
+        StoneResourceChangedEvent e = new()
+        {
+            amount = amount,
+            newValue = stoneCollected,
+        };
+        OnStoneResourceChanged?.Invoke(this, e);
+    }
+
+    private void UpdateGoldResource(int amount)
+    {
+        goldCollected += amount;
+
+        GoldResourceChangedEvent e = new()
+        {
+            amount = amount,
+            newValue = goldCollected,
+        };
+        OnGoldResourceChanged?.Invoke(this, e);
+    }
+
+    private void UpdateWoodResource(int amount)
+    {
+        woodCollected += amount;
+
+        WoodResourceChangedEvent e = new()
+        {
+            amount = amount,
+            newValue = woodCollected,
+        };
+        OnWoodResourceChanged?.Invoke(this, e);
+    }
+
+    private void UpdateFoodResource(int amount)
+    {
+        foodCollected += amount;
+
+        FoodResourceChangedEvent e = new()
+        {
+            amount = amount,
+            newValue = foodCollected,
+        };
+        OnFoodResourceChanged?.Invoke(this, e);
+    }
+
+    private void InitializeResources()
+    {
+        UpdateFoodResource(0);
+        UpdateGoldResource(0);
+        UpdateStoneResource(0);
+        UpdateWoodResource(0);        
     }
 
     public void DeductTechResourceCost(TechBase techBase)
     {
-        goldCollected -= techBase.goldCost;
-        foodCollected -= techBase.foodCost;
-        woodCollected -= techBase.woodCost;
-        stoneCollected -= techBase.stoneCost;
-
-        UpdateWristDisplayResourceText();
+        UpdateGoldResource(-techBase.goldCost);
+        UpdateFoodResource(-techBase.foodCost);
+        UpdateStoneResource(-techBase.stoneCost);
+        UpdateWoodResource(-techBase.woodCost);
 
         // TODO: Switch this to events?
         faction.techTree.RefreshNodes();
-        //buildMenu.RefreshSlots();
     }
 
 

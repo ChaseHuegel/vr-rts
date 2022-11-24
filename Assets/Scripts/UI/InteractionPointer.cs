@@ -8,6 +8,7 @@ using Swordfish.Navigation;
 using UnityEngine;
 using Valve.VR;
 using Valve.VR.InteractionSystem;
+using System.Collections;
 using UnityEngine.Events;
 
 public class InteractionPointer : MonoBehaviour
@@ -24,7 +25,7 @@ public class InteractionPointer : MonoBehaviour
     public SteamVR_Action_Boolean rotateBuildingCounterclockwiseAction = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("RotateBuildingCounterclockwise");
     public SteamVR_Action_Boolean teleportAction = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("Teleport");
     public SteamVR_Action_Boolean grabGripAction = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("GrabGrip");
-    
+    public SteamVR_Action_Boolean showMenuAction = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("ToggleMainMenu");
     //=========================================================================
     public GameObject pointerAttachmentPoint;
     public LayerMask traceLayerMask;
@@ -48,8 +49,8 @@ public class InteractionPointer : MonoBehaviour
     private Player player = null;
     private TeleportArc teleportArc = null;
     public bool showPointerArc = false;
-    private PointerInteractable pointedAtPointerInteractable;
-    public QueueUnitButton PointedAtQueueButton { get => pointedAtPointerInteractable.GetComponentInChildren<QueueUnitButton>(); }
+    private PointerInteractable currentPointerInteractable;
+    public QueueUnitButton PointedAtQueueButton { get => currentPointerInteractable.GetComponentInChildren<QueueUnitButton>(); }
     private SpawnQueue spawnQueue;
     private List<ActorV2> selectedActors;
     private Vector3 pointedAtPosition;
@@ -67,6 +68,9 @@ public class InteractionPointer : MonoBehaviour
     private Vector3 rallyWaypointArcStartPosition;
     public GameObject setRallyPointPrefab;
     private float triggerAddToSelectionThreshold = 0.85f;
+
+    private GameObject hintObject;
+
 
     // Cache value
     private int maxUnitSelectionCount;
@@ -224,6 +228,11 @@ public class InteractionPointer : MonoBehaviour
             else if (WasInteractButtonPressed(hand))
                 Process_InteractUI_Action_Start(hand);
 
+            else if (WasShowMenuButtonPressed(hand))
+            {
+                PlayerManager.Instance.ToggleMainMenu();
+            }
+
             else if (WasCancelButtonPressed(hand))
             {
                 pointerHand = hand;
@@ -231,9 +240,9 @@ public class InteractionPointer : MonoBehaviour
                     EndUnitSelectionMode();
                 else if (isInBuildingPlacementMode)
                     EndBuildingPlacementMode();
-                else if (pointedAtPointerInteractable)
+                else if (currentPointerInteractable)
                 {
-                    WallGate wallGate = pointedAtPointerInteractable.GetComponent<WallGate>();
+                    WallGate wallGate = currentPointerInteractable.GetComponent<WallGate>();
                     if (wallGate)
                     {
                         wallGate.CloseDoors();
@@ -249,17 +258,17 @@ public class InteractionPointer : MonoBehaviour
             else if (WasSelectButtonPressed(hand))
             {
                 pointerHand = hand;
-                if (pointedAtPointerInteractable)
+                if (currentPointerInteractable)
                 {
-                    if (TryToggleBuildingInteractionPanel(pointedAtPointerInteractable.gameObject))
+                    if (TryToggleBuildingInteractionPanel(currentPointerInteractable.gameObject))
                         return;
 
                     //-----------------------------------------------------------------
                     // Queue/Cancel buttons in building interaction panels  
-                    if (TryInvokeHoverButton(hand, pointedAtPointerInteractable.gameObject))
+                    if (TryInvokeHoverButton(hand, currentPointerInteractable.gameObject))
                         return;    
 
-                    if (TryToggleWallGate(pointedAtPointerInteractable.gameObject))
+                    if (TryToggleWallGate(currentPointerInteractable.gameObject))
                         return;
                 }          
             }            
@@ -394,19 +403,19 @@ public class InteractionPointer : MonoBehaviour
             
             currentWallData = (WallData)curBldngData;
         }
-        else if (pointedAtPointerInteractable != null)
+        else if (currentPointerInteractable != null)
         {
-            spawnQueue = pointedAtPointerInteractable.GetComponentInChildren<SpawnQueue>();
+            spawnQueue = currentPointerInteractable.GetComponentInChildren<SpawnQueue>();
 
             if (spawnQueue && spawnQueue.enabled && !isSettingRallyPoint)
             {
-                rallyWaypointArcStartPosition = pointedAtPointerInteractable.transform.position;
+                rallyWaypointArcStartPosition = currentPointerInteractable.transform.position;
                 isSettingRallyPoint = true;
                 wayPointReticle.SetActive(true);
                 return;
             }
 
-            ActorV2 hoveredActor = pointedAtPointerInteractable.GetComponent<ActorV2>();
+            ActorV2 hoveredActor = currentPointerInteractable.GetComponent<ActorV2>();
             if (hoveredActor &&
                 !isInUnitSelectionMode &&
                 hoveredActor.Faction.IsSameFaction(faction))
@@ -418,10 +427,10 @@ public class InteractionPointer : MonoBehaviour
 
             //-----------------------------------------------------------------
             // Queue/Cancel buttons in building interaction panels  
-            if (TryInvokeHoverButton(hand, pointedAtPointerInteractable.gameObject))
+            if (TryInvokeHoverButton(hand, currentPointerInteractable.gameObject))
                 return;
 
-            if (TryToggleWallGate(pointedAtPointerInteractable.gameObject))
+            if (TryToggleWallGate(currentPointerInteractable.gameObject))
                 return;
             
         }
@@ -430,7 +439,7 @@ public class InteractionPointer : MonoBehaviour
             return;
         }
         // Start unit selection mode if no interactible object is pointed at.
-        else if (pointedAtPointerInteractable == null)
+        else if (currentPointerInteractable == null)
         {
             isInUnitSelectionMode = true;
         }
@@ -549,8 +558,8 @@ public class InteractionPointer : MonoBehaviour
         {
             foreach (ActorV2 actor in selectedActors)
             {
-                Body body = pointedAtPointerInteractable?.GetComponents<Body>().FirstOrDefault(x => x.enabled);
-                if (pointedAtPointerInteractable && body)
+                Body body = currentPointerInteractable?.GetComponents<Body>().FirstOrDefault(x => x.enabled);
+                if (currentPointerInteractable && body)
                     actor.IssueTargetedOrder(body);
                 else
                     actor.IssueGoToOrder(World.ToWorldCoord(pointedAtPosition));
@@ -863,10 +872,10 @@ public class InteractionPointer : MonoBehaviour
         Vector3 playerFeetOffset = player.trackingOriginTransform.position - player.feetPositionGuess;
         Vector3 arcVelocity = pointerDir * arcDistance;
         PointerInteractable hitPointerInteractable = null;
-
+        
         // Trace to see if the pointer hit anything
         RaycastHit hitInfo;
-        teleportArc.SetArcData(pointerStart, arcVelocity, true, false);// pointerAtBadAngle);
+        teleportArc.SetArcData(pointerStart, arcVelocity, true, false);;
 
         if (isInUnitSelectionMode && IsAddingToUnitSelection())
             teleportArc.traceLayerMask = unitSelectionMask;
@@ -893,9 +902,11 @@ public class InteractionPointer : MonoBehaviour
         HighlightSelected(hitPointerInteractable);
 
         if (hitPointerInteractable != null)
-            pointedAtPointerInteractable = hitPointerInteractable;
+            currentPointerInteractable = hitPointerInteractable;
         else
-            pointedAtPointerInteractable = null;
+            currentPointerInteractable = null;
+
+        ShowObjectHint(hitPointerInteractable);
 
         pointedAtPosition = hitInfo.point;
         pointerEnd = hitInfo.point;
@@ -918,13 +929,13 @@ public class InteractionPointer : MonoBehaviour
             //HardSnapToGrid(destinationReticleTransform, 1, 1, false);
 
         }
-        else if (isInUnitSelectionMode && pointedAtPointerInteractable != null)
+        else if (isInUnitSelectionMode && currentPointerInteractable != null)
         {                
             // Only add units to selection if trigger is pressed in more than triggerAddToSelectionThreshold
             if (selectedActors.Count < maxUnitSelectionCount && 
                 pointerHand != null && IsAddingToUnitSelection())
             {
-                ActorV2 hoveredActor = pointedAtPointerInteractable.GetComponent<ActorV2>();
+                ActorV2 hoveredActor = currentPointerInteractable.GetComponent<ActorV2>();
                 if (hoveredActor &&
                     !selectedActors.Contains(hoveredActor) && 
                     hoveredActor.Faction.IsSameFaction(faction))
@@ -1006,7 +1017,7 @@ public class InteractionPointer : MonoBehaviour
             }
         }
     }
-
+    
     //=========================================================================
     // Walls
     //-------------------------------------------------------------------------
@@ -1260,7 +1271,7 @@ public class InteractionPointer : MonoBehaviour
     {
         if (!showPointerArc)
         {
-            pointedAtPointerInteractable = null;
+            currentPointerInteractable = null;
             pointerShowStartTime = Time.time;
             showPointerArc = true;
             //pointerObject.SetActive( false );
@@ -1335,6 +1346,11 @@ public class InteractionPointer : MonoBehaviour
         return selectAction.GetStateDown(hand.handType);
     }
 
+    private bool WasShowMenuButtonPressed(Hand hand)
+    {
+        return showMenuAction.GetStateDown(hand.handType);
+    }
+
     private bool WasCancelButtonPressed(Hand hand)
     {
         return cancelAction.GetStateDown(hand.handType);
@@ -1392,31 +1408,48 @@ public class InteractionPointer : MonoBehaviour
                 pointerHand.TriggerHapticPulse(100);
     }
 
+    private void ShowObjectHint(PointerInteractable targetPointerInteractable)
+    {
+        // Different interactable
+        // if (currentPointerInteractable != targetPointerInteractable)
+        // { 
+        //     if (!hintObject)
+        //         hintObject = Instantiate(GameMaster.Instance.worldButtonHintPrefab, targetPointerInteractable.transform);
 
-    private void HighlightSelected(PointerInteractable hitPointerInteractable)
+        //     hintObject.transform.SetParent(targetPointerInteractable.transform);
+        //     hintObject.transform.localPosition = new Vector3(0.0f, 0.65f, -0.2f);
+        //     hintObject.transform.localRotation = Quaternion.identity;
+        // }
+    }
+
+    private void HideObjectHint()
+    { }
+
+    private void HighlightSelected(PointerInteractable targetPointerInteractable)
     {
         // Pointing at a new interactable
-        if (pointedAtPointerInteractable != hitPointerInteractable)
+        if (currentPointerInteractable != targetPointerInteractable)
         {
-            if (pointedAtPointerInteractable != null)
-                pointedAtPointerInteractable.Highlight(false);
+            if (currentPointerInteractable != null)
+                currentPointerInteractable.Highlight(false);
 
-            if (hitPointerInteractable != null)
+            if (targetPointerInteractable != null)
             {
-                hitPointerInteractable.Highlight(true);
+                targetPointerInteractable.Highlight(true);
                 prevPointedAtPosition = pointedAtPosition;
-                PlayPointerHaptic(true);//!hitPointerInteractable.locked );
-                                        // PlayAudioClip( reticleAudioSource, goodHighlightSound );
-                                        // loopingAudioSource.volume = loopingAudioMaxVolume;
+                PlayPointerHaptic(true);
+                // PlayPointerHaptic(!hitPointerInteractable.locked );
+                // PlayAudioClip( reticleAudioSource, goodHighlightSound );
+                // loopingAudioSource.volume = loopingAudioMaxVolume;
             }
-            else if (pointedAtPointerInteractable != null)
-            {
-                // PlayAudioClip( reticleAudioSource, badHighlightSound );
-                // loopingAudioSource.volume = 0.0f;
-            }
+            // else if (currentPointerInteractable != null)
+            // {
+            //     PlayAudioClip( reticleAudioSource, badHighlightSound );
+            //     loopingAudioSource.volume = 0.0f;
+            // }
         }
         // Pointing at the same interactable
-        else if (hitPointerInteractable != null)
+        else if (targetPointerInteractable != null)
         {
             if (Vector3.Distance(prevPointedAtPosition, pointedAtPosition) > 1.0f)
             {
