@@ -172,6 +172,7 @@ public class InteractionPointer : MonoBehaviour
         }
 
         vertLaserObject = Instantiate(verticalLaserPrefab, Vector3.zero, Quaternion.identity);
+        HideVerticalLaser();
 
         // Initialize reticle
         //ShowPointer();
@@ -574,17 +575,10 @@ public class InteractionPointer : MonoBehaviour
                 PlayerManager.Instance.PlayBuildingPlacedSound();
                 GameObject gameObject = Instantiate(curBldngData.constructionPrefab, bldngPreview.transform.position, bldngPreview.transform.rotation);
                 gameObject.GetComponent<Constructible>().Faction = this.faction;
-                PlayerManager.Instance.DeductTechResourceCost(curBldngData);
+                PlayerManager.Instance.DeductTechResourceCost(curBldngData);            
             }
 
-            //lastBuildingRotation = buildingPlacementPreviewObject.transform.localRotation.eulerAngles.z;
-            Destroy(bldngPreview);
-            bldngPreview = null;
-
-            // Reenable snap turn since it's turned off for rotating building using sticks
-            // Should be unnecessary with different steam profiles for different action sets if we decide
-            // to go down that road. 
-            SetSnapTurnEnabled(true, true);
+            EndBuildingPlacementMode();                                  
         }
 
         else if (isSettingRallyPoint)
@@ -675,9 +669,14 @@ public class InteractionPointer : MonoBehaviour
         bldngPreview = null;
         buildingPlacementCachedMat = null;
 
+        //lastBuildingRotation = buildingPlacementPreviewObject.transform.localRotation.eulerAngles.z;  
+
         HideVerticalLaser();
         // TODO: Restore resources to player?
 
+        // Reenable snap turn since it's turned off for rotating building using sticks
+        // Should be unnecessary with different steam profiles for different action sets if we decide
+        // to go down that road. 
         SetSnapTurnEnabled(true, true);
     }
 
@@ -1054,9 +1053,6 @@ public class InteractionPointer : MonoBehaviour
             {
                 DrawQuadraticBezierCurve(pointerLineRenderer, pointerStart, pointerReticle.position);
                 EnablePointerArcRendering();
-                // if (pointerLineRenderer.enabled == false)
-                //     pointerLineRenderer.enabled = true;                
-
                 HardSnapToGrid(pointerReticle, curBldngData.boundingDimensionX, curBldngData.boundingDimensionY, true);
             }
         }
@@ -1180,6 +1176,8 @@ public class InteractionPointer : MonoBehaviour
 
         wallPlacementPreviewAnchor = null;
         bldngPreview = null;
+        
+        HideVerticalLaser();
 
         SetSnapTurnEnabled(true, true);
     }

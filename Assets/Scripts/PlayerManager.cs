@@ -155,6 +155,11 @@ public class PlayerManager : MonoBehaviour
             Debug.Log("GripPan not found.");
     }    
 
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
+
     void Start()
     {
         HookIntoEvents();
@@ -220,11 +225,6 @@ public class PlayerManager : MonoBehaviour
     public void CloseMenu()
     {
         mainMenuObject.SetActive(false);
-    }
-
-    public void QuitGame()
-    {
-
     }
 
     void OnDestroy()
