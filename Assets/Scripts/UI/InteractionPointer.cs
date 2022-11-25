@@ -24,6 +24,7 @@ public class InteractionPointer : MonoBehaviour
     public SteamVR_Action_Boolean rotateBuildingClockwiseAction = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("RotateBuildingClockwise");
     public SteamVR_Action_Boolean rotateBuildingCounterclockwiseAction = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("RotateBuildingCounterclockwise");
     public SteamVR_Action_Boolean teleportAction = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("Teleport");
+    public SteamVR_Action_Single squeezeAction = SteamVR_Input.GetAction<SteamVR_Action_Single>("Squeeze");
     public SteamVR_Action_Boolean grabGripAction = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("GrabGrip");
     public SteamVR_Action_Boolean showMenuAction = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("ToggleMainMenu");
     //=========================================================================
@@ -42,7 +43,6 @@ public class InteractionPointer : MonoBehaviour
     private Material buildingPlacementCachedMat;
     private LineRenderer pointerLineRenderer;
     private LineRenderer[] unitSelectionLineRenderers;
-    private GameObject pointerObject;
     private Transform pointerStartTransform;
     public float teleportFadeTime = 0.1f;
     public Hand pointerHand = null;
@@ -135,7 +135,6 @@ public class InteractionPointer : MonoBehaviour
         _instance = this;
 
         pointerLineRenderer = GetComponentInChildren<LineRenderer>();
-        pointerObject = pointerLineRenderer.gameObject;
         handReticle.enabled = useHandAsReticle;
 
 #if UNITY_URP
@@ -236,15 +235,6 @@ public class InteractionPointer : MonoBehaviour
 
     private void ShowVerticalLaser() => vertLaserObject.SetActive(true);
     private void HideVerticalLaser() => vertLaserObject.SetActive(false);
-
-    private void test()
-    {
-        Player.instance.rightHand.GetComponent<SteamVR_Behaviour_Pose>().onTransformChanged.AddListener(OnPoseChanged);
-    }
-    private void OnPoseChanged(SteamVR_Behaviour_Pose pose, SteamVR_Input_Sources inputSource)
-    {
-        //if (pose.)
-    }
 
     //=========================================================================
     void Update()
@@ -1034,6 +1024,8 @@ public class InteractionPointer : MonoBehaviour
             }
 
             // TODO: Integrate this into input loop 
+            //if (grabGripAction.GetState(player.rightHand.handType))
+            //if (squeezeAction.GetAxis(SteamVR_Input_Sources.RightHand) > 0.0f)
             if (player.rightHand.skeleton.fingerCurls[2] >= 0.75f && 
                 player.rightHand.skeleton.fingerCurls[3] >= 0.75f &&
                 player.rightHand.skeleton.fingerCurls[4] >= 0.75f)
@@ -1053,7 +1045,10 @@ public class InteractionPointer : MonoBehaviour
             }
 
             if (isVerticalPlacementModeActive)
+            {
                 TryShowVerticalPlacementLaser();
+                DisablePointerArcRendering();
+            }
             else
             {
                 DrawQuadraticBezierCurve(pointerLineRenderer, pointerStart, pointerReticle.position);
@@ -1106,13 +1101,11 @@ public class InteractionPointer : MonoBehaviour
     private void DisablePointerArcRendering()
     {
         pointerLineRenderer.enabled = false;
-        pointerObject.SetActive(false);
     }
 
     private void EnablePointerArcRendering()
     {
-        //pointerLineRenderer.enabled = true;
-        pointerObject.SetActive(true);
+        pointerLineRenderer.enabled = true;
     }
     
     //=========================================================================

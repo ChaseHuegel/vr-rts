@@ -75,6 +75,9 @@
                "inputs" : {
                   "pull" : {
                      "output" : "/actions/default/in/squeeze"
+                  },
+                  "touch" : {
+                     "output" : "/actions/default/in/squeeze"
                   }
                },
                "mode" : "trigger",
@@ -110,6 +113,9 @@
             {
                "inputs" : {
                   "pull" : {
+                     "output" : "/actions/default/in/squeeze"
+                  },
+                  "touch" : {
                      "output" : "/actions/default/in/squeeze"
                   }
                },
@@ -169,9 +175,6 @@
             },
             {
                "inputs" : {
-                  "center" : {
-                     "output" : "/actions/default/in/togglemainmenu"
-                  },
                   "east" : {
                      "output" : "/actions/default/in/rotatebuildingclockwise"
                   },
@@ -187,15 +190,13 @@
                },
                "mode" : "dpad",
                "parameters" : {
+                  "overlap_pct" : "0",
                   "sub_mode" : "touch"
                },
                "path" : "/user/hand/left/input/joystick"
             },
             {
                "inputs" : {
-                  "center" : {
-                     "output" : "/actions/default/in/togglemainmenu"
-                  },
                   "east" : {
                      "output" : "/actions/default/in/rotatebuildingclockwise"
                   },
@@ -211,6 +212,7 @@
                },
                "mode" : "dpad",
                "parameters" : {
+                  "overlap_pct" : "0",
                   "sub_mode" : "touch"
                },
                "path" : "/user/hand/right/input/joystick"
@@ -262,6 +264,7 @@
                },
                "mode" : "dpad",
                "parameters" : {
+                  "overlap_pct" : "0",
                   "sub_mode" : "touch"
                },
                "path" : "/user/hand/left/input/joystick"
@@ -277,8 +280,27 @@
                },
                "mode" : "dpad",
                "parameters" : {
+                  "overlap_pct" : "0",
                   "sub_mode" : "touch"
                },
+               "path" : "/user/hand/right/input/joystick"
+            },
+            {
+               "inputs" : {
+                  "click" : {
+                     "output" : "/actions/default/in/togglemainmenu"
+                  }
+               },
+               "mode" : "button",
+               "path" : "/user/hand/left/input/joystick"
+            },
+            {
+               "inputs" : {
+                  "click" : {
+                     "output" : "/actions/default/in/togglemainmenu"
+                  }
+               },
+               "mode" : "button",
                "path" : "/user/hand/right/input/joystick"
             }
          ]
