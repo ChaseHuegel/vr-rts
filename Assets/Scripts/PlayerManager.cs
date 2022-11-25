@@ -600,10 +600,11 @@ public class PlayerManager : MonoBehaviour
             leftHand.useHoverSphere = leftHand.useFingerJointHover = canInteract;
     }
 
-    public void DisableGripPanning(Hand hand)
+    public void DisableGripPanning(Hand hand, bool disableInteractionPointer = true)
     {
         gripPan.DisablePanning(hand);
-        InteractionPointer.Instance.DisableInteraction();
+        if (disableInteractionPointer)
+            InteractionPointer.Instance.DisableInteraction();
     }
 
     public void EnableGripPanning(Hand hand)

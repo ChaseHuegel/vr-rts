@@ -32,7 +32,7 @@ public class InteractionPointer : MonoBehaviour
     public LayerMask allowedPlacementLayers;
     public LayerMask unitSelectionMask;
     public Material pointVisibleMaterial;
-    public Transform destinationReticleTransform;
+    public Transform pointerReticle;
     public Color pointerValidColor;
     public Color pointerInvalidColor;
     public float arcDistance = 10.0f;   
@@ -68,6 +68,9 @@ public class InteractionPointer : MonoBehaviour
     private Vector3 rallyWaypointArcStartPosition;
     public GameObject setRallyPointPrefab;
     private float triggerAddToSelectionThreshold = 0.85f;
+    
+
+    
 
     private GameObject hintObject;
 
@@ -92,6 +95,7 @@ public class InteractionPointer : MonoBehaviour
     public float wallPlacementRotationIncrement = 45f;
     private GameObject bldngPreview;
     private float lastBuildingRotation;
+
     private BuildingData curBldngData;
 
     //=========================================================================
@@ -104,6 +108,13 @@ public class InteractionPointer : MonoBehaviour
     private List<GameObject> wallPreviewDiagonalSegments = new List<GameObject>();
     private List<GameObject> wallPreviewCornerSegments = new List<GameObject>();
     private List<GameObject> wallPreviewStraightSegments = new List<GameObject>();
+
+    //=========================================================================
+    // Vertical placement mode
+    private bool isVerticalPlacementModeActive = true; 
+    public GameObject verticalLaserPrefab;
+    private GameObject vertLaserObject;
+    public GameObject verticalLaserAnchorPoint;
 
     //=========================================================================
     private static InteractionPointer _instance;
@@ -134,7 +145,7 @@ public class InteractionPointer : MonoBehaviour
         fullTintAlpha = pointVisibleMaterial.GetColor(tintColorID).a;
 #endif
         teleportArc = GetComponent<TeleportArc>();
-        teleportArc.traceLayerMask = traceLayerMask;
+        teleportArc.traceLayerMask = traceLayerMask;        
     }
 
     //=========================================================================
@@ -160,6 +171,8 @@ public class InteractionPointer : MonoBehaviour
             return;
         }
 
+        vertLaserObject = Instantiate(verticalLaserPrefab, Vector3.zero, Quaternion.identity);
+
         // Initialize reticle
         //ShowPointer();
         pointerStartTransform = pointerAttachmentPoint.transform;
@@ -176,16 +189,63 @@ public class InteractionPointer : MonoBehaviour
         }
     }
 
-    public void DisableInteraction()
+    public void DisableInteraction() => this.enabled = false;
+    public void EnableInteraction() => this.enabled = true;
+
+    private void TryShowVerticalPlacementLaser()
     {
-        this.enabled = false;
+        RaycastHit hit;
+
+        // Ray from anchor
+        if (Physics.Raycast(verticalLaserAnchorPoint.transform.position, Vector3.down, out hit, 100, allowedPlacementLayers))
+        {
+            // Are we hitting something on acceptable layer?
+            // if (LayerMatchTest(allowedPlacementLayers, hit.collider.gameObject))
+                PointLaser(hit);
+            // else
+            //     HideVerticalLaser();
+        }
+        else
+            HideVerticalLaser();
     }
 
-    public void EnableInteraction()
+    private void PointLaser(RaycastHit hit)
     {
-        this.enabled = true;
+        ShowVerticalLaser();
+
+        // Position laser between controller and point where raycast hits. Use Lerp because you can
+        // give it two positions and the % it should travel. If you pass it .5f, which is 50%
+        // you get the precise middle point.
+        vertLaserObject.transform.position = Vector3.Lerp(verticalLaserAnchorPoint.transform.position, hit.point, .5f);
+
+        // Point the laser at position where raycast hits.
+        vertLaserObject.transform.LookAt(hit.point);
+
+        // Scale the laser so it fits perfectly between the two positions
+        vertLaserObject.transform.localScale = new Vector3(vertLaserObject.transform.localScale.x,
+            vertLaserObject.transform.localScale.y, hit.distance);
+
+        // Reticle
+        if (bldngPreview)
+        {
+            bldngPreview.transform.position = hit.point;// + vrReticleOffset;
+            HardSnapToGrid(bldngPreview.transform, curBldngData.boundingDimensionX, curBldngData.boundingDimensionY, true);
+        }
+
     }
- 
+
+    private void ShowVerticalLaser() => vertLaserObject.SetActive(true);
+    private void HideVerticalLaser() => vertLaserObject.SetActive(false);
+
+    private void test()
+    {
+        Player.instance.rightHand.GetComponent<SteamVR_Behaviour_Pose>().onTransformChanged.AddListener(OnPoseChanged);
+    }
+    private void OnPoseChanged(SteamVR_Behaviour_Pose pose, SteamVR_Input_Sources inputSource)
+    {
+        //if (pose.)
+    }
+
     //=========================================================================
     void Update()
     {
@@ -200,7 +260,7 @@ public class InteractionPointer : MonoBehaviour
             //     EndUnitSelectionMode();
             //     return;
             // }
-            
+
             // if (showPointerAction.GetState(SteamVR_Input_Sources.Any) == true &&
             //     !isInUnitSelectionMode &&
             //     !hand.hoveringInteractable &&
@@ -550,7 +610,7 @@ public class InteractionPointer : MonoBehaviour
             PlayerManager.Instance.PlaySetRallyPointSound();
             spawnQueue = null;
             isSettingRallyPoint = false;
-            pointerLineRenderer.enabled = false;
+            DisablePointerArcRendering();
 
             return;
         }
@@ -624,6 +684,7 @@ public class InteractionPointer : MonoBehaviour
         bldngPreview = null;
         buildingPlacementCachedMat = null;
 
+        HideVerticalLaser();
         // TODO: Restore resources to player?
 
         SetSnapTurnEnabled(true, true);
@@ -863,7 +924,7 @@ public class InteractionPointer : MonoBehaviour
 
     //=========================================================================
     private void UpdatePointer()
-    {
+    {        
         Vector3 pointerStart = pointerStartTransform.position;
         Vector3 pointerEnd;
         Vector3 pointerDir = pointerStartTransform.forward;
@@ -916,15 +977,14 @@ public class InteractionPointer : MonoBehaviour
         else
             pointerEnd = teleportArc.GetArcPositionAtTime(teleportArc.arcDuration);
 
-        destinationReticleTransform.position = pointedAtPosition;
-        destinationReticleTransform.gameObject.SetActive(true);
+        pointerReticle.position = pointedAtPosition;
+        pointerReticle.gameObject.SetActive(true);
 
         // TODO: Change reticle collision layers when setting rally point?
         if (isSettingRallyPoint)
         {
             DrawQuadraticBezierCurve(pointerLineRenderer, rallyWaypointArcStartPosition, pointedAtPosition);
-            if (pointerLineRenderer.enabled == false)
-                pointerLineRenderer.enabled = true;
+            EnablePointerArcRendering();
 
             //HardSnapToGrid(destinationReticleTransform, 1, 1, false);
 
@@ -973,27 +1033,52 @@ public class InteractionPointer : MonoBehaviour
                         skinnedMeshRenderer.sharedMaterial = buildingPlacementCachedMat;
             }
 
-            DrawQuadraticBezierCurve(pointerLineRenderer, pointerStart, destinationReticleTransform.position);
-            if (pointerLineRenderer.enabled == false)
-                pointerLineRenderer.enabled = true;
+            // TODO: Integrate this into input loop 
+            if (player.rightHand.skeleton.fingerCurls[2] >= 0.75f && 
+                player.rightHand.skeleton.fingerCurls[3] >= 0.75f &&
+                player.rightHand.skeleton.fingerCurls[4] >= 0.75f)
+            {
+                isVerticalPlacementModeActive = true;
+                PlayerManager.Instance.DisableGripPanning(player.rightHand, false);
+            }
+            else
+            {
+                if (isVerticalPlacementModeActive)
+                {
+                    isVerticalPlacementModeActive = false;
+                    bldngPreview.transform.localPosition = Vector3.zero;
+                    HideVerticalLaser();
+                    PlayerManager.Instance.EnableGripPanning(player.rightHand);
+                }
+            }
 
-            HardSnapToGrid(destinationReticleTransform, curBldngData.boundingDimensionX, curBldngData.boundingDimensionY, true);
+            if (isVerticalPlacementModeActive)
+                TryShowVerticalPlacementLaser();
+            else
+            {
+                DrawQuadraticBezierCurve(pointerLineRenderer, pointerStart, pointerReticle.position);
+                EnablePointerArcRendering();
+                // if (pointerLineRenderer.enabled == false)
+                //     pointerLineRenderer.enabled = true;                
+
+                HardSnapToGrid(pointerReticle, curBldngData.boundingDimensionX, curBldngData.boundingDimensionY, true);
+            }
         }
         else if (isInWallPlacementMode)
         {
-            HardSnapToGrid(destinationReticleTransform, curBldngData.boundingDimensionX, curBldngData.boundingDimensionY, true);
+            HardSnapToGrid(pointerReticle, curBldngData.boundingDimensionX, curBldngData.boundingDimensionY, true);
             if (wallPlacementPreviewAnchor)// && buildingPlacementPreviewObject)
             {
                 DrawWallPreviewSegments();
             }
 
             //DrawQuadraticBezierCurve(pointerLineRenderer, pointerStart, destinationReticleTransform.position);
-            if (pointerLineRenderer.enabled == false)
-                pointerLineRenderer.enabled = true;
-        }
-        else if (pointerLineRenderer.enabled == true)
-            pointerLineRenderer.enabled = false;
 
+            EnablePointerArcRendering();
+        }
+        else
+            DisablePointerArcRendering();
+   
         if (selectedActors.Count > 0)
         {
             int i = 0;
@@ -1016,6 +1101,18 @@ public class InteractionPointer : MonoBehaviour
                 i++;
             }
         }
+    }
+
+    private void DisablePointerArcRendering()
+    {
+        pointerLineRenderer.enabled = false;
+        pointerObject.SetActive(false);
+    }
+
+    private void EnablePointerArcRendering()
+    {
+        //pointerLineRenderer.enabled = true;
+        pointerObject.SetActive(true);
     }
     
     //=========================================================================
@@ -1047,12 +1144,12 @@ public class InteractionPointer : MonoBehaviour
             currentWallData = (WallData)curBldngData;
 
             // Instantiate wall corner as preview object and assign to reticle
-            bldngPreview = Instantiate(currentWallData.cornerPreviewPrefab, destinationReticleTransform);
+            bldngPreview = Instantiate(currentWallData.cornerPreviewPrefab, pointerReticle);
         }
         else if (curBldngData is BuildingData)
         {
             isInBuildingPlacementMode = true;
-            bldngPreview = Instantiate(curBldngData.worldPreviewPrefab, destinationReticleTransform);
+            bldngPreview = Instantiate(curBldngData.worldPreviewPrefab, pointerReticle);
             bldngPreview.transform.rotation = Quaternion.identity;
             
             MeshRenderer meshRenderer = bldngPreview.GetComponentInChildren<MeshRenderer>();

@@ -35584,6 +35584,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1543387424}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &811036512 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7725849359551786828, guid: 0e20e52b3d933304889227afb2893690,
+    type: 3}
+  m_PrefabInstance: {fileID: 4603657073447195606}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &811151737 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8724854349296649426, guid: a6a54e351f7131743b15fdaba02005ca,
@@ -92412,9 +92418,30 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7675742794475362646, guid: 0d2f86a6df2b48c438492ee725a8e97a,
         type: 3}
+      propertyPath: laser
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7675742794475362646, guid: 0d2f86a6df2b48c438492ee725a8e97a,
+        type: 3}
+      propertyPath: laserPrefab
+      value: 
+      objectReference: {fileID: 4752845737145788312, guid: 1ed08dd9b28f63a4eb7b056880222e29,
+        type: 3}
+    - target: {fileID: 7675742794475362646, guid: 0d2f86a6df2b48c438492ee725a8e97a,
+        type: 3}
+      propertyPath: laserAnchorPoint
+      value: 
+      objectReference: {fileID: 811036512}
+    - target: {fileID: 7675742794475362646, guid: 0d2f86a6df2b48c438492ee725a8e97a,
+        type: 3}
       propertyPath: pointerAttachmentPoint
       value: 
       objectReference: {fileID: 2070240802}
+    - target: {fileID: 7675742794475362646, guid: 0d2f86a6df2b48c438492ee725a8e97a,
+        type: 3}
+      propertyPath: verticalLaserAnchorPoint
+      value: 
+      objectReference: {fileID: 811036512}
     - target: {fileID: 7675742794475362647, guid: 0d2f86a6df2b48c438492ee725a8e97a,
         type: 3}
       propertyPath: m_Name

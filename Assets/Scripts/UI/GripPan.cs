@@ -107,7 +107,7 @@ public class GripPan : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (isRightGripPressed && isLeftGripPressed)
+        if (isRightGripPressed && isLeftGripPressed && isRightHandPanEnabled && isLeftHandPanEnabled)
         {
             if (!isScaling)
             {
