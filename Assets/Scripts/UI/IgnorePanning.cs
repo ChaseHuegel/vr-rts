@@ -24,7 +24,7 @@ public class IgnorePanning : MonoBehaviour
             if (!secondHand && firstHand != hand)
                 secondHand = hand;
 
-            playerManager.DisableGripPanning(hand);   
+            //playerManager.DisableGripPanning(hand);   
 
         }
     }
@@ -40,16 +40,16 @@ public class IgnorePanning : MonoBehaviour
             if (secondHand && secondHand == hand)
                 secondHand = null;
 
-            playerManager.EnableGripPanning(hand);   
+            //playerManager.EnableGripPanning(hand);   
         }
     }
 
     void OnDestroy()
     {
-        if (firstHand)
-            playerManager.EnableGripPanning(firstHand);
+        // if (firstHand)
+        //     playerManager.EnableGripPanning(firstHand);
         
-        if (secondHand)
-            playerManager.EnableGripPanning(secondHand);
+        // if (secondHand)
+        //     playerManager.EnableGripPanning(secondHand);
     }
 }

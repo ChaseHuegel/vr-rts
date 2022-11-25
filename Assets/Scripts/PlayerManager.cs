@@ -600,20 +600,6 @@ public class PlayerManager : MonoBehaviour
             leftHand.useHoverSphere = leftHand.useFingerJointHover = canInteract;
     }
 
-    public void DisableGripPanning(Hand hand, bool disableInteractionPointer = true)
-    {
-        gripPan.DisablePanning(hand);
-        if (disableInteractionPointer)
-            InteractionPointer.Instance.DisableInteraction();
-    }
-
-    public void EnableGripPanning(Hand hand)
-    {
-        gripPan.EnablePanning(hand);
-        InteractionPointer.Instance.EnableInteraction();
-        //InteractionPointer.instance.enabled = true;
-    }
-
     public void AddToPopulation(UnitV2 unit)
     {
         // Determine if the unit should be added to civilian or military population

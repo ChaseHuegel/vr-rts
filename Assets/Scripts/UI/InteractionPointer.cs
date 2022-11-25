@@ -68,9 +68,9 @@ public class InteractionPointer : MonoBehaviour
     private Vector3 rallyWaypointArcStartPosition;
     public GameObject setRallyPointPrefab;
     private float triggerAddToSelectionThreshold = 0.85f;
-    
 
-    
+    private GripPan gripPan;
+
 
     private GameObject hintObject;
 
@@ -155,6 +155,7 @@ public class InteractionPointer : MonoBehaviour
         playerManager = PlayerManager.Instance;
         //interactableObjects = GameObject.FindObjectsOfType<PointerInteractable>();
         selectedActors = new List<ActorV2>();
+        gripPan = Player.instance.GetComponent<GripPan>();
 
         // Cache some values
         maxUnitSelectionCount = GameMaster.Instance.maximumUnitSelectionCount;
@@ -1024,14 +1025,14 @@ public class InteractionPointer : MonoBehaviour
             }
 
             // TODO: Integrate this into input loop 
-            //if (grabGripAction.GetState(player.rightHand.handType))
+            if (grabGripAction.GetState(player.rightHand.handType))
             //if (squeezeAction.GetAxis(SteamVR_Input_Sources.RightHand) > 0.0f)
-            if (player.rightHand.skeleton.fingerCurls[2] >= 0.75f && 
-                player.rightHand.skeleton.fingerCurls[3] >= 0.75f &&
-                player.rightHand.skeleton.fingerCurls[4] >= 0.75f)
+            // if (player.rightHand.skeleton.fingerCurls[2] >= 0.75f && 
+            //     player.rightHand.skeleton.fingerCurls[3] >= 0.75f &&
+            //     player.rightHand.skeleton.fingerCurls[4] >= 0.75f)
             {
                 isVerticalPlacementModeActive = true;
-                PlayerManager.Instance.DisableGripPanning(player.rightHand, false);
+                gripPan.DisablePanning(player.rightHand);
             }
             else
             {
@@ -1040,7 +1041,7 @@ public class InteractionPointer : MonoBehaviour
                     isVerticalPlacementModeActive = false;
                     bldngPreview.transform.localPosition = Vector3.zero;
                     HideVerticalLaser();
-                    PlayerManager.Instance.EnableGripPanning(player.rightHand);
+                    gripPan.EnablePanning(player.rightHand);
                 }
             }
 
