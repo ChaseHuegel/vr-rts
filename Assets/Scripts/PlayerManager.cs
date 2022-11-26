@@ -3,12 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Swordfish;
+using Swordfish.Library.Collections;
+using Swordfish.Library.Types;
 using Swordfish.Navigation;
 using UnityEngine;
 using UnityEngine.UI;
 using Valve.VR;
 using Valve.VR.InteractionSystem;
-using Swordfish.Library.Collections;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -114,7 +115,7 @@ public class PlayerManager : MonoBehaviour
     {
         public int civilianPopulation;
         public int militaryPopulation;
-        public int totalPopulation;    
+        public int totalPopulation;
     }
 
     public event EventHandler<PopulationLimitChangedEvent> OnPopulationLimitChanged;
@@ -128,12 +129,11 @@ public class PlayerManager : MonoBehaviour
     public class AttributeBonusChangeEvent : Swordfish.Event
     {
         public UnitData unitData;
-        public AttributeType attributeType;
-        public float amount;
+        public AttributeBonus bonus;
     }
 
     public static Dictionary<UnitData, List<AttributeBonus>> AllAttributeBonuses = new();
-     
+
     private static PlayerManager _instance;
     //private bool isAutohideHandMenuVisible;
 
@@ -153,7 +153,7 @@ public class PlayerManager : MonoBehaviour
         _instance = this;
         if (!(gripPan = Player.instance.GetComponent<GripPan>()))
             Debug.Log("GripPan not found.");
-    }    
+    }
 
     public void QuitGame()
     {
@@ -195,7 +195,7 @@ public class PlayerManager : MonoBehaviour
 
         // Activate the menu so it can catch startup resource values.
         mainMenuObject.SetActive(true);
-        
+
         InitializeResources();
 
         mainMenuObject.SetActive(false);
@@ -332,8 +332,10 @@ public class PlayerManager : MonoBehaviour
     {
         if (!AllAttributeBonuses.ContainsKey(unitData))
         {
-            List<AttributeBonus> newBonusList = new List<AttributeBonus>();
-            newBonusList.Add(new AttributeBonus(attributeBonus.targetAttribute, attributeBonus.amount));
+            List<AttributeBonus> newBonusList = new()
+            {
+                attributeBonus
+            };
 
             AllAttributeBonuses.Add(unitData, newBonusList);
         }
@@ -341,7 +343,7 @@ public class PlayerManager : MonoBehaviour
         {
             AttributeBonus foundAttributeBonus = AllAttributeBonuses[unitData].Find(x => x.targetAttribute == attributeBonus.targetAttribute);
             if (foundAttributeBonus == null)
-                AllAttributeBonuses[unitData].Add(new AttributeBonus(attributeBonus.targetAttribute, attributeBonus.amount));
+                AllAttributeBonuses[unitData].Add(attributeBonus);
             else if (foundAttributeBonus != null)
                 foundAttributeBonus.amount += attributeBonus.amount;
         }
@@ -349,8 +351,7 @@ public class PlayerManager : MonoBehaviour
         AttributeBonusChangeEvent e = new()
         {
             unitData = unitData,
-            attributeType = attributeBonus.targetAttribute,
-            amount = attributeBonus.amount
+            bonus = attributeBonus
         };
 
         OnAttributeBonusChangedEvent?.Invoke(this, e);
@@ -673,7 +674,7 @@ public class PlayerManager : MonoBehaviour
         switch (type)
         {
             case ResourceGatheringType.Wood:
-                UpdateWoodResource(amount);                
+                UpdateWoodResource(amount);
                 break;
 
             case ResourceGatheringType.Meat:
@@ -700,8 +701,8 @@ public class PlayerManager : MonoBehaviour
 
     private void UpdateStoneResource(int amount)
     {
-        stoneCollected += amount;        
-        
+        stoneCollected += amount;
+
         StoneResourceChangedEvent e = new()
         {
             amount = amount,
@@ -751,7 +752,7 @@ public class PlayerManager : MonoBehaviour
         UpdateFoodResource(0);
         UpdateGoldResource(0);
         UpdateStoneResource(0);
-        UpdateWoodResource(0);        
+        UpdateWoodResource(0);
     }
 
     public void DeductTechResourceCost(TechBase techBase)

@@ -3,17 +3,20 @@ using System.Collections;
 using System.Collections.Generic;
 using Swordfish;
 using Swordfish.Library.Collections;
+using Swordfish.Library.Types;
 using UnityEngine;
 
 [Serializable]
 public class AttributeBonus
 {
     public AttributeType targetAttribute;
+    public Modifier modifier = Modifier.ADDITION;
     public float amount;
 
-    public AttributeBonus(AttributeType attributeType, float fAmount)
+    public AttributeBonus(AttributeType attributeType, Modifier modifierType, float fAmount)
     {
         targetAttribute = attributeType;
+        modifier = modifierType;
         amount = fAmount;
     }
 }

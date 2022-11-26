@@ -65,17 +65,21 @@ public abstract class UnitV2 : ActorV2
         Attributes.Get(AttributeType.SPEED).MaxValue = data.movementSpeed;
         Attributes.Get(AttributeType.SPEED).Value = data.movementSpeed;
 
-        if (PlayerManager.AllAttributeBonuses.ContainsKey(unitData))
-            foreach (AttributeBonus bonus in PlayerManager.AllAttributeBonuses[unitData])
-                Attributes.Get(bonus.targetAttribute).Value += bonus.amount;
+        if (PlayerManager.AllAttributeBonuses.TryGetValue(unitData, out var bonuses))
+            foreach (AttributeBonus bonus in bonuses)
+                Attributes.Get(bonus.targetAttribute).AddModifier(bonus.targetAttribute, bonus.modifier, bonus.amount);
     }
 
     protected virtual void OnAttributeBonusChanged(object sender, PlayerManager.AttributeBonusChangeEvent e)
     {
         if (e.unitData == unitData)
         {
-            Attributes.Get(e.attributeType).MaxValue += e.amount;
-            Attributes.Get(e.attributeType).Value += e.amount;
+            var attribute = Attributes.Get(e.bonus.targetAttribute);
+
+            if (attribute.MaxValue < int.MaxValue)
+                attribute.AddMaxModifier(e.bonus.targetAttribute, e.bonus.modifier, e.bonus.amount);
+
+            attribute.AddModifier(e.bonus.targetAttribute, e.bonus.modifier, e.bonus.amount);
         }
     }
 
