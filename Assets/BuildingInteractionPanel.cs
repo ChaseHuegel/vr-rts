@@ -1,9 +1,9 @@
 using System.Collections.Generic;
+using Swordfish;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 using Valve.VR.InteractionSystem;
-using Swordfish;
 
 [RequireComponent(typeof(PointerInteractable), typeof(Collider))]
 public class BuildingInteractionPanel : MonoBehaviour
@@ -106,7 +106,7 @@ public class BuildingInteractionPanel : MonoBehaviour
 
     void Awake()
     {
-        if (!faceTarget) faceTarget = Player.instance.hmdTransform;        
+        if (!faceTarget) faceTarget = Player.instance.hmdTransform;
     }
 
     // Start is called before the first frame update
@@ -132,9 +132,9 @@ public class BuildingInteractionPanel : MonoBehaviour
 
         if (interactionPanelObject)
             return;
-            
+
         InitializeInteractionPanel();
-        
+
         if (title == "")
             title = this.gameObject.GetComponent<Structure>()?.buildingData.title;
 
@@ -155,9 +155,9 @@ public class BuildingInteractionPanel : MonoBehaviour
 
             InitializeMenuDisplay();
 
-            this.gameObject.GetComponent<PointerInteractable>().AddChildrenToHideHighlight(interactionPanelObject);            
+            this.gameObject.GetComponent<PointerInteractable>().AddChildrenToHideHighlight(interactionPanelObject);
 
-            HookIntoEvents();            
+            HookIntoEvents();
         }
 
         // TODO: Probably should be handled differently
@@ -166,10 +166,10 @@ public class BuildingInteractionPanel : MonoBehaviour
         if (startHidden)
             Hide();
         else
-            Show();        
+            Show();
     }
 
-    private void OnNodeResearched(TechNode node) 
+    private void OnNodeResearched(TechNode node)
     {
         // Do not destroy buttons if node is a unit node
         if (node.tech is UnitData)
@@ -179,7 +179,7 @@ public class BuildingInteractionPanel : MonoBehaviour
 
         // TODO: Just move the buttons into new positions rather
         // than regenerating them
-        foreach(QueueUnitButton queueUnitButton in queueUnitButtons.ToArray())
+        foreach (QueueUnitButton queueUnitButton in queueUnitButtons.ToArray())
         {
             GameObject obj = queueUnitButton.gameObject;
             Destroy(obj);
@@ -219,7 +219,7 @@ public class BuildingInteractionPanel : MonoBehaviour
     }
 
     private void InitializeInteractionPanel()
-    {        
+    {
         interactionPanelObject = new GameObject("_interaction_panel");
         interactionPanelObject.transform.SetParent(this.gameObject.transform, false);
         interactionPanelObject.transform.localPosition = panelPositionOffset;
@@ -228,7 +228,7 @@ public class BuildingInteractionPanel : MonoBehaviour
         radiusExitTime = Time.time;
         Quaternion rot = faceTarget.transform.rotation;
         rot.z = rot.x = 0;
-        interactionPanelObject.transform.rotation = rot;              
+        interactionPanelObject.transform.rotation = rot;
     }
 
     // Update is called once per frame
@@ -272,7 +272,7 @@ public class BuildingInteractionPanel : MonoBehaviour
                 if (onAutoHide != null)
                     onAutoHide();
 
-                Hide();                
+                Hide();
 
                 autohideTimerStarted = false;
             }
@@ -324,7 +324,7 @@ public class BuildingInteractionPanel : MonoBehaviour
 
         GameObject healthBarForegroundGameObject = new GameObject("_health_bar_foreground");
         healthBarForegroundGameObject.transform.SetParent(healthBarGameObject.transform, false);
-        
+
         healthBarForegroundGameObject.AddComponent<Canvas>().sortingOrder = 1;
 
         healthBarForegroundImage = healthBarForegroundGameObject.AddComponent<Image>();
@@ -350,7 +350,7 @@ public class BuildingInteractionPanel : MonoBehaviour
             healthBarText.verticalAlignment = VerticalAlignmentOptions.Middle;
             healthBarText.raycastTarget = false;
             healthBarText.sortingOrder = 2;
-            healthBarText.color = GameMaster.Instance.healthBarTextColor;            
+            healthBarText.color = GameMaster.Instance.healthBarTextColor;
         }
 
         damageable = this.gameObject.GetComponent<Damageable>();
@@ -359,7 +359,7 @@ public class BuildingInteractionPanel : MonoBehaviour
         {
             damageable.OnDamageEvent += OnDamage;
             damageable.OnHealthRegainEvent += OnHealthRegainEvent;
-            SetHealthBarFilledAmount(damageable.Attributes.ValueOf(AttributeConstants.HEALTH));
+            SetHealthBarFilledAmount(damageable.Attributes.ValueOf(AttributeType.HEALTH));
         }
         else
             Debug.Log("Damageable component not found in parent.", this);
@@ -370,18 +370,18 @@ public class BuildingInteractionPanel : MonoBehaviour
         menuGameObject = new GameObject("_menu");
         menuGameObject.transform.position = new Vector3(0.0f, QueueMenuVerticalOffset, 0.0f);
         menuGameObject.transform.SetParent(interactionPanelObject.transform, false);
-        
+
         InitializeQueueButtons();
 
         GameObject queueSlotsGameObject = new GameObject("_queue_slots");
         queueSlotsGameObject.transform.SetParent(menuGameObject.transform, false);
         InitializeQueueSlots(queueSlotsGameObject.transform, 7, spaceBetweenQueueSlots);
-        
+
         GameObject progressGameObject = new GameObject("_progress");
         progressGameObject.transform.SetParent(menuGameObject.transform, false);
         Vector2 size = new Vector2(queueSlotSize * 2.0f + spaceBetweenQueueSlots, queueSlotSize);
         InitializeProgressBar(progressPosition, size, 0.03f, progressGameObject.transform);
-        
+
         cancelButtonGameObject = new GameObject("_cancel");
         cancelButtonGameObject.transform.SetParent(menuGameObject.transform, false);
         cancelButtonGameObject.transform.localPosition = cancelButtonPosition;
@@ -396,7 +396,7 @@ public class BuildingInteractionPanel : MonoBehaviour
         {
             buttonsGameObject = new GameObject("_buttons");
             buttonsGameObject.transform.SetParent(menuGameObject.transform, false);
-        }        
+        }
 
         Vector3 startPosition = Vector3.zero;
         float buttonsTotalWidth = ((buttonSize + spaceBetweenButtons) * maxButtonColumns);
@@ -407,7 +407,7 @@ public class BuildingInteractionPanel : MonoBehaviour
         startPosition.y = (buttonSize + spaceBetweenButtons) * 0.5f;
         startPosition.y += (buttonSize + spaceBetweenButtons) * (totalRows - 1);
 
-        titleGameObject.transform.localPosition = new Vector3 (0.0f, startPosition.y + (buttonSize * 0.85f), 0.0f);
+        titleGameObject.transform.localPosition = new Vector3(0.0f, startPosition.y + (buttonSize * 0.85f), 0.0f);
         Vector3 nextButtonPosition = startPosition;
 
         int currentButtonColumn = 0;
@@ -443,12 +443,12 @@ public class BuildingInteractionPanel : MonoBehaviour
         else
             Show();
     }
-    
+
     public void Show()
     {
         if (disableSelf)
             this.enabled = true;
-        
+
         isVisible = true;
         titleGameObject?.SetActive(true);
         menuGameObject?.SetActive(true);
@@ -462,7 +462,7 @@ public class BuildingInteractionPanel : MonoBehaviour
     }
 
     public void Hide()
-    {        
+    {
         titleGameObject?.SetActive(false);
         menuGameObject?.SetActive(false);
 
@@ -497,7 +497,7 @@ public class BuildingInteractionPanel : MonoBehaviour
             healthBarForegroundImage.fillAmount = amount;
 
         if (showHealthText)
-            healthBarText.text = (damageable.GetHealthPercent() * 100.0f ).ToString() + "%";
+            healthBarText.text = (damageable.GetHealthPercent() * 100.0f).ToString() + "%";
 
         if (amount >= healthBarAutoHideAt)
             healthBarGameObject.SetActive(false);
@@ -505,10 +505,10 @@ public class BuildingInteractionPanel : MonoBehaviour
             healthBarGameObject.SetActive(true);
 
         if (amount <= 0.0f)
-            healthBarGameObject.SetActive(false);;
+            healthBarGameObject.SetActive(false); ;
     }
 
-    
+
     private GameObject GenerateQueueButton(TechBase tech, Vector3 position, Transform parent)
     {
         //---------------------------------------------------------------------
@@ -626,7 +626,7 @@ public class BuildingInteractionPanel : MonoBehaviour
         // pointer interactables or create InteractionPointer events
         QueueUnitButton queueUnitButton = InteractionPointer.Instance.PointedAtQueueButton;
         if (queueUnitButton)
-            techQueue.QueueTech(queueUnitButton.techToQueue);        
+            techQueue.QueueTech(queueUnitButton.techToQueue);
 
         PlayerManager.Instance.PlayQueueButtonDownSound();
     }
@@ -747,7 +747,7 @@ public class BuildingInteractionPanel : MonoBehaviour
         face.transform.SetParent(parent, false);
         face.transform.localPosition = new Vector3(0.0f, 0.0f, -0.05f);
         face.GetComponent<Interactable>().highlightOnHover = false;
-        
+
         HoverButton hoverButton = face.GetComponent<HoverButton>();
         hoverButton.localMoveDistance = new Vector3(0, 0, 0.04f);
         hoverButton.onButtonDown.AddListener(OnCancelQueueHoverButtonDown);
@@ -777,8 +777,8 @@ public class BuildingInteractionPanel : MonoBehaviour
             healthBarGameObject.SetActive(false);
     }
 
-    
-    
+
+
     public delegate void OnAutohide();
     public event OnAutohide onAutoHide;
 }

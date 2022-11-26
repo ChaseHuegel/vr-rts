@@ -21,7 +21,7 @@ public class TargetNearestResource : BehaviorNode<VillagerV2>
                 continue;
 
             int distance = villager.GetDistanceTo(resource.GetPosition().x, resource.GetPosition().y);
-            if (distance < shortestDistance && distance < villager.Attributes.ValueOf(AttributeConstants.SENSE_RADIUS))
+            if (distance < shortestDistance && distance < villager.Attributes.ValueOf(AttributeType.SENSE_RADIUS))
             {
                 shortestDistance = distance;
                 nearestResource = resource;

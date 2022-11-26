@@ -40,7 +40,7 @@ namespace Swordfish
             public Damageable attacker;
         }
 
-        public ValueFieldCollection Attributes { get; set; } = new();
+        public ValueFieldCollection<AttributeType> Attributes { get; set; } = new();
 
         [SerializeField]
         protected bool Invulnerable = false;
@@ -78,13 +78,13 @@ namespace Swordfish
 
         protected virtual void InitializeAttributes()
         {
-            Attributes.TryAdd(AttributeConstants.HEALTH, 20f, 20f);
+            Attributes.TryAdd(AttributeType.HEALTH, 20f, 20f);
         }
 
-        public bool IsAlive() => Attributes.ValueOf(AttributeConstants.HEALTH) > 0;
-        public float GetHealth() => Attributes.ValueOf(AttributeConstants.HEALTH);
-        public float GetMaxHealth() => Attributes.MaxValueOf(AttributeConstants.HEALTH);
-        public float GetHealthPercent() => Attributes.CalculatePercentOf(AttributeConstants.HEALTH);
+        public bool IsAlive() => Attributes.ValueOf(AttributeType.HEALTH) > 0;
+        public float GetHealth() => Attributes.ValueOf(AttributeType.HEALTH);
+        public float GetMaxHealth() => Attributes.MaxValueOf(AttributeType.HEALTH);
+        public float GetHealthPercent() => Attributes.CalculatePercentOf(AttributeType.HEALTH);
 
         public void Damage(float damage, AttributeChangeCause cause = AttributeChangeCause.FORCED, Damageable attacker = null, DamageType type = DamageType.NONE)
         {
@@ -134,12 +134,12 @@ namespace Swordfish
                     }
                 }
             }
-            
+
             OnDamaged(e);
-            Attributes.Get(AttributeConstants.HEALTH).Remove(e.damage);
+            Attributes.Get(AttributeType.HEALTH).Remove(e.damage);
 
             //  If the damage was enough to kill, invoke a death event
-            if (Attributes.ValueOf(AttributeConstants.HEALTH) <= 0)
+            if (Attributes.ValueOf(AttributeType.HEALTH) <= 0)
             {
                 DeathEvent e2 = new()
                 {
@@ -159,7 +159,7 @@ namespace Swordfish
 
         public void Heal(float amount, AttributeChangeCause cause = AttributeChangeCause.FORCED, Damageable healer = null)
         {
-            if (Attributes.CalculatePercentOf(AttributeConstants.HEALTH) == 1.0f)
+            if (Attributes.CalculatePercentOf(AttributeType.HEALTH) == 1.0f)
                 return;
 
             //  Invoke a health regain event
@@ -169,7 +169,7 @@ namespace Swordfish
                 target = this,
                 healer = healer,
                 amount = amount,
-                health = Attributes.Get(AttributeConstants.HEALTH).PeekAdd(amount)
+                health = Attributes.Get(AttributeType.HEALTH).PeekAdd(amount)
             };
             OnHealthRegainEvent?.Invoke(this, e);
 
@@ -178,7 +178,7 @@ namespace Swordfish
                 return;
 
             OnHealthRegain(e);
-            Attributes.Get(AttributeConstants.HEALTH).Add(e.amount);
+            Attributes.Get(AttributeType.HEALTH).Add(e.amount);
         }
     }
 

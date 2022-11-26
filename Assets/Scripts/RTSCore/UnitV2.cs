@@ -50,32 +50,32 @@ public abstract class UnitV2 : ActorV2
     protected override void InitializeAttributes()
     {
         base.InitializeAttributes();
-        Attributes.AddOrUpdate(AttributeConstants.DAMAGE, 1f);
-        Attributes.AddOrUpdate(AttributeConstants.ATTACK_SPEED, 1f);
-        Attributes.AddOrUpdate(AttributeConstants.ATTACK_RANGE, Attributes.ValueOf(AttributeConstants.REACH));
-        Attributes.AddOrUpdate(AttributeConstants.HEAL_RATE, 1f);
+        Attributes.AddOrUpdate(AttributeType.DAMAGE, 1f);
+        Attributes.AddOrUpdate(AttributeType.ATTACK_SPEED, 1f);
+        Attributes.AddOrUpdate(AttributeType.ATTACK_RANGE, Attributes.ValueOf(AttributeType.REACH));
+        Attributes.AddOrUpdate(AttributeType.HEAL_RATE, 1f);
     }
 
     protected virtual void OnLoadUnitData(UnitData data)
     {
-        Attributes.Get(AttributeConstants.ATTACK_RANGE).Value = data.attackRange;
-        Attributes.Get(AttributeConstants.DAMAGE).Value = data.attackDamage;
-        Attributes.Get(AttributeConstants.HEALTH).MaxValue = data.maximumHitPoints;
-        Attributes.Get(AttributeConstants.HEALTH).Value = data.maximumHitPoints;
-        Attributes.Get(AttributeConstants.SPEED).MaxValue = data.movementSpeed;
-        Attributes.Get(AttributeConstants.SPEED).Value = data.movementSpeed;
+        Attributes.Get(AttributeType.ATTACK_RANGE).Value = data.attackRange;
+        Attributes.Get(AttributeType.DAMAGE).Value = data.attackDamage;
+        Attributes.Get(AttributeType.HEALTH).MaxValue = data.maximumHitPoints;
+        Attributes.Get(AttributeType.HEALTH).Value = data.maximumHitPoints;
+        Attributes.Get(AttributeType.SPEED).MaxValue = data.movementSpeed;
+        Attributes.Get(AttributeType.SPEED).Value = data.movementSpeed;
 
-        if(PlayerManager.AllAttributeBonuses.ContainsKey(unitData))
-            foreach(AttributeBonus bonus in PlayerManager.AllAttributeBonuses[unitData])
-                Attributes.Get(bonus.targetAttribute.ToString()).Value += bonus.amount;
+        if (PlayerManager.AllAttributeBonuses.ContainsKey(unitData))
+            foreach (AttributeBonus bonus in PlayerManager.AllAttributeBonuses[unitData])
+                Attributes.Get(bonus.targetAttribute).Value += bonus.amount;
     }
 
     protected virtual void OnAttributeBonusChanged(object sender, PlayerManager.AttributeBonusChangeEvent e)
     {
         if (e.unitData == unitData)
         {
-            Attributes.Get(e.attributeType.ToString()).MaxValue += e.amount;
-            Attributes.Get(e.attributeType.ToString()).Value += e.amount;
+            Attributes.Get(e.attributeType).MaxValue += e.amount;
+            Attributes.Get(e.attributeType).Value += e.amount;
         }
     }
 
@@ -142,7 +142,7 @@ public abstract class UnitV2 : ActorV2
             return;
 
         AttackTimer += deltaTime;
-        if (AttackTimer >= Attributes.ValueOf(AttributeConstants.ATTACK_SPEED))
+        if (AttackTimer >= Attributes.ValueOf(AttributeType.ATTACK_SPEED))
         {
             AttackTimer = 0f;
 
@@ -159,9 +159,9 @@ public abstract class UnitV2 : ActorV2
 
     private void Attack(Damageable victim)
     {
-        // Debug.Log("Attacking for " + Attributes.ValueOf(AttributeConstants.DAMAGE).ToString());
+        // Debug.Log("Attacking for " + Attributes.ValueOf(AttributeType.DAMAGE).ToString());
         // TODO: this is where we want to handle weapons, damage types, etc.
-        victim.Damage(Attributes.ValueOf(AttributeConstants.DAMAGE), AttributeChangeCause.ATTACKED, this, DamageType.NONE);
+        victim.Damage(Attributes.ValueOf(AttributeType.DAMAGE), AttributeChangeCause.ATTACKED, this, DamageType.NONE);
     }
 
     protected virtual void ProcessHealRoutine(float deltaTime)
@@ -174,7 +174,7 @@ public abstract class UnitV2 : ActorV2
         {
             HealTimer = 0f;
 
-            if (Target != null && !Target.Attributes.Get(AttributeConstants.HEALTH).IsMax() && !IsMoving)
+            if (Target != null && !Target.Attributes.Get(AttributeType.HEALTH).IsMax() && !IsMoving)
             {
                 Heal(Target);
             }
@@ -187,7 +187,7 @@ public abstract class UnitV2 : ActorV2
 
     private void Heal(Damageable target)
     {
-        target.Heal(Attributes.ValueOf(AttributeConstants.HEAL_RATE), AttributeChangeCause.HEALED, this);
+        target.Heal(Attributes.ValueOf(AttributeType.HEAL_RATE), AttributeChangeCause.HEALED, this);
     }
 
 }

@@ -1,0 +1,27 @@
+public enum AttributeType
+{
+    NONE = 0,
+    HEALTH = 1 << 0,
+    SPEED = 1 << 1,
+    REACH = 1 << 2,
+    CARGO = 1 << 3,
+    DAMAGE = 1 << 4,
+    ARMOR = 1 << 5,
+    SENSE_RADIUS = 1 << 6,
+    ATTACK_SPEED = 1 << 7,
+    ATTACK_RANGE = 1 << 8,
+    COLLECT_RATE = 1 << 9, // Overall collect rate multiplier applied to all gathering
+    HEAL_RATE = 1 << 10,
+    BUILD_RATE = 1 << 11,
+    REPAIR_RATE = 1 << 12,
+    STONE_MINING_RATE = 1 << 13,
+    GOLD_MINING_RATE = 1 << 14,
+    FARMING_RATE = 1 << 15,
+    HUNTING_RATE = 1 << 16,
+    LUMBERJACKING_RATE = 1 << 17,
+    FISHING_RATE = 1 << 18,
+    BLUDGEONING_DAMAGE = 1 << 19,
+    PIERCING_DAMAGE = 1 << 20,
+    SLASHING_DAMAGE = 1 << 21,
+    HACKING_DAMAGE = 1 << 22,
+}

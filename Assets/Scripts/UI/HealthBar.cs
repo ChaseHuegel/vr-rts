@@ -46,7 +46,7 @@ public class HealthBar : MonoBehaviour
         {
             damageable.OnDamageEvent += OnDamage;
             damageable.OnHealthRegainEvent += OnHealthRegainEvent;
-            SetFilledAmount(damageable.Attributes.ValueOf(AttributeConstants.HEALTH));
+            SetFilledAmount(damageable.Attributes.ValueOf(AttributeType.HEALTH));
         }
         else
         {

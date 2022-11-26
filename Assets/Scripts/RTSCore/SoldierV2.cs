@@ -13,16 +13,16 @@ public class SoldierV2 : UnitV2
     protected override void InitializeAttributes()
     {
         base.InitializeAttributes();
-        Attributes.AddOrUpdate(AttributeConstants.ARMOR, 1f);
+        Attributes.AddOrUpdate(AttributeType.ARMOR, 1f);
     }
 
     protected override void OnLoadUnitData(UnitData data)
     {
         base.OnLoadUnitData(data);
-        Attributes.AddOrUpdate(AttributeConstants.ARMOR, unitData.armor);
+        Attributes.AddOrUpdate(AttributeType.ARMOR, unitData.armor);
 
     }
-    
+
     public override void IssueTargetedOrder(Body body)
     {
         switch (body)

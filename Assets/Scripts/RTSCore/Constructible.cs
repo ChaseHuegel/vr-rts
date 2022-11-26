@@ -18,7 +18,7 @@ public class Constructible : Obstacle
     {
         base.Initialize();
 
-        Attributes.AddOrUpdate(AttributeConstants.HEALTH, 0f, buildingData.maximumHitPoints);
+        Attributes.AddOrUpdate(AttributeType.HEALTH, 0f, buildingData.maximumHitPoints);
         OnHealthRegainEvent += OnBuild;
 
         ResetStages();
@@ -81,7 +81,7 @@ public class Constructible : Obstacle
 
     public bool IsBuilt()
     {
-        return Attributes.Get(AttributeConstants.HEALTH).IsMax();
+        return Attributes.Get(AttributeType.HEALTH).IsMax();
     }
 
     private void ResetStages()
@@ -95,7 +95,7 @@ public class Constructible : Obstacle
 
     private void UpdateStage()
     {
-        float progress = Attributes.CalculatePercentOf(AttributeConstants.HEALTH);
+        float progress = Attributes.CalculatePercentOf(AttributeType.HEALTH);
         int progressStage = 0;// = (int)(progress / (1f / ConstructionStages.Length));
 
         if (progress >= 0.33)
@@ -114,8 +114,8 @@ public class Constructible : Obstacle
 
     public void OnBuild(object sender, HealthRegainEvent e)
     {
-        //Debug.Log(Attributes.ValueOf(AttributeConstants.HEALTH) + "/" + Attributes.MaxValueOf(AttributeConstants.HEALTH));
-        if (Attributes.Get(AttributeConstants.HEALTH).PeekAdd(e.amount) == GetMaxHealth())
+        //Debug.Log(Attributes.ValueOf(AttributeType.HEALTH) + "/" + Attributes.MaxValueOf(AttributeType.HEALTH));
+        if (Attributes.Get(AttributeType.HEALTH).PeekAdd(e.amount) == GetMaxHealth())
         {
             if (DestroyOnBuilt)
             {

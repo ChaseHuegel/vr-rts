@@ -6,7 +6,7 @@ public class FishingBoat : VillagerV2
     protected override void OnLoadUnitData(UnitData data)
     {
         base.OnLoadUnitData(data);
-        Attributes.Get(AttributeConstants.COLLECT_RATE).Value = data.fishingRate;
+        Attributes.Get(AttributeType.COLLECT_RATE).Value = data.fishingRate;
     }
 
     public override void IssueTargetedOrder(Body body)
@@ -20,7 +20,7 @@ public class FishingBoat : VillagerV2
 
             case Structure structure:
                 Target = structure;
-                if (structure.Attributes.Get(AttributeConstants.HEALTH).IsMax())
+                if (structure.Attributes.Get(AttributeType.HEALTH).IsMax())
                     Order = UnitOrder.DropOff;
                 break;
 

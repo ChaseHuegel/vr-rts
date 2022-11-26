@@ -74,5 +74,16 @@ namespace Swordfish
             return new UnityEngine.Vector2(_coord.x, _coord.y);
         }
 
+        public override bool Equals(object obj)
+        {
+            return obj is Coord2D d &&
+                   x == d.x &&
+                   y == d.y;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(x, y);
+        }
     }
 }

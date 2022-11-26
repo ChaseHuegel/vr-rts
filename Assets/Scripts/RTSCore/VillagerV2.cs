@@ -63,7 +63,7 @@ public class VillagerV2 : UnitV2
     private Transform CurrentCargoObject;
     private float CollectTimer;
 
-    public bool IsCargoFull() => Attributes.Get(AttributeConstants.CARGO).IsMax();
+    public bool IsCargoFull() => Attributes.Get(AttributeType.CARGO).IsMax();
 
     protected override void Update()
     {
@@ -80,28 +80,28 @@ public class VillagerV2 : UnitV2
     protected override void InitializeAttributes()
     {
         base.InitializeAttributes();
-        Attributes.AddOrUpdate(AttributeConstants.CARGO, 0f, 10f);
-        Attributes.AddOrUpdate(AttributeConstants.COLLECT_RATE, 1f);
+        Attributes.AddOrUpdate(AttributeType.CARGO, 0f, 10f);
+        Attributes.AddOrUpdate(AttributeType.COLLECT_RATE, 1f);
     }
 
     protected override void OnLoadUnitData(UnitData data)
     {
         base.OnLoadUnitData(data);
-        Attributes.Get(AttributeConstants.COLLECT_RATE).Value = data.lumberjackingRate;
-        Attributes.Get(AttributeConstants.HEAL_RATE).MaxValue = data.buildRate;
+        Attributes.Get(AttributeType.COLLECT_RATE).Value = data.lumberjackingRate;
+        Attributes.Get(AttributeType.HEAL_RATE).MaxValue = data.buildRate;
     }
 
     protected override void AttachListeners()
     {
         base.AttachListeners();
-        Attributes.Get(AttributeConstants.CARGO).ValueBinding.Changed += OnCargoChanged;
+        Attributes.Get(AttributeType.CARGO).ValueBinding.Changed += OnCargoChanged;
         // TODO: add a listener on CargoType change to update COLLECT_RATE appropriately
     }
 
     protected override void CleanupListeners()
     {
         base.CleanupListeners();
-        Attributes.Get(AttributeConstants.CARGO).ValueBinding.Changed -= OnCargoChanged;
+        Attributes.Get(AttributeType.CARGO).ValueBinding.Changed -= OnCargoChanged;
     }
 
     public override void IssueTargetedOrder(Body body)
@@ -132,7 +132,7 @@ public class VillagerV2 : UnitV2
                 Target = structure;
                 if (structure.buildingData is WallData)
                     Order = UnitOrder.BuildWalls;
-                else if (structure.Attributes.Get(AttributeConstants.HEALTH).IsMax())
+                else if (structure.Attributes.Get(AttributeType.HEALTH).IsMax())
                     Order = UnitOrder.DropOff;
                 else
                     Order = UnitOrder.Repair;
@@ -162,7 +162,7 @@ public class VillagerV2 : UnitV2
 
     protected virtual void OnCargoChanged(object sender, DataChangedEventArgs<float> e)
     {
-        bool isCargoFull = e.NewValue == Attributes.MaxValueOf(AttributeConstants.CARGO);
+        bool isCargoFull = e.NewValue == Attributes.MaxValueOf(AttributeType.CARGO);
         if (isCargoFull || e.NewValue == 0.0f)
             UpdateCurrentCargoObject(isCargoFull);
     }
@@ -258,6 +258,6 @@ public class VillagerV2 : UnitV2
 
     private void CollectResource(Resource resource)
     {
-        Attributes.Get(AttributeConstants.CARGO).Value += resource.TryRemove(Attributes.ValueOf(AttributeConstants.COLLECT_RATE));
+        Attributes.Get(AttributeType.CARGO).Value += resource.TryRemove(Attributes.ValueOf(AttributeType.COLLECT_RATE));
     }
 }

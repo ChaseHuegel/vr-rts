@@ -13,9 +13,9 @@ public class TargetNearestEnemy : BehaviorNode<ActorV2>
 
             if (!body.IsAlive() || body.Faction == null || body.Faction.IsAllied(actor.Faction))
                 continue;
-            
+
             int distance = actor.GetDistanceTo(body.GetPosition().x, body.GetPosition().y);
-            if (distance < shortestDistance && distance < actor.Attributes.ValueOf(AttributeConstants.SENSE_RADIUS))
+            if (distance < shortestDistance && distance < actor.Attributes.ValueOf(AttributeType.SENSE_RADIUS))
             {
                 shortestDistance = distance;
                 nearestEnemy = body;
