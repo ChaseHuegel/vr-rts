@@ -8,7 +8,7 @@ using System.Collections;
 [RequireComponent (typeof(Collider)) ] // this thing needs a collider if we should look at it
 public class RaycastTargetTrigger : MonoBehaviour {
 
-	bool amIBeingLookedAt = false;
+	//bool amIBeingLookedAt = false;
 	public float maximumDistance = 1000f;
 
 	// ADD YOUR CODE AND BEHAVIORS IN THESE FOUR FUNCTIONS BELOW ===============================

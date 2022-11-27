@@ -21,6 +21,7 @@ public class Structure : Obstacle
 
     public bool NeedsRepairs() => !damageable.Attributes.Get(AttributeConstants.HEALTH).IsMax();
 
+
     public void Awake()
     {
         if (!(audioSource = GetComponent<AudioSource>()))

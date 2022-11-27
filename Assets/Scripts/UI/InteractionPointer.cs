@@ -48,7 +48,7 @@ public class InteractionPointer : MonoBehaviour
     public Hand pointerHand = null;
     private Player player = null;
     private TeleportArc teleportArc = null;
-    public bool showPointerArc = false;
+    private bool showPointerArc = false;
     private PointerInteractable currentPointerInteractable;
     public QueueUnitButton PointedAtQueueButton { get => currentPointerInteractable.GetComponentInChildren<QueueUnitButton>(); }
     private SpawnQueue spawnQueue;
@@ -68,12 +68,8 @@ public class InteractionPointer : MonoBehaviour
     private Vector3 rallyWaypointArcStartPosition;
     public GameObject setRallyPointPrefab;
     private float triggerAddToSelectionThreshold = 0.85f;
-
     private GripPan gripPan;
-
-
     private GameObject hintObject;
-
 
     // Cache value
     private int maxUnitSelectionCount;
@@ -200,11 +196,7 @@ public class InteractionPointer : MonoBehaviour
         // Ray from anchor
         if (Physics.Raycast(verticalLaserAnchorPoint.transform.position, Vector3.down, out hit, 100, allowedPlacementLayers))
         {
-            // Are we hitting something on acceptable layer?
-            // if (LayerMatchTest(allowedPlacementLayers, hit.collider.gameObject))
-                PointLaser(hit);
-            // else
-            //     HideVerticalLaser();
+            PointLaser(hit);
         }
         else
             HideVerticalLaser();
@@ -698,8 +690,7 @@ public class InteractionPointer : MonoBehaviour
         for (int i = 0; i < walls.Length; i++)
             Destroy(walls[i]);
 
-        wallPreviewStraightSegments.Clear();
-        
+        wallPreviewStraightSegments.Clear();       
     }
 
     private void DrawWallPreviewSegments()
@@ -951,6 +942,14 @@ public class InteractionPointer : MonoBehaviour
         }
 
         HighlightSelected(hitPointerInteractable);
+
+        // teleportArc.SetColor(pointerValidColor);
+        // pointerLineRenderer.startColor = pointerValidColor;
+        // pointerLineRenderer.endColor = pointerValidColor;
+
+        // teleportArc.SetColor(pointerInvalidColor);
+        // pointerLineRenderer.startColor = pointerInvalidColor;
+        // pointerLineRenderer.endColor = pointerInvalidColor;
 
         if (hitPointerInteractable != null)
             currentPointerInteractable = hitPointerInteractable;

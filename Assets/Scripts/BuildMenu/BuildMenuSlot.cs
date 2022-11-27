@@ -27,7 +27,6 @@ public class BuildMenuSlot : MonoBehaviour
 
     private GameObject spawnedItem;
     private bool itemIsSpawned = false;
-    private bool useFadedPreview;
     public UnityEvent pickupEvent;
     public UnityEvent dropEvent;
     //private GameObject oldpreviewcrap;
@@ -202,7 +201,6 @@ public class BuildMenuSlot : MonoBehaviour
         if ( ( itemIsSpawned == true ) && ( spawnedItem == null ) )
         {
             itemIsSpawned = false;
-            useFadedPreview = false;
             dropEvent.Invoke();           
         }                  
     }
@@ -381,7 +379,6 @@ public class BuildMenuSlot : MonoBehaviour
         itemIsSpawned = true;
         justPickedUpItem = true;
 
-        useFadedPreview = true;
         pickupEvent.Invoke();
     }
 

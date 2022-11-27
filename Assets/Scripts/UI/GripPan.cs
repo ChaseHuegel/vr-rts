@@ -33,6 +33,7 @@ public class GripPan : MonoBehaviour
     bool isScaling;
     Vector3 initialGripPosition;
     Hand currentHand;
+    Hand otherHand;
     private Vector3 movementVector;
     private Vector3 glidingVector;
     private float glideTimePassed;
@@ -91,10 +92,7 @@ public class GripPan : MonoBehaviour
     {
         if (isScalingStarting() && IsScalingEnabled())
         {
-            Vector3 right = Player.instance.rightHand.transform.localPosition;                
-            Vector3 left = Player.instance.leftHand.transform.localPosition;
-            right.z = right.y = left.z = left.y = 0;
-            initialHandDistance = Vector3.Distance(right, left);
+            initialHandDistance = Mathf.Abs(currentHand.transform.localPosition.x - otherHand.transform.localPosition.x);
             startScale = targetTransform.localScale.x;
             isScaling = true;
             isPanning = false;
@@ -109,12 +107,8 @@ public class GripPan : MonoBehaviour
             }
 
             isGliding = false;
+            float currentHandDistance = Mathf.Abs(currentHand.transform.localPosition.x - otherHand.transform.localPosition.x);
 
-            Vector3 right = Player.instance.rightHand.transform.localPosition;
-            Vector3 left = Player.instance.leftHand.transform.localPosition;
-            right.z = right.y = left.z = left.y = 0;
-
-            float currentHandDistance = Vector3.Distance(right, left);
             float distanceDelta = (currentHandDistance - initialHandDistance);
             distanceDelta *= -scalingSensitivity; 
             float newScale = startScale + (distanceDelta);            
@@ -188,6 +182,7 @@ public class GripPan : MonoBehaviour
             if (Player.instance.rightHand.hoveringInteractable == null)
             {
                 currentHand = Player.instance.rightHand;
+                otherHand = Player.instance.leftHand;
                 initialGripPosition = currentHand.panTransform.position;
                 isPanning = true;
             }
@@ -224,6 +219,7 @@ public class GripPan : MonoBehaviour
             if (Player.instance.leftHand.hoveringInteractable == null)
             {
                 currentHand = Player.instance.leftHand;
+                otherHand = Player.instance.rightHand;
                 initialGripPosition = currentHand.panTransform.position;
                 isPanning = true;
             }

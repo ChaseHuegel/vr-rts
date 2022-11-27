@@ -39,6 +39,24 @@ namespace Swordfish
             return (a.x == b.x && a.y == b.y);
         }
 
+        // override object.Equals
+        public override bool Equals(object obj)
+        {            
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            Coord2D rhs = (Coord2D)obj;
+            return (this.x == rhs.x && this.y == rhs.y);
+        }
+        
+        // override object.GetHashCode
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
         public static Coord2D operator +(Coord2D a, Coord2D b)
         {
             return new Coord2D(a.x + b.x, a.y + b.y);

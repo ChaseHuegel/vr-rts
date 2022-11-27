@@ -1,17 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &8535358683159564390
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 184236362274105860}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3ecf569eaf4f58f43bb8f6733152f817, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2092039726793936747
 GameObject:
   m_ObjectHideFlags: 0
@@ -28,7 +16,6 @@ GameObject:
   - component: {fileID: 3999362570706805278}
   - component: {fileID: 2084730763766606829}
   - component: {fileID: 8584786662924471624}
-  - component: {fileID: 8655223117144118269}
   - component: {fileID: 465591726281918915}
   - component: {fileID: 1109623579988469932}
   - component: {fileID: -9200534466598773922}
@@ -49,6 +36,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -7.4684997, y: -0.0009999275, z: -7.3229623}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 184236362273748580}
   - {fileID: 3720804522370341824}
@@ -357,45 +345,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8753ff4a5012a141b16468281698adb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attributes:
-  - attribute: 0
-    value: 125
-    max: 125
-  invulnerable: 0
-  weaknesses: 
-  resistances: 
-  immunities: 
---- !u!114 &8655223117144118269
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2092039726793936747}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 799a4068a4d7010468792c05a1b767af, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  boundingDimensions: {x: 1, y: 1}
-  boundingOrigin: {x: 0, y: 0}
-  gridPosition:
-    x: 0
-    y: 0
-  factionId: 0
-  doMicroSearching: 1
-  movementSpeed: 0.3
-  goalSearchDistance: 30
-  faction: {fileID: 0}
-  rtsUnitType: 11
-  rangedProjectile: {fileID: 0}
-  projectileSpeed: 5
-  meshes: []
-  skinnedMeshes: []
-  state: 0
-  huntVillagers: 1
-  huntMilitary: 1
-  huntBuildings: 1
+  Invulnerable: 0
+  Weaknesses: 
+  Resistances: 
+  Immunities: 
 --- !u!114 &465591726281918915
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -504,6 +457,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -1, z: -0, w: 0.0000029504295}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3720804522370341824}
   m_RootOrder: 1
@@ -579,6 +533,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -1, z: -0, w: 0.0000029504295}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3720804522370341824}
   m_RootOrder: 0
@@ -655,6 +610,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -1, z: -0, w: 0.0000029504295}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.010196623, y: 0.010196623, z: 0.010196623}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3720804522370341824}
   m_RootOrder: 2
@@ -751,6 +707,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.04808522, y: 0.04808522, z: 0.04808522}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2826503663517909656}
   - {fileID: 8547167394327141604}
@@ -929,3 +886,15 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 184236362274139350}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &8535358683159564390
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 184236362274105860}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ecf569eaf4f58f43bb8f6733152f817, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
