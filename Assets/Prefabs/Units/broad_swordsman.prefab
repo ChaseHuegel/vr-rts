@@ -906,7 +906,9 @@ MonoBehaviour:
   BoundingDimensions: {x: 1, y: 1}
   BoundingOrigin: {x: 0, y: 0}
   SkinRendererTargets:
-  - {fileID: 7515896993506461139}
+  - {fileID: 7515896993506461077}
+  - {fileID: 7515896993509741521}
+  - {fileID: 7515896993509741323}
   m_Layers: 1
   unitData: {fileID: 11400000, guid: 32286c2bb252648459ee0189b4a11a57, type: 2}
 --- !u!1 &4869804949806714405
@@ -1692,7 +1694,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100632, guid: 02ded044b8e0963439276550f50be6f9, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 100634, guid: 02ded044b8e0963439276550f50be6f9, type: 3}
       propertyPath: m_IsActive
@@ -1708,7 +1710,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100640, guid: 02ded044b8e0963439276550f50be6f9, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 100642, guid: 02ded044b8e0963439276550f50be6f9, type: 3}
       propertyPath: m_IsActive
@@ -2472,9 +2474,21 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 02ded044b8e0963439276550f50be6f9, type: 3}
---- !u!137 &7515896993506461139 stripped
+--- !u!137 &7515896993506461077 stripped
 SkinnedMeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 13700296, guid: 02ded044b8e0963439276550f50be6f9,
+  m_CorrespondingSourceObject: {fileID: 13700238, guid: 02ded044b8e0963439276550f50be6f9,
+    type: 3}
+  m_PrefabInstance: {fileID: 7515896993511639323}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &7515896993509741323 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 2300432, guid: 02ded044b8e0963439276550f50be6f9,
+    type: 3}
+  m_PrefabInstance: {fileID: 7515896993511639323}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &7515896993509741521 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 2300618, guid: 02ded044b8e0963439276550f50be6f9,
     type: 3}
   m_PrefabInstance: {fileID: 7515896993511639323}
   m_PrefabAsset: {fileID: 0}

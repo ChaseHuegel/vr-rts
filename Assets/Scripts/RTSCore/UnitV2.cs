@@ -34,6 +34,8 @@ public abstract class UnitV2 : ActorV2
         base.Start();
         OnLoadUnitData(unitData);
 
+        TryFetchRenderers();
+
         originalScale = gameObject.transform.localScale;
     }
 
@@ -69,6 +71,27 @@ public abstract class UnitV2 : ActorV2
             foreach (AttributeBonus bonus in bonuses)
                 Attributes.Get(bonus.targetAttribute).AddModifier(bonus.targetAttribute, bonus.modifier, bonus.amount);
     }
+    
+    private bool TryFetchRenderers()
+    {
+        if (SkinRendererTargets.Length <= 0)
+        {
+            Renderer[] skinnedMeshRenderers = GetComponentsInChildren<Renderer>(false);
+            if (skinnedMeshRenderers.Length <= 0) 
+                return false;
+
+            SkinRendererTargets = new Renderer[skinnedMeshRenderers.Length];
+            for (int i = 0; i < skinnedMeshRenderers.Length; i++)
+            {
+                SkinRendererTargets[i] = skinnedMeshRenderers[i];
+            }
+
+            return true;
+
+        }
+
+        return false;
+    }
 
     protected virtual void OnAttributeBonusChanged(object sender, PlayerManager.AttributeBonusChangeEvent e)
     {
@@ -76,7 +99,7 @@ public abstract class UnitV2 : ActorV2
         {
             var attribute = Attributes.Get(e.bonus.targetAttribute);
 
-            if (attribute.MaxValue < int.MaxValue)
+            if (attribute?.MaxValue < int.MaxValue)
                 attribute.AddMaxModifier(e.bonus.targetAttribute, e.bonus.modifier, e.bonus.amount);
 
             attribute.AddModifier(e.bonus.targetAttribute, e.bonus.modifier, e.bonus.amount);

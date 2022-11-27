@@ -676,7 +676,7 @@ public class TechTreeEditor : EditorWindow
             case EventType.MouseDrag:
                 if (drawingSelectionBox)
                 {
-                    if (selectionRect.Contains(nodeRect.center))
+                    if (selectionRect.Contains(nodeRect.center, true))
                     {                       
                         SelectNode(techNode);
                         if (selectedNodeGroup.Count == 1)

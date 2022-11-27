@@ -10,7 +10,7 @@ public enum AttributeType
     SENSE_RADIUS = 1 << 6,
     ATTACK_SPEED = 1 << 7,
     ATTACK_RANGE = 1 << 8,
-    COLLECT_RATE = 1 << 9, // Overall collect rate multiplier applied to all gathering
+    COLLECT_RATE = 1 << 9,
     HEAL_RATE = 1 << 10,
     BUILD_RATE = 1 << 11,
     REPAIR_RATE = 1 << 12,
@@ -20,8 +20,9 @@ public enum AttributeType
     HUNTING_RATE = 1 << 16,
     LUMBERJACKING_RATE = 1 << 17,
     FISHING_RATE = 1 << 18,
-    BLUDGEONING_DAMAGE = 1 << 19,
+    FORAGING_RATE = 1 << 19,
     PIERCING_DAMAGE = 1 << 20,
     SLASHING_DAMAGE = 1 << 21,
     HACKING_DAMAGE = 1 << 22,
+    BLUDGEONING_DAMAGE = 1 << 23,
 }

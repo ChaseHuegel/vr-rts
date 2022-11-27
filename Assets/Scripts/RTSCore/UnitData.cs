@@ -16,6 +16,7 @@ public class UnitData : TechBase
     public float huntingRate;
     public float lumberjackingRate;
     public float fishingRate;
+    public float collectRate;
 
     [Header("Stats")]
     public int maximumHitPoints;

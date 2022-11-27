@@ -1434,7 +1434,8 @@ MonoBehaviour:
   BoundingDimensions: {x: 1, y: 1}
   BoundingOrigin: {x: 0, y: 0}
   SkinRendererTargets:
-  - {fileID: 4213747471575033159}
+  - {fileID: 4213747471575033101}
+  - {fileID: 4213747471578051365}
   m_Layers: 1
   unitData: {fileID: 11400000, guid: 6a3967368cf4e1948b5774dbb9880233, type: 2}
 --- !u!1 &8569883186678360605
@@ -1832,7 +1833,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100632, guid: 02ded044b8e0963439276550f50be6f9, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 100634, guid: 02ded044b8e0963439276550f50be6f9, type: 3}
       propertyPath: m_IsActive
@@ -1900,7 +1901,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100668, guid: 02ded044b8e0963439276550f50be6f9, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 100670, guid: 02ded044b8e0963439276550f50be6f9, type: 3}
       propertyPath: m_IsActive
@@ -2612,9 +2613,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 02ded044b8e0963439276550f50be6f9, type: 3}
---- !u!137 &4213747471575033159 stripped
+--- !u!137 &4213747471575033101 stripped
 SkinnedMeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 13700296, guid: 02ded044b8e0963439276550f50be6f9,
+  m_CorrespondingSourceObject: {fileID: 13700226, guid: 02ded044b8e0963439276550f50be6f9,
+    type: 3}
+  m_PrefabInstance: {fileID: 4213747471580342671}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &4213747471578051365 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 2300586, guid: 02ded044b8e0963439276550f50be6f9,
     type: 3}
   m_PrefabInstance: {fileID: 4213747471580342671}
   m_PrefabAsset: {fileID: 0}

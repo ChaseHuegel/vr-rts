@@ -38,6 +38,28 @@ public class VRTSToolsWindow : EditorWindow
         if (GUILayout.Button("Tech Tree Editor"))
             OpenTechTreeWindow();
 
+        EditorGUILayout.Space();
+
+        if (GUILayout.Button("Set Unit SkinRenderer Targets"))
+            SetSkinRendererTargets();
+
+    }
+
+    private void SetSkinRendererTargets()
+    {
+        GameObject gameObject = Selection.activeGameObject;
+
+        UnitV2 unit = (UnitV2)Selection.activeGameObject.GetComponent<UnitV2>();
+        if (unit == null)
+            Debug.Log("No unit found.");
+
+        Renderer[] skinnedMeshRenderers = Selection.activeGameObject.GetComponentsInChildren<Renderer>(false);        
+        unit.SkinRendererTargets = new Renderer[skinnedMeshRenderers.Length];
+        for (int i = 0; i < skinnedMeshRenderers.Length; i++)
+        {
+            unit.SkinRendererTargets[i] = skinnedMeshRenderers[i];
+        }
+
     }
 
     void OpenTechTreeWindow()

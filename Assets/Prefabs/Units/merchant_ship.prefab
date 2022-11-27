@@ -431,7 +431,8 @@ MonoBehaviour:
   Faction: {fileID: 0}
   BoundingDimensions: {x: 1, y: 1}
   BoundingOrigin: {x: 0, y: 0}
-  SkinRendererTargets: []
+  SkinRendererTargets:
+  - {fileID: 5388127251806150863}
   m_Layers: 2
   unitData: {fileID: 11400000, guid: 0db5cbe357e746f44881105ef56985a7, type: 2}
   FarmingToolObject: {fileID: 0}
@@ -519,6 +520,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d36db2189a21d8f4080c5a7e0c673c4c, type: 3}
+--- !u!23 &5388127251806150863 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: d36db2189a21d8f4080c5a7e0c673c4c,
+    type: 3}
+  m_PrefabInstance: {fileID: 6703586681941097547}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6524965909589531552 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: d36db2189a21d8f4080c5a7e0c673c4c,
