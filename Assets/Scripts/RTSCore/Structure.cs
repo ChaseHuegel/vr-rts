@@ -19,7 +19,7 @@ public class Structure : Obstacle
     private GameObject sparksParticleSystem;
     private PlayerManager playerManager;
 
-    public bool NeedsRepairs() => !damageable.Attributes.Get(AttributeConstants.HEALTH).IsMax();
+    public bool NeedsRepairs() => !damageable.Attributes.Get(AttributeType.HEALTH).IsMax();
 
 
     public void Awake()
@@ -60,7 +60,7 @@ public class Structure : Obstacle
 
 
         // Set max health based on building database hit point value.
-        damageable.Attributes.Get(AttributeConstants.HEALTH).MaxValue = buildingData.maximumHitPoints;
+        damageable.Attributes.Get(AttributeType.HEALTH).MaxValue = buildingData.maximumHitPoints;
 
         HookIntoEvents();
 
@@ -68,7 +68,7 @@ public class Structure : Obstacle
         // building damage FX particle systems on buildings that don't need them yet.
         // We can generate them at startup later on to gain real time performance
         // if needed.
-        if (!damageable.Attributes.Get(AttributeConstants.HEALTH).IsMax())
+        if (!damageable.Attributes.Get(AttributeType.HEALTH).IsMax())
             RefreshVisuals();
     }
 
@@ -147,7 +147,7 @@ public class Structure : Obstacle
         if (!buildingDamagedFX)
             CreateBuildingDamageFX();
 
-        float healthPercent = damageable.Attributes.CalculatePercentOf(AttributeConstants.HEALTH);
+        float healthPercent = damageable.Attributes.CalculatePercentOf(AttributeType.HEALTH);
         if (healthPercent == 1f)
         {
             if (buildingDamagedFX.activeSelf)

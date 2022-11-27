@@ -8,7 +8,7 @@ public class PursueTarget : BehaviorNode<UnitV2>
     {
         Coord2D position = unit.Target.GetNearestPositionFrom(unit.GetPosition());
 
-        if (unit.GetDistanceTo(position.x, position.y) <= unit.Attributes.ValueOf(AttributeConstants.ATTACK_RANGE))
+        if (unit.GetDistanceTo(position.x, position.y) <= unit.Attributes.ValueOf(AttributeType.ATTACK_RANGE))
         {
             unit.ResetPath();
             return BehaviorState.SUCCESS;

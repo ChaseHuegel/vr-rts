@@ -75,9 +75,9 @@ public class Fauna : ActorV2
     protected override void InitializeAttributes()
     {
         base.InitializeAttributes();
-        Attributes.AddOrUpdate(AttributeConstants.HEALTH, 25f, 25f);
-        Attributes.AddOrUpdate(AttributeConstants.SPEED, 0.2f);
-        normalMovementSpeed = Attributes.ValueOf(AttributeConstants.SPEED);
+        Attributes.AddOrUpdate(AttributeType.HEALTH, 25f, 25f);
+        Attributes.AddOrUpdate(AttributeType.SPEED, 0.2f);
+        normalMovementSpeed = Attributes.ValueOf(AttributeType.SPEED);
     }
 
     public override void Tick(float deltaTime)
@@ -98,12 +98,12 @@ public class Fauna : ActorV2
         {
             if (isRunnng)
             {
-                Attributes.Get(AttributeConstants.SPEED).Value = runSpeed;
+                Attributes.Get(AttributeType.SPEED).Value = runSpeed;
                 Animator.SetInteger("ActorAnimationState", (int)FaunaActions.RUN);
             }
             else
             {
-                Attributes.Get(AttributeConstants.SPEED).Value = normalMovementSpeed;
+                Attributes.Get(AttributeType.SPEED).Value = normalMovementSpeed;
                 Animator.SetInteger("ActorAnimationState", (int)FaunaActions.WALK);
             }
         }

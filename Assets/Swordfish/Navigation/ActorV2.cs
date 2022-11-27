@@ -142,9 +142,9 @@ namespace Swordfish.Navigation
         protected override void InitializeAttributes()
         {
             base.InitializeAttributes();
-            Attributes.AddOrUpdate(AttributeConstants.SPEED, 0.3f, 0.3f);
-            Attributes.AddOrUpdate(AttributeConstants.REACH, 1.5f);
-            Attributes.AddOrUpdate(AttributeConstants.SENSE_RADIUS, 20f);
+            Attributes.AddOrUpdate(AttributeType.SPEED, 0.3f, 0.3f);
+            Attributes.AddOrUpdate(AttributeType.REACH, 1.5f);
+            Attributes.AddOrUpdate(AttributeType.SENSE_RADIUS, 20f);
         }
 
         protected override void AttachListeners()
@@ -361,7 +361,7 @@ namespace Swordfish.Navigation
                 transform.position = Vector3.MoveTowards(
                         transform.position,
                         gridToWorldSpace,
-                        deltaTime * InterpolationStrength * Attributes.ValueOf(AttributeConstants.SPEED)
+                        deltaTime * InterpolationStrength * Attributes.ValueOf(AttributeType.SPEED)
                     );
             }
             else
