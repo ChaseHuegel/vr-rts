@@ -304,7 +304,6 @@ public class VillagerV2 : UnitV2
         }
     }
 
-    
     private void CollectResource(Resource resource)
     {
         Attributes.Get(AttributeType.CARGO).Value += resource.TryRemove(Attributes.ValueOf(currentCollectRate));
