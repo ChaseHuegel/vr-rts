@@ -40,6 +40,9 @@ public class ResourceChangedListener : MonoBehaviour
 
     private void CleanupEvents()
     {
+        if (PlayerManager.Instance == null)
+            return;
+            
         if (stoneQuantityText)
             PlayerManager.Instance.OnStoneResourceChanged -= OnStoneResourceChanged;
 

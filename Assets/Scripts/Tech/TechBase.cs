@@ -9,6 +9,7 @@ public class TechBase : ScriptableObject
 {
     public string title;
     public string description;
+    public string details;
 
     [Tooltip("For units, the time to produce a unit after it's queued, otherwise it's the research time for a technology.")]
     public float queueResearchTime = 25.0f;

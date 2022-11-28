@@ -23,6 +23,8 @@ public class BuildMenuTab : MonoBehaviour
     public Vector3 slotLockPosition;
 
     public TechBase[] ButtonsNew;
+
+    public BuildMenuSlot[] Slots { get { return slots; } }
     private BuildMenuSlot[] slots;
 
     void Awake()
@@ -31,8 +33,14 @@ public class BuildMenuTab : MonoBehaviour
         //     Generate();
 
         //HookIntoEvents();
+        Initialize();
+        
+    }
 
-        slots = GetComponentsInChildren<BuildMenuSlot>();
+    public void Initialize()
+    {
+        if (slots == null)
+            slots = GetComponentsInChildren<BuildMenuSlot>();
     }
 
     // private void OnNodeUnlocked(TechNode node)

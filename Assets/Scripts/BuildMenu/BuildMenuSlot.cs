@@ -16,7 +16,6 @@ public class BuildMenuSlot : MonoBehaviour
     public SteamVR_Action_Boolean selectAction = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("Select");
 	public SteamVR_Action_Boolean cancelAction = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("Cancel");
 
-
     public BuildingData rtsTypeData;
     public bool requireGrabActionToTake = true;
     public bool requireReleaseActionToReturn = false;
@@ -24,12 +23,11 @@ public class BuildMenuSlot : MonoBehaviour
 
     [EnumFlags]
     public Hand.AttachmentFlags attachmentFlags = Hand.defaultAttachmentFlags;
-
     private GameObject spawnedItem;
     private bool itemIsSpawned = false;
     public UnityEvent pickupEvent;
-    public UnityEvent dropEvent;
-    //private GameObject oldpreviewcrap;
+    public UnityEvent dropEvent;    
+
     [SerializeField]
     private GameObject fadedPreviewObject;
 
@@ -46,6 +44,12 @@ public class BuildMenuSlot : MonoBehaviour
     public GameObject iconObject;
 
     private BuildMenuTab parentTab;
+
+    public delegate void OnHandHoverBeginEvent(TechBase techBase);
+    public event OnHandHoverBeginEvent HandHoverBegin;
+
+    public delegate void OnHandHoverEndEvent(TechBase techBase);
+    public event OnHandHoverEndEvent HandHoverEnd;
 
     void Awake()
     {
@@ -245,6 +249,9 @@ public class BuildMenuSlot : MonoBehaviour
 
         ScaleUp();
 
+        if (HandHoverBegin != null)
+            HandHoverBegin.Invoke(rtsTypeData);
+
         // We don't require trigger press for pickup. Spawn and attach object.
         if (!requireGrabActionToTake)
         {
@@ -328,6 +335,9 @@ public class BuildMenuSlot : MonoBehaviour
 
         justPickedUpItem = false;
         ResetScale();
+
+        if (HandHoverEnd != null)
+            HandHoverEnd.Invoke(rtsTypeData);
     }
 
     private ThrowableBuilding GetAttachedThrowableBuilding( Hand hand )

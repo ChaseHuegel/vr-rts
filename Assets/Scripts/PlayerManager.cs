@@ -167,7 +167,7 @@ public class PlayerManager : MonoBehaviour
         headAudioSource.transform.SetParent(Player.instance.hmdTransform);
         headAudioSource.transform.localPosition = Vector3.zero;
 
-        if (newTechTreeInstance)
+        if (newTechTreeInstance && faction)
         {
             currentTree = Instantiate(faction.techTree);
             faction = Instantiate(faction);
