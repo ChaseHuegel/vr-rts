@@ -4,21 +4,25 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    public float speed = 8.5f; // Speed of projectile.
-    public float radius = 1f; // Collision radius.
-    float radiusSq; // Radius squared; optimisation.
-    Transform target; // Who we are homing at.
+    [Tooltip("Speed of projectile.")]
+    public float speed = 1.0f; // Speed of projectile.
 
-    Vector3 currentPosition; // Store the current position we are at.
-    float distanceTravelled; // Record the distance travelled.
-
+    [Tooltip("Radius to target in which the projectile destroys itself.")]
+    public float collisionRadius = 0.1f;
+    [Tooltip("How much of an arc in the projectile's path.")]
     public float arcFactor = 0.5f; // Higher number means bigger arc.
-    Vector3 origin; // To store where the projectile first spawned.
+    [Tooltip("Should the projectile always point towards target?")]
+    public bool pointAtTarget;
+    private float radiusSq; // Radius squared; optimisation.
+    private Transform target; // Who we are homing at.
+    private Vector3 currentPosition; // Store the current position we are at.
+    private float distanceTravelled; // Record the distance travelled.
+    private Vector3 origin; // To store where the projectile first spawned.
 
     void OnEnable()
     {
         // Pre-compute the value. 
-        radiusSq = radius * radius;
+        radiusSq = collisionRadius * collisionRadius;
         origin = currentPosition = transform.position;
     }
 
@@ -40,7 +44,12 @@ public class Projectile : MonoBehaviour
         // Set our position to <currentPosition>, and add a height offset to it.
         float totalDistance = Vector3.Distance(origin, target.position);
         float heightOffset = arcFactor * totalDistance * Mathf.Sin(distanceTravelled * Mathf.PI / totalDistance);
-        transform.position = currentPosition + new Vector3(0, heightOffset, 0);
+        Vector3 nextPosition = currentPosition + new Vector3(0, heightOffset, 0);
+        
+        if (pointAtTarget)
+            transform.LookAt(nextPosition);
+        
+        transform.position = nextPosition;
 
         // Destroy the projectile if it is close to the target.
         if (direction.sqrMagnitude < radiusSq)

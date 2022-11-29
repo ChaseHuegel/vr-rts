@@ -15,11 +15,11 @@ public class BuildingData : TechBase
 
     [Header("Stats")]
     public int populationSupported;
-    public int maxUnitQueueSize = 12;
+    public int maxUnitQueueSize;
     public int maximumHitPoints;
     public int garrisonCapacity;
     public int armor;
-
+    
     [Header("Additional Visual Prefabs")]
     public GameObject menuPreviewPrefab;
     public GameObject fadedPreviewPrefab;

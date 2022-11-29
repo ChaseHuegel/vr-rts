@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   title: Ballista
   description: 
+  details: 
   queueResearchTime: 10
   worldPrefab: {fileID: 7389846229538309282, guid: 0c80ad80c0d471d4ea1e8af9f9786ec1,
     type: 3}
@@ -33,10 +34,11 @@ MonoBehaviour:
   huntingRate: 0
   lumberjackingRate: 0
   fishingRate: 0
+  collectRate: 0
   maximumHitPoints: 10
   maxCargo: 0
   huntingDamage: 0
   attackRange: 10
-  attackDamage: 3
+  attackDamage: 1
   armor: 1
-  movementSpeed: 0.2
+  movementSpeed: 0.1

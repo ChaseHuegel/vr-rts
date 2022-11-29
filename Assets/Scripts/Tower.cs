@@ -3,30 +3,27 @@ using System.Collections.Generic;
 using Swordfish.Navigation;
 using UnityEngine;
 
-[RequireComponent(typeof(SphereCollider))]
 public class Tower : Structure
 {
-    [Tooltip("Radius in grid cells of the tower's attack.")]
-    public float attackRange = 5;
-
-
-    [Tooltip("Time between attacks.")]
+    [Tooltip("Building attack radius in grid units/cells.")]
+    public int attackRange = 5;
+    [Tooltip("Seconds between attacks.")]
     public float attackSpeed = 3.0f;
     public float attackDamage = 1.0f;
-    public GameObject rangedProjectile;
-    public float projectileSpeed = 5.0f;
-    public Transform projectileOrigin;
-    protected UnitV2 currentTarget;
-    protected float attackTimer;
+
+    [Header("Projectile")]
+    public GameObject projectilePrefab;
+    public Transform projectileOrigin;    
+    protected Body currentTarget;
+    protected float timeSinceLastAttack;
     private SphereCollider attackRangeCollider;
     protected GameObject projectileTarget;
-    private GameObject projectile;
-    private Vector3 projectileTargetPos;
+    
 
     public override void Initialize()
     {
         base.Initialize();
-        attackRangeCollider = GetComponent<SphereCollider>();
+        attackRangeCollider = GetComponentInChildren<SphereCollider>();
         attackRangeCollider.radius = attackRange * World.GetUnit();
 
         if (!projectileOrigin)
@@ -35,19 +32,16 @@ public class Tower : Structure
 
     void Update()
     {
-        if (projectile)
-            LaunchProjectile();
-
         if (!currentTarget)// || targetCount <= 0)
             return;
 
-        if (attackTimer >= attackSpeed)
+        if (timeSinceLastAttack >= attackSpeed)
         {
             Attack();
-            attackTimer = 0.0f;
+            timeSinceLastAttack = 0.0f;
         }
 
-        attackTimer += Time.deltaTime;
+        timeSinceLastAttack += Time.deltaTime;
 
     }
 
@@ -60,10 +54,8 @@ public class Tower : Structure
         {
             currentTarget.Damage(attackDamage, Swordfish.AttributeChangeCause.ATTACKED, this, Swordfish.DamageType.PIERCING);
             projectileTarget = currentTarget.gameObject;
-            LaunchProjectile();
+            TrySpawnProjectile();
         }
-
-
     }
 
     void TryAcquireNewTarget()
@@ -114,7 +106,21 @@ public class Tower : Structure
         }
     }
 
-    public virtual void LaunchProjectile()
+    public virtual void TrySpawnProjectile()
+    {
+        if (projectilePrefab && projectileTarget)
+            Projectile.Spawn(projectilePrefab, projectileOrigin.position, Quaternion.identity, projectileTarget.transform);
+    }
+
+
+    #region OldCode
+    /* 
+    private GameObject projectile;
+    private Vector3 projectileTargetPos;
+    public GameObject rangedProjectile;
+    public float projectileSpeed = 5.0f;    
+
+    public virtual void TryLaunchProjectile()
     {
         if (!projectile)
         {
@@ -151,5 +157,7 @@ public class Tower : Structure
             // If not, then we just keep moving forward
             projectile.transform.Translate(Vector3.forward * (projectileSpeed * Time.deltaTime));
         }
-    }
+    } 
+    */
+    #endregion
 }
