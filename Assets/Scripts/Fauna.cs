@@ -99,12 +99,12 @@ public class Fauna : ActorV2
             if (isRunnng)
             {
                 Attributes.Get(AttributeType.SPEED).Value = runSpeed;
-                Animator.SetInteger("ActorAnimationState", (int)FaunaActions.RUN);
+                SetAnimatorsInteger("ActorAnimationState", (int)FaunaActions.RUN);
             }
             else
             {
                 Attributes.Get(AttributeType.SPEED).Value = normalMovementSpeed;
-                Animator.SetInteger("ActorAnimationState", (int)FaunaActions.WALK);
+                SetAnimatorsInteger("ActorAnimationState", (int)FaunaActions.WALK);
             }
         }
         // Idle action
@@ -113,11 +113,11 @@ public class Fauna : ActorV2
             float idleAction = Random.Range(0.0f, 1.0f);
 
             if (idleAction < eatActionChance)
-                Animator.SetTrigger("Eat");
+                SetAnimatorsTrigger("Eat");
             else if (idleAction < lookAroundActionChance)
-                Animator.SetTrigger("LookAround");
+                SetAnimatorsTrigger("LookAround");
             else
-                Animator.SetInteger("ActorAnimationState", (int)FaunaActions.IDLE);
+                SetAnimatorsInteger("ActorAnimationState", (int)FaunaActions.IDLE);
         }
 
         newDecisionTimer += Time.deltaTime;
@@ -132,7 +132,7 @@ public class Fauna : ActorV2
             resource.enabled = true;
             Frozen = true;
             deadFaunaObject.SetActive(true);
-            Animator.enabled = false;
+            DisableAnimators();
             Destroy(liveFaunaObject);
             Destroy(this);
         }
@@ -147,7 +147,7 @@ public class Fauna : ActorV2
         // Non-movement action
         if (action >= moveActionChance)
         {
-            Animator.SetInteger("ActorAnimationState", (int)FaunaActions.IDLE);
+            SetAnimatorsInteger("ActorAnimationState", (int)FaunaActions.IDLE);
             actionTime = Random.Range(1.0f, 3.0f);
         }
         else

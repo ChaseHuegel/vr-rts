@@ -433,11 +433,10 @@ MonoBehaviour:
   BoundingDimensions: {x: 1, y: 1}
   BoundingOrigin: {x: 0, y: 0}
   SkinRendererTargets:
+  - {fileID: 2547815576877561223}
   - {fileID: 2547815576877561217}
-  - {fileID: 2547815576877561231}
-  - {fileID: 2547815576877561229}
   m_Layers: 1
-  unitData: {fileID: 11400000, guid: afd0772933e012145b9e5ca2aa679480, type: 2}
+  unitData: {fileID: 11400000, guid: 5916dbccc9db8a449af261ab7fba44db, type: 2}
 --- !u!1001 &2547815576863997479
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -521,6 +520,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9500000, guid: 2dfc7e76293c2fe4393a1903174931ea, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 27520aa6426af55488175cd4d470cf66, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2dfc7e76293c2fe4393a1903174931ea, type: 3}
 --- !u!4 &2547815576863597711 stripped
@@ -535,15 +538,9 @@ SkinnedMeshRenderer:
     type: 3}
   m_PrefabInstance: {fileID: 2547815576863997479}
   m_PrefabAsset: {fileID: 0}
---- !u!137 &2547815576877561229 stripped
+--- !u!137 &2547815576877561223 stripped
 SkinnedMeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 13700010, guid: 2dfc7e76293c2fe4393a1903174931ea,
-    type: 3}
-  m_PrefabInstance: {fileID: 2547815576863997479}
-  m_PrefabAsset: {fileID: 0}
---- !u!137 &2547815576877561231 stripped
-SkinnedMeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 13700008, guid: 2dfc7e76293c2fe4393a1903174931ea,
+  m_CorrespondingSourceObject: {fileID: 13700000, guid: 2dfc7e76293c2fe4393a1903174931ea,
     type: 3}
   m_PrefabInstance: {fileID: 2547815576863997479}
   m_PrefabAsset: {fileID: 0}

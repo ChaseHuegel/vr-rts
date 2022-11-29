@@ -6,7 +6,8 @@ using UnityEngine;
 public abstract class UnitV2 : ActorV2
 {
     public abstract bool IsCivilian { get; }
-
+    public GameObject projectilePrefab;
+    public Transform projectileOrigin;
     public UnitData unitData;
 
     public bool AttackingTarget
@@ -135,7 +136,10 @@ public abstract class UnitV2 : ActorV2
         Target = null;
 
         ActorAnimationState deathState = Random.Range(1, 100) < 50 ? ActorAnimationState.DYING : ActorAnimationState.DYING2;
-        Animator?.SetInteger("ActorAnimationState", (int)deathState);
+
+
+        SetAnimatorsInteger("ActorAnimationState", (int)deathState);
+
         AudioSource.PlayOneShot(GameMaster.GetAudio("unit_death").GetClip());
         Destroy(gameObject, GameMaster.Instance.unitCorpseDecayTime);
     }
@@ -188,7 +192,13 @@ public abstract class UnitV2 : ActorV2
     {
         // Debug.Log("Attacking for " + Attributes.ValueOf(AttributeType.DAMAGE).ToString());
         // TODO: this is where we want to handle weapons, damage types, etc.
-        victim.Damage(Attributes.ValueOf(AttributeType.DAMAGE), AttributeChangeCause.ATTACKED, this, DamageType.NONE);
+        victim.Damage(Attributes.ValueOf(AttributeType.DAMAGE), AttributeChangeCause.ATTACKED, this, DamageType.NONE);        
+    }
+
+    public void SpawnAndLaunchProjectile()
+    {
+        if (projectilePrefab && Target)
+            Projectile.Spawn(projectilePrefab, projectileOrigin.position, Quaternion.identity, Target.transform);
     }
 
     protected virtual void ProcessHealRoutine(float deltaTime)

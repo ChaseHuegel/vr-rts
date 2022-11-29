@@ -71,6 +71,9 @@ public class BuildMenu : MonoBehaviour
 
     private void CleanupEvents()
     {
+        if (buildMenuTabs == null)
+            return;
+            
         foreach (BuildMenuTab tab in buildMenuTabs)
         {
             foreach (BuildMenuSlot slot in tab.Slots)

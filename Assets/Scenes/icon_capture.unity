@@ -152,8 +152,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65863d4773aa047438bb48d7fb25b215, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  showGizmos: 1
-  showDebugGrid: 1
+  showGizmos: 0
+  showDebugGrid: 0
   gridSize: 10
   gridUnit: 1
 --- !u!4 &331695750
@@ -401,7 +401,7 @@ Camera:
   far clip plane: 1000
   field of view: 49
   orthographic: 1
-  orthographic size: 0.14
+  orthographic size: 0.25
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -425,7 +425,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1949761602}
   m_LocalRotation: {x: 0.08840504, y: -0.8907355, z: 0.19685079, w: 0.40003082}
-  m_LocalPosition: {x: 0.57090557, y: 0.5290308, z: 0.58288395}
+  m_LocalPosition: {x: 0.6153, y: 0.565, z: 0.5572}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -444,8 +444,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68b915cc8c7ddfe48b4d319ace334443, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneObjects:
-  - {fileID: 0}
+  sceneObjects: []
   pathFolder: Textures\queue icons
   suffix: _queue_icon
   size: 512

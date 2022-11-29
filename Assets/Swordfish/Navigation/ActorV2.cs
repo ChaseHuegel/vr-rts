@@ -112,7 +112,7 @@ namespace Swordfish.Navigation
         public DataBinding<bool> IsMovingBinding { get; private set; } = new();
 
         protected AudioSource AudioSource { get; private set; }
-        protected Animator Animator { get; private set; }
+        protected Animator[] Animators { get; private set; }
 
         [SerializeField]
         private NavigationLayers m_Layers = NavigationLayers.DEFAULT;
@@ -128,7 +128,7 @@ namespace Swordfish.Navigation
             AllActors.Add(this);
 
             AudioSource = GetComponent<AudioSource>();
-            Animator = GetComponentInChildren<Animator>();
+            Animators = GetComponentsInChildren<Animator>();
 
             BehaviorTree = BehaviorTreeFactory();
         }
@@ -185,6 +185,24 @@ namespace Swordfish.Navigation
             TargetChangedRecently = false;
             OrderChangedRecently = false;
             PositionChangedRecently = false;
+        }
+
+        protected void SetAnimatorsInteger(string name, int value)
+        {
+            foreach (Animator animator in Animators)
+                animator.SetInteger(name, value);
+        }
+
+        protected void DisableAnimators()
+        {
+            foreach (Animator animator in Animators)
+                animator.enabled = false;
+        }
+
+        protected void SetAnimatorsTrigger(string name)
+        {
+            foreach (Animator animator in Animators)
+                animator.SetTrigger(name);
         }
 
         public abstract void IssueTargetedOrder(Body body);
@@ -286,7 +304,7 @@ namespace Swordfish.Navigation
 
         protected virtual void OnStateUpdate()
         {
-            Animator?.SetInteger("ActorAnimationState", (int)State);
+            SetAnimatorsInteger("ActorAnimationState", (int)State);
         }
 
         protected virtual void OnFrozenChanged(object sender, DataChangedEventArgs<bool> e)

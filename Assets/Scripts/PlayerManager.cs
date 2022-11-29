@@ -50,7 +50,8 @@ public class PlayerManager : MonoBehaviour
     public bool autoHideHandMenuEnabled;
     public float handMenuTrackingSensitivity = 0.5f;
 
-    public GameObject mainMenuObject;
+    public GameObject mainMenuPrefab;
+    private GameObject mainMenuObject;
 
     //=========================================================================
     [Header("Attachment/Tracking Points")]
@@ -59,11 +60,6 @@ public class PlayerManager : MonoBehaviour
     public Transform lHandAttachmentPoint;
     public Transform lHandTrackingPoint;
     public GameObject autohideHandMenuObject;
-
-    //=========================================================================
-    // [Header("Information Displays")]
-    // public WristDisplay WristDisplay;
-    // public WristDisplay FaceDisplay;
 
     //=========================================================================
     [Header("Prefabs")]
@@ -193,7 +189,10 @@ public class PlayerManager : MonoBehaviour
 
         faction.techTree.RefreshNodes();
 
-        // Activate the menu so it can catch startup resource values.
+        // Initialize and activate the menu so it can catch startup resource values. Resource
+        // displays on the main menu hook into events on PlayerManager so we initialize
+        // resources after the menu has been loaded.
+        mainMenuObject = Instantiate(mainMenuPrefab, Vector3.zero, Quaternion.identity);
         mainMenuObject.SetActive(true);
 
         InitializeResources();

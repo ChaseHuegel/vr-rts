@@ -27,50 +27,49 @@ public class InteractionPointer : MonoBehaviour
     public SteamVR_Action_Single squeezeAction = SteamVR_Input.GetAction<SteamVR_Action_Single>("Squeeze");
     public SteamVR_Action_Boolean grabGripAction = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("GrabGrip");
     public SteamVR_Action_Boolean showMenuAction = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("ToggleMainMenu");
+  
     //=========================================================================
-    public GameObject pointerAttachmentPoint;
+    [Header("Layer Masks")]
     public LayerMask traceLayerMask;
     public LayerMask allowedPlacementLayers;
     public LayerMask unitSelectionMask;
-    public Material pointVisibleMaterial;
+
+    //=========================================================================
+    [Header("Pointer")]
     public Transform pointerReticle;
     public Color pointerValidColor;
     public Color pointerInvalidColor;
     public float arcDistance = 10.0f;   
 
     //=========================================================================
-    public Material buildingPlacementInvalidMat;
-    private Material buildingPlacementCachedMat;
-    private LineRenderer pointerLineRenderer;
-    private LineRenderer[] unitSelectionLineRenderers;
-    private Transform pointerStartTransform;
+    [Header("Teleport")]
     public float teleportFadeTime = 0.1f;
-    public Hand pointerHand = null;
-    private Player player = null;
-    private TeleportArc teleportArc = null;
-    private bool showPointerArc = false;
-    private PointerInteractable currentPointerInteractable;
+
+    //=========================================================================
+    [Header("Misc")]
+    public Hand handReticle;
+    public bool useHandAsReticle;
+    public GameObject wayPointReticle;
+    public GameObject setRallyPointPrefab;
+
     public QueueUnitButton PointedAtQueueButton { get => currentPointerInteractable.GetComponentInChildren<QueueUnitButton>(); }
     private SpawnQueue spawnQueue;
+    private Hand pointerHand = null;
     private List<ActorV2> selectedActors;
     private Vector3 pointedAtPosition;
     private Vector3 prevPointedAtPosition;
     private float pointerShowStartTime = 0.0f;
     private float pointerHideStartTime = 0.0f;
-    private float fullTintAlpha;
     private AllowTeleportWhileAttachedToHand allowTeleportWhileAttached = null;
-    public Hand handReticle;
-    public bool useHandAsReticle;
+    
     private bool teleporting = false;
     private float currentFadeTime = 0.0f;
-    public GameObject wayPointReticle;
+    
     private Resource pointedAtResource;
-    private Vector3 rallyWaypointArcStartPosition;
-    public GameObject setRallyPointPrefab;
+    private Vector3 rallyWaypointArcStartPosition;    
     private float triggerAddToSelectionThreshold = 0.85f;
     private GripPan gripPan;
     private GameObject hintObject;
-
     // Cache value
     private int maxUnitSelectionCount;
 
@@ -87,12 +86,14 @@ public class InteractionPointer : MonoBehaviour
 
     //=========================================================================
     [Header("Building Placement")]
+    public Material buildingPlacementInvalidMat;    
     public float buildingPlacementRotationIncrement = 90.0f;
     public float wallPlacementRotationIncrement = 45f;
+
     private GameObject bldngPreview;
     private float lastBuildingRotation;
-
     private BuildingData curBldngData;
+    private Material buildingPlacementCachedMat;
 
     //=========================================================================
     // Wall Related
@@ -110,7 +111,13 @@ public class InteractionPointer : MonoBehaviour
     private bool isVerticalPlacementModeActive = true; 
     public GameObject verticalLaserPrefab;
     private GameObject vertLaserObject;
-    public GameObject verticalLaserAnchorPoint;
+    
+    private TeleportArc teleportArc = null;
+    private bool showPointerArc = false;
+    private PointerInteractable currentPointerInteractable;
+    private LineRenderer pointerLineRenderer;
+    private LineRenderer[] unitSelectionLineRenderers;
+    private Transform pointerStartTransform;
 
     //=========================================================================
     private static InteractionPointer _instance;
@@ -135,9 +142,6 @@ public class InteractionPointer : MonoBehaviour
 
 #if UNITY_URP
 		fullTintAlpha = 0.5f;
-#else
-        int tintColorID = Shader.PropertyToID("_TintColor");
-        fullTintAlpha = pointVisibleMaterial.GetColor(tintColorID).a;
 #endif
         teleportArc = GetComponent<TeleportArc>();
         teleportArc.traceLayerMask = traceLayerMask;        
@@ -159,8 +163,7 @@ public class InteractionPointer : MonoBehaviour
         
         InitializeUnitSelectionLineRenderers();
 
-        player = Valve.VR.InteractionSystem.Player.instance;
-        if (player == null)
+        if (Player.instance == null)
         {
             Debug.LogError("<b>[SteamVR Interaction]</b> InteractionPointer: No Player instance found in map.", this);
             Destroy(this.gameObject);
@@ -172,7 +175,7 @@ public class InteractionPointer : MonoBehaviour
 
         // Initialize reticle
         //ShowPointer();
-        pointerStartTransform = pointerAttachmentPoint.transform;
+        pointerStartTransform = Player.instance.rightHand.panTransform;// pointerAttachmentPoint.transform;
     }
 
     // Setup LineRenderers for unit selection
@@ -194,7 +197,7 @@ public class InteractionPointer : MonoBehaviour
         RaycastHit hit;
 
         // Ray from anchor
-        if (Physics.Raycast(verticalLaserAnchorPoint.transform.position, Vector3.down, out hit, 100, allowedPlacementLayers))
+        if (Physics.Raycast(Player.instance.rightHand.panTransform.position, Vector3.down, out hit, 100, allowedPlacementLayers))
         {
             PointLaser(hit);
         }
@@ -209,7 +212,7 @@ public class InteractionPointer : MonoBehaviour
         // Position laser between controller and point where raycast hits. Use Lerp because you can
         // give it two positions and the % it should travel. If you pass it .5f, which is 50%
         // you get the precise middle point.
-        vertLaserObject.transform.position = Vector3.Lerp(verticalLaserAnchorPoint.transform.position, hit.point, .5f);
+        vertLaserObject.transform.position = Vector3.Lerp(Player.instance.rightHand.panTransform.position, hit.point, .5f);
 
         // Point the laser at position where raycast hits.
         vertLaserObject.transform.LookAt(hit.point);
@@ -235,7 +238,7 @@ public class InteractionPointer : MonoBehaviour
     {
         UpdatePointer();
 
-        foreach (Hand hand in player.hands)
+        foreach (Hand hand in Player.instance.hands)
         {
             // Breaks unit selection mode when build menu is active
             // if (isInUnitSelectionMode == true && hand.currentAttachedObject != null &&
@@ -911,7 +914,7 @@ public class InteractionPointer : MonoBehaviour
         Vector3 pointerDir = pointerStartTransform.forward;
         bool hitSomething = false;
         bool hitPointValid = false;
-        Vector3 playerFeetOffset = player.trackingOriginTransform.position - player.feetPositionGuess;
+        Vector3 playerFeetOffset = Player.instance.trackingOriginTransform.position - Player.instance.feetPositionGuess;
         Vector3 arcVelocity = pointerDir * arcDistance;
         PointerInteractable hitPointerInteractable = null;
         
@@ -1023,14 +1026,14 @@ public class InteractionPointer : MonoBehaviour
             }
 
             // TODO: Integrate this into input loop 
-            if (grabGripAction.GetState(player.rightHand.handType))
+            if (grabGripAction.GetState(Player.instance.rightHand.handType))
             //if (squeezeAction.GetAxis(SteamVR_Input_Sources.RightHand) > 0.0f)
             // if (player.rightHand.skeleton.fingerCurls[2] >= 0.75f && 
             //     player.rightHand.skeleton.fingerCurls[3] >= 0.75f &&
             //     player.rightHand.skeleton.fingerCurls[4] >= 0.75f)
             {
                 isVerticalPlacementModeActive = true;
-                gripPan.DisablePanning(player.rightHand);
+                gripPan.DisablePanning(Player.instance.rightHand);
             }
             else
             {
@@ -1039,7 +1042,7 @@ public class InteractionPointer : MonoBehaviour
                     isVerticalPlacementModeActive = false;
                     bldngPreview.transform.localPosition = Vector3.zero;
                     HideVerticalLaser();
-                    gripPan.EnablePanning(player.rightHand);
+                    gripPan.EnablePanning(Player.instance.rightHand);
                 }
             }
 
@@ -1295,13 +1298,13 @@ public class InteractionPointer : MonoBehaviour
 
         // if ( teleportingToMarker.ShouldMovePlayer() )
         // {
-        Vector3 playerFeetOffset = player.trackingOriginTransform.position - player.feetPositionGuess;
-        player.trackingOriginTransform.position = teleportPosition + playerFeetOffset;
+        Vector3 playerFeetOffset = Player.instance.trackingOriginTransform.position - Player.instance.feetPositionGuess;
+        Player.instance.trackingOriginTransform.position = teleportPosition + playerFeetOffset;
 
-        if (player.leftHand.currentAttachedObjectInfo.HasValue)
-            player.leftHand.ResetAttachedTransform(player.leftHand.currentAttachedObjectInfo.Value);
-        if (player.rightHand.currentAttachedObjectInfo.HasValue)
-            player.rightHand.ResetAttachedTransform(player.rightHand.currentAttachedObjectInfo.Value);
+        if (Player.instance.leftHand.currentAttachedObjectInfo.HasValue)
+            Player.instance.leftHand.ResetAttachedTransform(Player.instance.leftHand.currentAttachedObjectInfo.Value);
+        if (Player.instance.rightHand.currentAttachedObjectInfo.HasValue)
+            Player.instance.rightHand.ResetAttachedTransform(Player.instance.rightHand.currentAttachedObjectInfo.Value);
         // }
         // else
         // {
@@ -1370,7 +1373,7 @@ public class InteractionPointer : MonoBehaviour
 
         }
 
-        pointerStartTransform = pointerAttachmentPoint.transform;
+        pointerStartTransform = Player.instance.rightHand.panTransform; //pointerAttachmentPoint.transform;
 
         // if (pointerHand.currentAttachedObject != null)
         // {

@@ -3,7 +3,7 @@ using Swordfish.Navigation;
 
 public class SoldierV2 : UnitV2
 {
-    public override bool IsCivilian => false;
+    public override bool IsCivilian => false;    
 
     protected override BehaviorTree<ActorV2> BehaviorTreeFactory()
     {

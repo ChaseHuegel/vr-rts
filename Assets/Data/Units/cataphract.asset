@@ -14,16 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   title: Cataphract
   description: 
-  queueResearchTime: 10
+  details: 
+  queueResearchTime: 25
   worldPrefab: {fileID: 8790705423788635401, guid: f1534807f3d5f8343ab4b6626234fdca,
     type: 3}
-  worldButtonMaterial: {fileID: 2100000, guid: 239fe99261d0d024cbf9c2aa5f3bc3ac, type: 2}
-  worldQueueImage: {fileID: 21300000, guid: a3dcfea3979150f4cacf37b7382e6fb0, type: 3}
+  worldButtonMaterial: {fileID: 2100000, guid: 6825a854c2dd9d84896b0620d5f2979e, type: 2}
+  worldQueueImage: {fileID: 21300000, guid: 4e7cb3044d0b03748bb336e813c2bc80, type: 3}
   populationCost: 1
-  goldCost: 0
+  goldCost: 10
   stoneCost: 0
   foodCost: 50
-  woodCost: 0
+  woodCost: 10
   buildRate: 0
   foragingRate: 0
   repairRate: 0
@@ -33,10 +34,11 @@ MonoBehaviour:
   huntingRate: 0
   lumberjackingRate: 0
   fishingRate: 0
-  maximumHitPoints: 30
+  collectRate: 0
+  maximumHitPoints: 75
   maxCargo: 0
   huntingDamage: 0
-  attackRange: 1
-  attackDamage: 8
-  armor: 1
+  attackRange: 2
+  attackDamage: 12
+  armor: 3
   movementSpeed: 0.5

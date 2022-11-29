@@ -6,10 +6,8 @@ using UnityEngine;
 public class Structure : Obstacle
 {
     public readonly static List<Structure> AllStructures = new();
-
-    public BuildingData buildingData;
-    private Damageable damageable;
-    public Damageable AttributeHandler { get { return damageable; } }
+    public static float fireFxStart = 0.35f;
+    public BuildingData buildingData;   
     private AudioSource audioSource;
     private GameObject buildingDamagedFX;
     private ParticleSystem smokeParticleSystem;
@@ -17,10 +15,7 @@ public class Structure : Obstacle
     private GameObject fireGlowParticleSystem;
     private GameObject flamesParticleSystem;
     private GameObject sparksParticleSystem;
-    private PlayerManager playerManager;
-
-    public bool NeedsRepairs() => !damageable.Attributes.Get(AttributeType.HEALTH).IsMax();
-
+    public bool NeedsRepairs() => Attributes.Get(AttributeType.HEALTH).IsMax();
 
     public void Awake()
     {
@@ -44,9 +39,6 @@ public class Structure : Obstacle
         base.Initialize();
         AllStructures.Add(this);
 
-        // TODO: Will need checks here for multiplayer
-        playerManager = PlayerManager.Instance;
-
         // Setup some defaults that tend to get switched in the editor.
         IgnorePanning ignorePanning = GetComponentInChildren<IgnorePanning>();
         if (ignorePanning)
@@ -55,12 +47,9 @@ public class Structure : Obstacle
         if (!buildingData)
             Debug.LogError("BuildingData not set.");
 
-        if (!(damageable = GetComponent<Damageable>()))
-            Debug.LogError("No damageable component on structure!");
-
 
         // Set max health based on building database hit point value.
-        damageable.Attributes.Get(AttributeType.HEALTH).MaxValue = buildingData.maximumHitPoints;
+        Attributes.Get(AttributeType.HEALTH).MaxValue = buildingData.maximumHitPoints;
 
         HookIntoEvents();
 
@@ -68,19 +57,19 @@ public class Structure : Obstacle
         // building damage FX particle systems on buildings that don't need them yet.
         // We can generate them at startup later on to gain real time performance
         // if needed.
-        if (!damageable.Attributes.Get(AttributeType.HEALTH).IsMax())
+        if (!Attributes.Get(AttributeType.HEALTH).IsMax())
             RefreshVisuals();
     }
 
     private void HookIntoEvents()
     {
-        damageable.OnDamageEvent += OnDamage;
+        OnDamageEvent += OnDamage;
         Damageable.OnDeathEvent += OnDeath;
     }
 
     private void CleanupEvents()
     {
-        damageable.OnDamageEvent -= OnDamage;
+        OnDamageEvent -= OnDamage;
         Damageable.OnDeathEvent -= OnDeath;
     }
 
@@ -128,7 +117,7 @@ public class Structure : Obstacle
 
     private void OnDeath(object sender, Damageable.DeathEvent e)
     {
-        if (e.victim == damageable)
+        if (e.victim == this)
         {
             AudioSource.PlayClipAtPoint(GameMaster.GetAudio("building_collapsed").GetClip(), transform.position, 0.5f);
             UnbakeFromGrid();
@@ -138,7 +127,7 @@ public class Structure : Obstacle
 
     public void TryRepair(float count, ActorV2 repairer = null)
     {
-        AttributeHandler.Heal(count, AttributeChangeCause.HEALED, repairer);
+        Heal(count, AttributeChangeCause.HEALED, repairer);
         RefreshVisuals();
     }
 
@@ -147,7 +136,7 @@ public class Structure : Obstacle
         if (!buildingDamagedFX)
             CreateBuildingDamageFX();
 
-        float healthPercent = damageable.Attributes.CalculatePercentOf(AttributeType.HEALTH);
+        float healthPercent = Attributes.CalculatePercentOf(AttributeType.HEALTH);
         if (healthPercent == 1f)
         {
             if (buildingDamagedFX.activeSelf)
@@ -156,43 +145,57 @@ public class Structure : Obstacle
             return;
         }
 
-        var emission = smokeParticleSystem.emission;
-
-        // Base rate desired + percent health missing * modifier.
-        emission.rateOverTime = 4.0f + ((1.0f - healthPercent) * 30);
-
-        float modifier = 2.0f - healthPercent;
-        psMain.startLifetime = new ParticleSystem.MinMaxCurve(2.0f + modifier, 3.0f + modifier);
-
-        modifier = (1.0f - healthPercent) * 0.75f;
-        psMain.startSize = new ParticleSystem.MinMaxCurve(0.0f + modifier, 0.5f + modifier);
-
-        if (healthPercent <= 0.35f)
+        // Start damage fx
+        else if (buildingDamagedFX.activeInHierarchy == false)
         {
-            if (!audioSource.isPlaying)
+            smokeParticleSystem.gameObject.SetActive(true);
+            buildingDamagedFX.SetActive(true);
+        }
+        else if (buildingDamagedFX.activeInHierarchy == true)
+        {
+            var emission = smokeParticleSystem.emission;
+
+            // Base rate desired + percent health missing * modifier.
+            emission.rateOverTime = 4.0f + ((1.0f - healthPercent) * 30);
+
+            float modifier = 2.0f - healthPercent;
+            psMain.startLifetime = new ParticleSystem.MinMaxCurve(2.0f + modifier, 3.0f + modifier);
+
+            modifier = (1.0f - healthPercent) * 0.75f;
+            psMain.startSize = new ParticleSystem.MinMaxCurve(0.0f + modifier, 0.5f + modifier);
+            
+            if (healthPercent <= fireFxStart)
             {
-                audioSource.clip = GameMaster.GetAudio("crackling_fire").GetClip();
-                audioSource.volume = 0.25f;
-                audioSource.Play();
+                if (!audioSource.isPlaying)
+                {
+                    audioSource.clip = GameMaster.GetAudio("crackling_fire").GetClip();
+                    audioSource.volume = 0.25f;
+                    audioSource.Play();
+                }
+                StartFireFX();
             }
-
-            if (!fireGlowParticleSystem.activeSelf) fireGlowParticleSystem.SetActive(true);
-            if (!flamesParticleSystem.activeSelf) flamesParticleSystem.SetActive(true);
-
-            if (sparksParticleSystem.activeSelf) sparksParticleSystem.SetActive(false);
         }
         else
         {
             if (audioSource.isPlaying)
                 audioSource.Stop();
 
-            if (fireGlowParticleSystem.activeSelf) fireGlowParticleSystem.SetActive(false);
-            if (flamesParticleSystem.activeSelf) flamesParticleSystem.SetActive(false);
-            if (sparksParticleSystem.activeSelf) sparksParticleSystem.SetActive(false);
+            StopFireFX();            
         }
+    }
 
-        if (!smokeParticleSystem.gameObject.activeSelf) smokeParticleSystem.gameObject.SetActive(true);
-        if (!buildingDamagedFX.activeSelf) buildingDamagedFX.SetActive(true);
+    private void StartFireFX()
+    {
+        fireGlowParticleSystem.SetActive(true);
+        flamesParticleSystem.SetActive(true);
+        sparksParticleSystem.SetActive(true);
+    }
+
+    private void StopFireFX()
+    {
+        fireGlowParticleSystem.SetActive(false);
+        flamesParticleSystem.SetActive(false);
+        sparksParticleSystem.SetActive(false);
     }
 
     public bool CanDropOff(ResourceGatheringType type)
