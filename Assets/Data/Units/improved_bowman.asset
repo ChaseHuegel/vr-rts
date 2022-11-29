@@ -14,10 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   title: Improved Bowman
   description: 
+  details: 
   queueResearchTime: 10
   worldPrefab: {fileID: 4075572290243062562, guid: 72fb866ec1c97304799e679439d5c30e,
     type: 3}
-  worldButtonMaterial: {fileID: 2100000, guid: d195f01412d39894f8643c32ee47292d, type: 2}
+  worldButtonTexture: {fileID: 2800000, guid: de090331f84cffe46b8d7766e3a613a2, type: 3}
   worldQueueImage: {fileID: 21300000, guid: 9def20c989e534647b098ab68cb87f9c, type: 3}
   populationCost: 1
   goldCost: 0
@@ -33,6 +34,7 @@ MonoBehaviour:
   huntingRate: 0
   lumberjackingRate: 0
   fishingRate: 0
+  collectRate: 0
   maximumHitPoints: 20
   maxCargo: 0
   huntingDamage: 0

@@ -1076,8 +1076,12 @@ MonoBehaviour:
   BoundingDimensions: {x: 1, y: 1}
   BoundingOrigin: {x: 0, y: 0}
   SkinRendererTargets:
-  - {fileID: 1470075884396507662}
+  - {fileID: 1470075884401615890}
+  - {fileID: 1470075884401616116}
+  - {fileID: 1470075884396507736}
   m_Layers: 1
+  projectilePrefab: {fileID: 0}
+  projectileOrigin: {fileID: 0}
   unitData: {fileID: 11400000, guid: ccc8f48f7e1aca94d8063fa105b5a605, type: 2}
 --- !u!1 &5222534400114555256
 GameObject:
@@ -1904,7 +1908,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100844, guid: 02ded044b8e0963439276550f50be6f9, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 100846, guid: 02ded044b8e0963439276550f50be6f9, type: 3}
       propertyPath: m_IsActive
@@ -1980,7 +1984,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100886, guid: 02ded044b8e0963439276550f50be6f9, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 100888, guid: 02ded044b8e0963439276550f50be6f9, type: 3}
       propertyPath: m_IsActive
@@ -2084,7 +2088,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100938, guid: 02ded044b8e0963439276550f50be6f9, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 100940, guid: 02ded044b8e0963439276550f50be6f9, type: 3}
       propertyPath: m_IsActive
@@ -2188,7 +2192,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100990, guid: 02ded044b8e0963439276550f50be6f9, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 100992, guid: 02ded044b8e0963439276550f50be6f9, type: 3}
       propertyPath: m_IsActive
@@ -2472,9 +2476,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 02ded044b8e0963439276550f50be6f9, type: 3}
---- !u!137 &1470075884396507662 stripped
+--- !u!137 &1470075884396507736 stripped
 SkinnedMeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 13700296, guid: 02ded044b8e0963439276550f50be6f9,
+  m_CorrespondingSourceObject: {fileID: 13700254, guid: 02ded044b8e0963439276550f50be6f9,
     type: 3}
   m_PrefabInstance: {fileID: 1470075884399722182}
   m_PrefabAsset: {fileID: 0}
@@ -2499,6 +2503,18 @@ MonoBehaviour:
 --- !u!4 &1470075884399846880 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400166, guid: 02ded044b8e0963439276550f50be6f9,
+    type: 3}
+  m_PrefabInstance: {fileID: 1470075884399722182}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &1470075884401615890 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 2300628, guid: 02ded044b8e0963439276550f50be6f9,
+    type: 3}
+  m_PrefabInstance: {fileID: 1470075884399722182}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &1470075884401616116 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 2300466, guid: 02ded044b8e0963439276550f50be6f9,
     type: 3}
   m_PrefabInstance: {fileID: 1470075884399722182}
   m_PrefabAsset: {fileID: 0}

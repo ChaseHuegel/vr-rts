@@ -18,8 +18,8 @@ public class TechBase : ScriptableObject
     // TODO: Optimize - Not used by all derived class, could be moved later on to save on memory.
     public GameObject worldPrefab; 
 
-    [Tooltip("The cube map material used to skin the buttons in the interaction panels for buildings.")]
-    public Material worldButtonMaterial;
+    [Tooltip("The texture used to skin the buttons in the interaction panels for buildings.")]
+    public Texture worldButtonTexture;
 
     [Tooltip("The image used in the queue list display of building interaction panels.")]
     public Sprite worldQueueImage;
@@ -31,7 +31,7 @@ public class TechBase : ScriptableObject
     public int stoneCost;
     public int foodCost;
     public int woodCost;
-    
+        
     public virtual void Execute(SpawnQueue spawnQueue)
     {
         PlayerManager.Instance.ProcessTechQueueComplete(this);

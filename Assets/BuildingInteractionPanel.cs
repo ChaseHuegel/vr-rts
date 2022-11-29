@@ -68,7 +68,7 @@ public class BuildingInteractionPanel : MonoBehaviour
     public Transform unitSpawnPoint;
     public Transform unitRallyWaypoint;
 
-    [Header("Queue Menu Button Settings")]
+    [Header("Queue Menu Button Settings")]    
     private List<TechBase> queueTechButtons;
     private float buttonSize = 0.25f;
     private float spaceBetweenButtons = 0.025f;
@@ -591,7 +591,9 @@ public class BuildingInteractionPanel : MonoBehaviour
         buttonMovingPart.name = "_moving_part";
         buttonMovingPart.transform.localPosition = Vector3.zero;
         buttonMovingPart.transform.localRotation = Quaternion.identity;
-        buttonMovingPart.transform.GetComponent<MeshRenderer>().sharedMaterial = tech.worldButtonMaterial;
+        Material mat = new Material(Shader.Find("Unlit/Texture"));
+        mat.SetTexture("_MainTex", tech.worldButtonTexture);
+        buttonMovingPart.transform.GetComponent<MeshRenderer>().sharedMaterial = mat;
 
         hoverButton.movingPart = buttonMovingPart.transform;
         button.transform.localRotation = Quaternion.identity;

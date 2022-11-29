@@ -14,9 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   title: Leather Armor
   description: +2 Archer Armor
+  details: 
   queueResearchTime: 5
   worldPrefab: {fileID: 0}
-  worldButtonMaterial: {fileID: 2100000, guid: 3fd104b70279f22409eff235b9ccddb3, type: 2}
+  worldButtonTexture: {fileID: 2800000, guid: 6e92f278a080d2743aea45422932faad, type: 3}
   worldQueueImage: {fileID: 21300000, guid: 7f5d93b6c238dfc4b8876b3f0085fbe9, type: 3}
   populationCost: 0
   goldCost: 0
@@ -28,4 +29,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 2412ce796068f7c4fa1be89612fcefb9, type: 2}
   attributeBonuses:
   - targetAttribute: 32
+    modifier: 0
     amount: 2

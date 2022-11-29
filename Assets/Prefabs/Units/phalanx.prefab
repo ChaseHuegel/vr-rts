@@ -1501,8 +1501,12 @@ MonoBehaviour:
   BoundingDimensions: {x: 1, y: 1}
   BoundingOrigin: {x: 0, y: 0}
   SkinRendererTargets:
-  - {fileID: 814831195917867192}
+  - {fileID: 814831195914587810}
+  - {fileID: 814831195914587726}
+  - {fileID: 814831195917867242}
   m_Layers: 1
+  projectilePrefab: {fileID: 0}
+  projectileOrigin: {fileID: 0}
   unitData: {fileID: 11400000, guid: a39030fe1479d0942a744e84cf4e65f3, type: 2}
 --- !u!1 &7509078048041666535
 GameObject:
@@ -2036,7 +2040,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100840, guid: 02ded044b8e0963439276550f50be6f9, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 100842, guid: 02ded044b8e0963439276550f50be6f9, type: 3}
       propertyPath: m_IsActive
@@ -2120,7 +2124,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100886, guid: 02ded044b8e0963439276550f50be6f9, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 100888, guid: 02ded044b8e0963439276550f50be6f9, type: 3}
       propertyPath: m_IsActive
@@ -2224,7 +2228,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100938, guid: 02ded044b8e0963439276550f50be6f9, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 100940, guid: 02ded044b8e0963439276550f50be6f9, type: 3}
       propertyPath: m_IsActive
@@ -2324,7 +2328,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100988, guid: 02ded044b8e0963439276550f50be6f9, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 100990, guid: 02ded044b8e0963439276550f50be6f9, type: 3}
       propertyPath: m_IsActive
@@ -2636,9 +2640,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ecf569eaf4f58f43bb8f6733152f817, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!137 &814831195917867192 stripped
+--- !u!23 &814831195914587726 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 2300478, guid: 02ded044b8e0963439276550f50be6f9,
+    type: 3}
+  m_PrefabInstance: {fileID: 814831195912557680}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &814831195914587810 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 2300626, guid: 02ded044b8e0963439276550f50be6f9,
+    type: 3}
+  m_PrefabInstance: {fileID: 814831195912557680}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &814831195917867242 stripped
 SkinnedMeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 13700296, guid: 02ded044b8e0963439276550f50be6f9,
+  m_CorrespondingSourceObject: {fileID: 13700250, guid: 02ded044b8e0963439276550f50be6f9,
     type: 3}
   m_PrefabInstance: {fileID: 814831195912557680}
   m_PrefabAsset: {fileID: 0}

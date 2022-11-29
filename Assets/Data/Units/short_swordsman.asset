@@ -14,11 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   title: Short Swordsman
   description: 
+  details: 
   queueResearchTime: 10
   worldPrefab: {fileID: 7761721374506538840, guid: a75aa5d36b8bcfc4096b4e828786b768,
     type: 3}
-  worldButtonMaterial: {fileID: 2100000, guid: 554144af16d911445a6297b2e9a8d1f3, type: 2}
-  worldQueueImage: {fileID: 21300000, guid: 3bd23174a2cf6d348b00e1563fa54090, type: 3}
+  worldButtonTexture: {fileID: 2800000, guid: a372e2d09ce1e6a459ded08f6c03d4d9, type: 3}
+  worldQueueImage: {fileID: 21300000, guid: 1da78c3f39c220646a5ff69209a5a535, type: 3}
   populationCost: 1
   goldCost: 0
   stoneCost: 0
@@ -33,6 +34,7 @@ MonoBehaviour:
   huntingRate: 0
   lumberjackingRate: 0
   fishingRate: 0
+  collectRate: 0
   maximumHitPoints: 30
   maxCargo: 0
   huntingDamage: 0

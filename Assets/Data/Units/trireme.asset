@@ -14,11 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   title: Trireme
   description: 
+  details: 
   queueResearchTime: 10
   worldPrefab: {fileID: 4472713310848627018, guid: d76130658b0ed6b43af805038de7812e,
     type: 3}
-  worldButtonMaterial: {fileID: 2100000, guid: 3285463c3ee416545802b6a25bc4f7fc, type: 2}
-  worldQueueImage: {fileID: 21300000, guid: 374f3808686a0c245af1531d4c7cc4a1, type: 3}
+  worldButtonTexture: {fileID: 2800000, guid: 3dc0218715604964dae61c466cebbf47, type: 3}
+  worldQueueImage: {fileID: 21300000, guid: 970b954d18d2fe2409565aefa3395e33, type: 3}
   populationCost: 1
   goldCost: 0
   stoneCost: 0
@@ -33,6 +34,7 @@ MonoBehaviour:
   huntingRate: 0
   lumberjackingRate: 0
   fishingRate: 0.5
+  collectRate: 0
   maximumHitPoints: 50
   maxCargo: 10
   huntingDamage: 0

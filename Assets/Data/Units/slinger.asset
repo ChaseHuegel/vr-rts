@@ -14,11 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   title: Slinger
   description: 
+  details: 
   queueResearchTime: 10
   worldPrefab: {fileID: 7890394742048736874, guid: f61b9dedc6dff6c4bbc8380c1a9fbdd4,
     type: 3}
-  worldButtonMaterial: {fileID: 2100000, guid: 1ccb369349e79524ca9e50dfd2895cf8, type: 2}
-  worldQueueImage: {fileID: 21300000, guid: c2417937c0c90fd43b5af4234beb81d7, type: 3}
+  worldButtonTexture: {fileID: 2800000, guid: e0570a3752c2abb4b8ec5f19671d618d, type: 3}
+  worldQueueImage: {fileID: 21300000, guid: e21b1d1974efab249bd8681130231b39, type: 3}
   populationCost: 1
   goldCost: 0
   stoneCost: 0
@@ -33,6 +34,7 @@ MonoBehaviour:
   huntingRate: 0
   lumberjackingRate: 0
   fishingRate: 0
+  collectRate: 0
   maximumHitPoints: 10
   maxCargo: 0
   huntingDamage: 0

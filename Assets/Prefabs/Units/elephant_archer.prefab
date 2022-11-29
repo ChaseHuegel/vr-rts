@@ -2271,8 +2271,8 @@ Transform:
   m_GameObject: {fileID: 991360490402752995}
   m_LocalRotation: {x: 0.70680565, y: 0.018705048, z: 0.018703505, w: 0.7069131}
   m_LocalPosition: {x: -0.08706444, y: -0.40386257, z: -0.0000013188359}
-  m_LocalScale: {x: 1.0000001, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.64, y: 0.64, z: 0.64}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 991360490403247117}
   m_Father: {fileID: 5740977489495661651}
@@ -3440,6 +3440,8 @@ MonoBehaviour:
   SkinRendererTargets:
   - {fileID: 5740977489483663935}
   m_Layers: 1
+  projectilePrefab: {fileID: 0}
+  projectileOrigin: {fileID: 0}
   unitData: {fileID: 11400000, guid: 162521c630160df42a00549969190f36, type: 2}
 --- !u!1 &3313112443738593365
 GameObject:

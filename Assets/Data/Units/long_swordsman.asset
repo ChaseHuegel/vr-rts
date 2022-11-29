@@ -14,11 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   title: Long Swordsman
   description: 
+  details: 
   queueResearchTime: 10
   worldPrefab: {fileID: 6548918178678704764, guid: 7ecc32958b78d9b47a0ffca0f8998470,
     type: 3}
-  worldButtonMaterial: {fileID: 2100000, guid: 554144af16d911445a6297b2e9a8d1f3, type: 2}
-  worldQueueImage: {fileID: 21300000, guid: 3bd23174a2cf6d348b00e1563fa54090, type: 3}
+  worldButtonTexture: {fileID: 2800000, guid: 6d67b8d66caa2df41bacb06dcb4a12de, type: 3}
+  worldQueueImage: {fileID: 21300000, guid: a8de0d313aac339458f572715a68d328, type: 3}
   populationCost: 1
   goldCost: 0
   stoneCost: 0
@@ -33,6 +34,7 @@ MonoBehaviour:
   huntingRate: 0
   lumberjackingRate: 0
   fishingRate: 0
+  collectRate: 0
   maximumHitPoints: 30
   maxCargo: 0
   huntingDamage: 0

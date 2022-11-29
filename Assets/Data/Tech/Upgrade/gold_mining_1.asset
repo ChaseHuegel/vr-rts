@@ -14,9 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   title: Gold Mining
   description: Gold Mining
+  details: 
   queueResearchTime: 5
   worldPrefab: {fileID: 0}
-  worldButtonMaterial: {fileID: 2100000, guid: 81e94b10b8892b443833a43621ae4e2d, type: 2}
+  worldButtonTexture: {fileID: 2800000, guid: 88f527b02e3e70c4d85e5fa25ba6ffa1, type: 3}
   worldQueueImage: {fileID: 21300000, guid: 7f5d93b6c238dfc4b8876b3f0085fbe9, type: 3}
   populationCost: 0
   goldCost: 0
@@ -27,4 +28,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: e2b8096b7a6bbdf4d914c05ac91463b9, type: 2}
   attributeBonuses:
   - targetAttribute: 16384
+    modifier: 0
     amount: 2

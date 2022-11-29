@@ -130,7 +130,7 @@ public class TechTreeNodeEditor : EditorWindow
 
         EditorGUILayout.LabelField("World Visuals", EditorStyles.boldLabel);
         techBase.worldPrefab = (GameObject)EditorGUILayout.ObjectField("World Prefab", techBase.worldPrefab, typeof(GameObject), false);
-        techBase.worldButtonMaterial = (Material)EditorGUILayout.ObjectField("World Button Material", techBase.worldButtonMaterial, typeof(Material), false);
+        techBase.worldButtonTexture = (Texture)EditorGUILayout.ObjectField("World Button Material", techBase.worldButtonTexture, typeof(Texture), false);
 
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.PrefixLabel("World Queue Image");

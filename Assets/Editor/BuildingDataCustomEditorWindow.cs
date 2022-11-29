@@ -54,7 +54,7 @@ public class BuildingDataCustomEditorWindow : EditorWindow
         EditorGUILayout.LabelField("World Visuals", EditorStyles.boldLabel);
         bData.worldPrefab = (GameObject)EditorGUILayout.ObjectField("World Prefab", bData.worldPrefab, typeof(GameObject), false);
 
-        bData.worldButtonMaterial = (Material)EditorGUILayout.ObjectField("World Button Material", bData.worldButtonMaterial, typeof(Material), false);
+        bData.worldButtonTexture = (Texture)EditorGUILayout.ObjectField("World Button Material", bData.worldButtonTexture, typeof(Texture), false);
 
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.PrefixLabel("World Queue Image");

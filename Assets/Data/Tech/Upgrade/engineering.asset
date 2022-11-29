@@ -14,9 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   title: Leather Armor
   description: +2 Infantry Armor
+  details: 
   queueResearchTime: 5
   worldPrefab: {fileID: 0}
-  worldButtonMaterial: {fileID: 2100000, guid: 9cd4ad97fca618c4aa402063e8597dd2, type: 2}
+  worldButtonTexture: {fileID: 2800000, guid: f30419608705808499f8212ef7933f72, type: 3}
   worldQueueImage: {fileID: 21300000, guid: 7f5d93b6c238dfc4b8876b3f0085fbe9, type: 3}
   populationCost: 0
   goldCost: 0
@@ -28,4 +29,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5ebc57ae57ef9ee46a3cf4d75de285a6, type: 2}
   attributeBonuses:
   - targetAttribute: 32
+    modifier: 0
     amount: 2

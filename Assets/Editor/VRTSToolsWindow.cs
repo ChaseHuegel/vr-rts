@@ -60,6 +60,7 @@ public class VRTSToolsWindow : EditorWindow
             unit.SkinRendererTargets[i] = skinnedMeshRenderers[i];
         }
 
+        EditorUtility.SetDirty(unit);
     }
 
     void OpenTechTreeWindow()

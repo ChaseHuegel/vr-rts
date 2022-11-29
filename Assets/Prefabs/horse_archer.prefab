@@ -3560,7 +3560,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1856105217782744200
 Transform:
   m_ObjectHideFlags: 0
@@ -7708,7 +7708,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1856105217782744302
 Transform:
   m_ObjectHideFlags: 0
@@ -19157,8 +19157,14 @@ MonoBehaviour:
   BoundingDimensions: {x: 1, y: 1}
   BoundingOrigin: {x: 0, y: 0}
   SkinRendererTargets:
-  - {fileID: 1856105217777964508}
+  - {fileID: 1856105217780974464}
+  - {fileID: 1856105217780974420}
+  - {fileID: 1856105217780974522}
+  - {fileID: 1856105217777964414}
+  - {fileID: 6605721125946604256}
   m_Layers: 1
+  projectilePrefab: {fileID: 0}
+  projectileOrigin: {fileID: 0}
   unitData: {fileID: 11400000, guid: ac17bd94e67e2a04ba16bf2ec8886cc1, type: 2}
 --- !u!1 &5495073030317819173
 GameObject:
