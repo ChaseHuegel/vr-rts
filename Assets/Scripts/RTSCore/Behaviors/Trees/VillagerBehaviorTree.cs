@@ -213,28 +213,9 @@ public static class VillagerBehaviorTree
                     new BehaviorSequence(
                         new HasTarget(),
                         new GoToTarget(),
-                        new SetActorState(ActorAnimationState.BUILDANDREPAIR),
+                        new SetActorState(ActorAnimationState.HEAL),
                         new HealTarget(),
                         new ResetTarget()
-                    ),
-                    //  Else order is complete
-                    new BehaviorSequence(
-                        new ResetTarget(),
-                        new ResetOrder()
-                    )
-                )
-            ),
-
-            new OrderIs(UnitOrder.Repair,
-                new BehaviorSelector(
-                    //  Attempt to repair the target
-                    new BehaviorSequence(
-                        new HasTarget(),
-                        new GoToTarget(),
-                        new SetActorState(ActorAnimationState.BUILDANDREPAIR),
-                        new HealTarget(),
-                        new ResetTarget(),
-                        new ResetOrder()
                     ),
                     //  Else order is complete
                     new BehaviorSequence(
@@ -253,7 +234,7 @@ public static class VillagerBehaviorTree
                             new TargetNearestConstructibleWall()
                         ),                        
                         new GoToTarget(),
-                        new SetActorState(ActorAnimationState.BUILDANDREPAIR),
+                        new SetActorState(ActorAnimationState.HEAL),
                         new HealTarget()
                     ),
 

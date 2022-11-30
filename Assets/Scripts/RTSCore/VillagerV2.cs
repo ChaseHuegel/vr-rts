@@ -83,6 +83,7 @@ public class VillagerV2 : UnitV2
         base.InitializeAttributes();
         Attributes.AddOrUpdate(AttributeType.CARGO, 0f, 10f);
         Attributes.AddOrUpdate(AttributeType.COLLECT_RATE, 1f);
+        Attributes.AddOrUpdate(AttributeType.BUILD_RATE, 1f);        
     }
 
     protected override void OnLoadUnitData(UnitData data)
@@ -90,8 +91,10 @@ public class VillagerV2 : UnitV2
         base.OnLoadUnitData(data);
         Attributes.Get(AttributeType.COLLECT_RATE).Value = data.collectRate;
         Attributes.Get(AttributeType.COLLECT_RATE).MaxValue = data.collectRate;
-        Attributes.Get(AttributeType.HEAL_RATE).Value = data.buildRate;
-        Attributes.Get(AttributeType.HEAL_RATE).MaxValue = data.buildRate;
+        Attributes.Get(AttributeType.HEAL_RATE).Value = data.healRate;
+        Attributes.Get(AttributeType.HEAL_RATE).MaxValue = data.healRate;
+        Attributes.Get(AttributeType.BUILD_RATE).Value = data.buildRate;
+        Attributes.Get(AttributeType.BUILD_RATE).MaxValue = data.buildRate;
         Attributes.AddOrUpdate(AttributeType.GOLD_MINING_RATE, data.goldMiningRate);
         Attributes.AddOrUpdate(AttributeType.STONE_MINING_RATE, data.stoneMiningRate);
         Attributes.AddOrUpdate(AttributeType.LUMBERJACKING_RATE, data.lumberjackingRate);
@@ -136,7 +139,7 @@ public class VillagerV2 : UnitV2
                 else if (constructible.buildingData.buildingType == BuildingType.FactionedResource)
                     Order = UnitOrder.BuildAndFarm;
                 else                    
-                    Order = UnitOrder.Repair;
+                    Order = UnitOrder.Heal;
 
                 currentCollectRate = AttributeType.BUILD_RATE;
                 break;
@@ -153,7 +156,7 @@ public class VillagerV2 : UnitV2
                 else
                 {
                     currentCollectRate = AttributeType.REPAIR_RATE;
-                    Order = UnitOrder.Repair;
+                    Order = UnitOrder.Heal;
                 }
                 break;
 
@@ -236,7 +239,7 @@ public class VillagerV2 : UnitV2
             case ActorAnimationState.LUMBERJACKING:
                 CurrentToolObject = LumberjackToolObject;
                 break;
-            case ActorAnimationState.BUILDANDREPAIR:
+            case ActorAnimationState.HEAL:
                 CurrentToolObject = BuilderToolObject;
                 break;
             case ActorAnimationState.FISHING:

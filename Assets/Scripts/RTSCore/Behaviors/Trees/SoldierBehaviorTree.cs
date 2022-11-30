@@ -42,7 +42,7 @@ public static class SoldierBehaviorTree
                     )
                 )
             ),
-
+            
             //  Attempt to attack nearby enemies
             new BehaviorSequence(
                 new BehaviorSelector(

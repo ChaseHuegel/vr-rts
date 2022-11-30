@@ -56,7 +56,7 @@ public abstract class UnitV2 : ActorV2
         Attributes.AddOrUpdate(AttributeType.DAMAGE, 1f);
         Attributes.AddOrUpdate(AttributeType.ATTACK_SPEED, 1f);
         Attributes.AddOrUpdate(AttributeType.ATTACK_RANGE, Attributes.ValueOf(AttributeType.REACH));
-        Attributes.AddOrUpdate(AttributeType.HEAL_RATE, 1f);
+        Attributes.AddOrUpdate(AttributeType.HEAL_RATE, 1f);       
     }
 
     protected virtual void OnLoadUnitData(UnitData data)
@@ -67,6 +67,8 @@ public abstract class UnitV2 : ActorV2
         Attributes.Get(AttributeType.HEALTH).Value = data.maximumHitPoints;
         Attributes.Get(AttributeType.SPEED).MaxValue = data.movementSpeed;
         Attributes.Get(AttributeType.SPEED).Value = data.movementSpeed;
+        Attributes.Get(AttributeType.HEAL_RATE).Value = data.healRate;
+        Attributes.Get(AttributeType.HEAL_RATE).MaxValue = data.healRate;
 
         if (PlayerManager.AllAttributeBonuses.TryGetValue(unitData, out var bonuses))
             foreach (AttributeBonus bonus in bonuses)

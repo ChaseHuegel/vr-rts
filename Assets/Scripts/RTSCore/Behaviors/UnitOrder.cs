@@ -7,7 +7,7 @@ public enum UnitOrder
     DropOff,
     Attack,
     Hunt,
-    Repair,
+    Heal,
     BuildWalls,
     BuildAndFarm,
 }

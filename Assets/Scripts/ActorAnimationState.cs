@@ -6,7 +6,7 @@ public enum ActorAnimationState
     FARMING = 2,
     MINING = 3,
     LUMBERJACKING = 4,
-    BUILDANDREPAIR = 5,
+    HEAL = 5,
     ATTACKING = 6,
     ATTACKING2 = 7,
     FORAGING = 8,

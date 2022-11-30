@@ -9,7 +9,7 @@ public class UnitData : TechBase
     [Header("Work Rates")]  
     public float buildRate;
     public float foragingRate;
-    public float repairRate;
+    public float healRate;
     public float stoneMiningRate;
     public float goldMiningRate;
     public float farmingRate;
