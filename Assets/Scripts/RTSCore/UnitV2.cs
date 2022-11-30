@@ -6,6 +6,8 @@ using UnityEngine;
 public abstract class UnitV2 : ActorV2
 {
     public abstract bool IsCivilian { get; }
+    public GameObject damagedFxPrefab;
+    public GameObject healFxPrefab;
     public GameObject projectilePrefab;
     public Transform projectileOrigin;
     public UnitData unitData;
@@ -226,7 +228,7 @@ public abstract class UnitV2 : ActorV2
 
     private void Heal(Damageable target)
     {
-        target.Heal(Attributes.ValueOf(AttributeType.HEAL_RATE), AttributeChangeCause.HEALED, this);
+        target.Heal(Attributes.ValueOf(AttributeType.HEAL_RATE), AttributeChangeCause.HEALED, this);              
     }
 
 }

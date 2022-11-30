@@ -1,9 +1,10 @@
 using Swordfish.Library.BehaviorTrees;
 using Swordfish.Navigation;
+using UnityEngine;
 
 public class Priest : UnitV2
 {
-    public override bool IsCivilian => false;    
+    public override bool IsCivilian => false;
 
     protected override BehaviorTree<ActorV2> BehaviorTreeFactory()
     {
@@ -20,8 +21,7 @@ public class Priest : UnitV2
     protected override void OnLoadUnitData(UnitData data)
     {
         base.OnLoadUnitData(data);
-        Attributes.AddOrUpdate(AttributeType.ARMOR, unitData.armor);
-        
+        Attributes.AddOrUpdate(AttributeType.ARMOR, unitData.armor);        
     }
 
     public override void IssueTargetedOrder(Body body)
@@ -47,6 +47,25 @@ public class Priest : UnitV2
                 Order = UnitOrder.GoTo;
                 break;
         }
+    }
+
+    protected GameObject currentHealFx;
+
+    protected override void ProcessHealRoutine(float deltaTime)
+    {
+        base.ProcessHealRoutine(deltaTime);
+
+        if (!HealingTarget)
+        {
+            if (currentHealFx)
+                Destroy(currentHealFx);
+
+            return;
+        }
+
+        if (!currentHealFx)
+            currentHealFx = Instantiate(healFxPrefab, Target.transform.position, healFxPrefab.transform.rotation, Target.transform);
+
     }
 
     protected override void OnDamaged(DamageEvent e)
