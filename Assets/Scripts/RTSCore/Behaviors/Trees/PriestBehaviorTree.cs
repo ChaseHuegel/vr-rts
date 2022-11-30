@@ -22,13 +22,13 @@ public static class PriestBehaviorTree
                 )
             ),
         
-            // //  Attempt to heal nearby allies
+            //  Attempt to heal nearby allies
             new BehaviorSequence(
                 new BehaviorSelector(
                     new IfHasTarget(
                         new TargetIsFriendly()
                     ),
-                    new TargetNearestFriendly()
+                    new TargetNearestInjuredFriendly()
                 ),
                 new PursueTarget(),
                 new SetActorState(ActorAnimationState.HEAL),

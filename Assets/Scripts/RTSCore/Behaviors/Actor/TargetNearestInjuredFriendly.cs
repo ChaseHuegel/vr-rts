@@ -1,7 +1,7 @@
 using Swordfish.Library.BehaviorTrees;
 using Swordfish.Navigation;
 
-public class TargetNearestFriendly : BehaviorNode<ActorV2>
+public class TargetNearestInjuredFriendly : BehaviorNode<ActorV2>
 {
     public override BehaviorState Evaluate(ActorV2 actor, float delta)
     {
@@ -13,7 +13,8 @@ public class TargetNearestFriendly : BehaviorNode<ActorV2>
 
             if (!body.IsAlive() || body.Faction == null ||
                 !body.Faction.IsAllied(actor.Faction) ||
-                body == actor)
+                body == actor ||
+                body.Attributes.Get(AttributeType.HEALTH).IsMax())
                 continue;
 
             int distance = actor.GetDistanceTo(body.GetPosition().x, body.GetPosition().y);
