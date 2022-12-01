@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Swordfish;
 using Swordfish.Audio;
 using UnityEngine;
 
@@ -19,15 +20,16 @@ public class UnitData : TechBase
     public float collectRate;
 
     [Header("Stats")]
-    public int maximumHitPoints;
-    public int maxCargo;
-    public float huntingDamage;
-    public int attackRange;
-    public float attackDamage;
-    public float attackSpeed = 1.0f;
-    public float armor;
     public float movementSpeed = 0.3f;
-
+    public int maximumHitPoints;
+    public float armor;
+    public int maxCargo;
+    public int attackRange;
+    public float attackSpeed = 1.0f;
+    public DamageType damageType = DamageType.BLUDGEONING;
+    public float attackDamage;
+    public float huntingDamage;
+    
     public override void Execute(SpawnQueue spawnQueue)
     {
         base.Execute(spawnQueue);

@@ -12,28 +12,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce9a7238ce7b06042b83fb4085bbbdf3, type: 3}
   m_Name: None
   m_EditorClassIdentifier: 
-  unitType: 0
-  queueTime: 0
-  prefab: {fileID: 0}
-  queueImage: {fileID: 0}
-  worldButtonMaterial: {fileID: 0}
+  title: 
+  description: 
+  details: 
+  queueResearchTime: 25
+  worldPrefab: {fileID: 0}
+  worldButtonTexture: {fileID: 0}
+  worldQueueImage: {fileID: 0}
+  populationCost: 0
+  goldCost: 0
+  stoneCost: 0
+  foodCost: 0
+  woodCost: 0
   buildRate: 0
   foragingRate: 0
-  repairRate: 0
+  healRate: 0
   stoneMiningRate: 0
   goldMiningRate: 0
   farmingRate: 0
   huntingRate: 0
   lumberjackingRate: 0
   fishingRate: 0
-  populationCost: 0
-  goldCost: 0
-  stoneCost: 0
-  foodCost: 0
-  woodCost: 0
-  maxHitPoints: 0
+  collectRate: 0
+  maximumHitPoints: 0
   maxCargo: 0
   huntingDamage: 0
+  damageType: 1
   attackRange: 0
   attackDamage: 0
+  attackSpeed: 1
   armor: 0
+  movementSpeed: 0.3
