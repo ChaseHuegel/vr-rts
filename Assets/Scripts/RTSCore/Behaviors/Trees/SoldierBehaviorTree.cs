@@ -30,7 +30,7 @@ public static class SoldierBehaviorTree
                         new HasTarget(),
                         new TargetIsEnemy(),
                         new PursueTarget(),
-                        new SetActorState(ActorAnimationState.ATTACKING),
+                        //new SetActorState(ActorAnimationState.ATTACKING),
                         new AttackTarget(),
                         new ResetTarget(),
                         new ResetOrder()
@@ -52,7 +52,7 @@ public static class SoldierBehaviorTree
                     new TargetNearestEnemy()
                 ),
                 new PursueTarget(),
-                new SetActorState(ActorAnimationState.ATTACKING),
+                //new SetActorState(ActorAnimationState.ATTACKING),
                 new AttackTarget(),
                 new ResetTarget()
             ),

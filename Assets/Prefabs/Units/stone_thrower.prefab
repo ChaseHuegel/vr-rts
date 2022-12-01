@@ -438,6 +438,8 @@ MonoBehaviour:
   - {fileID: 8333759293538293904}
   - {fileID: 8333759293538293906}
   m_Layers: 1
+  damagedFxPrefab: {fileID: 0}
+  healFxPrefab: {fileID: 0}
   projectilePrefab: {fileID: 4101366286241908024, guid: 2e06b509bd45b264f80fe865e893c674,
     type: 3}
   projectileOrigin: {fileID: 956727781344217842}
@@ -713,6 +715,24 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 8333759293524595504}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &8333759293524628978 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 100034, guid: a568148748050d646b5be25edaa7d066,
+    type: 3}
+  m_PrefabInstance: {fileID: 8333759293524595504}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4769266092406168953
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8333759293524628978}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ecf569eaf4f58f43bb8f6733152f817, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!137 &8333759293538293904 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: 13700000, guid: a568148748050d646b5be25edaa7d066,

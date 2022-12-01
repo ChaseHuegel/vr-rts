@@ -24,6 +24,7 @@ public class UnitData : TechBase
     public float huntingDamage;
     public int attackRange;
     public float attackDamage;
+    public float attackSpeed = 1.0f;
     public float armor;
     public float movementSpeed = 0.3f;
 

@@ -36,6 +36,6 @@ public class AnimatorEventForwarder : MonoBehaviour
 
     public void LaunchProjectile()
     {
-        this.GetComponentInParent<UnitV2>().SpawnAndLaunchProjectile();
+        this.GetComponentInParent<UnitV2>().LaunchProjectile();
     }
 }

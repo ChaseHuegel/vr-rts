@@ -33,7 +33,7 @@ public abstract class UnitV2 : ActorV2
     private Vector3 originalScale = Vector3.one;
 
     protected override void Start()
-    {
+    {        
         base.Start();
         OnLoadUnitData(unitData);
 
@@ -64,6 +64,7 @@ public abstract class UnitV2 : ActorV2
     protected virtual void OnLoadUnitData(UnitData data)
     {
         Attributes.Get(AttributeType.ATTACK_RANGE).Value = data.attackRange;
+        Attributes.Get(AttributeType.ATTACK_SPEED).Value = data.attackSpeed;
         Attributes.Get(AttributeType.DAMAGE).Value = data.attackDamage;
         Attributes.Get(AttributeType.HEALTH).MaxValue = data.maximumHitPoints;
         Attributes.Get(AttributeType.HEALTH).Value = data.maximumHitPoints;
@@ -183,31 +184,36 @@ public abstract class UnitV2 : ActorV2
 
             if (Target != null && Target.IsAlive() && !IsMoving)
             {
+                SetAnimatorsInteger("ActorAnimationState", (int)ActorAnimationState.ATTACKING);
                 Attack(Target);
             }
             else
-            {
+            {                
                 AttackingTarget = false;
             }
         }
     }
 
     private void Attack(Damageable victim)
-    {
+    {        
         // Don't register normal damage if this unit uses projectiles... the projectile
         // will deal the damage.
-        if (projectilePrefab!= null)
+        if (projectilePrefab != null)
             return;
 
         // Debug.Log("Attacking for " + Attributes.ValueOf(AttributeType.DAMAGE).ToString());
         // TODO: this is where we want to handle weapons, damage types, etc.
-        victim.Damage(Attributes.ValueOf(AttributeType.DAMAGE), AttributeChangeCause.ATTACKED, this, DamageType.NONE);        
+        victim.Damage(Attributes.ValueOf(AttributeType.DAMAGE), AttributeChangeCause.ATTACKED, this, DamageType.NONE);
+        SetAnimatorsInteger("ActorAnimationState", (int)ActorAnimationState.IDLE);
     }
 
-    public void SpawnAndLaunchProjectile()
+    public void LaunchProjectile()
     {
-        if (projectilePrefab && Target)
-            Projectile.Spawn(projectilePrefab, projectileOrigin.position, Quaternion.identity, this, Target.transform);
+        if (!projectilePrefab || !Target)
+            return;
+
+        Projectile.Spawn(projectilePrefab, projectileOrigin.position, Quaternion.identity, this, Target.transform);
+        SetAnimatorsInteger("ActorAnimationState", (int)ActorAnimationState.IDLE);
     }
 
     protected virtual void ProcessHealRoutine(float deltaTime)
