@@ -194,6 +194,11 @@ public abstract class UnitV2 : ActorV2
 
     private void Attack(Damageable victim)
     {
+        // Don't register normal damage if this unit uses projectiles... the projectile
+        // will deal the damage.
+        if (projectilePrefab!= null)
+            return;
+
         // Debug.Log("Attacking for " + Attributes.ValueOf(AttributeType.DAMAGE).ToString());
         // TODO: this is where we want to handle weapons, damage types, etc.
         victim.Damage(Attributes.ValueOf(AttributeType.DAMAGE), AttributeChangeCause.ATTACKED, this, DamageType.NONE);        
@@ -202,7 +207,7 @@ public abstract class UnitV2 : ActorV2
     public void SpawnAndLaunchProjectile()
     {
         if (projectilePrefab && Target)
-            Projectile.Spawn(projectilePrefab, projectileOrigin.position, Quaternion.identity, Target.transform);
+            Projectile.Spawn(projectilePrefab, projectileOrigin.position, Quaternion.identity, this, Target.transform);
     }
 
     protected virtual void ProcessHealRoutine(float deltaTime)

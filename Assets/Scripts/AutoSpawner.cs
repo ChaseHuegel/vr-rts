@@ -136,6 +136,8 @@ public class AutoSpawner : MonoBehaviour
         {
             Vector3 randomPos = Random.insideUnitSphere * unitSpawnPointRadius;
             Vector3 position = unitSpawnPoint.transform.position + randomPos;
+
+            // TODO: Project ray to get y position?
             position.y = unitSpawnPoint.transform.position.y;
 
             GameObject unitGameObject = Instantiate(unitData.worldPrefab, position, Quaternion.identity);

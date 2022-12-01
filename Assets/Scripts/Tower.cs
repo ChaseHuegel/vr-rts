@@ -109,7 +109,7 @@ public class Tower : Structure
     public virtual void TrySpawnProjectile()
     {
         if (projectilePrefab && projectileTarget)
-            Projectile.Spawn(projectilePrefab, projectileOrigin.position, Quaternion.identity, projectileTarget.transform);
+            Projectile.Spawn(projectilePrefab, projectileOrigin.position, Quaternion.identity, this, projectileTarget.transform);
     }
 
 

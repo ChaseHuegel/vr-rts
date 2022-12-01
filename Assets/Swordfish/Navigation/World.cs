@@ -191,6 +191,32 @@ namespace Swordfish.Navigation
             
         }
 
+        public static List<Body> GetBodiesInArea(Vector3 position, int dimensionX, int dimensionY)
+        {
+            Cell initialCell = World.at(World.ToWorldCoord(position));
+
+            int startX = initialCell.x - dimensionX / 2;
+            int startY = initialCell.y - dimensionY / 2;
+            int endX = startX + dimensionX;
+            int endY = startY + dimensionY;
+            List<Body> retList = new List<Body>();
+
+            for (int x = startX; x < endX; x++)
+            {
+                for (int y = startY; y < endY; y++)
+                {
+                    Cell curCell = World.at(x, y);
+                    if (curCell.occupied)
+                    {
+                        foreach (Body body in curCell.occupants)
+                            retList.Add(body);
+                    }
+                }
+            }
+
+            return retList;
+        }
+
         //  Debug draw the grid
         protected void OnDrawGizmos()
         {

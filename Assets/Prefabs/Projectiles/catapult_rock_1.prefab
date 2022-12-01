@@ -96,8 +96,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80de200347cb8f344bbdb5bcbe604c14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damageType: 1
+  damage: 1
   speed: 1
-  radius: 0.01
+  areaOfEffect: 5
   collisionRadius: 0.01
   arcFactor: 0.4
   pointAtTarget: 0
+  sourceBody: {fileID: 0}

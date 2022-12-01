@@ -1,9 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using Swordfish;
+using Swordfish.Navigation;
 using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
+    public DamageType damageType;
+    public float damage = 1.0f;
+
     [Tooltip("Speed of projectile.")]
     public float speed = 1.0f; // Speed of projectile.
     [Tooltip("Damage radius in cells around the target point. 0 is target only.")]
@@ -14,6 +19,7 @@ public class Projectile : MonoBehaviour
     public float arcFactor = 0.5f; // Higher number means bigger arc.
     [Tooltip("Should the projectile always point towards target?")]
     public bool pointAtTarget;
+    public Body sourceBody;
     private float radiusSq; // Radius squared; optimisation.
     private Transform target; // Who we are homing at.
     private Vector3 currentPosition; // Store the current position we are at.
@@ -56,13 +62,19 @@ public class Projectile : MonoBehaviour
         if (direction.sqrMagnitude < radiusSq)
         {
             Destroy(gameObject);
+
             // Write your own code to spawn an explosion / splat effect.
             // Write your own code to deal damage to the .
+            
+            if (areaOfEffect == 0)
+                target.GetComponent<Body>().Damage(damage, AttributeChangeCause.ATTACKED, sourceBody, damageType);
+            foreach(Body body in World.GetBodiesInArea(target.position, areaOfEffect, areaOfEffect))
+                body.Damage(damage, AttributeChangeCause.ATTACKED, sourceBody, damageType);
         }
     }
 
     // So that other scripts can use Projectile.Spawn to spawn a projectile.
-    public static Projectile Spawn(GameObject prefab, Vector3 position, Quaternion rotation, Transform target)
+    public static Projectile Spawn(GameObject prefab, Vector3 position, Quaternion rotation, Body source, Transform target)
     {
         // Spawn a GameObject based on a prefab, and returns its Projectile component.
         GameObject go = Instantiate(prefab, position, rotation);
@@ -73,6 +85,7 @@ public class Projectile : MonoBehaviour
 
         // Set the projectile's target, so that it can work.
         p.target = target;
+        p.sourceBody = source;
         return p;
     }
 }
