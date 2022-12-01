@@ -6,8 +6,9 @@ public class Projectile : MonoBehaviour
 {
     [Tooltip("Speed of projectile.")]
     public float speed = 1.0f; // Speed of projectile.
-
-    [Tooltip("Radius to target in which the projectile destroys itself.")]
+    [Tooltip("Damage radius in cells around the target point. 0 is target only.")]
+    public int areaOfEffect;
+    [Tooltip("Distance to target in which the projectile destroys itself.")]
     public float collisionRadius = 0.1f;
     [Tooltip("How much of an arc in the projectile's path.")]
     public float arcFactor = 0.5f; // Higher number means bigger arc.

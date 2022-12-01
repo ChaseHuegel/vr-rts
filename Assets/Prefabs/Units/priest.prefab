@@ -1544,7 +1544,7 @@ MonoBehaviour:
   Weaknesses: 
   Resistances: 
   Immunities: 
-  Faction: {fileID: 0}
+  Faction: {fileID: 11400000, guid: effa210fcfc5796468bcaecb24cb5693, type: 2}
   BoundingDimensions: {x: 1, y: 1}
   BoundingOrigin: {x: 0, y: 0}
   SkinRendererTargets:
@@ -2573,10 +2573,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2300500, guid: 02ded044b8e0963439276550f50be6f9, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 792a4bad9e08b8e41bfbd3f0b8aac1ab, type: 2}
+    - target: {fileID: 2300582, guid: 02ded044b8e0963439276550f50be6f9, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 792a4bad9e08b8e41bfbd3f0b8aac1ab, type: 2}
     - target: {fileID: 9500000, guid: 02ded044b8e0963439276550f50be6f9, type: 3}
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: a483d9879095f474c9467374cdb49a46, type: 2}
+    - target: {fileID: 13700284, guid: 02ded044b8e0963439276550f50be6f9, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 792a4bad9e08b8e41bfbd3f0b8aac1ab, type: 2}
     - target: {fileID: 254688453104507979, guid: 02ded044b8e0963439276550f50be6f9,
         type: 3}
       propertyPath: m_IsActive

@@ -71,7 +71,6 @@ public class Priest : UnitV2
     protected override void OnDamaged(DamageEvent e)
     {
         base.OnDamaged(e);
-
         // Target = this;
         // Order = UnitOrder.Repair;
     }

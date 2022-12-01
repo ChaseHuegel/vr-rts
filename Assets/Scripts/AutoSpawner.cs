@@ -12,35 +12,49 @@ public class AutoSpawner : MonoBehaviour
 {
     [Header("Autospawn Settings")]
     public bool autospawn;
-    public bool randomize;
 
-    [Range(0.0f, 600.0f)]
-    public float secondsToAutospawnStart;
+    // [Range(0.0f, 600.0f)]
+    public float secondsToAutospawnStart = 180.0f;
 
-    [Range(2.0f, 600.0f)]
-    public float timeBetweenWaves = 30.0f;
+    [Header("Wave Settings")]
+    // [Range(2.0f, 600.0f)]
+    public float secondsBetweenWaves = 600.0f;
+    [Tooltip("[Units to spawn per wave] is multiplied by [wave spawn multiplier] every [wave spawn increment interval].")]
     public byte unitsToSpawnPerWave = 1;
 
-    [Tooltip("How much to increase the spawns per wave by after each wave spawn increment interval.")]
-    public byte waveSpawnIncrement = 0;
+    [Tooltip("[Units to spawn per wave] is multiplied by [wave spawn multiplier] every [wave spawn increment interval].")]
+    public byte waveSpawnMultiplier = 1;
+    [Tooltip("The maximum number of units to spawn per wave.")]
     public byte maxUnitsPerWave = 5;
 
-    [Tooltip("The number of waves between each wave spawn increment change.")]
+    [Tooltip("[Units to spawn per wave] is multiplied by [wave spawn multiplier] every [wave spawn increment interval].")]
     public byte waveSpawnIncrementInterval = 10;
 
     private byte currentWaveSpawnIncrementInterval;
     private int currentWave;
 
-    [Header("Unit")]
-    public byte factionID;
+    [Header("Spawn/Rally Location")]    
+
+    [Tooltip("Central point of the area where the unit will spawn.")]
     public Transform unitSpawnPoint;
+    [Tooltip("The radius around the [unit spawn point] in which the unit's spawn location is generated.")]
     public float unitSpawnPointRadius;
+    [Tooltip("The point the unit should navigate to after spawning.")]
     public Transform unitRallyWaypoint;
+    [Tooltip("The radius around the [unit rally waypoint] in which the unit's rally location is genereated.")]
     public float unitRallyWaypointRadius;
+
+    [Header("Unit settings")]
+    public Faction faction;
+
+    [Tooltip("Randomly choose a unit to spawn from [unit spawn list].")]
+    public bool randomize;
+    [Tooltip("The list of units to spawn. Once the list has been completed it will reset to the beginning.")]
     public UnitData[] unitSpawnList;
 
     [Header("Instant Spawn")]
     public UnitData unit;
+
     [InspectorButton("OnSpawnClicked")]
     public bool spawn;
     private LinkedList<UnitData> unitSpawnQueue = new LinkedList<UnitData>();
@@ -49,10 +63,15 @@ public class AutoSpawner : MonoBehaviour
     private bool started;
     void Awake()
     {
+        Body body = GetComponent<Body>();
+        if (body)
+            faction = body.Faction;
+            
         // TODO: Pick a spot around the building and set it as the spawn point
         // when no spawn point is found. Using transform center currently.
         if (!unitSpawnPoint)
             unitSpawnPoint = transform;
+
         if (!unitRallyWaypoint)
             unitRallyWaypoint = unitSpawnPoint;
 
@@ -74,7 +93,7 @@ public class AutoSpawner : MonoBehaviour
 
         if (started)
         {
-            if (spawnTimer >= timeBetweenWaves)
+            if (spawnTimer >= secondsBetweenWaves)
             {
                 byte countToSpawn = unitsToSpawnPerWave < maxUnitsPerWave ? unitsToSpawnPerWave : maxUnitsPerWave;
                 for (byte i = 0; i < countToSpawn; i++)
@@ -97,7 +116,7 @@ public class AutoSpawner : MonoBehaviour
 
                 if (currentWaveSpawnIncrementInterval == waveSpawnIncrementInterval)
                 {
-                    unitsToSpawnPerWave += waveSpawnIncrement;
+                    unitsToSpawnPerWave += waveSpawnMultiplier;
                     currentWaveSpawnIncrementInterval = 0;
                 }
             }
@@ -109,15 +128,6 @@ public class AutoSpawner : MonoBehaviour
         }
 
         spawnTimer += Time.deltaTime;
-    }
-
-    public void OnDrawGizmos()
-    {
-        if (Application.isEditor != true || Application.isPlaying) return;
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(unitSpawnPoint.position, unitSpawnPointRadius);
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(unitRallyWaypoint.position, unitRallyWaypointRadius);
     }
 
     private void SpawnUnit(UnitData unitData)
@@ -134,7 +144,8 @@ public class AutoSpawner : MonoBehaviour
                 unitGameObject.GetComponent<NetworkObject>().Spawn();
 
             UnitV2 unit = unitGameObject.GetComponent<UnitV2>();
-            unit.Faction = GameMaster.Factions.Find(x => x.Id == factionID);
+            if (faction)
+                unit.Faction = faction;
             unit.unitData = unitData;
 
             randomPos = Random.insideUnitSphere * unitSpawnPointRadius;
@@ -146,5 +157,14 @@ public class AutoSpawner : MonoBehaviour
         {
             Debug.Log(string.Format("Spawn {0} failed. Missing prefabToSpawn.", unitData.name));
         }
+    }
+
+    public void OnDrawGizmos()
+    {
+        if (Application.isEditor != true || Application.isPlaying) return;
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(unitSpawnPoint.position, unitSpawnPointRadius);
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(unitRallyWaypoint.position, unitRallyWaypointRadius);
     }
 }
