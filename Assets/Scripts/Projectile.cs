@@ -8,16 +8,22 @@ public class Projectile : MonoBehaviour
 {
     public DamageType damageType;
     public float damage = 1.0f;
+    public GameObject hitFx;
 
     [Tooltip("Speed of projectile.")]
     public float speed = 1.0f; // Speed of projectile.
+
     [Tooltip("Damage radius in cells around the target point. 0 is target only.")]
+    
     public int areaOfEffect;
     [Tooltip("Distance to target in which the projectile destroys itself.")]
+    
     public float collisionRadius = 0.1f;
     [Tooltip("How much of an arc in the projectile's path.")]
+    
     public float arcFactor = 0.5f; // Higher number means bigger arc.
     [Tooltip("Should the projectile always point towards target?")]
+    
     public bool pointAtTarget;
     public Body sourceBody;
     private float radiusSq; // Radius squared; optimisation.
@@ -63,13 +69,15 @@ public class Projectile : MonoBehaviour
         {
             Destroy(gameObject);
 
-            // Write your own code to spawn an explosion / splat effect.
-            // Write your own code to deal damage to the .
-            
+            Body targetBody = target.GetComponent<Body>();            
             if (areaOfEffect == 0)
-                target.GetComponent<Body>().Damage(damage, AttributeChangeCause.ATTACKED, sourceBody, damageType);
-            foreach(Body body in World.GetBodiesInArea(target.position, areaOfEffect, areaOfEffect))
-                body.Damage(damage, AttributeChangeCause.ATTACKED, sourceBody, damageType);
+                targetBody.Damage(damage, AttributeChangeCause.ATTACKED, sourceBody, damageType);
+            else
+                foreach (Body body in World.GetBodiesInArea(target.position, areaOfEffect, areaOfEffect))
+                    body.Damage(damage, AttributeChangeCause.ATTACKED, sourceBody, damageType);
+
+            if (hitFx)
+                Instantiate(hitFx, target.position, hitFx.transform.rotation);
         }
     }
 

@@ -209,7 +209,8 @@ namespace Swordfish.Navigation
                     if (curCell.occupied)
                     {
                         foreach (Body body in curCell.occupants)
-                            retList.Add(body);
+                            if (!retList.Contains(body))
+                                retList.Add(body);
                     }
                 }
             }
