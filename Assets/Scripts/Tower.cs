@@ -52,7 +52,6 @@ public class Tower : Structure
 
         if (currentTarget)
         {
-            currentTarget.Damage(attackDamage, Swordfish.AttributeChangeCause.ATTACKED, this, Swordfish.DamageType.PIERCING);
             projectileTarget = currentTarget.gameObject;
             TrySpawnProjectile();
         }

@@ -6,12 +6,14 @@ using UnityEngine;
 public abstract class UnitV2 : ActorV2
 {
     public abstract bool IsCivilian { get; }
-    public GameObject damagedFxPrefab;
     public GameObject healFxPrefab;
+    public GameObject damagedFxPrefab;
+    public GameObject deathFxPrefab;
     public GameObject projectilePrefab;
     public Transform projectileOrigin;
     public UnitData unitData;
 
+    private bool deathFxStarted;
     public bool AttackingTarget
     {
         get => AttackingTargetBinding.Get();
@@ -146,6 +148,11 @@ public abstract class UnitV2 : ActorV2
         SetAnimatorsInteger("ActorAnimationState", (int)deathState);
 
         AudioSource.PlayOneShot(GameMaster.GetAudio("unit_death").GetClip());
+        if (deathFxPrefab && !deathFxStarted)
+            Instantiate(deathFxPrefab, transform.position, deathFxPrefab.transform.rotation);
+
+        deathFxStarted = true;
+
         Destroy(gameObject, GameMaster.Instance.unitCorpseDecayTime);
     }
 

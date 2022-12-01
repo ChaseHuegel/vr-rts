@@ -54,7 +54,10 @@ public class BuildingDataCustomEditorWindow : EditorWindow
         EditorGUILayout.LabelField("World Visuals", EditorStyles.boldLabel);
         bData.worldPrefab = (GameObject)EditorGUILayout.ObjectField("World Prefab", bData.worldPrefab, typeof(GameObject), false);
 
-        bData.worldButtonTexture = (Texture)EditorGUILayout.ObjectField("World Button Material", bData.worldButtonTexture, typeof(Texture), false);
+        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.PrefixLabel("World Button Texture");
+        bData.worldButtonTexture = (Texture)EditorGUILayout.ObjectField(bData.worldButtonTexture, typeof(Texture), false);
+        EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.PrefixLabel("World Queue Image");
@@ -170,18 +173,6 @@ public class BuildingDataCustomEditorWindow : EditorWindow
                 collider.center = new Vector3(0.0f, 0.06f, 0.0f);
 
                 BuildingInteractionPanel interactionPanel = worldObject.AddComponent<BuildingInteractionPanel>();
-                // interactionPanel.healthBarBackground = null;
-                // interactionPanel.healthBarForeground = null;
-
-                // interactionPanel.progressImage = null;
-                // interactionPanel.progressFont = null;
-
-                // interactionPanel.buttonBaseMaterial = null;
-                // interactionPanel.cancelButtonMaterial = null;
-                // interactionPanel.onButtonDownAudio = null;
-                // interactionPanel.onButtonUpAudio = null;
-                // interactionPanel.emptyQueueSlotSprite = null;
-                // interactionPanel.buttonLockPrefab = null;
 
                 interactionPanel.unitRallyWaypoint = rallyPointModel.transform;
                 interactionPanel.unitSpawnPoint = spawnPoint.transform;
