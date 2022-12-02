@@ -12,8 +12,7 @@ public class BuildMenuTab : MonoBehaviour
     public float horzontalButtonSpacing = 71.0f;
     public float verticalButtonSpacing = 96.0f;
     public int maximumNumberOfColumns = 3;
-    public GameObject resourceCostPrefab;
-    public GameObject slotLockedPrefab;
+    public GameObject resourceCostPrefab;    
     public Material slotEnabledMaterial;
     public Material slotDisabledMaterial;
     public TMPro.TMP_FontAsset titleFont;
@@ -29,48 +28,17 @@ public class BuildMenuTab : MonoBehaviour
 
     void Awake()
     {
-        // if (transform.childCount <= 0)
-        //     Generate();
-
-        //HookIntoEvents();
         Initialize();
-        
     }
 
     public void Initialize()
     {
         if (slots == null)
             slots = GetComponentsInChildren<BuildMenuSlot>();
+
+        // foreach(BuildMenuSlot slot in slots)
+        //     slot.Initialize();
     }
-
-    // private void OnNodeUnlocked(TechNode node)
-    // {
-    //     if (slots != null)
-    //         Array.Find<BuildMenuSlot>(slots, x => x.rtsTypeData == node?.tech)?.Unlock();
-    // }
-
-    // private void OnNodeLocked(TechNode node)
-    // {
-    //     if (slots != null)
-    //         Array.Find<BuildMenuSlot>(slots, x => x.rtsTypeData == node?.tech)?.Lock();
-    // }
-
-    // private void HookIntoEvents()
-    // {
-    //     TechTree.OnNodeUnlocked += OnNodeUnlocked;
-    //     TechTree.OnNodeLocked += OnNodeLocked;
-    // }
-
-    // private void CleanupEvents()
-    // {
-    //     TechTree.OnNodeUnlocked -= OnNodeUnlocked;
-    //     TechTree.OnNodeLocked -= OnNodeUnlocked;
-    // }
-
-    // void OnDestroy()
-    // {
-    //     CleanupEvents();
-    // }
 
     [ExecuteInEditMode]
     public void Generate()
@@ -99,7 +67,7 @@ public class BuildMenuTab : MonoBehaviour
                 slot.transform.SetParent(this.gameObject.transform);
 
                 slot.transform.localPosition = new Vector3(slotPositionX, slotPositionY, origin.z);
-                slot.transform.Rotate(0, 90, -90);
+                slot.transform.localRotation = Quaternion.Euler(0, 90, -90);
                 slot.AddComponent<Interactable>();
                 slot.GetComponent<Interactable>().highlightOnHover = false;
 
@@ -107,7 +75,8 @@ public class BuildMenuTab : MonoBehaviour
                 slot.layer = LayerMask.NameToLayer("UI");
 
                 // Lock
-                GameObject lockObject = Instantiate(slotLockedPrefab, Vector3.zero, Quaternion.identity, slot.transform);
+                GameObject lockObject = Instantiate(PlayerManager.Instance.GetSlotLockPrefab(tech), Vector3.zero, Quaternion.identity, slot.transform);
+
                 lockObject.name = "_lock";
                 lockObject.transform.localPosition = slotLockPosition;
                 lockObject.SetActive(false);

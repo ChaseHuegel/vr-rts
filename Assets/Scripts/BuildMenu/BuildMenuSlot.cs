@@ -43,8 +43,6 @@ public class BuildMenuSlot : MonoBehaviour
     public GameObject lockObject;
     public GameObject iconObject;
 
-    private BuildMenuTab parentTab;
-
     public delegate void OnHandHoverBeginEvent(TechBase techBase);
     public event OnHandHoverBeginEvent HandHoverBegin;
 
@@ -53,17 +51,13 @@ public class BuildMenuSlot : MonoBehaviour
 
     void Awake()
     {
-        parentTab = GetComponentInParent<BuildMenuTab>();
-        grabCollider = GetComponent<SphereCollider>();
+        Initialize();        
+    }
 
-#if UNITY_EDITOR
-        if (!parentTab) Debug.LogError("Parent tab missing.", this);
-        if (!grabCollider) Debug.LogError("grabCollider missing.", this);
-#endif
-
-        //CreatePreviewObjects();
+    public void Initialize()
+    {
+        InitializeGrabCollider();
         previewObjectOriginalScale = normalPreviewObject.transform.localScale;
-
         HookIntoEvents();
     }
 
@@ -85,6 +79,9 @@ public class BuildMenuSlot : MonoBehaviour
     {
         if (!grabCollider)
             grabCollider = GetComponent<SphereCollider>();
+
+        if (!grabCollider) 
+            Debug.LogError("grabCollider missing.", this);
     }
 
     private void Enable()

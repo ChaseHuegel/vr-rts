@@ -15,19 +15,23 @@ public class BuildMenu : MonoBehaviour
     private BuildMenuTab[] buildMenuTabs;
     private int activeTabIndex = 0;
 
+    void Awake()
+    {
+        if (TryGetTabs())
+            InitializeTabs();
+    }
+
     void Start()
     {
-        TryGetTabs();
-        InitializeTabs();
         SetActiveTab(0);
         HookIntoEvents();
     }
     
     private void InitializeTabs()
     {
-        // Init each tab
         foreach (BuildMenuTab tab in buildMenuTabs)
         {
+            tab.gameObject.SetActive(true);
             tab.Initialize();
             tab.gameObject.SetActive(false);
         }

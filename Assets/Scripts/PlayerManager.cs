@@ -64,7 +64,16 @@ public class PlayerManager : MonoBehaviour
     //=========================================================================
     [Header("Prefabs")]
     public GameObject handBuildMenuPrefab;
+    public GameObject defaultButtonLockPrefab;
+    public GameObject buttonLockEpoch2Prefab;
+    public GameObject buttonLockEpoch3Prefab;
+    public GameObject buttonLockEpoch4Prefab;
+    public GameObject defaultSlotLockedPrefab;
+    public GameObject slotLockEpoch2Prefab;
+    public GameObject slotLockEpoch3Prefab;
+    public GameObject slotLockEpoch4Prefab;
 
+   
     private GripPan gripPan;
     private Hand buildMenuHand;
     private Hand selectionHand;
@@ -125,10 +134,10 @@ public class PlayerManager : MonoBehaviour
     public class AttributeBonusChangeEvent : Swordfish.Event
     {
         public UnitData unitData;
-        public AttributeBonus bonus;
+        public StatUpgradeContainer bonus;
     }
 
-    public static Dictionary<UnitData, List<AttributeBonus>> AllAttributeBonuses = new();
+    public static Dictionary<UnitData, List<StatUpgradeContainer>> AllAttributeBonuses = new();
 
     private static PlayerManager _instance;
     //private bool isAutohideHandMenuVisible;
@@ -327,11 +336,11 @@ public class PlayerManager : MonoBehaviour
         actor.BehaviorTree?.Tick(actor, Constants.TICK_RATE_DELTA);
     }
 
-    public void AddUnitStatUpgrade(UnitData unitData, AttributeBonus attributeBonus)
+    public void AddUnitStatUpgrade(UnitData unitData, StatUpgradeContainer attributeBonus)
     {
         if (!AllAttributeBonuses.ContainsKey(unitData))
         {
-            List<AttributeBonus> newBonusList = new()
+            List<StatUpgradeContainer> newBonusList = new()
             {
                 attributeBonus
             };
@@ -340,7 +349,7 @@ public class PlayerManager : MonoBehaviour
         }
         else
         {
-            AttributeBonus foundAttributeBonus = AllAttributeBonuses[unitData].Find(x => x.targetAttribute == attributeBonus.targetAttribute);
+            StatUpgradeContainer foundAttributeBonus = AllAttributeBonuses[unitData].Find(x => x.targetAttribute == attributeBonus.targetAttribute);
             if (foundAttributeBonus == null)
                 AllAttributeBonuses[unitData].Add(attributeBonus);
             else if (foundAttributeBonus != null)
@@ -356,6 +365,79 @@ public class PlayerManager : MonoBehaviour
         OnAttributeBonusChangedEvent?.Invoke(this, e);
         //Debug.LogFormat("+{0} {1} bonus added for {2}.", attributeBonus.amount, attributeBonus.targetAttribute.ToString(), unitData.title);
     }
+
+    public GameObject GetButtonLockPrefab(TechBase tech)
+    {
+        GameObject lockPrefab = null;
+        TechNode node = faction.techTree.FindNode(tech);
+        lockPrefab = defaultButtonLockPrefab;
+
+        if (node != null)
+        {
+            foreach (TechBase techBase in node.techRequirements)
+            {
+                if (techBase is EpochUpgrade)
+                {
+                    int id = ((EpochUpgrade)techBase).epochId;
+                    if (id <= 1)
+                        continue;
+
+                    switch (id)
+                    {
+                        case 2:
+                            lockPrefab = buttonLockEpoch2Prefab;
+                            break;
+                        case 3:
+                            lockPrefab = buttonLockEpoch3Prefab;
+                            break;
+                        case 4:
+                            lockPrefab = buttonLockEpoch4Prefab;
+                            break;
+                    }
+
+                    break;
+                }
+            }
+        }
+        return lockPrefab;
+    }
+
+    public GameObject GetSlotLockPrefab(TechBase tech)
+    {
+        GameObject lockPrefab = null;
+        TechNode node = faction.techTree.FindNode(tech);
+        lockPrefab = defaultSlotLockedPrefab;
+
+        if (node != null)
+        {
+            foreach (TechBase techBase in node.techRequirements)
+            {
+                if (techBase is EpochUpgrade)
+                {
+                    int id = ((EpochUpgrade)techBase).epochId;
+                    if (id <= 1)
+                        continue;
+
+                    switch (id)
+                    {
+                        case 2:
+                            lockPrefab = slotLockEpoch2Prefab;
+                            break;
+                        case 3:
+                            lockPrefab = slotLockEpoch3Prefab;
+                            break;
+                        case 4:
+                            lockPrefab = slotLockEpoch4Prefab;
+                            break;
+                    }
+
+                    break;
+                }
+            }
+        }
+        return lockPrefab;
+    }
+
 
     public void HookIntoEvents()
     {

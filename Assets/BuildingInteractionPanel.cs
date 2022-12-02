@@ -600,22 +600,20 @@ public class BuildingInteractionPanel : MonoBehaviour
 
         //---------------------------------------------------------------------
         // Lock (child of Button)
-        if (GameMaster.Instance.buttonLockPrefab)
-        {
-            GameObject buttonLock = Instantiate<GameObject>(GameMaster.Instance.buttonLockPrefab);
-            buttonLock.name = "_lock";
-            buttonLock.transform.SetParent(button.transform, false);
-            buttonLock.transform.localPosition = new Vector3(0.0f, 0.0f, -0.14f);
-            buttonLock.transform.Rotate(0.0f, 180.0f, 0.0f);
-            buttonLock.SetActive(false);
 
-            queueUnitButton.buttonLockedObject = buttonLock;
-            queueUnitButton.Initialize();
-            if (PlayerManager.Instance.faction.techTree.IsUnlocked(tech))
-                queueUnitButton.Unlock();
-            else
-                queueUnitButton.Lock();
-        }
+        GameObject buttonLock = Instantiate<GameObject>(PlayerManager.Instance.GetButtonLockPrefab(tech));
+        buttonLock.name = "_lock";
+        buttonLock.transform.SetParent(button.transform, false);
+        buttonLock.transform.localPosition = new Vector3(0.0f, 0.0f, -0.14f);
+        buttonLock.transform.Rotate(0.0f, 180.0f, 0.0f);
+        buttonLock.SetActive(false);
+
+        queueUnitButton.buttonLockedObject = buttonLock;
+        queueUnitButton.Initialize();
+        if (PlayerManager.Instance.faction.techTree.IsUnlocked(tech))
+            queueUnitButton.Unlock();
+        else
+            queueUnitButton.Lock();
 
         Destroy(buttonBase.GetComponent<BoxCollider>());
 

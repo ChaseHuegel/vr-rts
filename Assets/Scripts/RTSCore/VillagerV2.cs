@@ -149,13 +149,13 @@ public class VillagerV2 : UnitV2
                 if (structure.buildingData is WallData)
                 {
                     Order = UnitOrder.BuildWalls;
-                    currentCollectRate = AttributeType.BUILD_RATE;
+                    currentCollectRate = AttributeType.HEAL_RATE;
                 }
                 else if (structure.Attributes.Get(AttributeType.HEALTH).IsMax())
                     Order = UnitOrder.DropOff;
                 else
                 {
-                    currentCollectRate = AttributeType.REPAIR_RATE;
+                    currentCollectRate = AttributeType.HEAL_RATE;
                     Order = UnitOrder.Heal;
                 }
                 break;

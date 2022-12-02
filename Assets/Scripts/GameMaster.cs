@@ -76,8 +76,7 @@ public class GameMaster : Singleton<GameMaster>
     public AudioClip onQueueButtonUpSound;
 
     [Header("Queue Menu Queue Slot Settings")]
-    public Sprite emptyQueueSlotSprite;
-    public GameObject buttonLockPrefab;
+    public Sprite emptyQueueSlotSprite;    
     
     [Header("Unit settings")]
     public int maximumUnitSelectionCount = 20;

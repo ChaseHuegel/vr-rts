@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59f52c3e4209a28419b8d4a360a1164e, type: 3}
+  m_Name: toolworking
+  m_EditorClassIdentifier: 
+  title: Inf / Cav Attack +1
+  description: +1 Infantry/Cavalry Attack
+  details: 
+  queueResearchTime: 5
+  worldPrefab: {fileID: 0}
+  worldButtonTexture: {fileID: 2800000, guid: ffd8c36a7b8e23d4f836ce536ac0d36a, type: 3}
+  worldQueueImage: {fileID: 21300000, guid: af6d1094fc326bb458033594464a9ac6, type: 3}
+  populationCost: 0
+  goldCost: 0
+  stoneCost: 0
+  foodCost: 0
+  woodCost: 0
+  statUpgrades:
+  - targetUnits:
+    - {fileID: 11400000, guid: 5ebc57ae57ef9ee46a3cf4d75de285a6, type: 2}
+    - {fileID: 11400000, guid: 32286c2bb252648459ee0189b4a11a57, type: 2}
+    - {fileID: 11400000, guid: 94aca7e17a8754648b1f953872ca2d77, type: 2}
+    - {fileID: 11400000, guid: aaa71de16c108d34d84fe4592741c242, type: 2}
+    - {fileID: 11400000, guid: afd0772933e012145b9e5ca2aa679480, type: 2}
+    - {fileID: 11400000, guid: ccc8f48f7e1aca94d8063fa105b5a605, type: 2}
+    - {fileID: 11400000, guid: 408ae3f890395334da0aa2b51e929d8e, type: 2}
+    - {fileID: 11400000, guid: ecec8660b50660f47a9112cef34e0b32, type: 2}
+    - {fileID: 11400000, guid: 4c7fb3b5dcb91354c8366f6c24e06bb5, type: 2}
+    - {fileID: 11400000, guid: 53ab51748e7d5d54c9012c7fcca7a6cb, type: 2}
+    - {fileID: 11400000, guid: 58318cc39a17f2d498842ac9ff294cd6, type: 2}
+    - {fileID: 11400000, guid: a39030fe1479d0942a744e84cf4e65f3, type: 2}
+    - {fileID: 11400000, guid: 6a3967368cf4e1948b5774dbb9880233, type: 2}
+    - {fileID: 11400000, guid: 6f8fca9f194b3f84cad3664f4d4e780e, type: 2}
+    targetAttribute: 16
+    modifier: 0
+    amount: 1

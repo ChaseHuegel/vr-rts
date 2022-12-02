@@ -40,6 +40,7 @@ namespace Swordfish
             public Damageable attacker;
         }
 
+        [SerializeField]
         public ValueFieldCollection<AttributeType> Attributes { get; set; } = new();
 
         [SerializeField]

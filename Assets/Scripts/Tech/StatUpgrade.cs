@@ -7,13 +7,14 @@ using Swordfish.Library.Types;
 using UnityEngine;
 
 [Serializable]
-public class AttributeBonus
+public class StatUpgradeContainer
 {
+    public List<UnitData> targetUnits;
     public AttributeType targetAttribute;
     public Modifier modifier = Modifier.ADDITION;
     public float amount;
 
-    public AttributeBonus(AttributeType attributeType, Modifier modifierType, float fAmount)
+    public StatUpgradeContainer(AttributeType attributeType, Modifier modifierType, float fAmount)
     {
         targetAttribute = attributeType;
         modifier = modifierType;
@@ -24,15 +25,18 @@ public class AttributeBonus
 [CreateAssetMenu(fileName = "Stat Upgrade", menuName = "RTS/Tech/Stat Upgrade")]
 public class StatUpgrade : TechBase
 {
-    public List<UnitData> targetUnits;
-    public List<AttributeBonus> attributeBonuses;
+    public List<StatUpgradeContainer> statUpgrades;
 
     public override void Execute(SpawnQueue spawnQueue)
     {
         base.Execute(spawnQueue);
 
-        foreach (UnitData unitData in targetUnits)
-            foreach (AttributeBonus attributeBonus in attributeBonuses)
+        // foreach (UnitData unitData in targetUnits)
+        //     foreach (AttributeBonus attributeBonus in attributeBonuses)
+        //         PlayerManager.Instance.AddUnitStatUpgrade(unitData, attributeBonus);
+
+        foreach (StatUpgradeContainer attributeBonus in statUpgrades)
+            foreach (UnitData unitData in attributeBonus.targetUnits)
                 PlayerManager.Instance.AddUnitStatUpgrade(unitData, attributeBonus);
 
         Debug.Log(this.title + "research completed.");

@@ -6,6 +6,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Epoch Upgrade", menuName = "RTS/Tech/Epoch Upgrade")]
 public class EpochUpgrade : TechBase
 {
+    public int epochId;
     public int requiredBuildingCount;
     public override void Execute(SpawnQueue spawnQueue)
     {

@@ -76,7 +76,7 @@ public abstract class UnitV2 : ActorV2
         Attributes.Get(AttributeType.HEAL_RATE).MaxValue = data.healRate;
 
         if (PlayerManager.AllAttributeBonuses.TryGetValue(unitData, out var bonuses))
-            foreach (AttributeBonus bonus in bonuses)
+            foreach (StatUpgradeContainer bonus in bonuses)
                 Attributes.Get(bonus.targetAttribute).AddModifier(bonus.targetAttribute, bonus.modifier, bonus.amount);
     }
     

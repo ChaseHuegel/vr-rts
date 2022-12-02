@@ -170,6 +170,25 @@ public static class VillagerBehaviorTree
                 )
             ),
 
+            new OrderIs(UnitOrder.Heal,
+                new BehaviorSelector(
+                    //  Attempt to repair the target
+                    new BehaviorSequence(
+                        new HasTarget(),
+                        new GoToTarget(),
+                        new SetActorState(ActorAnimationState.HEAL),
+                        new HealTarget(),
+                        new ResetTarget(),
+                        new ResetOrder()
+                    ),
+                    //  Else order is complete
+                    new BehaviorSequence(
+                        new ResetTarget(),
+                        new ResetOrder()
+                    )
+                )
+            ),
+            
             new OrderIs(UnitOrder.BuildAndFarm,
                 new BehaviorSelector(
                     //  Attempt to drop off if cargo is full
@@ -223,7 +242,7 @@ public static class VillagerBehaviorTree
                         new ResetOrder()
                     )
                 )
-            ),
+            ),            
 
             new OrderIs(UnitOrder.BuildWalls,
                 new BehaviorSelector(
@@ -243,14 +262,6 @@ public static class VillagerBehaviorTree
                         new ResetTarget(),
                         new ResetOrder()
                     )
-                )
-            ),
-
-            //  Try to navigate to our current destination
-            new IfHasDestination(
-                new BehaviorSequence(
-                    new GoToDestination(),
-                    new ResetDestination()
                 )
             ),
 
