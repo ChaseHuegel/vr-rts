@@ -39,6 +39,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4149168669137387316}
+  - {fileID: 5096145159834151817}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -434,6 +435,12 @@ MonoBehaviour:
   SkinRendererTargets:
   - {fileID: 3017379003108607067}
   m_Layers: 2
+  healFxPrefab: {fileID: 0}
+  damagedFxPrefab: {fileID: 0}
+  deathFxPrefab: {fileID: 0}
+  projectilePrefab: {fileID: 3360805562578941854, guid: 8dd0ff26bb58b2446a2d7f27476a333e,
+    type: 3}
+  projectileOrigin: {fileID: 5096145159834151817}
   unitData: {fileID: 11400000, guid: 5f983a65057572240868463f52df70e5, type: 2}
   FarmingToolObject: {fileID: 0}
   MiningToolObject: {fileID: 0}
@@ -446,6 +453,37 @@ MonoBehaviour:
   WoodCargoObject: {fileID: 0}
   StoneCargoObject: {fileID: 0}
   GoldCargoObject: {fileID: 0}
+--- !u!1 &8181582500373021035
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5096145159834151817}
+  m_Layer: 9
+  m_Name: projectile_origin
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5096145159834151817
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8181582500373021035}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.042, z: -0.016}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 933087206238152153}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &4476146568526846175
 PrefabInstance:
   m_ObjectHideFlags: 0

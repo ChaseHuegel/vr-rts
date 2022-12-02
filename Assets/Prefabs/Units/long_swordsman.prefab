@@ -1500,7 +1500,11 @@ MonoBehaviour:
   Faction: {fileID: 0}
   BoundingDimensions: {x: 1, y: 1}
   BoundingOrigin: {x: 0, y: 0}
-  SkinRendererTargets: []
+  SkinRendererTargets:
+  - {fileID: 806002589625151161}
+  - {fileID: 806002589625151079}
+  - {fileID: 806002589625151217}
+  - {fileID: 806002589619779641}
   m_Layers: 1
   healFxPrefab: {fileID: 0}
   damagedFxPrefab: {fileID: 0}
@@ -2616,6 +2620,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 02ded044b8e0963439276550f50be6f9, type: 3}
+--- !u!137 &806002589619779641 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 13700242, guid: 02ded044b8e0963439276550f50be6f9,
+    type: 3}
+  m_PrefabInstance: {fileID: 806002589622989995}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &806002589622857613 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400166, guid: 02ded044b8e0963439276550f50be6f9,
@@ -2640,3 +2650,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ecf569eaf4f58f43bb8f6733152f817, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!23 &806002589625151079 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 2300620, guid: 02ded044b8e0963439276550f50be6f9,
+    type: 3}
+  m_PrefabInstance: {fileID: 806002589622989995}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &806002589625151161 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 2300434, guid: 02ded044b8e0963439276550f50be6f9,
+    type: 3}
+  m_PrefabInstance: {fileID: 806002589622989995}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &806002589625151217 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 2300506, guid: 02ded044b8e0963439276550f50be6f9,
+    type: 3}
+  m_PrefabInstance: {fileID: 806002589622989995}
+  m_PrefabAsset: {fileID: 0}

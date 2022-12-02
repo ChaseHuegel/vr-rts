@@ -590,6 +590,7 @@ Transform:
   - {fileID: 1977437644203039147}
   - {fileID: 8792111814282211829}
   - {fileID: 1595909879168450441}
+  - {fileID: 5489693091413692755}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1001,6 +1002,12 @@ MonoBehaviour:
   SkinRendererTargets:
   - {fileID: 1977437644214353651}
   m_Layers: 1
+  healFxPrefab: {fileID: 0}
+  damagedFxPrefab: {fileID: 0}
+  deathFxPrefab: {fileID: 0}
+  projectilePrefab: {fileID: 3360805562578941854, guid: 8dd0ff26bb58b2446a2d7f27476a333e,
+    type: 3}
+  projectileOrigin: {fileID: 5489693091413692755}
   unitData: {fileID: 11400000, guid: 2412ce796068f7c4fa1be89612fcefb9, type: 2}
 --- !u!1 &4095888295868567910
 GameObject:
@@ -1774,6 +1781,37 @@ MonoBehaviour:
   healthBarBackgroundImage: {fileID: 5768796333517946014}
   healthBarForegroundImage: {fileID: 1189716020814333972}
   healthBarStatusText: {fileID: 1053849352697614634}
+--- !u!1 &8796813680627890050
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5489693091413692755}
+  m_Layer: 9
+  m_Name: projectile_origin
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5489693091413692755
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8796813680627890050}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.083, z: 0.012}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4075572290243062573}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8862277412468767693
 GameObject:
   m_ObjectHideFlags: 0

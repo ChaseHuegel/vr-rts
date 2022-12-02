@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4379431030245881377
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6961728423678985954}
+  m_Layer: 9
+  m_Name: projectile_origin
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6961728423678985954
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4379431030245881377}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.044, z: -0.032}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4472713310848627013}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4472713310848627018
 GameObject:
   m_ObjectHideFlags: 0
@@ -39,6 +70,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 825414623298546600}
+  - {fileID: 6961728423678985954}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -434,6 +466,12 @@ MonoBehaviour:
   SkinRendererTargets:
   - {fileID: 1963387909297967303}
   m_Layers: 2
+  healFxPrefab: {fileID: 0}
+  damagedFxPrefab: {fileID: 0}
+  deathFxPrefab: {fileID: 0}
+  projectilePrefab: {fileID: 3749667354531930376, guid: 0d17c8df07a90b447ab303432bbd6039,
+    type: 3}
+  projectileOrigin: {fileID: 6961728423678985954}
   unitData: {fileID: 11400000, guid: e248b03a70e218b4ba589d6d36c80392, type: 2}
   FarmingToolObject: {fileID: 0}
   MiningToolObject: {fileID: 0}
