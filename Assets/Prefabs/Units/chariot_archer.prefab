@@ -1834,6 +1834,9 @@ MonoBehaviour:
   - {fileID: 8556134138718432976}
   - {fileID: 8778740559090576565}
   m_Layers: 1
+  healFxPrefab: {fileID: 0}
+  damagedFxPrefab: {fileID: 0}
+  deathFxPrefab: {fileID: 0}
   projectilePrefab: {fileID: 0}
   projectileOrigin: {fileID: 0}
   unitData: {fileID: 11400000, guid: 182ace54105744549bd79f42af10519b, type: 2}
@@ -14116,7 +14119,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &8556134138716006876
 Transform:
   m_ObjectHideFlags: 0
@@ -14611,7 +14614,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &8556134138716006886
 Transform:
   m_ObjectHideFlags: 0

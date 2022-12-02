@@ -567,6 +567,11 @@ MonoBehaviour:
   SkinRendererTargets:
   - {fileID: 3779031098810203071}
   m_Layers: 1
+  healFxPrefab: {fileID: 0}
+  damagedFxPrefab: {fileID: 0}
+  deathFxPrefab: {fileID: 0}
+  projectilePrefab: {fileID: 0}
+  projectileOrigin: {fileID: 0}
   unitData: {fileID: 11400000, guid: 0bd5de1f2f7ae25488c472929f857b37, type: 2}
 --- !u!1 &1717860990524118058
 GameObject:
@@ -1953,7 +1958,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 103416, guid: 6652791f0d19f3b408a94277d330b59b, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 103654, guid: 6652791f0d19f3b408a94277d330b59b, type: 3}
       propertyPath: m_IsActive
@@ -1969,11 +1974,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 113700, guid: 6652791f0d19f3b408a94277d330b59b, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114982, guid: 6652791f0d19f3b408a94277d330b59b, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 117472, guid: 6652791f0d19f3b408a94277d330b59b, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 118320, guid: 6652791f0d19f3b408a94277d330b59b, type: 3}
       propertyPath: m_IsActive
@@ -2037,7 +2046,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 155190, guid: 6652791f0d19f3b408a94277d330b59b, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 155526, guid: 6652791f0d19f3b408a94277d330b59b, type: 3}
       propertyPath: m_IsActive

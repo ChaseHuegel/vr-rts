@@ -90,12 +90,9 @@ public abstract class UnitV2 : ActorV2
 
             SkinRendererTargets = new Renderer[skinnedMeshRenderers.Length];
             for (int i = 0; i < skinnedMeshRenderers.Length; i++)
-            {
                 SkinRendererTargets[i] = skinnedMeshRenderers[i];
-            }
 
             return true;
-
         }
 
         return false;
@@ -207,7 +204,8 @@ public abstract class UnitV2 : ActorV2
 
         if (projectilePrefab)
         {
-            Projectile.Spawn(projectilePrefab, projectileOrigin.position, Quaternion.identity, this, Target.transform);
+            Projectile projectile = Projectile.Spawn(projectilePrefab, projectileOrigin.position, projectilePrefab.transform.rotation, this, Target.transform);
+            projectile.damage += Attributes.ValueOf(AttributeType.DAMAGE);
             //SetAnimatorsInteger("ActorAnimationState", (int)ActorAnimationState.IDLE);
         }
         else if (AttackingTarget)

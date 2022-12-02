@@ -1749,6 +1749,11 @@ MonoBehaviour:
   SkinRendererTargets:
   - {fileID: 5656031156166107791}
   m_Layers: 1
+  healFxPrefab: {fileID: 0}
+  damagedFxPrefab: {fileID: 0}
+  deathFxPrefab: {fileID: 0}
+  projectilePrefab: {fileID: 0}
+  projectileOrigin: {fileID: 0}
   unitData: {fileID: 11400000, guid: 1a362cc56473cff4f9da8674ee86dcab, type: 2}
 --- !u!1 &7915221367423581230
 GameObject:
@@ -2045,11 +2050,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 158110, guid: 6652791f0d19f3b408a94277d330b59b, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 158336, guid: 6652791f0d19f3b408a94277d330b59b, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 159424, guid: 6652791f0d19f3b408a94277d330b59b, type: 3}
       propertyPath: m_IsActive

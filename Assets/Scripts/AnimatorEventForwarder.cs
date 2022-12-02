@@ -29,9 +29,4 @@ public class AnimatorEventForwarder : MonoBehaviour
         if (audioSource != null && clipName != "")
             audioSource.PlayOneShot(GameMaster.GetAudio(clipName).GetClip());
     }
-
-    // public void LaunchProjectile()
-    // {
-    //     this.GetComponentInParent<UnitV2>().LaunchProjectile();
-    // }
 }
