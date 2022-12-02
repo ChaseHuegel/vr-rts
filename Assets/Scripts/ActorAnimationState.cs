@@ -15,3 +15,13 @@ public enum ActorAnimationState
     DYING2 = 11,
     HUNTING = 12,
 }
+
+[System.Serializable]
+public enum ActorAnimationTrigger
+{
+    ATTACK = 1,
+    EAT = 2,
+    LOOKAROUND = 3,
+}
+
+

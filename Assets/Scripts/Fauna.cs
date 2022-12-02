@@ -113,9 +113,9 @@ public class Fauna : ActorV2
             float idleAction = Random.Range(0.0f, 1.0f);
 
             if (idleAction < eatActionChance)
-                SetAnimatorsTrigger("Eat");
+                SetAnimatorsTrigger(ActorAnimationTrigger.EAT);
             else if (idleAction < lookAroundActionChance)
-                SetAnimatorsTrigger("LookAround");
+                SetAnimatorsTrigger(ActorAnimationTrigger.LOOKAROUND);
             else
                 SetAnimatorsInteger("ActorAnimationState", (int)FaunaActions.IDLE);
         }

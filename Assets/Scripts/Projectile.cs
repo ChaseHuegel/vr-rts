@@ -74,9 +74,12 @@ public class Projectile : MonoBehaviour
                 targetBody.Damage(damage, AttributeChangeCause.ATTACKED, sourceBody, damageType);
             else
                 foreach (Body body in World.GetBodiesInArea(target.position, areaOfEffect, areaOfEffect))
-                    body.Damage(damage, AttributeChangeCause.ATTACKED, sourceBody, damageType);
+                {
+                    if (!sourceBody.Faction.IsAllied(body.Faction))
+                        body.Damage(damage, AttributeChangeCause.ATTACKED, sourceBody, damageType);
+                }
 
-            if (hitFx)
+            if (hitFx && targetBody)
                 Instantiate(hitFx, target.position, hitFx.transform.rotation);
         }
     }

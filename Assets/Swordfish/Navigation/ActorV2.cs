@@ -199,10 +199,16 @@ namespace Swordfish.Navigation
                 animator.enabled = false;
         }
 
-        protected void SetAnimatorsTrigger(string name)
+        protected void ResetAnimatorsTrigger(ActorAnimationTrigger trigger)
         {
             foreach (Animator animator in Animators)
-                animator.SetTrigger(name);
+                animator.ResetTrigger(trigger.ToString());
+        }
+
+        protected void SetAnimatorsTrigger(ActorAnimationTrigger trigger)
+        {
+            foreach (Animator animator in Animators)
+                animator.SetTrigger(trigger.ToString());
         }
 
         public abstract void IssueTargetedOrder(Body body);

@@ -18,24 +18,20 @@ public class AnimatorEventForwarder : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Forwards a contact/strike event from the animator to the unit 
-    /// this animator belongs to.
-    /// </summary>
-    /// <param name="audioClipName"></param>
-    public void Strike(string audioClipName = "")
+    public void ExecuteAttackAnimationEvent()
     {
+        this.GetComponentInParent<UnitV2>().ExecuteAttackFromAnimation();
     }
 
-    // TODO: Remove this, don't think this is called anymore by any animators.
+    // TODO: Remove this, don't think this is called anymore by any animators??
     public void PlayAudio(string clipName = "")
     {
         if (audioSource != null && clipName != "")
             audioSource.PlayOneShot(GameMaster.GetAudio(clipName).GetClip());
     }
 
-    public void LaunchProjectile()
-    {
-        this.GetComponentInParent<UnitV2>().LaunchProjectile();
-    }
+    // public void LaunchProjectile()
+    // {
+    //     this.GetComponentInParent<UnitV2>().LaunchProjectile();
+    // }
 }

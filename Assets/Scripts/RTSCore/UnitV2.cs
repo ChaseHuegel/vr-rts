@@ -191,8 +191,7 @@ public abstract class UnitV2 : ActorV2
 
             if (Target != null && Target.IsAlive() && !IsMoving)
             {
-                SetAnimatorsInteger("ActorAnimationState", (int)ActorAnimationState.ATTACKING);
-                Attack(Target);
+                SetAnimatorsTrigger(ActorAnimationTrigger.ATTACK);
             }
             else
             {                
@@ -201,26 +200,21 @@ public abstract class UnitV2 : ActorV2
         }
     }
 
-    private void Attack(Damageable victim)
-    {        
-        // Don't register normal damage if this unit uses projectiles... the projectile
-        // will deal the damage.
-        if (projectilePrefab != null)
-            return;
-
-        // Debug.Log("Attacking for " + Attributes.ValueOf(AttributeType.DAMAGE).ToString());
-        // TODO: this is where we want to handle weapons, damage types, etc.
-        victim.Damage(Attributes.ValueOf(AttributeType.DAMAGE), AttributeChangeCause.ATTACKED, this, DamageType.NONE);
-        SetAnimatorsInteger("ActorAnimationState", (int)ActorAnimationState.IDLE);
-    }
-
-    public void LaunchProjectile()
+    public void ExecuteAttackFromAnimation()
     {
-        if (!projectilePrefab || !Target)
+        if (!Target)
             return;
 
-        Projectile.Spawn(projectilePrefab, projectileOrigin.position, Quaternion.identity, this, Target.transform);
-        SetAnimatorsInteger("ActorAnimationState", (int)ActorAnimationState.IDLE);
+        if (projectilePrefab)
+        {
+            Projectile.Spawn(projectilePrefab, projectileOrigin.position, Quaternion.identity, this, Target.transform);
+            //SetAnimatorsInteger("ActorAnimationState", (int)ActorAnimationState.IDLE);
+        }
+        else if (AttackingTarget)
+            // TODO: this is where we want to handle weapons, damage types, etc.
+            Target.Damage(Attributes.ValueOf(AttributeType.DAMAGE), AttributeChangeCause.ATTACKED, this, DamageType.NONE);
+
+        ResetAnimatorsTrigger(ActorAnimationTrigger.ATTACK);
     }
 
     protected virtual void ProcessHealRoutine(float deltaTime)
