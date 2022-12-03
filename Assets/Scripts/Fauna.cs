@@ -14,8 +14,9 @@ public class Fauna : ActorV2
     }
 
     public readonly static List<Fauna> AllFauna = new();
-
+    public float normalMovementSpeed;
     public float runSpeed;
+    public float hitPoints = 10.0f;
 
     [Tooltip("The radius that the actor will operate in centered on their starting spawn location.")]
     [Range(0.0f, 2.0f)]
@@ -36,11 +37,9 @@ public class Fauna : ActorV2
     [SerializeField]
     public float lookAroundActionChance = 0.6f;
 
-
     public GameObject liveFaunaObject;
     public GameObject deadFaunaObject;
     private Vector3 startPosition;
-    private float normalMovementSpeed;
 
     bool isRunnng;
     float newDecisionTimer;
@@ -75,9 +74,9 @@ public class Fauna : ActorV2
     protected override void InitializeAttributes()
     {
         base.InitializeAttributes();
-        Attributes.AddOrUpdate(AttributeType.HEALTH, 25f, 25f);
-        Attributes.AddOrUpdate(AttributeType.SPEED, 0.2f);
-        normalMovementSpeed = Attributes.ValueOf(AttributeType.SPEED);
+        Attributes.Get(AttributeType.HEALTH).MaxValue = hitPoints;
+        Attributes.Get(AttributeType.HEALTH).Value = hitPoints;
+        Attributes.AddOrUpdate(AttributeType.SPEED, 1f);
     }
 
     public override void Tick(float deltaTime)
@@ -138,6 +137,12 @@ public class Fauna : ActorV2
         }
 
         return isDead;
+    }
+
+    protected override void OnDeath(DeathEvent e)
+    {
+        base.OnDeath(e);
+        IsDead();
     }
 
     void MakeNewDecision()
