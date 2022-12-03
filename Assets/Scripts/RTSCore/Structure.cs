@@ -15,6 +15,9 @@ public class Structure : Obstacle
     private GameObject fireGlowParticleSystem;
     private GameObject flamesParticleSystem;
     private GameObject sparksParticleSystem;
+
+    protected int armor;
+        
     public bool NeedsRepairs() => Attributes.Get(AttributeType.HEALTH).IsMax();
 
     public void Awake()
@@ -38,6 +41,9 @@ public class Structure : Obstacle
     {
         base.Initialize();
         AllStructures.Add(this);
+
+        // TODO: Switch to the attribute system
+        armor = buildingData.armor;
 
         // Setup some defaults that tend to get switched in the editor.
         IgnorePanning ignorePanning = GetComponentInChildren<IgnorePanning>();

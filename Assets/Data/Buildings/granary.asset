@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c98206bdc9ffd5547bf4552bd13d2c59, type: 3}
+  m_Name: granary
+  m_EditorClassIdentifier: 
+  title: Granary
+  description: Grain drop off location.
+  details: Farm upgrades.
+  queueResearchTime: 25
+  worldPrefab: {fileID: 557160733203580378, guid: 1a0e4a32dc507d64a8068524247818ce,
+    type: 3}
+  worldButtonMaterial: {fileID: 2100000, guid: 7efca1a23fe081b458699fedbe0e5312, type: 2}
+  worldQueueImage: {fileID: 21300000, guid: a21fda3aedfd077469087548bd5152e0, type: 3}
+  populationCost: 0
+  goldCost: 0
+  stoneCost: 0
+  foodCost: 0
+  woodCost: 100
+  buildingType: 30
+  dropoffTypes: 17
+  boundingDimensionX: 3
+  boundingDimensionY: 3
+  allowedLayers: 1
+  populationSupported: 0
+  maxUnitQueueSize: 12
+  maximumHitPoints: 100
+  garrisonCapacity: 0
+  armor: 3
+  menuPreviewPrefab: {fileID: 453152195784497181, guid: dcf44e6d84b30634ca55b9338af59656,
+    type: 3}
+  fadedPreviewPrefab: {fileID: 1774457948488373667, guid: 38d497c8ee2fbdc4782abbfa8d4e7614,
+    type: 3}
+  worldPreviewPrefab: {fileID: 1823290313715983368, guid: bc7cbd4c6cdab3f45bd10d80923b201b,
+    type: 3}
+  throwablePrefab: {fileID: 8842842324772799369, guid: ceb414b0916c62c4995a83ed792c3692,
+    type: 3}
+  constructionPrefab: {fileID: 4963415027078729092, guid: ceefc8fdedb29354da47d8dac2a788f4,
+    type: 3}
+  constructionCompletedAudio: {fileID: 11400000, guid: c72159ec98440534abf1b3058c7edd57,
+    type: 2}
+  techQueueButtons:
+  - {fileID: 11400000, guid: 240df38f622796846b8908ba9199f77c, type: 2}
+  - {fileID: 11400000, guid: ac97aa2d2084dd5458250aa55e8329de, type: 2}
+  - {fileID: 11400000, guid: b1d3b8f6efd121f4eace566be7c84a0d, type: 2}
+  - {fileID: 11400000, guid: fa827f7b022c12b40ab63515fba89473, type: 2}
+  - {fileID: 11400000, guid: 5b2d7c633ee7f624393b98e383c68c94, type: 2}
+  - {fileID: 11400000, guid: 1f440a3df83f076488230c8a9075dc60, type: 2}
+  - {fileID: 11400000, guid: ddbf2c9d3cebf9942ab75340998a99ae, type: 2}

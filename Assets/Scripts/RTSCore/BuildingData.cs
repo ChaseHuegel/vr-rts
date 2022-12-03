@@ -19,6 +19,12 @@ public class BuildingData : TechBase
     public int maximumHitPoints;
     public int garrisonCapacity;
     public int armor;
+
+    [Tooltip("Building attack radius in grid units/cells.")]
+    public int attackRange;
+    [Tooltip("Seconds between attacks.")]
+    public float attackSpeed;
+    public float attackDamage;
     
     [Header("Additional Visual Prefabs")]
     public GameObject menuPreviewPrefab;

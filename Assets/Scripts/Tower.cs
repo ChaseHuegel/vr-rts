@@ -5,12 +5,6 @@ using UnityEngine;
 
 public class Tower : Structure
 {
-    [Tooltip("Building attack radius in grid units/cells.")]
-    public int attackRange = 5;
-    [Tooltip("Seconds between attacks.")]
-    public float attackSpeed = 3.0f;
-    public float attackDamage = 1.0f;
-
     [Header("Projectile")]
     public GameObject projectilePrefab;
     public Transform projectileOrigin;    
@@ -18,11 +12,18 @@ public class Tower : Structure
     protected float timeSinceLastAttack;
     private SphereCollider attackRangeCollider;
     protected GameObject projectileTarget;
-    
-
+    protected int attackRange;
+    protected float attackSpeed;
+    protected float attackDamage;
     public override void Initialize()
     {
         base.Initialize();
+        
+        // TODO: Switch to the attribute system
+        attackRange = buildingData.attackRange;
+        attackSpeed = buildingData.attackSpeed;
+        attackRange = buildingData.attackRange;
+
         attackRangeCollider = GetComponentInChildren<SphereCollider>();
         attackRangeCollider.radius = attackRange * World.GetUnit();
 
