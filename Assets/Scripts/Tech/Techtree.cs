@@ -387,6 +387,11 @@ public class UnitNode : TechNode
             TechNode requirementNode = techTree.FindNode(req);
             if (!requirementNode.unlocked)
                 return false;
+            else if (requirementNode is ResearchNode)
+            {
+                if (!requirementNode.researched)
+                    return false;
+            }
         }
 
         return true;

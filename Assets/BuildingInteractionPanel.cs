@@ -560,6 +560,9 @@ public class BuildingInteractionPanel : MonoBehaviour
         text.font = GameMaster.Instance.progressFont;
         text.text = tech.title;
 
+        if (tech is TechResearcher)
+            text.color = Color.yellow;
+
         //---------------------------------------------------------------------
         // Face (child of Button)
         GameObject face = new GameObject("_face", typeof(Interactable), typeof(HoverButton));
