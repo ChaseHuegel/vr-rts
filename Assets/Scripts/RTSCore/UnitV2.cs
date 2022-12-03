@@ -188,7 +188,10 @@ public abstract class UnitV2 : ActorV2
 
             if (Target != null && Target.IsAlive() && !IsMoving)
             {
-                SetAnimatorsTrigger(ActorAnimationTrigger.ATTACK);
+                if (Animators.Length > 0)
+                    SetAnimatorsTrigger(ActorAnimationTrigger.ATTACK);
+                else
+                    Attack();
             }
             else
             {                
@@ -198,6 +201,12 @@ public abstract class UnitV2 : ActorV2
     }
 
     public void ExecuteAttackFromAnimation()
+    {
+        Attack();
+        ResetAnimatorsTrigger(ActorAnimationTrigger.ATTACK);
+    }
+
+    protected void Attack()
     {
         if (!Target)
             return;
@@ -211,8 +220,6 @@ public abstract class UnitV2 : ActorV2
         else if (AttackingTarget)
             // TODO: this is where we want to handle weapons, damage types, etc.
             Target.Damage(Attributes.ValueOf(AttributeType.DAMAGE), AttributeChangeCause.ATTACKED, this, DamageType.NONE);
-
-        ResetAnimatorsTrigger(ActorAnimationTrigger.ATTACK);
     }
 
     protected virtual void ProcessHealRoutine(float deltaTime)

@@ -434,6 +434,11 @@ MonoBehaviour:
   SkinRendererTargets:
   - {fileID: 4770410711224474253}
   m_Layers: 2
+  healFxPrefab: {fileID: 0}
+  damagedFxPrefab: {fileID: 0}
+  deathFxPrefab: {fileID: 0}
+  projectilePrefab: {fileID: 0}
+  projectileOrigin: {fileID: 0}
   unitData: {fileID: 11400000, guid: 483cf06ab49655349b1f1fdbe08a7b69, type: 2}
   FarmingToolObject: {fileID: 0}
   MiningToolObject: {fileID: 0}
@@ -518,6 +523,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: trade_boat
       objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: c5d42c8c73c613942909b243e2281af8,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 753e4b92f15e5f349a9d97926662deb1, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c5d42c8c73c613942909b243e2281af8, type: 3}
 --- !u!23 &4770410711224474253 stripped
@@ -532,3 +542,21 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 6193138768445326857}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &6427511004781837144 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: c5d42c8c73c613942909b243e2281af8,
+    type: 3}
+  m_PrefabInstance: {fileID: 6193138768445326857}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8177915345981056854
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6427511004781837144}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ecf569eaf4f58f43bb8f6733152f817, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

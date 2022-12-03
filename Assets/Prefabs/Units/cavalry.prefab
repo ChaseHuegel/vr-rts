@@ -636,6 +636,11 @@ MonoBehaviour:
   - {fileID: 8214657524082787148}
   - {fileID: 3489826815680277552}
   m_Layers: 1
+  healFxPrefab: {fileID: 0}
+  damagedFxPrefab: {fileID: 0}
+  deathFxPrefab: {fileID: 0}
+  projectilePrefab: {fileID: 0}
+  projectileOrigin: {fileID: 0}
   unitData: {fileID: 11400000, guid: aaa71de16c108d34d84fe4592741c242, type: 2}
 --- !u!1 &2745587657529811524
 GameObject:
@@ -22234,7 +22239,7 @@ PrefabInstance:
     - target: {fileID: 8966060164252398307, guid: f2080da68bda4a444a494b00f6bb6201,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.1761
+      value: 0.275
       objectReference: {fileID: 0}
     - target: {fileID: 8966060164252398307, guid: f2080da68bda4a444a494b00f6bb6201,
         type: 3}
