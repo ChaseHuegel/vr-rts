@@ -10,39 +10,43 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 28b639bd8c1567e45a5dc6fc5308b6d9, type: 3}
-  m_Name: stone_wall_a_corner
+  m_Name: stone_wall_a
   m_EditorClassIdentifier: 
   title: Stone Wall
   description: 
+  details: 
   queueResearchTime: 5
-  worldPrefab: {fileID: 2193715503344255681, guid: 77df6042ed50eef4b8f78ef84b17a4b0,
+  worldPrefab: {fileID: 919132149155446097, guid: 20054be302ea4cf4aa9526d807f4129f,
     type: 3}
-  worldButtonMaterial: {fileID: 2100000, guid: dffe9ebd884373149a9978b358114b93, type: 2}
-  worldQueueImage: {fileID: 21300000, guid: 9e95add7aee099042b84888401f6ce3f, type: 3}
+  worldButtonTexture: {fileID: 0}
+  worldQueueImage: {fileID: 21300000, guid: 3df1908ea49e7ba449de43020d1770ec, type: 3}
   populationCost: 0
   goldCost: 0
   stoneCost: 0
   foodCost: 0
   woodCost: 0
-  buildingType: 125
+  buildingType: 0
   dropoffTypes: 0
   boundingDimensionX: 1
   boundingDimensionY: 1
   allowedLayers: 1
   populationSupported: 0
   maxUnitQueueSize: 12
-  maximumHitPoints: 10
+  maximumHitPoints: 30
   garrisonCapacity: 0
   armor: 2
-  menuPreviewPrefab: {fileID: 7367178104103769980, guid: c63b0423a5ffa0d4f806ddf461560ea0,
+  attackRange: 0
+  attackSpeed: 0
+  attackDamage: 0
+  menuPreviewPrefab: {fileID: 9137173371099412973, guid: f7bca3faa8abec74188e7273ee9e39c9,
     type: 3}
-  fadedPreviewPrefab: {fileID: 6179498552039159527, guid: 1142f7c703b79c144be09dd91a503135,
+  fadedPreviewPrefab: {fileID: 3786263206386792123, guid: 5e5aebb1251264048a2d03d3ac70a5a3,
     type: 3}
-  worldPreviewPrefab: {fileID: 7465523776477995692, guid: 44a3c819c632e634894f2fd751530e5f,
+  worldPreviewPrefab: {fileID: 7495025880625584041, guid: f045986ab1f837b4897b41899974f4cd,
     type: 3}
-  throwablePrefab: {fileID: 5956610102014355640, guid: bbcda553511d6014689449d589054332,
+  throwablePrefab: {fileID: 3129452465192890263, guid: 8eaffab3898b5ba448d2378a0718eb8e,
     type: 3}
-  constructionPrefab: {fileID: 30784435363744344, guid: ca6af84fb0196434fb2bcfb8e752a968,
+  constructionPrefab: {fileID: 3625756549702738129, guid: 68a413726cda0754ea49fc0f8bc40cc2,
     type: 3}
   constructionCompletedAudio: {fileID: 11400000, guid: c72159ec98440534abf1b3058c7edd57,
     type: 2}

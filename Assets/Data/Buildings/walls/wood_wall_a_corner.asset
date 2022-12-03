@@ -10,14 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 28b639bd8c1567e45a5dc6fc5308b6d9, type: 3}
-  m_Name: pallisade_wall_a_corner
+  m_Name: wood_wall_a_corner
   m_EditorClassIdentifier: 
-  title: Pallisade Wall
+  title: Wood Wall
   description: 
+  details: 
   queueResearchTime: 5
   worldPrefab: {fileID: 2735593572440158462, guid: 593ded4fe061a214b98ae180528f5f1c,
     type: 3}
-  worldButtonMaterial: {fileID: 2100000, guid: ba7fc9e09ec5f6348954685dbdc7752f, type: 2}
+  worldButtonTexture: {fileID: 0}
   worldQueueImage: {fileID: 21300000, guid: e6411728158a7574d97afb49acc3a895, type: 3}
   populationCost: 0
   goldCost: 0
@@ -31,9 +32,12 @@ MonoBehaviour:
   allowedLayers: 1
   populationSupported: 0
   maxUnitQueueSize: 12
-  maximumHitPoints: 10
+  maximumHitPoints: 30
   garrisonCapacity: 0
   armor: 2
+  attackRange: 0
+  attackSpeed: 0
+  attackDamage: 0
   menuPreviewPrefab: {fileID: 4567268106861603064, guid: 66b446ed9b6cf5b4c969e88e44d1d801,
     type: 3}
   fadedPreviewPrefab: {fileID: 3767241666771750208, guid: ef95af45a61ce85429af2b4e7909d579,

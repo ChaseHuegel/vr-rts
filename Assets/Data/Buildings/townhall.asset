@@ -14,10 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   title: Town Hall
   description: 
+  details: 
   queueResearchTime: 25
   worldPrefab: {fileID: 1129064322338806663, guid: 9b01cde0f07486643a93faa1b4864738,
     type: 3}
-  worldButtonMaterial: {fileID: 2100000, guid: 7efca1a23fe081b458699fedbe0e5312, type: 2}
+  worldButtonTexture: {fileID: 0}
   worldQueueImage: {fileID: 21300000, guid: 3ef14d1b95a99cd48adb3afe65621bb8, type: 3}
   populationCost: 0
   goldCost: 0
@@ -33,7 +34,10 @@ MonoBehaviour:
   maxUnitQueueSize: 12
   maximumHitPoints: 100
   garrisonCapacity: 15
-  armor: 6
+  armor: 0
+  attackRange: 0
+  attackSpeed: 0
+  attackDamage: 0
   menuPreviewPrefab: {fileID: 6762361472588772891, guid: 76864ca5d7aacd148b07c6f6951ce407,
     type: 3}
   fadedPreviewPrefab: {fileID: 8181061439616555921, guid: 2f99df15e44780045b4f8234a2223ded,

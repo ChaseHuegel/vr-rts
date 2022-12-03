@@ -10,14 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c98206bdc9ffd5547bf4552bd13d2c59, type: 3}
-  m_Name: pallisade_wall_gate
+  m_Name: wood_wall_a_gate
   m_EditorClassIdentifier: 
-  title: Pallisade Gate
+  title: Wood Gate
   description: 
+  details: 
   queueResearchTime: 25
   worldPrefab: {fileID: 5733846702584742329, guid: d3ab26c87f1150e449edc2209da1f2e9,
     type: 3}
-  worldButtonMaterial: {fileID: 2100000, guid: 7b14ef588187c83418cd8c9185ddd219, type: 2}
+  worldButtonTexture: {fileID: 0}
   worldQueueImage: {fileID: 21300000, guid: 7bbfcdd3737eae4428b173364a69f107, type: 3}
   populationCost: 0
   goldCost: 0
@@ -31,9 +32,12 @@ MonoBehaviour:
   allowedLayers: 1
   populationSupported: 0
   maxUnitQueueSize: 12
-  maximumHitPoints: 5
+  maximumHitPoints: 50
   garrisonCapacity: 0
   armor: 2
+  attackRange: 0
+  attackSpeed: 0
+  attackDamage: 0
   menuPreviewPrefab: {fileID: 7159461885893815296, guid: f4a2ed5fd54a5d649a47db51cef7977a,
     type: 3}
   fadedPreviewPrefab: {fileID: 4013362369166548745, guid: 2293aeb283bec124eb128994980d99f7,

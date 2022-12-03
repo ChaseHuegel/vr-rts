@@ -18,7 +18,7 @@ MonoBehaviour:
   queueResearchTime: 25
   worldPrefab: {fileID: 557160733203580378, guid: 1a0e4a32dc507d64a8068524247818ce,
     type: 3}
-  worldButtonMaterial: {fileID: 2100000, guid: 7efca1a23fe081b458699fedbe0e5312, type: 2}
+  worldButtonTexture: {fileID: 0}
   worldQueueImage: {fileID: 21300000, guid: a21fda3aedfd077469087548bd5152e0, type: 3}
   populationCost: 0
   goldCost: 0
@@ -34,7 +34,10 @@ MonoBehaviour:
   maxUnitQueueSize: 12
   maximumHitPoints: 100
   garrisonCapacity: 0
-  armor: 3
+  armor: 0
+  attackRange: 0
+  attackSpeed: 0
+  attackDamage: 0
   menuPreviewPrefab: {fileID: 453152195784497181, guid: dcf44e6d84b30634ca55b9338af59656,
     type: 3}
   fadedPreviewPrefab: {fileID: 1774457948488373667, guid: 38d497c8ee2fbdc4782abbfa8d4e7614,

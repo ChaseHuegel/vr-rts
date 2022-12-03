@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c98206bdc9ffd5547bf4552bd13d2c59, type: 3}
-  m_Name: pallisade_tower
+  m_Name: guard_tower
   m_EditorClassIdentifier: 
-  title: Pallisade Tower
+  title: Guard Tower
   description: 
   details: 
   queueResearchTime: 25
-  worldPrefab: {fileID: 591123639016174085, guid: 9cef492d986127f42af4d27e1695441b,
+  worldPrefab: {fileID: 2510808510622055872, guid: 36c58c37d2ba36447a12752747603cc4,
     type: 3}
-  worldButtonTexture: {fileID: 2800000, guid: 6ea3b4e8858028e409580e541798d75e, type: 3}
-  worldQueueImage: {fileID: 21300000, guid: 5cb878e8696154d44bc84352d2c1bc23, type: 3}
+  worldButtonTexture: {fileID: 2800000, guid: efc8827ad05ccb440a46f20d203f6200, type: 3}
+  worldQueueImage: {fileID: 21300000, guid: b1f60575799e98b43a48e13e7db189b1, type: 3}
   populationCost: 0
   goldCost: 0
   stoneCost: 0
@@ -34,19 +34,19 @@ MonoBehaviour:
   maxUnitQueueSize: 0
   maximumHitPoints: 100
   garrisonCapacity: 5
-  armor: 2
-  attackRange: 10
+  armor: 0
+  attackRange: 16
   attackSpeed: 2
-  attackDamage: 1
-  menuPreviewPrefab: {fileID: 405477875305395676, guid: aeef9f9dcee3997428cf6c71f0a19e36,
+  attackDamage: 4
+  menuPreviewPrefab: {fileID: 6922809375794524236, guid: 5cc2185721d1a7b4ea8be77b63ef5962,
     type: 3}
-  fadedPreviewPrefab: {fileID: 8733073488767878141, guid: 6520b5f9551fe864597da5dcae672862,
+  fadedPreviewPrefab: {fileID: 5695179112866939857, guid: f3d48d70ead6e0a489b921bb19b4f406,
     type: 3}
-  worldPreviewPrefab: {fileID: 4372496435288002864, guid: 4123f1071a5db9d4c83cb27b613f360e,
+  worldPreviewPrefab: {fileID: 1452382639519947399, guid: 97247a189aa346c42a41e0b7b6cc4575,
     type: 3}
-  throwablePrefab: {fileID: 823987391400144701, guid: 63b3005306d69e64eabfc268816458f8,
+  throwablePrefab: {fileID: 7479614072700583393, guid: ee0d0159392f02445adda3fb2f8fc69a,
     type: 3}
-  constructionPrefab: {fileID: 7071734301438593356, guid: 739e689bda04c704ca410b8e3bbc9b8a,
+  constructionPrefab: {fileID: 7643112351946405732, guid: 612d1857ae449564fb968795cde1c54f,
     type: 3}
   constructionCompletedAudio: {fileID: 11400000, guid: c72159ec98440534abf1b3058c7edd57,
     type: 2}

@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c98206bdc9ffd5547bf4552bd13d2c59, type: 3}
-  m_Name: sentry_tower
+  m_Name: ballista_tower
   m_EditorClassIdentifier: 
-  title: Sentry Tower
+  title: Ballista Tower
   description: 
   details: 
   queueResearchTime: 25
-  worldPrefab: {fileID: 3233172062331517444, guid: 7691f8b0531d0084aab5ba31c405ff90,
+  worldPrefab: {fileID: 7640834972797639356, guid: d4b2e7de13f4dbe4085965df4124c33c,
     type: 3}
-  worldButtonTexture: {fileID: 2800000, guid: bb11933c243f8de428c84c421e227301, type: 3}
-  worldQueueImage: {fileID: 21300000, guid: 182ac023c20c9bf4dbfe363f03d65354, type: 3}
+  worldButtonTexture: {fileID: 2800000, guid: d9494c7cb63afc1488236acfc2448b9d, type: 3}
+  worldQueueImage: {fileID: 21300000, guid: 8f6c98df969580a468554f983194a1e7, type: 3}
   populationCost: 0
   goldCost: 0
   stoneCost: 0
@@ -31,22 +31,22 @@ MonoBehaviour:
   boundingDimensionY: 2
   allowedLayers: 1
   populationSupported: 0
-  maxUnitQueueSize: 12
+  maxUnitQueueSize: 0
   maximumHitPoints: 100
   garrisonCapacity: 5
-  armor: 1
-  attackRange: 14
+  armor: 0
+  attackRange: 18
   attackSpeed: 2
-  attackDamage: 3
-  menuPreviewPrefab: {fileID: 2989848622837833154, guid: 9f830f1148229cb43a09704f5cc0c7a6,
+  attackDamage: 6
+  menuPreviewPrefab: {fileID: 7914448649188159429, guid: 229447de64f1cfe46b3838e59bde84b7,
     type: 3}
-  fadedPreviewPrefab: {fileID: 7480519017742707303, guid: 1c87182213e77e64ab21313a3ab147cd,
+  fadedPreviewPrefab: {fileID: 2434177262814560059, guid: db7d7d4580bf434458511506a90b5515,
     type: 3}
-  worldPreviewPrefab: {fileID: 1620922531411722902, guid: d70edc9bf8340b840918bee81d2f6725,
+  worldPreviewPrefab: {fileID: 3958894852812107954, guid: d6df1d0f8fa0eae42b8d22a62ab9783d,
     type: 3}
-  throwablePrefab: {fileID: 950786707747094966, guid: 66a669cbb31bd554482232d82e6610d6,
+  throwablePrefab: {fileID: 6159335168656572189, guid: 3ea3d71bbf049f04abb7b521ea8697ee,
     type: 3}
-  constructionPrefab: {fileID: 4269214081614591373, guid: 8a39ed93178599e4ab87ae5857e95684,
+  constructionPrefab: {fileID: 8870923438430462121, guid: 75936f2b6d617984e8494a0f27ce728b,
     type: 3}
   constructionCompletedAudio: {fileID: 11400000, guid: c72159ec98440534abf1b3058c7edd57,
     type: 2}
