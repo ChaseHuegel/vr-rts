@@ -22,27 +22,13 @@ public class BuildMenuTab : MonoBehaviour
     public Vector3 slotLockPosition;
 
     public TechBase[] ButtonsNew;
-
-    public BuildMenuSlot[] Slots { get { return slots; } }
-    private BuildMenuSlot[] slots;
-
-    void Awake()
-    {
-        Initialize();
-    }
-
-    public void Initialize()
-    {
-        if (slots == null)
-            slots = GetComponentsInChildren<BuildMenuSlot>(true);
-
-        foreach(BuildMenuSlot slot in slots)
-            slot.Initialize();
-    }
+    public List<BuildMenuSlot> slots;
 
     [ExecuteInEditMode]
     public void Generate()
     {
+        this.gameObject.SetActive(true);
+
         Vector3 origin = Vector3.zero;
         origin.x = (maximumNumberOfColumns - 1) * horzontalButtonSpacing * -0.5f;
         float rows = Mathf.Ceil((float)ButtonsNew.Length / (float)maximumNumberOfColumns);
@@ -100,7 +86,8 @@ public class BuildMenuTab : MonoBehaviour
                 // BuildMenuSlot component
                 BuildMenuSlot buildMenuSlotComponent = slot.AddComponent<BuildMenuSlot>();
                 buildMenuSlotComponent.grabCollider = sphereCollider;
-
+                slots.Add(buildMenuSlotComponent);
+                
                 // Resource cost gameobject
                 GameObject resourceCostObject = Instantiate(resourceCostPrefab, Vector3.zero, Quaternion.identity, slot.transform);
                 resourceCostObject.name = "_resource_cost";
@@ -108,7 +95,7 @@ public class BuildMenuTab : MonoBehaviour
                 resourceCostObject.transform.localRotation = Quaternion.identity;
 
                 // Fetch and set the building type data from the database
-                buildMenuSlotComponent.rtsTypeData = (BuildingData)tech;
+                buildMenuSlotComponent.buildingData = (BuildingData)tech;
                 buildMenuSlotComponent.lockObject = lockObject;
                 buildMenuSlotComponent.iconObject = iconObject;
 
@@ -116,10 +103,10 @@ public class BuildMenuTab : MonoBehaviour
 
                 // Popluate the resource cost prefab text objects
                 BuildMenuResouceCost cost = resourceCostObject.GetComponent<BuildMenuResouceCost>();
-                cost.woodText.text = buildMenuSlotComponent.rtsTypeData.woodCost.ToString();
-                cost.goldText.text = buildMenuSlotComponent.rtsTypeData.goldCost.ToString();
-                cost.grainText.text = buildMenuSlotComponent.rtsTypeData.foodCost.ToString();
-                cost.stoneText.text = buildMenuSlotComponent.rtsTypeData.stoneCost.ToString();
+                cost.woodText.text = buildMenuSlotComponent.buildingData.woodCost.ToString();
+                cost.goldText.text = buildMenuSlotComponent.buildingData.goldCost.ToString();
+                cost.grainText.text = buildMenuSlotComponent.buildingData.foodCost.ToString();
+                cost.stoneText.text = buildMenuSlotComponent.buildingData.stoneCost.ToString();
 
                 // Create/Instatiate preview objects for slots
                 buildMenuSlotComponent.CreatePreviewObjects();                           
@@ -152,7 +139,7 @@ public class BuildMenuTab : MonoBehaviour
         titleGameObject.transform.Rotate(90, 0, 90);
 
         TextMeshPro titleText = titleGameObject.AddComponent<TextMeshPro>();
-        titleText.SetText(slot.rtsTypeData.title);
+        titleText.SetText(slot.buildingData.title);
         titleText.fontStyle = FontStyles.Bold;
         titleText.fontSize = 0.10f;
         titleText.font = titleFont;

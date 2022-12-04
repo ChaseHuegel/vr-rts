@@ -16,7 +16,7 @@ public class BuildMenuSlot : MonoBehaviour
     public SteamVR_Action_Boolean selectAction = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("Select");
 	public SteamVR_Action_Boolean cancelAction = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("Cancel");
 
-    public BuildingData rtsTypeData;
+    public BuildingData buildingData;
     public bool requireGrabActionToTake = true;
     public bool requireReleaseActionToReturn = false;
     public bool showTriggerHint = false;
@@ -36,10 +36,6 @@ public class BuildMenuSlot : MonoBehaviour
     public bool justPickedUpItem = false;
     public SphereCollider grabCollider;
     private Vector3 previewObjectOriginalScale;
-
-    // MeshRenderer[] meshRenderers;
-    // SkinnedMeshRenderer[] skinnedMeshRenderers;
-
     public GameObject lockObject;
     public GameObject iconObject;
 
@@ -57,6 +53,10 @@ public class BuildMenuSlot : MonoBehaviour
     public void Initialize()
     {
         previewObjectOriginalScale = normalPreviewObject.transform.localScale;
+
+        SpriteRenderer spriteRenderer = GetComponentInChildren<SpriteRenderer>(true);
+        spriteRenderer.sprite = Sprite.Create(buildingData.worldQueueTexture, new Rect(0f, 0f, buildingData.worldQueueTexture.width, buildingData.worldQueueTexture.height), new Vector2(0.5f, 0.5f), 100.0f, 1, SpriteMeshType.Tight, Vector4.zero, true);
+
         HookIntoEvents();
     }
 
@@ -76,49 +76,39 @@ public class BuildMenuSlot : MonoBehaviour
 
     private void Enable()
     {
-        // GetMeshRenderers();
-
         grabCollider.enabled = true;
         iconObject.SetActive(false);
         normalPreviewObject?.SetActive(true);
-        
-        // if (previewObject)
-        //     SetMeshMaterial(parentTab.slotEnabledMaterial);
     }
 
     private void Disable()
     {
-        // GetMeshRenderers();
-
         grabCollider.enabled = false;
         iconObject.SetActive(true);
         normalPreviewObject?.SetActive(false);
-
-        // if(previewObject)
-        //     SetMeshMaterial(parentTab.slotDisabledMaterial);
     }
 
     private void OnNodeLocked(TechNode node)
     {
-        if (node.tech == rtsTypeData)
+        if (node.tech == buildingData)
             Lock();
     }
 
     private void OnNodeUnlocked(TechNode node)
     {
-        if (node.tech == rtsTypeData)
+        if (node.tech == buildingData)
             Unlock();
     }
 
     private void OnNodeEnabled(TechNode node)
     {
-        if (node.tech == rtsTypeData)
+        if (node.tech == buildingData)
             Enable();
     }
 
     private void OnNodeDisabled(TechNode node)
     {   
-        if (node.tech == rtsTypeData)
+        if (node.tech == buildingData)
             Disable();
     }
 
@@ -145,43 +135,23 @@ public class BuildMenuSlot : MonoBehaviour
 
     public void CreatePreviewObjects()
     {
-        if (rtsTypeData.menuPreviewPrefab != null && !normalPreviewObject)
+        if (buildingData.menuPreviewPrefab != null && !normalPreviewObject)
         {
-            normalPreviewObject = Instantiate( rtsTypeData.menuPreviewPrefab, transform.position, Quaternion.identity ) as GameObject;
+            normalPreviewObject = Instantiate( buildingData.menuPreviewPrefab, transform.position, Quaternion.identity ) as GameObject;
             normalPreviewObject.name = "_" + normalPreviewObject.name;
             normalPreviewObject.transform.parent = transform;
             normalPreviewObject.transform.localRotation = Quaternion.identity;
         }            
     
-        if (rtsTypeData.fadedPreviewPrefab != null && !fadedPreviewObject)
+        if (buildingData.fadedPreviewPrefab != null && !fadedPreviewObject)
         {
-            fadedPreviewObject = Instantiate( rtsTypeData.fadedPreviewPrefab, transform.position, Quaternion.identity ) as GameObject;
+            fadedPreviewObject = Instantiate( buildingData.fadedPreviewPrefab, transform.position, Quaternion.identity ) as GameObject;
             fadedPreviewObject.name = "_" + fadedPreviewObject.name;
             fadedPreviewObject.transform.parent = transform;
             fadedPreviewObject.transform.localRotation = Quaternion.identity;
             fadedPreviewObject.SetActive(false);
         }
-
-        // GetMeshRenderers();
     }
-
-    // private void GetMeshRenderers()
-    // {
-    //     if (!normalPreviewObject)
-    //         return;
-
-    //     meshRenderers = normalPreviewObject.GetComponentsInChildren<MeshRenderer>();
-    //     skinnedMeshRenderers = normalPreviewObject.GetComponentsInChildren<SkinnedMeshRenderer>();
-    // }
-
-    // private void SetMeshMaterial(Material material)
-    // {
-    //     foreach (MeshRenderer meshRenderer in meshRenderers)
-    //         meshRenderer.sharedMaterial = material;
-
-    //     foreach (SkinnedMeshRenderer skinnedMeshRenderer in skinnedMeshRenderers)
-    //         skinnedMeshRenderer.sharedMaterial = material;
-    // }
 
     void Update()
     {
@@ -231,7 +201,7 @@ public class BuildMenuSlot : MonoBehaviour
             // If we want to take back the item and we aren't waiting for a trigger press
             if ( !requireReleaseActionToReturn && !justPickedUpItem)
             {
-                if(rtsTypeData.buildingType == currentAttachedThrowableBuilding.rtsBuildingTypeData.buildingType)
+                if(buildingData.buildingType == currentAttachedThrowableBuilding.rtsBuildingTypeData.buildingType)
                     TakeBackItem( hand );
             }
         }
@@ -239,7 +209,7 @@ public class BuildMenuSlot : MonoBehaviour
         ScaleUp();
 
         if (HandHoverBegin != null)
-            HandHoverBegin.Invoke(rtsTypeData);
+            HandHoverBegin.Invoke(buildingData);
 
         // We don't require trigger press for pickup. Spawn and attach object.
         if (!requireGrabActionToTake)
@@ -291,7 +261,7 @@ public class BuildMenuSlot : MonoBehaviour
         {
             if (isPointerPlacementStarting)
             {                
-                BuildingPlacementEvent e = new BuildingPlacementEvent{ buildingData = rtsTypeData, hand = hand };
+                BuildingPlacementEvent e = new BuildingPlacementEvent{ buildingData = buildingData, hand = hand };
                 OnBuildingPlacementEvent?.Invoke(this, e);
                 // itemIsSpawned = true;
                 // useFadedPreview = true;
@@ -326,7 +296,7 @@ public class BuildMenuSlot : MonoBehaviour
         ResetScale();
 
         if (HandHoverEnd != null)
-            HandHoverEnd.Invoke(rtsTypeData);
+            HandHoverEnd.Invoke(buildingData);
     }
 
     private ThrowableBuilding GetAttachedThrowableBuilding( Hand hand )
@@ -369,14 +339,14 @@ public class BuildMenuSlot : MonoBehaviour
         }
 
         ActivateFadedPreviewObject();
-        spawnedItem = GameObject.Instantiate( rtsTypeData.throwablePrefab );
+        spawnedItem = GameObject.Instantiate( buildingData.throwablePrefab );
         spawnedItem.SetActive( true );
         hand.AttachObject( spawnedItem, grabType, attachmentFlags );
 
         hand.ForceHoverUnlock();
 
         ThrowableBuilding throwableBuilding = spawnedItem.GetComponent<ThrowableBuilding>();
-        throwableBuilding.rtsBuildingTypeData = rtsTypeData;
+        throwableBuilding.rtsBuildingTypeData = buildingData;
         throwableBuilding.onDetachFromHand.AddListener(OnThrowableDetachedFromHand);
         itemIsSpawned = true;
         justPickedUpItem = true;

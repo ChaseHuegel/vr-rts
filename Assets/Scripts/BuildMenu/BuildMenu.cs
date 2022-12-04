@@ -19,6 +19,7 @@ public class BuildMenu : MonoBehaviour
     {
         if (TryGetTabs())
             InitializeTabs();
+
     }
 
     void Start()
@@ -30,19 +31,8 @@ public class BuildMenu : MonoBehaviour
     private void InitializeTabs()
     {
         foreach (BuildMenuTab tab in buildMenuTabs)
-        {
-            tab.gameObject.SetActive(true);
-            tab.Generate();
-            tab.Initialize();
-
-            foreach (BuildMenuSlot slot in tab.Slots)
-            {
-                slot.HandHoverBegin += OnSlotHandHoverBegin;
-                // slot.HandHoverEnd += OnSlotHandHoverEnd;
-            }
-            
-            tab.gameObject.SetActive(false);
-        }
+            foreach (BuildMenuSlot slot in tab.slots)
+                slot.Initialize();
     }
 
     private void OnSlotHandHoverBegin(TechBase techBase)
@@ -71,6 +61,14 @@ public class BuildMenu : MonoBehaviour
 
     private void HookIntoEvents()
     {
+        foreach (BuildMenuTab tab in buildMenuTabs)
+        {
+            foreach (BuildMenuSlot slot in tab.slots)
+            {
+                slot.HandHoverBegin += OnSlotHandHoverBegin;
+                // slot.HandHoverEnd += OnSlotHandHoverEnd;
+            }
+        }
     }
 
     private void CleanupEvents()
@@ -80,7 +78,7 @@ public class BuildMenu : MonoBehaviour
             
         foreach (BuildMenuTab tab in buildMenuTabs)
         {
-            foreach (BuildMenuSlot slot in tab.Slots)
+            foreach (BuildMenuSlot slot in tab.slots)
             {
                 slot.HandHoverBegin -= OnSlotHandHoverBegin;
                 // slot.HandHoverEnd -= OnSlotHandHoverEnd;
@@ -119,9 +117,9 @@ public class BuildMenu : MonoBehaviour
     {
         buildMenuTabs[activeTabIndex].gameObject.SetActive(false);
 
-        activeTabIndex++;
-        if (activeTabIndex >= buildMenuTabs.Length)
-            activeTabIndex = 0;
+        activeTabIndex--;
+        if (activeTabIndex < 0)
+            activeTabIndex = buildMenuTabs.Length - 1;
 
         buildMenuTabs[activeTabIndex].gameObject.SetActive(true);
     }
