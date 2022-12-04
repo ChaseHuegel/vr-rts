@@ -20,8 +20,10 @@ public enum ActorAnimationState
 public enum ActorAnimationTrigger
 {
     ATTACK = 1,
-    EAT = 2,
-    LOOKAROUND = 3,
+    HEAL = 2,
+    CAST = 3,
+    EAT = 10,
+    LOOKAROUND = 20,
 }
 
 

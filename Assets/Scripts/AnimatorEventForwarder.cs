@@ -18,12 +18,21 @@ public class AnimatorEventForwarder : MonoBehaviour
         }
     }
 
-    public void ExecuteAttackAnimationEvent()
+    public void ExectuteCastAnimationEvent()
     {
-        this.GetComponentInParent<UnitV2>().ExecuteAttackFromAnimation();
+        unit.TriggerCastFromAnimation();
     }
 
-    // TODO: Remove this, don't think this is called anymore by any animators??
+    public void ExecuteHealAnimationEvent()
+    {
+        unit.TriggerHealFromAnimation();
+    }
+
+    public void ExecuteAttackAnimationEvent()
+    {
+        unit.TriggerAttackFromAnimation();
+    }
+
     public void PlayAudio(string clipName = "")
     {
         if (audioSource != null && clipName != "")

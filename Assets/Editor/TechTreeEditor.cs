@@ -892,8 +892,8 @@ public class TechTreeEditor : EditorWindow
 
         EditorGUILayout.BeginHorizontal();
 
-        if (node.tech.worldQueueImage != null)
-            GUILayout.Label(node.tech.worldQueueImage.texture, GUILayout.Width(52.0f), GUILayout.Height(52.0f));
+        if (node.tech.worldQueueTexture != null)
+            GUILayout.Label(node.tech.worldQueueTexture, GUILayout.Width(52.0f), GUILayout.Height(52.0f));
 
         EditorGUILayout.BeginVertical();
 
@@ -971,9 +971,9 @@ public class TechTreeEditor : EditorWindow
             {
                 if (count < 6)
                 {
-                    if (tech.worldQueueImage != null)
+                    if (tech.worldQueueTexture != null)
                     {
-                        if (GUILayout.Button(new GUIContent(tech.worldQueueImage.texture, tech.title), queueButtonStyle, GUILayout.Width(24.0f), GUILayout.Height(24.0f)))
+                        if (GUILayout.Button(new GUIContent(tech.worldQueueTexture, tech.title), queueButtonStyle, GUILayout.Width(24.0f), GUILayout.Height(24.0f)))
                         {
                             if (Event.current.button == 0)
                             {

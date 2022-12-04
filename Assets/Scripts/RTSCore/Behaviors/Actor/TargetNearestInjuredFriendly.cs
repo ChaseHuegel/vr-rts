@@ -13,7 +13,7 @@ public class TargetNearestInjuredFriendly : BehaviorNode<ActorV2>
 
             if (!body.IsAlive() || body.Faction == null ||
                 !body.Faction.IsAllied(actor.Faction) ||
-                body == actor ||
+                body == actor || !(body is UnitV2) ||
                 body.Attributes.Get(AttributeType.HEALTH).IsMax())
                 continue;
 

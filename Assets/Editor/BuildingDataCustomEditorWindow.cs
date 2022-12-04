@@ -61,7 +61,7 @@ public class BuildingDataCustomEditorWindow : EditorWindow
 
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.PrefixLabel("World Queue Image");
-        bData.worldQueueImage = (Sprite)EditorGUILayout.ObjectField(bData.worldQueueImage, typeof(Sprite), false);
+        bData.worldQueueTexture = (Texture2D)EditorGUILayout.ObjectField(bData.worldQueueTexture, typeof(Texture2D), false);
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.Space();

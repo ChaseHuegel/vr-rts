@@ -173,7 +173,7 @@ public class SpawnQueue : MonoBehaviour
         int i = 0;
         foreach (TechBase techBase in queue)
         {
-            queueSlotImages[i].overrideSprite = techBase.worldQueueImage;
+            queueSlotImages[i].overrideSprite = Sprite.Create(techBase.worldQueueTexture, new Rect(0f, 0f, techBase.worldQueueTexture.width, techBase.worldQueueTexture.height), new Vector2(0.5f, 0.5f), 100.0f, 1, SpriteMeshType.Tight, Vector4.zero, true);
             i++;
 
             if (i >= queue.Count)

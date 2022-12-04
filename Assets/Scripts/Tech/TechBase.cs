@@ -22,7 +22,7 @@ public class TechBase : ScriptableObject
     public Texture worldButtonTexture;
 
     [Tooltip("The image used in the queue list display of building interaction panels.")]
-    public Sprite worldQueueImage;
+    public Texture2D worldQueueTexture;
 
     [Header("Economic Costs")]
     // TODO: Optimize - Not used by all derived class, could be moved later on to save on memory.

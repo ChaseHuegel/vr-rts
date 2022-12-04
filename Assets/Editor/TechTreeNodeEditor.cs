@@ -134,7 +134,7 @@ public class TechTreeNodeEditor : EditorWindow
 
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.PrefixLabel("World Queue Image");
-        techBase.worldQueueImage = (Sprite)EditorGUILayout.ObjectField(techBase.worldQueueImage, typeof(Sprite), false);
+        techBase.worldQueueTexture = (Texture2D)EditorGUILayout.ObjectField(techBase.worldQueueTexture, typeof(Texture2D), false);
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.Space();
@@ -200,9 +200,9 @@ public class TechTreeNodeEditor : EditorWindow
         
         foreach(TechBase tech in buildingData.techQueueButtons)
         {
-            if (tech.worldQueueImage != null)
+            if (tech.worldQueueTexture != null)
             {
-                if (GUILayout.Button(tech.worldQueueImage.texture, GUILayout.Width(64.0f), GUILayout.Height(64.0f)))
+                if (GUILayout.Button(tech.worldQueueTexture, GUILayout.Width(64.0f), GUILayout.Height(64.0f)))
                 {
                     if (Event.current.button == 0)
                     {

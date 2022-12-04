@@ -9,7 +9,8 @@ using UnityEngine;
 [Serializable]
 public class StatUpgradeContainer
 {
-    public List<UnitData> targetUnits;
+    public List<BuildingData> targetBuildings;
+    public List<UnitData> targetUnits;    
     public AttributeType targetAttribute;
     public Modifier modifier = Modifier.ADDITION;
     public float amount;
@@ -31,13 +32,11 @@ public class StatUpgrade : TechBase
     {
         base.Execute(spawnQueue);
 
-        // foreach (UnitData unitData in targetUnits)
-        //     foreach (AttributeBonus attributeBonus in attributeBonuses)
-        //         PlayerManager.Instance.AddUnitStatUpgrade(unitData, attributeBonus);
-
         foreach (StatUpgradeContainer attributeBonus in statUpgrades)
+        {
             foreach (UnitData unitData in attributeBonus.targetUnits)
                 PlayerManager.Instance.AddUnitStatUpgrade(unitData, attributeBonus);
+        }
 
         Debug.Log(this.title + "research completed.");
     }

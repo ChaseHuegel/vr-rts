@@ -12,7 +12,7 @@ public abstract class UnitV2 : ActorV2
     public GameObject projectilePrefab;
     public Transform projectileOrigin;
     public UnitData unitData;
-
+    
     private bool deathFxStarted;
     public bool AttackingTarget
     {
@@ -29,8 +29,8 @@ public abstract class UnitV2 : ActorV2
     public DataBinding<bool> AttackingTargetBinding { get; private set; } = new();
     public DataBinding<bool> HealTargetBinding { get; private set; } = new();
 
-    private float AttackTimer;
-    private float HealTimer;
+    protected float AttackTimer;
+    protected float HealTimer;
 
     private Vector3 originalScale = Vector3.one;
 
@@ -38,6 +38,8 @@ public abstract class UnitV2 : ActorV2
     {        
         base.Start();
         OnLoadUnitData(unitData);
+
+        audioSource = GetComponent<AudioSource>();
 
         TryFetchRenderers();
 
@@ -141,7 +143,6 @@ public abstract class UnitV2 : ActorV2
 
         ActorAnimationState deathState = Random.Range(1, 100) < 50 ? ActorAnimationState.DYING : ActorAnimationState.DYING2;
 
-
         SetAnimatorsInteger("ActorAnimationState", (int)deathState);
 
         AudioSource.PlayOneShot(GameMaster.GetAudio("unit_death").GetClip());
@@ -188,10 +189,12 @@ public abstract class UnitV2 : ActorV2
 
             if (Target != null && Target.IsAlive() && !IsMoving)
             {
+                // Attack is triggered by animation
                 if (Animators.Length > 0)
                     SetAnimatorsTrigger(ActorAnimationTrigger.ATTACK);
+                // No animation to trigger attack, do it manually
                 else
-                    Attack();
+                    TriggerAttackFromAnimation();
             }
             else
             {                
@@ -200,7 +203,12 @@ public abstract class UnitV2 : ActorV2
         }
     }
 
-    public void ExecuteAttackFromAnimation()
+    public virtual void TriggerCastFromAnimation()
+    {
+        ResetAnimatorsTrigger(ActorAnimationTrigger.CAST);
+    }
+
+    public virtual void TriggerAttackFromAnimation()
     {
         Attack();
         ResetAnimatorsTrigger(ActorAnimationTrigger.ATTACK);
@@ -215,11 +223,15 @@ public abstract class UnitV2 : ActorV2
         {
             Projectile projectile = Projectile.Spawn(projectilePrefab, projectileOrigin.position, projectilePrefab.transform.rotation, this, Target.transform);
             projectile.damage += Attributes.ValueOf(AttributeType.DAMAGE);
-            //SetAnimatorsInteger("ActorAnimationState", (int)ActorAnimationState.IDLE);
         }
         else if (AttackingTarget)
+        {
             // TODO: this is where we want to handle weapons, damage types, etc.
             Target.Damage(Attributes.ValueOf(AttributeType.DAMAGE), AttributeChangeCause.ATTACKED, this, DamageType.NONE);
+        }
+
+        // TODO: Play attack start sound. For siege weapons, a launch sound, archers a bow sound,
+        // infantry/cavalry a metal attack sound etc. (If we want all those sounds.)
     }
 
     protected virtual void ProcessHealRoutine(float deltaTime)
@@ -234,7 +246,14 @@ public abstract class UnitV2 : ActorV2
 
             if (Target != null && !Target.Attributes.Get(AttributeType.HEALTH).IsMax() && !IsMoving)
             {
-                Heal(Target);
+                // Heal triggered by animation
+                if (Animators.Length > 0)
+                {
+                    SetAnimatorsTrigger(ActorAnimationTrigger.HEAL);   
+                }
+                // No animation to trigger heal, do it manually
+                else
+                    TriggerHealFromAnimation();
             }
             else
             {
@@ -243,9 +262,34 @@ public abstract class UnitV2 : ActorV2
         }
     }
 
-    private void Heal(Damageable target)
+    public virtual void TriggerHealFromAnimation()
     {
-        target.Heal(Attributes.ValueOf(AttributeType.HEAL_RATE), AttributeChangeCause.HEALED, this);              
+        Heal();
+        ResetAnimatorsTrigger(ActorAnimationTrigger.HEAL);
     }
 
+    // TODO: Should these be handled by the object getting healed?
+    protected GameObject currentHealFx;
+    protected AudioSource audioSource;
+    private void Heal()
+    {
+        if (!Target)
+            return;
+
+        if (HealingTarget)
+        {
+            Target.Heal(Attributes.ValueOf(AttributeType.HEAL_RATE), AttributeChangeCause.HEALED, this);
+
+            // TODO: Should FX/Sounds be handled by the object getting healed?
+            if (!currentHealFx && healFxPrefab)
+                currentHealFx = Instantiate(healFxPrefab, Target.transform.position, healFxPrefab.transform.rotation, Target.transform);
+
+            if (audioSource && !audioSource.isPlaying)
+            {
+                //audioSource.Play();
+                audioSource.PlayOneShot(GameMaster.GetAudio("building_repairing").GetClip());
+            }
+                
+        }
+    }
 }

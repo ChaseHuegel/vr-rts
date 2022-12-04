@@ -90,7 +90,7 @@ public class BuildMenuTab : MonoBehaviour
                 iconObject.SetActive(false);
 
                 SpriteRenderer spriteRenderer = iconObject.AddComponent<SpriteRenderer>();
-                spriteRenderer.sprite = tech.worldQueueImage;
+                spriteRenderer.sprite = Sprite.Create(tech.worldQueueTexture, new Rect(0f, 0f, tech.worldQueueTexture.width, tech.worldQueueTexture.height), new Vector2(0.5f, 0.5f), 100.0f, 1, SpriteMeshType.Tight, Vector4.zero, true);
 
                 // BuildMenuSlot component
                 BuildMenuSlot buildMenuSlotComponent = slot.AddComponent<BuildMenuSlot>();
