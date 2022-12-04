@@ -46,9 +46,9 @@ public abstract class UnitV2 : ActorV2
         OnLoadUnitData(unitData);
 
         audioSource = GetComponent<AudioSource>();
-        attackClip = attackSound.GetClip();
-        healClip = healSound.GetClip();
-        
+        attackClip = attackSound?.GetClip();
+        healClip = healSound?.GetClip();
+
         TryFetchRenderers();
 
         originalScale = gameObject.transform.localScale;
