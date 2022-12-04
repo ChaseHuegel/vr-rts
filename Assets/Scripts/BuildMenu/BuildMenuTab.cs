@@ -34,10 +34,10 @@ public class BuildMenuTab : MonoBehaviour
     public void Initialize()
     {
         if (slots == null)
-            slots = GetComponentsInChildren<BuildMenuSlot>();
+            slots = GetComponentsInChildren<BuildMenuSlot>(true);
 
-        // foreach(BuildMenuSlot slot in slots)
-        //     slot.Initialize();
+        foreach(BuildMenuSlot slot in slots)
+            slot.Initialize();
     }
 
     [ExecuteInEditMode]
@@ -92,11 +92,14 @@ public class BuildMenuTab : MonoBehaviour
                 SpriteRenderer spriteRenderer = iconObject.AddComponent<SpriteRenderer>();
                 spriteRenderer.sprite = Sprite.Create(tech.worldQueueTexture, new Rect(0f, 0f, tech.worldQueueTexture.width, tech.worldQueueTexture.height), new Vector2(0.5f, 0.5f), 100.0f, 1, SpriteMeshType.Tight, Vector4.zero, true);
 
-                // BuildMenuSlot component
-                BuildMenuSlot buildMenuSlotComponent = slot.AddComponent<BuildMenuSlot>();
+                // Collider - Must be added before BuildMenuSlot
                 SphereCollider sphereCollider = slot.AddComponent<SphereCollider>();
                 sphereCollider.radius = 0.045f;
                 sphereCollider.center.Set(0.0f, 0.02f, 0.0f);
+
+                // BuildMenuSlot component
+                BuildMenuSlot buildMenuSlotComponent = slot.AddComponent<BuildMenuSlot>();
+                buildMenuSlotComponent.grabCollider = sphereCollider;
 
                 // Resource cost gameobject
                 GameObject resourceCostObject = Instantiate(resourceCostPrefab, Vector3.zero, Quaternion.identity, slot.transform);

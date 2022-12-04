@@ -4,6 +4,7 @@ using MLAPI;
 using Swordfish.Audio;
 using Swordfish.Navigation;
 using UnityEngine;
+//using UnityEngine.Events;
 using Valve.VR.InteractionSystem;
 
 public class ThrowableBuilding : Throwable
@@ -11,6 +12,7 @@ public class ThrowableBuilding : Throwable
     //public LayerMask allowedLayersMask;
     public LayerMask disallowedLayersMask;
     public BuildingData rtsBuildingTypeData;
+
     private void OnCollisionEnter(Collision collision)
     {
         bool hitPointValid = !LayerMatchTest(disallowedLayersMask, collision.gameObject);

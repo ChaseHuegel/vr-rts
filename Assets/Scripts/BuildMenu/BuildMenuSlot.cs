@@ -34,11 +34,11 @@ public class BuildMenuSlot : MonoBehaviour
     [SerializeField]
     private GameObject normalPreviewObject;
     public bool justPickedUpItem = false;
-    private SphereCollider grabCollider;
+    public SphereCollider grabCollider;
     private Vector3 previewObjectOriginalScale;
 
-    MeshRenderer[] meshRenderers;
-    SkinnedMeshRenderer[] skinnedMeshRenderers;
+    // MeshRenderer[] meshRenderers;
+    // SkinnedMeshRenderer[] skinnedMeshRenderers;
 
     public GameObject lockObject;
     public GameObject iconObject;
@@ -49,14 +49,13 @@ public class BuildMenuSlot : MonoBehaviour
     public delegate void OnHandHoverEndEvent(TechBase techBase);
     public event OnHandHoverEndEvent HandHoverEnd;
 
-    void Awake()
+    void Start()
     {
         Initialize();        
     }
 
     public void Initialize()
     {
-        InitializeGrabCollider();
         previewObjectOriginalScale = normalPreviewObject.transform.localScale;
         HookIntoEvents();
     }
@@ -75,20 +74,9 @@ public class BuildMenuSlot : MonoBehaviour
         normalPreviewObject.SetActive(true);
     }
 
-    private void InitializeGrabCollider()
-    {
-        if (!grabCollider)
-            grabCollider = GetComponent<SphereCollider>();
-
-        if (!grabCollider) 
-            Debug.LogError("grabCollider missing.", this);
-    }
-
     private void Enable()
     {
-        // TODO: Sort this out so it's not neccassary here
-        InitializeGrabCollider();
-        GetMeshRenderers();
+        // GetMeshRenderers();
 
         grabCollider.enabled = true;
         iconObject.SetActive(false);
@@ -100,9 +88,7 @@ public class BuildMenuSlot : MonoBehaviour
 
     private void Disable()
     {
-        // TODO: Sort this out so it's not neccassary here
-        InitializeGrabCollider();
-        GetMeshRenderers();
+        // GetMeshRenderers();
 
         grabCollider.enabled = false;
         iconObject.SetActive(true);
@@ -176,48 +162,54 @@ public class BuildMenuSlot : MonoBehaviour
             fadedPreviewObject.SetActive(false);
         }
 
-        GetMeshRenderers();
+        // GetMeshRenderers();
     }
 
-    private void GetMeshRenderers()
-    {
-        if (!normalPreviewObject)
-            return;
+    // private void GetMeshRenderers()
+    // {
+    //     if (!normalPreviewObject)
+    //         return;
 
-        meshRenderers = normalPreviewObject.GetComponentsInChildren<MeshRenderer>();
-        skinnedMeshRenderers = normalPreviewObject.GetComponentsInChildren<SkinnedMeshRenderer>();
-    }
+    //     meshRenderers = normalPreviewObject.GetComponentsInChildren<MeshRenderer>();
+    //     skinnedMeshRenderers = normalPreviewObject.GetComponentsInChildren<SkinnedMeshRenderer>();
+    // }
 
-    private void SetMeshMaterial(Material material)
-    {
-        foreach (MeshRenderer meshRenderer in meshRenderers)
-            meshRenderer.sharedMaterial = material;
+    // private void SetMeshMaterial(Material material)
+    // {
+    //     foreach (MeshRenderer meshRenderer in meshRenderers)
+    //         meshRenderer.sharedMaterial = material;
 
-        foreach (SkinnedMeshRenderer skinnedMeshRenderer in skinnedMeshRenderers)
-            skinnedMeshRenderer.sharedMaterial = material;
-    }
+    //     foreach (SkinnedMeshRenderer skinnedMeshRenderer in skinnedMeshRenderers)
+    //         skinnedMeshRenderer.sharedMaterial = material;
+    // }
 
     void Update()
     {
         if ( ( itemIsSpawned == true ) && ( spawnedItem == null ) )
         {
             itemIsSpawned = false;
-            dropEvent.Invoke();           
+            dropEvent?.Invoke();           
         }                  
+    }
+
+    private void ActivateNormalPreviewObject()
+    {
+        fadedPreviewObject.SetActive(false);
+        normalPreviewObject.SetActive(true);        
+    }
+
+    private void ActivateFadedPreviewObject()
+    {
+        normalPreviewObject.SetActive(false);
+        fadedPreviewObject.SetActive(true);
     }
 
     void SwapPreviewObject()
     {
-        if (normalPreviewObject.activeSelf) 
-        {
-            normalPreviewObject.SetActive(false);
-            fadedPreviewObject.SetActive(true);
-        }
+        if (normalPreviewObject.activeSelf)
+            ActivateFadedPreviewObject();
         else
-        {
-            normalPreviewObject.SetActive(true);
-            fadedPreviewObject.SetActive(false);
-        }
+            ActivateNormalPreviewObject();
     }
 
     private void ScaleUp()
@@ -272,7 +264,7 @@ public class BuildMenuSlot : MonoBehaviour
                 {
                     TakeBackItem( hand );
 
-                    // So that we don't pick up an throwable building the same frame that we return it
+                    // So that we don't pick up a throwable building the same frame that we return it
                     return;
                 }
             }
@@ -285,7 +277,7 @@ public class BuildMenuSlot : MonoBehaviour
             if (startingGrab != GrabTypes.None)
             {
                 if (startingGrab == GrabTypes.Trigger || startingGrab == GrabTypes.Pinch)
-                    SpawnAndAttachObject( hand, startingGrab);// GrabTypes.Scripted);
+                    SpawnAndAttachObject(hand, startingGrab);// GrabTypes.Scripted);
             }
         }
         
@@ -355,7 +347,8 @@ public class BuildMenuSlot : MonoBehaviour
     }
 
     private void TakeBackItem( Hand hand )
-    {        
+    {
+        ActivateNormalPreviewObject();
         GameObject detachedItem = hand.AttachedObjects[0].attachedObject;
         hand.DetachObject( detachedItem );
         Destroy(detachedItem);
@@ -375,18 +368,25 @@ public class BuildMenuSlot : MonoBehaviour
             hand.HideGrabHint();
         }
 
+        ActivateFadedPreviewObject();
         spawnedItem = GameObject.Instantiate( rtsTypeData.throwablePrefab );
         spawnedItem.SetActive( true );
         hand.AttachObject( spawnedItem, grabType, attachmentFlags );
 
         hand.ForceHoverUnlock();
 
-        spawnedItem.GetComponent<ThrowableBuilding>().rtsBuildingTypeData = rtsTypeData;
-
+        ThrowableBuilding throwableBuilding = spawnedItem.GetComponent<ThrowableBuilding>();
+        throwableBuilding.rtsBuildingTypeData = rtsTypeData;
+        throwableBuilding.onDetachFromHand.AddListener(OnThrowableDetachedFromHand);
         itemIsSpawned = true;
         justPickedUpItem = true;
 
-        pickupEvent.Invoke();
+        pickupEvent?.Invoke();
+    }
+
+    private void OnThrowableDetachedFromHand()
+    {
+        ActivateNormalPreviewObject();
     }
 
     public static event EventHandler<BuildingPlacementEvent> OnBuildingPlacementEvent;

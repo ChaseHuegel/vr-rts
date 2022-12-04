@@ -8,7 +8,7 @@ using Valve.VR.InteractionSystem;
 public class BuildMenu : MonoBehaviour
 {
     public bool enableDetailPanel = true;
-    public GameObject detailRanel;
+    public GameObject detailPanel;
     public TMPro.TextMeshPro titleText;
     public TMPro.TextMeshPro descriptionText;
     public TMPro.TextMeshPro detailText;
@@ -22,9 +22,9 @@ public class BuildMenu : MonoBehaviour
     }
 
     void Start()
-    {
-        SetActiveTab(0);
+    {        
         HookIntoEvents();
+        SetActiveTab(0);
     }
     
     private void InitializeTabs()
@@ -32,7 +32,15 @@ public class BuildMenu : MonoBehaviour
         foreach (BuildMenuTab tab in buildMenuTabs)
         {
             tab.gameObject.SetActive(true);
+            tab.Generate();
             tab.Initialize();
+
+            foreach (BuildMenuSlot slot in tab.Slots)
+            {
+                slot.HandHoverBegin += OnSlotHandHoverBegin;
+                // slot.HandHoverEnd += OnSlotHandHoverEnd;
+            }
+            
             tab.gameObject.SetActive(false);
         }
     }
@@ -63,14 +71,6 @@ public class BuildMenu : MonoBehaviour
 
     private void HookIntoEvents()
     {
-        foreach (BuildMenuTab tab in buildMenuTabs)
-        {
-            foreach (BuildMenuSlot slot in tab.Slots)
-            {
-                slot.HandHoverBegin += OnSlotHandHoverBegin;
-                // slot.HandHoverEnd += OnSlotHandHoverEnd;
-            }
-        }
     }
 
     private void CleanupEvents()
@@ -131,11 +131,5 @@ public class BuildMenu : MonoBehaviour
         buildMenuTabs[activeTabIndex].gameObject.SetActive(false);
         activeTabIndex = newTabIndex;
         buildMenuTabs[activeTabIndex].gameObject.SetActive(true);
-    }
-
-    public void GenerateTabs()
-    {
-        foreach(BuildMenuTab tab in buildMenuTabs)
-            tab.Generate();
     }
 }
