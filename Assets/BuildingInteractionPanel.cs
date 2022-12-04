@@ -175,6 +175,11 @@ public class BuildingInteractionPanel : MonoBehaviour
         if (node.tech is UnitData)
             return;
 
+        DestroyQueueButton(node);        
+    }
+
+    private void DestroyQueueButton(TechNode node)
+    {
         queueTechButtons.Remove(node.tech);
 
         // TODO: Just move the buttons into new positions rather
@@ -390,14 +395,8 @@ public class BuildingInteractionPanel : MonoBehaviour
         InitializeCancelButton(cancelButtonGameObject.transform);
     }
 
-    private void InitializeQueueButtons()
+    private Vector3 CalculateQueueButtonsStartPosition()
     {
-        if (!buttonsGameObject)
-        {
-            buttonsGameObject = new GameObject("_buttons");
-            buttonsGameObject.transform.SetParent(menuGameObject.transform, false);
-        }
-
         Vector3 startPosition = Vector3.zero;
         float buttonsTotalWidth = ((buttonSize + spaceBetweenButtons) * maxButtonColumns);
         int totalRows = Mathf.CeilToInt((float)queueTechButtons.Count / (float)maxButtonColumns);
@@ -407,7 +406,29 @@ public class BuildingInteractionPanel : MonoBehaviour
         startPosition.y = (buttonSize + spaceBetweenButtons) * 0.5f;
         startPosition.y += (buttonSize + spaceBetweenButtons) * (totalRows - 1);
 
-        titleGameObject.transform.localPosition = new Vector3(0.0f, startPosition.y + (buttonSize * 0.85f), 0.0f);
+        return startPosition;
+    }
+
+    private void InitializeQueueButtons()
+    {
+        if (!buttonsGameObject)
+        {
+            buttonsGameObject = new GameObject("_buttons");
+            buttonsGameObject.transform.SetParent(menuGameObject.transform, false);
+        }
+
+        // Vector3 startPosition = Vector3.zero;
+        // float buttonsTotalWidth = ((buttonSize + spaceBetweenButtons) * maxButtonColumns);
+        // int totalRows = Mathf.CeilToInt((float)queueTechButtons.Count / (float)maxButtonColumns);
+        // //float buttonsTotalHeight = ((buttonSize + spaceBetweenButtons) * totalRows);
+
+        // startPosition.x = buttonsTotalWidth * -0.5f + (buttonSize * 0.5f + spaceBetweenButtons * 0.5f);
+        // startPosition.y = (buttonSize + spaceBetweenButtons) * 0.5f;
+        // startPosition.y += (buttonSize + spaceBetweenButtons) * (totalRows - 1);
+
+        // titleGameObject.transform.localPosition = new Vector3(0.0f, startPosition.y + (buttonSize * 0.85f), 0.0f);
+
+        Vector3 startPosition = CalculateQueueButtonsStartPosition();        
         Vector3 nextButtonPosition = startPosition;
 
         int currentButtonColumn = 0;

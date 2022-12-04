@@ -18,14 +18,15 @@ MonoBehaviour:
   queueResearchTime: 5
   worldPrefab: {fileID: 0}
   worldButtonTexture: {fileID: 2800000, guid: dcb4e7ac37cf964478c9f2cd5fef9e68, type: 3}
-  worldQueueImage: {fileID: 21300000, guid: a52052f87184c1f4eaf88c51d050f99e, type: 3}
+  worldQueueTexture: {fileID: 2800000, guid: a52052f87184c1f4eaf88c51d050f99e, type: 3}
   populationCost: 0
   goldCost: 0
   stoneCost: 0
   foodCost: 0
   woodCost: 0
   statUpgrades:
-  - targetUnits:
+  - targetBuildings: []
+    targetUnits:
     - {fileID: 11400000, guid: 5ebc57ae57ef9ee46a3cf4d75de285a6, type: 2}
     - {fileID: 11400000, guid: ccc8f48f7e1aca94d8063fa105b5a605, type: 2}
     - {fileID: 11400000, guid: 32286c2bb252648459ee0189b4a11a57, type: 2}
