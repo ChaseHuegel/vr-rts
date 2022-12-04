@@ -178,6 +178,8 @@ public class BuildingInteractionPanel : MonoBehaviour
         DestroyQueueButton(node);        
     }
 
+    GameObject queueSlotsGameObject;
+
     private void DestroyQueueButton(TechNode node)
     {
         queueTechButtons.Remove(node.tech);
@@ -185,7 +187,14 @@ public class BuildingInteractionPanel : MonoBehaviour
         queueUnitButtons?.Remove(queueUnitButton);
         Destroy(queueUnitButton?.gameObject);
 
-        RepositionQueueButtons();
+        if (queueUnitButtons.Count > 0)
+            RepositionQueueButtons();
+        else
+        {
+            queueSlotsGameObject.SetActive(false);
+            Destroy(queueSlotsGameObject);
+            titleGameObject.transform.position = new Vector3(0.0f, titleDisplayVerticalOffset, 0.0f);
+        }
     }
 
     private void HookIntoEvents()
@@ -372,7 +381,7 @@ public class BuildingInteractionPanel : MonoBehaviour
 
         InitializeQueueButtons();
 
-        GameObject queueSlotsGameObject = new GameObject("_queue_slots");
+        queueSlotsGameObject = new GameObject("_queue_slots");
         queueSlotsGameObject.transform.SetParent(menuGameObject.transform, false);
         InitializeQueueSlots(queueSlotsGameObject.transform, 7, spaceBetweenQueueSlots);
 
@@ -428,7 +437,7 @@ public class BuildingInteractionPanel : MonoBehaviour
             }
             nextButtonPosition.x = startPosition.x + ((buttonSize + spaceBetweenButtons) * currentButtonColumn);
             nextButtonPosition.y = startPosition.y - ((buttonSize + spaceBetweenButtons) * currentButtonRow);
-        }
+        }        
     }
 
     private void InitializeQueueButtons()
@@ -439,7 +448,8 @@ public class BuildingInteractionPanel : MonoBehaviour
             buttonsGameObject.transform.SetParent(menuGameObject.transform, false);
         }
 
-        Vector3 startPosition = CalculateQueueButtonsStartPosition();        
+        Vector3 startPosition = CalculateQueueButtonsStartPosition();
+        titleGameObject.transform.localPosition = new Vector3(0.0f, startPosition.y + (buttonSize * 0.85f), 0.0f); 
         Vector3 nextButtonPosition = startPosition;
 
         int currentButtonColumn = 0;
