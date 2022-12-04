@@ -181,17 +181,11 @@ public class BuildingInteractionPanel : MonoBehaviour
     private void DestroyQueueButton(TechNode node)
     {
         queueTechButtons.Remove(node.tech);
+        QueueUnitButton queueUnitButton = queueUnitButtons.Find(x => x.techToQueue == node.tech);
+        queueUnitButtons?.Remove(queueUnitButton);
+        Destroy(queueUnitButton?.gameObject);
 
-        // TODO: Just move the buttons into new positions rather
-        // than regenerating them
-        foreach (QueueUnitButton queueUnitButton in queueUnitButtons.ToArray())
-        {
-            GameObject obj = queueUnitButton.gameObject;
-            Destroy(obj);
-        }
-
-        queueUnitButtons.Clear();
-        InitializeQueueButtons();
+        RepositionQueueButtons();
     }
 
     private void HookIntoEvents()
@@ -409,6 +403,34 @@ public class BuildingInteractionPanel : MonoBehaviour
         return startPosition;
     }
 
+    private void RepositionQueueButtons()
+    {
+        Vector3 startPosition = CalculateQueueButtonsStartPosition();
+        Vector3 nextButtonPosition = startPosition;
+
+        int currentButtonColumn = 0;
+        int currentButtonRow = 0;
+
+        if (queueUnitButtons == null)
+            queueUnitButtons = new List<QueueUnitButton>();
+
+        canQueueUnits = false;
+
+        foreach (QueueUnitButton queueButton in queueUnitButtons)
+        {
+            queueButton.transform.localPosition = nextButtonPosition;
+            
+            currentButtonColumn++;
+            if (currentButtonColumn >= maxButtonColumns)
+            {
+                currentButtonColumn = 0;
+                currentButtonRow++;
+            }
+            nextButtonPosition.x = startPosition.x + ((buttonSize + spaceBetweenButtons) * currentButtonColumn);
+            nextButtonPosition.y = startPosition.y - ((buttonSize + spaceBetweenButtons) * currentButtonRow);
+        }
+    }
+
     private void InitializeQueueButtons()
     {
         if (!buttonsGameObject)
@@ -416,17 +438,6 @@ public class BuildingInteractionPanel : MonoBehaviour
             buttonsGameObject = new GameObject("_buttons");
             buttonsGameObject.transform.SetParent(menuGameObject.transform, false);
         }
-
-        // Vector3 startPosition = Vector3.zero;
-        // float buttonsTotalWidth = ((buttonSize + spaceBetweenButtons) * maxButtonColumns);
-        // int totalRows = Mathf.CeilToInt((float)queueTechButtons.Count / (float)maxButtonColumns);
-        // //float buttonsTotalHeight = ((buttonSize + spaceBetweenButtons) * totalRows);
-
-        // startPosition.x = buttonsTotalWidth * -0.5f + (buttonSize * 0.5f + spaceBetweenButtons * 0.5f);
-        // startPosition.y = (buttonSize + spaceBetweenButtons) * 0.5f;
-        // startPosition.y += (buttonSize + spaceBetweenButtons) * (totalRows - 1);
-
-        // titleGameObject.transform.localPosition = new Vector3(0.0f, startPosition.y + (buttonSize * 0.85f), 0.0f);
 
         Vector3 startPosition = CalculateQueueButtonsStartPosition();        
         Vector3 nextButtonPosition = startPosition;
