@@ -11,9 +11,12 @@ public abstract class UnitV2 : ActorV2
     public GameObject deathFxPrefab;
     public GameObject projectilePrefab;
     public Transform projectileOrigin;
+    [Tooltip("Sound played when unit heals or repairs a target.")]
     public SoundElement healSound;
+    protected AudioClip healClip;
+    [Tooltip("Collection of sounds chosen from when the unit attacks a target.")]
     public SoundElement attackSound;
-
+    protected AudioClip attackClip;
     public UnitData unitData;
     
     private bool deathFxStarted;
@@ -43,7 +46,9 @@ public abstract class UnitV2 : ActorV2
         OnLoadUnitData(unitData);
 
         audioSource = GetComponent<AudioSource>();
-
+        attackClip = attackSound.GetClip();
+        healClip = healSound.GetClip();
+        
         TryFetchRenderers();
 
         originalScale = gameObject.transform.localScale;
@@ -296,15 +301,15 @@ public abstract class UnitV2 : ActorV2
 
     private void TryPlayAttackSound()
     {
-        if (attackSound && audioSource && !audioSource.isPlaying)
-            audioSource.PlayOneShot(attackSound.GetClip());
+        if (attackClip && audioSource && !audioSource.isPlaying)
+            audioSource.PlayOneShot(attackClip);
 
     }
 
     private void TryPlayHealSound()
     {
-        if (healSound && audioSource && !audioSource.isPlaying)
-            audioSource.PlayOneShot(healSound.GetClip());
+        if (healClip && audioSource && !audioSource.isPlaying)
+            audioSource.PlayOneShot(healClip);
             
     }
 }

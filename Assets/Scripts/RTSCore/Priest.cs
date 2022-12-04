@@ -11,13 +11,17 @@ public class Priest : UnitV2
         return PriestBehaviorTree.Value;
     }
 
+    protected override void Start()
+    {
+        base.Start();
+        audioSource = gameObject.GetComponent<AudioSource>();
+    }
+    
     protected override void InitializeAttributes()
     {
         base.InitializeAttributes();
         Attributes.AddOrUpdate(AttributeType.ARMOR, 1f);
-        Attributes.AddOrUpdate(AttributeType.HEAL_RATE, 1f);
-
-        audioSource = GetComponent<AudioSource>();
+        Attributes.AddOrUpdate(AttributeType.HEAL_RATE, 1f);        
     }
 
     protected override void OnLoadUnitData(UnitData data)
