@@ -16,6 +16,8 @@ public class Priest : UnitV2
         base.InitializeAttributes();
         Attributes.AddOrUpdate(AttributeType.ARMOR, 1f);
         Attributes.AddOrUpdate(AttributeType.HEAL_RATE, 1f);
+
+        audioSource = GetComponent<AudioSource>();
     }
 
     protected override void OnLoadUnitData(UnitData data)

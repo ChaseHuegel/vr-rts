@@ -1,4 +1,5 @@
 using Swordfish;
+using Swordfish.Audio;
 using Swordfish.Library.Types;
 using Swordfish.Navigation;
 using UnityEngine;
@@ -6,11 +7,13 @@ using UnityEngine;
 public abstract class UnitV2 : ActorV2
 {
     public abstract bool IsCivilian { get; }
-    public GameObject healFxPrefab;
     public GameObject damagedFxPrefab;
     public GameObject deathFxPrefab;
     public GameObject projectilePrefab;
     public Transform projectileOrigin;
+    public SoundElement healSound;
+    public SoundElement attackSound;
+
     public UnitData unitData;
     
     private bool deathFxStarted;
@@ -131,6 +134,13 @@ public abstract class UnitV2 : ActorV2
         IssueTargetedOrder(body);
     }
 
+    protected override void OnHealthRegain(HealthRegainEvent e)
+    {
+        base.OnHealthRegain(e);
+        if (!currentHealFx)
+            currentHealFx = Instantiate(GameMaster.Instance.onUnitHealedFxPrefab, transform.position, GameMaster.Instance.onUnitHealedFxPrefab.transform.rotation, transform);
+    }
+
     protected override void OnDeath(DeathEvent e)
     {
         base.OnDeath(e);
@@ -232,6 +242,7 @@ public abstract class UnitV2 : ActorV2
 
         // TODO: Play attack start sound. For siege weapons, a launch sound, archers a bow sound,
         // infantry/cavalry a metal attack sound etc. (If we want all those sounds.)
+        TryPlayAttackSound();
     }
 
     protected virtual void ProcessHealRoutine(float deltaTime)
@@ -279,17 +290,21 @@ public abstract class UnitV2 : ActorV2
         if (HealingTarget)
         {
             Target.Heal(Attributes.ValueOf(AttributeType.HEAL_RATE), AttributeChangeCause.HEALED, this);
-
-            // TODO: Should FX/Sounds be handled by the object getting healed?
-            if (!currentHealFx && healFxPrefab)
-                currentHealFx = Instantiate(healFxPrefab, Target.transform.position, healFxPrefab.transform.rotation, Target.transform);
-
-            if (audioSource && !audioSource.isPlaying)
-            {
-                //audioSource.Play();
-                audioSource.PlayOneShot(GameMaster.GetAudio("building_repairing").GetClip());
-            }
-                
+            TryPlayHealSound();                
         }
+    }
+
+    private void TryPlayAttackSound()
+    {
+        if (attackSound && audioSource && !audioSource.isPlaying)
+            audioSource.PlayOneShot(attackSound.GetClip());
+
+    }
+
+    private void TryPlayHealSound()
+    {
+        if (healSound && audioSource && !audioSource.isPlaying)
+            audioSource.PlayOneShot(healSound.GetClip());
+            
     }
 }

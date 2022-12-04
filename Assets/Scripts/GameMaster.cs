@@ -43,6 +43,8 @@ public class GameMaster : Singleton<GameMaster>
     public GameObject buildingDamagedFX;
     public GameObject buildingDestroyedFX;
     public GameObject buildingPlacementDeniedFX;
+    public GameObject onUnitHealedFxPrefab;
+
 
     [Header("Sounds")]
     public AudioClip buildingDestroyedSound;
