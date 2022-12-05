@@ -91,7 +91,7 @@ namespace Swordfish.Navigation
             }
         }
 
-        public void OnDrawGizmos()
+        public virtual void OnDrawGizmos()
         {
             if (Application.isEditor != true || Application.isPlaying) return;
 

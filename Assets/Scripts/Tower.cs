@@ -20,7 +20,7 @@ public class Tower : Structure
         base.Initialize();
         
         // TODO: Switch to the attribute system
-        attackRange = buildingData.attackRange;
+        attackDamage = buildingData.attackDamage;
         attackSpeed = buildingData.attackSpeed;
         attackRange = buildingData.attackRange;
 
@@ -112,6 +112,13 @@ public class Tower : Structure
             Projectile.Spawn(projectilePrefab, projectileOrigin.position, Quaternion.identity, this, projectileTarget.transform);
     }
 
+    public override void OnDrawGizmos()
+    {
+        base.OnDrawGizmos();
+        Gizmos.matrix = Matrix4x4.identity;
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawWireSphere(transform.position, buildingData.attackRange * World.GetUnit());
+    }
 
     #region OldCode
     /* 
