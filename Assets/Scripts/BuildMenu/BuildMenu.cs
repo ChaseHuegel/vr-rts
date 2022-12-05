@@ -19,7 +19,6 @@ public class BuildMenu : MonoBehaviour
     {
         if (TryGetTabs())
             InitializeTabs();
-
     }
 
     void Start()

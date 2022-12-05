@@ -37,7 +37,5 @@ public class StatUpgrade : TechBase
             foreach (UnitData unitData in attributeBonus.targetUnits)
                 PlayerManager.Instance.AddUnitStatUpgrade(unitData, attributeBonus);
         }
-
-        Debug.Log(this.title + "research completed.");
     }
 }

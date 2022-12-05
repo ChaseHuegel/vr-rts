@@ -315,6 +315,7 @@ public class UpgradeNode : TechNode
 public class ResearchNode : TechNode
 {
     public int requiredTechCount = 0;
+    public List<TechNode> targetNodes = new List<TechNode>();
     public ResearchNode(TechBase tech, List<TechBase> reqs, Vector2 position, bool unlocked = false, bool researched = false)
     : base(tech, reqs, position, unlocked, researched)
     {

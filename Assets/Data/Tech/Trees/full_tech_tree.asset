@@ -225,6 +225,15 @@ MonoBehaviour:
         - {fileID: 11400000, guid: 744691140f29f074ea9f47aad6f1fffb, type: 2}
         UIposition: {x: 2450, y: 20}
         requiredTechCount: 0
+        targetNodes:
+        - tech: {fileID: 11400000, guid: 2e66ccd352360c843a90fb60cfae6849, type: 2}
+          unlocked: 0
+          researched: 0
+          requiresResearch: 0
+          enabled: 0
+          techRequirements:
+          - {fileID: 11400000, guid: 486a5536e665c94458bcef1f5ae096f7, type: 2}
+          UIposition: {x: 2670, y: 20}
     - rid: 292525113965019144
       type: {class: ResearchNode, ns: , asm: Assembly-CSharp}
       data:
@@ -237,6 +246,15 @@ MonoBehaviour:
         - {fileID: 11400000, guid: 744691140f29f074ea9f47aad6f1fffb, type: 2}
         UIposition: {x: 2450, y: -70}
         requiredTechCount: 0
+        targetNodes:
+        - tech: {fileID: 11400000, guid: 0db5cbe357e746f44881105ef56985a7, type: 2}
+          unlocked: 0
+          researched: 0
+          requiresResearch: 0
+          enabled: 0
+          techRequirements:
+          - {fileID: 11400000, guid: ba82904291d372f49ba455772b3375f5, type: 2}
+          UIposition: {x: 2670, y: -70}
     - rid: 292525113965019145
       type: {class: ResearchNode, ns: , asm: Assembly-CSharp}
       data:
@@ -249,6 +267,15 @@ MonoBehaviour:
         - {fileID: 11400000, guid: 744691140f29f074ea9f47aad6f1fffb, type: 2}
         UIposition: {x: 2450, y: -160}
         requiredTechCount: 0
+        targetNodes:
+        - tech: {fileID: 11400000, guid: 36f6519d70433b24cb48d3d70d66edf6, type: 2}
+          unlocked: 0
+          researched: 0
+          requiresResearch: 0
+          enabled: 0
+          techRequirements:
+          - {fileID: 11400000, guid: 5f25f22773164ed48a24d58e5977bcff, type: 2}
+          UIposition: {x: 2670, y: -160}
     - rid: 292525113965019146
       type: {class: UpgradeNode, ns: , asm: Assembly-CSharp}
       data:
@@ -430,6 +457,16 @@ MonoBehaviour:
         - {fileID: 11400000, guid: 5d092c1e6aff0094f9846a8357e92bd7, type: 2}
         UIposition: {x: 4220, y: 890}
         requiredTechCount: 0
+        targetNodes:
+        - tech: {fileID: 11400000, guid: 3948780946c268849ab83a6110873446, type: 2}
+          unlocked: 0
+          researched: 0
+          requiresResearch: 0
+          enabled: 0
+          techRequirements:
+          - {fileID: 11400000, guid: 55d9adbbedb925242b1e682f3148747a, type: 2}
+          - {fileID: 11400000, guid: c8c96015b3bbd874c9adf2e4f830d301, type: 2}
+          UIposition: {x: 4500, y: 840}
     - rid: 8296355504631316509
       type: {class: UnitNode, ns: , asm: Assembly-CSharp}
       data:
@@ -764,6 +801,23 @@ MonoBehaviour:
         - {fileID: 11400000, guid: 1c99027ec54ca054aa9caa1c7f275bff, type: 2}
         UIposition: {x: 1470, y: 770}
         requiredTechCount: 0
+        targetNodes:
+        - tech: {fileID: 11400000, guid: 5563b94f1188a1c4e8f99f9596e6f399, type: 2}
+          unlocked: 0
+          researched: 0
+          requiresResearch: 0
+          enabled: 0
+          techRequirements:
+          - {fileID: 11400000, guid: b1d3b8f6efd121f4eace566be7c84a0d, type: 2}
+          UIposition: {x: 1740, y: 900}
+        - tech: {fileID: 11400000, guid: 3a39ca3ab0e90a64b9f9e99a5b245745, type: 2}
+          unlocked: 0
+          researched: 0
+          requiresResearch: 0
+          enabled: 0
+          techRequirements:
+          - {fileID: 11400000, guid: b1d3b8f6efd121f4eace566be7c84a0d, type: 2}
+          UIposition: {x: 1740, y: 810}
     - rid: 8296355504631316551
       type: {class: UnitNode, ns: , asm: Assembly-CSharp}
       data:
@@ -788,6 +842,23 @@ MonoBehaviour:
         - {fileID: 11400000, guid: 744691140f29f074ea9f47aad6f1fffb, type: 2}
         UIposition: {x: 2440, y: 980}
         requiredTechCount: 0
+        targetNodes:
+        - tech: {fileID: 11400000, guid: d4b2c2c90fed3c84092794ec96efedc4, type: 2}
+          unlocked: 0
+          researched: 0
+          requiresResearch: 0
+          enabled: 0
+          techRequirements:
+          - {fileID: 11400000, guid: 5b2d7c633ee7f624393b98e383c68c94, type: 2}
+          UIposition: {x: 2670, y: 1070}
+        - tech: {fileID: 11400000, guid: 81c6378611a68644a9e6a2ef67dbeaa7, type: 2}
+          unlocked: 0
+          researched: 0
+          requiresResearch: 0
+          enabled: 0
+          techRequirements:
+          - {fileID: 11400000, guid: 5b2d7c633ee7f624393b98e383c68c94, type: 2}
+          UIposition: {x: 2670, y: 980}
     - rid: 8296355516206546946
       type: {class: UnitNode, ns: , asm: Assembly-CSharp}
       data:
@@ -812,6 +883,15 @@ MonoBehaviour:
         - {fileID: 11400000, guid: 1c99027ec54ca054aa9caa1c7f275bff, type: 2}
         UIposition: {x: 1470, y: 590}
         requiredTechCount: 0
+        targetNodes:
+        - tech: {fileID: 11400000, guid: 5ebc57ae57ef9ee46a3cf4d75de285a6, type: 2}
+          unlocked: 0
+          researched: 0
+          requiresResearch: 0
+          enabled: 0
+          techRequirements:
+          - {fileID: 11400000, guid: 532c625e073eb644bbfc5b35e19c21af, type: 2}
+          UIposition: {x: 1740, y: 630}
     - rid: 8296355516206546948
       type: {class: UnitNode, ns: , asm: Assembly-CSharp}
       data:
@@ -836,6 +916,15 @@ MonoBehaviour:
         - {fileID: 11400000, guid: 744691140f29f074ea9f47aad6f1fffb, type: 2}
         UIposition: {x: 2450, y: 800}
         requiredTechCount: 0
+        targetNodes:
+        - tech: {fileID: 11400000, guid: 2412ce796068f7c4fa1be89612fcefb9, type: 2}
+          unlocked: 0
+          researched: 0
+          requiresResearch: 0
+          enabled: 0
+          techRequirements:
+          - {fileID: 11400000, guid: 3605adbb4c14009419522f8855226829, type: 2}
+          UIposition: {x: 2670, y: 800}
     - rid: 8296355516206546951
       type: {class: UnitNode, ns: , asm: Assembly-CSharp}
       data:
@@ -934,7 +1023,7 @@ MonoBehaviour:
         enabled: 0
         techRequirements:
         - {fileID: 11400000, guid: 240df38f622796846b8908ba9199f77c, type: 2}
-        UIposition: {x: 920, y: 930}
+        UIposition: {x: 919, y: 930}
         isBuilt: 0
         requiredTechCount: 0
     - rid: 8296355591191265285
@@ -1070,6 +1159,15 @@ MonoBehaviour:
         - {fileID: 11400000, guid: 6a3967368cf4e1948b5774dbb9880233, type: 2}
         UIposition: {x: 2870, y: 890}
         requiredTechCount: 0
+        targetNodes:
+        - tech: {fileID: 11400000, guid: 32286c2bb252648459ee0189b4a11a57, type: 2}
+          unlocked: 0
+          researched: 0
+          requiresResearch: 0
+          enabled: 0
+          techRequirements:
+          - {fileID: 11400000, guid: 3af7d74bcf80faa46afaf9ccca05a28d, type: 2}
+          UIposition: {x: 3080, y: 890}
     - rid: 8296355635171164161
       type: {class: ResearchNode, ns: , asm: Assembly-CSharp}
       data:
@@ -1082,6 +1180,15 @@ MonoBehaviour:
         - {fileID: 11400000, guid: 744691140f29f074ea9f47aad6f1fffb, type: 2}
         UIposition: {x: 2440, y: 890}
         requiredTechCount: 0
+        targetNodes:
+        - tech: {fileID: 11400000, guid: 6a3967368cf4e1948b5774dbb9880233, type: 2}
+          unlocked: 0
+          researched: 0
+          requiresResearch: 0
+          enabled: 0
+          techRequirements:
+          - {fileID: 11400000, guid: 4f85bbcb20050184485f2a1444c3cec0, type: 2}
+          UIposition: {x: 2670, y: 890}
     - rid: 8296355710977179648
       type: {class: UnitNode, ns: , asm: Assembly-CSharp}
       data:
@@ -1103,8 +1210,8 @@ MonoBehaviour:
         requiresResearch: 0
         enabled: 0
         techRequirements:
-        - {fileID: 11400000, guid: d08e0168d0b717f479ae224f7fff4bc8, type: 2}
         - {fileID: 11400000, guid: 7f4c3f7671550984ab1bcd726931b792, type: 2}
+        - {fileID: 11400000, guid: d08e0168d0b717f479ae224f7fff4bc8, type: 2}
         UIposition: {x: 4250, y: 1070}
         requiredTechCount: 0
     - rid: 8296355710977179650
@@ -1261,7 +1368,7 @@ MonoBehaviour:
         enabled: 0
         techRequirements:
         - {fileID: 11400000, guid: 1b75c52c9deec4c49be29abcba21ea36, type: 2}
-        UIposition: {x: 4070, y: -100}
+        UIposition: {x: 4062, y: -100}
         requiredTechCount: 0
     - rid: 8296355710977179664
       type: {class: UnitNode, ns: , asm: Assembly-CSharp}
@@ -1432,6 +1539,15 @@ MonoBehaviour:
         - {fileID: 11400000, guid: 2412ce796068f7c4fa1be89612fcefb9, type: 2}
         UIposition: {x: 2870, y: 800}
         requiredTechCount: 0
+        targetNodes:
+        - tech: {fileID: 11400000, guid: 0bd5de1f2f7ae25488c472929f857b37, type: 2}
+          unlocked: 0
+          researched: 0
+          requiresResearch: 0
+          enabled: 0
+          techRequirements:
+          - {fileID: 11400000, guid: 0e6d18a843e6dbd428c381ff0baf3c89, type: 2}
+          UIposition: {x: 3080, y: 800}
     - rid: 8296355710977179678
       type: {class: EpochNode, ns: , asm: Assembly-CSharp}
       data:
@@ -1459,6 +1575,15 @@ MonoBehaviour:
         - {fileID: 11400000, guid: 608a2f45476427b47b18d337ac49899d, type: 2}
         UIposition: {x: 3620, y: 350}
         requiredTechCount: 0
+        targetNodes:
+        - tech: {fileID: 11400000, guid: 58318cc39a17f2d498842ac9ff294cd6, type: 2}
+          unlocked: 0
+          researched: 0
+          requiresResearch: 0
+          enabled: 0
+          techRequirements:
+          - {fileID: 11400000, guid: 3a8906ced2256b24dbb7f7864ed0ea93, type: 2}
+          UIposition: {x: 3830, y: 350}
     - rid: 8296355710977179680
       type: {class: ResearchNode, ns: , asm: Assembly-CSharp}
       data:
@@ -1472,6 +1597,15 @@ MonoBehaviour:
         - {fileID: 11400000, guid: df72aca10ff519d449acbae8d848a042, type: 2}
         UIposition: {x: 4040, y: 260}
         requiredTechCount: 0
+        targetNodes:
+        - tech: {fileID: 11400000, guid: 53ab51748e7d5d54c9012c7fcca7a6cb, type: 2}
+          unlocked: 0
+          researched: 0
+          requiresResearch: 0
+          enabled: 0
+          techRequirements:
+          - {fileID: 11400000, guid: f912f116d459126469333c42e58163c9, type: 2}
+          UIposition: {x: 4290, y: 260}
     - rid: 8296355710977179681
       type: {class: ResearchNode, ns: , asm: Assembly-CSharp}
       data:
@@ -1484,6 +1618,15 @@ MonoBehaviour:
         - {fileID: 11400000, guid: 608a2f45476427b47b18d337ac49899d, type: 2}
         UIposition: {x: 3620, y: -190}
         requiredTechCount: 0
+        targetNodes:
+        - tech: {fileID: 11400000, guid: b7d9ff19ba2411040b768a61d79aaa06, type: 2}
+          unlocked: 0
+          researched: 0
+          requiresResearch: 0
+          enabled: 0
+          techRequirements:
+          - {fileID: 11400000, guid: 44b8c0dda4c3b114d81525dd6c3de181, type: 2}
+          UIposition: {x: 3830, y: -190}
     - rid: 8296355710977179682
       type: {class: ResearchNode, ns: , asm: Assembly-CSharp}
       data:
@@ -1493,10 +1636,19 @@ MonoBehaviour:
         requiresResearch: 0
         enabled: 0
         techRequirements:
-        - {fileID: 11400000, guid: b7d9ff19ba2411040b768a61d79aaa06, type: 2}
         - {fileID: 11400000, guid: 8ea0c7cf6d7d4e74dbe4f44ad408a380, type: 2}
+        - {fileID: 11400000, guid: b7d9ff19ba2411040b768a61d79aaa06, type: 2}
         UIposition: {x: 4030, y: -190}
         requiredTechCount: 0
+        targetNodes:
+        - tech: {fileID: 11400000, guid: abee2dd17f9b18c4ab3236a34ef42780, type: 2}
+          unlocked: 0
+          researched: 0
+          requiresResearch: 0
+          enabled: 0
+          techRequirements:
+          - {fileID: 11400000, guid: 9fd7faf2b83458345afe250c7cf0c580, type: 2}
+          UIposition: {x: 4260, y: -190}
     - rid: 8296355710977179683
       type: {class: ResearchNode, ns: , asm: Assembly-CSharp}
       data:
@@ -1506,10 +1658,19 @@ MonoBehaviour:
         requiresResearch: 0
         enabled: 0
         techRequirements:
-        - {fileID: 11400000, guid: 5916dbccc9db8a449af261ab7fba44db, type: 2}
         - {fileID: 11400000, guid: e06a1e3083dedcd498e571bcbcccb915, type: 2}
+        - {fileID: 11400000, guid: 5916dbccc9db8a449af261ab7fba44db, type: 2}
         UIposition: {x: 3850, y: -100}
         requiredTechCount: 0
+        targetNodes:
+        - tech: {fileID: 11400000, guid: 047e4ea952009414b97d664e30b52477, type: 2}
+          unlocked: 0
+          researched: 0
+          requiresResearch: 0
+          enabled: 0
+          techRequirements:
+          - {fileID: 11400000, guid: 1b75c52c9deec4c49be29abcba21ea36, type: 2}
+          UIposition: {x: 4062, y: -100}
     - rid: 8296355710977179684
       type: {class: ResearchNode, ns: , asm: Assembly-CSharp}
       data:
@@ -1519,10 +1680,19 @@ MonoBehaviour:
         requiresResearch: 0
         enabled: 0
         techRequirements:
-        - {fileID: 11400000, guid: ac17bd94e67e2a04ba16bf2ec8886cc1, type: 2}
         - {fileID: 11400000, guid: 7d22aaf515ba3dc4cb7dac12a3b8aac7, type: 2}
+        - {fileID: 11400000, guid: ac17bd94e67e2a04ba16bf2ec8886cc1, type: 2}
         UIposition: {x: 3840, y: 170}
         requiredTechCount: 0
+        targetNodes:
+        - tech: {fileID: 11400000, guid: dc6f6124766d47447b91f34dc52751ef, type: 2}
+          unlocked: 0
+          researched: 0
+          requiresResearch: 0
+          enabled: 0
+          techRequirements:
+          - {fileID: 11400000, guid: ee29d350a821d0b458de1fe909f8fbe6, type: 2}
+          UIposition: {x: 4060, y: 170}
     - rid: 8296355710977179685
       type: {class: ResearchNode, ns: , asm: Assembly-CSharp}
       data:
@@ -1535,6 +1705,15 @@ MonoBehaviour:
         - {fileID: 11400000, guid: 608a2f45476427b47b18d337ac49899d, type: 2}
         UIposition: {x: 3620, y: 530}
         requiredTechCount: 0
+        targetNodes:
+        - tech: {fileID: 11400000, guid: a39030fe1479d0942a744e84cf4e65f3, type: 2}
+          unlocked: 0
+          researched: 0
+          requiresResearch: 0
+          enabled: 0
+          techRequirements:
+          - {fileID: 11400000, guid: 137faf28715d7754490290df021ae255, type: 2}
+          UIposition: {x: 3830, y: 530}
     - rid: 8296355710977179686
       type: {class: ResearchNode, ns: , asm: Assembly-CSharp}
       data:
@@ -1547,6 +1726,15 @@ MonoBehaviour:
         - {fileID: 11400000, guid: a39030fe1479d0942a744e84cf4e65f3, type: 2}
         UIposition: {x: 4020, y: 530}
         requiredTechCount: 0
+        targetNodes:
+        - tech: {fileID: 11400000, guid: ccc8f48f7e1aca94d8063fa105b5a605, type: 2}
+          unlocked: 0
+          researched: 0
+          requiresResearch: 0
+          enabled: 0
+          techRequirements:
+          - {fileID: 11400000, guid: 9d4b6422952501a4cb260e2b7eb799f1, type: 2}
+          UIposition: {x: 4230, y: 530}
     - rid: 8296355710977179687
       type: {class: ResearchNode, ns: , asm: Assembly-CSharp}
       data:
@@ -1559,6 +1747,7 @@ MonoBehaviour:
         - {fileID: 11400000, guid: 608a2f45476427b47b18d337ac49899d, type: 2}
         UIposition: {x: 3620, y: 980}
         requiredTechCount: 0
+        targetNodes: []
     - rid: 8296355710977179688
       type: {class: ResearchNode, ns: , asm: Assembly-CSharp}
       data:
@@ -1569,8 +1758,18 @@ MonoBehaviour:
         enabled: 0
         techRequirements:
         - {fileID: 11400000, guid: ecec8660b50660f47a9112cef34e0b32, type: 2}
-        UIposition: {x: 4020, y: 980}
+        UIposition: {x: 4021, y: 979}
         requiredTechCount: 0
+        targetNodes:
+        - tech: {fileID: 11400000, guid: 94aca7e17a8754648b1f953872ca2d77, type: 2}
+          unlocked: 0
+          researched: 0
+          requiresResearch: 0
+          enabled: 0
+          techRequirements:
+          - {fileID: 11400000, guid: 7f4c3f7671550984ab1bcd726931b792, type: 2}
+          - {fileID: 11400000, guid: d08e0168d0b717f479ae224f7fff4bc8, type: 2}
+          UIposition: {x: 4250, y: 1070}
     - rid: 8296355710977179689
       type: {class: ResearchNode, ns: , asm: Assembly-CSharp}
       data:
@@ -1583,6 +1782,15 @@ MonoBehaviour:
         - {fileID: 11400000, guid: 608a2f45476427b47b18d337ac49899d, type: 2}
         UIposition: {x: 3620, y: 710}
         requiredTechCount: 0
+        targetNodes:
+        - tech: {fileID: 11400000, guid: 483cf06ab49655349b1f1fdbe08a7b69, type: 2}
+          unlocked: 0
+          researched: 0
+          requiresResearch: 0
+          enabled: 0
+          techRequirements:
+          - {fileID: 11400000, guid: 433f079e3f7351e4f9c335a58a670a40, type: 2}
+          UIposition: {x: 3830, y: 708.5294}
     - rid: 8296355710977179690
       type: {class: ResearchNode, ns: , asm: Assembly-CSharp}
       data:
@@ -1593,8 +1801,17 @@ MonoBehaviour:
         enabled: 0
         techRequirements:
         - {fileID: 11400000, guid: 608a2f45476427b47b18d337ac49899d, type: 2}
-        UIposition: {x: 3620, y: 800}
+        UIposition: {x: 3620, y: 798.9131}
         requiredTechCount: 0
+        targetNodes:
+        - tech: {fileID: 11400000, guid: e248b03a70e218b4ba589d6d36c80392, type: 2}
+          unlocked: 0
+          researched: 0
+          requiresResearch: 0
+          enabled: 0
+          techRequirements:
+          - {fileID: 11400000, guid: e73cde3aa21331c4caded20d40e89a51, type: 2}
+          UIposition: {x: 3830, y: 800}
     - rid: 8296355710977179691
       type: {class: ResearchNode, ns: , asm: Assembly-CSharp}
       data:
@@ -1607,6 +1824,15 @@ MonoBehaviour:
         - {fileID: 11400000, guid: e248b03a70e218b4ba589d6d36c80392, type: 2}
         UIposition: {x: 4020, y: 800}
         requiredTechCount: 0
+        targetNodes:
+        - tech: {fileID: 11400000, guid: 55d9adbbedb925242b1e682f3148747a, type: 2}
+          unlocked: 0
+          researched: 0
+          requiresResearch: 0
+          enabled: 0
+          techRequirements:
+          - {fileID: 11400000, guid: 615d512b7da75f14984f1e9c0b68b64e, type: 2}
+          UIposition: {x: 4230, y: 800}
     - rid: 8296355710977179692
       type: {class: UpgradeNode, ns: , asm: Assembly-CSharp}
       data:
@@ -1629,8 +1855,17 @@ MonoBehaviour:
         enabled: 1
         techRequirements:
         - {fileID: 11400000, guid: e8855eb8a447c704ca7745172e7203be, type: 2}
-        UIposition: {x: 680, y: 830}
+        UIposition: {x: 681, y: 830}
         requiredTechCount: 0
+        targetNodes:
+        - tech: {fileID: 11400000, guid: 5b199889873229245b3ec2589f50a2fd, type: 2}
+          unlocked: 0
+          researched: 0
+          requiresResearch: 0
+          enabled: 0
+          techRequirements:
+          - {fileID: 11400000, guid: ac97aa2d2084dd5458250aa55e8329de, type: 2}
+          UIposition: {x: 920, y: 750}
     - rid: 8296355710977179694
       type: {class: ResearchNode, ns: , asm: Assembly-CSharp}
       data:
@@ -1641,8 +1876,25 @@ MonoBehaviour:
         enabled: 1
         techRequirements:
         - {fileID: 11400000, guid: e8855eb8a447c704ca7745172e7203be, type: 2}
-        UIposition: {x: 680, y: 920}
+        UIposition: {x: 678, y: 920}
         requiredTechCount: 0
+        targetNodes:
+        - tech: {fileID: 11400000, guid: de38837a0ecf8634eae9e18a752a62e2, type: 2}
+          unlocked: 0
+          researched: 0
+          requiresResearch: 0
+          enabled: 0
+          techRequirements:
+          - {fileID: 11400000, guid: 240df38f622796846b8908ba9199f77c, type: 2}
+          UIposition: {x: 919, y: 930}
+        - tech: {fileID: 11400000, guid: ed5341aebd7ab7445b57e02b10aa0c8e, type: 2}
+          unlocked: 0
+          researched: 0
+          requiresResearch: 0
+          enabled: 0
+          techRequirements:
+          - {fileID: 11400000, guid: 240df38f622796846b8908ba9199f77c, type: 2}
+          UIposition: {x: 920, y: 840}
     - rid: 8296355710977179695
       type: {class: ResearchNode, ns: , asm: Assembly-CSharp}
       data:
@@ -1653,8 +1905,17 @@ MonoBehaviour:
         enabled: 0
         techRequirements:
         - {fileID: 11400000, guid: 1c99027ec54ca054aa9caa1c7f275bff, type: 2}
-        UIposition: {x: 1470, y: 680}
+        UIposition: {x: 1471, y: 680}
         requiredTechCount: 0
+        targetNodes:
+        - tech: {fileID: 11400000, guid: bc71de8f503ea984dab70f06ddc0dac4, type: 2}
+          unlocked: 0
+          researched: 0
+          requiresResearch: 0
+          enabled: 0
+          techRequirements:
+          - {fileID: 11400000, guid: fa827f7b022c12b40ab63515fba89473, type: 2}
+          UIposition: {x: 1740, y: 720}
     - rid: 8296355710977179696
       type: {class: ResearchNode, ns: , asm: Assembly-CSharp}
       data:
@@ -1665,8 +1926,17 @@ MonoBehaviour:
         enabled: 0
         techRequirements:
         - {fileID: 11400000, guid: 744691140f29f074ea9f47aad6f1fffb, type: 2}
-        UIposition: {x: 2440, y: 1070}
+        UIposition: {x: 2440, y: 1071}
         requiredTechCount: 0
+        targetNodes:
+        - tech: {fileID: 11400000, guid: 41bb8fe22cd2f4e46868b7a4d18270ca, type: 2}
+          unlocked: 0
+          researched: 0
+          requiresResearch: 0
+          enabled: 0
+          techRequirements:
+          - {fileID: 11400000, guid: 1f440a3df83f076488230c8a9075dc60, type: 2}
+          UIposition: {x: 2670, y: 1160}
     - rid: 8296355710977179697
       type: {class: ResearchNode, ns: , asm: Assembly-CSharp}
       data:
@@ -1679,3 +1949,12 @@ MonoBehaviour:
         - {fileID: 11400000, guid: 608a2f45476427b47b18d337ac49899d, type: 2}
         UIposition: {x: 3620, y: 620}
         requiredTechCount: 0
+        targetNodes:
+        - tech: {fileID: 11400000, guid: baa99189b78566e48b3c0d904afd3ab1, type: 2}
+          unlocked: 0
+          researched: 0
+          requiresResearch: 0
+          enabled: 0
+          techRequirements:
+          - {fileID: 11400000, guid: ddbf2c9d3cebf9942ab75340998a99ae, type: 2}
+          UIposition: {x: 3820, y: 620}

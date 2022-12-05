@@ -111,6 +111,11 @@ public class TechTreeNodeEditor : EditorWindow
     private void DrawResearchNodeEditor(ResearchNode node)
     {
         node.researched = EditorGUILayout.Toggle("Researched", node.researched);
+        EditorGUILayout.Space();
+
+        foreach(TechNode techNode in node.targetNodes)
+            EditorGUILayout.ObjectField((TechBase)techNode.tech, typeof(TechBase), false);
+        
     }
 
     private void DrawUpgradeNodeEditor(UpgradeNode node)

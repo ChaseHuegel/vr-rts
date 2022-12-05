@@ -180,10 +180,18 @@ public class BuildingInteractionPanel : MonoBehaviour
 
     GameObject queueSlotsGameObject;
 
-    private void DestroyQueueButton(TechNode node)
+    private void DestroyQueueButton(TechNode techNode)
     {
-        queueTechButtons.Remove(node.tech);
-        QueueUnitButton queueUnitButton = queueUnitButtons.Find(x => x.techToQueue == node.tech);
+        queueTechButtons.Remove(techNode.tech);
+
+        if (techNode is ResearchNode)
+        {
+            ResearchNode researchNode = ((ResearchNode)techNode);
+            foreach (TechNode targetNode in researchNode.targetNodes)
+                queueUnitButtons.Find(x => x.techToQueue == targetNode.tech)?.gameObject.SetActive(true);
+        }
+
+        QueueUnitButton queueUnitButton = queueUnitButtons.Find(x => x.techToQueue == techNode.tech);
         queueUnitButtons?.Remove(queueUnitButton);
         Destroy(queueUnitButton?.gameObject);
 
@@ -402,7 +410,10 @@ public class BuildingInteractionPanel : MonoBehaviour
     {
         Vector3 startPosition = Vector3.zero;
         float buttonsTotalWidth = ((buttonSize + spaceBetweenButtons) * maxButtonColumns);
-        int totalRows = Mathf.CeilToInt((float)queueTechButtons.Count / (float)maxButtonColumns);
+
+        // Don't count buttons that won't be displayed immediately.
+        int count =  queueTechButtons.Count - queueTechButtons.FindAll(x => x is TechResearcher).Count;
+        int totalRows = Mathf.CeilToInt((float)count / (float)maxButtonColumns);
         //float buttonsTotalHeight = ((buttonSize + spaceBetweenButtons) * totalRows);
 
         startPosition.x = buttonsTotalWidth * -0.5f + (buttonSize * 0.5f + spaceBetweenButtons * 0.5f);
@@ -427,6 +438,9 @@ public class BuildingInteractionPanel : MonoBehaviour
 
         foreach (QueueUnitButton queueButton in queueUnitButtons)
         {
+            if (!queueButton.gameObject.activeSelf)
+                continue;
+
             queueButton.transform.localPosition = nextButtonPosition;
             
             currentButtonColumn++;
@@ -463,10 +477,19 @@ public class BuildingInteractionPanel : MonoBehaviour
         foreach (TechBase tech in queueTechButtons)
         {
             if (tech is UnitData)
-                canQueueUnits = true;
-
-            GenerateQueueButton(tech, nextButtonPosition, buttonsGameObject.transform);
-
+                canQueueUnits = true;            
+            
+            GameObject button = GenerateQueueButton(tech, nextButtonPosition, buttonsGameObject.transform);
+            
+            TechNode node = PlayerManager.Instance.currentTree.FindNode(tech);
+            TechBase researcher = node.techRequirements.Find(x => x is TechResearcher);
+            if (researcher)
+            {
+                button.gameObject.SetActive(false);
+                //button.gameObject.transform.localPosition = queueUnitButtons.Find(x => x.techToQueue == researcher).transform.localPosition;
+                continue;
+            }
+            
             currentButtonColumn++;
             if (currentButtonColumn >= maxButtonColumns)
             {
@@ -618,7 +641,6 @@ public class BuildingInteractionPanel : MonoBehaviour
         hoverButton.localMoveDistance = new Vector3(0, 0, 0.04f);
         hoverButton.onButtonDown.AddListener(OnQueueHoverButtonDown);
         hoverButton.onButtonUp.AddListener(OnQueueHoverButtonUp);
-
 
         //---------------------------------------------------------------------
         // Set up and initialize queue

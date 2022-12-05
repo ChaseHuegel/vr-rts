@@ -780,12 +780,21 @@ public class TechTreeEditor : EditorWindow
         {
             selectedInPointNode.techRequirements.Add(selectedOutPointNode.tech);
 
+            if (selectedOutPointNode is ResearchNode)
+                TryAddResearchNodeTarget((ResearchNode)selectedOutPointNode, selectedInPointNode);
+
             // Creating connection may annul other requirement connections, so check all connections.
             for (int k = 0; k < targetTree.tree.Count; k++)
                 targetTree.CorrectRequirementCascades(k);
 
             ClearConnectionSelection();
         }
+    }
+
+    private void TryAddResearchNodeTarget(ResearchNode outNode, TechNode inNode)
+    {
+        if (!outNode.targetNodes.Contains(inNode))
+            outNode.targetNodes.Add(inNode);
     }
 
     private void ClearConnectionSelection()
@@ -830,13 +839,16 @@ public class TechTreeEditor : EditorWindow
         }
     }
 
-    private void OnClickRemoveConnection(TechNode techNodeFirst, TechNode techNodeSecond)
+    private void OnClickRemoveConnection(TechNode techNodeFirst, TechNode reqNode)
     {
-        if (techNodeFirst.techRequirements.Contains(techNodeSecond.tech))
-            techNodeFirst.techRequirements.Remove(techNodeSecond.tech);
+        if (techNodeFirst.techRequirements.Contains(reqNode.tech))
+            techNodeFirst.techRequirements.Remove(reqNode.tech);
 
-        else if (techNodeSecond.techRequirements.Contains(techNodeFirst.tech))
-            techNodeSecond.techRequirements.Remove(techNodeFirst.tech);
+        else if (reqNode.techRequirements.Contains(techNodeFirst.tech))
+            reqNode.techRequirements.Remove(techNodeFirst.tech);
+
+        if (reqNode is ResearchNode)
+            ((ResearchNode)techNodeFirst).targetNodes.Remove(reqNode);
     }
 
     private static Rect GetInPointRect(ref Rect nodeRect)
