@@ -60,14 +60,15 @@ namespace Valve.VR.InteractionSystem
 
         [Tooltip("Set whether or not you want this interactible to highlight when hovering over it")]
         public bool highlightOnHover = true;
+        public bool highlightOnPointedAt = true;
         protected MeshRenderer[] highlightRenderers;
         protected MeshRenderer[] existingRenderers;
         protected GameObject highlightHolder;
         protected SkinnedMeshRenderer[] highlightSkinnedRenderers;
         protected SkinnedMeshRenderer[] existingSkinnedRenderers;
-        protected static Material highlightMat;
+        public Material highlightMaterial;
         [Tooltip("An array of child gameObjects to not render a highlight for. Things like transparent parts, vfx, etc.")]
-        public GameObject[] hideHighlight;
+        public List<GameObject> hideHighlight;
 
         [Tooltip("Higher is better")]
         public int hoverPriority = 0;
@@ -92,6 +93,9 @@ namespace Valve.VR.InteractionSystem
         public bool isHovering { get; protected set; }
         public bool wasHovering { get; protected set; }
 
+        public bool isPointedAt { get; protected set; }
+        public bool wasPointedAt { get; protected set; }
+
 
         private void Awake()
         {
@@ -100,14 +104,14 @@ namespace Valve.VR.InteractionSystem
 
         protected virtual void Start()
         {
-            if (highlightMat == null)
+            if (highlightMaterial == null)
 #if UNITY_URP
                 highlightMat = (Material)Resources.Load("SteamVR_HoverHighlight_URP", typeof(Material));
 #else
-                highlightMat = (Material)Resources.Load("SteamVR_HoverHighlight", typeof(Material));
+                highlightMaterial = (Material)Resources.Load("SteamVR_HoverHighlight", typeof(Material));
 #endif
 
-            if (highlightMat == null)
+            if (highlightMaterial == null)
                 Debug.LogError("<b>[SteamVR Interaction]</b> Hover Highlight Material is missing. Please create a material named 'SteamVR_HoverHighlight' and place it in a Resources folder", this);
 
             if (skeletonPoser != null)
@@ -120,6 +124,16 @@ namespace Valve.VR.InteractionSystem
             }
         }
 
+        public bool TryAddToHideHighlight(GameObject gameObject)
+        {
+            if (!hideHighlight.Contains(gameObject))
+            {
+                hideHighlight.Add(gameObject);
+                return true;
+            }
+            return false;
+        }
+
         protected virtual bool ShouldIgnoreHighlight(Component component)
         {
             return ShouldIgnore(component.gameObject);
@@ -127,7 +141,7 @@ namespace Valve.VR.InteractionSystem
 
         protected virtual bool ShouldIgnore(GameObject check)
         {
-            for (int ignoreIndex = 0; ignoreIndex < hideHighlight.Length; ignoreIndex++)
+            for (int ignoreIndex = 0; ignoreIndex < hideHighlight?.Count; ignoreIndex++)
             {
                 if (check == hideHighlight[ignoreIndex])
                     return true;
@@ -155,7 +169,7 @@ namespace Valve.VR.InteractionSystem
                 Material[] materials = new Material[existingSkinned.sharedMaterials.Length];
                 for (int materialIndex = 0; materialIndex < materials.Length; materialIndex++)
                 {
-                    materials[materialIndex] = highlightMat;
+                    materials[materialIndex] = highlightMaterial;
                 }
 
                 newSkinned.sharedMaterials = materials;
@@ -188,7 +202,7 @@ namespace Valve.VR.InteractionSystem
                 Material[] materials = new Material[existingRenderer.sharedMaterials.Length];
                 for (int materialIndex = 0; materialIndex < materials.Length; materialIndex++)
                 {
-                    materials[materialIndex] = highlightMat;
+                    materials[materialIndex] = highlightMaterial;
                 }
                 newRenderer.sharedMaterials = materials;
 
@@ -285,11 +299,10 @@ namespace Valve.VR.InteractionSystem
             {
                 UpdateHighlightRenderers();
 
-                if (isHovering == false && highlightHolder != null)
+                if (isHovering == false && isPointedAt == false && highlightHolder != null)
                     Destroy(highlightHolder);
             }
         }
-
 
         protected float blendToPoseTime = 0.1f;
         protected float releasePoseBlendTime = 0.2f;
@@ -366,6 +379,30 @@ namespace Valve.VR.InteractionSystem
 
             if (highlightHolder != null)
                 Destroy(highlightHolder);
+        }
+
+        public void Highlight(bool highlight)
+        {
+            if (highlight)
+            {
+                wasPointedAt = isPointedAt;
+                isPointedAt = true;
+
+                if (wasPointedAt == false)
+                {
+                    CreateHighlightRenderers();
+                    UpdateHighlightRenderers();
+                }
+            }
+            else
+            {
+                wasPointedAt = isPointedAt;
+                isPointedAt = false;
+
+                if (highlightHolder != null)
+                    Destroy(highlightHolder);
+            }
+
         }
     }
 }

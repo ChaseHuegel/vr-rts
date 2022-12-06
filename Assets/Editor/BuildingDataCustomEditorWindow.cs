@@ -205,7 +205,7 @@ public class BuildingDataCustomEditorWindow : EditorWindow
             GameObject construction = new GameObject(editedName + "_construction");
             construction.layer = constructionLayer;
             construction.AddComponent<AudioSource>();
-            construction.AddComponent<PointerInteractable>().highlightOnHover = true;
+            construction.AddComponent<PointerInteractable>().highlightOnPointedAt = true;
             construction.AddComponent<Interactable>();
             construction.AddComponent<SphereCollider>().radius = 0.3f;
 

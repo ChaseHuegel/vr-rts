@@ -5,10 +5,9 @@ using UnityEngine;
 public class PointerInteractable : MonoBehaviour
 {
     public Material highlightMaterial;
-    public bool highlightOnHover = true;
+    public bool highlightOnPointedAt = true;
     protected GameObject highlightHolder;
-    [Tooltip("An array of child gameObjects to not render a highlight for. Things like transparent parts, vfx, etc.")]
-    //public GameObject[] hideHighlight;
+    [Tooltip("An array of child gameObjects to not render a highlight for. Things like transparent parts, vfx, etc.")]    
     public List<GameObject> hideHighlight;
     protected MeshRenderer[] highlightRenderers;
     protected MeshRenderer[] existingRenderers;
@@ -39,20 +38,14 @@ public class PointerInteractable : MonoBehaviour
             Destroy(highlightHolder);
     }
 
-    public void AddChildrenToHideHighlight(GameObject target)
+    public bool TryAddToHideHighlight(GameObject gameObject)
     {
-        SkinnedMeshRenderer[] skinnedMeshRenderers = target.GetComponentsInChildren<SkinnedMeshRenderer>();
-        foreach (SkinnedMeshRenderer skinnedMesh in skinnedMeshRenderers)
-            AddToHideHighlight(skinnedMesh.gameObject);
-
-        MeshRenderer[] meshRenderers = target.GetComponentsInChildren<MeshRenderer>();
-        foreach (MeshRenderer mesh in meshRenderers)
-            AddToHideHighlight(mesh.gameObject);
-    }
-
-    public void AddToHideHighlight(GameObject gameObject)
-    {
-        hideHighlight.Add(gameObject);
+        if (!hideHighlight.Contains(gameObject))
+        {
+            hideHighlight.Add(gameObject);
+            return true;
+        }
+        return false;
     }
 
     public void Highlight( bool highlight )
@@ -202,7 +195,6 @@ public class PointerInteractable : MonoBehaviour
         }
     }
     
-
     protected virtual void OnDestroy()
     {
         if (highlightHolder != null)

@@ -154,9 +154,6 @@ public class BuildingInteractionPanel : MonoBehaviour
                 Debug.LogWarning("Missing SpawnQueue component.", this);
 
             InitializeMenuDisplay();
-
-            this.gameObject.GetComponent<PointerInteractable>().AddChildrenToHideHighlight(interactionPanelObject);
-
             HookIntoEvents();
         }
 
@@ -404,6 +401,15 @@ public class BuildingInteractionPanel : MonoBehaviour
         cancelButtonGameObject.transform.localScale = new Vector3(buttonSize, buttonSize, buttonSize);
         cancelButtonGameObject.AddComponent<PointerInteractable>();
         InitializeCancelButton(cancelButtonGameObject.transform);
+
+        PointerInteractable pointerInteractable = GetComponent<PointerInteractable>();
+        pointerInteractable.TryAddToHideHighlight(menuGameObject);
+        // pointerInteractable.AddToHideHighlight(queueSlotsGameObject);
+        // pointerInteractable.AddToHideHighlight(progressGameObject);
+        // pointerInteractable.AddToHideHighlight(cancelButtonGameObject);
+
+        Interactable interactable = GetComponent<Interactable>();
+        interactable.TryAddToHideHighlight(menuGameObject);
     }
 
     private Vector3 CalculateQueueButtonsStartPosition()
