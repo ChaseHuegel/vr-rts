@@ -212,7 +212,6 @@ public class BuildingInteractionPanel : MonoBehaviour
     private void HookIntoEvents()
     {
         TechTree.OnNodeResearched += OnNodeResearched;
-
     }
 
     private void CleanupEvents()
@@ -592,8 +591,8 @@ public class BuildingInteractionPanel : MonoBehaviour
         button.transform.localScale = new Vector3(buttonSize, buttonSize, buttonSize);
 
         Interactable buttonInteractable = button.AddComponent<Interactable>();
-        buttonInteractable.highlightOnHover = false;
-        buttonInteractable.highlightOnPointedAt = false;
+        // buttonInteractable.highlightOnHover = false;
+        // buttonInteractable.highlightOnPointedAt = false;
         buttonInteractable.highlightMaterial = GameMaster.Instance.interactionHighlightMaterial;
 
         QueueUnitButton queueUnitButton = button.GetComponent<QueueUnitButton>();

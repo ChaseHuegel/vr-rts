@@ -52,7 +52,7 @@ public class InteractionPointer : MonoBehaviour
     public GameObject wayPointReticle;
     public GameObject setRallyPointPrefab;
 
-    public QueueUnitButton PointedAtQueueButton { get => currentInteractable.GetComponentInChildren<QueueUnitButton>(); }
+    public QueueUnitButton PointedAtQueueButton { get => currentInteractable.GetComponentInParent<QueueUnitButton>(); }
     private SpawnQueue spawnQueue;
     private Hand pointerHand = null;
     private List<ActorV2> selectedActors;
