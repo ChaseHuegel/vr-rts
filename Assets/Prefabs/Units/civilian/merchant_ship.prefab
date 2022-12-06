@@ -17,7 +17,6 @@ GameObject:
   - component: {fileID: 2916149276524079550}
   - component: {fileID: 5390233086919964361}
   - component: {fileID: 7536900912149001964}
-  - component: {fileID: 8857568230826319546}
   - component: {fileID: 6992902960699934327}
   m_Layer: 9
   m_Name: merchant_ship
@@ -122,6 +121,8 @@ MonoBehaviour:
   skeletonPoser: {fileID: 0}
   handFollowTransform: 0
   highlightOnHover: 0
+  highlightOnPointedAt: 1
+  highlightMaterial: {fileID: 0}
   hideHighlight:
   - {fileID: 0}
   - {fileID: 0}
@@ -397,21 +398,6 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &8857568230826319546
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2998877045432716600}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 847aeadd287e865488f59b558e0b9caf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  highlightMaterial: {fileID: 0}
-  highlightOnHover: 1
-  hideHighlight: []
 --- !u!114 &6992902960699934327
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -434,11 +420,12 @@ MonoBehaviour:
   SkinRendererTargets:
   - {fileID: 5388127251806150863}
   m_Layers: 2
-  healFxPrefab: {fileID: 0}
   damagedFxPrefab: {fileID: 0}
   deathFxPrefab: {fileID: 0}
   projectilePrefab: {fileID: 0}
   projectileOrigin: {fileID: 0}
+  healSound: {fileID: 0}
+  attackSound: {fileID: 0}
   unitData: {fileID: 11400000, guid: 0db5cbe357e746f44881105ef56985a7, type: 2}
   FarmingToolObject: {fileID: 0}
   MiningToolObject: {fileID: 0}

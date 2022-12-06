@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: -162982284593069479}
   - component: {fileID: 7799785980354746952}
   - component: {fileID: 8580054357101469083}
-  - component: {fileID: 4424245338257627667}
   - component: {fileID: 6863785217574491828}
   - component: {fileID: 8805676235268775860}
   - component: {fileID: 2747820869390259530}
@@ -157,26 +156,11 @@ MonoBehaviour:
   skeletonPoser: {fileID: 0}
   handFollowTransform: 1
   highlightOnHover: 0
+  highlightOnPointedAt: 1
+  highlightMaterial: {fileID: 0}
   hideHighlight:
   - {fileID: 0}
   hoverPriority: 0
---- !u!114 &4424245338257627667
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1129064322338806663}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 847aeadd287e865488f59b558e0b9caf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  highlightMaterial: {fileID: 0}
-  highlightOnHover: 1
-  hideHighlight:
-  - {fileID: 5250096691040418188}
-  - {fileID: 532877335955788662}
 --- !u!135 &6863785217574491828
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -472,12 +456,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d73c0ebd7248acd4daabf362cf93287b, type: 3}
---- !u!1 &532877335955788662 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 552509685690141556, guid: d73c0ebd7248acd4daabf362cf93287b,
-    type: 3}
-  m_PrefabInstance: {fileID: 58478336061888514}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &532877335956279126 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 552509685689849684, guid: d73c0ebd7248acd4daabf362cf93287b,

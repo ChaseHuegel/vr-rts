@@ -3599,6 +3599,7 @@ MonoBehaviour:
     type: 3}
   onUnitHealedFxPrefab: {fileID: 8049181049452028627, guid: b9cab7853c50ac349a5c647e4739f915,
     type: 3}
+  interactionHighlightMaterial: {fileID: 0}
   buildingDestroyedSound: {fileID: 8300000, guid: f81af9d790be4fb439b1825bcf657e76,
     type: 3}
   buildingPlacementAllowedSound: {fileID: 0}
@@ -3625,13 +3626,13 @@ MonoBehaviour:
   buttonMovingPartPrefab: {fileID: 8198329711952831405, guid: 10e81dae365761e4eb1cd1d23b978862,
     type: 3}
   buttonBaseMaterial: {fileID: 2100000, guid: df52f4d0325777d49bbe6e566536e284, type: 2}
-  cancelButtonMaterial: {fileID: 2100000, guid: 9efd5b26b67a6d04c887a980faf6ec9e,
+  cancelButtonMaterial: {fileID: 2100000, guid: 7f33e9773af3d5a4bba4b9295a5876af,
     type: 2}
   onQueueButtonDownSound: {fileID: 8300000, guid: dcebca48962a9454cab218611adb729f,
     type: 3}
   onQueueButtonUpSound: {fileID: 8300000, guid: ceaa897b8429f1340bb8221533272abf,
     type: 3}
-  emptyQueueSlotSprite: {fileID: 21300000, guid: 85867c66586f9ea45a4c1f56a281d550,
+  emptyQueueSlotTexture: {fileID: 2800000, guid: 85867c66586f9ea45a4c1f56a281d550,
     type: 3}
   maximumUnitSelectionCount: 20
   unitCorpseDecayTime: 30
@@ -5512,6 +5513,8 @@ MonoBehaviour:
   skeletonPoser: {fileID: 0}
   handFollowTransform: 0
   highlightOnHover: 1
+  highlightOnPointedAt: 1
+  highlightMaterial: {fileID: 0}
   hideHighlight: []
   hoverPriority: 0
 --- !u!114 &560069871
@@ -20939,7 +20942,7 @@ PrefabInstance:
     - target: {fileID: 7799785980354746952, guid: 9b01cde0f07486643a93faa1b4864738,
         type: 3}
       propertyPath: autoHide
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7799785980354746952, guid: 9b01cde0f07486643a93faa1b4864738,
         type: 3}
@@ -20954,7 +20957,7 @@ PrefabInstance:
     - target: {fileID: 7799785980354746952, guid: 9b01cde0f07486643a93faa1b4864738,
         type: 3}
       propertyPath: startHidden
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7799785980354746952, guid: 9b01cde0f07486643a93faa1b4864738,
         type: 3}

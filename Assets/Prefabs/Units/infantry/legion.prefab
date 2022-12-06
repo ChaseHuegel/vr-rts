@@ -512,6 +512,8 @@ MonoBehaviour:
   skeletonPoser: {fileID: 0}
   handFollowTransform: 0
   highlightOnHover: 1
+  highlightOnPointedAt: 1
+  highlightMaterial: {fileID: 0}
   hideHighlight: []
   hoverPriority: 0
 --- !u!114 &247204686449087178
@@ -626,6 +628,8 @@ MonoBehaviour:
   skeletonPoser: {fileID: 0}
   handFollowTransform: 0
   highlightOnHover: 1
+  highlightOnPointedAt: 1
+  highlightMaterial: {fileID: 0}
   hideHighlight: []
   hoverPriority: 0
 --- !u!114 &4944054541122663007
@@ -787,6 +791,8 @@ MonoBehaviour:
   skeletonPoser: {fileID: 0}
   handFollowTransform: 0
   highlightOnHover: 1
+  highlightOnPointedAt: 1
+  highlightMaterial: {fileID: 0}
   hideHighlight: []
   hoverPriority: 0
 --- !u!114 &6891134723736004089
@@ -820,7 +826,6 @@ GameObject:
   - component: {fileID: 8077872826680673209}
   - component: {fileID: 7674749668899889559}
   - component: {fileID: 7174799184957669624}
-  - component: {fileID: 7704510924216660347}
   - component: {fileID: 2717757672323069768}
   m_Layer: 9
   m_Name: legion
@@ -927,6 +932,8 @@ MonoBehaviour:
   skeletonPoser: {fileID: 0}
   handFollowTransform: 0
   highlightOnHover: 0
+  highlightOnPointedAt: 1
+  highlightMaterial: {fileID: 0}
   hideHighlight:
   - {fileID: 7828730860524427898}
   - {fileID: 8948016945539948118}
@@ -1202,21 +1209,6 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &7704510924216660347
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8213516855591626559}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 847aeadd287e865488f59b558e0b9caf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  highlightMaterial: {fileID: 0}
-  highlightOnHover: 1
-  hideHighlight: []
 --- !u!114 &2717757672323069768
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1347,6 +1339,8 @@ MonoBehaviour:
   skeletonPoser: {fileID: 0}
   handFollowTransform: 0
   highlightOnHover: 1
+  highlightOnPointedAt: 1
+  highlightMaterial: {fileID: 0}
   hideHighlight: []
   hoverPriority: 0
 --- !u!114 &1901795174838693582
@@ -1544,6 +1538,8 @@ MonoBehaviour:
   skeletonPoser: {fileID: 0}
   handFollowTransform: 0
   highlightOnHover: 1
+  highlightOnPointedAt: 1
+  highlightMaterial: {fileID: 0}
   hideHighlight: []
   hoverPriority: 0
 --- !u!114 &3070194753963837424

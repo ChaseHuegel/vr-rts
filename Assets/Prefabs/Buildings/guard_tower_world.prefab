@@ -264,7 +264,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2554289200868885683}
   - component: {fileID: 6065175729476283336}
-  - component: {fileID: 4739576908327195905}
   - component: {fileID: 9010008872329402981}
   - component: {fileID: 4626839666673688760}
   - component: {fileID: 5790111820259555734}
@@ -393,21 +392,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &4739576908327195905
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2510808510622055872}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 847aeadd287e865488f59b558e0b9caf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  highlightMaterial: {fileID: 0}
-  highlightOnHover: 1
-  hideHighlight: []
 --- !u!114 &9010008872329402981
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -458,6 +442,8 @@ MonoBehaviour:
   skeletonPoser: {fileID: 0}
   handFollowTransform: 1
   highlightOnHover: 0
+  highlightOnPointedAt: 1
+  highlightMaterial: {fileID: 0}
   hideHighlight: []
   hoverPriority: 0
 --- !u!114 &4626839666673688760
@@ -526,9 +512,6 @@ MonoBehaviour:
   bakeOnStart: 1
   allowPathThru: 0
   buildingData: {fileID: 11400000, guid: 41bb8fe22cd2f4e46868b7a4d18270ca, type: 2}
-  attackRange: 16
-  attackSpeed: 3
-  attackDamage: 8
   projectilePrefab: {fileID: 3360805562578941854, guid: 999f3af07ad72c74bb908d0fa0785682,
     type: 3}
   projectileOrigin: {fileID: 268845153175077506}

@@ -512,6 +512,8 @@ MonoBehaviour:
   skeletonPoser: {fileID: 0}
   handFollowTransform: 0
   highlightOnHover: 1
+  highlightOnPointedAt: 1
+  highlightMaterial: {fileID: 0}
   hideHighlight: []
   hoverPriority: 0
 --- !u!114 &901781161266925219
@@ -626,6 +628,8 @@ MonoBehaviour:
   skeletonPoser: {fileID: 0}
   handFollowTransform: 0
   highlightOnHover: 1
+  highlightOnPointedAt: 1
+  highlightMaterial: {fileID: 0}
   hideHighlight: []
   hoverPriority: 0
 --- !u!114 &5436184513911565878
@@ -787,6 +791,8 @@ MonoBehaviour:
   skeletonPoser: {fileID: 0}
   handFollowTransform: 0
   highlightOnHover: 1
+  highlightOnPointedAt: 1
+  highlightMaterial: {fileID: 0}
   hideHighlight: []
   hoverPriority: 0
 --- !u!114 &5787056180254521744
@@ -901,6 +907,8 @@ MonoBehaviour:
   skeletonPoser: {fileID: 0}
   handFollowTransform: 0
   highlightOnHover: 1
+  highlightOnPointedAt: 1
+  highlightMaterial: {fileID: 0}
   hideHighlight: []
   hoverPriority: 0
 --- !u!114 &2699485449564461977
@@ -1098,6 +1106,8 @@ MonoBehaviour:
   skeletonPoser: {fileID: 0}
   handFollowTransform: 0
   highlightOnHover: 1
+  highlightOnPointedAt: 1
+  highlightMaterial: {fileID: 0}
   hideHighlight: []
   hoverPriority: 0
 --- !u!114 &1551897753467466407
@@ -1131,7 +1141,6 @@ GameObject:
   - component: {fileID: 9221020060753944528}
   - component: {fileID: 7309283110401310206}
   - component: {fileID: 7818244220711492753}
-  - component: {fileID: 7279525329442745618}
   - component: {fileID: 3652363537040143979}
   m_Layer: 9
   m_Name: priest
@@ -1238,6 +1247,8 @@ MonoBehaviour:
   skeletonPoser: {fileID: 0}
   handFollowTransform: 0
   highlightOnHover: 0
+  highlightOnPointedAt: 1
+  highlightMaterial: {fileID: 0}
   hideHighlight:
   - {fileID: 7154187185818306067}
   - {fileID: 8340741734900023871}
@@ -1513,21 +1524,6 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &7279525329442745618
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9084249156944444246}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 847aeadd287e865488f59b558e0b9caf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  highlightMaterial: {fileID: 0}
-  highlightOnHover: 1
-  hideHighlight: []
 --- !u!114 &3652363537040143979
 MonoBehaviour:
   m_ObjectHideFlags: 0

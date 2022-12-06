@@ -3022,7 +3022,6 @@ GameObject:
   - component: {fileID: 2271790527847799976}
   - component: {fileID: 369132244250476166}
   - component: {fileID: 869012359967416297}
-  - component: {fileID: 393695698076233322}
   - component: {fileID: 5344138674752366681}
   m_Layer: 9
   m_Name: elephant_archer
@@ -3129,6 +3128,8 @@ MonoBehaviour:
   skeletonPoser: {fileID: 0}
   handFollowTransform: 0
   highlightOnHover: 0
+  highlightOnPointedAt: 1
+  highlightMaterial: {fileID: 0}
   hideHighlight:
   - {fileID: 0}
   - {fileID: 0}
@@ -3404,21 +3405,6 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &393695698076233322
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2189063790800861230}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 847aeadd287e865488f59b558e0b9caf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  highlightMaterial: {fileID: 0}
-  highlightOnHover: 1
-  hideHighlight: []
 --- !u!114 &5344138674752366681
 MonoBehaviour:
   m_ObjectHideFlags: 0

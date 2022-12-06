@@ -45,6 +45,8 @@ public class GameMaster : Singleton<GameMaster>
     public GameObject buildingPlacementDeniedFX;
     public GameObject onUnitHealedFxPrefab;
 
+    [Header("Highlight")]
+    public Material interactionHighlightMaterial;
 
     [Header("Sounds")]
     public AudioClip buildingDestroyedSound;
@@ -78,7 +80,7 @@ public class GameMaster : Singleton<GameMaster>
     public AudioClip onQueueButtonUpSound;
 
     [Header("Queue Menu Queue Slot Settings")]
-    public Sprite emptyQueueSlotSprite;    
+    public Texture2D emptyQueueSlotTexture;    
     
     [Header("Unit settings")]
     public int maximumUnitSelectionCount = 20;

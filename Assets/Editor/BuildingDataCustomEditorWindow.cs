@@ -150,7 +150,7 @@ public class BuildingDataCustomEditorWindow : EditorWindow
                 GameObject worldObject = new GameObject(editedName + "_world");
                 worldObject.layer = worldLayer;
                 worldObject.AddComponent<AudioSource>();
-                worldObject.AddComponent<PointerInteractable>();
+                worldObject.AddComponent<Interactable>();
 
                 GameObject displayModel = Instantiate(model, Vector3.zero, Quaternion.identity, worldObject.transform);
                 GameObject rallyPointModel = Instantiate(rallyPointPrefab, Vector3.zero, Quaternion.identity, worldObject.transform);
@@ -205,8 +205,7 @@ public class BuildingDataCustomEditorWindow : EditorWindow
             GameObject construction = new GameObject(editedName + "_construction");
             construction.layer = constructionLayer;
             construction.AddComponent<AudioSource>();
-            construction.AddComponent<PointerInteractable>().highlightOnPointedAt = true;
-            construction.AddComponent<Interactable>();
+            construction.AddComponent<Interactable>().highlightOnPointedAt = true;
             construction.AddComponent<SphereCollider>().radius = 0.3f;
 
             Constructible constructible = construction.AddComponent<Constructible>();

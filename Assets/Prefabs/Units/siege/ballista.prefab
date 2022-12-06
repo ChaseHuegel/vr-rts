@@ -48,7 +48,6 @@ GameObject:
   - component: {fileID: 7451233516094349348}
   - component: {fileID: 9074884947018236426}
   - component: {fileID: 8421808502342083429}
-  - component: {fileID: 9050454263373763302}
   - component: {fileID: 3658380687208371413}
   m_Layer: 9
   m_Name: ballista
@@ -155,6 +154,8 @@ MonoBehaviour:
   skeletonPoser: {fileID: 0}
   handFollowTransform: 0
   highlightOnHover: 0
+  highlightOnPointedAt: 1
+  highlightMaterial: {fileID: 0}
   hideHighlight:
   - {fileID: 0}
   - {fileID: 0}
@@ -430,21 +431,6 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &9050454263373763302
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7389846229538309282}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 847aeadd287e865488f59b558e0b9caf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  highlightMaterial: {fileID: 0}
-  highlightOnHover: 1
-  hideHighlight: []
 --- !u!114 &3658380687208371413
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -468,13 +454,14 @@ MonoBehaviour:
   - {fileID: 2547815576877561223}
   - {fileID: 2547815576877561217}
   m_Layers: 1
-  healFxPrefab: {fileID: 0}
   damagedFxPrefab: {fileID: 0}
   deathFxPrefab: {fileID: 6690100799304951235, guid: 92efa2d6d6ca3d24f8668215b20b2e16,
     type: 3}
   projectilePrefab: {fileID: 3749667354531930376, guid: 0d17c8df07a90b447ab303432bbd6039,
     type: 3}
   projectileOrigin: {fileID: 2739979175088521237}
+  healSound: {fileID: 0}
+  attackSound: {fileID: 0}
   unitData: {fileID: 11400000, guid: 5916dbccc9db8a449af261ab7fba44db, type: 2}
 --- !u!1001 &2547815576863997479
 PrefabInstance:

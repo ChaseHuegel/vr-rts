@@ -93,7 +93,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1380751176626234913}
   - component: {fileID: 3697574471897236432}
-  - component: {fileID: 7440724694418620936}
   - component: {fileID: 7696623629864553123}
   - component: {fileID: 4781337132075069000}
   - component: {fileID: 7588955806001892803}
@@ -219,21 +218,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &7440724694418620936
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6199601559403147735}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 847aeadd287e865488f59b558e0b9caf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  highlightMaterial: {fileID: 0}
-  highlightOnHover: 1
-  hideHighlight: []
 --- !u!114 &7696623629864553123
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -284,6 +268,8 @@ MonoBehaviour:
   skeletonPoser: {fileID: 0}
   handFollowTransform: 1
   highlightOnHover: 1
+  highlightOnPointedAt: 1
+  highlightMaterial: {fileID: 0}
   hideHighlight: []
   hoverPriority: 0
 --- !u!135 &4781337132075069000

@@ -48,7 +48,6 @@ GameObject:
   - component: {fileID: 5247105052624802532}
   - component: {fileID: 5929297452990329034}
   - component: {fileID: 6582337889208947109}
-  - component: {fileID: 5917944773246853158}
   - component: {fileID: 2124646254815634965}
   m_Layer: 9
   m_Name: heavy_catapult
@@ -155,6 +154,8 @@ MonoBehaviour:
   skeletonPoser: {fileID: 0}
   handFollowTransform: 0
   highlightOnHover: 0
+  highlightOnPointedAt: 1
+  highlightMaterial: {fileID: 0}
   hideHighlight:
   - {fileID: 0}
   - {fileID: 0}
@@ -430,21 +431,6 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &5917944773246853158
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5275807152193549922}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 847aeadd287e865488f59b558e0b9caf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  highlightMaterial: {fileID: 0}
-  highlightOnHover: 1
-  hideHighlight: []
 --- !u!114 &2124646254815634965
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -469,13 +455,14 @@ MonoBehaviour:
   - {fileID: 8539297764791021668}
   - {fileID: 8539297764791021666}
   m_Layers: 1
-  healFxPrefab: {fileID: 0}
   damagedFxPrefab: {fileID: 0}
   deathFxPrefab: {fileID: 6690100799304951235, guid: 92efa2d6d6ca3d24f8668215b20b2e16,
     type: 3}
   projectilePrefab: {fileID: 4101366286241908024, guid: 2e06b509bd45b264f80fe865e893c674,
     type: 3}
   projectileOrigin: {fileID: 1791526656713311044}
+  healSound: {fileID: 0}
+  attackSound: {fileID: 0}
   unitData: {fileID: 11400000, guid: abee2dd17f9b18c4ab3236a34ef42780, type: 2}
 --- !u!1001 &2013160040029917226
 PrefabInstance:

@@ -17,7 +17,6 @@ GameObject:
   - component: {fileID: 9077731935512184035}
   - component: {fileID: 2256126561310563220}
   - component: {fileID: 4403069333532826545}
-  - component: {fileID: 3417893639817704423}
   - component: {fileID: 5671245697571728848}
   m_Layer: 9
   m_Name: light_transport
@@ -122,6 +121,8 @@ MonoBehaviour:
   skeletonPoser: {fileID: 0}
   handFollowTransform: 0
   highlightOnHover: 0
+  highlightOnPointedAt: 1
+  highlightMaterial: {fileID: 0}
   hideHighlight:
   - {fileID: 0}
   - {fileID: 0}
@@ -397,21 +398,6 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &3417893639817704423
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8943178544289259621}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 847aeadd287e865488f59b558e0b9caf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  highlightMaterial: {fileID: 0}
-  highlightOnHover: 1
-  hideHighlight: []
 --- !u!114 &5671245697571728848
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -434,11 +420,12 @@ MonoBehaviour:
   SkinRendererTargets:
   - {fileID: 6427079124615561704}
   m_Layers: 2
-  healFxPrefab: {fileID: 0}
   damagedFxPrefab: {fileID: 0}
   deathFxPrefab: {fileID: 0}
   projectilePrefab: {fileID: 0}
   projectileOrigin: {fileID: 0}
+  healSound: {fileID: 0}
+  attackSound: {fileID: 0}
   unitData: {fileID: 11400000, guid: 2aac8fdeead8af94cad175cfbf7fff28, type: 2}
   FarmingToolObject: {fileID: 0}
   MiningToolObject: {fileID: 0}

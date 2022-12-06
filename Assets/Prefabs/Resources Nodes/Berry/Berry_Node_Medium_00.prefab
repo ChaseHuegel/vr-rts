@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8601071924827813316}
   - component: {fileID: 2034060243891160313}
   - component: {fileID: 6221280364675008998}
-  - component: {fileID: 2454037941676378929}
+  - component: {fileID: -9111915774613107238}
   m_Layer: 11
   m_Name: Berry_Node_Medium_00
   m_TagString: Untagged
@@ -59,6 +59,7 @@ MonoBehaviour:
   allowPathThru: 0
   type: 16
   amount: 200
+  onDestroyPrefab: {fileID: 0}
 --- !u!135 &6221280364675008998
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -72,7 +73,7 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.12
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &2454037941676378929
+--- !u!114 &-9111915774613107238
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -81,12 +82,51 @@ MonoBehaviour:
   m_GameObject: {fileID: 2984123256857542887}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 847aeadd287e865488f59b558e0b9caf, type: 3}
+  m_Script: {fileID: 11500000, guid: b93b6a877adcbf94c89a9d6e0c0e844d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  activateActionSetOnAttach:
+    actionSetPath: 
+  hideHandOnAttach: 1
+  hideSkeletonOnAttach: 0
+  hideControllerOnAttach: 0
+  handAnimationOnPickup: 0
+  setRangeOfMotionOnPickup: -1
+  useHandObjectAttachmentPoint: 1
+  attachEaseIn: 0
+  snapAttachEaseInCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  snapAttachEaseInTime: 0.15
+  snapAttachEaseInCompleted: 0
+  skeletonPoser: {fileID: 0}
+  handFollowTransform: 1
+  highlightOnHover: 0
+  highlightOnPointedAt: 1
   highlightMaterial: {fileID: 0}
-  highlightOnHover: 1
   hideHighlight: []
+  hoverPriority: 0
 --- !u!1001 &8804000120183188624
 PrefabInstance:
   m_ObjectHideFlags: 0

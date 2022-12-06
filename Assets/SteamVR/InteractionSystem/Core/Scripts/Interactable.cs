@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using System.Collections;
 using System.Collections.Generic;
-
+using Valve.VR.InteractionSystem;
 namespace Valve.VR.InteractionSystem
 {
     //-------------------------------------------------------------------------
@@ -106,9 +106,9 @@ namespace Valve.VR.InteractionSystem
         {
             if (highlightMaterial == null)
 #if UNITY_URP
-                highlightMat = (Material)Resources.Load("SteamVR_HoverHighlight_URP", typeof(Material));
+                highlightMaterial = (Material)Resources.Load("SteamVR_HoverHighlight_URP", typeof(Material));
 #else
-                highlightMaterial = (Material)Resources.Load("SteamVR_HoverHighlight", typeof(Material));
+                highlightMaterial = (Material)Resources.Load("PointerHoverHighlight", typeof(Material));
 #endif
 
             if (highlightMaterial == null)
@@ -220,14 +220,14 @@ namespace Valve.VR.InteractionSystem
             {
                 SkinnedMeshRenderer existingSkinned = existingSkinnedRenderers[skinnedIndex];
                 SkinnedMeshRenderer highlightSkinned = highlightSkinnedRenderers[skinnedIndex];
-
-                if (existingSkinned != null && highlightSkinned != null && attachedToHand == false)
+                
+                if (existingSkinned != null && highlightSkinned != null && (attachedToHand == false || isPointedAt == true))
                 {
                     highlightSkinned.transform.position = existingSkinned.transform.position;
                     highlightSkinned.transform.rotation = existingSkinned.transform.rotation;
                     highlightSkinned.transform.localScale = existingSkinned.transform.lossyScale;
                     highlightSkinned.localBounds = existingSkinned.localBounds;
-                    highlightSkinned.enabled = isHovering && existingSkinned.enabled && existingSkinned.gameObject.activeInHierarchy;
+                    highlightSkinned.enabled = (isHovering || isPointedAt) && existingSkinned.enabled && existingSkinned.gameObject.activeInHierarchy;
 
                     int blendShapeCount = existingSkinned.sharedMesh.blendShapeCount;
                     for (int blendShapeIndex = 0; blendShapeIndex < blendShapeCount; blendShapeIndex++)
@@ -245,12 +245,12 @@ namespace Valve.VR.InteractionSystem
                 MeshRenderer existingRenderer = existingRenderers[rendererIndex];
                 MeshRenderer highlightRenderer = highlightRenderers[rendererIndex];
 
-                if (existingRenderer != null && highlightRenderer != null && attachedToHand == false)
+                if (existingRenderer != null && highlightRenderer != null && (attachedToHand == false || isPointedAt == true))
                 {
                     highlightRenderer.transform.position = existingRenderer.transform.position;
                     highlightRenderer.transform.rotation = existingRenderer.transform.rotation;
                     highlightRenderer.transform.localScale = existingRenderer.transform.lossyScale;
-                    highlightRenderer.enabled = isHovering && existingRenderer.enabled && existingRenderer.gameObject.activeInHierarchy;
+                    highlightRenderer.enabled = (isHovering || isPointedAt) && existingRenderer.enabled && existingRenderer.gameObject.activeInHierarchy;
                 }
                 else if (highlightRenderer != null)
                     highlightRenderer.enabled = false;
@@ -295,7 +295,7 @@ namespace Valve.VR.InteractionSystem
 
         protected virtual void Update()
         {
-            if (highlightOnHover)
+            if (highlightOnHover || highlightOnPointedAt)
             {
                 UpdateHighlightRenderers();
 

@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Valve.VR.InteractionSystem;
 
-[RequireComponent(typeof(PointerInteractable), typeof(Collider))]
+[RequireComponent(typeof(Interactable), typeof(Collider))]
 public class BuildingInteractionPanel : MonoBehaviour
 {
     [Header("Panel Behaviour")]
@@ -398,18 +398,15 @@ public class BuildingInteractionPanel : MonoBehaviour
         cancelButtonGameObject = new GameObject("_cancel");
         cancelButtonGameObject.transform.SetParent(menuGameObject.transform, false);
         cancelButtonGameObject.transform.localPosition = cancelButtonPosition;
-        cancelButtonGameObject.transform.localScale = new Vector3(buttonSize, buttonSize, buttonSize);
-        cancelButtonGameObject.AddComponent<PointerInteractable>();
+        cancelButtonGameObject.transform.localScale = new Vector3(buttonSize, buttonSize, buttonSize);        
         InitializeCancelButton(cancelButtonGameObject.transform);
 
-        PointerInteractable pointerInteractable = GetComponent<PointerInteractable>();
-        pointerInteractable.TryAddToHideHighlight(menuGameObject);
+        // Interactable interactable = GetComponent<Interactable>();
+        // interactable.TryAddToHideHighlight(menuGameObject);
+        
         // pointerInteractable.AddToHideHighlight(queueSlotsGameObject);
         // pointerInteractable.AddToHideHighlight(progressGameObject);
         // pointerInteractable.AddToHideHighlight(cancelButtonGameObject);
-
-        Interactable interactable = GetComponent<Interactable>();
-        interactable.TryAddToHideHighlight(menuGameObject);
     }
 
     private Vector3 CalculateQueueButtonsStartPosition()
@@ -589,7 +586,10 @@ public class BuildingInteractionPanel : MonoBehaviour
         button.transform.localPosition = position;
         button.name = string.Format("_queue_{0}_button", tech.title.ToString());
         button.transform.localScale = new Vector3(buttonSize, buttonSize, buttonSize);
-        button.AddComponent<PointerInteractable>();
+
+        Interactable buttonInteractable = button.AddComponent<Interactable>();
+        buttonInteractable.highlightOnHover = false;
+        buttonInteractable.highlightMaterial = GameMaster.Instance.interactionHighlightMaterial;
 
         QueueUnitButton queueUnitButton = button.GetComponent<QueueUnitButton>();
         queueUnitButton.techToQueue = tech;
@@ -639,7 +639,10 @@ public class BuildingInteractionPanel : MonoBehaviour
         GameObject face = new GameObject("_face", typeof(Interactable), typeof(HoverButton));
         face.transform.SetParent(button.transform, false);
         face.transform.localPosition = new Vector3(0.0f, 0.0f, -0.05f);
-        face.GetComponent<Interactable>().highlightOnHover = false;
+
+        Interactable faceInteractable = face.GetComponent<Interactable>();
+        faceInteractable.highlightOnHover = false;
+        faceInteractable.highlightMaterial = GameMaster.Instance.interactionHighlightMaterial;
 
         //---------------------------------------------------------------------
         // Hover button
@@ -766,7 +769,7 @@ public class BuildingInteractionPanel : MonoBehaviour
         image.transform.SetParent(parent, false);
         image.rectTransform.sizeDelta = new Vector2(queueSlotSize, queueSlotSize);
         image.rectTransform.anchoredPosition = position;
-        image.sprite = GameMaster.Instance.emptyQueueSlotSprite;
+        image.sprite = Sprite.Create(GameMaster.Instance.emptyQueueSlotTexture, new Rect(0f, 0f, GameMaster.Instance.emptyQueueSlotTexture.width, GameMaster.Instance.emptyQueueSlotTexture.height), new Vector2(0.5f, 0.5f), 100.0f, 1, SpriteMeshType.Tight, Vector4.zero, true);
 
         return image;
     }
@@ -819,7 +822,10 @@ public class BuildingInteractionPanel : MonoBehaviour
         GameObject face = new GameObject("_face", typeof(Interactable), typeof(HoverButton));
         face.transform.SetParent(parent, false);
         face.transform.localPosition = new Vector3(0.0f, 0.0f, -0.05f);
-        face.GetComponent<Interactable>().highlightOnHover = false;
+
+        Interactable interactable = face.GetComponent<Interactable>();
+        interactable.highlightOnHover = false;
+        interactable.highlightMaterial = GameMaster.Instance.interactionHighlightMaterial;
 
         HoverButton hoverButton = face.GetComponent<HoverButton>();
         hoverButton.localMoveDistance = new Vector3(0, 0, 0.04f);

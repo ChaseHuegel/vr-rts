@@ -48,7 +48,6 @@ GameObject:
   - component: {fileID: 4608411220660639180}
   - component: {fileID: 6719818869562133179}
   - component: {fileID: 9156962312843250334}
-  - component: {fileID: 7881304466785051336}
   - component: {fileID: 1943935467217487484}
   m_Layer: 9
   m_Name: trireme
@@ -155,6 +154,8 @@ MonoBehaviour:
   skeletonPoser: {fileID: 0}
   handFollowTransform: 0
   highlightOnHover: 0
+  highlightOnPointedAt: 1
+  highlightMaterial: {fileID: 0}
   hideHighlight:
   - {fileID: 0}
   - {fileID: 0}
@@ -430,21 +431,6 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &7881304466785051336
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4472713310848627018}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 847aeadd287e865488f59b558e0b9caf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  highlightMaterial: {fileID: 0}
-  highlightOnHover: 1
-  hideHighlight: []
 --- !u!114 &1943935467217487484
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -461,7 +447,7 @@ MonoBehaviour:
   Weaknesses: 
   Resistances: 
   Immunities: 
-  Faction: {fileID: 11400000, guid: eda0de12f7914a54d8987ecbb6d6208d, type: 2}
+  Faction: {fileID: 0}
   BoundingDimensions: {x: 1, y: 1}
   BoundingOrigin: {x: 0, y: 0}
   SkinRendererTargets:
@@ -681,7 +667,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: f9ec407a080d408459742617c9dc6607, type: 2}
+      objectReference: {fileID: 2100000, guid: dccf8e44ede71db42b49378af93c5fb7, type: 2}
     - target: {fileID: 919132149155446097, guid: c5d42c8c73c613942909b243e2281af8,
         type: 3}
       propertyPath: m_Name
