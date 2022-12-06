@@ -31,7 +31,7 @@ public class InteractionPointer : MonoBehaviour
     //=========================================================================
     [Header("Layer Masks")]
     public LayerMask traceLayerMask;
-    public LayerMask allowedPlacementLayers;
+    public LayerMask buildingPlacementMask;
     public LayerMask unitSelectionMask;
 
     //=========================================================================
@@ -197,7 +197,7 @@ public class InteractionPointer : MonoBehaviour
         RaycastHit hit;
 
         // Ray from anchor
-        if (Physics.Raycast(Player.instance.rightHand.panTransform.position, Vector3.down, out hit, 100, allowedPlacementLayers))
+        if (Physics.Raycast(Player.instance.rightHand.panTransform.position, Vector3.down, out hit, 100, buildingPlacementMask))
         {
             PointLaser(hit);
         }
@@ -925,7 +925,7 @@ public class InteractionPointer : MonoBehaviour
         if (isInUnitSelectionMode && IsAddingToUnitSelection())
             teleportArc.traceLayerMask = unitSelectionMask;
         else if (isInBuildingPlacementMode)
-            teleportArc.traceLayerMask = allowedPlacementLayers;
+            teleportArc.traceLayerMask = buildingPlacementMask;
         else
             teleportArc.traceLayerMask = traceLayerMask;
 
@@ -936,7 +936,7 @@ public class InteractionPointer : MonoBehaviour
         if (hitInfo.collider)
         {
             hitSomething = true;
-            hitPointValid = LayerMatchTest(allowedPlacementLayers, hitInfo.collider.gameObject);
+            hitPointValid = LayerMatchTest(buildingPlacementMask, hitInfo.collider.gameObject);
 
             if (selectedActors.Count > 0)
                 pointedAtResource = hitInfo.collider.GetComponentInParent<Resource>();
@@ -1483,7 +1483,7 @@ public class InteractionPointer : MonoBehaviour
             Vector3 sourceLocation = obj.position;
             sourceLocation.y += 10.0f;
 
-            if (Physics.Raycast(sourceLocation, Vector3.down, out hit, 30.0f, allowedPlacementLayers))
+            if (Physics.Raycast(sourceLocation, Vector3.down, out hit, 30.0f, buildingPlacementMask))
                 modPos.y = hit.point.y;
         }
 
