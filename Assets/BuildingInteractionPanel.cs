@@ -133,7 +133,7 @@ public class BuildingInteractionPanel : MonoBehaviour
         if (interactionPanelObject)
             return;
 
-        InitializeInteractionPanel();
+        InitializeInteractionPanel();        
 
         if (title == "")
             title = this.gameObject.GetComponent<Structure>()?.buildingData.title;
@@ -142,10 +142,16 @@ public class BuildingInteractionPanel : MonoBehaviour
             title = this.gameObject.GetComponent<Constructible>()?.buildingData.title;
 
         if (enableTitleDisplay)
+        {
             InitializeTitleDisplay();
+            AddObjectMeshesToHideHighlight(titleGameObject);
+        }
 
         if (enableHealthBarDisplay)
+        {
             InitializeHealthBarDisplay();
+            AddObjectMeshesToHideHighlight(healthBarGameObject);
+        }
 
         if (enableQueueMenu)
         {
@@ -154,6 +160,7 @@ public class BuildingInteractionPanel : MonoBehaviour
                 Debug.LogWarning("Missing SpawnQueue component.", this);
 
             InitializeMenuDisplay();
+            AddObjectMeshesToHideHighlight(menuGameObject);
             HookIntoEvents();
         }
 
@@ -242,9 +249,6 @@ public class BuildingInteractionPanel : MonoBehaviour
         Quaternion rot = faceTarget.transform.rotation;
         rot.z = rot.x = 0;
         interactionPanelObject.transform.rotation = rot;
-
-        Interactable interactable = GetComponent<Interactable>();
-        interactable.TryAddToHideHighlight(interactionPanelObject);
     }
 
     // Update is called once per frame
@@ -326,13 +330,6 @@ public class BuildingInteractionPanel : MonoBehaviour
         cancelButtonGameObject.transform.localPosition = cancelButtonPosition;
         cancelButtonGameObject.transform.localScale = new Vector3(buttonSize, buttonSize, buttonSize);        
         InitializeCancelButton(cancelButtonGameObject.transform);
-
-        // Interactable interactable = GetComponent<Interactable>();
-        // interactable.TryAddToHideHighlight(menuGameObject);
-
-        // interactable.AddToHideHighlight(queueSlotsGameObject);
-        // interactable.AddToHideHighlight(progressGameObject);
-        // interactable.AddToHideHighlight(cancelButtonGameObject);
     }
 
     private void InitializeTitleDisplay()
@@ -340,7 +337,7 @@ public class BuildingInteractionPanel : MonoBehaviour
         titleGameObject = new GameObject("_title");
         titleGameObject.transform.position = new Vector3(0.0f, titleDisplayVerticalOffset, 0.0f);
         titleGameObject.transform.SetParent(interactionPanelObject.transform, false);
-
+        
         TextMeshPro titleText = titleGameObject.AddComponent<TextMeshPro>();
         titleText.SetText(title);
         titleText.fontStyle = FontStyles.Bold;
@@ -356,6 +353,8 @@ public class BuildingInteractionPanel : MonoBehaviour
         healthBarGameObject = new GameObject("_health_bar");
         healthBarGameObject.transform.position = new Vector3(0.0f, healthBarVerticalOffset, 0.0f);
         healthBarGameObject.transform.SetParent(interactionPanelObject.transform, false);
+
+        Interactable interactable = GetComponent<Interactable>();
 
         if (showBarBackground)
         {
@@ -487,6 +486,8 @@ public class BuildingInteractionPanel : MonoBehaviour
             
             GameObject button = GenerateQueueButton(tech, nextButtonPosition, buttonsGameObject.transform);
             
+            AddObjectMeshesToHideHighlight(button);
+
             TechNode node = PlayerManager.Instance.currentTree.FindNode(tech);
             TechBase researcher = node.techRequirements.Find(x => x is TechResearcher);
             if (researcher)
@@ -689,6 +690,8 @@ public class BuildingInteractionPanel : MonoBehaviour
         buttonLock.transform.Rotate(0.0f, 180.0f, 0.0f);
         buttonLock.SetActive(false);
 
+        AddObjectMeshesToHideHighlight(buttonLock);
+
         queueUnitButton.buttonLockedObject = buttonLock;
         queueUnitButton.Initialize();
         if (PlayerManager.Instance.faction.techTree.IsUnlocked(tech))
@@ -699,6 +702,19 @@ public class BuildingInteractionPanel : MonoBehaviour
         Destroy(buttonBase.GetComponent<BoxCollider>());
 
         return button;
+    }
+
+    private void AddObjectMeshesToHideHighlight(GameObject gameObject)
+    {
+        Interactable interactable = GetComponent<Interactable>();
+        if (!interactable)
+            return;
+
+        foreach (SkinnedMeshRenderer skinnedMeshRenderer in gameObject.GetComponentsInChildren<SkinnedMeshRenderer>(true))
+            interactable.TryAddToHideHighlight(skinnedMeshRenderer.gameObject);
+
+        foreach (MeshFilter meshFilter in gameObject.GetComponentsInChildren<MeshFilter>(true))
+            interactable.TryAddToHideHighlight(meshFilter.gameObject);
     }
 
     public void OnQueueHoverButtonDown(Hand hand)
@@ -828,10 +844,10 @@ public class BuildingInteractionPanel : MonoBehaviour
         face.transform.SetParent(parent, false);
         face.transform.localPosition = new Vector3(0.0f, 0.0f, -0.05f);
 
-        Interactable interactable = face.GetComponent<Interactable>();
-        interactable.highlightOnHover = false;
-        interactable.highlightOnPointedAt = false;
-        interactable.highlightMaterial = GameMaster.Instance.interactionHighlightMaterial;
+        Interactable faceInteractable = face.GetComponent<Interactable>();
+        faceInteractable.highlightOnHover = false;
+        faceInteractable.highlightOnPointedAt = false;
+        faceInteractable.highlightMaterial = GameMaster.Instance.interactionHighlightMaterial;
 
         HoverButton hoverButton = face.GetComponent<HoverButton>();
         hoverButton.localMoveDistance = new Vector3(0, 0, 0.04f);

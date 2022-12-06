@@ -209,7 +209,12 @@ namespace Valve.VR.InteractionSystem
                 existingRenderers[filterIndex] = existingRenderer;
             }
         }
+        
+        protected virtual void GetExistingSkinnedMeshRenderers()
+        {
 
+        }
+        
         protected virtual void UpdateHighlightRenderers()
         {
             if (highlightHolder == null)
