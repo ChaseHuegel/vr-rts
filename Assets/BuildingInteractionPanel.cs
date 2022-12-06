@@ -416,8 +416,12 @@ public class BuildingInteractionPanel : MonoBehaviour
         float buttonsTotalWidth = ((buttonSize + spaceBetweenButtons) * maxButtonColumns);
 
         // Don't count buttons that won't be displayed immediately.
-        int count =  queueTechButtons.Count - queueTechButtons.FindAll(x => x is TechResearcher).Count;
+        int count = queueTechButtons.Count - queueTechButtons.FindAll(x => x is TechResearcher).Count;
+        if (count == 0)
+            count = queueTechButtons.Count;
+            
         int totalRows = Mathf.CeilToInt((float)count / (float)maxButtonColumns);
+        
         //float buttonsTotalHeight = ((buttonSize + spaceBetweenButtons) * totalRows);
 
         startPosition.x = buttonsTotalWidth * -0.5f + (buttonSize * 0.5f + spaceBetweenButtons * 0.5f);
