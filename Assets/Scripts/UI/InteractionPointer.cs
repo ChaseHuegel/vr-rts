@@ -924,6 +924,8 @@ public class InteractionPointer : MonoBehaviour
 
         if (isInUnitSelectionMode && IsAddingToUnitSelection())
             teleportArc.traceLayerMask = unitSelectionMask;
+        else if (isInBuildingPlacementMode)
+            teleportArc.traceLayerMask = allowedPlacementLayers;
         else
             teleportArc.traceLayerMask = traceLayerMask;
 
@@ -944,7 +946,7 @@ public class InteractionPointer : MonoBehaviour
                 hitInteractable = hitInfo.collider.GetComponentInParent<Interactable>();
         }
 
-        HighlightSelected(hitInteractable);
+        TryHighlightSelected(hitInteractable);
 
         // teleportArc.SetColor(pointerValidColor);
         // pointerLineRenderer.startColor = pointerValidColor;
@@ -1516,17 +1518,17 @@ public class InteractionPointer : MonoBehaviour
     private void HideObjectHint()
     { }
 
-    private void HighlightSelected(Interactable targetInteractable)
+    private void TryHighlightSelected(Interactable targetInteractable)
     {
         // Pointing at a new interactable
         if (currentInteractable != targetInteractable)
         {
             if (currentInteractable != null)
-                currentInteractable.Highlight(false);
+                currentInteractable.HighlightOff();
 
             if (targetInteractable != null)
             {
-                targetInteractable.Highlight(true);
+                targetInteractable.TryHighlight();
                 prevPointedAtPosition = pointedAtPosition;
                 PlayPointerHaptic(true);
                 // PlayPointerHaptic(!hitInteractable.locked );

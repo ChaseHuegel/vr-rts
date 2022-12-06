@@ -43,6 +43,7 @@ public class BuildMenuTab : MonoBehaviour
         float slotPositionY = origin.y;
         
         DestroyChildren();
+        slots.Clear();
         
         foreach (TechBase tech in ButtonsNew)
         {
@@ -54,18 +55,19 @@ public class BuildMenuTab : MonoBehaviour
 
                 slot.transform.localPosition = new Vector3(slotPositionX, slotPositionY, origin.z);
                 slot.transform.localRotation = Quaternion.Euler(0, 90, -90);
-                slot.AddComponent<Interactable>();
-                slot.GetComponent<Interactable>().highlightOnHover = false;
+                Interactable interactable = slot.AddComponent<Interactable>();
+                interactable.highlightOnHover = false;
+                interactable.highlightOnPointedAt = false;
 
                 // Set layer
                 slot.layer = LayerMask.NameToLayer("UI");
 
                 // Lock
                 GameObject lockObject = Instantiate(PlayerManager.Instance.GetSlotLockPrefab(tech), Vector3.zero, Quaternion.identity, slot.transform);
-
                 lockObject.name = "_lock";
                 lockObject.transform.localPosition = slotLockPosition;
                 lockObject.SetActive(false);
+                lockObject.layer = LayerMask.NameToLayer("UI");
 
                 // Icon
                 GameObject iconObject = new GameObject("_icon");
@@ -74,6 +76,7 @@ public class BuildMenuTab : MonoBehaviour
                 iconObject.transform.localScale = slotIconScale;
                 iconObject.transform.localEulerAngles = slotIconRotation;
                 iconObject.SetActive(false);
+                iconObject.layer = LayerMask.NameToLayer("UI");
 
                 SpriteRenderer spriteRenderer = iconObject.AddComponent<SpriteRenderer>();
                 spriteRenderer.sprite = Sprite.Create(tech.worldQueueTexture, new Rect(0f, 0f, tech.worldQueueTexture.width, tech.worldQueueTexture.height), new Vector2(0.5f, 0.5f), 100.0f, 1, SpriteMeshType.Tight, Vector4.zero, true);
@@ -93,6 +96,7 @@ public class BuildMenuTab : MonoBehaviour
                 resourceCostObject.name = "_resource_cost";
                 resourceCostObject.transform.localPosition = new Vector3(0.0743f, -0.002f, 0.0f);
                 resourceCostObject.transform.localRotation = Quaternion.identity;
+                resourceCostObject.layer = LayerMask.NameToLayer("UI");
 
                 // Fetch and set the building type data from the database
                 buildMenuSlotComponent.buildingData = (BuildingData)tech;
@@ -137,7 +141,8 @@ public class BuildMenuTab : MonoBehaviour
         titleGameObject.transform.position = new Vector3(0.0513f, -0.0042f, 0.0f);
         titleGameObject.transform.SetParent(slot.transform, false);
         titleGameObject.transform.Rotate(90, 0, 90);
-
+        titleGameObject.layer = LayerMask.NameToLayer("UI");
+        
         TextMeshPro titleText = titleGameObject.AddComponent<TextMeshPro>();
         titleText.SetText(slot.buildingData.title);
         titleText.fontStyle = FontStyles.Bold;

@@ -242,6 +242,9 @@ public class BuildingInteractionPanel : MonoBehaviour
         Quaternion rot = faceTarget.transform.rotation;
         rot.z = rot.x = 0;
         interactionPanelObject.transform.rotation = rot;
+
+        Interactable interactable = GetComponent<Interactable>();
+        interactable.TryAddToHideHighlight(interactionPanelObject);
     }
 
     // Update is called once per frame
@@ -299,6 +302,37 @@ public class BuildingInteractionPanel : MonoBehaviour
                 radiusExitTime = Time.time;
             }
         }
+    }
+
+    private void InitializeMenuDisplay()
+    {
+        menuGameObject = new GameObject("_menu");
+        menuGameObject.transform.position = new Vector3(0.0f, QueueMenuVerticalOffset, 0.0f);
+        menuGameObject.transform.SetParent(interactionPanelObject.transform, false);
+
+        InitializeQueueButtons();
+
+        queueSlotsGameObject = new GameObject("_queue_slots");
+        queueSlotsGameObject.transform.SetParent(menuGameObject.transform, false);
+        InitializeQueueSlots(queueSlotsGameObject.transform, 7, spaceBetweenQueueSlots);
+
+        GameObject progressGameObject = new GameObject("_progress");
+        progressGameObject.transform.SetParent(menuGameObject.transform, false);
+        Vector2 size = new Vector2(queueSlotSize * 2.0f + spaceBetweenQueueSlots, queueSlotSize);
+        InitializeProgressBar(progressPosition, size, 0.03f, progressGameObject.transform);
+
+        cancelButtonGameObject = new GameObject("_cancel");
+        cancelButtonGameObject.transform.SetParent(menuGameObject.transform, false);
+        cancelButtonGameObject.transform.localPosition = cancelButtonPosition;
+        cancelButtonGameObject.transform.localScale = new Vector3(buttonSize, buttonSize, buttonSize);        
+        InitializeCancelButton(cancelButtonGameObject.transform);
+
+        // Interactable interactable = GetComponent<Interactable>();
+        // interactable.TryAddToHideHighlight(menuGameObject);
+
+        // interactable.AddToHideHighlight(queueSlotsGameObject);
+        // interactable.AddToHideHighlight(progressGameObject);
+        // interactable.AddToHideHighlight(cancelButtonGameObject);
     }
 
     private void InitializeTitleDisplay()
@@ -376,37 +410,6 @@ public class BuildingInteractionPanel : MonoBehaviour
         }
         else
             Debug.Log("Damageable component not found in parent.", this);
-    }
-
-    private void InitializeMenuDisplay()
-    {
-        menuGameObject = new GameObject("_menu");
-        menuGameObject.transform.position = new Vector3(0.0f, QueueMenuVerticalOffset, 0.0f);
-        menuGameObject.transform.SetParent(interactionPanelObject.transform, false);
-
-        InitializeQueueButtons();
-
-        queueSlotsGameObject = new GameObject("_queue_slots");
-        queueSlotsGameObject.transform.SetParent(menuGameObject.transform, false);
-        InitializeQueueSlots(queueSlotsGameObject.transform, 7, spaceBetweenQueueSlots);
-
-        GameObject progressGameObject = new GameObject("_progress");
-        progressGameObject.transform.SetParent(menuGameObject.transform, false);
-        Vector2 size = new Vector2(queueSlotSize * 2.0f + spaceBetweenQueueSlots, queueSlotSize);
-        InitializeProgressBar(progressPosition, size, 0.03f, progressGameObject.transform);
-
-        cancelButtonGameObject = new GameObject("_cancel");
-        cancelButtonGameObject.transform.SetParent(menuGameObject.transform, false);
-        cancelButtonGameObject.transform.localPosition = cancelButtonPosition;
-        cancelButtonGameObject.transform.localScale = new Vector3(buttonSize, buttonSize, buttonSize);        
-        InitializeCancelButton(cancelButtonGameObject.transform);
-
-        // Interactable interactable = GetComponent<Interactable>();
-        // interactable.TryAddToHideHighlight(menuGameObject);
-        
-        // pointerInteractable.AddToHideHighlight(queueSlotsGameObject);
-        // pointerInteractable.AddToHideHighlight(progressGameObject);
-        // pointerInteractable.AddToHideHighlight(cancelButtonGameObject);
     }
 
     private Vector3 CalculateQueueButtonsStartPosition()
@@ -589,6 +592,7 @@ public class BuildingInteractionPanel : MonoBehaviour
 
         Interactable buttonInteractable = button.AddComponent<Interactable>();
         buttonInteractable.highlightOnHover = false;
+        buttonInteractable.highlightOnPointedAt = false;
         buttonInteractable.highlightMaterial = GameMaster.Instance.interactionHighlightMaterial;
 
         QueueUnitButton queueUnitButton = button.GetComponent<QueueUnitButton>();
@@ -642,6 +646,7 @@ public class BuildingInteractionPanel : MonoBehaviour
 
         Interactable faceInteractable = face.GetComponent<Interactable>();
         faceInteractable.highlightOnHover = false;
+        faceInteractable.highlightOnPointedAt = false;
         faceInteractable.highlightMaterial = GameMaster.Instance.interactionHighlightMaterial;
 
         //---------------------------------------------------------------------
@@ -825,6 +830,7 @@ public class BuildingInteractionPanel : MonoBehaviour
 
         Interactable interactable = face.GetComponent<Interactable>();
         interactable.highlightOnHover = false;
+        interactable.highlightOnPointedAt = false;
         interactable.highlightMaterial = GameMaster.Instance.interactionHighlightMaterial;
 
         HoverButton hoverButton = face.GetComponent<HoverButton>();

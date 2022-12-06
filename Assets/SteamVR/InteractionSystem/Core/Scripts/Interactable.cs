@@ -57,7 +57,6 @@ namespace Valve.VR.InteractionSystem
         [Tooltip("Should the rendered hand lock on to and follow the object")]
         public bool handFollowTransform= true;
 
-
         [Tooltip("Set whether or not you want this interactible to highlight when hovering over it")]
         public bool highlightOnHover = true;
         public bool highlightOnPointedAt = true;
@@ -381,28 +380,28 @@ namespace Valve.VR.InteractionSystem
                 Destroy(highlightHolder);
         }
 
-        public void Highlight(bool highlight)
+        public void TryHighlight()
         {
-            if (highlight)
+            if (!highlightOnPointedAt)
+                return; 
+
+            wasPointedAt = isPointedAt;
+            isPointedAt = true;
+
+            if (wasPointedAt == false)
             {
-                wasPointedAt = isPointedAt;
-                isPointedAt = true;
-
-                if (wasPointedAt == false)
-                {
-                    CreateHighlightRenderers();
-                    UpdateHighlightRenderers();
-                }
+                CreateHighlightRenderers();
+                UpdateHighlightRenderers();
             }
-            else
-            {
-                wasPointedAt = isPointedAt;
-                isPointedAt = false;
+        }
 
-                if (highlightHolder != null)
-                    Destroy(highlightHolder);
-            }
+        public void HighlightOff()
+        {
+            wasPointedAt = isPointedAt;
+            isPointedAt = false;
 
+            if (highlightHolder != null)
+                Destroy(highlightHolder);
         }
     }
 }
