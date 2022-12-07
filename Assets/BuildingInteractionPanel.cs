@@ -417,6 +417,8 @@ public class BuildingInteractionPanel : MonoBehaviour
 
         // Don't count buttons that won't be displayed immediately.
         int count = queueTechButtons.Count - queueTechButtons.FindAll(x => x is TechResearcher).Count;
+
+        // ALL the buttons are TechResearch buttons
         if (count == 0)
             count = queueTechButtons.Count;
             
