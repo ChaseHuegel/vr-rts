@@ -46,14 +46,16 @@ public class TechTree : ScriptableObject
             if (techNode.RequirementsPassed(this))
             {
                 techNode.unlocked = true;
-                if (OnNodeUnlocked != null)
+                if (Application.isPlaying)
+                    if (OnNodeUnlocked != null)
                     OnNodeUnlocked(techNode);
             }
             else
             {
                 techNode.unlocked = false;
-                if (OnNodeLocked != null)
-                    OnNodeLocked(techNode);
+                if (Application.isPlaying)
+                    if (OnNodeLocked != null)
+                        OnNodeLocked(techNode);
             }
 
             //bool canEnable = techNode.requiresResearch ? techNode.researched : true;
@@ -61,14 +63,16 @@ public class TechTree : ScriptableObject
             if (canAfford && techNode.unlocked)
             {
                 techNode.enabled = true;
-                if (OnNodeEnabled != null)
-                    OnNodeEnabled(techNode);
+                if (Application.isPlaying)
+                    if (OnNodeEnabled != null)
+                        OnNodeEnabled(techNode);
             }
             else
             {
                 techNode.enabled = false;
-                if (OnNodeDisabled != null)
-                    OnNodeDisabled(techNode);
+                if (Application.isPlaying)
+                    if (OnNodeDisabled != null)
+                        OnNodeDisabled(techNode);
             }
         }
     }

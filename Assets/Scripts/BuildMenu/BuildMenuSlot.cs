@@ -69,8 +69,8 @@ public class BuildMenuSlot : MonoBehaviour
 
     private void Unlock()
     {
-        iconObject?.SetActive(false);
-        lockObject?.SetActive(false);
+        iconObject.SetActive(false);
+        lockObject.SetActive(false);
         normalPreviewObject.SetActive(true);
     }
 
