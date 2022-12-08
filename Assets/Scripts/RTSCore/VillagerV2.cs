@@ -103,11 +103,11 @@ public class VillagerV2 : UnitV2
         Attributes.AddOrUpdate(AttributeType.FISHING_RATE, data.fishingRate, data.fishingRate);
         Attributes.AddOrUpdate(AttributeType.FORAGING_RATE, data.foragingRate, data.foragingRate);
         Attributes.AddOrUpdate(AttributeType.HUNTING_RATE, data.huntingRate, data.huntingRate);
-        Attributes.AddOrUpdate(AttributeType.CARGO, data.maxCargo, data.maxCargo);
-        Attributes.AddOrUpdate(AttributeType.WOOD_CARGO, data.maxWoodCargo, data.maxWoodCargo);
-        Attributes.AddOrUpdate(AttributeType.STONE_CARGO, data.maxStoneCargo, data.maxStoneCargo);
-        Attributes.AddOrUpdate(AttributeType.GOLD_CARGO, data.maxGoldCargo, data.maxGoldCargo);
-        Attributes.AddOrUpdate(AttributeType.FOOD_CARGO, data.maxFoodCargo, data.maxFoodCargo);
+        Attributes.AddOrUpdate(AttributeType.CARGO, 0, data.maxCargo);
+        Attributes.AddOrUpdate(AttributeType.WOOD_CARGO, 0, data.maxWoodCargo);
+        Attributes.AddOrUpdate(AttributeType.STONE_CARGO, 0, data.maxStoneCargo);
+        Attributes.AddOrUpdate(AttributeType.GOLD_CARGO, 0, data.maxGoldCargo);
+        Attributes.AddOrUpdate(AttributeType.FOOD_CARGO, 0, data.maxFoodCargo);
     }
 
     protected override void AttachListeners()
