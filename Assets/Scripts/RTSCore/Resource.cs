@@ -23,16 +23,16 @@ public class Resource : Obstacle
         AllResources.Remove(this);
     }
 
-    public float GetRemoveAmount(float count)
-    {
-        float value = yield - count;
-        float overflow = value < 0 ? Mathf.Abs(value) : 0;
+    // public float GetRemoveAmount(float count)
+    // {
+    //     float value = yield - count;
+    //     float overflow = value < 0 ? Mathf.Abs(value) : 0;
 
-        return count - overflow;
-    }
+    //     return count - overflow;
+    // }
 
     //  Removes count and returns how much was removed
-    public float TryRemove(float count)
+    public virtual float TryRemove(float count)
     {
         yield -= count;
 
