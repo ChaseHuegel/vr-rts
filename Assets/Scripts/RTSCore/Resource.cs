@@ -7,7 +7,6 @@ using UnityEngine;
 public class Resource : Obstacle
 {
     public readonly static List<Resource> AllResources = new();
-
     public ResourceGatheringType type = ResourceGatheringType.None;
     public float amount = 1000;
 

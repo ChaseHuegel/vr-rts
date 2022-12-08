@@ -8,7 +8,10 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Unit", menuName = "RTS/Units/Unit Data")]
 public class UnitData : TechBase
 {
-    [Header("Work Rates")]  
+    //=========================================================================
+    // Villager
+
+    [Header("Villager Work Rates")]  
     public float buildRate;
     public float foragingRate;
     public float healRate;
@@ -20,21 +23,25 @@ public class UnitData : TechBase
     public float fishingRate;
     public float collectRate;
 
-    [Header("Stats")]
-    public float movementSpeed = 0.3f;
-    public int maximumHitPoints;
-    public float armor;
+    [Header("Villager Stats")]
     public int maxCargo = 10;
     public int maxWoodCargo = 10;
     public int maxStoneCargo = 10;
     public int maxGoldCargo = 10;
     public int maxFoodCargo = 10;
+    public int huntingDamage = 1;
+
+    //=========================================================================
+    // Unit
+    [Header("Unit Stats")]
+    public float movementSpeed = 0.3f;
+    public int maximumHitPoints;
+    public float armor;
     public int attackRange;
     public float attackSpeed = 1.0f;
     public DamageType damageType = DamageType.BLUDGEONING;
     public float attackDamage;
-    public float huntingDamage;
-    
+        
     public override void Execute(SpawnQueue spawnQueue)
     {
         base.Execute(spawnQueue);
