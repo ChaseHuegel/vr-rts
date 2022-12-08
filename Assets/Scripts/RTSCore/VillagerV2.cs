@@ -78,26 +78,6 @@ public class VillagerV2 : UnitV2
         return VillagerBehaviorTree.Value;
     }
 
-    public Swordfish.Library.Types.ValueField<AttributeType> GetCargoAttribute()
-    {
-        switch (CargoType)
-        {
-            // case ResourceGatheringType.Berries:
-            // case ResourceGatheringType.Grain:
-            // case ResourceGatheringType.Fish:
-            // case ResourceGatheringType.Meat:
-            //     return Attributes.Get(AttributeType.FOOD_CARGO);
-            // case ResourceGatheringType.Gold:
-            //     return Attributes.Get(AttributeType.GOLD_CARGO);
-            // case ResourceGatheringType.Wood:
-            //     return Attributes.Get(AttributeType.WOOD_CARGO);
-            // case ResourceGatheringType.Stone:
-            //     return Attributes.Get(AttributeType.STONE_CARGO);
-            default:
-                return Attributes.Get(AttributeType.CARGO);
-        }
-    }
-
     protected override void InitializeAttributes()
     {
         base.InitializeAttributes();
@@ -113,24 +93,21 @@ public class VillagerV2 : UnitV2
     protected override void OnLoadUnitData(UnitData data)
     {
         base.OnLoadUnitData(data);
-        Attributes.Get(AttributeType.COLLECT_RATE).Value = data.collectRate;
-        Attributes.Get(AttributeType.COLLECT_RATE).MaxValue = data.collectRate;
-        Attributes.Get(AttributeType.HEAL_RATE).Value = data.healRate;
-        Attributes.Get(AttributeType.HEAL_RATE).MaxValue = data.healRate;
-        Attributes.Get(AttributeType.BUILD_RATE).Value = data.buildRate;
-        Attributes.Get(AttributeType.BUILD_RATE).MaxValue = data.buildRate;
-        Attributes.AddOrUpdate(AttributeType.GOLD_MINING_RATE, data.goldMiningRate);
-        Attributes.AddOrUpdate(AttributeType.STONE_MINING_RATE, data.stoneMiningRate);
-        Attributes.AddOrUpdate(AttributeType.LUMBERJACKING_RATE, data.lumberjackingRate);
-        Attributes.AddOrUpdate(AttributeType.FARMING_RATE, data.farmingRate);
-        Attributes.AddOrUpdate(AttributeType.FISHING_RATE, data.fishingRate);
-        Attributes.AddOrUpdate(AttributeType.FORAGING_RATE, data.foragingRate);
-        Attributes.AddOrUpdate(AttributeType.HUNTING_RATE, data.huntingRate);
-        Attributes.AddOrUpdate(AttributeType.CARGO, data.maxCargo);
-        Attributes.AddOrUpdate(AttributeType.WOOD_CARGO, data.maxWoodCargo);
-        Attributes.AddOrUpdate(AttributeType.STONE_CARGO, data.maxStoneCargo);
-        Attributes.AddOrUpdate(AttributeType.GOLD_CARGO, data.maxGoldCargo);
-        Attributes.AddOrUpdate(AttributeType.FOOD_CARGO, data.maxFoodCargo);
+        Attributes.AddOrUpdate(AttributeType.COLLECT_RATE, data.collectRate, data.collectRate);
+        Attributes.AddOrUpdate(AttributeType.HEAL_RATE, data.healRate, data.healRate);
+        Attributes.AddOrUpdate(AttributeType.BUILD_RATE, data.buildRate, data.buildRate);
+        Attributes.AddOrUpdate(AttributeType.GOLD_MINING_RATE, data.goldMiningRate, data.goldMiningRate);
+        Attributes.AddOrUpdate(AttributeType.STONE_MINING_RATE, data.stoneMiningRate, data.stoneMiningRate);
+        Attributes.AddOrUpdate(AttributeType.LUMBERJACKING_RATE, data.lumberjackingRate, data.lumberjackingRate);
+        Attributes.AddOrUpdate(AttributeType.FARMING_RATE, data.farmingRate, data.farmingRate);
+        Attributes.AddOrUpdate(AttributeType.FISHING_RATE, data.fishingRate, data.fishingRate);
+        Attributes.AddOrUpdate(AttributeType.FORAGING_RATE, data.foragingRate, data.foragingRate);
+        Attributes.AddOrUpdate(AttributeType.HUNTING_RATE, data.huntingRate, data.huntingRate);
+        Attributes.AddOrUpdate(AttributeType.CARGO, data.maxCargo, data.maxCargo);
+        Attributes.AddOrUpdate(AttributeType.WOOD_CARGO, data.maxWoodCargo, data.maxWoodCargo);
+        Attributes.AddOrUpdate(AttributeType.STONE_CARGO, data.maxStoneCargo, data.maxStoneCargo);
+        Attributes.AddOrUpdate(AttributeType.GOLD_CARGO, data.maxGoldCargo, data.maxGoldCargo);
+        Attributes.AddOrUpdate(AttributeType.FOOD_CARGO, data.maxFoodCargo, data.maxFoodCargo);
     }
 
     protected override void AttachListeners()
@@ -209,7 +186,7 @@ public class VillagerV2 : UnitV2
         Target = target;
         Order = UnitOrder.Collect;
         CargoType = resourceType;
-        SetCurrentCollectRate(resourceType);       
+        SetCurrentCollectRateAndCargoMaxValue(resourceType);
     }
 
     protected virtual void OnCargoChanged(object sender, DataChangedEventArgs<float> e)
@@ -219,32 +196,43 @@ public class VillagerV2 : UnitV2
             UpdateCurrentCargoObject(isCargoFull);
     }
 
-    protected virtual void SetCurrentCollectRate(ResourceGatheringType resourceGatheringType)
+    protected virtual void SetCurrentCollectRateAndCargoMaxValue(ResourceGatheringType resourceGatheringType)
     {
+        float newMaxValue = Attributes.Get(AttributeType.CARGO).MaxValue;
+
         switch (resourceGatheringType)
         {
             case ResourceGatheringType.Grain:
                 currentCollectRate = AttributeType.FARMING_RATE;
+                newMaxValue = Attributes.Get(AttributeType.FOOD_CARGO).MaxValue;;
                 break;
             case ResourceGatheringType.Berries:
                 currentCollectRate = AttributeType.FORAGING_RATE;
+                newMaxValue = Attributes.Get(AttributeType.FOOD_CARGO).MaxValue;
                 break;
             case ResourceGatheringType.Fish:
                 currentCollectRate = AttributeType.FISHING_RATE;
+                newMaxValue = Attributes.Get(AttributeType.FOOD_CARGO).MaxValue;
                 break;
             case ResourceGatheringType.Meat:
                 currentCollectRate = AttributeType.HUNTING_RATE;
+                newMaxValue = Attributes.Get(AttributeType.FOOD_CARGO).MaxValue;
                 break;
             case ResourceGatheringType.Wood:
                 currentCollectRate = AttributeType.LUMBERJACKING_RATE;
+                newMaxValue = Attributes.Get(AttributeType.WOOD_CARGO).MaxValue;
                 break;
             case ResourceGatheringType.Stone:
                 currentCollectRate = AttributeType.STONE_MINING_RATE;
+                newMaxValue = Attributes.Get(AttributeType.STONE_CARGO).MaxValue;
                 break;
             case ResourceGatheringType.Gold:
                 currentCollectRate = AttributeType.GOLD_MINING_RATE;
+                newMaxValue = Attributes.Get(AttributeType.GOLD_CARGO).MaxValue;
                 break;
         }
+
+        Attributes.Get(AttributeType.CARGO).MaxValue = newMaxValue;
     }
     
     protected override void OnStateUpdate()
