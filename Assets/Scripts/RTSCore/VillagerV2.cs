@@ -87,7 +87,8 @@ public class VillagerV2 : UnitV2
         Attributes.AddOrUpdate(AttributeType.GOLD_CARGO, 0f, 10f);
         Attributes.AddOrUpdate(AttributeType.FOOD_CARGO, 0f, 10f);
         Attributes.AddOrUpdate(AttributeType.COLLECT_RATE, 1f);
-        Attributes.AddOrUpdate(AttributeType.BUILD_RATE, 1f);        
+        Attributes.AddOrUpdate(AttributeType.BUILD_RATE, 1f);
+        Attributes.AddOrUpdate(AttributeType.EFFICIENCY, 1f);
     }
 
     protected override void OnLoadUnitData(UnitData data)
@@ -326,6 +327,9 @@ public class VillagerV2 : UnitV2
 
     private void CollectResource(Resource resource)
     {
-        Attributes.Get(AttributeType.CARGO).Value += resource.TryRemove(Attributes.ValueOf(currentCollectRate));
+        float collectRateModdedByEfficiency = Attributes.ValueOf(currentCollectRate) * Attributes.ValueOf(AttributeType.EFFICIENCY);
+        float amount = resource.TryRemove(Attributes.ValueOf(currentCollectRate));
+        Attributes.Get(AttributeType.CARGO).Value += amount + collectRateModdedByEfficiency;
+
     }
 }
