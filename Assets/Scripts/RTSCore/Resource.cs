@@ -12,7 +12,6 @@ public class Resource : Obstacle
     public float amount = 1000;
 
     public GameObject onDestroyPrefab;
-
     public override void Initialize()
     {
         base.Initialize();

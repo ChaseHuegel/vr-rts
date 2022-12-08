@@ -27,12 +27,6 @@ MonoBehaviour:
   statUpgrades:
   - targetBuildings: []
     targetUnits:
-    - {fileID: 11400000, guid: e2b8096b7a6bbdf4d914c05ac91463b9, type: 2}
-    targetAttribute: 131072
-    modifier: 0
-    amount: 2
-  - targetBuildings: []
-    targetUnits:
     - {fileID: 11400000, guid: 1a362cc56473cff4f9da8674ee86dcab, type: 2}
     - {fileID: 11400000, guid: 182ace54105744549bd79f42af10519b, type: 2}
     - {fileID: 11400000, guid: 0bd5de1f2f7ae25488c472929f857b37, type: 2}
@@ -43,3 +37,15 @@ MonoBehaviour:
     targetAttribute: 256
     modifier: 0
     amount: 1
+  - targetBuildings: []
+    targetUnits:
+    - {fileID: 11400000, guid: e2b8096b7a6bbdf4d914c05ac91463b9, type: 2}
+    targetAttribute: 131072
+    modifier: 2
+    amount: 1.2
+  - targetBuildings: []
+    targetUnits:
+    - {fileID: 11400000, guid: e2b8096b7a6bbdf4d914c05ac91463b9, type: 2}
+    targetAttribute: 67108864
+    modifier: 0
+    amount: 2

@@ -502,7 +502,7 @@ public class PlayerManager : MonoBehaviour
             if (st == structure)
                 continue;
 
-            if (st.buildingData.buildingType == structure.buildingData.buildingType)
+            if (st.buildingData.title == structure.buildingData.title)
                 return true;
         }
 
