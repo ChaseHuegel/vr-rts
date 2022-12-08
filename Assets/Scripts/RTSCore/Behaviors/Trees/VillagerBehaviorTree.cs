@@ -205,7 +205,16 @@ public static class VillagerBehaviorTree
                         new CanDropOffAtTarget(),
                         new DropOffCargo(),
                         new TargetPrevious()
-                    ),                    
+                    ),
+                    //  Attempt to repair the target
+                    new BehaviorSequence(
+                        new HasTarget(),
+                        new GoToTarget(),
+                        new SetActorState(ActorAnimationState.HEAL),
+                        new HealTarget(),
+                        new ResetTarget(),
+                        new SetStateToGathering()
+                    ),
                     //  Else attempt to collect resources
                     new BehaviorSequence(
                         new BehaviorSelector(
@@ -228,14 +237,6 @@ public static class VillagerBehaviorTree
                             new CollectCargo()
                         )
                     ),
-                    //  Attempt to repair the target
-                    new BehaviorSequence(
-                        new HasTarget(),
-                        new GoToTarget(),
-                        new SetActorState(ActorAnimationState.HEAL),
-                        new HealTarget(),
-                        new ResetTarget()
-                    ),      
                     //  Else order is complete
                     new BehaviorSequence(
                         new ResetTarget(),
