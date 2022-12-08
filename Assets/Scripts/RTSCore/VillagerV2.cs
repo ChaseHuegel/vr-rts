@@ -78,10 +78,34 @@ public class VillagerV2 : UnitV2
         return VillagerBehaviorTree.Value;
     }
 
+    public Swordfish.Library.Types.ValueField<AttributeType> GetCargoAttribute()
+    {
+        switch (CargoType)
+        {
+            // case ResourceGatheringType.Berries:
+            // case ResourceGatheringType.Grain:
+            // case ResourceGatheringType.Fish:
+            // case ResourceGatheringType.Meat:
+            //     return Attributes.Get(AttributeType.FOOD_CARGO);
+            // case ResourceGatheringType.Gold:
+            //     return Attributes.Get(AttributeType.GOLD_CARGO);
+            // case ResourceGatheringType.Wood:
+            //     return Attributes.Get(AttributeType.WOOD_CARGO);
+            // case ResourceGatheringType.Stone:
+            //     return Attributes.Get(AttributeType.STONE_CARGO);
+            default:
+                return Attributes.Get(AttributeType.CARGO);
+        }
+    }
+
     protected override void InitializeAttributes()
     {
         base.InitializeAttributes();
         Attributes.AddOrUpdate(AttributeType.CARGO, 0f, 10f);
+        Attributes.AddOrUpdate(AttributeType.WOOD_CARGO, 0f, 10f);
+        Attributes.AddOrUpdate(AttributeType.STONE_CARGO, 0f, 10f);
+        Attributes.AddOrUpdate(AttributeType.GOLD_CARGO, 0f, 10f);
+        Attributes.AddOrUpdate(AttributeType.FOOD_CARGO, 0f, 10f);
         Attributes.AddOrUpdate(AttributeType.COLLECT_RATE, 1f);
         Attributes.AddOrUpdate(AttributeType.BUILD_RATE, 1f);        
     }
@@ -102,6 +126,11 @@ public class VillagerV2 : UnitV2
         Attributes.AddOrUpdate(AttributeType.FISHING_RATE, data.fishingRate);
         Attributes.AddOrUpdate(AttributeType.FORAGING_RATE, data.foragingRate);
         Attributes.AddOrUpdate(AttributeType.HUNTING_RATE, data.huntingRate);
+        Attributes.AddOrUpdate(AttributeType.CARGO, data.maxCargo);
+        Attributes.AddOrUpdate(AttributeType.WOOD_CARGO, data.maxWoodCargo);
+        Attributes.AddOrUpdate(AttributeType.STONE_CARGO, data.maxStoneCargo);
+        Attributes.AddOrUpdate(AttributeType.GOLD_CARGO, data.maxGoldCargo);
+        Attributes.AddOrUpdate(AttributeType.FOOD_CARGO, data.maxFoodCargo);
     }
 
     protected override void AttachListeners()

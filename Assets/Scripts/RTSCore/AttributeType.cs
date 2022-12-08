@@ -25,4 +25,8 @@ public enum AttributeType
     SLASHING_DAMAGE = 1 << 21,
     HACKING_DAMAGE = 1 << 22,
     BLUDGEONING_DAMAGE = 1 << 23,
+    STONE_CARGO = 1 << 24,
+    GOLD_CARGO = 1 << 25,
+    WOOD_CARGO = 1 << 26,
+    FOOD_CARGO = 1 << 27,
 }

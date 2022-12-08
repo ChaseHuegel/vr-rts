@@ -24,7 +24,11 @@ public class UnitData : TechBase
     public float movementSpeed = 0.3f;
     public int maximumHitPoints;
     public float armor;
-    public int maxCargo;
+    public int maxCargo = 10;
+    public int maxWoodCargo = 10;
+    public int maxStoneCargo = 10;
+    public int maxGoldCargo = 10;
+    public int maxFoodCargo = 10;
     public int attackRange;
     public float attackSpeed = 1.0f;
     public DamageType damageType = DamageType.BLUDGEONING;
