@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 4403653269302452209}
   - component: {fileID: 771013581072076884}
   - component: {fileID: 3267299466085754014}
+  - component: {fileID: 2783405949858748375}
+  - component: {fileID: 4753935038237979593}
   m_Layer: 0
   m_Name: long_boat
   m_TagString: Untagged
@@ -85,3 +87,35 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!95 &2783405949858748375
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3915664361056814411}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: b685e7682446e904b80b975a63a16ea0, type: 3}
+  m_Controller: {fileID: 9100000, guid: 316592720e4bf244c9a6264cf7d2efb1, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &4753935038237979593
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3915664361056814411}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ecf569eaf4f58f43bb8f6733152f817, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
