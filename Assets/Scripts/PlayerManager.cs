@@ -130,14 +130,22 @@ public class PlayerManager : MonoBehaviour
         public int newValue;
     }
 
-    public static event EventHandler<AttributeBonusChangeEvent> OnAttributeBonusChangedEvent;
-    public class AttributeBonusChangeEvent : Swordfish.Event
+    public static event EventHandler<UnitAttributeBonusChangeEvent> OnUnitAttributeBonusChangedEvent;
+    public class UnitAttributeBonusChangeEvent : Swordfish.Event
     {
         public UnitData unitData;
         public StatUpgradeContainer bonus;
     }
 
-    public static Dictionary<UnitData, List<StatUpgradeContainer>> AllAttributeBonuses = new();
+    public static event EventHandler<BuildingAttributeBonusChangeEvent> OnBuildingAttributeBonusChangedEvent;
+    public class BuildingAttributeBonusChangeEvent : Swordfish.Event
+    {
+        public BuildingData buildingData;
+        public StatUpgradeContainer bonus;
+    }
+
+    public static Dictionary<UnitData, List<StatUpgradeContainer>> AllUnitAttributeBonuses = new();
+    public static Dictionary<BuildingData, List<StatUpgradeContainer>> AllBuildingAttributeBonuses = new();
 
     private static PlayerManager _instance;
     //private bool isAutohideHandMenuVisible;
@@ -336,33 +344,62 @@ public class PlayerManager : MonoBehaviour
         actor.BehaviorTree?.Tick(actor, Constants.TICK_RATE_DELTA);
     }
 
-    public void AddUnitStatUpgrade(UnitData unitData, StatUpgradeContainer attributeBonus)
+    public void AddBuildingStatUpgrade(BuildingData buildingData, StatUpgradeContainer attributeBonus)
     {
-        if (!AllAttributeBonuses.ContainsKey(unitData))
+        if (!AllBuildingAttributeBonuses.ContainsKey(buildingData))
         {
             List<StatUpgradeContainer> newBonusList = new()
             {
                 attributeBonus
             };
 
-            AllAttributeBonuses.Add(unitData, newBonusList);
+            AllBuildingAttributeBonuses.Add(buildingData, newBonusList);
         }
         else
         {
-            StatUpgradeContainer foundAttributeBonus = AllAttributeBonuses[unitData].Find(x => x.targetAttribute == attributeBonus.targetAttribute);
+            StatUpgradeContainer foundAttributeBonus = AllBuildingAttributeBonuses[buildingData].Find(x => x.targetAttribute == attributeBonus.targetAttribute);
             if (foundAttributeBonus == null)
-                AllAttributeBonuses[unitData].Add(attributeBonus);
+                AllBuildingAttributeBonuses[buildingData].Add(attributeBonus);
             else if (foundAttributeBonus != null)
                 foundAttributeBonus.amount += attributeBonus.amount;
         }
 
-        AttributeBonusChangeEvent e = new()
+        BuildingAttributeBonusChangeEvent e = new()
+        {
+            buildingData = buildingData,
+            bonus = attributeBonus
+        };
+
+        OnBuildingAttributeBonusChangedEvent?.Invoke(this, e);
+    }
+
+    public void AddUnitStatUpgrade(UnitData unitData, StatUpgradeContainer attributeBonus)
+    {
+        if (!AllUnitAttributeBonuses.ContainsKey(unitData))
+        {
+            List<StatUpgradeContainer> newBonusList = new()
+            {
+                attributeBonus
+            };
+
+            AllUnitAttributeBonuses.Add(unitData, newBonusList);
+        }
+        else
+        {
+            StatUpgradeContainer foundAttributeBonus = AllUnitAttributeBonuses[unitData].Find(x => x.targetAttribute == attributeBonus.targetAttribute);
+            if (foundAttributeBonus == null)
+                AllUnitAttributeBonuses[unitData].Add(attributeBonus);
+            else if (foundAttributeBonus != null)
+                foundAttributeBonus.amount += attributeBonus.amount;
+        }
+
+        UnitAttributeBonusChangeEvent e = new()
         {
             unitData = unitData,
             bonus = attributeBonus
         };
 
-        OnAttributeBonusChangedEvent?.Invoke(this, e);
+        OnUnitAttributeBonusChangedEvent?.Invoke(this, e);
         //Debug.LogFormat("+{0} {1} bonus added for {2}.", attributeBonus.amount, attributeBonus.targetAttribute.ToString(), unitData.title);
     }
 

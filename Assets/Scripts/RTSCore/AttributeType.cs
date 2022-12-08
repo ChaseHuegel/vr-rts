@@ -29,4 +29,6 @@ public enum AttributeType
     GOLD_CARGO = 1 << 25,
     WOOD_CARGO = 1 << 26,
     FOOD_CARGO = 1 << 27,
+    YIELD = 1 << 28,
+    EFFICIENCY = 1 << 29,
 }

@@ -85,7 +85,7 @@ public abstract class UnitV2 : ActorV2
         Attributes.Get(AttributeType.HEAL_RATE).Value = data.healRate;
         Attributes.Get(AttributeType.HEAL_RATE).MaxValue = data.healRate;
 
-        if (PlayerManager.AllAttributeBonuses.TryGetValue(unitData, out var bonuses))
+        if (PlayerManager.AllUnitAttributeBonuses.TryGetValue(data, out var bonuses))
             foreach (StatUpgradeContainer bonus in bonuses)
                 Attributes.Get(bonus.targetAttribute).AddModifier(bonus.targetAttribute, bonus.modifier, bonus.amount);
     }
@@ -108,7 +108,7 @@ public abstract class UnitV2 : ActorV2
         return false;
     }
 
-    protected virtual void OnAttributeBonusChanged(object sender, PlayerManager.AttributeBonusChangeEvent e)
+    protected virtual void OnAttributeBonusChanged(object sender, PlayerManager.UnitAttributeBonusChangeEvent e)
     {
         if (e.unitData == unitData)
         {
@@ -124,13 +124,13 @@ public abstract class UnitV2 : ActorV2
     protected override void AttachListeners()
     {
         base.AttachListeners();
-        PlayerManager.OnAttributeBonusChangedEvent += OnAttributeBonusChanged;
+        PlayerManager.OnUnitAttributeBonusChangedEvent += OnAttributeBonusChanged;
     }
 
     protected override void CleanupListeners()
     {
         base.CleanupListeners();
-        PlayerManager.OnAttributeBonusChangedEvent -= OnAttributeBonusChanged;
+        PlayerManager.OnUnitAttributeBonusChangedEvent -= OnAttributeBonusChanged;
     }
 
     protected override void OnFallingOntoBody(Body body)

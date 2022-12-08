@@ -36,6 +36,9 @@ public class StatUpgrade : TechBase
         {
             foreach (UnitData unitData in attributeBonus.targetUnits)
                 PlayerManager.Instance.AddUnitStatUpgrade(unitData, attributeBonus);
+
+            foreach (BuildingData buildingData in attributeBonus.targetBuildings)
+                PlayerManager.Instance.AddBuildingStatUpgrade(buildingData, attributeBonus);
         }
     }
 }

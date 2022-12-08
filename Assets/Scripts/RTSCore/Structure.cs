@@ -26,6 +26,34 @@ public class Structure : Obstacle
             Debug.Log("Audiosource component not found.");
     }
 
+    protected override void Start()
+    {
+        base.Start();
+        OnLoadBuildingData(buildingData);
+    }
+
+    protected override void InitializeAttributes()
+    {
+        base.InitializeAttributes();
+        Attributes.AddOrUpdate(AttributeType.DAMAGE, 1f);
+        Attributes.AddOrUpdate(AttributeType.ARMOR, 1f);
+        Attributes.AddOrUpdate(AttributeType.ATTACK_SPEED, 1f);
+        Attributes.AddOrUpdate(AttributeType.ATTACK_RANGE, Attributes.ValueOf(AttributeType.REACH));
+    }
+
+    protected virtual void OnLoadBuildingData(BuildingData data)
+    {
+        Attributes.Get(AttributeType.ATTACK_RANGE).Value = data.attackRange;
+        Attributes.Get(AttributeType.ATTACK_SPEED).Value = data.attackSpeed;
+        Attributes.Get(AttributeType.DAMAGE).Value = data.attackDamage;
+        Attributes.AddOrUpdate(AttributeType.HEALTH, data.maximumHitPoints, data.maximumHitPoints);
+        Attributes.AddOrUpdate(AttributeType.ARMOR, data.armor, data.armor);
+
+        if (PlayerManager.AllBuildingAttributeBonuses.TryGetValue(data, out var bonuses))
+            foreach (StatUpgradeContainer bonus in bonuses)
+                Attributes.Get(bonus.targetAttribute).AddModifier(bonus.targetAttribute, bonus.modifier, bonus.amount);
+    }
+
     protected override void UpdateSkin()
     {
         if (SkinRendererTargets == null || SkinRendererTargets.Length <= 0) return;

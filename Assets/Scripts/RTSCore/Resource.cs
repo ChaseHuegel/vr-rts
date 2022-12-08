@@ -8,7 +8,7 @@ public class Resource : Obstacle
 {
     public readonly static List<Resource> AllResources = new();
     public ResourceGatheringType type = ResourceGatheringType.None;
-    public float amount = 1000;
+    public float yield = 1000;
 
     public GameObject onDestroyPrefab;
     public override void Initialize()
@@ -25,7 +25,7 @@ public class Resource : Obstacle
 
     public float GetRemoveAmount(float count)
     {
-        float value = amount - count;
+        float value = yield - count;
         float overflow = value < 0 ? Mathf.Abs(value) : 0;
 
         return count - overflow;
@@ -34,11 +34,11 @@ public class Resource : Obstacle
     //  Removes count and returns how much was removed
     public float TryRemove(float count)
     {
-        amount -= count;
+        yield -= count;
 
-        float overflow = amount < 0 ? Mathf.Abs(amount) : 0;
+        float overflow = yield < 0 ? Mathf.Abs(yield) : 0;
 
-        if (amount <= 0)
+        if (yield <= 0)
         {
             UnbakeFromGrid();
 
