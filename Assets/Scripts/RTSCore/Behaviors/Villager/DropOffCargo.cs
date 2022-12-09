@@ -5,7 +5,7 @@ public class DropOffCargo : BehaviorAction<VillagerV2>
 {
     public override void Run(VillagerV2 villager, float delta)
     {
-        var cargo = villager.Attributes.Get(AttributeType.CARGO);
+        var cargo = villager.CurrentCargo;
 
         Vector3 pos = villager.Target.transform.position;
         pos.y += 0.5f;

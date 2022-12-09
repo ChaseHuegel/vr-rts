@@ -27,7 +27,9 @@ public class Priest : UnitV2
     protected override void OnLoadUnitData(UnitData data)
     {
         base.OnLoadUnitData(data);
-        Attributes.AddOrUpdate(AttributeType.ARMOR, unitData.armor);        
+        Attributes.AddOrUpdate(AttributeType.ARMOR, unitData.armor);
+        Attributes.AddOrUpdate(AttributeType.HEAL_RATE, unitData.healRate);
+        Attributes.AddOrUpdate(AttributeType.REJUVENATION_RATE, unitData.rejuvenationRate);
     }
 
     public override void IssueTargetedOrder(Body body)

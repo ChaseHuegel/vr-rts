@@ -22,15 +22,7 @@ public class Resource : Obstacle
         base.OnDestroy();
         AllResources.Remove(this);
     }
-
-    // public float GetRemoveAmount(float count)
-    // {
-    //     float value = yield - count;
-    //     float overflow = value < 0 ? Mathf.Abs(value) : 0;
-
-    //     return count - overflow;
-    // }
-
+    
     //  Removes count and returns how much was removed
     public virtual float TryRemove(float count)
     {

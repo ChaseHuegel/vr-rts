@@ -31,4 +31,5 @@ public enum AttributeType
     FOOD_CARGO = 1 << 27,
     YIELD = 1 << 28,
     EFFICIENCY = 1 << 29,
+    REJUVENATION_RATE = 1 << 30,
 }

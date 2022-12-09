@@ -41,7 +41,11 @@ public class UnitData : TechBase
     public float attackSpeed = 1.0f;
     public DamageType damageType = DamageType.BLUDGEONING;
     public float attackDamage;
-        
+
+    //=========================================================================
+    // Priest
+    [Header("Priest Stats")]
+    public float rejuvenationRate = 1.0f;
     public override void Execute(SpawnQueue spawnQueue)
     {
         base.Execute(spawnQueue);

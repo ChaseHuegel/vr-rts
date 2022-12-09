@@ -22,6 +22,8 @@ public class VillagerV2 : UnitV2
     public DataBinding<ResourceGatheringType> CargoTypeBinding { get; private set; } = new();
     public DataBinding<bool> CollectingTargetBinding { get; private set; } = new();
     private AttributeType currentCollectRate = AttributeType.COLLECT_RATE;
+    private AttributeType currentCargoType = AttributeType.CARGO;
+    public ValueField<AttributeType> CurrentCargo => Attributes.Get(currentCargoType);
 
     [Header("Tool Objects")]
     [SerializeField]
@@ -64,7 +66,7 @@ public class VillagerV2 : UnitV2
     private Transform CurrentCargoObject;
     private float CollectTimer;
 
-    public bool IsCargoFull() => Attributes.Get(AttributeType.CARGO).IsMax();
+    public bool IsCargoFull() => CurrentCargo.IsMax();
 
     protected override void Update()
     {
@@ -115,6 +117,10 @@ public class VillagerV2 : UnitV2
     {
         base.AttachListeners();
         Attributes.Get(AttributeType.CARGO).ValueBinding.Changed += OnCargoChanged;
+        Attributes.Get(AttributeType.WOOD_CARGO).ValueBinding.Changed += OnCargoChanged;
+        Attributes.Get(AttributeType.STONE_CARGO).ValueBinding.Changed += OnCargoChanged;
+        Attributes.Get(AttributeType.GOLD_CARGO).ValueBinding.Changed += OnCargoChanged;
+        Attributes.Get(AttributeType.FOOD_CARGO).ValueBinding.Changed += OnCargoChanged;
         // TODO: add a listener on CargoType change to update COLLECT_RATE appropriately
     }
 
@@ -122,6 +128,10 @@ public class VillagerV2 : UnitV2
     {
         base.CleanupListeners();
         Attributes.Get(AttributeType.CARGO).ValueBinding.Changed -= OnCargoChanged;
+        Attributes.Get(AttributeType.WOOD_CARGO).ValueBinding.Changed -= OnCargoChanged;
+        Attributes.Get(AttributeType.STONE_CARGO).ValueBinding.Changed -= OnCargoChanged;
+        Attributes.Get(AttributeType.GOLD_CARGO).ValueBinding.Changed -= OnCargoChanged;
+        Attributes.Get(AttributeType.FOOD_CARGO).ValueBinding.Changed -= OnCargoChanged;
     }
 
     public override void IssueTargetedOrder(Body body)
@@ -192,48 +202,44 @@ public class VillagerV2 : UnitV2
 
     protected virtual void OnCargoChanged(object sender, DataChangedEventArgs<float> e)
     {
-        bool isCargoFull = e.NewValue == Attributes.MaxValueOf(AttributeType.CARGO);
+        bool isCargoFull = e.NewValue == Attributes.MaxValueOf(currentCargoType);
         if (isCargoFull || e.NewValue == 0.0f)
             UpdateCurrentCargoObject(isCargoFull);
     }
 
     protected virtual void SetCurrentCollectRateAndCargoMaxValue(ResourceGatheringType resourceGatheringType)
     {
-        float newMaxValue = Attributes.Get(AttributeType.CARGO).MaxValue;
-
         switch (resourceGatheringType)
         {
             case ResourceGatheringType.Grain:
                 currentCollectRate = AttributeType.FARMING_RATE;
-                newMaxValue = Attributes.Get(AttributeType.FOOD_CARGO).MaxValue;;
+                currentCargoType = AttributeType.FOOD_CARGO;
                 break;
             case ResourceGatheringType.Berries:
                 currentCollectRate = AttributeType.FORAGING_RATE;
-                newMaxValue = Attributes.Get(AttributeType.FOOD_CARGO).MaxValue;
+                currentCargoType = AttributeType.FOOD_CARGO;
                 break;
             case ResourceGatheringType.Fish:
                 currentCollectRate = AttributeType.FISHING_RATE;
-                newMaxValue = Attributes.Get(AttributeType.FOOD_CARGO).MaxValue;
+                currentCargoType = AttributeType.FOOD_CARGO;
                 break;
             case ResourceGatheringType.Meat:
                 currentCollectRate = AttributeType.HUNTING_RATE;
-                newMaxValue = Attributes.Get(AttributeType.FOOD_CARGO).MaxValue;
+                currentCargoType = AttributeType.FOOD_CARGO;
                 break;
             case ResourceGatheringType.Wood:
                 currentCollectRate = AttributeType.LUMBERJACKING_RATE;
-                newMaxValue = Attributes.Get(AttributeType.WOOD_CARGO).MaxValue;
+                currentCargoType = AttributeType.WOOD_CARGO;
                 break;
             case ResourceGatheringType.Stone:
                 currentCollectRate = AttributeType.STONE_MINING_RATE;
-                newMaxValue = Attributes.Get(AttributeType.STONE_CARGO).MaxValue;
+                currentCargoType = AttributeType.STONE_CARGO;
                 break;
             case ResourceGatheringType.Gold:
                 currentCollectRate = AttributeType.GOLD_MINING_RATE;
-                newMaxValue = Attributes.Get(AttributeType.GOLD_CARGO).MaxValue;
+                currentCargoType = AttributeType.GOLD_CARGO;
                 break;
         }
-
-        Attributes.Get(AttributeType.CARGO).MaxValue = newMaxValue;
     }
     
     protected override void OnStateUpdate()
@@ -329,7 +335,7 @@ public class VillagerV2 : UnitV2
     {
         float collectRateModdedByEfficiency = Attributes.ValueOf(currentCollectRate) * Attributes.ValueOf(AttributeType.EFFICIENCY);
         float amount = resource.TryRemove(Attributes.ValueOf(currentCollectRate));
-        Attributes.Get(AttributeType.CARGO).Value += amount + collectRateModdedByEfficiency;
+        CurrentCargo.Value += amount + collectRateModdedByEfficiency;
 
     }
 }
