@@ -379,7 +379,7 @@ public class PlayerManager : MonoBehaviour
         {
             List<StatUpgradeContainer> newBonusList = new()
             {
-                attributeBonus
+                new StatUpgradeContainer(attributeBonus)
             };
 
             AllUnitAttributeBonuses.Add(unitData, newBonusList);
@@ -388,7 +388,7 @@ public class PlayerManager : MonoBehaviour
         {
             StatUpgradeContainer foundAttributeBonus = AllUnitAttributeBonuses[unitData].Find(x => x.targetAttribute == attributeBonus.targetAttribute);
             if (foundAttributeBonus == null)
-                AllUnitAttributeBonuses[unitData].Add(attributeBonus);
+                AllUnitAttributeBonuses[unitData].Add(new StatUpgradeContainer(attributeBonus));
             else if (foundAttributeBonus != null)
                 foundAttributeBonus.amount += attributeBonus.amount;
         }

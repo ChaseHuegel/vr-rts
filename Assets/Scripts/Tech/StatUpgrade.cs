@@ -21,6 +21,13 @@ public class StatUpgradeContainer
         modifier = modifierType;
         amount = fAmount;
     }
+
+    public StatUpgradeContainer(StatUpgradeContainer bonus)
+    {
+        targetAttribute = bonus.targetAttribute;
+        modifier = bonus.modifier;
+        amount = bonus.amount;
+    }
 }
 
 [CreateAssetMenu(fileName = "Stat Upgrade", menuName = "RTS/Tech/Stat Upgrade")]
