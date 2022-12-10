@@ -196,8 +196,7 @@ public class VillagerV2 : UnitV2
     {
         Target = target;
         Order = UnitOrder.Collect;
-        CargoType = resourceType;
-        SetCurrentCollectRateAndCargoMaxValue(resourceType);
+        CargoType = resourceType;        
     }
 
     protected virtual void OnCargoChanged(object sender, DataChangedEventArgs<float> e)
@@ -207,9 +206,12 @@ public class VillagerV2 : UnitV2
             UpdateCurrentCargoObject(isCargoFull);
     }
 
-    protected virtual void SetCurrentCollectRateAndCargoMaxValue(ResourceGatheringType resourceGatheringType)
+    protected override void OnStateUpdate()
     {
-        switch (resourceGatheringType)
+        base.OnStateUpdate();
+        UpdateCurrentToolObject();
+
+        switch (CargoType)
         {
             case ResourceGatheringType.Grain:
                 currentCollectRate = AttributeType.FARMING_RATE;
@@ -240,12 +242,6 @@ public class VillagerV2 : UnitV2
                 currentCargoType = AttributeType.GOLD_CARGO;
                 break;
         }
-    }
-    
-    protected override void OnStateUpdate()
-    {
-        base.OnStateUpdate();
-        UpdateCurrentToolObject();
     }
 
     protected virtual void UpdateCurrentToolObject()
@@ -336,6 +332,5 @@ public class VillagerV2 : UnitV2
         float collectRateModdedByEfficiency = Attributes.ValueOf(currentCollectRate) * Attributes.ValueOf(AttributeType.EFFICIENCY);
         float amount = resource.TryRemove(Attributes.ValueOf(currentCollectRate));
         CurrentCargo.Value += amount + collectRateModdedByEfficiency;
-
     }
 }
