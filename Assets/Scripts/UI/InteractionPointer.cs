@@ -914,6 +914,9 @@ public class InteractionPointer : MonoBehaviour
 
     private bool IsAddingToUnitSelection() 
     {
+        if (!pointerHand)
+            return false;
+            
         return uiInteractAction.GetAxis(pointerHand.handType) > triggerAddToSelectionThreshold; 
     }
 
