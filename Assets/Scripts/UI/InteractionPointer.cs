@@ -708,7 +708,7 @@ public class InteractionPointer : MonoBehaviour
     }
 
     private void DrawWallPreviewSegments()
-    {
+    {        
         ClearWallPreviewSections();
 
         // Start position, will be corner wall segment
@@ -716,11 +716,6 @@ public class InteractionPointer : MonoBehaviour
 
         // Reticle position, will also be a corner
         Vector3 reticlePosition = bldngPreview.transform.position;
-
-        // ! This is to reduce DrawWallPreview calls, commented out for testing.
-        // if (lastPreviewPointerPosition == World.ToWorldCoord(reticlePosition))
-        //     return;
-        // lastPreviewPointerPosition = World.ToWorldCoord(reticlePosition);
 
         // Grid unit * wall bounding dimension
         float wallWorldLength = 0.125f * 1.0f;
@@ -1079,6 +1074,13 @@ public class InteractionPointer : MonoBehaviour
             HardSnapToGrid(pointerReticle, curBldngData.boundingDimensionX, curBldngData.boundingDimensionY, true);
             if (wallPlacementPreviewAnchor)// && buildingPlacementPreviewObject)
             {
+                // ! This is to reduce DrawWallPreview calls, commented out for testing.
+                // if (lastPreviewPointerPosition != World.ToWorldCoord(reticlePosition))
+                // {
+                //     DrawWallPreviewSegments();
+                //     lastPreviewPointerPosition = World.ToWorldCoord(reticlePosition);
+                // }
+
                 DrawWallPreviewSegments();
             }
 
