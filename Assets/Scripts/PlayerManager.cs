@@ -155,7 +155,7 @@ public class PlayerManager : MonoBehaviour
         get
         {
             if (_instance == null)
-                _instance = GameObject.FindObjectOfType<PlayerManager>();
+                _instance = GameObject.FindFirstObjectByType<PlayerManager>();
 
             return _instance;
         }

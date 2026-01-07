@@ -17,7 +17,7 @@ public class PalmMenu : MonoBehaviour
     {        
         menuHand = Player.instance.leftHand;
         selectionHand = Player.instance.rightHand;      
-        objectPlacementPointer = FindObjectOfType<InteractionPointer>();          
+        objectPlacementPointer = FindFirstObjectByType<InteractionPointer>();          
     }
 
     

@@ -137,7 +137,7 @@ public class InteractionPointer : MonoBehaviour
         get
         {
             if (_instance == null)
-                _instance = GameObject.FindObjectOfType<InteractionPointer>();
+                _instance = GameObject.FindFirstObjectByType<InteractionPointer>();
 
             return _instance;
         }
