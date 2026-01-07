@@ -24,10 +24,10 @@ public class GripPan : MonoBehaviour
     [Header("Grip Panning")]
     public SteamVR_Action_Boolean GripOnOff;
     public float floorHeight = 0f;
-    public float panMovementRate = 3.0f;
+    public float panSensitivity = 1.0f; // Movement rate multiplier
     public bool useMomentum = true;
-    public float momentumStrength = 3.0f;
-    public float momentumDrag = 5.0f;
+    public float glideStrength = 3.0f;
+    public float glideDrag = 5.0f;
     bool isPanning;
     bool isGliding;
     bool isScaling;
@@ -39,7 +39,8 @@ public class GripPan : MonoBehaviour
     private float glideTimePassed;
     private Vector3 startGrabPosition;
     private Vector3 endGrabPosition;
-    float magnitude;
+    private Vector3 startPlayerPosition;
+    float glideMagnitude;
     bool isRightHandPanEnabled = true;
     bool isLeftHandPanEnabled = true;
     public bool IsScalingEnabled() => isRightHandPanEnabled && isLeftHandPanEnabled;
@@ -94,6 +95,7 @@ public class GripPan : MonoBehaviour
         {
             initialHandDistance = Mathf.Abs(currentHand.transform.localPosition.x - otherHand.transform.localPosition.x);
             startScale = targetTransform.localScale.x;
+            Debug.Log("Starting scaling at scale: " + startScale + " hand distance: " + initialHandDistance);
             isScaling = true;
             isPanning = false;
         }
@@ -103,6 +105,7 @@ public class GripPan : MonoBehaviour
             if (!isRightGripPressed && !isLeftGripPressed)
             {
                 isScaling = false;
+                Debug.Log("Ending scaling at scale: " + targetTransform.localScale.x);
                 return;
             }
 
@@ -121,17 +124,24 @@ public class GripPan : MonoBehaviour
         else if (isPanning && currentHand)
         {
             movementVector = initialGripPosition - currentHand.panTransform.position;;
-            Vector3 adjustedMovementVector = movementVector * panMovementRate;
+            Vector3 adjustedMovementVector = movementVector * panSensitivity;
             Player.instance.transform.position += adjustedMovementVector;
             initialGripPosition = currentHand.panTransform.position;
             glideTimePassed += Time.deltaTime;
         }
         else if (isGliding)
         {
-            magnitude -= momentumDrag * Time.deltaTime / Player.instance.transform.localScale.x;
-            if (magnitude < 0) magnitude = 0;
+            glideMagnitude -= glideDrag * Time.deltaTime / Player.instance.transform.localScale.x;
+            if (glideMagnitude < 0) {
+                glideMagnitude = 0;
+                return;
+            }
 
-            Player.instance.transform.position += glidingVector * magnitude * Time.deltaTime;
+            if (glideMagnitude > 0)
+                Debug.Log("Gliding with magnitude: " + glideMagnitude);
+
+            Player.instance.transform.position += glidingVector * glideMagnitude * Time.deltaTime;
+            // Debug.Log("New player position: " + Player.instance.transform.position);
         }
 
         //  Don't let player go below the 'floor'
@@ -171,14 +181,18 @@ public class GripPan : MonoBehaviour
         {
             isPanning = false;
 
-            endGrabPosition = currentHand.panTransform.position;
+            // compute glide from player-world movement during the pan so it's independent of panSensitivity
+            Vector3 endPlayerPosition = Player.instance.transform.position;
 
             if (useMomentum && glideTimePassed > 0.0001f)
             {
-                isGliding = true;
-                glidingVector = endGrabPosition - startGrabPosition;
-                magnitude = (glidingVector.magnitude / Mathf.Max(glideTimePassed, 0.0001f)) * momentumStrength;
-                glidingVector.Normalize();
+                Vector3 worldDelta = endPlayerPosition - startPlayerPosition;
+                if (worldDelta.magnitude > 0.0001f)
+                {
+                    isGliding = true;
+                    glidingVector = worldDelta.normalized;
+                    glideMagnitude = (worldDelta.magnitude / Mathf.Max(glideTimePassed, 0.0001f)) * glideStrength;
+                }
             }
 
             currentHand = null;
@@ -198,6 +212,7 @@ public class GripPan : MonoBehaviour
             }
             isGliding = false;
             startGrabPosition = currentHand.panTransform.position;
+            startPlayerPosition = Player.instance.transform.position;
             glideTimePassed = 0.0f;
         } 
     }
@@ -217,15 +232,17 @@ public class GripPan : MonoBehaviour
         {
             isPanning = false;
 
-            endGrabPosition = currentHand.panTransform.position;
+            Vector3 endPlayerPosition = Player.instance.transform.position;
 
             if (useMomentum && glideTimePassed > 0.0001f)
             {
-                isGliding = true;
-
-                glidingVector = endGrabPosition - startGrabPosition;
-                magnitude = (glidingVector.magnitude / Mathf.Max(glideTimePassed, 0.0001f)) * momentumStrength;
-                glidingVector.Normalize();
+                Vector3 worldDelta = endPlayerPosition - startPlayerPosition;
+                if (worldDelta.magnitude > 0.0001f)
+                {
+                    isGliding = true;
+                    glidingVector = worldDelta.normalized;
+                    glideMagnitude = (worldDelta.magnitude / Mathf.Max(glideTimePassed, 0.0001f)) * glideStrength;
+                }
             }
 
             currentHand = null;
@@ -246,6 +263,7 @@ public class GripPan : MonoBehaviour
 
             isGliding = false;
             startGrabPosition = currentHand.panTransform.position;
+            startPlayerPosition = Player.instance.transform.position;
             glideTimePassed = 0.0f;
         }
     }
