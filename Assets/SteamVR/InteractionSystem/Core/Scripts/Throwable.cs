@@ -40,9 +40,10 @@ namespace Valve.VR.InteractionSystem
         [Tooltip( "When detaching the object, should it return to its original parent?" )]
 		public bool restoreOriginalParent = false;
 
+        public bool attachOnPinch = true;
+        public bool attachOnGrip = false;
 
-
-		protected VelocityEstimator velocityEstimator;
+        protected VelocityEstimator velocityEstimator;
         protected bool attached = false;
         protected float attachTime;
         protected Vector3 attachPosition;
@@ -97,6 +98,9 @@ namespace Valve.VR.InteractionSystem
 
                 GrabTypes bestGrabType = hand.GetBestGrabbingType();
 
+                if (!grabTypeIsValid(bestGrabType))
+                    bestGrabType = GrabTypes.None;
+
                 if ( bestGrabType != GrabTypes.None )
 				{
 					if (rigidbody.linearVelocity.magnitude >= catchingThreshold)
@@ -120,11 +124,16 @@ namespace Valve.VR.InteractionSystem
             hand.HideGrabHint();
 		}
 
-
-        //-------------------------------------------------
+        /// <summary>
+        /// Called every Update() while hovering over this object
+        /// </summary>
+        /// <param name="hand"></param>
         protected virtual void HandHoverUpdate( Hand hand )
         {
             GrabTypes startingGrabType = hand.GetGrabStarting();
+
+            if (!grabTypeIsValid(startingGrabType))
+                startingGrabType = GrabTypes.None;
 
             if (startingGrabType != GrabTypes.None)
             {
@@ -132,6 +141,15 @@ namespace Valve.VR.InteractionSystem
                 hand.HideGrabHint();
             }
 		}
+
+        private bool grabTypeIsValid(GrabTypes grabType)
+        {
+            if (grabType == GrabTypes.Pinch && !attachOnPinch)
+                return false;
+            if (grabType == GrabTypes.Grip && !attachOnGrip)
+                return false;
+            return true;
+        }
 
         //-------------------------------------------------
         protected virtual void OnAttachedToHand( Hand hand )
