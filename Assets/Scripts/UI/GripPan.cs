@@ -158,20 +158,30 @@ public class GripPan : MonoBehaviour
 
     public void OnRightGripReleased(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {    
-        if (isScaling || !isRightHandPanEnabled) return;
+        // If scaling is active, releasing any grip cancels scaling
+        if (isScaling)
+        {
+            isScaling = false;
+            return;
+        }
 
-        if (isPanning && currentHand.handType == fromSource)
+        if (!isRightHandPanEnabled) return;
+
+        if (isPanning && currentHand != null && currentHand.handType == fromSource)
         {
             isPanning = false;
+
             endGrabPosition = currentHand.panTransform.position;
 
-            if (useMomentum)
+            if (useMomentum && glideTimePassed > 0.0001f)
             {
                 isGliding = true;
                 glidingVector = endGrabPosition - startGrabPosition;
-                magnitude = (glidingVector.magnitude / glideTimePassed) * momentumStrength;
+                magnitude = (glidingVector.magnitude / Mathf.Max(glideTimePassed, 0.0001f)) * momentumStrength;
                 glidingVector.Normalize();
             }
+
+            currentHand = null;
         }
     }
 
@@ -194,21 +204,31 @@ public class GripPan : MonoBehaviour
 
     public void OnLeftGripReleased(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
-        if (isScaling || !isLeftHandPanEnabled) return;
+        // If scaling is active, releasing any grip cancels scaling
+        if (isScaling)
+        {
+            isScaling = false;
+            return;
+        }
 
-        if (isPanning && currentHand.handType == fromSource)
+        if (!isLeftHandPanEnabled) return;
+
+        if (isPanning && currentHand != null && currentHand.handType == fromSource)
         {
             isPanning = false;
+
             endGrabPosition = currentHand.panTransform.position;
 
-            if (useMomentum)
+            if (useMomentum && glideTimePassed > 0.0001f)
             {
                 isGliding = true;
 
                 glidingVector = endGrabPosition - startGrabPosition;
-                magnitude = (glidingVector.magnitude / glideTimePassed) * momentumStrength;
+                magnitude = (glidingVector.magnitude / Mathf.Max(glideTimePassed, 0.0001f)) * momentumStrength;
                 glidingVector.Normalize();
             }
+
+            currentHand = null;
         }
     }
 
