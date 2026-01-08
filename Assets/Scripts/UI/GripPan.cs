@@ -13,7 +13,7 @@ public class GripPan : MonoBehaviour
     public Transform targetTransform;
 
     [Tooltip("Minimum world scale of transform.")]
-    public float minScale = 0.20f; // 
+    public float minScale = 1.0f; // 
 
     [Tooltip("Maximum world scale of transform.")]
     public float maxScale = 5.0f; // 
@@ -28,6 +28,11 @@ public class GripPan : MonoBehaviour
     public bool useMomentum = true;
     public float glideStrength = 3.0f;
     public float glideDrag = 5.0f;
+    [Tooltip("Minimum world distance the player must have moved during a pan to enable glide")]
+    public float minGlideDistance = 0.05f;
+    [Tooltip("Minimum average speed (world units / sec) during the pan to enable glide")]
+    public float minGlideSpeed = 0.1f;
+
     bool isPanning;
     bool isGliding;
     bool isScaling;
@@ -40,6 +45,7 @@ public class GripPan : MonoBehaviour
     private Vector3 startGrabPosition;
     private Vector3 endGrabPosition;
     private Vector3 startPlayerPosition;
+    private Vector3 accumulatedAppliedDelta;
     float glideMagnitude;
     bool isRightHandPanEnabled = true;
     bool isLeftHandPanEnabled = true;
@@ -49,6 +55,29 @@ public class GripPan : MonoBehaviour
     private bool isScalingStarting() => isRightGripPressed && isLeftGripPressed && !isScaling;
      private float startScale = 1.0f;
     private float initialHandDistance;
+    [Tooltip("Dot product threshold to consider palms facing each other (0..1)")]
+    public float palmFacingThreshold = 0.5f;
+
+    private bool PalmsFacingEachOther()
+    {
+        var right = Player.instance?.rightHand;
+        var left = Player.instance?.leftHand;
+        if (right == null || left == null)
+            return false;
+
+        Vector3 vec = left.transform.position - right.transform.position;
+        if (vec.sqrMagnitude < 1e-6f)
+            return false;
+
+        Vector3 dir = vec.normalized;
+
+        // Check that each hand's palm normal (up) is pointing roughly toward the other hand.
+        // Use transform.up as the palm normal; flip sign if your hand model uses -up for palms
+        float rightDot = Vector3.Dot(right.transform.right, -dir);
+        float leftDot = Vector3.Dot(left.transform.right, -dir);
+
+        return rightDot >= palmFacingThreshold && leftDot >= palmFacingThreshold;
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -91,8 +120,12 @@ public class GripPan : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (isScalingStarting() && IsScalingEnabled())
+        // Start scaling only when both grips pressed and palms face each other
+        if (!isScaling && IsScalingEnabled() && isRightGripPressed && isLeftGripPressed && PalmsFacingEachOther())
         {
+            // ensure we reference the correct hand instances
+            currentHand = Player.instance.rightHand;
+            otherHand = Player.instance.leftHand;
             initialHandDistance = Mathf.Abs(currentHand.transform.localPosition.x - otherHand.transform.localPosition.x);
             startScale = targetTransform.localScale.x;
             Debug.Log("Starting scaling at scale: " + startScale + " hand distance: " + initialHandDistance);
@@ -102,7 +135,8 @@ public class GripPan : MonoBehaviour
 
         if (isScaling && IsScalingEnabled())
         {
-            if (!isRightGripPressed && !isLeftGripPressed)
+            // Stop scaling if either grip released or palms are no longer facing each other
+            if (!isRightGripPressed || !isLeftGripPressed || !PalmsFacingEachOther())
             {
                 isScaling = false;
                 Debug.Log("Ending scaling at scale: " + targetTransform.localScale.x);
@@ -126,22 +160,37 @@ public class GripPan : MonoBehaviour
             movementVector = initialGripPosition - currentHand.panTransform.position;;
             Vector3 adjustedMovementVector = movementVector * panSensitivity;
             Player.instance.transform.position += adjustedMovementVector;
+            // track the actual applied world movement so glide uses the same displacement
+            accumulatedAppliedDelta += adjustedMovementVector;
             initialGripPosition = currentHand.panTransform.position;
             glideTimePassed += Time.deltaTime;
         }
         else if (isGliding)
         {
-            glideMagnitude -= glideDrag * Time.deltaTime / Player.instance.transform.localScale.x;
-            if (glideMagnitude < 0) {
-                glideMagnitude = 0;
-                return;
+            // Apply current velocity (glideMagnitude is in units per second)
+            if (glideMagnitude > 0.0001f)
+            {
+                Player.instance.transform.position += glidingVector * glideMagnitude * Time.deltaTime;
+
+                // smooth exponential decay for less jerky feel (frame-rate independent)
+                float decayFactor = Mathf.Exp(-glideDrag * Time.deltaTime);
+                glideMagnitude *= decayFactor;
+
+                if (glideMagnitude <= 0.001f)
+                {
+                    glideMagnitude = 0f;
+                    isGliding = false;
+                }
+                else
+                {
+                    Debug.Log("Gliding with magnitude: " + glideMagnitude);
+                }
             }
-
-            if (glideMagnitude > 0)
-                Debug.Log("Gliding with magnitude: " + glideMagnitude);
-
-            Player.instance.transform.position += glidingVector * glideMagnitude * Time.deltaTime;
-            // Debug.Log("New player position: " + Player.instance.transform.position);
+            else
+            {
+                glideMagnitude = 0f;
+                isGliding = false;
+            }
         }
 
         //  Don't let player go below the 'floor'
@@ -179,23 +228,44 @@ public class GripPan : MonoBehaviour
 
         if (isPanning && currentHand != null && currentHand.handType == fromSource)
         {
-            isPanning = false;
-
-            // compute glide from player-world movement during the pan so it's independent of panSensitivity
-            Vector3 endPlayerPosition = Player.instance.transform.position;
-
-            if (useMomentum && glideTimePassed > 0.0001f)
+            // If the other hand is holding its grip and can pan, transfer control to it instead of stopping
+            if (isLeftGripPressed && isLeftHandPanEnabled && Player.instance.leftHand.hoveringInteractable == null)
             {
-                Vector3 worldDelta = endPlayerPosition - startPlayerPosition;
-                if (worldDelta.magnitude > 0.0001f)
-                {
-                    isGliding = true;
-                    glidingVector = worldDelta.normalized;
-                    glideMagnitude = (worldDelta.magnitude / Mathf.Max(glideTimePassed, 0.0001f)) * glideStrength;
-                }
+                currentHand = Player.instance.leftHand;
+                otherHand = Player.instance.rightHand;
+                // Reset pan tracking for new hand
+                initialGripPosition = currentHand.panTransform.position;
+                startGrabPosition = currentHand.panTransform.position;
+                startPlayerPosition = Player.instance.transform.position;
+                accumulatedAppliedDelta = Vector3.zero;
+                glideTimePassed = 0.0f;
+                isGliding = false;
+                // keep isPanning = true
             }
+            else
+            {
+                isPanning = false;
 
-            currentHand = null;
+                // compute glide from player-world movement during the pan so it's independent of panSensitivity
+                Vector3 endPlayerPosition = Player.instance.transform.position;
+
+                if (useMomentum && glideTimePassed > 0.0001f)
+                {
+                    Vector3 worldDelta = accumulatedAppliedDelta; // use actual applied movement
+                    float travel = worldDelta.magnitude;
+                    float avgSpeed = travel / Mathf.Max(glideTimePassed, 0.0001f);
+
+                    // Only enable glide if movement exceeded configurable thresholds to avoid accidental glides
+                    if (travel >= minGlideDistance && avgSpeed >= minGlideSpeed)
+                    {
+                        isGliding = true;
+                        glidingVector = worldDelta.normalized;
+                        glideMagnitude = (travel / Mathf.Max(glideTimePassed, 0.0001f)) * glideStrength;
+                    }
+                }
+
+                currentHand = null;
+            }
         }
     }
 
@@ -203,18 +273,23 @@ public class GripPan : MonoBehaviour
     {
         if (isRightHandPanEnabled && !isScaling)
         {
-            if (Player.instance.rightHand.hoveringInteractable == null)
+            Hand newHand = Player.instance.rightHand;
+            if (newHand.hoveringInteractable == null)
             {
-                currentHand = Player.instance.rightHand;
+                // allow takeover if other hand was panning
+                currentHand = newHand;
                 otherHand = Player.instance.leftHand;
                 initialGripPosition = currentHand.panTransform.position;
                 isPanning = true;
+
+                // reset glide tracking
+                isGliding = false;
+                startGrabPosition = currentHand.panTransform.position;
+                startPlayerPosition = Player.instance.transform.position;
+                glideTimePassed = 0.0f;
+                accumulatedAppliedDelta = Vector3.zero;
             }
-            isGliding = false;
-            startGrabPosition = currentHand.panTransform.position;
-            startPlayerPosition = Player.instance.transform.position;
-            glideTimePassed = 0.0f;
-        } 
+        }
     }
 
     public void OnLeftGripReleased(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
@@ -230,22 +305,42 @@ public class GripPan : MonoBehaviour
 
         if (isPanning && currentHand != null && currentHand.handType == fromSource)
         {
-            isPanning = false;
-
-            Vector3 endPlayerPosition = Player.instance.transform.position;
-
-            if (useMomentum && glideTimePassed > 0.0001f)
+            // If the other hand is holding its grip and can pan, transfer control to it instead of stopping
+            if (isRightGripPressed && isRightHandPanEnabled && Player.instance.rightHand.hoveringInteractable == null)
             {
-                Vector3 worldDelta = endPlayerPosition - startPlayerPosition;
-                if (worldDelta.magnitude > 0.0001f)
-                {
-                    isGliding = true;
-                    glidingVector = worldDelta.normalized;
-                    glideMagnitude = (worldDelta.magnitude / Mathf.Max(glideTimePassed, 0.0001f)) * glideStrength;
-                }
+                currentHand = Player.instance.rightHand;
+                otherHand = Player.instance.leftHand;
+                // Reset pan tracking for new hand
+                initialGripPosition = currentHand.panTransform.position;
+                startGrabPosition = currentHand.panTransform.position;
+                startPlayerPosition = Player.instance.transform.position;
+                accumulatedAppliedDelta = Vector3.zero;
+                glideTimePassed = 0.0f;
+                isGliding = false;
+                // keep isPanning = true
             }
+            else
+            {
+                isPanning = false;
 
-            currentHand = null;
+                Vector3 endPlayerPosition = Player.instance.transform.position;
+
+                if (useMomentum && glideTimePassed > 0.0001f)
+                {
+                    Vector3 worldDelta = accumulatedAppliedDelta;
+                    float travel = worldDelta.magnitude;
+                    float avgSpeed = travel / Mathf.Max(glideTimePassed, 0.0001f);
+
+                    if (travel >= minGlideDistance && avgSpeed >= minGlideSpeed)
+                    {
+                        isGliding = true;
+                        glidingVector = worldDelta.normalized;
+                        glideMagnitude = (travel / Mathf.Max(glideTimePassed, 0.0001f)) * glideStrength;
+                    }
+                }
+
+                currentHand = null;
+            }
         }
     }
 
@@ -253,18 +348,20 @@ public class GripPan : MonoBehaviour
     {
         if (isLeftHandPanEnabled && !isScaling)
         {
-            if (Player.instance.leftHand.hoveringInteractable == null)
+            Hand newHand = Player.instance.leftHand;
+            if (newHand.hoveringInteractable == null)
             {
-                currentHand = Player.instance.leftHand;
+                currentHand = newHand;
                 otherHand = Player.instance.rightHand;
                 initialGripPosition = currentHand.panTransform.position;
                 isPanning = true;
-            }
 
-            isGliding = false;
-            startGrabPosition = currentHand.panTransform.position;
-            startPlayerPosition = Player.instance.transform.position;
-            glideTimePassed = 0.0f;
+                isGliding = false;
+                startGrabPosition = currentHand.panTransform.position;
+                startPlayerPosition = Player.instance.transform.position;
+                glideTimePassed = 0.0f;
+                accumulatedAppliedDelta = Vector3.zero;
+            }
         }
     }
 
