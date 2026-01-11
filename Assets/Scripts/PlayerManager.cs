@@ -36,6 +36,7 @@ public class PlayerManager : MonoBehaviour
 
     [Header("UI")]
     public SteamVR_Action_Boolean handMenuToggle;
+    public SteamVR_Action_Boolean moveCommandMenuToggle;
 
     //=========================================================================
     [Header("Hammer")]
@@ -64,6 +65,7 @@ public class PlayerManager : MonoBehaviour
     //=========================================================================
     [Header("Prefabs")]
     public GameObject handBuildMenuPrefab;
+    public GameObject moveCommandMenuPrefab;
     public GameObject defaultButtonLockPrefab;
     public GameObject buttonLockEpoch2Prefab;
     public GameObject buttonLockEpoch3Prefab;
@@ -203,7 +205,8 @@ public class PlayerManager : MonoBehaviour
 
         handMenuToggle?.AddOnStateDownListener(OnHandToggleMenuRightDown, SteamVR_Input_Sources.RightHand);
         handMenuToggle?.AddOnStateDownListener(OnHandToggleMenuLeftDown, SteamVR_Input_Sources.LeftHand);
-
+        moveCommandMenuToggle?.AddOnStateDownListener(OnMoveCommandMenuRightToggleDown, SteamVR_Input_Sources.RightHand);
+        moveCommandMenuToggle?.AddOnStateDownListener(OnMoveCommandMenuLeftToggleDown, SteamVR_Input_Sources.LeftHand);
         faction.techTree.RefreshNodes();
 
         // Initialize and activate the menu so it can catch startup resource values. Resource
@@ -632,6 +635,14 @@ public class PlayerManager : MonoBehaviour
             rightHand.AttachObject(handBuildMenuGameObject, GrabTypes.Scripted);
         }
 
+    }
+
+    public void OnMoveCommandMenuRightToggleDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
+    {
+    }
+
+    public void OnMoveCommandMenuLeftToggleDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
+    {
     }
 
     public void OnHandToggleMenuLeftDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)

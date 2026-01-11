@@ -87,7 +87,17 @@ public abstract class UnitV2 : ActorV2
 
         if (PlayerManager.AllUnitAttributeBonuses.TryGetValue(data, out var bonuses))
             foreach (StatUpgradeContainer bonus in bonuses)
-                Attributes.Get(bonus.targetAttribute).AddModifier(bonus.targetAttribute, bonus.modifier, bonus.amount);
+            {
+                var attribute = Attributes.Get(bonus.targetAttribute);
+                if (attribute != null)
+                {
+                    attribute.AddModifier(bonus.targetAttribute, bonus.modifier, bonus.amount);
+                }
+                else 
+                {
+                    Debug.LogWarning($"Unit {data.title} does not have attribute {bonus.targetAttribute} to apply bonus.");
+                }
+            }
     }
     
     private bool TryFetchRenderers()

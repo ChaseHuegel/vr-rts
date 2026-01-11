@@ -20940,6 +20940,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4603657074501566449, guid: 0e20e52b3d933304889227afb2893690,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4603657074501618427, guid: 0e20e52b3d933304889227afb2893690,
         type: 3}
       propertyPath: m_IsActive
@@ -21117,14 +21122,29 @@ PrefabInstance:
       objectReference: {fileID: 1128724109}
     - target: {fileID: 4603657074826361736, guid: 0e20e52b3d933304889227afb2893690,
         type: 3}
+      propertyPath: glideDrag
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4603657074826361736, guid: 0e20e52b3d933304889227afb2893690,
+        type: 3}
       propertyPath: handRight
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4603657074826361736, guid: 0e20e52b3d933304889227afb2893690,
+        type: 3}
+      propertyPath: glideStrength
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 4603657074826361736, guid: 0e20e52b3d933304889227afb2893690,
         type: 3}
       propertyPath: scalingTransform
       value: 
       objectReference: {fileID: 543281276}
+    - target: {fileID: 4603657074826361736, guid: 0e20e52b3d933304889227afb2893690,
+        type: 3}
+      propertyPath: palmFacingThreshold
+      value: 0.95
+      objectReference: {fileID: 0}
     - target: {fileID: 4603657074826361737, guid: 0e20e52b3d933304889227afb2893690,
         type: 3}
       propertyPath: isInGaze
@@ -21175,6 +21195,17 @@ PrefabInstance:
         type: 3}
       propertyPath: stoneCollected
       value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 4603657074826361739, guid: 0e20e52b3d933304889227afb2893690,
+        type: 3}
+      propertyPath: moveCommandMenuPrefab
+      value: 
+      objectReference: {fileID: 156529350050154163, guid: 96be8148cc22b1146b516bb21ae2123b,
+        type: 3}
+    - target: {fileID: 4603657074826361739, guid: 0e20e52b3d933304889227afb2893690,
+        type: 3}
+      propertyPath: moveCommandMenuToggle.actionPath
+      value: /actions/default/in/MoveCommandMenu
       objectReference: {fileID: 0}
     - target: {fileID: 4689913512131614245, guid: 0e20e52b3d933304889227afb2893690,
         type: 3}

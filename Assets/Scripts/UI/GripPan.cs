@@ -71,8 +71,6 @@ public class GripPan : MonoBehaviour
 
         Vector3 dir = vec.normalized;
 
-        // Check that each hand's palm normal (up) is pointing roughly toward the other hand.
-        // Use transform.up as the palm normal; flip sign if your hand model uses -up for palms
         float rightDot = Vector3.Dot(right.transform.right, -dir);
         float leftDot = Vector3.Dot(left.transform.right, -dir);
 
@@ -181,10 +179,10 @@ public class GripPan : MonoBehaviour
                     glideMagnitude = 0f;
                     isGliding = false;
                 }
-                else
-                {
-                    Debug.Log("Gliding with magnitude: " + glideMagnitude);
-                }
+                //else
+                //{
+                //    Debug.Log("Gliding with magnitude: " + glideMagnitude);
+                //}
             }
             else
             {
