@@ -83,6 +83,9 @@ public class PlayerManager : MonoBehaviour
     private GameObject handBuildMenuGameObject;
     public GameObject HandBuildMenuGameObject { get => handBuildMenuGameObject; }
 
+    private GameObject moveCommandMenuGameObject;
+    public GameObject MoveCommandMenuGameObject { get => moveCommandMenuGameObject; }
+
     protected BuildMenu buildMenu;
     public BuildMenu Buildmenu { get => buildMenu; }
 
@@ -202,11 +205,12 @@ public class PlayerManager : MonoBehaviour
         rightHandHammerStorage.gameObject.SetActive(hammerOnRight);
 
         InitializeHandBuildMenu();
+        InitializeMoveCommandMenu();
 
         handMenuToggle?.AddOnStateDownListener(OnHandToggleMenuRightDown, SteamVR_Input_Sources.RightHand);
         handMenuToggle?.AddOnStateDownListener(OnHandToggleMenuLeftDown, SteamVR_Input_Sources.LeftHand);
-        moveCommandMenuToggle?.AddOnStateDownListener(OnMoveCommandMenuRightToggleDown, SteamVR_Input_Sources.RightHand);
-        moveCommandMenuToggle?.AddOnStateDownListener(OnMoveCommandMenuLeftToggleDown, SteamVR_Input_Sources.LeftHand);
+        moveCommandMenuToggle?.AddOnStateDownListener(OnMoveCommandMenuToggle, SteamVR_Input_Sources.RightHand);
+        moveCommandMenuToggle?.AddOnStateDownListener(OnMoveCommandMenuToggle, SteamVR_Input_Sources.LeftHand);
         faction.techTree.RefreshNodes();
 
         // Initialize and activate the menu so it can catch startup resource values. Resource
@@ -587,6 +591,20 @@ public class PlayerManager : MonoBehaviour
 
     }
 
+    private void InitializeMoveCommandMenu()
+    {
+        if (moveCommandMenuPrefab)
+        {
+            Vector3 position = new(0.0f, 0.0f, 0.0f);
+            moveCommandMenuGameObject = Instantiate(moveCommandMenuPrefab, position, Quaternion.identity, autohideHandMenuObject.transform);
+            moveCommandMenuGameObject.SetActive(false);
+        }
+#if UNITY_EDITOR
+        else
+            Debug.LogError("MoveCommandMenuPrefab not set.", this);     
+#endif
+    }
+
     public void OnHandToggleMenuRightDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
         //buildMenu.RefreshSlots();
@@ -637,13 +655,69 @@ public class PlayerManager : MonoBehaviour
 
     }
 
-    public void OnMoveCommandMenuRightToggleDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
+
+
+    public void OnMoveCommandMenuToggle(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
+        Debug.Log($"OnMoveCommandMenuToggle called from {fromSource}");
+         // Menu is already visible.
+        if (moveCommandMenuGameObject.activeSelf)
+        {
+            if (fromSource == SteamVR_Input_Sources.RightHand)
+            {
+                // Menu is attached to right hand, deactivate it, detach it, and
+                // enable interactions in right hand.
+                if (rightHand.currentAttachedObject == moveCommandMenuGameObject)
+                {
+                    rightHand.DetachObject(moveCommandMenuGameObject);
+                    // TODO: This should be taken care of by DetachObject -> OnDetachedFromHand event
+                    // but OnDetachedFromHand has no reciever (Interactable) for some reason.
+                    if (rightHand.skeleton != null)
+                        rightHand.skeleton.BlendToSkeleton(0.2f);
+
+                    moveCommandMenuGameObject.SetActive(false);
+                    SetRightHandInteraction(true);
+                }
+            }
+            else if (fromSource == SteamVR_Input_Sources.LeftHand)
+            {
+                // Menu is attached to left hand, deactivate it, detach it, and
+                // enable interactions in left hand.
+                if (leftHand.currentAttachedObject == moveCommandMenuGameObject)
+                {
+                    leftHand.DetachObject(moveCommandMenuGameObject);
+                    // TODO: This should be taken care of by DetachObject -> OnDetachedFromHand event
+                    // but OnDetachedFromHand has no reciever (Interactable) for some reason.
+                    if (leftHand.skeleton != null)
+                        leftHand.skeleton.BlendToSkeleton(0.2f);
+
+                    moveCommandMenuGameObject.SetActive(false);
+                    SetLeftHandInteraction(true);
+                }
+            }
+        }
+        // Menu is not visible.
+        else
+        {   
+            if (fromSource == SteamVR_Input_Sources.RightHand)
+            {
+                // Disable interaction in right hand, activate the command menu, and
+                // attach command menu to right hand,
+                SetRightHandInteraction(false);
+                moveCommandMenuGameObject.SetActive(true);
+                rightHand.AttachObject(moveCommandMenuGameObject, GrabTypes.None);
+            }
+            else if (fromSource == SteamVR_Input_Sources.LeftHand)
+            {
+                // Disable interaction in left hand, activate the command menu, and
+                // attach command menu to left hand,
+                SetLeftHandInteraction(false);
+                moveCommandMenuGameObject.SetActive(true);
+                leftHand.AttachObject(moveCommandMenuGameObject, GrabTypes.None);
+            }       
+        }
     }
 
-    public void OnMoveCommandMenuLeftToggleDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
-    {
-    }
 
     public void OnHandToggleMenuLeftDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {

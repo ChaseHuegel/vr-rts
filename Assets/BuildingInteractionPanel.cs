@@ -203,9 +203,14 @@ public class BuildingInteractionPanel : MonoBehaviour
             RepositionQueueButtons();
         else
         {
-            queueSlotsGameObject?.SetActive(false);
-            Destroy(queueSlotsGameObject);
-            titleGameObject.transform.position = new Vector3(0.0f, titleDisplayVerticalOffset, 0.0f);
+            if (queueSlotsGameObject != null)
+            { 
+                queueSlotsGameObject.SetActive(false);
+                Destroy(queueSlotsGameObject);
+            }
+            
+            if (titleGameObject != null)
+                titleGameObject.transform.position = new Vector3(0.0f, titleDisplayVerticalOffset, 0.0f);
         }
     }
 

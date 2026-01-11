@@ -9458,7 +9458,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1100157233}
   - component: {fileID: 1100157232}
-  - component: {fileID: 1100157231}
   - component: {fileID: 1100157234}
   m_Layer: 0
   m_Name: NetworkManager
@@ -9467,18 +9466,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1100157231
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1100157230}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b84c2d8dfe509a34fb59e2b81f8e1319, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1100157232
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9494,10 +9481,12 @@ MonoBehaviour:
   NetworkManagerExpanded: 0
   NetworkConfig:
     ProtocolVersion: 0
-    NetworkTransport: {fileID: 0}
-    PlayerPrefab: {fileID: 0}
+    NetworkTransport: {fileID: 1100157234}
+    PlayerPrefab: {fileID: 4081880006288822309, guid: 853c301450c3de74d89ea9d1d8fa37bf,
+      type: 3}
     Prefabs:
-      NetworkPrefabsLists: []
+      NetworkPrefabsLists:
+      - {fileID: 11400000, guid: 2cf1c0a2043123844b2b9b0409c1bf21, type: 2}
     TickRate: 30
     ClientConnectionBufferTimeout: 10
     ConnectionApproval: 0
@@ -9517,13 +9506,7 @@ MonoBehaviour:
     UseCMBService: 0
     AutoSpawnPlayerPrefabClientSide: 1
     NetworkProfilingMetrics: 1
-    OldPrefabList:
-    - Override: 0
-      Prefab: {fileID: 4081880006288822309, guid: 853c301450c3de74d89ea9d1d8fa37bf,
-        type: 3}
-      SourcePrefabToOverride: {fileID: 0}
-      SourceHashToOverride: 0
-      OverridingTargetPrefab: {fileID: 0}
+    OldPrefabList: []
   RunInBackground: 1
   LogLevel: 1
 --- !u!4 &1100157233
@@ -9551,9 +9534,26 @@ MonoBehaviour:
   m_GameObject: {fileID: 1100157230}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7cc1f3f8160f70e4f9599e895fb00a8c, type: 3}
+  m_Script: {fileID: 11500000, guid: 6960e84d07fb87f47956e7a81d71c4e6, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Transports.UTP.UnityTransport
+  m_ProtocolType: 0
+  m_UseWebSockets: 0
+  m_UseEncryption: 0
+  m_MaxPacketQueueSize: 128
+  m_MaxPayloadSize: 6144
+  m_HeartbeatTimeoutMS: 500
+  m_ConnectTimeoutMS: 1000
+  m_MaxConnectAttempts: 60
+  m_DisconnectTimeoutMS: 30000
+  ConnectionData:
+    Address: 127.0.0.1
+    Port: 7777
+    ServerListenAddress: 127.0.0.1
+  DebugSimulator:
+    PacketDelayMS: 0
+    PacketJitterMS: 0
+    PacketDropRate: 0
 --- !u!1001 &1126277273
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13031,6 +13031,50 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 504072324}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1592400636
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1592400638}
+  - component: {fileID: 1592400637}
+  m_Layer: 0
+  m_Name: VRToggle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1592400637
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1592400636}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a6d0c14d3abb9742b8ae39ee25f29cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+--- !u!4 &1592400638
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1592400636}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.82775, y: -0.12685, z: 0.55581}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1614163074
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17146,6 +17190,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2124979849}
   - component: {fileID: 2124979850}
+  - component: {fileID: 2124979851}
   m_Layer: 0
   m_Name: NetworkCommandLine
   m_TagString: Untagged
@@ -17180,6 +17225,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 514c39ade7a1d694c8cbd572d8c1df00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2124979851
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2124979848}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d6e6059b5d407342a28317542b33142, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NetworkCommandLine
 --- !u!1001 &2130004582
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -20890,6 +20947,11 @@ PrefabInstance:
       propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
       value: 1801810542
       objectReference: {fileID: 0}
+    - target: {fileID: 4500921077613330421, guid: 0e20e52b3d933304889227afb2893690,
+        type: 3}
+      propertyPath: initializeSteamVROnAwake
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4602947332147455103, guid: 0e20e52b3d933304889227afb2893690,
         type: 3}
       propertyPath: m_IsActive
@@ -21094,6 +21156,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4603657074503412933, guid: 0e20e52b3d933304889227afb2893690,
+        type: 3}
+      propertyPath: m_CullingMask.m_Bits
+      value: 4294967295
       objectReference: {fileID: 0}
     - target: {fileID: 4603657074506551913, guid: 0e20e52b3d933304889227afb2893690,
         type: 3}
@@ -24128,3 +24195,4 @@ SceneRoots:
   - {fileID: 760236208}
   - {fileID: 771802060}
   - {fileID: 1321514044}
+  - {fileID: 1592400638}

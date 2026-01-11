@@ -918,6 +918,11 @@ public class InteractionPointer : MonoBehaviour
     //=========================================================================
     private void UpdatePointer()
     {        
+        if (!pointerStartTransform)
+        {
+            return;
+        }
+
         Vector3 pointerStart = pointerStartTransform.position;
         Vector3 pointerEnd;
         Vector3 pointerDir = pointerStartTransform.forward;
