@@ -181,7 +181,8 @@ public class VillagerV2 : UnitV2
             case UnitV2 unit:
                 Target = unit;
                 if (Faction.IsAllied(Faction))
-                    Order = UnitOrder.None;
+                    //Order = UnitOrder.None;
+                    IssueGoToOrder(unit.GetCell());
                 else
                     Order = UnitOrder.Attack;
                 break;
