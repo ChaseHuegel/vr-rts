@@ -9547,7 +9547,7 @@ MonoBehaviour:
   m_MaxConnectAttempts: 60
   m_DisconnectTimeoutMS: 30000
   ConnectionData:
-    Address: 127.0.0.1
+    Address: 192.168.1.240
     Port: 7777
     ServerListenAddress: 127.0.0.1
   DebugSimulator:
@@ -13042,7 +13042,7 @@ GameObject:
   - component: {fileID: 1592400638}
   - component: {fileID: 1592400637}
   m_Layer: 0
-  m_Name: VRToggle
+  m_Name: VR Switcher
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -21265,12 +21265,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4603657074826361739, guid: 0e20e52b3d933304889227afb2893690,
         type: 3}
-      propertyPath: moveCommandMenuPrefab
-      value: 
-      objectReference: {fileID: 156529350050154163, guid: 96be8148cc22b1146b516bb21ae2123b,
-        type: 3}
-    - target: {fileID: 4603657074826361739, guid: 0e20e52b3d933304889227afb2893690,
-        type: 3}
       propertyPath: moveCommandMenuToggle.actionPath
       value: /actions/default/in/MoveCommandMenu
       objectReference: {fileID: 0}
@@ -23257,6 +23251,36 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2349590028033094936, guid: 96be8148cc22b1146b516bb21ae2123b,
+        type: 3}
+      propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
+      value: 1801810542
+      objectReference: {fileID: 0}
+    - target: {fileID: 2349590029063280728, guid: 96be8148cc22b1146b516bb21ae2123b,
+        type: 3}
+      propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
+      value: 1801810542
+      objectReference: {fileID: 0}
+    - target: {fileID: 2349590029067538214, guid: 96be8148cc22b1146b516bb21ae2123b,
+        type: 3}
+      propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
+      value: 1801810542
+      objectReference: {fileID: 0}
+    - target: {fileID: 2349590029884141731, guid: 96be8148cc22b1146b516bb21ae2123b,
+        type: 3}
+      propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
+      value: 1801810542
+      objectReference: {fileID: 0}
+    - target: {fileID: 7752610897074895314, guid: 96be8148cc22b1146b516bb21ae2123b,
+        type: 3}
+      propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
+      value: 1801810542
+      objectReference: {fileID: 0}
+    - target: {fileID: 7752610897224275620, guid: 96be8148cc22b1146b516bb21ae2123b,
+        type: 3}
+      propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
+      value: 1801810542
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

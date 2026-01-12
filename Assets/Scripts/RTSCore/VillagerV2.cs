@@ -141,6 +141,7 @@ public class VillagerV2 : UnitV2
             case Resource resource:
                 Target = resource;
                 Order = UnitOrder.Collect;
+                CargoType = resource.type; // Set cargo type to match resource type
                 break;
 
             case Fauna fauna:

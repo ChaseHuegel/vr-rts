@@ -595,8 +595,7 @@ public class PlayerManager : MonoBehaviour
     {
         if (moveCommandMenuPrefab)
         {
-            Vector3 position = new(0.0f, 0.0f, 0.0f);
-            moveCommandMenuGameObject = Instantiate(moveCommandMenuPrefab, position, Quaternion.identity, autohideHandMenuObject.transform);
+            moveCommandMenuGameObject = Instantiate(moveCommandMenuPrefab, autohideHandMenuObject.transform);
             moveCommandMenuGameObject.SetActive(false);
         }
 #if UNITY_EDITOR
@@ -660,6 +659,10 @@ public class PlayerManager : MonoBehaviour
     public void OnMoveCommandMenuToggle(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
         Debug.Log($"OnMoveCommandMenuToggle called from {fromSource}");
+
+        moveCommandMenuGameObject.SetActive(!moveCommandMenuGameObject.activeSelf);
+        return;
+
          // Menu is already visible.
         if (moveCommandMenuGameObject.activeSelf)
         {
