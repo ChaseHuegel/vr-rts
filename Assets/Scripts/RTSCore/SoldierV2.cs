@@ -1,5 +1,9 @@
+using System.Diagnostics;
+using Consolation;
 using Swordfish.Library.BehaviorTrees;
 using Swordfish.Navigation;
+using UnityEngine;
+using Valve.VR.InteractionSystem;
 
 public class SoldierV2 : UnitV2
 {
@@ -28,11 +32,18 @@ public class SoldierV2 : UnitV2
         switch (body)
         {
             case ActorV2 _:
+                
                 Target = body;
                 if (!body.Faction.IsAllied(Faction))
+                {
                     Order = UnitOrder.Attack;
+                }
                 else
-                    Order = UnitOrder.Follow;
+                {
+                    // Follow isn't implemented and using UnitOrder.GoTo broke rally points for soldiers.
+                    // Order = UnitOrder.Follow;
+                    IssueGoToOrder(body.GetCell());
+                }
                 break;
 
             case Structure _:

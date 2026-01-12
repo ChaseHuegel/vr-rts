@@ -215,7 +215,7 @@ public class SpawnQueue : MonoBehaviour
         unitRallyWaypoint.position = position;
         Debug.Log($"Rally point set to position {position}", this);
         unitRallyPointCell = World.at(World.ToWorldCoord(unitRallyWaypoint.position));
-        Debug.Log($"Rally point set to cell {unitRallyPointCell.GetFirstOccupant()}", this);
+        Debug.Log($"Rally point set to cell with occupant {unitRallyPointCell.GetFirstOccupant()}", this);
     }
 
     public void SetCancelButton(HoverButton button)
