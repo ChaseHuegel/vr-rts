@@ -1,4 +1,4 @@
-﻿
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -980,12 +980,13 @@ public class InteractionPointer : MonoBehaviour
         // pointerLineRenderer.startColor = pointerInvalidColor;
         // pointerLineRenderer.endColor = pointerInvalidColor;
 
+        PlayerManager.Instance.UpdateContextDisplayBasedOn(hitInteractable);
+        // ShowObjectHint(hitInteractable);
+
         if (hitInteractable != null)
             currentInteractable = hitInteractable;
         else
             currentInteractable = null;
-
-        ShowObjectHint(hitInteractable);
 
         pointedAtPosition = hitInfo.point;
         pointerEnd = hitInfo.point;
@@ -1534,16 +1535,28 @@ public class InteractionPointer : MonoBehaviour
 
     private void ShowObjectHint(Interactable targetInteractable)
     {
-        // Different interactable
-        // if (currentInteractable != targetInteractable)
-        // { 
-        //     if (!hintObject)
-        //         hintObject = Instantiate(GameMaster.Instance.worldButtonHintPrefab, targetInteractable.transform);
+        if (!targetInteractable)
+        {
+            if (hintObject)
+            {
+                Destroy(hintObject);
+                hintObject = null;
+                Debug.Log("ShowObjectHint destroyed hintObject.");
+            }
+            return;
+        }
 
-        //     hintObject.transform.SetParent(targetInteractable.transform);
-        //     hintObject.transform.localPosition = new Vector3(0.0f, 0.65f, -0.2f);
-        //     hintObject.transform.localRotation = Quaternion.identity;
-        // }
+        // Different interactable
+        if (currentInteractable != targetInteractable)
+        { 
+            if (!hintObject)
+                hintObject = Instantiate(GameMaster.Instance.worldButtonHintPrefab, targetInteractable.transform);
+
+            hintObject.transform.SetParent(targetInteractable.transform);
+            hintObject.transform.localPosition = new Vector3(0.0f, 0.65f, -0.2f);
+            hintObject.transform.localRotation = Quaternion.identity;
+            Debug.Log("ShowObjectHint instantiated hintObject.");
+        }
     }
 
     private void HideObjectHint()

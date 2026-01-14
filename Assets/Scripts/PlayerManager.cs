@@ -1,11 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Swordfish;
 using Swordfish.Library.Collections;
 using Swordfish.Library.Types;
 using Swordfish.Navigation;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Valve.VR;
@@ -37,13 +39,18 @@ public class PlayerManager : MonoBehaviour
     [Header("UI")]
     public SteamVR_Action_Boolean handMenuToggle;
     public SteamVR_Action_Boolean moveCommandMenuToggle;
+    public GameObject contextDisplayObject;
+    private TextMeshPro contextDisplayTitleText;
+    private TextMeshPro contextDisplayDescriptionText;
+    private TextMeshPro contextDisplayDetailsText;
+
 
     //=========================================================================
     [Header("Hammer")]
     public bool hammerOnLeft = true;
     public bool hammerOnRight = false;
     public Transform rightHandHammerStorage;
-    public Transform leftHandHammerStorage;
+    public Transform leftHandHammerStorage;    
 
     //=========================================================================
     [Header("Autohide Hand Menu")]
@@ -218,6 +225,13 @@ public class PlayerManager : MonoBehaviour
         // resources after the menu has been loaded.
         mainMenuObject = Instantiate(mainMenuPrefab, Vector3.zero, Quaternion.identity);
         mainMenuObject.SetActive(true);
+
+        if (contextDisplayObject && contextDisplayObject.activeSelf)
+        {
+            contextDisplayTitleText = contextDisplayObject.transform.Find("Title").GetComponent<TextMeshPro>();
+            contextDisplayDescriptionText = contextDisplayObject.transform.Find("Description").GetComponent<TextMeshPro>();
+            contextDisplayDetailsText = contextDisplayObject.transform.Find("Details").GetComponent<TextMeshPro>();
+        }
 
         InitializeResources();
 
@@ -658,7 +672,7 @@ public class PlayerManager : MonoBehaviour
 
     public void OnMoveCommandMenuToggle(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
-        Debug.Log($"OnMoveCommandMenuToggle called from {fromSource}");
+        //Debug.Log($"OnMoveCommandMenuToggle called from {fromSource}");
 
         moveCommandMenuGameObject.SetActive(!moveCommandMenuGameObject.activeSelf);
         return;
@@ -1004,5 +1018,52 @@ public class PlayerManager : MonoBehaviour
         }
 
         return true;
+    }
+
+    internal void UpdateContextDisplayBasedOn(Interactable hitInteractable)
+    {
+        if (hitInteractable == null )
+            return;
+            
+        // buildMenu.titleText.text = hitInteractable.name;
+        // buildMenu.descriptionText.text = "Description text not implemented.";
+        // buildMenu.detailText.text = "Details text not implemented.";
+
+        if (contextDisplayObject == null || !contextDisplayObject.activeSelf)
+            return;
+
+        Body body = hitInteractable.GetComponents<Body>().FirstOrDefault(x => x.enabled);
+        if (body)
+        {
+            // Check what type of interactable we hit and update context display accordingly
+            switch (body)
+            {
+                case ActorV2 _:
+                    contextDisplayTitleText.text = body.name;
+                    contextDisplayDescriptionText.text = "Description text not implemented.";   
+                    contextDisplayDetailsText.text = "Details text not implemented.";
+                    break;
+                case Structure _:
+                    contextDisplayTitleText.text = body.name;   
+                    contextDisplayDescriptionText.text = "Description text not implemented.";
+                    contextDisplayDetailsText.text = "Details text not implemented.";
+                    break;
+                case Constructible _:
+                    contextDisplayTitleText.text = body.name;   
+                    contextDisplayDescriptionText.text = "Description text not implemented.";
+                    contextDisplayDetailsText.text = "Details text not implemented.";
+                    break;
+                case Resource _:
+                    contextDisplayTitleText.text = body.name;   
+                    contextDisplayDescriptionText.text = "Description text not implemented.";
+                    contextDisplayDetailsText.text = "Details text not implemented.";
+                    break;
+                default:
+                    contextDisplayTitleText.text = body.name;
+                    contextDisplayDescriptionText.text = "Description text not implemented.";
+                    contextDisplayDetailsText.text = "Details text not implemented.";
+                    break;
+            }
+        }
     }
 }
